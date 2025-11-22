@@ -1,35 +1,41 @@
-"use client";
-
-import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
 import { formatCurrency } from "@/lib/utils/formatting";
 import { Proposal, ProposalStatus } from "./types";
 import { mockProposals, mockProposalStats } from "./mockData";
+import { requireAuth } from "@/lib/session";
 
-export default function ProposalsPage() {
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<ProposalStatus | "All">("All");
-  const [currentPage, setCurrentPage] = useState(1);
+interface ProposalsPageProps {
+  searchParams?: {
+    page?: string;
+    search?: string;
+    status?: string;
+  };
+}
+
+export default async function ProposalsPage({ searchParams: rawSearchParams }: ProposalsPageProps) {
+  const searchParams = await Promise.resolve(rawSearchParams);
+  // Server-side authentication and permission check
+  await requireAuth(['proposal-list', 'proposal-read']); // Requires either proposal-list or proposal-read permission
+
+  const currentPage = searchParams?.page ? parseInt(searchParams.page, 10) : 1;
+  const searchQuery = searchParams?.search || '';
+  const statusFilter = searchParams?.status as ProposalStatus | 'All' || 'All';
   const itemsPerPage = 10;
 
   // Filter proposals based on search and status
-  const filteredProposals = useMemo(() => {
-    return mockProposals.filter((proposal) => {
-      const matchesSearch =
-        proposal.proposalNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        proposal.accountName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        proposal.contactName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        proposal.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        proposal.opportunityName?.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredProposals = mockProposals.filter((proposal) => {
+    const matchesSearch =
+      proposal.proposalNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      proposal.accountName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      proposal.contactName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      proposal.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      proposal.opportunityName?.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesStatus = statusFilter === "All" || proposal.status === statusFilter;
+    const matchesStatus = statusFilter === "All" || proposal.status === statusFilter;
 
-      return matchesSearch && matchesStatus;
-    });
-  }, [searchQuery, statusFilter]);
+    return matchesSearch && matchesStatus;
+  });
 
   // Pagination
   const totalPages = Math.ceil(filteredProposals.length / itemsPerPage);
@@ -57,6 +63,15 @@ export default function ProposalsPage() {
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
     }
+  };
+
+  // Generate query string for pagination links
+  const generateQueryString = (newPage: number) => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.set('search', searchQuery);
+    if (statusFilter && statusFilter !== 'All') params.set('status', statusFilter);
+    params.set('page', newPage.toString());
+    return params.toString();
   };
 
   return (
@@ -96,12 +111,12 @@ export default function ProposalsPage() {
             {mockProposalStats.pendingReview}
           </h3>
           <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">Pending Review</p>
-          <button
-            onClick={() => setStatusFilter("Pending Review")}
-            className="w-full px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-colors text-sm font-medium"
+          <a
+            href={`/proposals?status=Pending Review`}
+            className="w-full px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-colors text-sm font-medium block text-center"
           >
             Review Now
-          </button>
+          </a>
         </div>
 
         {/* Approved Proposals Card */}
@@ -132,26 +147,26 @@ export default function ProposalsPage() {
             ${mockProposalStats.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h3>
           <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">Total Value</p>
-          <button
-            onClick={() => router.push("/proposals/new")}
-            className="w-full px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors text-sm font-medium"
+          <a
+            href="/proposals/new"
+            className="w-full px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors text-sm font-medium block text-center"
           >
             Create Proposal
-          </button>
+          </a>
         </div>
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700 mb-6">
+      <form className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700 mb-6">
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           {/* Search */}
           <div className="flex-1 w-full lg:max-w-md">
             <div className="relative">
               <input
                 type="text"
+                name="search"
+                defaultValue={searchQuery}
                 placeholder="Search proposals by number, account, or description..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               <svg
@@ -167,22 +182,30 @@ export default function ProposalsPage() {
 
           {/* Status Filter */}
           <div className="flex flex-wrap gap-2">
-            {["All", "Draft", "Pending Review", "Under Review", "Approved", "Accepted", "Rejected", "Expired"].map((status) => (
-              <button
-                key={status}
-                onClick={() => setStatusFilter(status as ProposalStatus | "All")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  statusFilter === status
-                    ? "bg-primary text-white"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                }`}
-              >
-                {status}
-              </button>
-            ))}
+            <select
+              name="status"
+              defaultValue={statusFilter}
+              className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="All">All Status</option>
+              <option value="Draft">Draft</option>
+              <option value="Pending Review">Pending Review</option>
+              <option value="Under Review">Under Review</option>
+              <option value="Approved">Approved</option>
+              <option value="Accepted">Accepted</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Expired">Expired</option>
+            </select>
+            
+            <button 
+              type="submit"
+              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+            >
+              Apply
+            </button>
           </div>
         </div>
-      </div>
+      </form>
 
       {/* Proposals Table */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -216,12 +239,12 @@ export default function ProposalsPage() {
                           : "Get started by creating your first proposal"}
                       </p>
                       {!searchQuery && statusFilter === "All" && (
-                        <button
-                          onClick={() => router.push("/proposals/new")}
+                        <a
+                          href="/proposals/new"
                           className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
                         >
                           Create Proposal
-                        </button>
+                        </a>
                       )}
                     </div>
                   </td>
@@ -230,15 +253,18 @@ export default function ProposalsPage() {
                 paginatedProposals.map((proposal) => (
                   <tr
                     key={proposal.id}
-                    onClick={() => router.push(`/proposals/${proposal.id}`)}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                   >
                     <td className="px-6 py-4">
-                      <div className="text-sm font-semibold text-primary">{proposal.proposalNumber}</div>
+                      <a href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
+                        {proposal.proposalNumber}
+                      </a>
                       <div className="text-xs text-gray-500 dark:text-gray-400">{proposal.proposalDate}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900 dark:text-white font-medium">{proposal.accountName}</div>
+                      <a href={`/proposals/${proposal.id}`} className="text-sm text-gray-900 dark:text-white font-medium hover:underline">
+                        {proposal.accountName}
+                      </a>
                       {proposal.opportunityName && (
                         <div className="text-xs text-gray-500 dark:text-gray-400">{proposal.opportunityName}</div>
                       )}
@@ -263,15 +289,12 @@ export default function ProposalsPage() {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <div className="flex items-center justify-center gap-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            router.push(`/proposals/${proposal.id}`);
-                          }}
+                        <a
+                          href={`/proposals/${proposal.id}`}
                           className="px-3 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-xs font-medium"
                         >
                           View
-                        </button>
+                        </a>
                       </div>
                     </td>
                   </tr>
@@ -282,14 +305,69 @@ export default function ProposalsPage() {
         </div>
 
         {/* Pagination */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalItems={filteredProposals.length}
-          itemsPerPage={itemsPerPage}
-          onPageChange={setCurrentPage}
-          itemName="proposals"
-        />
+        <div className="border-t border-gray-200 dark:border-gray-700 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-700 dark:text-gray-300">
+              Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+              <span className="font-medium">
+                {Math.min(currentPage * itemsPerPage, filteredProposals.length)}
+              </span>{' '}
+              of <span className="font-medium">{filteredProposals.length}</span> results
+            </div>
+            
+            <div className="flex space-x-2">
+              {currentPage > 1 && (
+                <a
+                  href={`?${generateQueryString(currentPage - 1)}`}
+                  className="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  Previous
+                </a>
+              )}
+              
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                // Calculate the page numbers to display
+                let pageNum;
+                if (totalPages <= 5) {
+                  // If total pages <= 5, show all
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  // If near the beginning, show first 5
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  // If near the end, show last 5
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  // Show around current page
+                  pageNum = currentPage - 2 + i;
+                }
+                
+                return (
+                  <a
+                    key={pageNum}
+                    href={`?${generateQueryString(pageNum)}`}
+                    className={`px-3 py-2 rounded-md text-sm font-medium ${
+                      currentPage === pageNum
+                        ? 'bg-primary text-white'
+                        : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
+                    }`}
+                  >
+                    {pageNum}
+                  </a>
+                );
+              })}
+              
+              {currentPage < totalPages && (
+                <a
+                  href={`?${generateQueryString(currentPage + 1)}`}
+                  className="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  Next
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </Sidebar>
   );

@@ -24,11 +24,15 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
   const { user } = useUserSession();
   const [permissions, setPermissions] = useState<string[]>(user?.permissions || []);
   const [roles, setRoles] = useState<any[]>([]);
-  const [isSuperAdminState, setIsSuperAdminState] = useState<boolean>(() => {
-    // Initialize from localStorage
-    return localStorage.getItem('isSuperAdmin') === 'true';
-  });
+  const [isSuperAdminState, setIsSuperAdminState] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Only access localStorage on the client-side
+    if (typeof window !== 'undefined') {
+      setIsSuperAdminState(localStorage.getItem('isSuperAdmin') === 'true');
+    }
+  }, []);
 
   // Function to fetch user permissions from API
   const fetchUserSessionData = async (): Promise<{permissions: string[], roles: any[], isSuperAdmin: boolean}> => {

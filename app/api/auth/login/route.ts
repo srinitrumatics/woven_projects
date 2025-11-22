@@ -1,6 +1,7 @@
 // app/api/auth/login/route.ts
 import { NextRequest } from 'next/server';
 import { authenticateUser } from '@/lib/auth-service';
+import { createSession } from '@/lib/session';
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,7 +23,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create response with user data and set auth session cookie
+    // Create session cookies
+    await createSession(userWithPermissions.id);
+
+    // Create response with user data
     const response = new Response(
       JSON.stringify({
         user: {
@@ -39,14 +43,6 @@ export async function POST(request: NextRequest) {
         }
       }
     );
-
-    // For server-side redirect capability, we would set a cookie
-    // response.cookies.set('auth-session', userWithPermissions.id.toString(), {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === 'production',
-    //   maxAge: 60 * 60 * 24, // 24 hours
-    //   path: '/',
-    // });
 
     return response;
   } catch (error) {

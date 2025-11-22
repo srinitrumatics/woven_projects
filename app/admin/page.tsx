@@ -1,7 +1,12 @@
 import Sidebar from "@/components/layouts/Sidebar";
 import Link from "next/link";
+import { requireAuth } from '../../lib/auth';
 
-export default function AdminPage() {
+// Server-side authorization check
+export default async function AdminPage() {
+  // This will redirect if user doesn't have required permissions
+  await requireAuth(); // This checks if user is authenticated
+
   return (
     <Sidebar>
       <div className="mb-6">
