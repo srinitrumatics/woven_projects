@@ -29,11 +29,26 @@ export const roles = pgTable('roles', {
     .notNull(),
 });
 
+// Permission Groups table
+export const permissionGroups = pgTable('permission_groups', {
+  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+  name: text('name').notNull(), // e.g. 'Order Management', 'User Management'
+  description: text('description'),
+  createdAt: text('created_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: text('updated_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
 // Permissions table
 export const permissions = pgTable('permissions', {
   id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
   name: text('name').notNull(), // e.g. 'create_user', 'delete_role'
   description: text('description'),
+  groupId: integer('group_id')
+    .references(() => permissionGroups.id, { onDelete: 'set null', onUpdate: 'cascade' }),
   createdAt: text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
@@ -84,7 +99,15 @@ export const roleRelations = relations(roles, ({ many }) => ({
   rolePermissions: many(rolePermissions),
 }));
 
-export const permissionRelations = relations(permissions, ({ many }) => ({
+export const permissionGroupRelations = relations(permissionGroups, ({ many }) => ({
+  permissions: many(permissions),
+}));
+
+export const permissionRelations = relations(permissions, ({ one, many }) => ({
+  group: one(permissionGroups, {
+    fields: [permissions.groupId],
+    references: [permissionGroups.id],
+  }),
   rolePermissions: many(rolePermissions),
 }));
 
@@ -94,6 +117,9 @@ export type NewUser = typeof users.$inferInsert;
 
 export type Role = typeof roles.$inferSelect;
 export type NewRole = typeof roles.$inferInsert;
+
+export type PermissionGroup = typeof permissionGroups.$inferSelect;
+export type NewPermissionGroup = typeof permissionGroups.$inferInsert;
 
 export type Permission = typeof permissions.$inferSelect;
 export type NewPermission = typeof permissions.$inferInsert;

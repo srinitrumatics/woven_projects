@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Role, Permission } from '../../../db/schema';
-import { roleApi, permissionApi } from '../../../lib/api/rbac-api';
+import { Role, Permission, PermissionGroup } from '../../../db/schema';
+import { roleApi, permissionApi, permissionGroupApi } from '../../../lib/api/rbac-api';
 import { Plus, Edit, Trash2, Save, X, Shield, Key } from 'lucide-react';
 
 interface RolePermission {
@@ -11,9 +11,18 @@ interface RolePermission {
   permissionDescription: string | null;
 }
 
+interface GroupedPermission {
+  id: number | null;
+  name: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+  permissions: Permission[];
+}
+
 const RoleManagement: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([]);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [groupedPermissions, setGroupedPermissions] = useState<GroupedPermission[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -26,22 +35,23 @@ const RoleManagement: React.FC = () => {
     name: '',
     description: '',
   });
-  const [permissionAssignments, setPermissionAssignments] = useState<number[]>([]);
+  // For form-level permission assignments (when creating/editing a role)
+  const [formPermissionAssignments, setFormPermissionAssignments] = useState<number[]>([]);
 
   useEffect(() => {
     loadRolesAndPermissions();
   }, []);
 
-  const loadRolesAndPermissions = async () => {
+  const loadRolesAndPermissions = async (roleIdToLoad?: number) => {
     try {
       setLoading(true);
-      const [rolesData, permissionsData] = await Promise.all([
+      const [rolesData, permissionGroupsData] = await Promise.all([
         roleApi.getRoles(),
-        permissionApi.getPermissions(),
+        permissionGroupApi.getPermissionGroups(),
       ]);
 
       setRoles(rolesData);
-      setPermissions(permissionsData);
+      setGroupedPermissions(permissionGroupsData);
 
       // Load permissions for each role
       const rolePermissionsMap: {[key: number]: RolePermission[]} = {};
@@ -62,6 +72,14 @@ const RoleManagement: React.FC = () => {
         selectedPermissionsMap[role.id] = rolePermissionsMap[role.id].map(rp => rp.permissionId);
       }
       setSelectedRolePermissions(selectedPermissionsMap);
+
+      // If we're editing a role, load its permissions into the form state
+      if (roleIdToLoad) {
+        const rolePermissions = rolePermissionsMap[roleIdToLoad] || [];
+        setFormPermissionAssignments(rolePermissions.map(rp => rp.permissionId));
+      } else {
+        setFormPermissionAssignments([]); // Reset when not editing
+      }
 
     } catch (err) {
       setError('Failed to load roles and permissions');
@@ -122,7 +140,7 @@ const RoleManagement: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       let savedRole: Role;
       if (editingRole) {
@@ -131,17 +149,25 @@ const RoleManagement: React.FC = () => {
           name: formData.name,
           description: formData.description,
         });
+
+        // Update permissions for the role
+        await roleApi.assignPermissionsToRole(savedRole.id, formPermissionAssignments);
       } else {
         // Create new role
         savedRole = await roleApi.createRole({
           name: formData.name,
           description: formData.description,
         });
+
+        // Assign permissions to the new role
+        if (formPermissionAssignments.length > 0) {
+          await roleApi.assignPermissionsToRole(savedRole.id, formPermissionAssignments);
+        }
       }
-      
+
       // Reset form and reload data
       setFormData({ name: '', description: '' });
-      setPermissionAssignments([]);
+      setFormPermissionAssignments([]);
       setEditingRole(null);
       setShowForm(false);
       await loadRolesAndPermissions();
@@ -158,6 +184,8 @@ const RoleManagement: React.FC = () => {
     });
     setEditingRole(role);
     setShowForm(true);
+    // Load permissions for this role into the form
+    setFormPermissionAssignments(selectedRolePermissions[role.id] || []);
   };
 
   const handleDelete = async (id: number) => {
@@ -174,6 +202,7 @@ const RoleManagement: React.FC = () => {
 
   const handleCancel = () => {
     setFormData({ name: '', description: '' });
+    setFormPermissionAssignments([]);
     setEditingRole(null);
     setShowForm(false);
   };
@@ -188,6 +217,7 @@ const RoleManagement: React.FC = () => {
         <button
           onClick={() => {
             setFormData({ name: '', description: '' });
+            setFormPermissionAssignments([]); // Reset permissions when creating a new role
             setEditingRole(null);
             setShowForm(true);
           }}
@@ -224,6 +254,48 @@ const RoleManagement: React.FC = () => {
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+            </div>
+
+            {/* Permission Assignment */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Permissions</label>
+              <div className="border border-gray-200 rounded-md p-3 max-h-96 overflow-y-auto">
+                {groupedPermissions.map((group) => (
+                  <div key={group.id !== null ? `group-${group.id}` : 'ungrouped'} className="mb-3">
+                    <h4 className="text-sm font-medium text-gray-800 bg-gray-100 px-2 py-1 rounded-t">
+                      {group.name} ({group.permissions.length})
+                    </h4>
+                    <div className="pl-2 pt-1">
+                      {group.permissions.map(permission => (
+                        <label key={permission.id} className="flex items-start mb-1">
+                          <input
+                            type="checkbox"
+                            checked={formPermissionAssignments.includes(permission.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setFormPermissionAssignments(prev => [...prev, permission.id]);
+                              } else {
+                                setFormPermissionAssignments(prev => prev.filter(id => id !== permission.id));
+                              }
+                            }}
+                            className="mt-1 h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                          />
+                          <div className="ml-2">
+                            <div className="text-sm font-medium text-gray-900">{permission.name}</div>
+                            <div className="text-xs text-gray-500">{permission.description}</div>
+                          </div>
+                        </label>
+                      ))}
+                      {group.permissions.length === 0 && (
+                        <p className="text-xs text-gray-500 italic pl-6">No permissions in this group</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {groupedPermissions.length === 0 && (
+                  <p className="text-sm text-gray-500">No permissions available</p>
+                )}
+              </div>
             </div>
 
             <div className="flex justify-end space-x-3">
@@ -289,23 +361,6 @@ const RoleManagement: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Permission assignment */}
-                    <div className="mt-2">
-                      <label className="block text-xs text-gray-500 mb-1">Assign Permissions:</label>
-                      <div className="flex flex-wrap gap-2">
-                        {permissions.map(permission => (
-                          <label key={permission.id} className="inline-flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={selectedRolePermissions[role.id]?.includes(permission.id) || false}
-                              onChange={() => handlePermissionChange(permission.id, role.id)}
-                              className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                            />
-                            <span className="ml-1 text-sm text-gray-700">{permission.name}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button

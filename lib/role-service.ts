@@ -1,6 +1,6 @@
 import { db } from '../db';
-import { roles, permissions, rolePermissions } from '../db/schema';
-import { eq, and } from 'drizzle-orm';
+import { roles, permissions, rolePermissions, permissionGroups } from '../db/schema';
+import { eq, and, desc } from 'drizzle-orm';
 import { NewRole } from '../db/schema';
 
 /**
@@ -138,10 +138,96 @@ export async function getRolePermissions(roleId: number) {
       .from(rolePermissions)
       .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
       .where(eq(rolePermissions.roleId, roleId));
-    
+
     return rolePermissionData;
   } catch (error) {
     console.error('Error fetching role permissions:', error);
     throw new Error('Failed to fetch role permissions');
+  }
+}
+
+/**
+ * Gets all permission groups with their permissions
+ * @returns Promise with array of permission groups and their permissions
+ */
+export async function getPermissionGroups() {
+  try {
+    const groups = await db
+      .select()
+      .from(permissionGroups)
+      .orderBy(desc(permissionGroups.id));
+
+    const groupsWithPermissions = await Promise.all(
+      groups.map(async (group) => {
+        const groupPermissions = await db
+          .select()
+          .from(permissions)
+          .where(eq(permissions.groupId, group.id));
+
+        return {
+          ...group,
+          permissions: groupPermissions
+        };
+      })
+    );
+
+    // Get permissions without groups as a separate "Ungrouped" section
+    const ungroupedPermissions = await db
+      .select()
+      .from(permissions)
+      .where(and(
+        eq(permissions.groupId, null)
+      ));
+
+    groupsWithPermissions.push({
+      id: null,
+      name: 'Ungrouped',
+      description: 'Permissions that are not assigned to any group',
+      createdAt: '',
+      updatedAt: '',
+      permissions: ungroupedPermissions
+    });
+
+    return groupsWithPermissions;
+  } catch (error) {
+    console.error('Error fetching permission groups:', error);
+    throw new Error('Failed to fetch permission groups');
+  }
+}
+
+/**
+ * Creates a new permission group
+ * @param groupData - The group data to create
+ * @returns Promise with the created group
+ */
+export async function createPermissionGroup(groupData: Omit<NewPermissionGroup, 'id' | 'createdAt' | 'updatedAt'>) {
+  try {
+    const [newGroup] = await db.insert(permissionGroups).values(groupData).returning();
+    return newGroup;
+  } catch (error) {
+    console.error('Error creating permission group:', error);
+    throw new Error('Failed to create permission group');
+  }
+}
+
+/**
+ * Gets all permissions with their group information
+ * @returns Promise with array of permissions and their groups
+ */
+export async function getPermissionsWithGroups() {
+  try {
+    const permissionsWithGroups = await db
+      .select({
+        permission: permissions,
+        group: permissionGroups,
+      })
+      .from(permissions)
+      .leftJoin(permissionGroups, eq(permissions.groupId, permissionGroups.id))
+      .orderBy(desc(permissionGroups.id), permissions.name);
+
+    return permissionsWithGroups;
+  } catch (error) {
+    console.error('Error fetching permissions with groups:', error);
+    throw new Error('Failed to fetch permissions with groups');
   }
 }

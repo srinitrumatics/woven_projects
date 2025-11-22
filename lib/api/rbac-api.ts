@@ -1,5 +1,6 @@
 // api/rbac-api.ts
-import { NewUser, User, NewRole, Role, NewPermission, Permission, UserRole } from '../../db/schema';
+import { NewUser, User, NewRole, Role, NewPermission, Permission, UserRole, PermissionGroup, NewPermissionGroup } from '../../db/schema';
+import { getPermissionGroups } from '../../lib/role-service';
 
 // User API functions
 export const userApi = {
@@ -316,6 +317,43 @@ export const permissionApi = {
       return response.ok;
     } catch (error) {
       console.error('Error deleting permission:', error);
+      throw error;
+    }
+  },
+};
+
+// Permission Group API functions
+export const permissionGroupApi = {
+  // Get all permission groups
+  async getPermissionGroups(): Promise<ReturnType<typeof getPermissionGroups> extends Promise<infer T> ? T : never> {
+    try {
+      const response = await fetch('/api/rbac/permission-groups');
+      if (!response.ok) {
+        throw new Error('Failed to fetch permission groups');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching permission groups:', error);
+      throw error;
+    }
+  },
+
+  // Create permission group
+  async createPermissionGroup(groupData: Omit<NewPermissionGroup, 'id' | 'createdAt' | 'updatedAt'>): Promise<PermissionGroup> {
+    try {
+      const response = await fetch('/api/rbac/permission-groups', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(groupData),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to create permission group');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error creating permission group:', error);
       throw error;
     }
   },
