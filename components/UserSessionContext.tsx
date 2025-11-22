@@ -8,6 +8,7 @@ interface User {
   name: string;
   email: string;
   permissions: string[];
+  roles?: any[]; // roles could be added to the user object
 }
 
 interface UserSessionContextType {

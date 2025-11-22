@@ -1,50 +1,54 @@
 // components/ProtectedRoute.tsx
 'use client';
 
-import { useSession } from 'next-auth/react';
 import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUserPermissions } from '../hooks/useUserPermissions';
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredPermissions?: string[];
+  requiredPermissions?: string[]; // Optional - if not provided, only check roles
+  requiredRoles?: string[];       // Optional - if not provided, only check permissions
   anyPermission?: boolean; // If true, user needs ANY of the permissions, not ALL
+  anyRole?: boolean;       // If true, user needs ANY of the roles, not ALL
   fallback?: ReactNode; // What to show if user doesn't have permissions
 }
 
 export default function ProtectedRoute({
   children,
   requiredPermissions = [],
+  requiredRoles = [],
   anyPermission = false,
+  anyRole = false,
   fallback = null
 }: ProtectedRouteProps) {
-  const { data: session, status } = useSession();
   const router = useRouter();
-  const { hasPermissions, loading } = useUserPermissions();
-
-  // If no session, redirect to login
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/login');
-    }
-  }, [status, router]);
+  const { hasPermissions, hasAnyRole, hasRole, loading } = useUserPermissions();
 
   // If still loading or checking permissions, show nothing (or a spinner)
-  if (status === 'loading' || loading) {
+  if (loading) {
     return <div>Loading...</div>; // You can replace this with a proper loading component
   }
 
-  // If authenticated but no required permissions to check, show children
-  if (requiredPermissions.length === 0) {
-    return <>{children}</>;
+  // Check if user has the required permissions (if specified)
+  const permissionsCheckPassed = requiredPermissions.length === 0 ||
+                                 hasPermissions(requiredPermissions, anyPermission);
+
+  // Check if user has the required roles (if specified)
+  const rolesCheckPassed = requiredRoles.length === 0;
+  let specificRolesCheckPassed = true;
+
+  if (requiredRoles.length > 0) {
+    specificRolesCheckPassed = anyRole ?
+      hasAnyRole(requiredRoles) :
+      requiredRoles.every(role => hasRole(role));
   }
 
-  // Check if user has required permissions
-  const userHasAccess = hasPermissions(requiredPermissions, anyPermission);
+  // User has access if both permission and role checks pass
+  const userHasAccess = permissionsCheckPassed && specificRolesCheckPassed;
 
   if (!userHasAccess) {
-    return fallback || <div>Access denied. You don't have the required permissions.</div>;
+    return fallback || <div>Access denied. You don't have the required permissions or roles.</div>;
   }
 
   return <>{children}</>;

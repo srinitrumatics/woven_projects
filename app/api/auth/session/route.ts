@@ -1,8 +1,11 @@
 // app/api/auth/session/route.ts
 import { NextRequest } from 'next/server';
-import { getUserPermissions } from '@/lib/auth-service';
+import { getUserPermissions, getUserRoles } from '@/lib/auth-service';
+import { db } from '@/db';
+import { users } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
-// This endpoint validates if the user is authenticated and returns their permissions
+// This endpoint validates if the user is authenticated and returns their info with roles
 export async function GET(request: NextRequest) {
   try {
     // We'll validate the session by checking if a valid userId is provided
@@ -24,12 +27,32 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch user permissions from database
+    // Get user from database
+    const [user] = await db
+      .select({ id: users.id, name: users.name, email: users.email })
+      .from(users)
+      .where(eq(users.id, userId));
+
+    if (!user) {
+      return new Response(
+        JSON.stringify({ authenticated: false, error: 'User not found' }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Fetch user permissions and roles from database
     const userPermissions = await getUserPermissions(userId);
+    const userRoles = await getUserRoles(userId);
 
     return new Response(
       JSON.stringify({
         authenticated: true,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+        roles: userRoles,
         permissions: userPermissions
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }

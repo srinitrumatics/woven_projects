@@ -6,6 +6,7 @@ import { useUserSession } from './UserSessionContext';
 
 interface PermissionContextType {
   permissions: string[];
+  roles: any[];
   hasPermission: (permission: string) => boolean;
   hasPermissions: (permissions: string[], anyPermission?: boolean) => boolean;
   loading: boolean;
@@ -21,16 +22,17 @@ interface PermissionProviderProps {
 export function PermissionProvider({ children }: PermissionProviderProps) {
   const { user } = useUserSession();
   const [permissions, setPermissions] = useState<string[]>(user?.permissions || []);
+  const [roles, setRoles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Function to fetch user permissions from API
-  const fetchUserPermissions = async (): Promise<string[]> => {
+  const fetchUserSessionData = async (): Promise<{permissions: string[], roles: any[]}> => {
     if (!user) {
-      return [];
+      return { permissions: [], roles: [] };
     }
 
     try {
-      // Call the session validation API endpoint to get current permissions
+      // Call the session validation API endpoint to get current permissions and roles
       const response = await fetch('/api/auth/session', {
         headers: {
           'user-id': user.id.toString(),
@@ -39,31 +41,45 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
 
       if (response.ok) {
         const data = await response.json();
-        return data.permissions || [];
+        return {
+          permissions: data.permissions || [],
+          roles: data.roles || []
+        };
       } else {
-        console.error('Failed to fetch user permissions:', response.statusText);
-        return user.permissions || []; // fallback to permissions from session
+        console.error('Failed to fetch user session data:', response.statusText);
+        // fallback to permissions from session
+        return {
+          permissions: user.permissions || [],
+          roles: [] // roles aren't stored in localStorage currently
+        };
       }
     } catch (error) {
-      console.error('Error fetching permissions:', error);
-      return user.permissions || []; // fallback to permissions from session
+      console.error('Error fetching session data:', error);
+      // fallback to permissions from session
+      return {
+        permissions: user.permissions || [],
+        roles: [] // roles aren't stored in localStorage currently
+      };
     }
   };
 
   const refreshPermissions = async () => {
     if (!user) {
       setPermissions([]);
+      setRoles([]);
       setLoading(false);
       return;
     }
 
     setLoading(true);
     try {
-      const userPermissions = await fetchUserPermissions();
-      setPermissions(userPermissions);
+      const sessionData = await fetchUserSessionData();
+      setPermissions(sessionData.permissions);
+      setRoles(sessionData.roles);
     } catch (error) {
       console.error('Error fetching permissions:', error);
       setPermissions(user?.permissions || []);
+      setRoles([]);
     } finally {
       setLoading(false);
     }
@@ -93,6 +109,7 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
 
   const value = {
     permissions,
+    roles,
     hasPermission,
     hasPermissions,
     loading,
@@ -111,5 +128,20 @@ export function usePermissions() {
   if (context === undefined) {
     throw new Error('usePermissions must be used within a PermissionProvider');
   }
-  return context;
+
+  // Add role-based access functions
+  const hasRole = (roleName: string): boolean => {
+    return context.roles.some((role: any) => role.name === roleName);
+  };
+
+  const hasAnyRole = (roleNames: string[]): boolean => {
+    if (!roleNames || roleNames.length === 0) return true;
+    return context.roles.some((role: any) => roleNames.includes(role.name));
+  };
+
+  return {
+    ...context,
+    hasRole,
+    hasAnyRole
+  };
 }
