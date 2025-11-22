@@ -1,5 +1,5 @@
 // api/rbac-api.ts
-import { NewUser, User, NewRole, Role, NewPermission, Permission, UserRole, PermissionGroup, NewPermissionGroup } from '../../db/schema';
+import { NewUser, User, NewRole, Role, NewPermission, Permission, UserRole, PermissionGroup, NewPermissionGroup, Organization, NewOrganization } from '../../db/schema';
 import { getPermissionGroups } from '../../lib/role-service';
 
 // User API functions
@@ -114,6 +114,37 @@ export const userApi = {
       return await response.json();
     } catch (error) {
       console.error('Error fetching user roles:', error);
+      throw error;
+    }
+  },
+
+  // Assign organizations to user
+  async assignOrganizationsToUser(userId: number, organizationIds: number[]): Promise<boolean> {
+    try {
+      const response = await fetch(`/api/rbac/users/${userId}/organizations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ organizationIds }),
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Error assigning organizations to user:', error);
+      throw error;
+    }
+  },
+
+  // Get user organizations
+  async getUserOrganizations(userId: number): Promise<{ organizationId: number; organizationName: string; organizationDescription: string | null }[]> {
+    try {
+      const response = await fetch(`/api/rbac/users/${userId}/organizations`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch user organizations');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching user organizations:', error);
       throw error;
     }
   },
@@ -354,6 +385,123 @@ export const permissionGroupApi = {
       return await response.json();
     } catch (error) {
       console.error('Error creating permission group:', error);
+      throw error;
+    }
+  },
+};
+
+// Organization API functions
+export const organizationApi = {
+  // Get all organizations
+  async getOrganizations(): Promise<Organization[]> {
+    try {
+      const response = await fetch('/api/rbac/organizations');
+      if (!response.ok) {
+        throw new Error('Failed to fetch organizations');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching organizations:', error);
+      throw error;
+    }
+  },
+
+  // Get organization by ID
+  async getOrganizationById(id: number): Promise<Organization | null> {
+    try {
+      const response = await fetch(`/api/rbac/organizations/${id}`);
+      if (!response.ok) {
+        if (response.status === 404) return null;
+        throw new Error('Failed to fetch organization');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching organization:', error);
+      throw error;
+    }
+  },
+
+  // Create organization
+  async createOrganization(orgData: Omit<NewOrganization, 'id' | 'createdAt' | 'updatedAt'>): Promise<Organization> {
+    try {
+      const response = await fetch('/api/rbac/organizations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orgData),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to create organization');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error creating organization:', error);
+      throw error;
+    }
+  },
+
+  // Update organization
+  async updateOrganization(id: number, orgData: Partial<Omit<NewOrganization, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Organization | null> {
+    try {
+      const response = await fetch(`/api/rbac/organizations/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orgData),
+      });
+      if (!response.ok) {
+        if (response.status === 404) return null;
+        throw new Error('Failed to update organization');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating organization:', error);
+      throw error;
+    }
+  },
+
+  // Delete organization
+  async deleteOrganization(id: number): Promise<boolean> {
+    try {
+      const response = await fetch(`/api/rbac/organizations/${id}`, {
+        method: 'DELETE',
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Error deleting organization:', error);
+      throw error;
+    }
+  },
+
+  // Get users in organization
+  async getUsersInOrganization(orgId: number): Promise<{ id: number; name: string; email: string; createdAt: string; updatedAt: string }[]> {
+    try {
+      const response = await fetch(`/api/rbac/organizations/${orgId}/users`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch users in organization');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching users in organization:', error);
+      throw error;
+    }
+  },
+
+  // Assign users to organization
+  async assignUsersToOrganization(orgId: number, userIds: number[]): Promise<boolean> {
+    try {
+      const response = await fetch(`/api/rbac/organizations/${orgId}/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userIds }),
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Error assigning users to organization:', error);
       throw error;
     }
   },

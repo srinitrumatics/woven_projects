@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, Role } from '../../../db/schema';
-import { userApi, roleApi } from '../../../lib/api/rbac-api';
-import { Plus, Edit, Trash2, Save, X, Users, Shield, Key } from 'lucide-react';
+import { User, Role, Organization } from '../../../db/schema';
+import { userApi, roleApi, organizationApi } from '../../../lib/api/rbac-api';
+import { Plus, Edit, Trash2, Save, X, Users, Shield, Key, Building2 } from 'lucide-react';
 
 interface UserRole {
   roleId: number;
@@ -11,15 +11,24 @@ interface UserRole {
   roleDescription: string | null;
 }
 
+interface UserOrganization {
+  organizationId: number;
+  organizationName: string;
+  organizationDescription: string | null;
+}
+
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<Omit<User, 'password'>[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingUser, setEditingUser] = useState<Omit<User, 'password'> | null>(null);
   const [selectedUserRoles, setSelectedUserRoles] = useState<{[key: number]: number[]}>({});
+  const [selectedUserOrganizations, setSelectedUserOrganizations] = useState<{[key: number]: number[]}>({});
   const [allUserRoles, setAllUserRoles] = useState<{[key: number]: UserRole[]}>({});
+  const [allUserOrganizations, setAllUserOrganizations] = useState<{[key: number]: UserOrganization[]}>({});
 
   // Form state
   const [formData, setFormData] = useState({
@@ -28,26 +37,33 @@ const UserManagement: React.FC = () => {
     password: '',
   });
   const [roleAssignments, setRoleAssignments] = useState<number[]>([]);
+  const [organizationAssignments, setOrganizationAssignments] = useState<number[]>([]);
 
   useEffect(() => {
-    loadUsersAndRoles();
+    loadUsersRolesAndOrganizations();
   }, []);
 
-  const loadUsersAndRoles = async () => {
+  const loadUsersRolesAndOrganizations = async () => {
     try {
       setLoading(true);
-      const [usersData, rolesData] = await Promise.all([
+      const [usersData, rolesData, organizationsData] = await Promise.all([
         userApi.getUsers(),
         roleApi.getRoles(),
+        organizationApi.getOrganizations(),
       ]);
-      
+
       setUsers(usersData);
       setRoles(rolesData);
-      
+      setOrganizations(organizationsData);
+
       // Load roles for each user
       const userRolesMap: {[key: number]: UserRole[]} = {};
+      // Load organizations for each user
+      const userOrganizationsMap: {[key: number]: UserOrganization[]} = {};
+
       for (const user of usersData) {
         try {
+          // Load user roles
           const userRoles = await userApi.getUserRoles(user.id);
           userRolesMap[user.id] = userRoles.map(ur => {
             const role = rolesData.find(r => r.id === ur.roleId);
@@ -57,22 +73,41 @@ const UserManagement: React.FC = () => {
               roleDescription: role?.description || null
             };
           });
+
+          // Load user organizations
+          const userOrgs = await userApi.getUserOrganizations(user.id);
+          userOrganizationsMap[user.id] = userOrgs.map(ug => {
+            const org = organizationsData.find(o => o.id === ug.organizationId);
+            return {
+              organizationId: ug.organizationId,
+              organizationName: org?.name || 'Unknown Organization',
+              organizationDescription: org?.description || null
+            };
+          });
         } catch (err) {
-          console.error(`Error loading roles for user ${user.id}:`, err);
+          console.error(`Error loading roles/organizations for user ${user.id}:`, err);
           userRolesMap[user.id] = [];
+          userOrganizationsMap[user.id] = [];
         }
       }
+
       setAllUserRoles(userRolesMap);
-      
-      // Initialize selected user roles
+      setAllUserOrganizations(userOrganizationsMap);
+
+      // Initialize selected user roles and organizations
       const selectedRolesMap: {[key: number]: number[]} = {};
+      const selectedOrgsMap: {[key: number]: number[]} = {};
+
       for (const user of usersData) {
         selectedRolesMap[user.id] = userRolesMap[user.id].map(ur => ur.roleId);
+        selectedOrgsMap[user.id] = userOrganizationsMap[user.id].map(ug => ug.organizationId);
       }
+
       setSelectedUserRoles(selectedRolesMap);
-      
+      setSelectedUserOrganizations(selectedOrgsMap);
+
     } catch (err) {
-      setError('Failed to load users and roles');
+      setError('Failed to load users, roles, and organizations');
       console.error(err);
     } finally {
       setLoading(false);
@@ -95,7 +130,7 @@ const UserManagement: React.FC = () => {
         const newRoles = currentRoles.includes(roleId)
           ? currentRoles.filter(id => id !== roleId)
           : [...currentRoles, roleId];
-        
+
         // Update the backend
         userApi.assignRolesToUser(userId, newRoles)
           .then(success => {
@@ -112,7 +147,7 @@ const UserManagement: React.FC = () => {
             }
           })
           .catch(err => console.error('Error updating user roles:', err));
-        
+
         return {
           ...prev,
           [userId]: newRoles
@@ -120,7 +155,7 @@ const UserManagement: React.FC = () => {
       });
     } else {
       // For form role selection
-      setRoleAssignments(prev => 
+      setRoleAssignments(prev =>
         prev.includes(roleId)
           ? prev.filter(id => id !== roleId)
           : [...prev, roleId]
@@ -128,9 +163,50 @@ const UserManagement: React.FC = () => {
     }
   };
 
+  const handleOrganizationChange = (organizationId: number, userId?: number) => {
+    if (userId !== undefined) {
+      // For organization assignment to user
+      setSelectedUserOrganizations(prev => {
+        const currentOrganizations = prev[userId] || [];
+        const newOrganizations = currentOrganizations.includes(organizationId)
+          ? currentOrganizations.filter(id => id !== organizationId)
+          : [...currentOrganizations, organizationId];
+
+        // Update the backend
+        userApi.assignOrganizationsToUser(userId, newOrganizations)
+          .then(success => {
+            if (success) {
+              // Update all user organizations cache
+              setAllUserOrganizations(prevOrgs => ({
+                ...prevOrgs,
+                [userId]: organizations.filter(o => newOrganizations.includes(o.id)).map(o => ({
+                  organizationId: o.id,
+                  organizationName: o.name,
+                  organizationDescription: o.description
+                }))
+              }));
+            }
+          })
+          .catch(err => console.error('Error updating user organizations:', err));
+
+        return {
+          ...prev,
+          [userId]: newOrganizations
+        };
+      });
+    } else {
+      // For form organization selection
+      setOrganizationAssignments(prev =>
+        prev.includes(organizationId)
+          ? prev.filter(id => id !== organizationId)
+          : [...prev, organizationId]
+      );
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       if (editingUser) {
         // Update existing user
@@ -139,21 +215,32 @@ const UserManagement: React.FC = () => {
           email: formData.email,
           ...(formData.password && { password: formData.password })
         });
+
+        // Update user roles
+        await userApi.assignRolesToUser(editingUser.id, roleAssignments);
+        // Update user organizations
+        await userApi.assignOrganizationsToUser(editingUser.id, organizationAssignments);
       } else {
         // Create new user
-        await userApi.createUser({
+        const newUser = await userApi.createUser({
           name: formData.name,
           email: formData.email,
           password: formData.password
         });
+
+        // Assign roles to new user
+        await userApi.assignRolesToUser(newUser.id, roleAssignments);
+        // Assign organizations to new user
+        await userApi.assignOrganizationsToUser(newUser.id, organizationAssignments);
       }
-      
+
       // Reset form and reload data
       setFormData({ name: '', email: '', password: '' });
       setRoleAssignments([]);
+      setOrganizationAssignments([]);
       setEditingUser(null);
       setShowForm(false);
-      await loadUsersAndRoles();
+      await loadUsersRolesAndOrganizations();
     } catch (err) {
       setError('Failed to save user');
       console.error(err);
@@ -166,6 +253,14 @@ const UserManagement: React.FC = () => {
       email: user.email,
       password: '' // Don't prefill password
     });
+
+    // Pre-populate role and organization assignments for editing
+    const userRoles = allUserRoles[user.id]?.map(ur => ur.roleId) || [];
+    const userOrganizations = allUserOrganizations[user.id]?.map(ug => ug.organizationId) || [];
+
+    setRoleAssignments(userRoles);
+    setOrganizationAssignments(userOrganizations);
+
     setEditingUser(user);
     setShowForm(true);
   };
@@ -174,7 +269,7 @@ const UserManagement: React.FC = () => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         await userApi.deleteUser(id);
-        await loadUsersAndRoles();
+        await loadUsersRolesAndOrganizations();
       } catch (err) {
         setError('Failed to delete user');
         console.error(err);
@@ -184,6 +279,8 @@ const UserManagement: React.FC = () => {
 
   const handleCancel = () => {
     setFormData({ name: '', email: '', password: '' });
+    setRoleAssignments([]);
+    setOrganizationAssignments([]);
     setEditingUser(null);
     setShowForm(false);
   };
@@ -199,6 +296,8 @@ const UserManagement: React.FC = () => {
           onClick={() => {
             setFormData({ name: '', email: '', password: '' });
             setEditingUser(null);
+            setRoleAssignments([]);
+            setOrganizationAssignments([]);
             setShowForm(true);
           }}
           className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
@@ -238,7 +337,7 @@ const UserManagement: React.FC = () => {
                 />
               </div>
             </div>
-            
+
             {!editingUser && (
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
@@ -252,6 +351,42 @@ const UserManagement: React.FC = () => {
                 />
               </div>
             )}
+
+            {/* Role Assignments */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Assign Roles</label>
+              <div className="flex flex-wrap gap-2">
+                {roles.map(role => (
+                  <label key={role.id} className="inline-flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={roleAssignments.includes(role.id)}
+                      onChange={() => handleRoleChange(role.id)}
+                      className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="ml-1 text-sm text-gray-700">{role.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Organization Assignments */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Assign Organizations</label>
+              <div className="flex flex-wrap gap-2">
+                {organizations.map(organization => (
+                  <label key={organization.id} className="inline-flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={organizationAssignments.includes(organization.id)}
+                      onChange={() => handleOrganizationChange(organization.id)}
+                      className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="ml-1 text-sm text-gray-700">{organization.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
 
             <div className="flex justify-end space-x-3">
               <button
@@ -281,6 +416,7 @@ const UserManagement: React.FC = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roles</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organizations</th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -329,6 +465,42 @@ const UserManagement: React.FC = () => {
                               className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                             />
                             <span className="ml-1 text-sm text-gray-700">{role.name}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">
+                      {allUserOrganizations[user.id]?.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {allUserOrganizations[user.id].map(userOrg => (
+                            <span
+                              key={userOrg.organizationId}
+                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                            >
+                              {userOrg.organizationName}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-500">No organizations assigned</span>
+                      )}
+                    </div>
+
+                    {/* Organization assignment dropdown */}
+                    <div className="mt-2">
+                      <label className="block text-xs text-gray-500 mb-1">Assign Organizations:</label>
+                      <div className="flex flex-wrap gap-2">
+                        {organizations.map(org => (
+                          <label key={org.id} className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={selectedUserOrganizations[user.id]?.includes(org.id) || false}
+                              onChange={() => handleOrganizationChange(org.id, user.id)}
+                              className="h-4 w-4 text-green-600 rounded border-gray-300 focus:ring-green-500"
+                            />
+                            <span className="ml-1 text-sm text-gray-700">{org.name}</span>
                           </label>
                         ))}
                       </div>

@@ -16,6 +16,19 @@ export const users = pgTable('users', {
     .notNull(),
 });
 
+// Organizations table
+export const organizations = pgTable('organizations', {
+  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+  name: text('name').notNull(),
+  description: text('description'),
+  createdAt: text('created_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: text('updated_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
 // Roles table
 export const roles = pgTable('roles', {
   id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
@@ -89,9 +102,30 @@ export const userRoles = pgTable(
   })
 );
 
+// User-Organization relationship (many-to-many)
+export const userOrganizations = pgTable(
+  'user_organizations',
+  {
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.organizationId] }),
+  })
+);
+
 // Define relations
+export const organizationRelations = relations(organizations, ({ many }) => ({
+  userOrganizations: many(userOrganizations),
+}));
+
 export const userRelations = relations(users, ({ many }) => ({
   userRoles: many(userRoles),
+  userOrganizations: many(userOrganizations),
 }));
 
 export const roleRelations = relations(roles, ({ many }) => ({
@@ -111,9 +145,26 @@ export const permissionRelations = relations(permissions, ({ one, many }) => ({
   rolePermissions: many(rolePermissions),
 }));
 
+export const userOrganizationRelations = relations(userOrganizations, ({ one }) => ({
+  user: one(users, {
+    fields: [userOrganizations.userId],
+    references: [users.id],
+  }),
+  organization: one(organizations, {
+    fields: [userOrganizations.organizationId],
+    references: [organizations.id],
+  }),
+}));
+
 // Types for better TypeScript support
+export type Organization = typeof organizations.$inferSelect;
+export type NewOrganization = typeof organizations.$inferInsert;
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+
+export type UserOrganization = typeof userOrganizations.$inferSelect;
+export type NewUserOrganization = typeof userOrganizations.$inferInsert;
 
 export type Role = typeof roles.$inferSelect;
 export type NewRole = typeof roles.$inferInsert;

@@ -1,6 +1,6 @@
 import { db } from '../db';
-import { users, roles, userRoles, rolePermissions, permissions } from '../db/schema';
-import { eq, and, or, inArray } from 'drizzle-orm';
+import { users, organizations, userOrganizations, roles, userRoles, permissions, rolePermissions } from '../db/schema';
+import { eq, and, or, inArray, exists } from 'drizzle-orm';
 import { NewUser, NewUserRole } from '../db/schema';
 import bcrypt from 'bcryptjs';
 
@@ -66,9 +66,12 @@ export async function updateUser(id: number, userData: Partial<NewUser>) {
  */
 export async function deleteUser(id: number) {
   try {
-    // First remove all user-role associations
-    await db.delete(userRoles).where(eq(userRoles.userId, id));
+    // First remove all user-organization associations
+    await db.delete(userOrganizations).where(eq(userOrganizations.userId, id));
     
+    // Then remove all user-role associations
+    await db.delete(userRoles).where(eq(userRoles.userId, id));
+
     // Then delete the user itself
     const deletedUsers = await db.delete(users).where(eq(users.id, id)).returning();
     return deletedUsers.length > 0;
@@ -178,7 +181,7 @@ export async function getUserRoles(userId: number) {
       .from(userRoles)
       .innerJoin(roles, eq(userRoles.roleId, roles.id))
       .where(eq(userRoles.userId, userId));
-    
+
     return userRoleData;
   } catch (error) {
     console.error('Error fetching user roles:', error);
@@ -206,7 +209,7 @@ export async function getUserPermissions(userId: number) {
       .innerJoin(rolePermissions, eq(roles.id, rolePermissions.roleId))
       .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
       .where(eq(users.id, userId));
-    
+
     return userPermissions;
   } catch (error) {
     console.error('Error fetching user permissions:', error);
@@ -235,7 +238,7 @@ export async function userHasPermission(userId: number, permissionName: string) 
           eq(permissions.name, permissionName)
         )
       );
-    
+
     return result[0].count > 0;
   } catch (error) {
     console.error('Error checking user permission:', error);
@@ -259,10 +262,87 @@ export async function removeRolesFromUser(userId: number, roleIds: number[]) {
           inArray(userRoles.roleId, roleIds)
         )
       );
-    
+
     return result.changes > 0;
   } catch (error) {
     console.error('Error removing roles from user:', error);
     throw new Error('Failed to remove roles from user');
+  }
+}
+
+/**
+ * Assigns organizations to a user
+ * @param userId - The ID of the user
+ * @param organizationIds - Array of organization IDs to assign
+ * @returns Promise indicating success or failure
+ */
+export async function assignOrganizationsToUser(userId: number, organizationIds: number[]) {
+  try {
+    await db.transaction(async (tx) => {
+      // First delete existing organizations for this user
+      await tx.delete(userOrganizations).where(eq(userOrganizations.userId, userId));
+
+      // Insert new user-organization associations
+      if (organizationIds.length > 0) {
+        const userOrgValues = organizationIds.map((orgId) => ({
+          userId,
+          organizationId: orgId,
+        }));
+        await tx.insert(userOrganizations).values(userOrgValues);
+      }
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error assigning organizations to user:", error);
+    throw new Error("Failed to assign organizations to user");
+  }
+}
+
+/**
+ * Gets organizations assigned to a user
+ * @param userId - The ID of the user
+ * @returns Promise with array of organizations for the user
+ */
+export async function getUserOrganizations(userId: number) {
+  try {
+    const userOrgData = await db
+      .select({
+        organizationId: userOrganizations.organizationId,
+        organizationName: organizations.name,
+        organizationDescription: organizations.description
+      })
+      .from(userOrganizations)
+      .innerJoin(organizations, eq(userOrganizations.organizationId, organizations.id))
+      .where(eq(userOrganizations.userId, userId));
+
+    return userOrgData;
+  } catch (error) {
+    console.error('Error fetching user organizations:', error);
+    throw new Error('Failed to fetch user organizations');
+  }
+}
+
+/**
+ * Removes organizations from a user
+ * @param userId - The ID of the user
+ * @param organizationIds - Array of organization IDs to remove
+ * @returns Promise indicating success or failure
+ */
+export async function removeOrganizationsFromUser(userId: number, organizationIds: number[]) {
+  try {
+    const result = await db
+      .delete(userOrganizations)
+      .where(
+        and(
+          eq(userOrganizations.userId, userId),
+          inArray(userOrganizations.organizationId, organizationIds)
+        )
+      );
+
+    return result.changes > 0;
+  } catch (error) {
+    console.error('Error removing organizations from user:', error);
+    throw new Error('Failed to remove organizations from user');
   }
 }

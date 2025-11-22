@@ -1,11 +1,13 @@
-// app/api/rbac/users/[id]/roles/route.ts
+// app/api/rbac/users/[id]/organizations/route.ts
 import { NextRequest } from 'next/server';
-import { getUserRoles, assignRolesToUser } from '@/lib/user-service';
+import { getUserOrganizations, assignOrganizationsToUser, removeOrganizationsFromUser } from '@/lib/user-service';
+import { requireAuth } from "@/lib/session";
 
+// Get organizations for a user
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params;
   try {
-    const userId = parseInt(resolvedParams.id, 10);
+    const awaitedParams = await params;
+    const userId = parseInt(awaitedParams.id);
     if (isNaN(userId)) {
       return new Response(JSON.stringify({ error: 'Invalid user ID' }), {
         status: 400,
@@ -15,16 +17,16 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       });
     }
 
-    const roles = await getUserRoles(userId);
-    return new Response(JSON.stringify(roles), {
+    const userOrganizations = await getUserOrganizations(userId);
+    return new Response(JSON.stringify(userOrganizations), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
       },
     });
   } catch (error) {
-    console.error('Error fetching user roles:', error);
-    return new Response(JSON.stringify({ error: 'Failed to fetch user roles' }), {
+    console.error('Error fetching user organizations:', error);
+    return new Response(JSON.stringify({ error: 'Failed to fetch user organizations' }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
@@ -33,10 +35,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
+// Assign organizations to a user
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params;
   try {
-    const userId = parseInt(resolvedParams.id, 10);
+    const awaitedParams = await params;
+    const userId = parseInt(awaitedParams.id);
     if (isNaN(userId)) {
       return new Response(JSON.stringify({ error: 'Invalid user ID' }), {
         status: 400,
@@ -46,9 +49,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       });
     }
 
-    const { roleIds } = await request.json();
-    if (!Array.isArray(roleIds)) {
-      return new Response(JSON.stringify({ error: 'roleIds must be an array' }), {
+    const { organizationIds } = await request.json();
+    if (!Array.isArray(organizationIds)) {
+      return new Response(JSON.stringify({ error: 'organizationIds must be an array' }), {
         status: 400,
         headers: {
           'Content-Type': 'application/json',
@@ -56,9 +59,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       });
     }
 
-    const success = await assignRolesToUser(userId, roleIds);
+    const success = await assignOrganizationsToUser(userId, organizationIds);
     if (!success) {
-      return new Response(JSON.stringify({ error: 'Failed to assign roles to user' }), {
+      return new Response(JSON.stringify({ error: 'Failed to assign organizations to user' }), {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
@@ -66,15 +69,15 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       });
     }
 
-    return new Response(JSON.stringify({ message: 'Roles assigned successfully' }), {
+    return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
       },
     });
   } catch (error) {
-    console.error('Error assigning roles to user:', error);
-    return new Response(JSON.stringify({ error: 'Failed to assign roles to user' }), {
+    console.error('Error assigning organizations to user:', error);
+    return new Response(JSON.stringify({ error: 'Failed to assign organizations to user' }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
