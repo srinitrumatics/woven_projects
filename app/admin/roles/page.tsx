@@ -39,31 +39,30 @@ const RoleManagement: React.FC = () => {
         roleApi.getRoles(),
         permissionApi.getPermissions(),
       ]);
-      
+
       setRoles(rolesData);
       setPermissions(permissionsData);
-      
+
       // Load permissions for each role
       const rolePermissionsMap: {[key: number]: RolePermission[]} = {};
       for (const role of rolesData) {
         try {
-          // Note: we don't have a direct API to get permissions for a role yet
-          // For now, we'll just set empty arrays and update as needed
-          rolePermissionsMap[role.id] = [];
+          const rolePermissions = await roleApi.getRolePermissions(role.id);
+          rolePermissionsMap[role.id] = rolePermissions;
         } catch (err) {
           console.error(`Error loading permissions for role ${role.id}:`, err);
           rolePermissionsMap[role.id] = [];
         }
       }
       setAllRolePermissions(rolePermissionsMap);
-      
+
       // Initialize selected role permissions
       const selectedPermissionsMap: {[key: number]: number[]} = {};
       for (const role of rolesData) {
         selectedPermissionsMap[role.id] = rolePermissionsMap[role.id].map(rp => rp.permissionId);
       }
       setSelectedRolePermissions(selectedPermissionsMap);
-      
+
     } catch (err) {
       setError('Failed to load roles and permissions');
       console.error(err);
@@ -246,89 +245,93 @@ const RoleManagement: React.FC = () => {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permissions</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {roles.map(role => (
-              <tr key={role.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <Shield className="flex-shrink-0 h-10 w-10 text-gray-400" />
-                    <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">{role.name}</div>
+      {/* Only show role list if not in form mode (hide when creating or editing) */}
+      {!showForm ? (
+        <div className="bg-white rounded-lg border overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permissions</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {roles.map(role => (
+                <tr key={role.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <Shield className="flex-shrink-0 h-10 w-10 text-gray-400" />
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-gray-900">{role.name}</div>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900">{role.description || '-'}</div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900">
-                    {allRolePermissions[role.id]?.length > 0 ? (
-                      <div className="flex flex-wrap gap-1">
-                        {allRolePermissions[role.id].map(rolePermission => (
-                          <span 
-                            key={rolePermission.permissionId}
-                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
-                          >
-                            {rolePermission.permissionName}
-                          </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">{role.description || '-'}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">
+                      {allRolePermissions[role.id]?.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {allRolePermissions[role.id].map(rolePermission => (
+                            <span
+                              key={rolePermission.permissionId}
+                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
+                            >
+                              {rolePermission.permissionName}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-500">No permissions assigned</span>
+                      )}
+                    </div>
+
+                    {/* Permission assignment */}
+                    <div className="mt-2">
+                      <label className="block text-xs text-gray-500 mb-1">Assign Permissions:</label>
+                      <div className="flex flex-wrap gap-2">
+                        {permissions.map(permission => (
+                          <label key={permission.id} className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={selectedRolePermissions[role.id]?.includes(permission.id) || false}
+                              onChange={() => handlePermissionChange(permission.id, role.id)}
+                              className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                            />
+                            <span className="ml-1 text-sm text-gray-700">{permission.name}</span>
+                          </label>
                         ))}
                       </div>
-                    ) : (
-                      <span className="text-sm text-gray-500">No permissions assigned</span>
-                    )}
-                  </div>
-                  
-                  {/* Permission assignment */}
-                  <div className="mt-2">
-                    <label className="block text-xs text-gray-500 mb-1">Assign Permissions:</label>
-                    <div className="flex flex-wrap gap-2">
-                      {permissions.map(permission => (
-                        <label key={permission.id} className="inline-flex items-center">
-                          <input
-                            type="checkbox"
-                            checked={selectedRolePermissions[role.id]?.includes(permission.id) || false}
-                            onChange={() => handlePermissionChange(permission.id, role.id)}
-                            className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                          />
-                          <span className="ml-1 text-sm text-gray-700">{permission.name}</span>
-                        </label>
-                      ))}
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button
-                    onClick={() => handleEdit(role)}
-                    className="text-blue-600 hover:text-blue-900 mr-3"
-                    title="Edit"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(role.id)}
-                    className="text-red-600 hover:text-red-900"
-                    title="Delete"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button
+                      onClick={() => handleEdit(role)}
+                      className="text-blue-600 hover:text-blue-900 mr-3"
+                      title="Edit"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(role.id)}
+                      className="text-red-600 hover:text-red-900"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
 
-      {roles.length === 0 && (
+      {/* Show empty state when there are no roles and form is not open */}
+      {roles.length === 0 && !showForm && (
         <div className="text-center py-12">
           <Shield className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">No roles</h3>

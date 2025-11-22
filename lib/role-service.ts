@@ -91,24 +91,34 @@ export async function getRoleById(id: number) {
  * @param permissionIds - Array of permission IDs to assign
  * @returns Promise indicating success or failure
  */
-export async function assignPermissionsToRole(roleId: number, permissionIds: number[]) {
+export async function assignPermissionsToRole(
+  roleId: number,
+  permissionIds: number[]
+) {
   try {
-    // First delete existing permissions for this role
-    await db.delete(rolePermissions).where(eq(rolePermissions.roleId, roleId));
-    
-    // Insert new role-permission associations
-    if (permissionIds.length > 0) {
-      const rolePermissionValues = permissionIds.map(permissionId => ({
-        roleId,
-        permissionId
-      }));
-      await db.insert(rolePermissions).values(rolePermissionValues);
-    }
-    
+    // Remove duplicate permission IDs to prevent constraint violations
+    const uniquePermissionIds = [...new Set(permissionIds)];
+
+    await db.transaction(async (tx) => {
+      // First delete existing permissions for this role
+      await tx
+        .delete(rolePermissions)
+        .where(eq(rolePermissions.roleId, roleId));
+
+      // Insert new role-permission associations
+      if (uniquePermissionIds.length > 0) {
+        const rolePermissionValues = uniquePermissionIds.map((permissionId) => ({
+          roleId,
+          permissionId,
+        }));
+        await tx.insert(rolePermissions).values(rolePermissionValues);
+      }
+    });
+
     return true;
   } catch (error) {
-    console.error('Error assigning permissions to role:', error);
-    throw new Error('Failed to assign permissions to role');
+    console.error("Error assigning permissions to role:", error);
+    throw new Error("Failed to assign permissions to role");
   }
 }
 

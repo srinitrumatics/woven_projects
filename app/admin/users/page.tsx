@@ -272,89 +272,93 @@ const UserManagement: React.FC = () => {
         </div>
       )}
 
-      <div className="bg-white rounded-lg border overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roles</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {users.map(user => (
-              <tr key={user.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <Users className="flex-shrink-0 h-10 w-10 text-gray-400" />
-                    <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">{user.name}</div>
+      {/* Only show user list if not in form mode (hide when creating or editing) */}
+      {!showForm ? (
+        <div className="bg-white rounded-lg border overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roles</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {users.map(user => (
+                <tr key={user.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <Users className="flex-shrink-0 h-10 w-10 text-gray-400" />
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{user.email}</div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900">
-                    {allUserRoles[user.id]?.length > 0 ? (
-                      <div className="flex flex-wrap gap-1">
-                        {allUserRoles[user.id].map(userRole => (
-                          <span 
-                            key={userRole.roleId}
-                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-                          >
-                            {userRole.roleName}
-                          </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">{user.email}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">
+                      {allUserRoles[user.id]?.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {allUserRoles[user.id].map(userRole => (
+                            <span
+                              key={userRole.roleId}
+                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                            >
+                              {userRole.roleName}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-500">No roles assigned</span>
+                      )}
+                    </div>
+
+                    {/* Role assignment dropdown */}
+                    <div className="mt-2">
+                      <label className="block text-xs text-gray-500 mb-1">Assign Roles:</label>
+                      <div className="flex flex-wrap gap-2">
+                        {roles.map(role => (
+                          <label key={role.id} className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={selectedUserRoles[user.id]?.includes(role.id) || false}
+                              onChange={() => handleRoleChange(role.id, user.id)}
+                              className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                            />
+                            <span className="ml-1 text-sm text-gray-700">{role.name}</span>
+                          </label>
                         ))}
                       </div>
-                    ) : (
-                      <span className="text-sm text-gray-500">No roles assigned</span>
-                    )}
-                  </div>
-                  
-                  {/* Role assignment dropdown */}
-                  <div className="mt-2">
-                    <label className="block text-xs text-gray-500 mb-1">Assign Roles:</label>
-                    <div className="flex flex-wrap gap-2">
-                      {roles.map(role => (
-                        <label key={role.id} className="inline-flex items-center">
-                          <input
-                            type="checkbox"
-                            checked={selectedUserRoles[user.id]?.includes(role.id) || false}
-                            onChange={() => handleRoleChange(role.id, user.id)}
-                            className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                          />
-                          <span className="ml-1 text-sm text-gray-700">{role.name}</span>
-                        </label>
-                      ))}
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button
-                    onClick={() => handleEdit(user)}
-                    className="text-blue-600 hover:text-blue-900 mr-3"
-                    title="Edit"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(user.id)}
-                    className="text-red-600 hover:text-red-900"
-                    title="Delete"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button
+                      onClick={() => handleEdit(user)}
+                      className="text-blue-600 hover:text-blue-900 mr-3"
+                      title="Edit"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      className="text-red-600 hover:text-red-900"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
 
-      {users.length === 0 && (
+      {/* Show empty state when there are no users and form is not open */}
+      {users.length === 0 && !showForm && (
         <div className="text-center py-12">
           <Users className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">No users</h3>

@@ -141,22 +141,24 @@ export async function getUserByEmail(email: string) {
  */
 export async function assignRolesToUser(userId: number, roleIds: number[]) {
   try {
-    // First delete existing roles for this user
-    await db.delete(userRoles).where(eq(userRoles.userId, userId));
-    
-    // Insert new user-role associations
-    if (roleIds.length > 0) {
-      const userRoleValues = roleIds.map(roleId => ({
-        userId,
-        roleId
-      }));
-      await db.insert(userRoles).values(userRoleValues);
-    }
-    
+    await db.transaction(async (tx) => {
+      // First delete existing roles for this user
+      await tx.delete(userRoles).where(eq(userRoles.userId, userId));
+
+      // Insert new user-role associations
+      if (roleIds.length > 0) {
+        const userRoleValues = roleIds.map((roleId) => ({
+          userId,
+          roleId,
+        }));
+        await tx.insert(userRoles).values(userRoleValues);
+      }
+    });
+
     return true;
   } catch (error) {
-    console.error('Error assigning roles to user:', error);
-    throw new Error('Failed to assign roles to user');
+    console.error("Error assigning roles to user:", error);
+    throw new Error("Failed to assign roles to user");
   }
 }
 

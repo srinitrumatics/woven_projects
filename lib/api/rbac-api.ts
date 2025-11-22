@@ -203,6 +203,20 @@ export const roleApi = {
     }
   },
 
+  // Get permissions for a role
+  async getRolePermissions(roleId: number): Promise<{ permissionId: number; permissionName: string; permissionDescription: string | null }[]> {
+    try {
+      const response = await fetch(`/api/rbac/roles/${roleId}/permissions`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch role permissions');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching role permissions:', error);
+      throw error;
+    }
+  },
+
   // Assign permissions to role
   async assignPermissionsToRole(roleId: number, permissionIds: number[]): Promise<boolean> {
     try {
