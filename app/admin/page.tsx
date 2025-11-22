@@ -5,7 +5,7 @@ import { requireAuth } from '../../lib/auth';
 // Server-side authorization check
 export default async function AdminPage() {
   // This will redirect if user doesn't have required permissions
-  await requireAuth(); // This checks if user is authenticated
+ await requireAuth(['list_user']);
 
   return (
     <Sidebar>
