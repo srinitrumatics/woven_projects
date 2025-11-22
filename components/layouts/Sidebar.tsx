@@ -90,7 +90,7 @@ const navigation: NavigationItem[] = [
 export default function Sidebar({ children }: SidebarProps) {
   const pathname = usePathname();
   const { user } = useUserSession();
-  const { permissions: userPermissions } = usePermissions();
+  const { permissions: userPermissions, isSuperAdmin } = usePermissions();
   const [isCollapsed, setIsCollapsed] = useState(false); // desktop collapse
   const [mobileOpen, setMobileOpen] = useState(false); // mobile drawer
 
@@ -158,8 +158,9 @@ export default function Sidebar({ children }: SidebarProps) {
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
             {navigation.map((item) => {
-              // If item has no required permissions, show it; otherwise check user permissions
+              // If user is super admin, show all items; otherwise check individual permissions
               const hasPermission = item.permissions.length === 0 ||
+                isSuperAdmin || // Super admins can access everything
                 item.permissions.some(perm => userPermissions.includes(perm));
 
               if (!hasPermission) {
@@ -214,8 +215,9 @@ export default function Sidebar({ children }: SidebarProps) {
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
             {navigation.map((item) => {
-              // If item has no required permissions, show it; otherwise check user permissions
+              // If user is super admin, show all items; otherwise check individual permissions
               const hasPermission = item.permissions.length === 0 ||
+                isSuperAdmin || // Super admins can access everything
                 item.permissions.some(perm => userPermissions.includes(perm));
 
               if (!hasPermission) {

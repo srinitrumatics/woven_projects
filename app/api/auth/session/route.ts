@@ -44,6 +44,12 @@ export async function GET(request: NextRequest) {
     const userPermissions = await getUserPermissions(userId);
     const userRoles = await getUserRoles(userId);
 
+    // Check if user is a super admin (has a role named 'Super Admin')
+    const isSuperAdmin = userRoles.some((role: any) =>
+      role.name?.toLowerCase() === 'super admin' ||
+      role.name?.toLowerCase() === 'super_admin'
+    );
+
     return new Response(
       JSON.stringify({
         authenticated: true,
@@ -53,7 +59,8 @@ export async function GET(request: NextRequest) {
           email: user.email,
         },
         roles: userRoles,
-        permissions: userPermissions
+        permissions: userPermissions,
+        isSuperAdmin: isSuperAdmin
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
