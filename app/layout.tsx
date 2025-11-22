@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AppAuthProvider from "@/components/AppAuthProvider";
 
 export const metadata: Metadata = {
   title: "WOVN Client & Partner Portal",
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased bg-background text-foreground">
-        {children}
+        <AppAuthProvider>
+          {children}
+        </AppAuthProvider>
       </body>
     </html>
   );

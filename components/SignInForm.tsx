@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface SignInFormProps {
   onToggle?: () => void;
@@ -11,16 +11,50 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnUrl = searchParams?.get('return') || '/dashboard';
 
   const handleSignUpClick = () => {
     router.push("/signup");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: add real auth
-    router.push("/dashboard");
+    setError("");
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // Store user info in localStorage
+        localStorage.setItem('user', JSON.stringify({
+          id: data.user.id,
+          name: data.user.name,
+          email: data.user.email,
+          permissions: data.permissions
+        }));
+
+        // Redirect to dashboard or return URL
+        router.push(returnUrl);
+        router.refresh(); // Refresh to update any UI that depends on auth state
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Invalid email or password");
+      }
+    } catch (err) {
+      setError("An error occurred during authentication");
+      console.error(err);
+    }
   };
 
   return (
@@ -93,6 +127,11 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
+                {error}
+              </div>
+            )}
             <div>
               <label htmlFor="signin-email" className="sr-only">
                 Email
