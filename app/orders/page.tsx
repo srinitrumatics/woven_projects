@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import Sidebar from '@/components/layouts/Sidebar';
+import Pagination from '@/components/ui/Pagination';
 import { requireAuth } from '@/lib/auth';
 import { getOrdersFromSalesforce } from '@/lib/salesforce-service';
 import { formatCurrency } from '@/lib/utils/formatting';
@@ -10,7 +11,7 @@ type TabFilter = 'All' | 'Pending' | 'Success' | 'Draft' | 'Cancelled';
 
 // Server component to get orders data
 async function OrdersContent({
-  searchParams
+  searchParams: rawSearchParams
 }: {
   searchParams?: {
     page?: string;
@@ -18,6 +19,7 @@ async function OrdersContent({
     search?: string;
   }
 }) {
+  const searchParams = await Promise.resolve(rawSearchParams);
   const currentPage = Number(searchParams?.page) || 1;
   const activeTab = searchParams?.tab || 'All';
   const searchQuery = searchParams?.search || '';

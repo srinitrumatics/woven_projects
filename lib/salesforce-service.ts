@@ -14,14 +14,26 @@ interface SalesforceOrder {
   Total_Price__c?: number;
   [key: string]: any; // Allow additional fields
 }
-
+// API Configuration
+const SALESFORCE_CONFIG = {
+  instanceUrl: process.env.SF_DATA_URL || '',
+  clientId: process.env.SALESFORCE_CLIENT_ID || '',
+  clientSecret: process.env.SALESFORCE_CLIENT_SECRET || '',
+  username: process.env.SALESFORCE_USERNAME || '',
+  password: process.env.SALESFORCE_PASSWORD || '',
+  securityToken: process.env.SALESFORCE_SECURITY_TOKEN || '',
+};
 // Get Salesforce session info (this would normally come from your session management)
 async function getSalesforceSession() {
-  // In a real implementation, you'd retrieve the SF session from server-side session storage
-  // For simulation, we'll return a mock session
+  // obtain or reuse token
+  const tokenRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/salesforce/token`, {
+    method: "POST",
+  });
+  const tokenData = await tokenRes.json();
+  
   return {
-    accessToken: process.env.SALESFORCE_ACCESS_TOKEN,
-    instanceUrl: process.env.SALESFORCE_INSTANCE_URL,
+    accessToken: tokenData.access_token,
+    instanceUrl: tokenData.instance_url,
   };
 }
 
@@ -34,6 +46,7 @@ export async function getOrdersFromSalesforce(accountId?: string): Promise<Sales
       console.error('No Salesforce access token available');
       return []; // Return empty array if not authenticated to Salesforce
     }
+    console.log('Fetching orders from Salesforce with session:', session);
 
     // Build SOQL query
     let soql = `SELECT Id, Name, Status__c, Bill_To_Contact_Name, Ship_To_Contact_Name, Total_Lines__c, Total_Price__c FROM Order__c`;
@@ -51,7 +64,7 @@ export async function getOrdersFromSalesforce(accountId?: string): Promise<Sales
     soql += ` ORDER BY CreatedDate DESC`;
 
     // Make API call to Salesforce
-    const response = await fetch(`${session.instanceUrl}/services/data/v58.0/query?q=${encodeURIComponent(soql)}`, {
+    const response = await fetch(`${process.env.SF_DATA_URL}/services/data/v58.0/query?q=${encodeURIComponent(soql)}`, {
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
         'Content-Type': 'application/json',
