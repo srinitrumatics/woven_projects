@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { Role, Permission, PermissionGroup, Organization } from '../../../db/schema';
 import { roleApi, permissionApi, permissionGroupApi, organizationApi } from '../../../lib/api/rbac-api';
 import { Plus, Edit, Trash2, Save, X, Shield, Key, Building2 } from 'lucide-react';
+import RoleList from '../../../components/RoleManagement/RoleList';
+import RoleForm from '../../../components/RoleManagement/RoleForm';
 
 interface RolePermission {
   permissionId: number;
@@ -22,7 +24,6 @@ interface GroupedPermission {
 
 const RoleManagement: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([]);
-  const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [groupedPermissions, setGroupedPermissions] = useState<GroupedPermission[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,8 +39,6 @@ const RoleManagement: React.FC = () => {
   });
   // For form-level permission assignments (when creating/editing a role)
   const [formPermissionAssignments, setFormPermissionAssignments] = useState<number[]>([]);
-  // For form-level organization selection (when creating/editing a role for a specific organization)
-  const [formOrganizationSelection, setFormOrganizationSelection] = useState<number | null>(null);
 
   useEffect(() => {
     loadRolesPermissionsAndOrganizations();
@@ -48,15 +47,13 @@ const RoleManagement: React.FC = () => {
   const loadRolesPermissionsAndOrganizations = async (roleIdToLoad?: number) => {
     try {
       setLoading(true);
-      const [rolesData, permissionGroupsData, organizationsData, allPermissionsData] = await Promise.all([
+      const [rolesData, permissionGroupsData, allPermissionsData] = await Promise.all([
         roleApi.getRoles(),
         permissionGroupApi.getPermissionGroups(),
-        organizationApi.getOrganizations(),
         permissionApi.getPermissions(), // Load all permissions to group them
       ]);
 
       setRoles(rolesData);
-      setOrganizations(organizationsData);
 
       // Group permissions by their groups
       const groupedPermsWithPermissions = permissionGroupsData.map(group => ({
@@ -105,7 +102,6 @@ const RoleManagement: React.FC = () => {
         setFormPermissionAssignments(rolePermissions.map(rp => rp.permissionId));
       } else {
         setFormPermissionAssignments([]); // Reset when not editing
-        setFormOrganizationSelection(null); // Reset organization selection when not editing
       }
 
     } catch (err) {
@@ -171,30 +167,18 @@ const RoleManagement: React.FC = () => {
     e.preventDefault();
 
     try {
-      let savedRole: Role;
       if (editingRole) {
         // Update existing role
-        savedRole = await roleApi.updateRole(editingRole.id, {
+        await roleApi.updateRole(editingRole.id, {
           name: formData.name,
           description: formData.description,
         });
 
         // Update permissions for the role
-        await roleApi.assignPermissionsToRole(savedRole.id, formPermissionAssignments);
-
-        // Update organizations for the role (only one organization)
-        if (formOrganizationSelection) {
-          await roleApi.assignOrganizationsToRole(savedRole.id, [formOrganizationSelection]);
-        } else {
-          // If no organization is selected, remove all organization assignments
-          const existingOrgs = await roleApi.getOrganizationsForRole(savedRole.id);
-          if (existingOrgs.length > 0) {
-            await roleApi.assignOrganizationsToRole(savedRole.id, []);
-          }
-        }
+        await roleApi.assignPermissionsToRole(editingRole.id, formPermissionAssignments);
       } else {
         // Create new role
-        savedRole = await roleApi.createRole({
+        const savedRole = await roleApi.createRole({
           name: formData.name,
           description: formData.description,
         });
@@ -203,17 +187,11 @@ const RoleManagement: React.FC = () => {
         if (formPermissionAssignments.length > 0) {
           await roleApi.assignPermissionsToRole(savedRole.id, formPermissionAssignments);
         }
-
-        // Assign organizations to the new role (only one organization)
-        if (formOrganizationSelection) {
-          await roleApi.assignOrganizationsToRole(savedRole.id, [formOrganizationSelection]);
-        }
       }
 
       // Reset form and reload data
       setFormData({ name: '', description: '' });
       setFormPermissionAssignments([]);
-      setFormOrganizationSelection(null);
       setEditingRole(null);
       setShowForm(false);
       await loadRolesPermissionsAndOrganizations();
@@ -233,22 +211,13 @@ const RoleManagement: React.FC = () => {
     // Load permissions for this role into the form
     setFormPermissionAssignments(selectedRolePermissions[role.id] || []);
 
-    // Load the first organization for this role into the form (since we now only allow one organization)
-    try {
-      const roleOrganizations = await roleApi.getOrganizationsForRole(role.id);
-      // Use the first organization if available, otherwise null
-      setFormOrganizationSelection(roleOrganizations.length > 0 ? roleOrganizations[0].organizationId : null);
-    } catch (err) {
-      console.error('Error loading organizations for role:', err);
-      setFormOrganizationSelection(null);
-    }
   };
 
   const handleDelete = async (id: number) => {
     if (window.confirm('Are you sure you want to delete this role?')) {
       try {
         await roleApi.deleteRole(id);
-        await loadRolesAndPermissions();
+        await loadRolesPermissionsAndOrganizations();
       } catch (err) {
         setError('Failed to delete role');
         console.error(err);
@@ -259,7 +228,6 @@ const RoleManagement: React.FC = () => {
   const handleCancel = () => {
     setFormData({ name: '', description: '' });
     setFormPermissionAssignments([]);
-    setFormOrganizationSelection(null);
     setEditingRole(null);
     setShowForm(false);
   };
@@ -275,7 +243,6 @@ const RoleManagement: React.FC = () => {
           onClick={() => {
             setFormData({ name: '', description: '' });
             setFormPermissionAssignments([]); // Reset permissions when creating a new role
-            setFormOrganizationSelection(null); // Reset organization selection when creating a new role
             setEditingRole(null);
             setShowForm(true);
           }}
@@ -287,187 +254,32 @@ const RoleManagement: React.FC = () => {
       </div>
 
       {showForm && (
-        <div className="bg-white p-6 rounded-lg border mb-6">
-          <h2 className="text-lg font-semibold mb-4">
-            {editingRole ? 'Edit Role' : 'Create New Role'}
-          </h2>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            {/* Organization Selection */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Select Organization</label>
-              <select
-                value={formOrganizationSelection || ''}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setFormOrganizationSelection(value === '' ? null : parseInt(value, 10));
-                }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select an organization...</option>
-                {organizations.map(organization => (
-                  <option key={organization.id} value={organization.id}>
-                    {organization.name}
-                  </option>
-                ))}
-              </select>
-              <p className="mt-1 text-sm text-gray-500">Select the organization to assign permissions to</p>
-            </div>
-
-            {/* Permission Assignment */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Permissions</label>
-              <div className="border border-gray-200 rounded-md p-3 max-h-96 overflow-y-auto">
-                {groupedPermissions.map((group) => (
-                  <div key={group.id !== null ? `group-${group.id}` : 'ungrouped'} className="mb-3">
-                    <h4 className="text-sm font-medium text-gray-800 bg-gray-100 px-2 py-1 rounded-t">
-                      {group.name} ({group.permissions?.length || 0})
-                    </h4>
-                    <div className="pl-2 pt-1">
-                      {group.permissions?.map(permission => (
-                        <label key={permission.id} className="flex items-start mb-1">
-                          <input
-                            type="checkbox"
-                            checked={formPermissionAssignments.includes(permission.id)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setFormPermissionAssignments(prev => [...prev, permission.id]);
-                              } else {
-                                setFormPermissionAssignments(prev => prev.filter(id => id !== permission.id));
-                              }
-                            }}
-                            className="mt-1 h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                          />
-                          <div className="ml-2">
-                            <div className="text-sm font-medium text-gray-900">{permission.name}</div>
-                            <div className="text-xs text-gray-500">{permission.description}</div>
-                          </div>
-                        </label>
-                      ))}
-                      {(!group.permissions || group.permissions.length === 0) && (
-                        <p className="text-xs text-gray-500 italic pl-6">No permissions in this group</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                {groupedPermissions.length === 0 && (
-                  <p className="text-sm text-gray-500">No permissions available</p>
-                )}
-              </div>
-            </div>
-
-            <div className="flex justify-end space-x-3">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              >
-                {editingRole ? 'Update' : 'Create'}
-              </button>
-            </div>
-          </form>
-        </div>
+        <RoleForm
+          editingRole={editingRole}
+          formData={formData}
+          formPermissionAssignments={formPermissionAssignments}
+          groupedPermissions={groupedPermissions}
+          handleInputChange={handleInputChange}
+          setFormPermissionAssignments={setFormPermissionAssignments}
+          setShowForm={setShowForm}
+          setFormData={setFormData}
+          setEditingRole={setEditingRole}
+          loadRolesPermissionsAndOrganizations={loadRolesPermissionsAndOrganizations}
+          roleApi={roleApi}
+        />
       )}
 
       {/* Only show role list if not in form mode (hide when creating or editing) */}
       {!showForm ? (
-        <div className="bg-white rounded-lg border overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permissions</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Available In</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {roles.map(role => (
-                <tr key={role.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <Shield className="flex-shrink-0 h-10 w-10 text-gray-400" />
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{role.name}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">{role.description || '-'}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">
-                      {allRolePermissions[role.id]?.length > 0 ? (
-                        <div className="flex flex-wrap gap-1">
-                          {allRolePermissions[role.id].map(rolePermission => (
-                            <span
-                              key={rolePermission.permissionId}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
-                            >
-                              {rolePermission.permissionName}
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-sm text-gray-500">No permissions assigned</span>
-                      )}
-                    </div>
-
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">
-                      <span className="text-sm text-gray-500">Organizations list not loaded in table view</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button
-                      onClick={() => handleEdit(role)}
-                      className="text-blue-600 hover:text-blue-900 mr-3"
-                      title="Edit"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(role.id)}
-                      className="text-red-600 hover:text-red-900"
-                      title="Delete"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <RoleList
+          roles={roles}
+          loading={loading}
+          error={error}
+          allRolePermissions={allRolePermissions}
+          groupedPermissions={groupedPermissions}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+        />
       ) : null}
 
       {/* Show empty state when there are no roles and form is not open */}
@@ -480,7 +292,12 @@ const RoleManagement: React.FC = () => {
           </p>
           <div className="mt-6">
             <button
-              onClick={() => setShowForm(true)}
+              onClick={() => {
+                setFormData({ name: '', description: '' });
+                setFormPermissionAssignments([]); // Reset permissions when creating a new role
+                setEditingRole(null);
+                setShowForm(true);
+              }}
               className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="w-4 h-4 mr-2" />

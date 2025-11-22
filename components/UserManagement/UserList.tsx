@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { User, Role, Organization } from '../../db/schema';
-import { userApi, roleApi, organizationApi } from '../../lib/api/rbac-api';
+import { userApi, roleApi, organizationApi } from '@/lib/api/rbac-api';
 import { Edit, Trash2, Users } from 'lucide-react';
 
 interface UserOrganization {
