@@ -11,7 +11,7 @@ interface GroupedPermission {
   description: string | null;
   createdAt: string;
   updatedAt: string;
-  permissions: Permission[];
+  permissions?: Permission[]; // Make it optional since it might be populated later
 }
 
 const PermissionManagement: React.FC = () => {
@@ -330,7 +330,7 @@ const PermissionManagement: React.FC = () => {
                 className="flex justify-between items-center p-4 bg-gray-50 cursor-pointer"
                 onClick={() => toggleGroup(group.name)}
               >
-                <h3 className="text-lg font-medium text-gray-800">{group.name} ({group.permissions.length})</h3>
+                <h3 className="text-lg font-medium text-gray-800">{group.name} ({group.permissions?.length || 0})</h3>
                 <button className="text-gray-500 hover:text-gray-700">
                   {expandedGroups.has(group.name) ?
                     <ChevronDown className="h-5 w-5" /> :
@@ -341,7 +341,7 @@ const PermissionManagement: React.FC = () => {
 
               {expandedGroups.has(group.name) && (
                 <div className="divide-y divide-gray-200">
-                  {group.permissions.map(permission => (
+                  {group.permissions?.map(permission => (
                     <div key={permission.id} className="p-4 flex items-center justify-between hover:bg-gray-50">
                       <div className="flex items-center">
                         <Key className="flex-shrink-0 h-6 w-6 text-gray-400" />

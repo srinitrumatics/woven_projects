@@ -86,7 +86,7 @@ export const rolePermissions = pgTable(
   })
 );
 
-// User-Role relationship (many-to-many)
+// User-Role relationship (many-to-many) with organization context
 export const userRoles = pgTable(
   'user_roles',
   {
@@ -96,9 +96,28 @@ export const userRoles = pgTable(
     roleId: integer('role_id')
       .notNull()
       .references(() => roles.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
   },
   (t) => ({
-    pk: primaryKey({ columns: [t.userId, t.roleId] }),
+    pk: primaryKey({ columns: [t.userId, t.roleId, t.organizationId] }),
+  })
+);
+
+// Role-Organization relationship (many-to-many) - determines which organizations a role is available in
+export const roleOrganizations = pgTable(
+  'role_organizations',
+  {
+    roleId: integer('role_id')
+      .notNull()
+      .references(() => roles.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.roleId, t.organizationId] }),
   })
 );
 
@@ -121,6 +140,7 @@ export const userOrganizations = pgTable(
 // Define relations
 export const organizationRelations = relations(organizations, ({ many }) => ({
   userOrganizations: many(userOrganizations),
+  userRoles: many(userRoles),
 }));
 
 export const userRelations = relations(users, ({ many }) => ({
@@ -156,6 +176,32 @@ export const userOrganizationRelations = relations(userOrganizations, ({ one }) 
   }),
 }));
 
+export const userRoleRelations = relations(userRoles, ({ one }) => ({
+  user: one(users, {
+    fields: [userRoles.userId],
+    references: [users.id],
+  }),
+  role: one(roles, {
+    fields: [userRoles.roleId],
+    references: [roles.id],
+  }),
+  organization: one(organizations, {
+    fields: [userRoles.organizationId],
+    references: [organizations.id],
+  }),
+}));
+
+export const roleOrganizationRelations = relations(roleOrganizations, ({ one }) => ({
+  role: one(roles, {
+    fields: [roleOrganizations.roleId],
+    references: [roles.id],
+  }),
+  organization: one(organizations, {
+    fields: [roleOrganizations.organizationId],
+    references: [organizations.id],
+  }),
+}));
+
 // Types for better TypeScript support
 export type Organization = typeof organizations.$inferSelect;
 export type NewOrganization = typeof organizations.$inferInsert;
@@ -165,6 +211,9 @@ export type NewUser = typeof users.$inferInsert;
 
 export type UserOrganization = typeof userOrganizations.$inferSelect;
 export type NewUserOrganization = typeof userOrganizations.$inferInsert;
+
+export type RoleOrganization = typeof roleOrganizations.$inferSelect;
+export type NewRoleOrganization = typeof roleOrganizations.$inferInsert;
 
 export type Role = typeof roles.$inferSelect;
 export type NewRole = typeof roles.$inferInsert;

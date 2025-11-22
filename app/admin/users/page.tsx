@@ -25,9 +25,9 @@ const UserManagement: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingUser, setEditingUser] = useState<Omit<User, 'password'> | null>(null);
-  const [selectedUserRoles, setSelectedUserRoles] = useState<{[key: number]: number[]}>({});
+  const [selectedUserRoles, setSelectedUserRoles] = useState<{[key: string]: number[]}>({});
   const [selectedUserOrganizations, setSelectedUserOrganizations] = useState<{[key: number]: number[]}>({});
-  const [allUserRoles, setAllUserRoles] = useState<{[key: number]: UserRole[]}>({});
+  const [allUserRoles, setAllUserRoles] = useState<{[key: string]: UserRole[]}>({});
   const [allUserOrganizations, setAllUserOrganizations] = useState<{[key: number]: UserOrganization[]}>({});
 
   // Form state
@@ -56,24 +56,13 @@ const UserManagement: React.FC = () => {
       setRoles(rolesData);
       setOrganizations(organizationsData);
 
-      // Load roles for each user
-      const userRolesMap: {[key: number]: UserRole[]} = {};
+      // Load roles for each user organization combination
+      const userOrgRolesMap: {[key: string]: UserRole[]} = {};
       // Load organizations for each user
       const userOrganizationsMap: {[key: number]: UserOrganization[]} = {};
 
       for (const user of usersData) {
         try {
-          // Load user roles
-          const userRoles = await userApi.getUserRoles(user.id);
-          userRolesMap[user.id] = userRoles.map(ur => {
-            const role = rolesData.find(r => r.id === ur.roleId);
-            return {
-              roleId: ur.roleId,
-              roleName: role?.name || 'Unknown Role',
-              roleDescription: role?.description || null
-            };
-          });
-
           // Load user organizations
           const userOrgs = await userApi.getUserOrganizations(user.id);
           userOrganizationsMap[user.id] = userOrgs.map(ug => {
@@ -84,25 +73,46 @@ const UserManagement: React.FC = () => {
               organizationDescription: org?.description || null
             };
           });
+
+          // For each organization, load the roles for this user
+          for (const userOrg of userOrgs) {
+            const userOrgKey = `${user.id}-${userOrg.organizationId}`;
+            const rolesForOrg = await userApi.getUserRoles(user.id, userOrg.organizationId);
+            userOrgRolesMap[userOrgKey] = rolesForOrg.map(ur => {
+              const role = rolesData.find(r => r.id === ur.roleId);
+              return {
+                roleId: ur.roleId,
+                roleName: role?.name || 'Unknown Role',
+                roleDescription: role?.description || null
+              };
+            });
+          }
         } catch (err) {
           console.error(`Error loading roles/organizations for user ${user.id}:`, err);
-          userRolesMap[user.id] = [];
+          userOrgRolesMap[user.id.toString()] = []; // Use the string key for consistency
           userOrganizationsMap[user.id] = [];
         }
       }
 
-      setAllUserRoles(userRolesMap);
+      setAllUserRoles(userOrgRolesMap);
       setAllUserOrganizations(userOrganizationsMap);
 
       // Initialize selected user roles and organizations
-      const selectedRolesMap: {[key: number]: number[]} = {};
+      const selectedRolesMap: {[key: string]: number[]} = {};
       const selectedOrgsMap: {[key: number]: number[]} = {};
 
       for (const user of usersData) {
-        selectedRolesMap[user.id] = userRolesMap[user.id].map(ur => ur.roleId);
+        // For each organization the user belongs to, set up role selections
+        for (const userOrg of userOrganizationsMap[user.id] || []) {
+          const userOrgKey = `${user.id}-${userOrg.organizationId}`;
+          selectedRolesMap[userOrgKey] = userOrgRolesMap[userOrgKey]?.map(ur => ur.roleId) || [];
+        }
+
         selectedOrgsMap[user.id] = userOrganizationsMap[user.id].map(ug => ug.organizationId);
       }
 
+      // Don't override the selectedUserRoles state here since it's used for form operations
+      // Only update it when loading for the table view
       setSelectedUserRoles(selectedRolesMap);
       setSelectedUserOrganizations(selectedOrgsMap);
 
@@ -122,23 +132,25 @@ const UserManagement: React.FC = () => {
     }));
   };
 
-  const handleRoleChange = (roleId: number, userId?: number) => {
-    if (userId !== undefined) {
-      // For role assignment to user
+  const handleRoleChange = (roleId: number, userId?: number, organizationId?: number) => {
+    if (userId !== undefined && organizationId !== undefined) {
+      // For role assignment to user in a specific organization
       setSelectedUserRoles(prev => {
-        const currentRoles = prev[userId] || [];
+        // Find the current roles for this specific user-organization combination
+        const userOrgKey = `${userId}-${organizationId}`;
+        const currentRoles = prev[userOrgKey] || [];
         const newRoles = currentRoles.includes(roleId)
           ? currentRoles.filter(id => id !== roleId)
           : [...currentRoles, roleId];
 
         // Update the backend
-        userApi.assignRolesToUser(userId, newRoles)
+        userApi.assignRolesToUser(userId, newRoles, organizationId)
           .then(success => {
             if (success) {
               // Update all user roles cache
               setAllUserRoles(prevRoles => ({
                 ...prevRoles,
-                [userId]: roles.filter(r => newRoles.includes(r.id)).map(r => ({
+                [userOrgKey]: roles.filter(r => newRoles.includes(r.id)).map(r => ({
                   roleId: r.id,
                   roleName: r.name,
                   roleDescription: r.description
@@ -150,7 +162,7 @@ const UserManagement: React.FC = () => {
 
         return {
           ...prev,
-          [userId]: newRoles
+          [userOrgKey]: newRoles
         };
       });
     } else {
@@ -216,10 +228,15 @@ const UserManagement: React.FC = () => {
           ...(formData.password && { password: formData.password })
         });
 
-        // Update user roles
-        await userApi.assignRolesToUser(editingUser.id, roleAssignments);
         // Update user organizations
         await userApi.assignOrganizationsToUser(editingUser.id, organizationAssignments);
+
+        // Update roles for each organization
+        for (const orgId of organizationAssignments) {
+          const userOrgKey = `${editingUser.id}-${orgId}`;
+          const rolesForOrg = selectedUserRoles[userOrgKey] || [];
+          await userApi.assignRolesToUser(editingUser.id, rolesForOrg, orgId);
+        }
       } else {
         // Create new user
         const newUser = await userApi.createUser({
@@ -228,16 +245,23 @@ const UserManagement: React.FC = () => {
           password: formData.password
         });
 
-        // Assign roles to new user
-        await userApi.assignRolesToUser(newUser.id, roleAssignments);
         // Assign organizations to new user
         await userApi.assignOrganizationsToUser(newUser.id, organizationAssignments);
+
+        // Assign roles to new user for each organization
+        for (const orgId of organizationAssignments) {
+          const userOrgKey = `new-${orgId}`;
+          const rolesForOrg = selectedUserRoles[userOrgKey] || [];
+          await userApi.assignRolesToUser(newUser.id, rolesForOrg, orgId);
+        }
       }
 
       // Reset form and reload data
       setFormData({ name: '', email: '', password: '' });
       setRoleAssignments([]);
       setOrganizationAssignments([]);
+      // Reset the selected user roles
+      setSelectedUserRoles({});
       setEditingUser(null);
       setShowForm(false);
       await loadUsersRolesAndOrganizations();
@@ -254,12 +278,19 @@ const UserManagement: React.FC = () => {
       password: '' // Don't prefill password
     });
 
-    // Pre-populate role and organization assignments for editing
-    const userRoles = allUserRoles[user.id]?.map(ur => ur.roleId) || [];
+    // Pre-populate organization assignments for editing
     const userOrganizations = allUserOrganizations[user.id]?.map(ug => ug.organizationId) || [];
 
-    setRoleAssignments(userRoles);
+    // For role assignments in edit mode, we'll load all role-organization assignments
     setOrganizationAssignments(userOrganizations);
+
+    // Reset selected user roles and populate with existing role assignments per organization
+    const newSelectedRoles: {[key: string]: number[]} = {};
+    for (const org of allUserOrganizations[user.id] || []) {
+      const userOrgKey = `${user.id}-${org.organizationId}`;
+      newSelectedRoles[userOrgKey] = allUserRoles[userOrgKey]?.map(r => r.roleId) || [];
+    }
+    setSelectedUserRoles(newSelectedRoles);
 
     setEditingUser(user);
     setShowForm(true);
@@ -281,6 +312,7 @@ const UserManagement: React.FC = () => {
     setFormData({ name: '', email: '', password: '' });
     setRoleAssignments([]);
     setOrganizationAssignments([]);
+    setSelectedUserRoles({});
     setEditingUser(null);
     setShowForm(false);
   };
@@ -352,24 +384,6 @@ const UserManagement: React.FC = () => {
               </div>
             )}
 
-            {/* Role Assignments */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Assign Roles</label>
-              <div className="flex flex-wrap gap-2">
-                {roles.map(role => (
-                  <label key={role.id} className="inline-flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={roleAssignments.includes(role.id)}
-                      onChange={() => handleRoleChange(role.id)}
-                      className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="ml-1 text-sm text-gray-700">{role.name}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
             {/* Organization Assignments */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">Assign Organizations</label>
@@ -387,6 +401,67 @@ const UserManagement: React.FC = () => {
                 ))}
               </div>
             </div>
+
+            {/* Organization-Role Assignment Cards */}
+            {organizationAssignments.length > 0 && (
+              <div className="mb-4 border-t pt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-4">Assign Roles by Organization</label>
+                <div className="space-y-4">
+                  {organizationAssignments.map(orgId => {
+                    const organization = organizations.find(o => o.id === orgId);
+                    if (!organization) return null;
+
+                    const userOrgKey = editingUser ? `${editingUser.id}-${orgId}` : `new-${orgId}`;
+                    const orgRoles = editingUser ? (allUserRoles[userOrgKey] || []) : [];
+
+                    return (
+                      <div key={orgId} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div className="flex items-center mb-2">
+                          <Building2 className="w-5 h-5 text-gray-600 mr-2" />
+                          <div className="font-medium text-gray-800">{organization.name}</div>
+                        </div>
+
+                        <div className="mt-3">
+                          <div className="text-xs font-medium text-gray-500 mb-2">Assigned Roles:</div>
+                          <div className="flex flex-wrap gap-1 mb-3">
+                            {orgRoles.length > 0 ? (
+                              orgRoles.map(userRole => (
+                                <span
+                                  key={`${userRole.roleId}-${orgId}`}
+                                  className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                >
+                                  {userRole.roleName}
+                                </span>
+                              ))
+                            ) : (
+                              <span className="text-xs text-gray-500 italic">No roles assigned</span>
+                            )}
+                          </div>
+
+                          {/* Role assignment for this organization */}
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-2">Select Roles:</label>
+                            <div className="flex flex-wrap gap-2">
+                              {roles.map(role => (
+                                <label key={`${role.id}-${orgId}`} className="inline-flex items-center">
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedUserRoles[userOrgKey]?.includes(role.id) || false}
+                                    onChange={() => handleRoleChange(role.id, editingUser?.id, orgId)}
+                                    className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                  />
+                                  <span className="ml-1 text-xs text-gray-700">{role.name}</span>
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             <div className="flex justify-end space-x-3">
               <button
@@ -436,38 +511,37 @@ const UserManagement: React.FC = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm text-gray-900">
-                      {allUserRoles[user.id]?.length > 0 ? (
+                      {allUserOrganizations[user.id]?.length > 0 ? (
                         <div className="flex flex-wrap gap-1">
-                          {allUserRoles[user.id].map(userRole => (
-                            <span
-                              key={userRole.roleId}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-                            >
-                              {userRole.roleName}
-                            </span>
-                          ))}
+                          {allUserOrganizations[user.id].map(userOrg => {
+                            // Get roles specific to this user-organization combination
+                            const userOrgKey = `${user.id}-${userOrg.organizationId}`;
+                            const orgRoles = allUserRoles[userOrgKey] || [];
+
+                            return (
+                              <div key={userOrg.organizationId} className="inline-block mr-2">
+                                <div className="font-medium text-xs text-gray-800">{userOrg.organizationName}:</div>
+                                {orgRoles.length > 0 ? (
+                                  <div className="flex flex-wrap gap-1">
+                                    {orgRoles.map(userRole => (
+                                      <span
+                                        key={`${userRole.roleId}-${userOrg.organizationId}`}
+                                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                      >
+                                        {userRole.roleName}
+                                      </span>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <span className="text-xs text-gray-500">No roles</span>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       ) : (
-                        <span className="text-sm text-gray-500">No roles assigned</span>
+                        <span className="text-sm text-gray-500">No organizations assigned</span>
                       )}
-                    </div>
-
-                    {/* Role assignment dropdown */}
-                    <div className="mt-2">
-                      <label className="block text-xs text-gray-500 mb-1">Assign Roles:</label>
-                      <div className="flex flex-wrap gap-2">
-                        {roles.map(role => (
-                          <label key={role.id} className="inline-flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={selectedUserRoles[user.id]?.includes(role.id) || false}
-                              onChange={() => handleRoleChange(role.id, user.id)}
-                              className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                            />
-                            <span className="ml-1 text-sm text-gray-700">{role.name}</span>
-                          </label>
-                        ))}
-                      </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">

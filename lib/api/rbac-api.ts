@@ -87,15 +87,15 @@ export const userApi = {
     }
   },
 
-  // Assign roles to user
-  async assignRolesToUser(userId: number, roleIds: number[]): Promise<boolean> {
+  // Assign roles to user in an organization
+  async assignRolesToUser(userId: number, roleIds: number[], organizationId: number): Promise<boolean> {
     try {
       const response = await fetch(`/api/rbac/users/${userId}/roles`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ roleIds }),
+        body: JSON.stringify({ roleIds, organizationId }),
       });
       return response.ok;
     } catch (error) {
@@ -104,16 +104,31 @@ export const userApi = {
     }
   },
 
-  // Get user roles
-  async getUserRoles(userId: number): Promise<UserRole[]> {
+  // Get user roles (optionally for a specific organization)
+  async getUserRoles(userId: number, organizationId?: number): Promise<({ roleId: number; roleName: string; roleDescription: string | null; organizationId: number })[]> {
     try {
-      const response = await fetch(`/api/rbac/users/${userId}/roles`);
+      const url = organizationId ? `/api/rbac/users/${userId}/roles?organizationId=${organizationId}` : `/api/rbac/users/${userId}/roles`;
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch user roles');
       }
       return await response.json();
     } catch (error) {
       console.error('Error fetching user roles:', error);
+      throw error;
+    }
+  },
+
+  // Get all user roles with organization context
+  async getAllUserRolesWithOrganizations(userId: number): Promise<({ roleId: number; roleName: string; roleDescription: string | null; organizationId: number; organizationName: string; organizationDescription: string | null })[]> {
+    try {
+      const response = await fetch(`/api/rbac/users/${userId}/roles-with-organizations`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch user roles with organizations');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching user roles with organizations:', error);
       throw error;
     }
   },
@@ -262,6 +277,37 @@ export const roleApi = {
       return response.ok;
     } catch (error) {
       console.error('Error assigning permissions to role:', error);
+      throw error;
+    }
+  },
+
+  // Assign organizations to a role
+  async assignOrganizationsToRole(roleId: number, organizationIds: number[]): Promise<boolean> {
+    try {
+      const response = await fetch(`/api/rbac/roles/${roleId}/organizations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ organizationIds }),
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Error assigning organizations to role:', error);
+      throw error;
+    }
+  },
+
+  // Get organizations assigned to a role
+  async getOrganizationsForRole(roleId: number): Promise<{ organizationId: number }[]> {
+    try {
+      const response = await fetch(`/api/rbac/roles/${roleId}/organizations`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch organizations for role');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching organizations for role:', error);
       throw error;
     }
   },

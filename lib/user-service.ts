@@ -137,22 +137,24 @@ export async function getUserByEmail(email: string) {
 }
 
 /**
- * Assigns roles to a user
+ * Assigns roles to a user for a specific organization
  * @param userId - The ID of the user
  * @param roleIds - Array of role IDs to assign
+ * @param organizationId - The ID of the organization
  * @returns Promise indicating success or failure
  */
-export async function assignRolesToUser(userId: number, roleIds: number[]) {
+export async function assignRolesToUser(userId: number, roleIds: number[], organizationId: number) {
   try {
     await db.transaction(async (tx) => {
-      // First delete existing roles for this user
-      await tx.delete(userRoles).where(eq(userRoles.userId, userId));
+      // First delete existing roles for this user in the specified organization
+      await tx.delete(userRoles).where(and(eq(userRoles.userId, userId), eq(userRoles.organizationId, organizationId)));
 
-      // Insert new user-role associations
+      // Insert new user-role associations for the organization
       if (roleIds.length > 0) {
         const userRoleValues = roleIds.map((roleId) => ({
           userId,
           roleId,
+          organizationId,
         }));
         await tx.insert(userRoles).values(userRoleValues);
       }
@@ -166,26 +168,63 @@ export async function assignRolesToUser(userId: number, roleIds: number[]) {
 }
 
 /**
- * Gets roles assigned to a user
+ * Gets roles assigned to a user for a specific organization
  * @param userId - The ID of the user
+ * @param organizationId - The ID of the organization (optional, if omitted returns all roles for the user)
  * @returns Promise with array of roles for the user
  */
-export async function getUserRoles(userId: number) {
+export async function getUserRoles(userId: number, organizationId?: number) {
   try {
+    let whereCondition;
+    if (organizationId !== undefined) {
+      whereCondition = and(eq(userRoles.userId, userId), eq(userRoles.organizationId, organizationId));
+    } else {
+      whereCondition = eq(userRoles.userId, userId);
+    }
+
     const userRoleData = await db
       .select({
         roleId: userRoles.roleId,
         roleName: roles.name,
-        roleDescription: roles.description
+        roleDescription: roles.description,
+        organizationId: userRoles.organizationId
       })
       .from(userRoles)
       .innerJoin(roles, eq(userRoles.roleId, roles.id))
-      .where(eq(userRoles.userId, userId));
+      .where(whereCondition);
 
     return userRoleData;
   } catch (error) {
     console.error('Error fetching user roles:', error);
     throw new Error('Failed to fetch user roles');
+  }
+}
+
+/**
+ * Gets all roles assigned to a user across all organizations
+ * @param userId - The ID of the user
+ * @returns Promise with array of roles with organization context for the user
+ */
+export async function getAllUserRolesWithOrganizations(userId: number) {
+  try {
+    const userRoleData = await db
+      .select({
+        roleId: userRoles.roleId,
+        roleName: roles.name,
+        roleDescription: roles.description,
+        organizationId: userRoles.organizationId,
+        organizationName: organizations.name,
+        organizationDescription: organizations.description
+      })
+      .from(userRoles)
+      .innerJoin(roles, eq(userRoles.roleId, roles.id))
+      .innerJoin(organizations, eq(userRoles.organizationId, organizations.id))
+      .where(eq(userRoles.userId, userId));
+
+    return userRoleData;
+  } catch (error) {
+    console.error('Error fetching user roles with organizations:', error);
+    throw new Error('Failed to fetch user roles with organizations');
   }
 }
 
