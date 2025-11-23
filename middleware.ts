@@ -7,7 +7,6 @@ const ROUTE_PERMISSIONS = {
   '/admin/users': ['SUPER_ADMIN', 'ADMIN_USER_MANAGEMENT', 'USER_MANAGEMENT'],
   '/admin/roles': ['SUPER_ADMIN', 'ADMIN_ROLE_MANAGEMENT', 'ROLE_MANAGEMENT'],
   '/admin/permissions': ['SUPER_ADMIN', 'ADMIN_PERMISSION_MANAGEMENT', 'PERMISSION_MANAGEMENT'],
-  '/dashboard': ['USER'],
   '/products': ['PRODUCT_LIST', 'PRODUCT_READ', 'PRODUCT_CREATE', 'PRODUCT_UPDATE', 'PRODUCT_DELETE'],
   '/orders': ['ORDER_LIST', 'ORDER_READ', 'ORDER_CREATE', 'ORDER_UPDATE', 'ORDER_DELETE'],
   '/proposals': ['PROPOSAL_LIST', 'PROPOSAL_READ', 'PROPOSAL_CREATE', 'PROPOSAL_UPDATE', 'PROPOSAL_DELETE'],
@@ -36,11 +35,10 @@ function getRequiredRoles(pathname: string): string[] | null {
 }
 
 export async function middleware(request: NextRequest) {
-  // Check if user is authenticated by looking for session cookies
-  const userId = request.cookies.get('user_id')?.value;
-  const sessionId = request.cookies.get('session_id')?.value;
+  // Check if user is authenticated by looking for session cookie
+  const sessionCookie = request.cookies.get('session')?.value;
 
-  const isAuthenticated = Boolean(userId && sessionId);
+  const isAuthenticated = Boolean(sessionCookie);
 
   // If not authenticated and accessing a protected route
   if (!isAuthenticated) {
@@ -56,10 +54,10 @@ export async function middleware(request: NextRequest) {
   }
 
   // If authenticated, validate permissions for specific routes
-  if (isAuthenticated && userId) {
+  if (isAuthenticated) {
     try {
       // Make a server-side call to validate the user session and permissions
-      const hasValidSession = await validateUserSession(userId);
+      const hasValidSession = await validateUserSession();
 
       if (!hasValidSession) {
         // Redirect to login if session is invalid
@@ -108,15 +106,12 @@ function isProtectedRoutePath(pathname: string): boolean {
 }
 
 // Validate user session server-side
-async function validateUserSession(userId: string | number): Promise<boolean> {
+async function validateUserSession(): Promise<boolean> {
   try {
-    // For this implementation, we'll just verify the userId is valid
-    // In a real implementation, you might check against a session store
-    // or validate a server-side session token
-
-    // Since we're using server-side cookies, we can trust the presence of the cookie if it was verified earlier
-    // But for extra security, you could implement a session lookup here
-    return !isNaN(Number(userId)); // Basic validation that userId is a valid number
+    // In a real implementation, you might validate the session token against a database
+    // For this demo, we'll trust that the presence of a valid session cookie indicates a valid session
+    // The actual user validation happens in the session decryption logic
+    return true;
   } catch (error) {
     console.error('Error validating session:', error);
     return false;

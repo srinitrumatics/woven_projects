@@ -168,6 +168,12 @@ async function encrypt(payload: any) {
   return JSON.stringify(payload);
 }
 
+// Delete a session (logout)
+export async function deleteSession() {
+  const cookieStore = await cookies();
+  cookieStore.delete('session');
+}
+
 // Decrypt the session
 async function decrypt(session: string) {
   // In a real app, use a robust decryption library that matches the encryption

@@ -15,7 +15,7 @@ interface UserSessionContextType {
   user: User | null;
   loading: boolean;
   login: (userData: User) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -45,9 +45,21 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('user', JSON.stringify(userData));
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
+  const logout = async () => {
+    try {
+      // Call the API to clear the session cookie
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+    } catch (error) {
+      console.error('Error during logout:', error);
+    } finally {
+      // Clear local state and localStorage
+      setUser(null);
+      localStorage.removeItem('user');
+      // Redirect to auth page
+      window.location.href = '/auth';
+    }
   };
 
   const value = {
