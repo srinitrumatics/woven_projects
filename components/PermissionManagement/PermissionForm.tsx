@@ -1,20 +1,22 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Permission, PermissionGroup } from '../../../db/schema';
+import { Permission, PermissionGroup } from '../../db/schema';
 import { permissionApi, permissionGroupApi } from '@/lib/api/rbac-api';
 import { Plus, Edit, Trash2, Save, X, Key } from 'lucide-react';
 
+interface PermissionFormData {
+  name: string;
+  description: string;
+  groupId: string | null;
+}
+
 interface PermissionFormProps {
   editingPermission: Permission | null;
-  formData: {
-    name: string;
-    description: string;
-    groupId: number | null;
-  };
+  formData: PermissionFormData;
   permissionGroups: PermissionGroup[];
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
-  setFormData: (data: { name: string; description: string; groupId: number | null }) => void;
+  setFormData: (data: PermissionFormData | ((prevState: PermissionFormData) => PermissionFormData)) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   handleCancel: () => void;
   loadPermissionsAndGroups: () => Promise<void>;
@@ -57,7 +59,7 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
       await loadPermissionsAndGroups();
 
       // Set the newly created group in the permission form
-      setFormData(prev => ({
+      setFormData((prev: PermissionFormData) => ({
         ...prev,
         groupId: newGroup.id
       }));

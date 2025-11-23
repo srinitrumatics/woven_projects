@@ -8,13 +8,13 @@ import UserList from '../../../components/UserManagement/UserList';
 import UserForm from '../../../components/UserManagement/UserForm';
 
 interface UserRole {
-  roleId: number;
+  roleId: string;
   roleName: string;
   roleDescription: string | null;
 }
 
 interface UserOrganization {
-  organizationId: number;
+  organizationId: string;
   organizationName: string;
   organizationDescription: string | null;
 }
@@ -27,10 +27,10 @@ const UserManagement: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingUser, setEditingUser] = useState<Omit<User, 'password'> | null>(null);
-  const [selectedUserRoles, setSelectedUserRoles] = useState<{[key: string]: number[]}>({});
-  const [selectedUserOrganizations, setSelectedUserOrganizations] = useState<{[key: number]: number[]}>({});
+  const [selectedUserRoles, setSelectedUserRoles] = useState<{[key: string]: string[]}>({});
+  const [selectedUserOrganizations, setSelectedUserOrganizations] = useState<{[key: string]: string[]}>({});
   const [allUserRoles, setAllUserRoles] = useState<{[key: string]: UserRole[]}>({});
-  const [allUserOrganizations, setAllUserOrganizations] = useState<{[key: number]: UserOrganization[]}>({});
+  const [allUserOrganizations, setAllUserOrganizations] = useState<{[key: string]: UserOrganization[]}>({});
 
   // Form state
   const [formData, setFormData] = useState({
@@ -38,7 +38,7 @@ const UserManagement: React.FC = () => {
     email: '',
     password: '',
   });
-  const [organizationAssignments, setOrganizationAssignments] = useState<number[]>([]);
+  const [organizationAssignments, setOrganizationAssignments] = useState<string[]>([]);
 
   useEffect(() => {
     loadUsersRolesAndOrganizations();
@@ -60,7 +60,7 @@ const UserManagement: React.FC = () => {
       // Load roles for each user organization combination
       const userOrgRolesMap: {[key: string]: UserRole[]} = {};
       // Load organizations for each user
-      const userOrganizationsMap: {[key: number]: UserOrganization[]} = {};
+      const userOrganizationsMap: {[key: string]: UserOrganization[]} = {};
 
       for (const user of usersData) {
         try {
@@ -90,7 +90,7 @@ const UserManagement: React.FC = () => {
           }
         } catch (err) {
           console.error(`Error loading roles/organizations for user ${user.id}:`, err);
-          userOrgRolesMap[user.id.toString()] = []; // Use the string key for consistency
+          userOrgRolesMap[user.id] = []; // Use the string key for consistency
           userOrganizationsMap[user.id] = [];
         }
       }
@@ -99,19 +99,19 @@ const UserManagement: React.FC = () => {
       setAllUserOrganizations(userOrganizationsMap);
 
       // Initialize selected user roles and organizations
-      const selectedRolesMap: {[key: string]: number[]} = {};
-      const selectedOrgsMap: {[key: number]: number[]} = {};
-      
+      const selectedRolesMap: {[key: string]: string[]} = {};
+      const selectedOrgsMap: {[key: string]: string[]} = {};
+
       for (const user of usersData) {
         // For each organization the user belongs to, set up role selections
         for (const userOrg of userOrganizationsMap[user.id] || []) {
           const userOrgKey = `${user.id}-${userOrg.organizationId}`;
           selectedRolesMap[userOrgKey] = userOrgRolesMap[userOrgKey]?.map(ur => ur.roleId) || [];
         }
-        
+
         selectedOrgsMap[user.id] = userOrganizationsMap[user.id].map(ug => ug.organizationId);
       }
-      
+
       setSelectedUserRoles(selectedRolesMap);
       setSelectedUserOrganizations(selectedOrgsMap);
 
@@ -131,7 +131,7 @@ const UserManagement: React.FC = () => {
     }));
   };
 
-  const handleOrganizationChange = (organizationId: number, userId?: number) => {
+  const handleOrganizationChange = (organizationId: string, userId?: string) => {
     if (userId !== undefined) {
       // For organization assignment to user in table view
       setSelectedUserOrganizations(prev => {
@@ -172,7 +172,7 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  const handleRoleChange = (roleId: number, userId: number, organizationId: number) => {
+  const handleRoleChange = (roleId: string, userId: string, organizationId: string) => {
     // For role assignment to user in a specific organization
     setSelectedUserRoles(prev => {
       // Find the current roles for this specific user-organization combination
@@ -212,21 +212,21 @@ const UserManagement: React.FC = () => {
       email: user.email,
       password: '' // Don't prefill password
     });
-    
+
     // Pre-populate organization assignments for editing
     const userOrganizations = allUserOrganizations[user.id]?.map(ug => ug.organizationId) || [];
-    
+
     // For role assignments in edit mode, we'll load all role-organization assignments
     setOrganizationAssignments(userOrganizations);
-    
+
     // Reset selected user roles and populate with existing role assignments per organization
-    const newSelectedRoles: {[key: string]: number[]} = {};
+    const newSelectedRoles: {[key: string]: string[]} = {};
     for (const org of allUserOrganizations[user.id] || []) {
       const userOrgKey = `${user.id}-${org.organizationId}`;
       newSelectedRoles[userOrgKey] = allUserRoles[userOrgKey]?.map(r => r.roleId) || [];
     }
     setSelectedUserRoles(newSelectedRoles);
-    
+
     setEditingUser(user);
     setShowForm(true);
   };
@@ -285,7 +285,7 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         await userApi.deleteUser(id);

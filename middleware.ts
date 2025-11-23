@@ -21,13 +21,13 @@ const ROUTE_PERMISSIONS = {
 function getRequiredRoles(pathname: string): string[] | null {
   // Exact match first
   if (ROUTE_PERMISSIONS[pathname as keyof typeof ROUTE_PERMISSIONS]) {
-    return ROUTE_PERMISSIONS[pathname as keyof typeof ROUTE_PERMISSIONS] as string[];
+    return [...ROUTE_PERMISSIONS[pathname as keyof typeof ROUTE_PERMISSIONS]];
   }
 
   // Check for parent path matches (e.g., /admin/users/123 matches /admin)
   for (const [route, roles] of Object.entries(ROUTE_PERMISSIONS)) {
     if (pathname.startsWith(route + '/') || pathname === route) {
-      return roles as string[];
+      return [...roles as readonly string[]];
     }
   }
 

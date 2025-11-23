@@ -1,18 +1,18 @@
 'use client';
 
 import React from 'react';
-import { User, Role, Organization } from '../../../db/schema';
+import { User, Role, Organization } from '../../db/schema';
 import { userApi, roleApi, organizationApi } from '@/lib/api/rbac-api';
 import { Building2 } from 'lucide-react';
 
 interface UserOrganization {
-  organizationId: number;
+  organizationId: string;
   organizationName: string;
   organizationDescription: string | null;
 }
 
 interface UserRole {
-  roleId: number;
+  roleId: string;
   roleName: string;
   roleDescription: string | null;
 }
@@ -24,17 +24,17 @@ interface UserFormProps {
     email: string;
     password: string;
   };
-  organizationAssignments: number[];
-  selectedUserRoles: {[key: string]: number[]};
+  organizationAssignments: string[];
+  selectedUserRoles: {[key: string]: string[]};
   roles: Role[];
   organizations: Organization[];
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleOrganizationChange: (organizationId: number) => void;
+  handleOrganizationChange: (organizationId: string) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   setShowForm: (show: boolean) => void;
   setFormData: (data: { name: string; email: string; password: string }) => void;
-  setOrganizationAssignments: (orgIds: number[]) => void;
-  setSelectedUserRoles: (roles: {[key: string]: number[]}) => void;
+  setOrganizationAssignments: (orgIds: string[]) => void;
+  setSelectedUserRoles: (roles: {[key: string]: string[]} | ((prevState: {[key: string]: string[]}) => {[key: string]: string[]} )) => void;
   setEditingUser: (user: Omit<User, 'password'> | null) => void;
 }
 
@@ -180,7 +180,7 @@ const UserForm: React.FC<UserFormProps> = ({
                                     ? currentRoles.filter(id => id !== role.id)
                                     : [...currentRoles, role.id];
                                   
-                                  setSelectedUserRoles(prev => ({
+                                  setSelectedUserRoles((prev: {[key: string]: string[]}) => ({
                                     ...prev,
                                     [userOrgKey]: newRoles
                                   }));

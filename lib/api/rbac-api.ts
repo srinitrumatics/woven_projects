@@ -19,7 +19,7 @@ export const userApi = {
   },
 
   // Get user by ID
-  async getUserById(id: number): Promise<Omit<User, 'password'> | null> {
+  async getUserById(id: string): Promise<Omit<User, 'password'> | null> {
     try {
       const response = await fetch(`/api/rbac/users/${id}`);
       if (!response.ok) {
@@ -54,7 +54,7 @@ export const userApi = {
   },
 
   // Update user
-  async updateUser(id: number, userData: Partial<Omit<NewUser, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Omit<User, 'password'> | null> {
+  async updateUser(id: string, userData: Partial<Omit<NewUser, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Omit<User, 'password'> | null> {
     try {
       const response = await fetch(`/api/rbac/users/${id}`, {
         method: 'PUT',
@@ -75,7 +75,7 @@ export const userApi = {
   },
 
   // Delete user
-  async deleteUser(id: number): Promise<boolean> {
+  async deleteUser(id: string): Promise<boolean> {
     try {
       const response = await fetch(`/api/rbac/users/${id}`, {
         method: 'DELETE',
@@ -88,7 +88,7 @@ export const userApi = {
   },
 
   // Assign roles to user in an organization
-  async assignRolesToUser(userId: number, roleIds: number[], organizationId: number): Promise<boolean> {
+  async assignRolesToUser(userId: string, roleIds: string[], organizationId: string): Promise<boolean> {
     try {
       const response = await fetch(`/api/rbac/users/${userId}/roles`, {
         method: 'POST',
@@ -105,7 +105,7 @@ export const userApi = {
   },
 
   // Get user roles (optionally for a specific organization)
-  async getUserRoles(userId: number, organizationId?: number): Promise<({ roleId: number; roleName: string; roleDescription: string | null; organizationId: number })[]> {
+  async getUserRoles(userId: string, organizationId?: string): Promise<({ roleId: string; roleName: string; roleDescription: string | null; organizationId: string })[]> {
     try {
       const url = organizationId ? `/api/rbac/users/${userId}/roles?organizationId=${organizationId}` : `/api/rbac/users/${userId}/roles`;
       const response = await fetch(url);
@@ -120,7 +120,7 @@ export const userApi = {
   },
 
   // Get all user roles with organization context
-  async getAllUserRolesWithOrganizations(userId: number): Promise<({ roleId: number; roleName: string; roleDescription: string | null; organizationId: number; organizationName: string; organizationDescription: string | null })[]> {
+  async getAllUserRolesWithOrganizations(userId: string): Promise<({ roleId: string; roleName: string; roleDescription: string | null; organizationId: string; organizationName: string; organizationDescription: string | null })[]> {
     try {
       const response = await fetch(`/api/rbac/users/${userId}/roles-with-organizations`);
       if (!response.ok) {
@@ -134,7 +134,7 @@ export const userApi = {
   },
 
   // Assign organizations to user
-  async assignOrganizationsToUser(userId: number, organizationIds: number[]): Promise<boolean> {
+  async assignOrganizationsToUser(userId: string, organizationIds: string[]): Promise<boolean> {
     try {
       const response = await fetch(`/api/rbac/users/${userId}/organizations`, {
         method: 'POST',
@@ -151,7 +151,7 @@ export const userApi = {
   },
 
   // Get user organizations
-  async getUserOrganizations(userId: number): Promise<{ organizationId: number; organizationName: string; organizationDescription: string | null }[]> {
+  async getUserOrganizations(userId: string): Promise<{ organizationId: string; organizationName: string; organizationDescription: string | null }[]> {
     try {
       const response = await fetch(`/api/rbac/users/${userId}/organizations`);
       if (!response.ok) {
@@ -182,7 +182,7 @@ export const roleApi = {
   },
 
   // Get role by ID
-  async getRoleById(id: number): Promise<Role | null> {
+  async getRoleById(id: string): Promise<Role | null> {
     try {
       const response = await fetch(`/api/rbac/roles/${id}`);
       if (!response.ok) {
@@ -217,7 +217,7 @@ export const roleApi = {
   },
 
   // Update role
-  async updateRole(id: number, roleData: Partial<Omit<NewRole, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Role | null> {
+  async updateRole(id: string, roleData: Partial<Omit<NewRole, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Role | null> {
     try {
       const response = await fetch(`/api/rbac/roles/${id}`, {
         method: 'PUT',
@@ -238,7 +238,7 @@ export const roleApi = {
   },
 
   // Delete role
-  async deleteRole(id: number): Promise<boolean> {
+  async deleteRole(id: string): Promise<boolean> {
     try {
       const response = await fetch(`/api/rbac/roles/${id}`, {
         method: 'DELETE',
@@ -251,7 +251,7 @@ export const roleApi = {
   },
 
   // Get permissions for a role
-  async getRolePermissions(roleId: number): Promise<{ permissionId: number; permissionName: string; permissionDescription: string | null }[]> {
+  async getRolePermissions(roleId: string): Promise<{ permissionId: string; permissionName: string; permissionDescription: string | null }[]> {
     try {
       const response = await fetch(`/api/rbac/roles/${roleId}/permissions`);
       if (!response.ok) {
@@ -265,7 +265,7 @@ export const roleApi = {
   },
 
   // Assign permissions to role
-  async assignPermissionsToRole(roleId: number, permissionIds: number[]): Promise<boolean> {
+  async assignPermissionsToRole(roleId: string, permissionIds: string[]): Promise<boolean> {
     try {
       const response = await fetch(`/api/rbac/roles/${roleId}/permissions`, {
         method: 'POST',
@@ -282,7 +282,7 @@ export const roleApi = {
   },
 
   // Assign organizations to a role
-  async assignOrganizationsToRole(roleId: number, organizationIds: number[]): Promise<boolean> {
+  async assignOrganizationsToRole(roleId: string, organizationIds: string[]): Promise<boolean> {
     try {
       const response = await fetch(`/api/rbac/roles/${roleId}/organizations`, {
         method: 'POST',
@@ -299,7 +299,7 @@ export const roleApi = {
   },
 
   // Get organizations assigned to a role
-  async getOrganizationsForRole(roleId: number): Promise<{ organizationId: number }[]> {
+  async getOrganizationsForRole(roleId: string): Promise<{ organizationId: string }[]> {
     try {
       const response = await fetch(`/api/rbac/roles/${roleId}/organizations`);
       if (!response.ok) {
@@ -330,7 +330,7 @@ export const permissionApi = {
   },
 
   // Get permission by ID
-  async getPermissionById(id: number): Promise<Permission | null> {
+  async getPermissionById(id: string): Promise<Permission | null> {
     try {
       const response = await fetch(`/api/rbac/permissions/${id}`);
       if (!response.ok) {
@@ -365,7 +365,7 @@ export const permissionApi = {
   },
 
   // Update permission
-  async updatePermission(id: number, permissionData: Partial<Omit<NewPermission, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Permission | null> {
+  async updatePermission(id: string, permissionData: Partial<Omit<NewPermission, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Permission | null> {
     try {
       const response = await fetch(`/api/rbac/permissions/${id}`, {
         method: 'PUT',
@@ -386,7 +386,7 @@ export const permissionApi = {
   },
 
   // Delete permission
-  async deletePermission(id: number): Promise<boolean> {
+  async deletePermission(id: string): Promise<boolean> {
     try {
       const response = await fetch(`/api/rbac/permissions/${id}`, {
         method: 'DELETE',
@@ -453,7 +453,7 @@ export const organizationApi = {
   },
 
   // Get organization by ID
-  async getOrganizationById(id: number): Promise<Organization | null> {
+  async getOrganizationById(id: string): Promise<Organization | null> {
     try {
       const response = await fetch(`/api/rbac/organizations/${id}`);
       if (!response.ok) {
@@ -488,7 +488,7 @@ export const organizationApi = {
   },
 
   // Update organization
-  async updateOrganization(id: number, orgData: Partial<Omit<NewOrganization, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Organization | null> {
+  async updateOrganization(id: string, orgData: Partial<Omit<NewOrganization, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Organization | null> {
     try {
       const response = await fetch(`/api/rbac/organizations/${id}`, {
         method: 'PUT',
@@ -509,7 +509,7 @@ export const organizationApi = {
   },
 
   // Delete organization
-  async deleteOrganization(id: number): Promise<boolean> {
+  async deleteOrganization(id: string): Promise<boolean> {
     try {
       const response = await fetch(`/api/rbac/organizations/${id}`, {
         method: 'DELETE',
@@ -522,7 +522,7 @@ export const organizationApi = {
   },
 
   // Get users in organization
-  async getUsersInOrganization(orgId: number): Promise<{ id: number; name: string; email: string; createdAt: string; updatedAt: string }[]> {
+  async getUsersInOrganization(orgId: string): Promise<{ id: string; name: string; email: string; createdAt: string; updatedAt: string }[]> {
     try {
       const response = await fetch(`/api/rbac/organizations/${orgId}/users`);
       if (!response.ok) {
@@ -536,7 +536,7 @@ export const organizationApi = {
   },
 
   // Assign users to organization
-  async assignUsersToOrganization(orgId: number, userIds: number[]): Promise<boolean> {
+  async assignUsersToOrganization(orgId: string, userIds: string[]): Promise<boolean> {
     try {
       const response = await fetch(`/api/rbac/organizations/${orgId}/users`, {
         method: 'POST',

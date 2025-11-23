@@ -13,12 +13,18 @@ interface ProposalsPageProps {
   };
 }
 
-export default async function ProposalsPage({ searchParams: rawSearchParams }: ProposalsPageProps) {
-  const searchParams = await Promise.resolve(rawSearchParams);
+type SearchParams = Promise<{
+  page?: string;
+  search?: string;
+  status?: string;
+}>;
+
+export default async function ProposalsPage({ searchParams: rawSearchParams }: { searchParams?: SearchParams }) {
+  const searchParams = await rawSearchParams;
   // Server-side authentication and permission check
   await requireAuth(['proposal-list', 'proposal-read']); // Requires either proposal-list or proposal-read permission
 
-  const currentPage = searchParams?.page ? parseInt(searchParams.page, 10) : 1;
+  const currentPage = searchParams?.page ? Number(searchParams.page) : 1;
   const searchQuery = searchParams?.search || '';
   const statusFilter = searchParams?.status as ProposalStatus | 'All' || 'All';
   const itemsPerPage = 10;

@@ -6,6 +6,7 @@ import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { mockProducts } from "../../products/mockData";
+import { Product } from "../types";
 
 export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);

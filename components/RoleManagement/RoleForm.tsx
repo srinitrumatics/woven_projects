@@ -1,9 +1,18 @@
 'use client';
 
 import React from 'react';
-import { Role, Permission, PermissionGroup } from '../../../db/schema';
+import { Role, Permission, PermissionGroup } from '../../db/schema';
 import { roleApi, permissionApi, permissionGroupApi } from '@/lib/api/rbac-api';
 import { Plus, Edit, Trash2, Save, X, Shield, Key, Building2 } from 'lucide-react';
+
+interface GroupedPermission {
+  id: string | null;
+  name: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+  permissions?: Permission[]; // Make it optional since it might be populated later
+}
 
 interface RoleFormProps {
   editingRole: Role | null;
@@ -11,10 +20,10 @@ interface RoleFormProps {
     name: string;
     description: string;
   };
-  formPermissionAssignments: number[];
-  groupedPermissions: PermissionGroup[];
+  formPermissionAssignments: string[];
+  groupedPermissions: GroupedPermission[];
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  setFormPermissionAssignments: (ids: number[]) => void;
+  setFormPermissionAssignments: (ids: string[] | ((prevState: string[]) => string[])) => void;
   setShowForm: (show: boolean) => void;
   setFormData: (data: { name: string; description: string }) => void;
   setEditingRole: (role: Role | null) => void;
@@ -124,9 +133,9 @@ const RoleForm: React.FC<RoleFormProps> = ({
                         checked={formPermissionAssignments.includes(permission.id)}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setFormPermissionAssignments(prev => [...prev, permission.id]);
+                            setFormPermissionAssignments((prev: string[]) => [...prev, permission.id]);
                           } else {
-                            setFormPermissionAssignments(prev => prev.filter(id => id !== permission.id));
+                            setFormPermissionAssignments((prev: string[]) => prev.filter(id => id !== permission.id));
                           }
                         }}
                         className="mt-1 h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"

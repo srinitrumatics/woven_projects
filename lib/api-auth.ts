@@ -23,19 +23,22 @@ export async function withAuth(
       );
     }
 
-    const userId = parseInt(userIdHeader, 10);
-    if (isNaN(userId)) {
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userIdHeader)) {
       return NextResponse.json(
         { error: 'Unauthorized - invalid user ID' },
         { status: 401 }
       );
     }
 
+    const userId: string = userIdHeader;
+
     try {
       // Get user permissions for validation
       const userPermissions = await getUserPermissions(userId);
       const userRoles = await getUserRoles(userId);
-      
+
       // Create a mock user object for the handler
       const user = {
         id: userId,

@@ -1,6 +1,7 @@
 import { createUser, getUserById, assignRolesToUser, getUserRoles, getUserPermissions, userHasPermission } from './user-service';
 import { createRole, getRoleById, assignPermissionsToRole } from './role-service';
 import { createPermission, getPermissionById } from './permission-service';
+import { createOrganization } from './organization-service';
 import { db } from '../db';
 
 /**
@@ -52,8 +53,16 @@ export async function testRBACSystem() {
     await assignPermissionsToRole(editorRole.id, [viewDashboardPermissionResult.id]);
     console.log(`Assigned view dashboard permission to ${editorRole.name} role`);
 
-    // Step 4: Create users
-    console.log('\n4. Creating users...');
+    // Step 4: Create an organization for testing
+    console.log('\n4. Creating organization...');
+    const testOrganization = await createOrganization({
+      name: 'Test Organization',
+      description: 'Organization for RBAC testing'
+    });
+    console.log(`Created organization: ${testOrganization.name}`);
+
+    // Step 5: Create users
+    console.log('\n5. Creating users...');
     const adminUser = await createUser({
       name: 'Admin User',
       email: 'admin@example.com',
@@ -68,16 +77,16 @@ export async function testRBACSystem() {
     });
     console.log(`Created user: ${editorUser.name}`);
 
-    // Step 5: Assign roles to users
-    console.log('\n5. Assigning roles to users...');
-    await assignRolesToUser(adminUser.id, [adminRole.id]); // Admin gets admin role
-    console.log(`Assigned ${adminRole.name} role to ${adminUser.name}`);
+    // Step 6: Assign roles to users
+    console.log('\n6. Assigning roles to users...');
+    await assignRolesToUser(adminUser.id, [adminRole.id], testOrganization.id); // Admin gets admin role in test org
+    console.log(`Assigned ${adminRole.name} role to ${adminUser.name} in ${testOrganization.name}`);
 
-    await assignRolesToUser(editorUser.id, [editorRole.id]); // Editor gets editor role
-    console.log(`Assigned ${editorRole.name} role to ${editorUser.name}`);
+    await assignRolesToUser(editorUser.id, [editorRole.id], testOrganization.id); // Editor gets editor role in test org
+    console.log(`Assigned ${editorRole.name} role to ${editorUser.name} in ${testOrganization.name}`);
 
-    // Step 6: Test user permissions
-    console.log('\n6. Testing user permissions...');
+    // Step 7: Test user permissions
+    console.log('\n7. Testing user permissions...');
     const adminHasCreatePermission = await userHasPermission(adminUser.id, 'create_user');
     console.log(`${adminUser.name} has 'create_user' permission: ${adminHasCreatePermission}`);
 
@@ -87,8 +96,8 @@ export async function testRBACSystem() {
     const editorHasViewPermission = await userHasPermission(editorUser.id, 'view_dashboard');
     console.log(`${editorUser.name} has 'view_dashboard' permission: ${editorHasViewPermission}`);
 
-    // Step 7: Get user roles and permissions
-    console.log('\n7. Fetching user roles and permissions...');
+    // Step 8: Get user roles and permissions
+    console.log('\n8. Fetching user roles and permissions...');
     const adminRoles = await getUserRoles(adminUser.id);
     console.log(`${adminUser.name} roles:`, adminRoles.map(r => r.roleName));
 

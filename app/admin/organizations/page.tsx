@@ -81,7 +81,7 @@ const OrganizationManagement: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this organization?')) {
       try {
         await organizationApi.deleteOrganization(id);

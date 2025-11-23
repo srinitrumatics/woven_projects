@@ -8,13 +8,13 @@ import RoleList from '../../../components/RoleManagement/RoleList';
 import RoleForm from '../../../components/RoleManagement/RoleForm';
 
 interface RolePermission {
-  permissionId: number;
+  permissionId: string;
   permissionName: string;
   permissionDescription: string | null;
 }
 
 interface GroupedPermission {
-  id: number | null;
+  id: string | null;
   name: string;
   description: string | null;
   createdAt: string;
@@ -29,8 +29,8 @@ const RoleManagement: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingRole, setEditingRole] = useState<Role | null>(null);
-  const [selectedRolePermissions, setSelectedRolePermissions] = useState<{[key: number]: number[]}>({});
-  const [allRolePermissions, setAllRolePermissions] = useState<{[key: number]: RolePermission[]}>({});
+  const [selectedRolePermissions, setSelectedRolePermissions] = useState<{[key: string]: string[]}>({});
+  const [allRolePermissions, setAllRolePermissions] = useState<{[key: string]: RolePermission[]}>({});
 
   // Form state
   const [formData, setFormData] = useState({
@@ -38,13 +38,13 @@ const RoleManagement: React.FC = () => {
     description: '',
   });
   // For form-level permission assignments (when creating/editing a role)
-  const [formPermissionAssignments, setFormPermissionAssignments] = useState<number[]>([]);
+  const [formPermissionAssignments, setFormPermissionAssignments] = useState<string[]>([]);
 
   useEffect(() => {
     loadRolesPermissionsAndOrganizations();
   }, []);
 
-  const loadRolesPermissionsAndOrganizations = async (roleIdToLoad?: number) => {
+  const loadRolesPermissionsAndOrganizations = async (roleIdToLoad?: string) => {
     try {
       setLoading(true);
       const [rolesData, permissionGroupsData, allPermissionsData] = await Promise.all([
@@ -56,7 +56,7 @@ const RoleManagement: React.FC = () => {
       setRoles(rolesData);
 
       // Group permissions by their groups
-      const groupedPermsWithPermissions = permissionGroupsData.map(group => ({
+      const groupedPermsWithPermissions: GroupedPermission[] = permissionGroupsData.map(group => ({
         ...group,
         permissions: allPermissionsData.filter(permission => permission.groupId === group.id)
       }));
@@ -65,7 +65,7 @@ const RoleManagement: React.FC = () => {
       const ungroupedPermissions = allPermissionsData.filter(permission => permission.groupId === null);
       if (ungroupedPermissions.length > 0) {
         groupedPermsWithPermissions.push({
-          id: null,
+          id: null as string | null,
           name: "Ungrouped Permissions",
           description: "Permissions that don't belong to any group",
           createdAt: "",
@@ -77,7 +77,7 @@ const RoleManagement: React.FC = () => {
       setGroupedPermissions(groupedPermsWithPermissions);
 
       // Load permissions for each role
-      const rolePermissionsMap: {[key: number]: RolePermission[]} = {};
+      const rolePermissionsMap: {[key: string]: RolePermission[]} = {};
       for (const role of rolesData) {
         try {
           const rolePermissions = await roleApi.getRolePermissions(role.id);
@@ -90,7 +90,7 @@ const RoleManagement: React.FC = () => {
       setAllRolePermissions(rolePermissionsMap);
 
       // Initialize selected role permissions
-      const selectedPermissionsMap: {[key: number]: number[]} = {};
+      const selectedPermissionsMap: {[key: string]: string[]} = {};
       for (const role of rolesData) {
         selectedPermissionsMap[role.id] = rolePermissionsMap[role.id].map(rp => rp.permissionId);
       }
@@ -120,7 +120,7 @@ const RoleManagement: React.FC = () => {
     }));
   };
 
-  const handlePermissionChange = (permissionId: number, roleId?: number) => {
+  const handlePermissionChange = (permissionId: string, roleId?: string) => {
     if (roleId !== undefined) {
       // For permission assignment to role
       setSelectedRolePermissions(prev => {
@@ -136,7 +136,9 @@ const RoleManagement: React.FC = () => {
               // Update all role permissions cache
               setAllRolePermissions(prevPermissions => ({
                 ...prevPermissions,
-                [roleId]: groupedPermissions.flatMap(g => g.permissions)
+                [roleId]: groupedPermissions
+                  .filter(g => g.permissions) // Only include groups that have permissions
+                  .flatMap(g => g.permissions!)
                   .filter(p => newPermissions.includes(p.id))
                   .map(p => ({
                     permissionId: p.id,
@@ -213,7 +215,7 @@ const RoleManagement: React.FC = () => {
 
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this role?')) {
       try {
         await roleApi.deleteRole(id);

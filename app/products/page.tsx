@@ -12,8 +12,15 @@ interface ProductsPageProps {
   };
 }
 
-export default async function ProductsPage({ searchParams: rawSearchParams }: ProductsPageProps) {
-  const searchParams = await Promise.resolve(rawSearchParams);
+type SearchParams = Promise<{
+  page?: string;
+  search?: string;
+  family?: string;
+  view?: 'list' | 'card';
+}>;
+
+export default async function ProductsPage({ searchParams: rawSearchParams }: { searchParams?: SearchParams }) {
+  const searchParams = await rawSearchParams;
   // Server-side authentication and permission check
   await requireAuth(['product-list', 'product-read']);
 

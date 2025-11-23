@@ -38,11 +38,20 @@ export function formatDate(
 ): string {
   const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
 
-  const options: Intl.DateTimeFormatOptions = {
-    short: { month: 'numeric', day: 'numeric', year: '2-digit' },
-    medium: { month: 'short', day: 'numeric', year: 'numeric' },
-    long: { month: 'long', day: 'numeric', year: 'numeric' },
-  }[format];
+  let options: Intl.DateTimeFormatOptions;
+  switch (format) {
+    case 'short':
+      options = { month: 'numeric', day: 'numeric', year: '2-digit' };
+      break;
+    case 'medium':
+      options = { month: 'short', day: 'numeric', year: 'numeric' };
+      break;
+    case 'long':
+      options = { month: 'long', day: 'numeric', year: 'numeric' };
+      break;
+    default:
+      options = { month: 'short', day: 'numeric', year: 'numeric' };
+  }
 
   return new Intl.DateTimeFormat('en-US', options).format(date);
 }

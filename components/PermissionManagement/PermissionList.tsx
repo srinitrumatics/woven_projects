@@ -6,7 +6,7 @@ import { permissionApi, permissionGroupApi } from '@/lib/api/rbac-api';
 import { Edit, Trash2, Key } from 'lucide-react';
 
 interface GroupedPermission {
-  id: number | null;
+  id: string | null;
   name: string;
   description: string | null;
   createdAt: string;
@@ -20,7 +20,7 @@ interface PermissionListProps {
   loading: boolean;
   error: string | null;
   handleEdit: (permission: Permission) => void;
-  handleDelete: (id: number) => void;
+  handleDelete: (id: string) => void;
 }
 
 const PermissionList: React.FC<PermissionListProps> = ({

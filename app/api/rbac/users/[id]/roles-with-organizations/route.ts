@@ -5,8 +5,10 @@ import { getAllUserRolesWithOrganizations } from '@/lib/user-service';
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   try {
-    const userId = parseInt(resolvedParams.id, 10);
-    if (isNaN(userId)) {
+    const userId = resolvedParams.id;
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userId)) {
       return new Response(JSON.stringify({ error: 'Invalid user ID' }), {
         status: 400,
         headers: {

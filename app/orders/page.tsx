@@ -11,7 +11,7 @@ type TabFilter = 'All' | 'Pending' | 'Success' | 'Draft' | 'Cancelled';
 
 // Server component to get orders data
 async function OrdersContent({
-  searchParams: rawSearchParams
+  searchParams
 }: {
   searchParams?: {
     page?: string;
@@ -19,7 +19,7 @@ async function OrdersContent({
     search?: string;
   }
 }) {
-  const searchParams = await Promise.resolve(rawSearchParams);
+  // Using the resolved searchParams directly
   const currentPage = Number(searchParams?.page) || 1;
   const activeTab = searchParams?.tab || 'All';
   const searchQuery = searchParams?.search || '';
@@ -188,7 +188,7 @@ async function OrdersContent({
                 </tr>
               ) : (
                 paginatedOrders.map((order) => (
-                  <tr key={order.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <td className="px-6 py-4 text-sm font-semibold text-primary">
                       <Link href={`/orders/${order.id}`}>#{order.name}</Link>
                     </td>
@@ -264,15 +264,19 @@ async function OrdersContent({
   );
 }
 
-export default async function OrdersPage({ 
-  searchParams 
-}: { 
-  searchParams?: { 
-    page?: string; 
-    tab?: TabFilter; 
-    search?: string; 
-  } 
+// Type for search parameters
+type SearchParams = Promise<{
+  page?: string;
+  tab?: TabFilter;
+  search?: string;
+}>;
+
+export default async function OrdersPage({
+  searchParams
+}: {
+  searchParams?: SearchParams;
 }) {
+  const resolvedSearchParams = await searchParams;
   // Server-side authentication and permission check
   await requireAuth(['order-list', 'order-read']); // Requires either order-list or order-read permission
 
@@ -309,7 +313,7 @@ export default async function OrdersPage({
       </div>
 
       <Suspense fallback={<div className="flex justify-center py-12">Loading orders...</div>}>
-        <OrdersContent searchParams={searchParams} />
+        <OrdersContent searchParams={resolvedSearchParams} />
       </Suspense>
     </Sidebar>
   );

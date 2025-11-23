@@ -24,7 +24,7 @@ export async function createOrganization(orgData: NewOrganization) {
  * @param orgData - The updated organization data
  * @returns Promise with the updated organization
  */
-export async function updateOrganization(id: number, orgData: Partial<NewOrganization>) {
+export async function updateOrganization(id: string, orgData: Partial<NewOrganization>) {
   try {
     const [updatedOrg] = await db
       .update(organizations)
@@ -43,7 +43,7 @@ export async function updateOrganization(id: number, orgData: Partial<NewOrganiz
  * @param id - The ID of the organization to delete
  * @returns Promise indicating success or failure
  */
-export async function deleteOrganization(id: number) {
+export async function deleteOrganization(id: string) {
   try {
     // Remove all user-organization associations for this organization
     await db.delete(userOrganizations).where(eq(userOrganizations.organizationId, id));
@@ -75,7 +75,7 @@ export async function getAllOrganizations() {
  * @param id - The ID of the organization to get
  * @returns Promise with the organization or null
  */
-export async function getOrganizationById(id: number) {
+export async function getOrganizationById(id: string) {
   try {
     const [org] = await db.select().from(organizations).where(eq(organizations.id, id));
     return org || null;
@@ -105,7 +105,7 @@ export async function getOrganizationByName(name: string) {
  * @param organizationId - The ID of the organization
  * @returns Promise with array of users in the organization
  */
-export async function getUsersInOrganization(organizationId: number) {
+export async function getUsersInOrganization(organizationId: string) {
   try {
     const usersInOrg = await db
       .select({
@@ -131,7 +131,7 @@ export async function getUsersInOrganization(organizationId: number) {
  * @param userId - The ID of the user
  * @returns Promise with array of organizations for the user
  */
-export async function getUserOrganizations(userId: number) {
+export async function getUserOrganizations(userId: string) {
   try {
     const orgsForUser = await db
       .select({
@@ -158,7 +158,7 @@ export async function getUserOrganizations(userId: number) {
  * @param userIds - Array of user IDs to assign
  * @returns Promise indicating success or failure
  */
-export async function assignUsersToOrganization(organizationId: number, userIds: number[]) {
+export async function assignUsersToOrganization(organizationId: string, userIds: string[]) {
   try {
     await db.transaction(async (tx) => {
       // Remove existing user-organization associations for this organization
@@ -187,7 +187,7 @@ export async function assignUsersToOrganization(organizationId: number, userIds:
  * @param userIds - Array of user IDs to remove
  * @returns Promise indicating success or failure
  */
-export async function removeUsersFromOrganization(organizationId: number, userIds: number[]) {
+export async function removeUsersFromOrganization(organizationId: string, userIds: string[]) {
   try {
     const result = await db
       .delete(userOrganizations)

@@ -6,13 +6,13 @@ import { userApi, roleApi, organizationApi } from '@/lib/api/rbac-api';
 import { Edit, Trash2, Users } from 'lucide-react';
 
 interface UserOrganization {
-  organizationId: number;
+  organizationId: string;
   organizationName: string;
   organizationDescription: string | null;
 }
 
 interface UserRole {
-  roleId: number;
+  roleId: string;
   roleName: string;
   roleDescription: string | null;
 }
@@ -23,10 +23,10 @@ interface UserListProps {
   organizations: Organization[];
   loading: boolean;
   error: string | null;
-  allUserOrganizations: {[key: number]: UserOrganization[]};
+  allUserOrganizations: {[key: string]: UserOrganization[]};
   allUserRoles: {[key: string]: UserRole[]};
   handleEdit: (user: Omit<User, 'password'>) => void;
-  handleDelete: (id: number) => void;
+  handleDelete: (id: string) => void;
 }
 
 const UserList: React.FC<UserListProps> = ({

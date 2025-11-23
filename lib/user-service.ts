@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { users, organizations, userOrganizations, roles, userRoles, permissions, rolePermissions } from '../db/schema';
-import { eq, and, or, inArray, exists } from 'drizzle-orm';
+import { eq, and, or, inArray, exists, count } from 'drizzle-orm';
 import { NewUser, NewUserRole } from '../db/schema';
 import bcrypt from 'bcryptjs';
 
@@ -265,7 +265,7 @@ export async function getUserPermissions(userId: string) {
 export async function userHasPermission(userId: string, permissionName: string) {
   try {
     const result = await db
-      .select({ count: db.$count() })
+      .select({ count: count() })
       .from(users)
       .innerJoin(userRoles, eq(users.id, userRoles.userId))
       .innerJoin(roles, eq(userRoles.roleId, roles.id))

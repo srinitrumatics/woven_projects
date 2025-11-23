@@ -81,7 +81,7 @@ export async function authenticateUser(email: string, password: string): Promise
       .where(inArray(rolePermissions.roleId, roleIds));
 
     // Group permissions by role
-    const permissionsByRole: { [key: number]: string[] } = {};
+    const permissionsByRole: { [key: string]: string[] } = {};
     rolePermissionsData.forEach(rp => {
       if (!permissionsByRole[rp.roleId]) {
         permissionsByRole[rp.roleId] = [];
@@ -148,9 +148,9 @@ export async function userHasPermission(userId: string, permission: string): Pro
  * @param permissions The permissions to check for
  * @returns Boolean indicating if user has any of the permissions
  */
-export async function userHasAnyPermission(userId: string, permissions: string[]): Promise<boolean> {
+export async function userHasAnyPermission(userId: string, permissionNames: string[]): Promise<boolean> {
   try {
-    if (permissions.length === 0) return true;
+    if (permissionNames.length === 0) return true;
 
     const userPermissions = await db
       .select({ permissionName: permissions.name })
@@ -160,7 +160,7 @@ export async function userHasAnyPermission(userId: string, permissions: string[]
       .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
       .where(and(
         eq(users.id, userId),
-        inArray(permissions.name, permissions)
+        inArray(permissions.name, permissionNames)
       ));
 
     return userPermissions.length > 0;

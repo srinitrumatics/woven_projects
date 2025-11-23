@@ -8,7 +8,7 @@ import PermissionList from '../../../components/PermissionManagement/PermissionL
 import PermissionForm from '../../../components/PermissionManagement/PermissionForm';
 
 interface GroupedPermission {
-  id: number | null;
+  id: string | null;
   name: string;
   description: string | null;
   createdAt: string;
@@ -28,7 +28,7 @@ const PermissionManagement: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    groupId: null as number | null,
+    groupId: null as string | null,
   });
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const PermissionManagement: React.FC = () => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'groupId' ? (value === '' ? null : Number(value)) : value
+      [name]: name === 'groupId' ? (value === '' ? null : value) : value
     }));
   };
 
@@ -68,7 +68,7 @@ const PermissionManagement: React.FC = () => {
     e.preventDefault();
 
     try {
-      let savedPermission: Permission;
+      let savedPermission: Permission | null;
       if (editingPermission) {
         // Update existing permission
         savedPermission = await permissionApi.updatePermission(editingPermission.id, {
@@ -85,11 +85,15 @@ const PermissionManagement: React.FC = () => {
         });
       }
 
-      // Reset form and reload data
-      setFormData({ name: '', description: '', groupId: null });
-      setEditingPermission(null);
-      setShowForm(false);
-      await loadPermissions();
+      if (savedPermission) {
+        // Reset form and reload data
+        setFormData({ name: '', description: '', groupId: null });
+        setEditingPermission(null);
+        setShowForm(false);
+        await loadPermissions();
+      } else {
+        setError('Failed to save permission - permission not found');
+      }
     } catch (err) {
       setError('Failed to save permission');
       console.error(err);
@@ -106,7 +110,7 @@ const PermissionManagement: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this permission?')) {
       try {
         await permissionApi.deletePermission(id);

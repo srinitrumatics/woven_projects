@@ -4,7 +4,7 @@
 import { useUserSession } from './UserSessionContext';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { PermissionGate } from './PermissionGate';
+import PermissionGate from './PermissionGate';
 
 interface ProtectedPageWrapperProps {
   children: React.ReactNode;

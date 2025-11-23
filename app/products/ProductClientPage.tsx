@@ -1,10 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "@/components/ui/Pagination";
 import { mockProducts } from "./mockData"; // Using mock data for now
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
+import { Product } from "../orders/types";
+
+interface ProductClientPageProps {
+  initialProducts: Product[];
+  initialTotalPages: number;
+  initialCurrentPage: number;
+  productFamilies: string[];
+}
 
 // This is a new Client Component to handle all interactivity
 
@@ -13,7 +21,7 @@ export default function ProductClientPage({
   initialTotalPages,
   initialCurrentPage,
   productFamilies,
-}) {
+}: ProductClientPageProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -22,17 +30,17 @@ export default function ProductClientPage({
   const viewMode = searchParams.get("view") === "list" ? "list" : "card";
   const currentPage = Number(searchParams.get("page")) || 1;
 
-  const handleSearch = (event) => {
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
     setSearchQuery(query);
     updateURL({ search: query, page: 1 });
   };
 
-  const updateURL = (params) => {
+  const updateURL = (params: Record<string, string | number | undefined | null>) => {
     const newParams = new URLSearchParams(searchParams.toString());
     Object.keys(params).forEach(key => {
         if (params[key] !== undefined && params[key] !== null) {
-            newParams.set(key, params[key]);
+            newParams.set(key, String(params[key]));
         } else {
             newParams.delete(key);
         }
@@ -118,16 +126,24 @@ export default function ProductClientPage({
         
         {/* Render products based on viewMode */}
         {viewMode === 'card' ? (
-            <CardView products={initialProducts} currentPage={currentPage} totalPages={initialTotalPages} onPageChange={(page) => updateURL({ page })} />
+            <CardView products={initialProducts} currentPage={currentPage} totalPages={initialTotalPages} totalItems={initialTotalPages * 9} onPageChange={(page) => updateURL({ page })} />
         ) : (
-            <ListView products={initialProducts} currentPage={currentPage} totalPages={initialTotalPages} onPageChange={(page) => updateURL({ page })} />
+            <ListView products={initialProducts} currentPage={currentPage} totalPages={initialTotalPages} totalItems={initialTotalPages * 9} onPageChange={(page) => updateURL({ page })} />
         )}
       </div>
     </>
   );
 }
 
-const CardView = ({ products, currentPage, totalPages, onPageChange }) => (
+interface ViewProps {
+  products: Product[];
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  onPageChange: (page: number) => void;
+}
+
+const CardView = ({ products, currentPage, totalPages, totalItems, onPageChange }: ViewProps) => (
     <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.length === 0 ? (
@@ -166,12 +182,12 @@ const CardView = ({ products, currentPage, totalPages, onPageChange }) => (
             )}
         </div>
         <div className="mt-8">
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} itemName="products" />
+            <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={totalItems} itemsPerPage={9} onPageChange={onPageChange} itemName="products" />
         </div>
     </>
 );
 
-const ListView = ({ products, currentPage, totalPages, onPageChange }) => (
+const ListView = ({ products, currentPage, totalPages, totalItems, onPageChange }: ViewProps) => (
     <>
         <div className="overflow-x-auto">
             <table className="w-full">
@@ -210,7 +226,7 @@ const ListView = ({ products, currentPage, totalPages, onPageChange }) => (
             </table>
         </div>
         <div className="mt-8">
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} itemName="products" />
+            <Pagination currentPage={currentPage} totalPages={totalPages} totalItems={totalItems} itemsPerPage={9} onPageChange={onPageChange} itemName="products" />
         </div>
     </>
 );

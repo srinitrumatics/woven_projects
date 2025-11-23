@@ -24,7 +24,7 @@ export async function createPermission(permissionData: NewPermission) {
  * @param permissionData - The updated permission data
  * @returns Promise with the updated permission
  */
-export async function updatePermission(id: number, permissionData: Partial<NewPermission>) {
+export async function updatePermission(id: string, permissionData: Partial<NewPermission>) {
   try {
     const [updatedPermission] = await db
       .update(permissions)
@@ -43,7 +43,7 @@ export async function updatePermission(id: number, permissionData: Partial<NewPe
  * @param id - The ID of the permission to delete
  * @returns Promise indicating success or failure
  */
-export async function deletePermission(id: number) {
+export async function deletePermission(id: string) {
   try {
     // First remove all role-permission associations that use this permission
     const { count } = await db.delete(permissions).where(eq(permissions.id, id));
@@ -72,7 +72,7 @@ export async function getAllPermissions() {
  * @param id - The ID of the permission to get
  * @returns Promise with the permission or null
  */
-export async function getPermissionById(id: number) {
+export async function getPermissionById(id: string) {
   try {
     const [permission] = await db.select().from(permissions).where(eq(permissions.id, id));
     return permission || null;

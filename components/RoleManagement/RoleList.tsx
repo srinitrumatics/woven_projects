@@ -6,13 +6,13 @@ import { roleApi } from '@/lib/api/rbac-api';
 import { Edit, Trash2, Shield, Building2 } from 'lucide-react';
 
 interface RolePermission {
-  permissionId: number;
+  permissionId: string;
   permissionName: string;
   permissionDescription: string | null;
 }
 
 interface GroupedPermission {
-  id: number | null;
+  id: string | null;
   name: string;
   description: string | null;
   createdAt: string;
@@ -24,10 +24,10 @@ interface RoleListProps {
   roles: Role[];
   loading: boolean;
   error: string | null;
-  allRolePermissions: {[key: number]: RolePermission[]};
+  allRolePermissions: {[key: string]: RolePermission[]};
   groupedPermissions: GroupedPermission[];
   handleEdit: (role: Role) => void;
-  handleDelete: (id: number) => void;
+  handleDelete: (id: string) => void;
 }
 
 const RoleList: React.FC<RoleListProps> = ({

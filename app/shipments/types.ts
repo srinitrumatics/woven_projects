@@ -1,4 +1,4 @@
-export type ShipmentStatus = "Pending" | "Picked" | "Packed" | "Shipped" | "In Transit" | "Out for Delivery" | "Delivered" | "Exception" | "Cancelled";
+export type ShipmentStatus = "Pending" | "Picked" | "Packed" | "Shipped" | "In Transit" | "Out for Delivery" | "Delivered" | "Exception" | "Cancelled" | "Will Call";
 export type CarrierType = "FedEx" | "UPS" | "USPS" | "DHL" | "OnTrac" | "Local Courier" | "Will Call";
 
 export interface ShippingManifest {

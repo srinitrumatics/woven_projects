@@ -57,6 +57,11 @@ async function authenticate(): Promise<string> {
 
     const data = await response.json();
     accessToken = data.access_token;
+
+    if (!accessToken) {
+      throw new Error('Salesforce authentication failed: No access token received');
+    }
+
     // Set token expiry to 1 hour from now (Salesforce tokens typically last 2 hours)
     tokenExpiry = Date.now() + 3600000;
 

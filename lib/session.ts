@@ -25,7 +25,7 @@ export interface CurrentUser {
 }
 
 // Get current user from session
-export async function getCurrentUser(organizationId?: number): Promise<CurrentUser | null> {
+export async function getCurrentUser(organizationId?: string): Promise<CurrentUser | null> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('session')?.value;
 
@@ -154,7 +154,7 @@ export async function getCurrentUser(organizationId?: number): Promise<CurrentUs
 }
 
 // Require authentication
-export async function requireAuth(allowedPermissions?: string[], organizationId?: number) {
+export async function requireAuth(allowedPermissions?: string[], organizationId?: string) {
   // If no organization ID is provided, try to get it from the session cookie
   
     const cookieStore = await cookies();
