@@ -1,7 +1,7 @@
 // app/api/auth/login/route.ts
 import { NextRequest } from 'next/server';
 import { authenticateUser } from '@/lib/auth-service';
-import { createSession } from '@/lib/session';
+import { createSession, getUserById } from '@/lib/session';
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,15 +26,27 @@ export async function POST(request: NextRequest) {
     // Create session cookies
     await createSession(userWithPermissions.id);
 
+    // Get complete user data including organizations
+    const completeUser = await getUserById(userWithPermissions.id);
+
+    if (!completeUser) {
+      return new Response(
+        JSON.stringify({ error: 'Error fetching user data' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Create response with user data
     const response = new Response(
       JSON.stringify({
         user: {
-          id: userWithPermissions.id,
-          name: userWithPermissions.name,
-          email: userWithPermissions.email,
+          id: completeUser.id,
+          name: completeUser.name,
+          email: completeUser.email,
+          organizations: completeUser.organizations,
+          roles: completeUser.roles,
         },
-        permissions: userWithPermissions.permissions
+        permissions: completeUser.permissions
       }),
       {
         status: 200,

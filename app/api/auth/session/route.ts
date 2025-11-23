@@ -2,53 +2,35 @@
 import { NextRequest } from 'next/server';
 import { getUserPermissions, getUserRoles } from '@/lib/auth-service';
 import { db } from '@/db';
-import { users } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { users, userOrganizations, organizations } from '@/db/schema';
+import { eq, inArray } from 'drizzle-orm';
+import { getCurrentUser } from '@/lib/session';
 
 // This endpoint validates if the user is authenticated and returns their info with roles
 export async function GET(request: NextRequest) {
   try {
-    // We'll validate the session by checking for a valid session cookie or user ID
-    // First check for session cookie
-    const userIdCookie = request.cookies.get('user_id')?.value;
-    const sessionIdCookie = request.cookies.get('session_id')?.value;
+    // Validate session using the session cookie
+    const sessionCookie = request.cookies.get('session')?.value;
 
-    let userId: number | null = null;
-
-    // If there's a userId cookie, use that
-    if (userIdCookie) {
-      userId = parseInt(userIdCookie, 10);
-    } else {
-      // Fallback to header for API calls
-      const userIdHeader = request.headers.get('user-id');
-      if (userIdHeader) {
-        userId = parseInt(userIdHeader, 10);
-      }
-    }
-
-    if (!userId || isNaN(userId)) {
+    if (!sessionCookie) {
       return new Response(
         JSON.stringify({ authenticated: false, error: 'No valid session found' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Get user from database
-    const [user] = await db
-      .select({ id: users.id, name: users.name, email: users.email })
-      .from(users)
-      .where(eq(users.id, userId));
+    // Get current user with all details including organizations
+    const currentUser = await getCurrentUser();
 
-    if (!user) {
+    if (!currentUser) {
       return new Response(
         JSON.stringify({ authenticated: false, error: 'User not found' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Fetch user permissions and roles from database
-    const userPermissions = await getUserPermissions(userId);
-    const userRoles = await getUserRoles(userId);
+    // Destructure the user data
+    const { id, name, email, permissions: userPermissions, roles: userRoles, organizations } = currentUser;
 
     // Check if user is a super admin (has a role named 'Super Admin')
     const isSuperAdmin = userRoles.some((role: any) =>
@@ -69,12 +51,13 @@ export async function GET(request: NextRequest) {
       JSON.stringify({
         authenticated: true,
         user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
+          id: currentUser.id,
+          name: currentUser.name,
+          email: currentUser.email,
+          organizations: currentUser.organizations, // Include organizations in the response
         },
-        roles: userRoles,
-        permissions: userPermissions,
+        roles: currentUser.roles,
+        permissions: currentUser.permissions,
         isSuperAdmin: isSuperAdmin,
         hasRouteAccess: hasRouteAccess
       }),

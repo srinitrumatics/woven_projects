@@ -9,6 +9,11 @@ interface User {
   email: string;
   permissions: string[];
   roles?: any[]; // roles could be added to the user object
+  organizations?: {
+    id: number;
+    name: string;
+    description: string | null;
+  }[];
 }
 
 interface UserSessionContextType {

@@ -2,7 +2,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { db } from '../db';
-import { users, userRoles, roles, rolePermissions, permissions } from '../db/schema';
+import { users, userRoles, roles, rolePermissions, permissions, userOrganizations, organizations } from '../db/schema';
 import { eq, and, inArray } from 'drizzle-orm';
 
 // Interface for current user with permissions
@@ -13,6 +13,11 @@ export interface CurrentUser {
   role: string;
   permissions: string[];
   roles: {
+    id: number;
+    name: string;
+    description: string | null;
+  }[];
+  organizations: {
     id: number;
     name: string;
     description: string | null;
@@ -94,6 +99,17 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       new Set(rolePermissionsData.map(rp => rp.permissionName))
     );
 
+    // Get user's organizations
+    const userOrgs = await db
+      .select({
+        id: organizations.id,
+        name: organizations.name,
+        description: organizations.description
+      })
+      .from(userOrganizations)
+      .innerJoin(organizations, eq(userOrganizations.organizationId, organizations.id))
+      .where(eq(userOrganizations.userId, user.id));
+
     // Get the primary role (first role, or highest priority role if defined)
     const primaryRole = rolesData[0]?.name || 'USER';
 
@@ -107,7 +123,8 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
         id: role.id,
         name: role.name,
         description: role.description
-      }))
+      })),
+      organizations: userOrgs
     };
   } catch (error) {
     console.error('Error getting current user:', error);
@@ -166,6 +183,95 @@ export async function createSession(userId: number) {
 async function encrypt(payload: any) {
   // In a real app, use a robust encryption library like iron-session or jose
   return JSON.stringify(payload);
+}
+
+// Get user data by ID (used during login to get complete user info)
+export async function getUserById(userId: number): Promise<CurrentUser | null> {
+  // Get user from database
+  const [user] = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email
+    })
+    .from(users)
+    .where(eq(users.id, userId));
+
+  if (!user) {
+    return null;
+  }
+
+  // Get user's roles
+  const userRolesData = await db
+    .select({
+      roleId: userRoles.roleId
+    })
+    .from(userRoles)
+    .where(eq(userRoles.userId, user.id));
+
+  if (userRolesData.length === 0) {
+    // User has no roles but exists, return user with empty permissions and organizations
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: 'USER', // Default role
+      permissions: [],
+      roles: [],
+      organizations: []
+    };
+  }
+
+  const roleIds = userRolesData.map(ur => ur.roleId);
+
+  // Get role details
+  const rolesData = await db
+    .select()
+    .from(roles)
+    .where(inArray(roles.id, roleIds));
+
+  // Get all permissions for these roles
+  const rolePermissionsData = await db
+    .select({
+      permissionId: rolePermissions.permissionId,
+      permissionName: permissions.name
+    })
+    .from(rolePermissions)
+    .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
+    .where(inArray(rolePermissions.roleId, roleIds));
+
+  // Extract unique permission names
+  const userPermissions = Array.from(
+    new Set(rolePermissionsData.map(rp => rp.permissionName))
+  );
+
+  // Get user's organizations
+  const userOrgs = await db
+    .select({
+      id: organizations.id,
+      name: organizations.name,
+      description: organizations.description
+    })
+    .from(userOrganizations)
+    .innerJoin(organizations, eq(userOrganizations.organizationId, organizations.id))
+    .where(eq(userOrganizations.userId, user.id));
+
+  // Get the primary role (first role, or highest priority role if defined)
+  const primaryRole = rolesData[0]?.name || 'USER';
+
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: primaryRole,
+    permissions: userPermissions,
+    roles: rolesData.map(role => ({
+      id: role.id,
+      name: role.name,
+      description: role.description
+    })),
+    organizations: userOrgs
+  };
 }
 
 // Delete a session (logout)
