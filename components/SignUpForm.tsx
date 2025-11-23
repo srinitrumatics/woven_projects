@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUserSession } from './UserSessionContext';
 
 interface SignUpFormProps {
   onToggle?: () => void;
@@ -17,19 +18,67 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const router = useRouter();
+  const { login } = useUserSession();
 
   const handleSignInClick = () => {
     router.push("/signin");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreedToTerms) {
       alert("Please agree to the Terms & Conditions");
       return;
     }
-    // TODO: Implement actual registration
-    router.push("/dashboard");
+
+    try {
+      // Call the registration API - assuming there's a register endpoint
+      const registerResponse = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (registerResponse.ok) {
+        // Login user after successful registration
+        const loginResponse = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+
+        if (loginResponse.ok) {
+          // Verify the session by fetching complete user data from the session API
+          const sessionResponse = await fetch('/api/auth/session');
+          const sessionData = await sessionResponse.json();
+
+          if (sessionData.authenticated && sessionData.user) {
+            // Update the user session context with the complete user data
+            login(sessionData.user);
+
+            // Redirect to dashboard after successful verification
+            router.push("/dashboard");
+            router.refresh(); // Refresh to update any UI that depends on auth state
+          } else {
+            alert("Session verification failed. Please try again.");
+          }
+        } else {
+          alert("Registration successful, but login failed. Please try logging in manually.");
+        }
+      } else {
+        alert("Registration failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("An error occurred during registration. Please try again.");
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

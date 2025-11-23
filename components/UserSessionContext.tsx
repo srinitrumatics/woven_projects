@@ -31,18 +31,39 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user data exists in localStorage on initial load
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
+    const fetchSession = async () => {
       try {
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
+        const response = await fetch('/api/auth/session');
+        const data = await response.json();
+
+        if (data.authenticated) {
+          // Update user state with complete user data from the session API
+          setUser(data.user);
+          // Store in localStorage for fallback
+          localStorage.setItem('user', JSON.stringify(data.user));
+        } else {
+          // If not authenticated, clear any stored user
+          localStorage.removeItem('user');
+        }
       } catch (error) {
-        console.error('Error parsing user data from localStorage:', error);
-        localStorage.removeItem('user'); // Clean up corrupted data
+        console.error('Error fetching session:', error);
+        // If API fails, try to load from localStorage as a fallback
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          try {
+            const userData = JSON.parse(storedUser);
+            setUser(userData);
+          } catch (parseError) {
+            console.error('Error parsing user data from localStorage:', parseError);
+            localStorage.removeItem('user');
+          }
+        }
+      } finally {
+        setLoading(false);
       }
-    }
-    setLoading(false);
+    };
+
+    fetchSession();
   }, []);
 
   const login = (userData: User) => {

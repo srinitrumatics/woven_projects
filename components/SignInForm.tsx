@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useUserSession } from './UserSessionContext';
 
 interface SignInFormProps {
   onToggle?: () => void;
@@ -15,6 +16,7 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnUrl = searchParams?.get('return') || '/dashboard';
+  const { login } = useUserSession();
 
   const handleSignUpClick = () => {
     router.push("/signup");
@@ -36,17 +38,20 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
       if (response.ok) {
         const data = await response.json();
 
-        // Store user info in localStorage
-        localStorage.setItem('user', JSON.stringify({
-          id: data.user.id,
-          name: data.user.name,
-          email: data.user.email,
-          permissions: data.permissions
-        }));
+        // Verify the session by fetching complete user data from the session API
+        const sessionResponse = await fetch('/api/auth/session');
+        const sessionData = await sessionResponse.json();
 
-        // Redirect to dashboard or return URL
-        router.push(returnUrl);
-        router.refresh(); // Refresh to update any UI that depends on auth state
+        if (sessionData.authenticated && sessionData.user) {
+          // Update the user session context with the complete user data
+          login(sessionData.user);
+
+          // Redirect to dashboard or return URL after successful verification
+          router.push(returnUrl);
+          router.refresh(); // Refresh to update any UI that depends on auth state
+        } else {
+          setError("Session verification failed. Please try again.");
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.error || "Invalid email or password");
