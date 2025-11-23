@@ -127,6 +127,27 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                             setIsOrgDropdownOpen(false); // Close dropdown after selection
 
                             try {
+                              console.log('Attempting to update session for organization:', org.id);
+
+                              // First, update the session cookie with the selected organization
+                              const sessionUpdateResponse = await fetch('/api/auth/update-session', {
+                                method: 'POST',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ organizationId: org.id }),
+                              });
+
+                              console.log('Session update response status:', sessionUpdateResponse.status);
+
+                              if (!sessionUpdateResponse.ok) {
+                                const errorText = await sessionUpdateResponse.text();
+                                console.error('Failed to update session with new organization:', errorText);
+                              } else {
+                                const responseData = await sessionUpdateResponse.json();
+                                console.log('Session updated successfully with organization:', org.id, responseData);
+                              }
+
                               // Set the organization in localStorage for persistence
                               localStorage.setItem('selectedOrganization', org.id.toString());
 
@@ -134,7 +155,7 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                               // Properly handle existing query parameters
                               const currentUrl = new URL(window.location.href);
                               currentUrl.searchParams.set('organizationId', org.id.toString());
-                              window.location.href = currentUrl.toString();
+                              window.location.href = '/dashboard';
                             } catch (error) {
                               console.error('Error switching organization:', error);
                             }

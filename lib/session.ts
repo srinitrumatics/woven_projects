@@ -155,8 +155,23 @@ export async function getCurrentUser(organizationId?: number): Promise<CurrentUs
 
 // Require authentication
 export async function requireAuth(allowedPermissions?: string[], organizationId?: number) {
+  // If no organization ID is provided, try to get it from the session cookie
+  
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get('session')?.value;
+ console.log('called  requireAuth:', sessionCookie);
+    if (sessionCookie) {
+      console.log('Session Cookie in requireAuth:', sessionCookie);
+      try {
+        const decryptedSession = await decrypt(sessionCookie);
+        if (decryptedSession?.organizationId) {
+          organizationId = decryptedSession.organizationId;
+        }
+      } catch (error) {
+        console.error('Error getting organization ID from session:', error);
+      }
+    }
   const user = await getCurrentUser(organizationId);
-
   if (!user) {
     redirect('/auth');
   }
@@ -201,8 +216,8 @@ export async function createSession(userId: number, organizationId?: number) {
   });
 }
 
-// Decrypt the session
-async function encrypt(payload: any) {
+// Encrypt the session
+export async function encrypt(payload: any) {
   // In a real app, use a robust encryption library like iron-session or jose
   return JSON.stringify(payload);
 }
@@ -320,7 +335,7 @@ export async function deleteSession() {
 }
 
 // Decrypt the session
-async function decrypt(session: string) {
+export async function decrypt(session: string) {
   // In a real app, use a robust decryption library that matches the encryption
   try {
     const parsed = JSON.parse(session);

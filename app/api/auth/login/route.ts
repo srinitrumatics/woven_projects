@@ -23,9 +23,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create session cookies
-    await createSession(userWithPermissions.id);
-
     // Get complete user data including organizations
     const completeUser = await getUserById(userWithPermissions.id);
 
@@ -35,6 +32,14 @@ export async function POST(request: NextRequest) {
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
     }
+
+    // Create session cookies with user's first organization by default
+    let defaultOrgId: number | undefined;
+    if (completeUser.organizations && completeUser.organizations.length > 0) {
+      defaultOrgId = completeUser.organizations[0].id;
+    }
+
+    await createSession(userWithPermissions.id, defaultOrgId);
 
     // Create response with user data
     const response = new Response(
