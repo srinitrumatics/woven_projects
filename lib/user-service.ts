@@ -34,7 +34,7 @@ export async function createUser(userData: NewUser) {
  * @param userData - The updated user data
  * @returns Promise with the updated user (without password)
  */
-export async function updateUser(id: number, userData: Partial<NewUser>) {
+export async function updateUser(id: string, userData: Partial<NewUser>) {
   try {
     // If password is being updated, hash it
     if (userData.password) {
@@ -64,7 +64,7 @@ export async function updateUser(id: number, userData: Partial<NewUser>) {
  * @param id - The ID of the user to delete
  * @returns Promise indicating success or failure
  */
-export async function deleteUser(id: number) {
+export async function deleteUser(id: string) {
   try {
     // First remove all user-organization associations
     await db.delete(userOrganizations).where(eq(userOrganizations.userId, id));
@@ -103,7 +103,7 @@ export async function getAllUsers() {
  * @param id - The ID of the user to get
  * @returns Promise with the user or null (without password)
  */
-export async function getUserById(id: number) {
+export async function getUserById(id: string) {
   try {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     if (user) {
@@ -143,7 +143,7 @@ export async function getUserByEmail(email: string) {
  * @param organizationId - The ID of the organization
  * @returns Promise indicating success or failure
  */
-export async function assignRolesToUser(userId: number, roleIds: number[], organizationId: number) {
+export async function assignRolesToUser(userId: string, roleIds: string[], organizationId: string) {
   try {
     await db.transaction(async (tx) => {
       // First delete existing roles for this user in the specified organization
@@ -173,7 +173,7 @@ export async function assignRolesToUser(userId: number, roleIds: number[], organ
  * @param organizationId - The ID of the organization (optional, if omitted returns all roles for the user)
  * @returns Promise with array of roles for the user
  */
-export async function getUserRoles(userId: number, organizationId?: number) {
+export async function getUserRoles(userId: string, organizationId?: string) {
   try {
     let whereCondition;
     if (organizationId !== undefined) {
@@ -205,7 +205,7 @@ export async function getUserRoles(userId: number, organizationId?: number) {
  * @param userId - The ID of the user
  * @returns Promise with array of roles with organization context for the user
  */
-export async function getAllUserRolesWithOrganizations(userId: number) {
+export async function getAllUserRolesWithOrganizations(userId: string) {
   try {
     const userRoleData = await db
       .select({
@@ -233,7 +233,7 @@ export async function getAllUserRolesWithOrganizations(userId: number) {
  * @param userId - The ID of the user
  * @returns Promise with array of permissions for the user
  */
-export async function getUserPermissions(userId: number) {
+export async function getUserPermissions(userId: string) {
   try {
     const userPermissions = await db
       .select({
@@ -262,7 +262,7 @@ export async function getUserPermissions(userId: number) {
  * @param permissionName - The name of the permission to check
  * @returns Promise with boolean indicating if user has permission
  */
-export async function userHasPermission(userId: number, permissionName: string) {
+export async function userHasPermission(userId: string, permissionName: string) {
   try {
     const result = await db
       .select({ count: db.$count() })
@@ -291,7 +291,7 @@ export async function userHasPermission(userId: number, permissionName: string) 
  * @param roleIds - Array of role IDs to remove
  * @returns Promise indicating success or failure
  */
-export async function removeRolesFromUser(userId: number, roleIds: number[]) {
+export async function removeRolesFromUser(userId: string, roleIds: string[]) {
   try {
     const result = await db
       .delete(userRoles)
@@ -315,7 +315,7 @@ export async function removeRolesFromUser(userId: number, roleIds: number[]) {
  * @param organizationIds - Array of organization IDs to assign
  * @returns Promise indicating success or failure
  */
-export async function assignOrganizationsToUser(userId: number, organizationIds: number[]) {
+export async function assignOrganizationsToUser(userId: string, organizationIds: string[]) {
   try {
     await db.transaction(async (tx) => {
       // First delete existing organizations for this user
@@ -343,7 +343,7 @@ export async function assignOrganizationsToUser(userId: number, organizationIds:
  * @param userId - The ID of the user
  * @returns Promise with array of organizations for the user
  */
-export async function getUserOrganizations(userId: number) {
+export async function getUserOrganizations(userId: string) {
   try {
     const userOrgData = await db
       .select({
@@ -368,7 +368,7 @@ export async function getUserOrganizations(userId: number) {
  * @param organizationIds - Array of organization IDs to remove
  * @returns Promise indicating success or failure
  */
-export async function removeOrganizationsFromUser(userId: number, organizationIds: number[]) {
+export async function removeOrganizationsFromUser(userId: string, organizationIds: string[]) {
   try {
     const result = await db
       .delete(userOrganizations)

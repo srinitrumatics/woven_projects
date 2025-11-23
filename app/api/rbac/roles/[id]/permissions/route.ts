@@ -5,8 +5,10 @@ import { assignPermissionsToRole, getRolePermissions } from '@/lib/role-service'
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   try {
-    const roleId = parseInt(resolvedParams.id, 10);
-    if (isNaN(roleId)) {
+    const roleId = resolvedParams.id;
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(roleId)) {
       return new Response(JSON.stringify({ error: 'Invalid role ID' }), {
         status: 400,
         headers: {
@@ -37,8 +39,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   try {
-    const roleId = parseInt(resolvedParams.id, 10);
-    if (isNaN(roleId)) {
+    const roleId = resolvedParams.id;
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(roleId)) {
       return new Response(JSON.stringify({ error: 'Invalid role ID' }), {
         status: 400,
         headers: {
@@ -55,6 +59,18 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
           'Content-Type': 'application/json',
         },
       });
+    }
+
+    // Validate that all permission IDs are valid UUIDs
+    for (const permissionId of permissionIds) {
+      if (!uuidRegex.test(permissionId)) {
+        return new Response(JSON.stringify({ error: `Invalid permission ID: ${permissionId}` }), {
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      }
     }
 
     const success = await assignPermissionsToRole(roleId, permissionIds);

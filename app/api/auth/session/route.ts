@@ -21,7 +21,9 @@ export async function GET(request: NextRequest) {
 
     // Get organization ID from query parameter if provided
     const organizationId = request.nextUrl.searchParams.get('organizationId');
-    const orgId = organizationId ? parseInt(organizationId, 10) : undefined;
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const orgId = organizationId && uuidRegex.test(organizationId) ? organizationId : undefined;
 
     // Get current user with all details including organizations
     const currentUser = await getCurrentUser(orgId);

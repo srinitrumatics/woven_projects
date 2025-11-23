@@ -5,8 +5,10 @@ import { getUserById, updateUser, deleteUser } from '@/lib/user-service';
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   try {
-    const id = parseInt(resolvedParams.id, 10);
-    if (isNaN(id)) {
+    const id = resolvedParams.id;
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(id)) {
       return new Response(JSON.stringify({ error: 'Invalid user ID' }), {
         status: 400,
         headers: {
@@ -45,8 +47,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   try {
-    const id = parseInt(resolvedParams.id, 10);
-    if (isNaN(id)) {
+    const id = resolvedParams.id;
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(id)) {
       return new Response(JSON.stringify({ error: 'Invalid user ID' }), {
         status: 400,
         headers: {
@@ -86,8 +90,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   try {
-    const id = parseInt(resolvedParams.id, 10);
-    if (isNaN(id)) {
+    const id = resolvedParams.id;
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(id)) {
       return new Response(JSON.stringify({ error: 'Invalid user ID' }), {
         status: 400,
         headers: {

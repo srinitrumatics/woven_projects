@@ -7,18 +7,18 @@ import { eq, and, inArray } from 'drizzle-orm';
 
 // Interface for current user with permissions
 export interface CurrentUser {
-  id: number;
+  id: string; // UUID as string
   name: string;
   email: string;
   role: string;
   permissions: string[];
   roles: {
-    id: number;
+    id: string; // UUID as string
     name: string;
     description: string | null;
   }[];
   organizations: {
-    id: number;
+    id: string; // UUID as string
     name: string;
     description: string | null;
   }[];
@@ -61,7 +61,7 @@ export async function getCurrentUser(organizationId?: number): Promise<CurrentUs
 
     // Get user's roles for the specific organization if provided
     let userRolesData;
-    if (organizationId) {
+    if (orgId) {
       // Get user's roles for the specific organization
       userRolesData = await db
         .select({
@@ -71,7 +71,7 @@ export async function getCurrentUser(organizationId?: number): Promise<CurrentUs
         .from(userRoles)
         .where(and(
           eq(userRoles.userId, user.id),
-          eq(userRoles.organizationId, organizationId)
+          eq(userRoles.organizationId, orgId)
         ));
     } else {
       // Get all user's roles across all organizations
@@ -202,7 +202,7 @@ export async function requireAuth(allowedPermissions?: string[], organizationId?
 }
 
 // Create a new session for the user
-export async function createSession(userId: number, organizationId?: number) {
+export async function createSession(userId: string, organizationId?: string) {
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
   const sessionData = { userId, organizationId, expires };
   const session = await encrypt(sessionData);
@@ -223,7 +223,7 @@ export async function encrypt(payload: any) {
 }
 
 // Get user data by ID (used during login to get complete user info)
-export async function getUserById(userId: number, organizationId?: number): Promise<CurrentUser | null> {
+export async function getUserById(userId: string, organizationId?: string): Promise<CurrentUser | null> {
   // Get user from database
   const [user] = await db
     .select({

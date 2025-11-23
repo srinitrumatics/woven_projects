@@ -25,7 +25,7 @@ export async function createRole(roleData: NewRole) {
  * @param roleData - The updated role data
  * @returns Promise with the updated role
  */
-export async function updateRole(id: number, roleData: Partial<NewRole>) {
+export async function updateRole(id: string, roleData: Partial<NewRole>) {
   try {
     const [updatedRole] = await db
       .update(roles)
@@ -44,7 +44,7 @@ export async function updateRole(id: number, roleData: Partial<NewRole>) {
  * @param id - The ID of the role to delete
  * @returns Promise indicating success or failure
  */
-export async function deleteRole(id: number) {
+export async function deleteRole(id: string) {
   try {
     // Delete associated role-organization relationships
     await db.delete(roleOrganizations).where(eq(roleOrganizations.roleId, id));
@@ -79,7 +79,7 @@ export async function getAllRoles() {
  * @param id - The ID of the role to get
  * @returns Promise with the role or null
  */
-export async function getRoleById(id: number) {
+export async function getRoleById(id: string) {
   try {
     const [role] = await db.select().from(roles).where(eq(roles.id, id));
     return role || null;
@@ -110,7 +110,7 @@ export async function getRoleByName(name: string) {
  * @param organizationIds - Array of organization IDs to assign to the role
  * @returns Promise indicating success or failure
  */
-export async function assignOrganizationsToRole(roleId: number, organizationIds: number[]) {
+export async function assignOrganizationsToRole(roleId: string, organizationIds: string[]) {
   try {
     await db.transaction(async (tx) => {
       // First delete existing role-organization associations for this role
@@ -138,7 +138,7 @@ export async function assignOrganizationsToRole(roleId: number, organizationIds:
  * @param roleId - The ID of the role
  * @returns Promise with array of organizations for the role
  */
-export async function getOrganizationsForRole(roleId: number) {
+export async function getOrganizationsForRole(roleId: string) {
   try {
     const roleOrgData = await db
       .select({
@@ -160,7 +160,7 @@ export async function getOrganizationsForRole(roleId: number) {
  * @param organizationIds - Array of organization IDs to remove from the role
  * @returns Promise indicating success or failure
  */
-export async function removeOrganizationsFromRole(roleId: number, organizationIds: number[]) {
+export async function removeOrganizationsFromRole(roleId: string, organizationIds: string[]) {
   try {
     const result = await db
       .delete(roleOrganizations)
@@ -212,7 +212,7 @@ export async function createPermissionGroup(groupData: NewPermissionGroup) {
  * @param groupData - The updated permission group data
  * @returns Promise with the updated permission group
  */
-export async function updatePermissionGroup(id: number, groupData: Partial<NewPermissionGroup>) {
+export async function updatePermissionGroup(id: string, groupData: Partial<NewPermissionGroup>) {
   try {
     const [updatedGroup] = await db
       .update(permissionGroups)
@@ -231,7 +231,7 @@ export async function updatePermissionGroup(id: number, groupData: Partial<NewPe
  * @param id - The ID of the permission group to delete
  * @returns Promise indicating success or failure
  */
-export async function deletePermissionGroup(id: number) {
+export async function deletePermissionGroup(id: string) {
   try {
     // Check if there are permissions associated with this group
     const permissionsWithGroup = await db
@@ -261,7 +261,7 @@ export async function deletePermissionGroup(id: number) {
  * @param roleId - The ID of the role
  * @returns Promise with array of permissions for the role
  */
-export async function getRolePermissions(roleId: number) {
+export async function getRolePermissions(roleId: string) {
   try {
     const rolePermData = await db
       .select({
@@ -286,7 +286,7 @@ export async function getRolePermissions(roleId: number) {
  * @param permissionIds - Array of permission IDs to assign to the role
  * @returns Promise indicating success or failure
  */
-export async function assignPermissionsToRole(roleId: number, permissionIds: number[]) {
+export async function assignPermissionsToRole(roleId: string, permissionIds: string[]) {
   try {
     await db.transaction(async (tx) => {
       // First delete existing role-permission associations for this role

@@ -18,32 +18,45 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
   const { permissions: userPermissions, isSuperAdmin } = usePermissions();
   const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [selectedOrganization, setSelectedOrganization] = useState<number | null>(null);
+  const [selectedOrganization, setSelectedOrganization] = useState<string | null>(null);
 
   // Get the login function to update user context when organization changes
   const { login } = useUserSession();
 
-  // Set selected organization from localStorage or default when user loads
+  // Set selected organization from URL query params, localStorage, or default when user loads
   useEffect(() => {
     if (user && user.organizations && user.organizations.length > 0) {
-      // First try to get selected organization from localStorage
-      const storedOrgId = localStorage.getItem('selectedOrganization');
-      if (storedOrgId) {
-        const orgId = parseInt(storedOrgId, 10);
-        // Verify that the stored organization ID exists in user's organizations
-        const orgExists = user.organizations.some(org => org.id === orgId);
-        if (orgExists) {
-          setSelectedOrganization(orgId);
-          return; // Early return to avoid setting default
+      // First try to get organization ID from URL query parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlOrgId = urlParams.get('organizationId');
+
+      if (urlOrgId) {
+        // Verify that the URL organization ID exists in user's organizations
+        const orgExists = user.organizations.some(org => org.id === urlOrgId);
+        if (orgExists && urlOrgId !== selectedOrganization) {
+          setSelectedOrganization(urlOrgId);
+          localStorage.setItem('selectedOrganization', urlOrgId);
+          return; // Only set from URL if valid and different from current
         }
       }
 
-      // If no stored organization or it doesn't exist, use the first one
+      // If no URL param or org doesn't exist, try to get selected organization from localStorage
+      const storedOrgId = localStorage.getItem('selectedOrganization');
+      if (storedOrgId && !urlOrgId) {
+        // Verify that the stored organization ID exists in user's organizations
+        const orgExists = user.organizations.some(org => org.id === storedOrgId);
+        if (orgExists && storedOrgId !== selectedOrganization) {
+          setSelectedOrganization(storedOrgId);
+          return; // Only set from localStorage if valid and different from current
+        }
+      }
+
+      // Only set default if no organization is currently selected
       if (!selectedOrganization) {
         setSelectedOrganization(user.organizations[0].id);
       }
     }
-  }, [user]);
+  }, [user, selectedOrganization]); // Include selectedOrganization in dependency to recheck
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -149,7 +162,7 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                               }
 
                               // Set the organization in localStorage for persistence
-                              localStorage.setItem('selectedOrganization', org.id.toString());
+                              localStorage.setItem('selectedOrganization', org.id);
 
                               // Redirect to the current page with organization parameter to refresh context
                               // Properly handle existing query parameters

@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create session cookies with user's first organization by default
-    let defaultOrgId: number | undefined;
+    let defaultOrgId: string | undefined;
     if (completeUser.organizations && completeUser.organizations.length > 0) {
       defaultOrgId = completeUser.organizations[0].id;
     }

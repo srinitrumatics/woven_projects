@@ -5,8 +5,10 @@ import { getUserRoles, assignRolesToUser } from '@/lib/user-service';
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   try {
-    const userId = parseInt(resolvedParams.id, 10);
-    if (isNaN(userId)) {
+    const userId = resolvedParams.id;
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userId)) {
       return new Response(JSON.stringify({ error: 'Invalid user ID' }), {
         status: 400,
         headers: {
@@ -21,8 +23,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     let roles;
     if (organizationId) {
-      const orgId = parseInt(organizationId, 10);
-      if (isNaN(orgId)) {
+      if (!uuidRegex.test(organizationId)) {
         return new Response(JSON.stringify({ error: 'Invalid organization ID' }), {
           status: 400,
           headers: {
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
           },
         });
       }
-      roles = await getUserRoles(userId, orgId);
+      roles = await getUserRoles(userId, organizationId);
     } else {
       roles = await getUserRoles(userId);
     }
@@ -55,8 +56,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   try {
-    const userId = parseInt(resolvedParams.id, 10);
-    if (isNaN(userId)) {
+    const userId = resolvedParams.id;
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userId)) {
       return new Response(JSON.stringify({ error: 'Invalid user ID' }), {
         status: 400,
         headers: {
@@ -84,8 +87,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       });
     }
 
-    const orgId = parseInt(organizationId, 10);
-    if (isNaN(orgId)) {
+    // Validate that organizationId is a valid UUID
+    if (!uuidRegex.test(organizationId)) {
       return new Response(JSON.stringify({ error: 'Invalid organization ID' }), {
         status: 400,
         headers: {
@@ -94,7 +97,19 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       });
     }
 
-    const success = await assignRolesToUser(userId, roleIds, orgId);
+    // Validate that all role IDs are valid UUIDs
+    for (const roleId of roleIds) {
+      if (!uuidRegex.test(roleId)) {
+        return new Response(JSON.stringify({ error: `Invalid role ID: ${roleId}` }), {
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      }
+    }
+
+    const success = await assignRolesToUser(userId, roleIds, organizationId);
     if (!success) {
       return new Response(JSON.stringify({ error: 'Failed to assign roles to user' }), {
         status: 500,

@@ -7,7 +7,7 @@ import { compare } from 'bcryptjs';
 // because it imports database connection which is not available on the client
 
 export interface UserWithPermissions {
-  id: number;
+  id: string; // UUID as string
   name: string;
   email: string;
   roles: RoleWithPermissions[];
@@ -15,7 +15,7 @@ export interface UserWithPermissions {
 }
 
 export interface RoleWithPermissions {
-  id: number;
+  id: string; // UUID as string
   name: string;
   description: string | null;
   permissions: string[];
@@ -121,7 +121,7 @@ export async function authenticateUser(email: string, password: string): Promise
  * @param permission The permission to check for
  * @returns Boolean indicating if user has the permission
  */
-export async function userHasPermission(userId: number, permission: string): Promise<boolean> {
+export async function userHasPermission(userId: string, permission: string): Promise<boolean> {
   try {
     // Get the user's permissions by joining through userRoles and rolePermissions
     const userPermissions = await db
@@ -148,7 +148,7 @@ export async function userHasPermission(userId: number, permission: string): Pro
  * @param permissions The permissions to check for
  * @returns Boolean indicating if user has any of the permissions
  */
-export async function userHasAnyPermission(userId: number, permissions: string[]): Promise<boolean> {
+export async function userHasAnyPermission(userId: string, permissions: string[]): Promise<boolean> {
   try {
     if (permissions.length === 0) return true;
 
@@ -175,7 +175,7 @@ export async function userHasAnyPermission(userId: number, permissions: string[]
  * @param userId The user ID
  * @returns Array of permission names
  */
-export async function getUserPermissions(userId: number): Promise<string[]> {
+export async function getUserPermissions(userId: string): Promise<string[]> {
   try {
     const permissionsData = await db
       .select({ permissionName: permissions.name })
@@ -197,7 +197,7 @@ export async function getUserPermissions(userId: number): Promise<string[]> {
  * @param userId The user ID
  * @returns Array of role objects with permissions
  */
-export async function getUserRoles(userId: number): Promise<RoleWithPermissions[]> {
+export async function getUserRoles(userId: string): Promise<RoleWithPermissions[]> {
   try {
     // Get user's roles
     const userRoleRecords = await db
@@ -228,7 +228,7 @@ export async function getUserRoles(userId: number): Promise<RoleWithPermissions[
       .where(inArray(rolePermissions.roleId, roleIds));
 
     // Group permissions by role
-    const permissionsByRole: { [key: number]: string[] } = {};
+    const permissionsByRole: { [key: string]: string[] } = {};
     rolePermissionsData.forEach(rp => {
       if (!permissionsByRole[rp.roleId]) {
         permissionsByRole[rp.roleId] = [];

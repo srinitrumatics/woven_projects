@@ -7,8 +7,10 @@ import { requireAuth } from "@/lib/session";
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const awaitedParams = await params;
-    const userId = parseInt(awaitedParams.id);
-    if (isNaN(userId)) {
+    const userId = awaitedParams.id;
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userId)) {
       return new Response(JSON.stringify({ error: 'Invalid user ID' }), {
         status: 400,
         headers: {
@@ -39,8 +41,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const awaitedParams = await params;
-    const userId = parseInt(awaitedParams.id);
-    if (isNaN(userId)) {
+    const userId = awaitedParams.id;
+    // Basic UUID validation - check if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userId)) {
       return new Response(JSON.stringify({ error: 'Invalid user ID' }), {
         status: 400,
         headers: {
@@ -57,6 +61,18 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
           'Content-Type': 'application/json',
         },
       });
+    }
+
+    // Validate that all organization IDs are valid UUIDs
+    for (const orgId of organizationIds) {
+      if (!uuidRegex.test(orgId)) {
+        return new Response(JSON.stringify({ error: `Invalid organization ID: ${orgId}` }), {
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      }
     }
 
     const success = await assignOrganizationsToUser(userId, organizationIds);

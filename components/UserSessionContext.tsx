@@ -4,13 +4,13 @@
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 
 interface User {
-  id: number;
+  id: string; // UUID as string
   name: string;
   email: string;
   permissions: string[];
   roles?: any[]; // roles could be added to the user object
   organizations?: {
-    id: number;
+    id: string; // UUID as string
     name: string;
     description: string | null;
   }[];

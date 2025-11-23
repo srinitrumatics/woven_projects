@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { uuid, pgTable, text, primaryKey } from 'drizzle-orm/pg-core';
+import { uuid, pgTable, text, primaryKey, integer } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 // Users table
