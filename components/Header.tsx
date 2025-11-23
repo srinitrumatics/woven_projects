@@ -20,13 +20,30 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [selectedOrganization, setSelectedOrganization] = useState<number | null>(null);
 
-  // Set default selected organization when user loads
+  // Get the login function to update user context when organization changes
+  const { login } = useUserSession();
+
+  // Set selected organization from localStorage or default when user loads
   useEffect(() => {
-    console.log('User organizations:', user);
-    if (user && user.organizations && user.organizations.length > 0 && !selectedOrganization) {
-      setSelectedOrganization(user.organizations[0].id);
+    if (user && user.organizations && user.organizations.length > 0) {
+      // First try to get selected organization from localStorage
+      const storedOrgId = localStorage.getItem('selectedOrganization');
+      if (storedOrgId) {
+        const orgId = parseInt(storedOrgId, 10);
+        // Verify that the stored organization ID exists in user's organizations
+        const orgExists = user.organizations.some(org => org.id === orgId);
+        if (orgExists) {
+          setSelectedOrganization(orgId);
+          return; // Early return to avoid setting default
+        }
+      }
+
+      // If no stored organization or it doesn't exist, use the first one
+      if (!selectedOrganization) {
+        setSelectedOrganization(user.organizations[0].id);
+      }
     }
-  }, [user, selectedOrganization]);
+  }, [user]);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -105,13 +122,22 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                               ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' 
                               : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                           }`}
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.stopPropagation();
-                            setSelectedOrganization(org.id);
                             setIsOrgDropdownOpen(false); // Close dropdown after selection
-                            // Placeholder for organization switching logic
-                            console.log('Switching to organization:', org.name);
-                            // In a real implementation, this would update the context/api to use this organization
+
+                            try {
+                              // Set the organization in localStorage for persistence
+                              localStorage.setItem('selectedOrganization', org.id.toString());
+
+                              // Redirect to the current page with organization parameter to refresh context
+                              // Properly handle existing query parameters
+                              const currentUrl = new URL(window.location.href);
+                              currentUrl.searchParams.set('organizationId', org.id.toString());
+                              window.location.href = currentUrl.toString();
+                            } catch (error) {
+                              console.error('Error switching organization:', error);
+                            }
                           }}
                         >
                           {org.name}

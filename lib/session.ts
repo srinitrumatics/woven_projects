@@ -25,7 +25,7 @@ export interface CurrentUser {
 }
 
 // Get current user from session
-export async function getCurrentUser(): Promise<CurrentUser | null> {
+export async function getCurrentUser(organizationId?: number): Promise<CurrentUser | null> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('session')?.value;
 
@@ -39,6 +39,9 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     if (!decryptedSession?.userId) {
       return null;
     }
+
+    // Use organization ID from session if not provided and available in session
+    const orgId = organizationId || decryptedSession?.organizationId;
 
     const userId = decryptedSession.userId;
 
@@ -56,23 +59,41 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       return null;
     }
 
-    // Get user's roles
-    const userRolesData = await db
-      .select({
-        roleId: userRoles.roleId
-      })
-      .from(userRoles)
-      .where(eq(userRoles.userId, user.id));
+    // Get user's roles for the specific organization if provided
+    let userRolesData;
+    if (organizationId) {
+      // Get user's roles for the specific organization
+      userRolesData = await db
+        .select({
+          roleId: userRoles.roleId,
+          organizationId: userRoles.organizationId
+        })
+        .from(userRoles)
+        .where(and(
+          eq(userRoles.userId, user.id),
+          eq(userRoles.organizationId, organizationId)
+        ));
+    } else {
+      // Get all user's roles across all organizations
+      userRolesData = await db
+        .select({
+          roleId: userRoles.roleId,
+          organizationId: userRoles.organizationId
+        })
+        .from(userRoles)
+        .where(eq(userRoles.userId, user.id));
+    }
 
     if (userRolesData.length === 0) {
-      // User has no roles but exists, return user with empty permissions
+      // User has no roles but exists, return user with empty permissions and organizations
       return {
         id: user.id,
         name: user.name,
         email: user.email,
         role: 'USER', // Default role
         permissions: [],
-        roles: []
+        roles: [],
+        organizations: []
       };
     }
 
@@ -84,7 +105,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       .from(roles)
       .where(inArray(roles.id, roleIds));
 
-    // Get all permissions for these roles
+    // Get all permissions for these roles within the specific organization context
     const rolePermissionsData = await db
       .select({
         permissionId: rolePermissions.permissionId,
@@ -133,8 +154,8 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
 }
 
 // Require authentication
-export async function requireAuth(allowedPermissions?: string[]) {
-  const user = await getCurrentUser();
+export async function requireAuth(allowedPermissions?: string[], organizationId?: number) {
+  const user = await getCurrentUser(organizationId);
 
   if (!user) {
     redirect('/auth');
@@ -143,16 +164,16 @@ export async function requireAuth(allowedPermissions?: string[]) {
   // If specific permissions are required, check if user has any of them
   if (allowedPermissions && allowedPermissions.length > 0) {
     // Super admin check
-    const isSuperAdmin = user.role?.toLowerCase().includes('super') || 
+    const isSuperAdmin = user.role?.toLowerCase().includes('super') ||
                          user.permissions.includes('ALL_ACCESS') ||
-                         user.permissions.some((perm: string) => 
-                           perm.toLowerCase().includes('super_admin') || 
+                         user.permissions.some((perm: string) =>
+                           perm.toLowerCase().includes('super_admin') ||
                            perm.toLowerCase().includes('superadmin')
                          );
 
     if (!isSuperAdmin) {
       // Check if user has any of the required permissions
-      const hasRequiredPermission = allowedPermissions.some(perm => 
+      const hasRequiredPermission = allowedPermissions.some(perm =>
         user.permissions.includes(perm)
       );
 
@@ -166,9 +187,10 @@ export async function requireAuth(allowedPermissions?: string[]) {
 }
 
 // Create a new session for the user
-export async function createSession(userId: number) {
+export async function createSession(userId: number, organizationId?: number) {
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-  const session = await encrypt({ userId, expires });
+  const sessionData = { userId, organizationId, expires };
+  const session = await encrypt(sessionData);
   const cookieStore = await cookies();
 
   cookieStore.set('session', session, {
@@ -186,7 +208,7 @@ async function encrypt(payload: any) {
 }
 
 // Get user data by ID (used during login to get complete user info)
-export async function getUserById(userId: number): Promise<CurrentUser | null> {
+export async function getUserById(userId: number, organizationId?: number): Promise<CurrentUser | null> {
   // Get user from database
   const [user] = await db
     .select({
@@ -201,13 +223,30 @@ export async function getUserById(userId: number): Promise<CurrentUser | null> {
     return null;
   }
 
-  // Get user's roles
-  const userRolesData = await db
-    .select({
-      roleId: userRoles.roleId
-    })
-    .from(userRoles)
-    .where(eq(userRoles.userId, user.id));
+  // Get user's roles for the specific organization if provided
+  let userRolesData;
+  if (organizationId) {
+    // Get user's roles for the specific organization
+    userRolesData = await db
+      .select({
+        roleId: userRoles.roleId,
+        organizationId: userRoles.organizationId
+      })
+      .from(userRoles)
+      .where(and(
+        eq(userRoles.userId, user.id),
+        eq(userRoles.organizationId, organizationId)
+      ));
+  } else {
+    // Get all user's roles across all organizations
+    userRolesData = await db
+      .select({
+        roleId: userRoles.roleId,
+        organizationId: userRoles.organizationId
+      })
+      .from(userRoles)
+      .where(eq(userRoles.userId, user.id));
+  }
 
   if (userRolesData.length === 0) {
     // User has no roles but exists, return user with empty permissions and organizations
@@ -230,7 +269,7 @@ export async function getUserById(userId: number): Promise<CurrentUser | null> {
     .from(roles)
     .where(inArray(roles.id, roleIds));
 
-  // Get all permissions for these roles
+  // Get all permissions for these roles within the specific organization context
   const rolePermissionsData = await db
     .select({
       permissionId: rolePermissions.permissionId,
@@ -284,7 +323,13 @@ export async function deleteSession() {
 async function decrypt(session: string) {
   // In a real app, use a robust decryption library that matches the encryption
   try {
-    return JSON.parse(session);
+    const parsed = JSON.parse(session);
+    // Ensure backward compatibility with old session format
+    if (parsed.hasOwnProperty('userId') && !parsed.hasOwnProperty('organizationId')) {
+      // Old format: { userId, expires } - set organizationId to undefined
+      return { ...parsed, organizationId: undefined };
+    }
+    return parsed;
   } catch (error) {
     console.error('Failed to parse session:', error);
     return null;

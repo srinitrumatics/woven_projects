@@ -19,8 +19,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Get organization ID from query parameter if provided
+    const organizationId = request.nextUrl.searchParams.get('organizationId');
+    const orgId = organizationId ? parseInt(organizationId, 10) : undefined;
+
     // Get current user with all details including organizations
-    const currentUser = await getCurrentUser();
+    const currentUser = await getCurrentUser(orgId);
 
     if (!currentUser) {
       return new Response(

@@ -41,12 +41,12 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
     }
 
     try {
+      // Get the selected organization ID from localStorage
+      const selectedOrgId = typeof window !== 'undefined' ? localStorage.getItem('selectedOrganization') : null;
+
       // Call the session validation API endpoint to get current permissions and roles
-      const response = await fetch('/api/auth/session', {
-        headers: {
-          'user-id': user.id.toString(),
-        }
-      });
+      const sessionUrl = selectedOrgId ? `/api/auth/session?organizationId=${selectedOrgId}` : '/api/auth/session';
+      const response = await fetch(sessionUrl);
 
       if (response.ok) {
         const data = await response.json();
@@ -105,7 +105,7 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
 
   useEffect(() => {
     refreshPermissions();
-  }, [user?.id]); // Refresh when user changes
+  }, [user?.id, user?.permissions, user?.roles]); // Refresh when user changes or when permissions/roles update
 
   const hasPermission = (permission: string): boolean => {
     // Check if user is a super admin - if so, grant access to everything

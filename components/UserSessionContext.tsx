@@ -33,7 +33,16 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const fetchSession = async () => {
       try {
-        const response = await fetch('/api/auth/session');
+        // Get organization ID from URL parameters or localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlOrgId = urlParams.get('organizationId');
+        const storedOrgId = localStorage.getItem('selectedOrganization');
+
+        // Build the session API URL with organization parameter if available
+        const orgId = urlOrgId || storedOrgId;
+        const sessionUrl = orgId ? `/api/auth/session?organizationId=${orgId}` : '/api/auth/session';
+
+        const response = await fetch(sessionUrl);
         const data = await response.json();
 
         if (data.authenticated) {
@@ -41,9 +50,15 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
           setUser(data.user);
           // Store in localStorage for fallback
           localStorage.setItem('user', JSON.stringify(data.user));
+
+          // If organization ID was specified in the URL, make sure it's stored
+          if (orgId) {
+            localStorage.setItem('selectedOrganization', orgId);
+          }
         } else {
           // If not authenticated, clear any stored user
           localStorage.removeItem('user');
+          localStorage.removeItem('selectedOrganization');
         }
       } catch (error) {
         console.error('Error fetching session:', error);
@@ -69,6 +84,11 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
   const login = (userData: User) => {
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
+
+    // Store the first organization as the selected one if available
+    if (userData.organizations && userData.organizations.length > 0) {
+      localStorage.setItem('selectedOrganization', userData.organizations[0].id.toString());
+    }
   };
 
   const logout = async () => {
@@ -83,6 +103,7 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
       // Clear local state and localStorage
       setUser(null);
       localStorage.removeItem('user');
+      localStorage.removeItem('selectedOrganization');
       // Redirect to auth page
       window.location.href = '/auth';
     }

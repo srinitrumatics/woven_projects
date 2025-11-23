@@ -56,6 +56,12 @@ export async function middleware(request: NextRequest) {
   // If authenticated, validate permissions for specific routes
   if (isAuthenticated) {
     try {
+      // Get organization ID from cookies or URL parameter if available
+      const orgIdFromCookie = request.cookies.get('current_organization')?.value;
+      const orgIdFromUrl = request.nextUrl.searchParams.get('organizationId');
+      const organizationId = orgIdFromCookie ? parseInt(orgIdFromCookie, 10) :
+                           orgIdFromUrl ? parseInt(orgIdFromUrl, 10) : undefined;
+
       // Make a server-side call to validate the user session and permissions
       const hasValidSession = await validateUserSession();
 
@@ -69,8 +75,12 @@ export async function middleware(request: NextRequest) {
       // Check route-level permissions
       const requiredPermission = getRequiredRoles(request.nextUrl.pathname);
       if (requiredPermission) {
-        // In a real implementation, you'd validate against the user's permissions
+        // For organization-specific permissions check, fetch user data for the organization
+        // In a real implementation, you'd validate against the user's permissions in the specific org
         // For now, we'll assume valid session means valid permissions for the demo
+
+        // If organization ID is present, you could implement additional org-specific checks here
+        // This is where you would verify that the user actually has access to this route in this org
       }
     } catch (error) {
       console.error('Session validation error:', error);
