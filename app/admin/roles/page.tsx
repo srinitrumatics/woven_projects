@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Role, Permission, PermissionGroup, Organization } from '../../../db/schema';
 import { roleApi, permissionApi, permissionGroupApi, organizationApi } from '../../../lib/api/rbac-api';
-import { Plus, Edit, Trash2, Save, X, Shield, Key, Building2 } from 'lucide-react';
+import { Plus, Shield, Sparkles } from 'lucide-react';
 import RoleList from '../../../components/RoleManagement/RoleList';
 import RoleForm from '../../../components/RoleManagement/RoleForm';
 
@@ -19,7 +20,7 @@ interface GroupedPermission {
   description: string | null;
   createdAt: string;
   updatedAt: string;
-  permissions?: Permission[]; // Make it optional since it might be populated later
+  permissions?: Permission[];
 }
 
 const RoleManagement: React.FC = () => {
@@ -29,15 +30,14 @@ const RoleManagement: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingRole, setEditingRole] = useState<Role | null>(null);
-  const [selectedRolePermissions, setSelectedRolePermissions] = useState<{[key: string]: string[]}>({});
-  const [allRolePermissions, setAllRolePermissions] = useState<{[key: string]: RolePermission[]}>({});
+  const [selectedRolePermissions, setSelectedRolePermissions] = useState<{ [key: string]: string[] }>({});
+  const [allRolePermissions, setAllRolePermissions] = useState<{ [key: string]: RolePermission[] }>({});
 
   // Form state
   const [formData, setFormData] = useState({
     name: '',
     description: '',
   });
-  // For form-level permission assignments (when creating/editing a role)
   const [formPermissionAssignments, setFormPermissionAssignments] = useState<string[]>([]);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const RoleManagement: React.FC = () => {
       const [rolesData, permissionGroupsData, allPermissionsData] = await Promise.all([
         roleApi.getRoles(),
         permissionGroupApi.getPermissionGroups(),
-        permissionApi.getPermissions(), // Load all permissions to group them
+        permissionApi.getPermissions(),
       ]);
 
       setRoles(rolesData);
@@ -77,7 +77,7 @@ const RoleManagement: React.FC = () => {
       setGroupedPermissions(groupedPermsWithPermissions);
 
       // Load permissions for each role
-      const rolePermissionsMap: {[key: string]: RolePermission[]} = {};
+      const rolePermissionsMap: { [key: string]: RolePermission[] } = {};
       for (const role of rolesData) {
         try {
           const rolePermissions = await roleApi.getRolePermissions(role.id);
@@ -90,18 +90,17 @@ const RoleManagement: React.FC = () => {
       setAllRolePermissions(rolePermissionsMap);
 
       // Initialize selected role permissions
-      const selectedPermissionsMap: {[key: string]: string[]} = {};
+      const selectedPermissionsMap: { [key: string]: string[] } = {};
       for (const role of rolesData) {
         selectedPermissionsMap[role.id] = rolePermissionsMap[role.id].map(rp => rp.permissionId);
       }
       setSelectedRolePermissions(selectedPermissionsMap);
 
-      // If we're editing a role, load its permissions into the form state (organization loading handled in handleEdit)
       if (roleIdToLoad) {
         const rolePermissions = rolePermissionsMap[roleIdToLoad] || [];
         setFormPermissionAssignments(rolePermissions.map(rp => rp.permissionId));
       } else {
-        setFormPermissionAssignments([]); // Reset when not editing
+        setFormPermissionAssignments([]);
       }
 
     } catch (err) {
@@ -120,89 +119,6 @@ const RoleManagement: React.FC = () => {
     }));
   };
 
-  const handlePermissionChange = (permissionId: string, roleId?: string) => {
-    if (roleId !== undefined) {
-      // For permission assignment to role
-      setSelectedRolePermissions(prev => {
-        const currentPermissions = prev[roleId] || [];
-        const newPermissions = currentPermissions.includes(permissionId)
-          ? currentPermissions.filter(id => id !== permissionId)
-          : [...currentPermissions, permissionId];
-
-        // Update the backend
-        roleApi.assignPermissionsToRole(roleId, newPermissions)
-          .then(success => {
-            if (success) {
-              // Update all role permissions cache
-              setAllRolePermissions(prevPermissions => ({
-                ...prevPermissions,
-                [roleId]: groupedPermissions
-                  .filter(g => g.permissions) // Only include groups that have permissions
-                  .flatMap(g => g.permissions!)
-                  .filter(p => newPermissions.includes(p.id))
-                  .map(p => ({
-                    permissionId: p.id,
-                    permissionName: p.name,
-                    permissionDescription: p.description
-                  }))
-              }));
-            }
-          })
-          .catch(err => console.error('Error updating role permissions:', err));
-
-        return {
-          ...prev,
-          [roleId]: newPermissions
-        };
-      });
-    } else {
-      // For form permission selection
-      setFormPermissionAssignments(prev =>
-        prev.includes(permissionId)
-          ? prev.filter(id => id !== permissionId)
-          : [...prev, permissionId]
-      );
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      if (editingRole) {
-        // Update existing role
-        await roleApi.updateRole(editingRole.id, {
-          name: formData.name,
-          description: formData.description,
-        });
-
-        // Update permissions for the role
-        await roleApi.assignPermissionsToRole(editingRole.id, formPermissionAssignments);
-      } else {
-        // Create new role
-        const savedRole = await roleApi.createRole({
-          name: formData.name,
-          description: formData.description,
-        });
-
-        // Assign permissions to the new role
-        if (formPermissionAssignments.length > 0) {
-          await roleApi.assignPermissionsToRole(savedRole.id, formPermissionAssignments);
-        }
-      }
-
-      // Reset form and reload data
-      setFormData({ name: '', description: '' });
-      setFormPermissionAssignments([]);
-      setEditingRole(null);
-      setShowForm(false);
-      await loadRolesPermissionsAndOrganizations();
-    } catch (err) {
-      setError('Failed to save role');
-      console.error(err);
-    }
-  };
-
   const handleEdit = async (role: Role) => {
     setFormData({
       name: role.name,
@@ -210,9 +126,7 @@ const RoleManagement: React.FC = () => {
     });
     setEditingRole(role);
     setShowForm(true);
-    // Load permissions for this role into the form
     setFormPermissionAssignments(selectedRolePermissions[role.id] || []);
-
   };
 
   const handleDelete = async (id: string) => {
@@ -227,87 +141,150 @@ const RoleManagement: React.FC = () => {
     }
   };
 
-  const handleCancel = () => {
-    setFormData({ name: '', description: '' });
-    setFormPermissionAssignments([]);
-    setEditingRole(null);
-    setShowForm(false);
-  };
-
-  if (loading) return <div className="p-8 text-center">Loading roles...</div>;
-  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
-
-  return (
-    <div>
-      <div className="mb-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Role Management</h1>
-        <button
-          onClick={() => {
-            setFormData({ name: '', description: '' });
-            setFormPermissionAssignments([]); // Reset permissions when creating a new role
-            setEditingRole(null);
-            setShowForm(true);
-          }}
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add Role
-        </button>
-      </div>
-
-      {showForm && (
-        <RoleForm
-          editingRole={editingRole}
-          formData={formData}
-          formPermissionAssignments={formPermissionAssignments}
-          groupedPermissions={groupedPermissions}
-          handleInputChange={handleInputChange}
-          setFormPermissionAssignments={setFormPermissionAssignments}
-          setShowForm={setShowForm}
-          setFormData={setFormData}
-          setEditingRole={setEditingRole}
-          loadRolesPermissionsAndOrganizations={loadRolesPermissionsAndOrganizations}
-          roleApi={roleApi}
-        />
-      )}
-
-      {/* Only show role list if not in form mode (hide when creating or editing) */}
-      {!showForm ? (
-        <RoleList
-          roles={roles}
-          loading={loading}
-          error={error}
-          allRolePermissions={allRolePermissions}
-          groupedPermissions={groupedPermissions}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-        />
-      ) : null}
-
-      {/* Show empty state when there are no roles and form is not open */}
-      {roles.length === 0 && !showForm && (
-        <div className="text-center py-12">
-          <Shield className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No roles</h3>
-          <p className="mt-1 text-sm text-gray-500">
-            Get started by creating a new role.
-          </p>
-          <div className="mt-6">
-            <button
-              onClick={() => {
-                setFormData({ name: '', description: '' });
-                setFormPermissionAssignments([]); // Reset permissions when creating a new role
-                setEditingRole(null);
-                setShowForm(true);
-              }}
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              New Role
-            </button>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="h-16 bg-gray-200 rounded-2xl mb-8 animate-pulse"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 animate-pulse">
+                <div className="h-12 w-12 bg-gray-200 rounded-xl mb-4"></div>
+                <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-full"></div>
+              </div>
+            ))}
           </div>
         </div>
-      )}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
+            <div className="text-red-600 text-lg font-semibold mb-2">Error Loading Roles</div>
+            <div className="text-red-500">{error}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-[#96C2DB] to-[#6B9DB8] rounded-xl flex items-center justify-center shadow-lg">
+                  <Shield className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                    Role Management
+                  </h1>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Create and manage roles with granular permissions
+                  </p>
+                </div>
+              </div>
+              {!showForm && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    setFormData({ name: '', description: '' });
+                    setFormPermissionAssignments([]);
+                    setEditingRole(null);
+                    setShowForm(true);
+                  }}
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#96C2DB] to-[#6B9DB8] text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium"
+                >
+                  <Plus className="w-5 h-5" />
+                  Add New Role
+                </motion.button>
+              )}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Form */}
+        {showForm && (
+          <RoleForm
+            editingRole={editingRole}
+            formData={formData}
+            formPermissionAssignments={formPermissionAssignments}
+            groupedPermissions={groupedPermissions}
+            handleInputChange={handleInputChange}
+            setFormPermissionAssignments={setFormPermissionAssignments}
+            setShowForm={setShowForm}
+            setFormData={setFormData}
+            setEditingRole={setEditingRole}
+            loadRolesPermissionsAndOrganizations={loadRolesPermissionsAndOrganizations}
+            roleApi={roleApi}
+          />
+        )}
+
+        {/* Role List */}
+        {!showForm && roles.length > 0 && (
+          <RoleList
+            roles={roles}
+            loading={loading}
+            error={error}
+            allRolePermissions={allRolePermissions}
+            groupedPermissions={groupedPermissions}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+        )}
+
+        {/* Empty State */}
+        {roles.length === 0 && !showForm && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gradient-to-br from-white to-gray-50 rounded-2xl border-2 border-dashed border-gray-300 p-16 text-center"
+          >
+            <div className="max-w-md mx-auto">
+              <div className="relative inline-block mb-6">
+                <div className="w-24 h-24 bg-gradient-to-br from-[#96C2DB]/20 to-[#6B9DB8]/20 rounded-2xl flex items-center justify-center">
+                  <Shield className="w-12 h-12 text-[#6B9DB8]" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">No Roles Yet</h3>
+              <p className="text-gray-500 mb-8">
+                Get started by creating your first role with custom permissions to control access across your application.
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  setFormData({ name: '', description: '' });
+                  setFormPermissionAssignments([]);
+                  setEditingRole(null);
+                  setShowForm(true);
+                }}
+                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#96C2DB] to-[#6B9DB8] text-white rounded-xl hover:shadow-xl transition-all duration-200 font-semibold text-lg"
+              >
+                <Plus className="w-6 h-6" />
+                Create Your First Role
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 };

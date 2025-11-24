@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { User, Role, Organization } from '../../../db/schema';
 import { userApi, roleApi, organizationApi } from '../../../lib/api/rbac-api';
-import { Plus, Edit, Trash2, Users, Building2 } from 'lucide-react';
+import { Plus, Users, Sparkles } from 'lucide-react';
 import UserList from '../../../components/UserManagement/UserList';
 import UserForm from '../../../components/UserManagement/UserForm';
 
@@ -27,12 +28,11 @@ const UserManagement: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingUser, setEditingUser] = useState<Omit<User, 'password'> | null>(null);
-  const [selectedUserRoles, setSelectedUserRoles] = useState<{[key: string]: string[]}>({});
-  const [selectedUserOrganizations, setSelectedUserOrganizations] = useState<{[key: string]: string[]}>({});
-  const [allUserRoles, setAllUserRoles] = useState<{[key: string]: UserRole[]}>({});
-  const [allUserOrganizations, setAllUserOrganizations] = useState<{[key: string]: UserOrganization[]}>({});
+  const [selectedUserRoles, setSelectedUserRoles] = useState<{ [key: string]: string[] }>({});
+  const [selectedUserOrganizations, setSelectedUserOrganizations] = useState<{ [key: string]: string[] }>({});
+  const [allUserRoles, setAllUserRoles] = useState<{ [key: string]: UserRole[] }>({});
+  const [allUserOrganizations, setAllUserOrganizations] = useState<{ [key: string]: UserOrganization[] }>({});
 
-  // Form state
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -57,14 +57,11 @@ const UserManagement: React.FC = () => {
       setRoles(rolesData);
       setOrganizations(organizationsData);
 
-      // Load roles for each user organization combination
-      const userOrgRolesMap: {[key: string]: UserRole[]} = {};
-      // Load organizations for each user
-      const userOrganizationsMap: {[key: string]: UserOrganization[]} = {};
+      const userOrgRolesMap: { [key: string]: UserRole[] } = {};
+      const userOrganizationsMap: { [key: string]: UserOrganization[] } = {};
 
       for (const user of usersData) {
         try {
-          // Load user organizations
           const userOrgs = await userApi.getUserOrganizations(user.id);
           userOrganizationsMap[user.id] = userOrgs.map(ug => {
             const org = organizationsData.find(o => o.id === ug.organizationId);
@@ -75,7 +72,6 @@ const UserManagement: React.FC = () => {
             };
           });
 
-          // For each organization, load the roles for this user
           for (const userOrg of userOrgs) {
             const userOrgKey = `${user.id}-${userOrg.organizationId}`;
             const rolesForOrg = await userApi.getUserRoles(user.id, userOrg.organizationId);
@@ -90,7 +86,7 @@ const UserManagement: React.FC = () => {
           }
         } catch (err) {
           console.error(`Error loading roles/organizations for user ${user.id}:`, err);
-          userOrgRolesMap[user.id] = []; // Use the string key for consistency
+          userOrgRolesMap[user.id] = [];
           userOrganizationsMap[user.id] = [];
         }
       }
@@ -98,12 +94,10 @@ const UserManagement: React.FC = () => {
       setAllUserRoles(userOrgRolesMap);
       setAllUserOrganizations(userOrganizationsMap);
 
-      // Initialize selected user roles and organizations
-      const selectedRolesMap: {[key: string]: string[]} = {};
-      const selectedOrgsMap: {[key: string]: string[]} = {};
+      const selectedRolesMap: { [key: string]: string[] } = {};
+      const selectedOrgsMap: { [key: string]: string[] } = {};
 
       for (const user of usersData) {
-        // For each organization the user belongs to, set up role selections
         for (const userOrg of userOrganizationsMap[user.id] || []) {
           const userOrgKey = `${user.id}-${userOrg.organizationId}`;
           selectedRolesMap[userOrgKey] = userOrgRolesMap[userOrgKey]?.map(ur => ur.roleId) || [];
@@ -133,18 +127,15 @@ const UserManagement: React.FC = () => {
 
   const handleOrganizationChange = (organizationId: string, userId?: string) => {
     if (userId !== undefined) {
-      // For organization assignment to user in table view
       setSelectedUserOrganizations(prev => {
         const currentOrganizations = prev[userId] || [];
         const newOrganizations = currentOrganizations.includes(organizationId)
           ? currentOrganizations.filter(id => id !== organizationId)
           : [...currentOrganizations, organizationId];
 
-        // Update the backend
         userApi.assignOrganizationsToUser(userId, newOrganizations)
           .then(success => {
             if (success) {
-              // Update all user organizations cache
               setAllUserOrganizations(prevOrgs => ({
                 ...prevOrgs,
                 [userId]: organizations.filter(o => newOrganizations.includes(o.id)).map(o => ({
@@ -163,7 +154,6 @@ const UserManagement: React.FC = () => {
         };
       });
     } else {
-      // For form organization selection
       setOrganizationAssignments(prev =>
         prev.includes(organizationId)
           ? prev.filter(id => id !== organizationId)
@@ -173,20 +163,16 @@ const UserManagement: React.FC = () => {
   };
 
   const handleRoleChange = (roleId: string, userId: string, organizationId: string) => {
-    // For role assignment to user in a specific organization
     setSelectedUserRoles(prev => {
-      // Find the current roles for this specific user-organization combination
       const userOrgKey = `${userId}-${organizationId}`;
       const currentRoles = prev[userOrgKey] || [];
       const newRoles = currentRoles.includes(roleId)
         ? currentRoles.filter(id => id !== roleId)
         : [...currentRoles, roleId];
 
-      // Update the backend
       userApi.assignRolesToUser(userId, newRoles, organizationId)
         .then(success => {
           if (success) {
-            // Update all user roles cache
             setAllUserRoles(prevRoles => ({
               ...prevRoles,
               [userOrgKey]: roles.filter(r => newRoles.includes(r.id)).map(r => ({
@@ -210,17 +196,13 @@ const UserManagement: React.FC = () => {
     setFormData({
       name: user.name,
       email: user.email,
-      password: '' // Don't prefill password
+      password: ''
     });
 
-    // Pre-populate organization assignments for editing
     const userOrganizations = allUserOrganizations[user.id]?.map(ug => ug.organizationId) || [];
-
-    // For role assignments in edit mode, we'll load all role-organization assignments
     setOrganizationAssignments(userOrganizations);
 
-    // Reset selected user roles and populate with existing role assignments per organization
-    const newSelectedRoles: {[key: string]: string[]} = {};
+    const newSelectedRoles: { [key: string]: string[] } = {};
     for (const org of allUserOrganizations[user.id] || []) {
       const userOrgKey = `${user.id}-${org.organizationId}`;
       newSelectedRoles[userOrgKey] = allUserRoles[userOrgKey]?.map(r => r.roleId) || [];
@@ -236,34 +218,28 @@ const UserManagement: React.FC = () => {
 
     try {
       if (editingUser) {
-        // Update existing user
         await userApi.updateUser(editingUser.id, {
           name: formData.name,
           email: formData.email,
           ...(formData.password && { password: formData.password })
         });
 
-        // Update user organizations
         await userApi.assignOrganizationsToUser(editingUser.id, organizationAssignments);
 
-        // Update roles for each organization
         for (const orgId of organizationAssignments) {
           const userOrgKey = `${editingUser.id}-${orgId}`;
           const rolesForOrg = selectedUserRoles[userOrgKey] || [];
           await userApi.assignRolesToUser(editingUser.id, rolesForOrg, orgId);
         }
       } else {
-        // Create new user
         const newUser = await userApi.createUser({
           name: formData.name,
           email: formData.email,
           password: formData.password
         });
 
-        // Assign organizations to new user
         await userApi.assignOrganizationsToUser(newUser.id, organizationAssignments);
 
-        // Assign roles to new user for each organization
         for (const orgId of organizationAssignments) {
           const userOrgKey = `new-${orgId}`;
           const rolesForOrg = selectedUserRoles[userOrgKey] || [];
@@ -271,10 +247,8 @@ const UserManagement: React.FC = () => {
         }
       }
 
-      // Reset form and reload data
       setFormData({ name: '', email: '', password: '' });
       setOrganizationAssignments([]);
-      // Reset the selected user roles
       setSelectedUserRoles({});
       setEditingUser(null);
       setShowForm(false);
@@ -297,84 +271,157 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  return (
-    <div>
-      <div className="mb-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">User Management</h1>
-        <button
-          onClick={() => {
-            setFormData({ name: '', email: '', password: '' });
-            setOrganizationAssignments([]);
-            setSelectedUserRoles({});
-            setEditingUser(null);
-            setShowForm(true);
-          }}
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add User
-        </button>
-      </div>
-
-      {showForm ? (
-        <UserForm
-          editingUser={editingUser}
-          formData={formData}
-          organizationAssignments={organizationAssignments}
-          selectedUserRoles={selectedUserRoles}
-          roles={roles}
-          organizations={organizations}
-          handleInputChange={handleInputChange}
-          handleOrganizationChange={handleOrganizationChange}
-          handleSubmit={handleSubmit}
-          setShowForm={setShowForm}
-          setFormData={setFormData}
-          setOrganizationAssignments={setOrganizationAssignments}
-          setSelectedUserRoles={setSelectedUserRoles}
-          setEditingUser={setEditingUser}
-        />
-      ) : null}
-
-      {/* Only show user list if not in form mode (hide when creating or editing) */}
-      {!showForm ? (
-        <UserList
-          users={users}
-          roles={roles}
-          organizations={organizations}
-          loading={loading}
-          error={error}
-          allUserOrganizations={allUserOrganizations}
-          allUserRoles={allUserRoles}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-        />
-      ) : null}
-
-      {/* Show empty state when there are no users and form is not open */}
-      {users.length === 0 && !showForm && (
-        <div className="text-center py-12">
-          <Users className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No users</h3>
-          <p className="mt-1 text-sm text-gray-500">
-            Get started by creating a new user.
-          </p>
-          <div className="mt-6">
-            <button
-              onClick={() => {
-                setFormData({ name: '', email: '', password: '' });
-                setOrganizationAssignments([]);
-                setSelectedUserRoles({});
-                setEditingUser(null);
-                setShowForm(true);
-              }}
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              New User
-            </button>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="h-16 bg-gray-200 rounded-2xl mb-8 animate-pulse"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 animate-pulse">
+                <div className="h-12 w-12 bg-gray-200 rounded-xl mb-4"></div>
+                <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-full"></div>
+              </div>
+            ))}
           </div>
         </div>
-      )}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
+            <div className="text-red-600 text-lg font-semibold mb-2">Error Loading Users</div>
+            <div className="text-red-500">{error}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-teal-50/20 to-cyan-50/20 p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <Users className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                    User Management
+                  </h1>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Manage users, roles, and organization assignments
+                  </p>
+                </div>
+              </div>
+              {!showForm && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    setFormData({ name: '', email: '', password: '' });
+                    setOrganizationAssignments([]);
+                    setSelectedUserRoles({});
+                    setEditingUser(null);
+                    setShowForm(true);
+                  }}
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium"
+                >
+                  <Plus className="w-5 h-5" />
+                  Add New User
+                </motion.button>
+              )}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Form */}
+        {showForm ? (
+          <UserForm
+            editingUser={editingUser}
+            formData={formData}
+            organizationAssignments={organizationAssignments}
+            selectedUserRoles={selectedUserRoles}
+            roles={roles}
+            organizations={organizations}
+            handleInputChange={handleInputChange}
+            handleOrganizationChange={handleOrganizationChange}
+            handleSubmit={handleSubmit}
+            setShowForm={setShowForm}
+            setFormData={setFormData}
+            setOrganizationAssignments={setOrganizationAssignments}
+            setSelectedUserRoles={setSelectedUserRoles}
+            setEditingUser={setEditingUser}
+          />
+        ) : null}
+
+        {/* User List */}
+        {!showForm && users.length > 0 && (
+          <UserList
+            users={users}
+            roles={roles}
+            organizations={organizations}
+            loading={loading}
+            error={error}
+            allUserOrganizations={allUserOrganizations}
+            allUserRoles={allUserRoles}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+        )}
+
+        {/* Empty State */}
+        {users.length === 0 && !showForm && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gradient-to-br from-white to-gray-50 rounded-2xl border-2 border-dashed border-gray-300 p-16 text-center"
+          >
+            <div className="max-w-md mx-auto">
+              <div className="relative inline-block mb-6">
+                <div className="w-24 h-24 bg-gradient-to-br from-teal-500/20 to-cyan-600/20 rounded-2xl flex items-center justify-center">
+                  <Users className="w-12 h-12 text-teal-600" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-teal-400 to-cyan-600 rounded-full flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">No Users Yet</h3>
+              <p className="text-gray-500 mb-8">
+                Get started by creating your first user account to manage access and permissions.
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  setFormData({ name: '', email: '', password: '' });
+                  setOrganizationAssignments([]);
+                  setSelectedUserRoles({});
+                  setEditingUser(null);
+                  setShowForm(true);
+                }}
+                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-semibold text-lg"
+              >
+                <Plus className="w-6 h-6" />
+                Create Your First User
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 };
