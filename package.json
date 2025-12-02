@@ -11,21 +11,24 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-
-    "test:rbac": "tsx lib/rbac-test.ts"
+    "test:rbac": "tsx lib/rbac-test.ts",
+    "start:worker": "node workers/algolia-sync-worker.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@libsql/client": "^0.15.15",
+    "algoliasearch": "^4.25.3",
     "autoprefixer": "^10.4.21",
     "bcryptjs": "^3.0.3",
+    "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",
     "framer-motion": "^12.23.24",
     "lucide-react": "^0.553.0",
     "next": "^15.0.3",
     "pg": "^8.16.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-instantsearch": "^7.20.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
