@@ -350,27 +350,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Cleanup old completed syncs
-CREATE OR REPLACE FUNCTION salesforce.cleanup_old_sync_records(days_to_keep INTEGER DEFAULT 7)
-RETURNS INTEGER AS $$
-DECLARE
-    deleted_count INTEGER;
-BEGIN
-    -- Clean up queue
-    DELETE FROM salesforce.algolia_sync_queue
-    WHERE status = 'completed'
-    AND processed_at < CURRENT_TIMESTAMP - (days_to_keep || ' days')::INTERVAL;
-    
-    GET DIAGNOSTICS deleted_count = ROW_COUNT;
-    
-    -- Clean up old logs
-    DELETE FROM salesforce.algolia_sync_log
-    WHERE synced_at < CURRENT_TIMESTAMP - (days_to_keep || ' days')::INTERVAL;
-    
-    RETURN deleted_count;
-END;
-$$ LANGUAGE plpgsql;
-
--- ============================================
 -- 8. TRIGGER FUNCTIONS
 -- ============================================
 
