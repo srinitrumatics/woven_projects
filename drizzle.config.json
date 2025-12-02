@@ -1,0 +1,8 @@
+{
+  "schema": "./db/schema.ts",
+  "out": "./drizzle",
+  "dialect": "postgresql",
+  "dbCredentials": {
+    "url": "postgres://postgres:password@123@localhost:5432/wovn_web_db"
+  }
+}
