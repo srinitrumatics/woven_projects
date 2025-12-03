@@ -155,7 +155,7 @@ export default function SearchPage() {
           )}
 
           <InstantSearch searchClient={searchClient} indexName={indexName}>
-            <Configure hitsPerPage={12} />
+            <Configure hitsPerPage={200} />
 
             <div className="mb-8">
               <SearchBox
