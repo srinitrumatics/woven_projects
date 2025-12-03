@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { liteClient as algoliasearch } from "algoliasearch/lite";
+import algoliasearch from "algoliasearch/lite";
 import { InstantSearch, SearchBox, Configure, useHits } from "react-instantsearch";
 
 const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "movies_index";
@@ -68,8 +68,8 @@ export default function SearchPage() {
 
   React.useEffect(() => {
     if (typeof window !== 'undefined' &&
-        process.env.NEXT_PUBLIC_ALGOLIA_APP_ID &&
-        process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY) {
+      process.env.NEXT_PUBLIC_ALGOLIA_APP_ID &&
+      process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY) {
       const client = algoliasearch(
         process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
         process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY!
@@ -138,16 +138,7 @@ export default function SearchPage() {
 
         {/* Seed Data Section for Demo/Dev */}
         <div className="max-w-2xl mx-auto mb-8 text-center">
-          <p className="text-sm text-gray-500 mb-2">
-            If you see an "Index not found" error, the Algolia index might be empty.
-          </p>
-          <button
-            onClick={handleSeed}
-            disabled={seedStatus === "loading"}
-            className="px-4 py-2 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 disabled:opacity-50 transition-colors"
-          >
-            {seedStatus === "loading" ? "Seeding..." : "Initialize / Reset Data"}
-          </button>
+
           {seedMessage && (
             <p className={`mt-2 text-sm ${seedStatus === "success" ? "text-green-600" : "text-red-600"}`}>
               {seedMessage}
