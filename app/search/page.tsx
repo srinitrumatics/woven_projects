@@ -151,7 +151,7 @@ export default function SearchPage() {
 
           <div className="max-w-2xl mx-auto mb-10">
             <SearchBox
-              placeholder="Search for movies, actors, or genres..."
+              placeholder="Search for products..."
               classNames={{
                 root: "w-full",
                 form: "relative",
