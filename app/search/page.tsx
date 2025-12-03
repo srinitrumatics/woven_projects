@@ -2,7 +2,15 @@
 
 import React from "react";
 import algoliasearch from "algoliasearch/lite";
-import { InstantSearch, SearchBox, Configure, useHits } from "react-instantsearch";
+import {
+  InstantSearch,
+  SearchBox,
+  Configure,
+  useHits,
+  RefinementList,
+  ClearRefinements,
+  CurrentRefinements
+} from "react-instantsearch";
 import Sidebar from "@/components/layouts/Sidebar";
 
 const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "movies_index";
@@ -155,7 +163,11 @@ export default function SearchPage() {
           )}
 
           <InstantSearch searchClient={searchClient} indexName={indexName}>
-            <Configure hitsPerPage={200} />
+            <Configure
+              hitsPerPage={200}
+              facets={['category', 'genre']}
+              maxValuesPerFacet={200}
+            />
 
             <div className="mb-8">
               <SearchBox
@@ -170,7 +182,96 @@ export default function SearchPage() {
               />
             </div>
 
-            <CustomHits />
+            {/* Current Refinements */}
+            <div className="mb-4">
+              <CurrentRefinements
+                classNames={{
+                  root: "flex flex-wrap gap-2",
+                  list: "flex flex-wrap gap-2",
+                  item: "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-3 py-1 rounded-full text-sm flex items-center gap-2",
+                  label: "font-medium",
+                  category: "opacity-75",
+                  delete: "hover:text-red-600 dark:hover:text-red-400 cursor-pointer ml-1"
+                }}
+              />
+            </div>
+
+            {/* Filters and Results Layout */}
+            <div className="flex flex-col lg:flex-row gap-6">
+              {/* Filters Sidebar */}
+              <aside className="lg:w-64 flex-shrink-0">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sticky top-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">Filters</h2>
+                    <ClearRefinements
+                      classNames={{
+                        root: "",
+                        button: "text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium",
+                        disabledButton: "text-gray-400 cursor-not-allowed"
+                      }}
+                      translations={{
+                        resetButtonText: "Clear all"
+                      }}
+                    />
+                  </div>
+
+                  {/* Category Filter */}
+                  <div className="mb-6">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Category</h3>
+                    <RefinementList
+                      attribute="category"
+                      limit={50}
+                      showMore={true}
+                      showMoreLimit={200}
+                      classNames={{
+                        root: "",
+                        list: "space-y-2",
+                        item: "flex items-center",
+                        selectedItem: "font-medium",
+                        label: "flex items-center cursor-pointer w-full group",
+                        checkbox: "w-4 h-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500 dark:focus:ring-indigo-400 cursor-pointer",
+                        labelText: "ml-2 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white flex-1",
+                        count: "ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full",
+                        showMore: "mt-3 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium cursor-pointer"
+                      }}
+                      translations={{
+                        showMoreButtonText({ isShowingMore }) {
+                          return isShowingMore ? 'Show less' : 'Show more';
+                        }
+                      }}
+                    />
+                  </div>
+
+
+                  {/* Genre/Type Filter (if available) */}
+                  <div className="mb-6">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Type</h3>
+                    <RefinementList
+                      attribute="genre"
+                      limit={50}
+                      showMore={true}
+                      showMoreLimit={200}
+                      classNames={{
+                        root: "",
+                        list: "space-y-2",
+                        item: "flex items-center",
+                        selectedItem: "font-medium",
+                        label: "flex items-center cursor-pointer w-full group",
+                        checkbox: "w-4 h-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500 dark:focus:ring-indigo-400 cursor-pointer",
+                        labelText: "ml-2 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white flex-1",
+                        count: "ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full",
+                        showMore: "mt-3 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium cursor-pointer"
+                      }}
+                    />
+                  </div>
+                </div>
+              </aside>
+
+              {/* Products Grid */}
+              <div className="flex-1">
+                <CustomHits />
+              </div>
+            </div>
           </InstantSearch>
         </div>
       </div>

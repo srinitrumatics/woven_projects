@@ -93,6 +93,24 @@ export async function POST() {
 
     // Clear the index and add sample data
     await index.clearObjects();
+
+    // Configure index settings for faceting
+    await index.setSettings({
+      attributesForFaceting: [
+        'searchable(category)',
+        'searchable(genre)',
+        'price'
+      ],
+      searchableAttributes: [
+        'title',
+        'name',
+        'description',
+        'category',
+        'genre'
+      ],
+      customRanking: ['desc(price)']
+    });
+
     const result = await index.saveObjects(sampleData);
 
     // Wait for the indexing task to complete
