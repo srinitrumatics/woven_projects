@@ -26,39 +26,68 @@ export async function POST() {
     const sampleData = [
       {
         objectID: "1",
-        title: "Sample Product 1",
-        name: "Sample Product 1",
-        original_title: "Sample Product 1",
+        title: "Wireless Bluetooth Headphones",
+        name: "Wireless Bluetooth Headphones",
+        original_title: "Premium Audio Headphones",
         genre: ["Electronics"],
-        year: 2023,
-        release_date: "2023-01-15",
-        vote_average: 8.5,
-        image: "https://via.placeholder.com/300x450?text=Product+1",
-        description: "This is a sample product for demonstration purposes."
+        category: "Electronics",
+        year: 2024,
+        release_date: "2024-01-15",
+        price: 79.99,
+        image: "https://via.placeholder.com/400x400?text=Headphones",
+        description: "High-quality wireless headphones with noise cancellation and 30-hour battery life."
       },
       {
         objectID: "2",
-        title: "Sample Product 2",
-        name: "Sample Product 2", 
-        original_title: "Sample Product 2",
-        genre: ["Clothing"],
+        title: "Smart Fitness Watch",
+        name: "Smart Fitness Watch",
+        original_title: "Advanced Fitness Tracker",
+        genre: ["Wearables"],
+        category: "Wearables",
         year: 2024,
         release_date: "2024-03-20",
-        vote_average: 7.8,
-        image: "https://via.placeholder.com/300x450?text=Product+2",
-        description: "This is another sample product for demonstration purposes."
+        price: 199.99,
+        image: "https://via.placeholder.com/400x400?text=Smart+Watch",
+        description: "Track your fitness goals with heart rate monitoring, GPS, and sleep tracking."
       },
       {
         objectID: "3",
-        title: "Sample Product 3",
-        name: "Sample Product 3",
-        original_title: "Sample Product 3", 
+        title: "Ergonomic Office Chair",
+        name: "Ergonomic Office Chair",
+        original_title: "Premium Comfort Chair",
+        genre: ["Furniture"],
+        category: "Furniture",
+        year: 2023,
+        release_date: "2023-11-10",
+        price: 349.99,
+        image: "https://via.placeholder.com/400x400?text=Office+Chair",
+        description: "Comfortable ergonomic chair with lumbar support and adjustable armrests."
+      },
+      {
+        objectID: "4",
+        title: "Stainless Steel Water Bottle",
+        name: "Stainless Steel Water Bottle",
+        original_title: "Insulated Water Bottle",
         genre: ["Home & Kitchen"],
-        year: 2022,
-        release_date: "2022-11-10",
-        vote_average: 9.2,
-        image: "https://via.placeholder.com/300x450?text=Product+3",
-        description: "Yet another sample product for demonstration purposes."
+        category: "Home & Kitchen",
+        year: 2024,
+        release_date: "2024-02-05",
+        price: 24.99,
+        image: "https://via.placeholder.com/400x400?text=Water+Bottle",
+        description: "Keep drinks cold for 24 hours or hot for 12 hours with double-wall insulation."
+      },
+      {
+        objectID: "5",
+        title: "Mechanical Gaming Keyboard",
+        name: "Mechanical Gaming Keyboard",
+        original_title: "RGB Gaming Keyboard",
+        genre: ["Gaming"],
+        category: "Gaming",
+        year: 2024,
+        release_date: "2024-04-12",
+        price: 129.99,
+        image: "https://via.placeholder.com/400x400?text=Gaming+Keyboard",
+        description: "Mechanical switches with customizable RGB lighting and programmable keys."
       }
     ];
 

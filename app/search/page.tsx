@@ -3,6 +3,7 @@
 import React from "react";
 import algoliasearch from "algoliasearch/lite";
 import { InstantSearch, SearchBox, Configure, useHits } from "react-instantsearch";
+import Sidebar from "@/components/layouts/Sidebar";
 
 const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "movies_index";
 
@@ -21,38 +22,54 @@ function CustomHits() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {hits.map((hit: any) => (
-        <div key={hit.objectID} className="flex flex-col h-full bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
-          <div className="relative aspect-[2/3] bg-gray-100 overflow-hidden">
+        <div key={hit.objectID} className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer">
+          <div className="relative aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden">
             {hit.image ? (
               <img
                 src={hit.image}
-                alt={hit.title}
+                alt={hit.title || hit.name}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 onError={(e) => (e.currentTarget.style.display = 'none')}
               />
             ) : (
               <div className="flex items-center justify-center h-full text-gray-400">
-                <span className="text-4xl">🎬</span>
+                <span className="text-4xl">📦</span>
               </div>
             )}
-            <div className="absolute top-2 right-2 bg-black/70 text-white text-xs font-bold px-2 py-1 rounded-full backdrop-blur-sm">
-              {hit.vote_average ? `★ ${hit.vote_average}` : "N/A"}
-            </div>
+            {hit.price && (
+              <div className="absolute top-2 right-2 bg-indigo-600 text-white text-sm font-bold px-3 py-1.5 rounded-lg backdrop-blur-sm shadow-lg">
+                ${typeof hit.price === 'number' ? hit.price.toFixed(2) : hit.price}
+              </div>
+            )}
           </div>
 
           <div className="p-4 flex flex-col flex-grow">
-            <div className="mb-1">
-              <span className="text-xs font-medium text-indigo-600 uppercase tracking-wider">
-                {Array.isArray(hit.genre) ? hit.genre[0] : (hit.genre || "Movie")}
+            <div className="mb-2">
+              <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+                {Array.isArray(hit.genre) ? hit.genre[0] : (hit.genre || hit.category || "Product")}
               </span>
             </div>
-            <h3 className="text-lg font-bold text-gray-900 line-clamp-2 mb-2 group-hover:text-indigo-600 transition-colors">
+            <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
               {hit.title || hit.name || hit.original_title || "Untitled"}
             </h3>
 
-            <div className="mt-auto pt-3 border-t border-gray-100 flex justify-between items-center text-xs text-gray-500">
-              <span>{hit.year || (hit.release_date ? new Date(hit.release_date).getFullYear() : "Unknown")}</span>
-              <span className="font-mono opacity-60">ID: {hit.objectID.slice(0, 6)}...</span>
+            {hit.description && (
+              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
+                {hit.description}
+              </p>
+            )}
+
+            <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
+              {hit.price ? (
+                <span className="text-lg font-bold text-gray-900 dark:text-white">
+                  ${typeof hit.price === 'number' ? hit.price.toFixed(2) : hit.price}
+                </span>
+              ) : (
+                <span className="text-sm text-gray-500 dark:text-gray-400">Price not available</span>
+              )}
+              <button className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg transition-colors">
+                View
+              </button>
             </div>
           </div>
         </div>
@@ -96,75 +113,67 @@ export default function SearchPage() {
 
   if (!process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || !process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Search</h1>
-          <div className="p-8 text-center text-red-600">
-            <h2 className="text-2xl font-bold mb-2">Configuration Missing</h2>
-            <p className="mb-4">Please add NEXT_PUBLIC_ALGOLIA_APP_ID and NEXT_PUBLIC_ALGOLIA_SEARCH_KEY to your .env.local file.</p>
-            <div className="bg-gray-100 p-4 rounded-lg text-left max-w-3xl mx-auto">
-              <h3 className="font-bold mb-2">To fix this:</h3>
-              <ol className="list-decimal list-inside mb-2">
-                <li>Copy the .env_example.env file to .env.local</li>
-                <li>Add your Algolia credentials to .env.local</li>
-                <li>Make sure to use the correct NEXT_PUBLIC_ prefixed variables</li>
-              </ol>
-              <p className="text-sm text-gray-600">Note: Never commit .env.local to version control</p>
-            </div>
+      <Sidebar>
+        <div className="p-8 text-center text-red-600">
+          <h2 className="text-2xl font-bold mb-2">Configuration Missing</h2>
+          <p className="mb-4">Please add NEXT_PUBLIC_ALGOLIA_APP_ID and NEXT_PUBLIC_ALGOLIA_SEARCH_KEY to your .env.local file.</p>
+          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-left max-w-3xl mx-auto">
+            <h3 className="font-bold mb-2 text-gray-900 dark:text-white">To fix this:</h3>
+            <ol className="list-decimal list-inside mb-2 text-gray-700 dark:text-gray-300">
+              <li>Copy the .env_example.env file to .env.local</li>
+              <li>Add your Algolia credentials to .env.local</li>
+              <li>Make sure to use the correct NEXT_PUBLIC_ prefixed variables</li>
+            </ol>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Note: Never commit .env.local to version control</p>
           </div>
         </div>
-      </div>
+      </Sidebar>
     );
   }
 
   if (!searchClient) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Search</h1>
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-600 mb-4"></div>
-            <p className="text-gray-600">Initializing search...</p>
-          </div>
+      <Sidebar>
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-600 mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Initializing search...</p>
         </div>
-      </div>
+      </Sidebar>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center"> Search</h1>
-
-        {/* Seed Data Section for Demo/Dev */}
-        <div className="max-w-2xl mx-auto mb-8 text-center">
-
+    <Sidebar>
+      <div className="bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4">
           {seedMessage && (
-            <p className={`mt-2 text-sm ${seedStatus === "success" ? "text-green-600" : "text-red-600"}`}>
-              {seedMessage}
-            </p>
+            <div className="mb-6">
+              <p className={`text-sm ${seedStatus === "success" ? "text-green-600" : "text-red-600"}`}>
+                {seedMessage}
+              </p>
+            </div>
           )}
+
+          <InstantSearch searchClient={searchClient} indexName={indexName}>
+            <Configure hitsPerPage={12} />
+
+            <div className="mb-8">
+              <SearchBox
+                placeholder="Search for products..."
+                classNames={{
+                  root: "w-full",
+                  form: "relative",
+                  input: "w-full px-4 py-3 pl-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400",
+                  submitIcon: "hidden",
+                  resetIcon: "hidden"
+                }}
+              />
+            </div>
+
+            <CustomHits />
+          </InstantSearch>
         </div>
-
-        <InstantSearch searchClient={searchClient} indexName={indexName}>
-          <Configure hitsPerPage={12} />
-
-          <div className="max-w-2xl mx-auto mb-10">
-            <SearchBox
-              placeholder="Search for products..."
-              classNames={{
-                root: "w-full",
-                form: "relative",
-                input: "w-full px-4 py-3 pl-10 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 placeholder-gray-500",
-                submitIcon: "hidden",
-                resetIcon: "hidden"
-              }}
-            />
-          </div>
-
-          <CustomHits />
-        </InstantSearch>
       </div>
-    </div>
+    </Sidebar>
   );
 }
