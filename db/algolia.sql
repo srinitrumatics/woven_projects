@@ -93,6 +93,7 @@ BEGIN
         'stock_quantity', COALESCE(product_row.gtherp__stock_quantity__c, 0),
         'available_quantity', COALESCE(product_row.gtherp__available_quantity__c, 0),
         'discount', COALESCE(product_row.gtherp__discount__c, 0),
+        'image_url', product_row.image_url,
         
         -- Categories and Family
         'category', product_row.gtherp__category__c,
@@ -426,28 +427,33 @@ BEGIN
         
         RETURN NEW;
     ELSIF (TG_OP = 'UPDATE') THEN
-        -- Only sync if relevant fields changed
-        IF (NEW IS DISTINCT FROM OLD) THEN
-            operation_type := 'UPDATE';
-            
-            BEGIN
-                record_id := NEW.sfid::TEXT;
-            EXCEPTION WHEN OTHERS THEN
-                record_id := NEW.id::TEXT;
-            END;
+        -- ALWAYS queue updates - no change detection
+        -- This ensures bulk updates work reliably
+        -- The ON CONFLICT in enqueue_algolia_sync will handle duplicates
+        operation_type := 'UPDATE';
+        
+        BEGIN
+            record_id := NEW.sfid::TEXT;
+        EXCEPTION WHEN OTHERS THEN
+            record_id := NEW.id::TEXT;
+        END;
 
-            -- Execute transform function dynamically with schema qualification
-            EXECUTE format('SELECT salesforce.%I($1)', transform_func)
-            USING NEW
-            INTO payload;
-            
+        -- Execute transform function dynamically with schema qualification
+        EXECUTE format('SELECT salesforce.%I($1)', transform_func)
+        USING NEW
+        INTO payload;
+        
+        -- Enqueue with error handling
+        BEGIN
             PERFORM salesforce.enqueue_algolia_sync(
                 full_table_name,
                 record_id,
                 operation_type,
                 payload
             );
-        END IF;
+        EXCEPTION WHEN OTHERS THEN
+            RAISE WARNING 'Failed to enqueue sync for record %: %', record_id, SQLERRM;
+        END;
         
         RETURN NEW;
     END IF;
