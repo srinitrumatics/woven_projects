@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { exit } from "process";
-import { getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, getProductsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce } from '@/lib/salesforce-service';
+import { getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, getProductsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce, cloneOrderFromSalesforce, deleteOrderFromSalesforce, getFilesFromSalesforce, deleteFileFromSalesforce, uploadFilesToSalesforce } from '@/lib/salesforce-service';
 
 
 export async function GET(req: Request) {
@@ -35,6 +35,11 @@ export async function GET(req: Request) {
       result = await getContactsFromSalesforce(accountId, contactId, contactUrl);
     } else if (rawAction === "products" || rawAction === "product") {
       result = await getProductsFromSalesforce(accountId, contactId);
+    } else if (rawAction === "files") {
+      if (!orderId) {
+        return NextResponse.json({ error: "Missing orderId for files action" }, { status: 400 });
+      }
+      result = await getFilesFromSalesforce(accountId, contactId, orderId);
     } else if (orderId) {
       // support direct order fetch when orderId provided without explicit action
       orderUrl = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
@@ -51,9 +56,23 @@ export async function GET(req: Request) {
   }
 }
 
-// POST handler for creating new orders
+// POST handler for creating new orders or uploading files
 export async function POST(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const action = searchParams.get("action");
+
+    if (action === "uploadFiles") {
+      const uploadData = await req.json();
+      console.log('POST /api/salesforce/orders?action=uploadFiles');
+      const result = await uploadFilesToSalesforce(uploadData);
+
+      if (!result) {
+        return NextResponse.json({ error: "Failed to upload files" }, { status: 500 });
+      }
+      return NextResponse.json(result, { status: 201 });
+    }
+
     const orderData = await req.json();
     const result = await createOrderFromSalesforce(orderData);
 
@@ -63,7 +82,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(result, { status: 201 });
   } catch (err) {
-    console.error("Create order error:", err);
+    console.error("Create order/upload error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
@@ -73,24 +92,108 @@ export async function PATCH(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const orderId = searchParams.get("orderId");
-
-    if (!orderId) {
-      return NextResponse.json({ error: "Missing orderId" }, { status: 400 });
-    }
-
     const orderData = await req.json();
     console.log('PATCH /api/salesforce/orders - orderId:', orderId);
     console.log('PATCH /api/salesforce/orders - orderData:', JSON.stringify(orderData, null, 2));
 
-    const result = await updateOrderFromSalesforce(orderId, orderData);
-
-    if (!result) {
-      return NextResponse.json({ error: "Failed to update order" }, { status: 500 });
+    let result;
+    if (orderId) {
+      result = await updateOrderFromSalesforce(orderId, orderData);
+    }
+    else {
+      result = await cloneOrderFromSalesforce(orderData);
     }
 
-    return NextResponse.json({ success: true, message: "Order updated successfully" });
+
+
+
+    if (!result) {
+      return NextResponse.json({
+        error: orderId ? "Failed to update order" : "Failed to clone order"
+      }, { status: 500 });
+    }
+
+    // For update operations (orderId present), return simple boolean response
+    if (orderId) {
+      return NextResponse.json({
+        success: true,
+        message: "Order updated successfully"
+      });
+    }
+
+    // For clone operations (no orderId), extract the new order ID and return simple response
+    let newOrderId = null;
+    if (result && typeof result === 'object') {
+      // Extract order ID from the nested Salesforce response
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        newOrderId = result.data[0].Id;
+      } else if (result.Id) {
+        newOrderId = result.Id;
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Order cloned successfully",
+      orderId: newOrderId,
+      data: result.data // Keep data array for frontend compatibility
+    });
   } catch (err) {
     console.error("Update order error:", err);
+    return NextResponse.json({
+      error: "Server error",
+      details: err instanceof Error ? err.message : String(err)
+    }, { status: 500 });
+  }
+}
+
+// DELETE handler for deleting order line items or files
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const accountId = searchParams.get("accountId");
+    const orderLineId = searchParams.get("orderLineId");
+    const contentDocumentId = searchParams.get("contentDocumentId");
+    const orderId = searchParams.get("orderId");
+    const contactId = searchParams.get("contactId");
+
+    if (!accountId || !contactId) {
+      return NextResponse.json(
+        { error: "Missing required parameters: accountId and contactId" },
+        { status: 400 }
+      );
+    }
+
+    if (contentDocumentId && orderId) {
+      console.log('DELETE file - accountId:', accountId, 'orderId:', orderId, 'contentDocumentId:', contentDocumentId, 'contactId:', contactId);
+      const result = await deleteFileFromSalesforce(accountId, contactId, orderId, contentDocumentId);
+      if (!result) {
+        return NextResponse.json({ error: "Failed to delete file" }, { status: 500 });
+      }
+      return NextResponse.json({ success: true, message: "File deleted successfully" });
+    }
+
+    if (!orderLineId) {
+      return NextResponse.json(
+        { error: "Missing orderLineId for order line deletion" },
+        { status: 400 }
+      );
+    }
+
+    console.log('DELETE order line - accountId:', accountId, 'orderLineId:', orderLineId, 'contactId:', contactId);
+
+    // Call the delete service function
+    const result = await deleteOrderFromSalesforce(accountId, contactId, orderLineId);
+
+    if (!result) {
+      return NextResponse.json({ error: "Failed to delete order line" }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, message: "Order line is deleted successfully" });
+
+
+  } catch (err) {
+    console.error("Delete order line error:", err);
     return NextResponse.json({
       error: "Server error",
       details: err instanceof Error ? err.message : String(err)

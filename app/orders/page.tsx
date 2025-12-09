@@ -24,8 +24,9 @@ export default function OrdersPage() {
   const [dateRange, setDateRange] = useState("Jan 1 - Jan 30, 2024");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const accountId = '001WL00000bapRiYAI';
-  const contactId = 'abc';
+  const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "001QL00001Kbvt3YAB"; // override with real value
+  const contactId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "003QL00001EzLjZYAV" //TODO: Get this from session / auth context
+
 
   // Fetch from backend API (backend should handle Salesforce auth)
   useEffect(() => {
@@ -228,42 +229,93 @@ export default function OrdersPage() {
 
       if (!sourceOrder) throw new Error("Order details not found");
 
-      // 2. Prepare payload
+      // Debug: Log the source order to see what fields are available
+      console.log('Source order data:', sourceOrder);
+      console.log('Source order keys:', Object.keys(sourceOrder));
+
+      // 2. Fetch contact details if we have a Ship_to_Contact__c
+      let contactDetails: any = null;
+      if (sourceOrder.Ship_to_Contact__c) {
+        try {
+          const contactRes = await fetch(`/api/salesforce/orders?accountId=${accountId}&contactId=${contactId}&action=contacts`);
+          if (contactRes.ok) {
+            const contacts = await contactRes.json();
+            contactDetails = Array.isArray(contacts) ? contacts.find((c: any) => c.Id === sourceOrder.Ship_to_Contact__c) : null;
+            console.log('Contact details fetched:', contactDetails);
+          }
+        } catch (err) {
+          console.warn('Failed to fetch contact details:', err);
+        }
+      }
+
+      // 3. Prepare payload (excluding Request_Date__c as per requirement)
+      // Build order object matching Salesforce API specification
+      const orderData: any = {
+        Bill_to_Account__c: sourceOrder.Bill_to_Account__c || accountId,
+        Ship_to_Account__c: sourceOrder.Ship_to_Account__c || accountId,
+        Inventory_Account__c: sourceOrder.Inventory_Account__c || accountId,
+        Status__c: 'Draft'
+      };
+
+      // Add all available fields from source order (excluding Request_Date__c)
+      if (sourceOrder.Authorized_Bill_To_Location__c) orderData.Authorized_Bill_To_Location__c = sourceOrder.Authorized_Bill_To_Location__c;
+      if (sourceOrder.Authorized_Ship_To_Location__c) orderData.Authorized_Ship_To_Location__c = sourceOrder.Authorized_Ship_To_Location__c;
+
+      // Contact fields - IMPORTANT: Include Bill_to_Contact__c if available
+      if (sourceOrder.Bill_to_Contact__c) {
+        orderData.Bill_to_Contact__c = sourceOrder.Bill_to_Contact__c;
+      } else if (sourceOrder.Ship_to_Contact__c) {
+        // Fallback: use Ship_to_Contact as Bill_to_Contact if Bill_to_Contact is missing
+        orderData.Bill_to_Contact__c = sourceOrder.Ship_to_Contact__c;
+      }
+
+      if (sourceOrder.Ship_to_Contact__c) {
+        orderData.Ship_to_Contact__c = sourceOrder.Ship_to_Contact__c;
+      }
+
+      // Other order fields
+      if (sourceOrder.Customer_PO__c) orderData.Customer_PO__c = sourceOrder.Customer_PO__c;
+      if (sourceOrder.Drop_Ship__c !== undefined) orderData.Drop_Ship__c = sourceOrder.Drop_Ship__c;
+      if (sourceOrder.Customer_Order_Notes__c) orderData.Customer_Order_Notes__c = sourceOrder.Customer_Order_Notes__c;
+      if (sourceOrder.Payment_Term__c) orderData.Payment_Term__c = sourceOrder.Payment_Term__c;
+
+      // Build shipToContact object with Phone and Email
+      const shipToContactData: any = {};
+      if (sourceOrder.Ship_to_Contact__c) {
+        shipToContactData.Id = sourceOrder.Ship_to_Contact__c;
+      }
+
+      // Try to get contact details from source order if available
+      if (sourceOrder.ShipToContact) {
+        if (sourceOrder.ShipToContact.Phone) shipToContactData.Phone = sourceOrder.ShipToContact.Phone;
+        if (sourceOrder.ShipToContact.Email) shipToContactData.Email = sourceOrder.ShipToContact.Email;
+      } else if (contactDetails) {
+        // Use separately fetched contact details
+        if (contactDetails.Phone) shipToContactData.Phone = contactDetails.Phone;
+        if (contactDetails.Email) shipToContactData.Email = contactDetails.Email;
+      }
+
       const payload = {
-        order: {
-          Bill_to_Account__c: sourceOrder.Bill_to_Account__c || accountId,
-          Ship_to_Account__c: sourceOrder.Ship_to_Account__c || accountId,
-          Inventory_Account__c: sourceOrder.Inventory_Account__c || accountId,
-          Authorized_Bill_To_Location__c: sourceOrder.Authorized_Bill_To_Location__c,
-          Authorized_Ship_To_Location__c: sourceOrder.Authorized_Ship_To_Location__c,
-          Bill_to_Contact__c: sourceOrder.Bill_to_Contact__c,
-          Ship_to_Contact__c: sourceOrder.Ship_to_Contact__c,
-          Customer_PO__c: sourceOrder.Customer_PO__c,
-          Request_Date__c: sourceOrder.Request_Date__c,
-          Drop_Ship__c: sourceOrder.Drop_Ship__c,
-          Customer_Order_Notes__c: sourceOrder.Customer_Order_Notes__c,
-          Payment_Term__c: sourceOrder.Payment_Term__c,
-          Status__c: 'Draft'
-        },
-        shipToContact: {
-          Id: sourceOrder.Ship_to_Contact__c
-        },
+        order: orderData,
+        shipToContact: shipToContactData,
         orderLines: (sourceOrder.CustomerOrderLines || []).map((line: any) => ({
+          Status__c: 'Draft',
           Product_Name__c: line.Product_Name__c,
           Order_Qty__c: line.Order_Qty__c,
           Unit_Price__c: line.Unit_Price__c,
           MOQ__c: line.MOQ__c,
           Inventory_Account__c: accountId,
-          IsTaxable__c: true
+          IsTaxable__c: line.IsTaxable__c !== undefined ? line.IsTaxable__c : true,
+          ...(line.Customer_Order_Line_Notes__c && { Customer_Order_Line_Notes__c: line.Customer_Order_Line_Notes__c })
         })),
         accountId: accountId,
         contactId: contactId,
         isDraft: true
       };
-
+      console.log('Clone payload:', JSON.stringify(payload, null, 2));
       // 3. Create new order
       const createRes = await fetch('/api/salesforce/orders', {
-        method: 'POST',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
@@ -510,14 +562,17 @@ export default function OrdersPage() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                             </svg>
                           </button>
-                          <button
-                            className="p-1.5 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
-                            title="Delete order"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
+                          {/* Only show delete for orders that are NOT Approved or Delivered */}
+                          {!["Approved", "Delivered"].includes(order.status) && (
+                            <button
+                              className="p-1.5 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
+                              title="Delete order"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

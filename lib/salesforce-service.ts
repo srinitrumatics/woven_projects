@@ -138,7 +138,7 @@ export async function getOrderslocationsFromSalesforce(accountId?: string, conta
 
     const separator = locationUrl?.includes('?') ? '&' : '?';
     let Url = (locationUrl ?? '') + `${separator}accountId=${encodeURIComponent(accountId ?? '')}&contactId=${encodeURIComponent(contactId ?? '')}`;
-    console.log('Fetching authorized locations from Salesforce with URL:', Url);
+    //console.log('Fetching authorized locations from Salesforce with URL:', Url);
     // Make API call to Salesforce
 
     const response = await fetch(Url, {
@@ -154,7 +154,7 @@ export async function getOrderslocationsFromSalesforce(accountId?: string, conta
     }
 
     const resultdata = await response.json();
-    console.log('order location resultdata:', resultdata);
+    //console.log('order location resultdata:', resultdata);
     // Return the records from the response
     return resultdata.data || [];
   } catch (error) {
@@ -175,7 +175,7 @@ export async function getContactsFromSalesforce(accountId?: string, contactId?: 
 
     const separator = contactUrl?.includes('?') ? '&' : '?';
     let Url = (contactUrl ?? '') + `${separator}accountId=${encodeURIComponent(accountId ?? '')}&contactId=${encodeURIComponent(contactId ?? '')}`;
-    console.log('Fetching contacts from Salesforce with URL:', Url);
+    //console.log('Fetching contacts from Salesforce with URL:', Url);
 
     const response = await fetch(Url, {
       method: "GET",
@@ -190,7 +190,7 @@ export async function getContactsFromSalesforce(accountId?: string, contactId?: 
     }
 
     const resultdata = await response.json();
-    console.log('Contacts resultdata:', resultdata);
+    //console.log('Contacts resultdata:', resultdata);
     // Return the records from the response
     return resultdata.data || [];
   } catch (error) {
@@ -210,6 +210,7 @@ export async function createOrderFromSalesforce(orderData: any): Promise<Salesfo
 
     let Url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
     console.log('createOrderFromSalesforce URL:', Url);
+    console.log('createOrderFromSalesforce Payload:', JSON.stringify(orderData, null, 2));
 
     const response = await fetch(Url, {
       method: 'POST',
@@ -219,12 +220,16 @@ export async function createOrderFromSalesforce(orderData: any): Promise<Salesfo
       },
       body: JSON.stringify(orderData),
     });
-    console.log('createOrderFromSalesforce Reponse:', response);
+
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Salesforce API error response:', errorText);
       throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
     }
 
-    return await response.json();
+    const result = await response.json();
+    console.log('createOrderFromSalesforce Response:', JSON.stringify(result, null, 2));
+    return result;
   } catch (error) {
     console.error('Error creating order in Salesforce:', error);
     return null;
@@ -255,7 +260,7 @@ export async function updateOrderFromSalesforce(orderId: string, orderData: any)
       body: JSON.stringify(orderData),
     });
 
-    console.log('updateOrderFromSalesforce Response:', response.status, response.statusText);
+    console.log('updateOrderFromSalesforce Response:', response);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -269,6 +274,46 @@ export async function updateOrderFromSalesforce(orderId: string, orderData: any)
   } catch (error) {
     console.error('Error updating order in Salesforce:', error);
     return false;
+  }
+}
+// Clone an existing order in Salesforce
+export async function cloneOrderFromSalesforce(orderData: any): Promise<any> {
+  try {
+    const session = await getSalesforceSession();
+
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return null;
+    }
+
+    // Use the same custom Apex REST endpoint as create order
+    const url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
+    console.log('cloneOrderFromSalesforce URL:', url);
+    console.log('cloneOrderFromSalesforce orderData:', JSON.stringify(orderData, null, 2));
+
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderData),
+    });
+
+    console.log('cloneOrderFromSalesforce Response:', response.status, response.statusText);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Salesforce API error response:', errorText);
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    console.log('cloneOrderFromSalesforce Result:', result);
+    return result;
+  } catch (error) {
+    console.error('Error Clone order in Salesforce:', error);
+    return null;
   }
 }
 
@@ -304,7 +349,7 @@ export async function getProductsFromSalesforce(accountId?: string, contactId?: 
     }
 
     const resultdata = await response.json();
-    console.log('Products resultdata:', resultdata);
+    //console.log('Products resultdata:', resultdata);
 
     // The API returns { data: [...], message: "...", success: true }
     return resultdata.data || [];
@@ -314,8 +359,8 @@ export async function getProductsFromSalesforce(accountId?: string, contactId?: 
   }
 }
 
-// Delete an order from Salesforce
-export async function deleteOrderFromSalesforce(orderId: string): Promise<boolean> {
+// Delete an order line from Salesforce
+export async function deleteOrderFromSalesforce(accountId: string, contactId: string, orderLineId: string): Promise<boolean> {
   try {
     const session = await getSalesforceSession();
 
@@ -324,20 +369,156 @@ export async function deleteOrderFromSalesforce(orderId: string): Promise<boolea
       return false;
     }
 
-    const response = await fetch(`${session.instanceUrl}/services/data/v58.0/sobjects/Order__c/${orderId}`, {
+    // Construct URL with query parameters
+    const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/orderlines`;
+    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&orderLineId=${encodeURIComponent(orderLineId)}`;
+
+    console.log('Deleting order line from Salesforce with URL:', url);
+
+    const response = await fetch(url, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Salesforce DELETE failed:', response.status, errorText);
       throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
     }
 
+    const result = await response.json();
+    console.log('Order line deleted successfully:', result);
     return true;
   } catch (error) {
-    console.error('Error deleting order from Salesforce:', error);
+    console.error('Error deleting order line from Salesforce:', error);
     return false;
+  }
+}
+
+// Fetch files from Salesforce
+export async function getFilesFromSalesforce(accountId: string, contactId: string, orderId: string): Promise<any[]> {
+  try {
+    const session = await getSalesforceSession();
+
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return [];
+    }
+
+    // Construct URL with query parameters
+    const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
+    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(orderId)}&objectName=Customer_Order__c`;
+
+    console.log('Fetching files from Salesforce with URL:', url);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    //console.log('Fetching files from Salesforce with response:', response);
+    if (!response.ok) {
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+    }
+
+    const resultdata = await response.json();
+    console.log('Files resultdata:', resultdata);
+
+    return resultdata.data || [];
+  } catch (error) {
+    console.error('Error fetching files from Salesforce:', error);
+    return [];
+  }
+}
+
+// Delete file(s) from Salesforce
+export async function deleteFileFromSalesforce(
+  accountId: string,
+  contactId: string,
+  objectId: string,
+  contentDocumentIds: string | string[]
+): Promise<boolean> {
+  try {
+    const session = await getSalesforceSession();
+
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return false;
+    }
+
+    // Convert to comma-separated string if array
+    const documentIds = Array.isArray(contentDocumentIds)
+      ? contentDocumentIds.join(',')
+      : contentDocumentIds;
+
+    // Construct URL with query parameters
+    const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
+    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(objectId)}&objectName=Customer_Order__c&contentDocumentId=${encodeURIComponent(documentIds)}`;
+
+    console.log('Deleting file from Salesforce with URL:', url);
+
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Salesforce DELETE file failed:', response.status, errorText);
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    console.log('File deleted successfully:', result);
+    return true;
+  } catch (error) {
+    console.error('Error deleting file from Salesforce:', error);
+    return false;
+  }
+}
+
+// Upload files to Salesforce
+export async function uploadFilesToSalesforce(uploadData: any): Promise<any> {
+  try {
+    const session = await getSalesforceSession();
+
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return null;
+    }
+
+    const url = `${session.instanceUrl}/services/apexrest/gtherp/files`;
+    console.log('Uploading files to Salesforce URL:', url);
+    // console.log('Upload payload:', JSON.stringify(uploadData, null, 2));
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(uploadData),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Salesforce upload failed:', response.status, errorText);
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    console.log('Files uploaded successfully:', result);
+    return result;
+  } catch (error) {
+    console.error('Error uploading files to Salesforce:', error);
+    return null;
   }
 }

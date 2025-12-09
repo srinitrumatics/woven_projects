@@ -1,11 +1,13 @@
 "use client";
 
-import { use, useState, useMemo, useEffect } from "react";
+import { use, useState, useMemo, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { Product } from "@/app/orders/types";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 // import { mockProducts } from "@/app/products/mockData"; // Removed in favor of API data
 
 interface Address {
@@ -83,7 +85,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   // State management for product tables
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"myOrder" | "catalog">("myOrder"); // Default to My Order table
+  const [viewMode, setViewMode] = useState<"myOrder" | "catalog" | "files">("myOrder"); // Default to My Order table
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [orderProducts, setOrderProducts] = useState<Product[]>([]);
@@ -96,6 +98,25 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   // Tooltip state
   const [hoveredTooltip, setHoveredTooltip] = useState<{ product: Product; x: number; y: number } | null>(null);
+
+  // Multi-select state
+  const [selectedProductIds, setSelectedProductIds] = useState<Set<string>>(new Set());
+
+  // Image popup state
+  const [popupProduct, setPopupProduct] = useState<Product | null>(null);
+
+  // Track quantities in catalog view
+  const [catalogQuantities, setCatalogQuantities] = useState<Record<string, number>>({});
+
+  const handleCatalogQuantityChange = (productId: string, quantity: number, moq: number) => {
+    // Ensure quantity respects MOQ steps and minimum
+    // But allow typing freely, validation happens on blur or we can force steps
+    // For better UX with "step" input, we just set the value
+    setCatalogQuantities(prev => ({
+      ...prev,
+      [productId]: quantity
+    }));
+  };
 
   const handleTooltipEnter = (e: React.MouseEvent<HTMLElement>, product: Product) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -110,6 +131,70 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     setHoveredTooltip(null);
   };
 
+  // Multi-select handlers
+  const handleSelectProduct = (productId: string) => {
+    const newSelected = new Set(selectedProductIds);
+    if (newSelected.has(productId)) {
+      newSelected.delete(productId);
+    } else {
+      newSelected.add(productId);
+    }
+    setSelectedProductIds(newSelected);
+  };
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      const allIds = new Set(paginatedCatalogProducts.map(p => p.id));
+      setSelectedProductIds(allIds);
+    } else {
+      setSelectedProductIds(new Set());
+    }
+  };
+
+  const handleAddSelectedProducts = () => {
+    const selectedProducts = catalogProducts.filter(p => selectedProductIds.has(p.id));
+    const newLineItems = selectedProducts.map(product => {
+      const qty = catalogQuantities[product.id] || product.moq || 1;
+      return {
+        ...product,
+        orderQty: qty,
+        subtotal: product.unitPrice * qty,
+        lineItemKey: `${product.id}-${Date.now()}-${Math.random()}`
+      };
+    });
+
+    setOrderProducts([...orderProducts, ...newLineItems]);
+    setSelectedProductIds(new Set()); // Clear selection
+    // Optional: Switch to My Order view or show success message
+    // setViewMode("myOrder");
+  };
+
+  // Popup handlers
+  const handleImageClick = (product: Product) => {
+    setPopupProduct(product);
+  };
+
+  const handleClosePopup = () => {
+    setPopupProduct(null);
+  };
+
+  const handleDownloadFile = (file: File) => {
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadAll = () => {
+    uploadedFiles.forEach(file => {
+      handleDownloadFile(file);
+    });
+  };
+
   const [formData, setFormData] = useState({
     // Primary Details
     shipTo: "",
@@ -118,6 +203,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     billingAddress: "",
     purchaseOrder: "",
     requestedDeliveryDate: "",
+
+    // Billing Contact Info
+    billingContact: "",
+    billingEmail: "",
+    billingPhone: "",
 
     // Contact Information
     locationContact: "",
@@ -151,8 +241,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [catalogProducts, setCatalogProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
 
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "001WL00000bapRiYAI"; // override with real value
-  const LOGGED_IN_CONTACT_ID = "abc" //TODO: Get this from session / auth context
+  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "001QL00001Kbvt3YAB"; // override with real value
+  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "003QL00001EzLjZYAV" //TODO: Get this from session / auth context
 
   useEffect(() => {
     let mounted = true;
@@ -160,7 +250,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       try {
         setLocationsLoading(true);
         // pass accountId, role and contactId as needed
-        const res = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(LOGGED_IN_CONTACT_ID)}&action=locations`);
+        const res = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&action=locations`);
         if (!res.ok) {
           const errorText = await res.text();
           console.error("Failed to fetch locations:", errorText);
@@ -251,7 +341,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     async function loadContacts() {
       try {
         setContactsLoading(true);
-        const res = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(LOGGED_IN_CONTACT_ID)}&action=contacts`);
+        const res = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&action=contacts`);
         console.log('=== CONTACTS FETCH ===');
         console.log('Response status:', res.status, res.statusText);
 
@@ -318,7 +408,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             manufacturer: item.Manufacturer_Name__r?.Name || "Unknown",
             brand: item.Manufacturer_Name__r?.Name || "Unknown", // Using Manufacturer as Brand
             availableQty: item.Available_To_Sell__c || 0,
-            moq: 1, // Not in response, default to 1
+            moq: item.MOQ__c || 1, // Use MOQ from API or default to 1
             listPrice: item.List_Price__c || 0,
             unitPrice: item.Unit_Price__c || 0,
             orderQty: 0,
@@ -462,7 +552,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
           // Map Order Items to Products
           if (order.CustomerOrderLines) {
-            const mappedProducts: Product[] = order.CustomerOrderLines.map((item: OrderItem) => ({
+            const mappedProducts: Product[] = order.CustomerOrderLines.map((item: OrderItem, index: number) => ({
               id: item.Product_Name__c || item.Id, // Use Product_Name__c as product ID if available
               name: item.ProductName || "Unknown Product",
               sku: item.Name || "", // Using Name as SKU/Line ID for now
@@ -477,7 +567,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               orderQty: item.Order_Qty__c,
               subtotal: item.Total_Price__c,
               // Store the original order line ID for updates
-              orderLineId: item.Id
+              orderLineId: item.Id,
+              // Add unique lineItemKey for proper tracking and deletion
+              lineItemKey: `${item.Id}-${Date.now()}-${index}-${Math.random()}`
             }));
             console.log("Mapped products:", mappedProducts);
             setOrderProducts(mappedProducts);
@@ -533,21 +625,61 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const shipping = productsSubtotal > 0 ? 65.00 : 0;
   const grandTotal = productsSubtotal + totalExciseTax + orderProcessing + shipping;
 
-  const handleAddProduct = (product: Product) => {
+  const handleAddProduct = (product: Product, quantity?: number) => {
     // Always add as a new line item, even if the same product exists
     // Generate a unique key by combining product id with timestamp
+    const qty = quantity || catalogQuantities[product.id] || product.moq || 1;
     const uniqueLineItem = {
       ...product,
-      orderQty: 1,
-      subtotal: product.unitPrice,
+      orderQty: qty,
+      subtotal: product.unitPrice * qty,
       // Add a unique identifier for this line item
       lineItemKey: `${product.id}-${Date.now()}-${Math.random()}`
     };
     setOrderProducts([...orderProducts, uniqueLineItem]);
   };
 
-  const handleRemoveProduct = (lineItemKey: string) => {
-    setOrderProducts(orderProducts.filter(p => p.lineItemKey !== lineItemKey));
+  const handleRemoveProduct = async (lineItemKey: string) => {
+    const product = orderProducts.find(p => p.lineItemKey === lineItemKey);
+
+    // If product has an orderLineId, it exists in Salesforce and needs to be deleted via API
+    if (product?.orderLineId) {
+      // Confirm deletion with user
+      if (!confirm(`Are you sure you want to delete ${product.name} from this order?`)) {
+        return;
+      }
+
+      try {
+        const deleteUrl = `/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&orderLineId=${encodeURIComponent(product.orderLineId)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}`;
+
+        console.log('Deleting order line:', product.orderLineId);
+
+        const response = await fetch(deleteUrl, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: 'Failed to delete order line' }));
+          throw new Error(errorData.error || 'Failed to delete order line from Salesforce');
+        }
+
+        const result = await response.json();
+        console.log('Order line deleted successfully:', result);
+
+        // Remove from state only after successful API deletion
+        setOrderProducts(orderProducts.filter(p => p.lineItemKey !== lineItemKey));
+        alert('Order line deleted successfully');
+      } catch (error) {
+        console.error('Error deleting order line:', error);
+        alert(error instanceof Error ? error.message : 'Failed to delete order line. Please try again.');
+      }
+    } else {
+      // Product doesn't exist in Salesforce yet, just remove from state
+      setOrderProducts(orderProducts.filter(p => p.lineItemKey !== lineItemKey));
+    }
   };
 
   const handleQuantityChange = (lineItemKey: string, newQuantity: number) => {
@@ -557,11 +689,72 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     ));
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files) {
-      const newFiles = Array.from(files);
-      setUploadedFiles(prev => [...prev, ...newFiles]);
+    if (!files || files.length === 0) return;
+
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB limit per file
+    const newFiles = Array.from(files);
+
+    // Check file sizes
+    const oversizedFiles = newFiles.filter(file => file.size > MAX_FILE_SIZE);
+    if (oversizedFiles.length > 0) {
+      alert(`The following files exceed the 4MB limit and cannot be uploaded:\n${oversizedFiles.map(f => `- ${f.name} (${(f.size / 1024 / 1024).toFixed(2)}MB)`).join('\n')}`);
+      // Filter out oversized files
+      const validFiles = newFiles.filter(file => file.size <= MAX_FILE_SIZE);
+      if (validFiles.length === 0) return;
+      // Continue with valid files only
+      newFiles.length = 0;
+      newFiles.push(...validFiles);
+    }
+
+    // Add to local state immediately for UI feedback
+    setUploadedFiles(prev => [...prev, ...newFiles]);
+
+    // Upload to Salesforce
+    try {
+      const processedFiles = [];
+      for (const file of newFiles) {
+        const base64Data = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            const result = reader.result as string;
+            const base64 = result.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = error => reject(error);
+        });
+
+        processedFiles.push({
+          fileName: file.name,
+          fileType: file.name.split('.').pop() || '',
+          base64Data: base64Data
+        });
+      }
+
+      const payload = {
+        accountId: SF_ACCOUNT_ID,
+        contactId: SF_CONTACT_ID,
+        objectId: id,
+        objectName: "Customer_Order__c",
+        files: processedFiles
+      };
+
+      const res = await fetch('/api/salesforce/orders?action=uploadFiles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error("Failed to upload files");
+
+      alert("Files uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      alert("Failed to upload files. Please try smaller files.");
     }
   };
 
@@ -572,6 +765,61 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   // Order submission state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
+  const handleDownloadPDF = async () => {
+    console.log("Starting PDF generation...");
+    const element = document.getElementById('pdf-template');
+    if (!element) {
+      console.error("PDF template element not found");
+      alert("Error: PDF template not found");
+      return;
+    }
+
+    try {
+      setIsGeneratingPDF(true);
+      console.log("Capturing canvas...");
+
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: true, // Enable logging for debugging
+        backgroundColor: '#ffffff',
+        windowWidth: 1200,
+        onclone: (clonedDoc) => {
+          const clonedElement = clonedDoc.getElementById('pdf-template');
+          if (clonedElement) {
+            // Ensure it's visible in the clone
+            clonedElement.style.display = 'block';
+            clonedElement.style.position = 'absolute';
+            clonedElement.style.left = '0';
+            clonedElement.style.top = '0';
+            clonedElement.style.zIndex = '9999';
+          }
+        }
+      });
+
+      console.log("Canvas captured, generating PDF...");
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      pdf.save(`Order_${id}.pdf`);
+      console.log("PDF saved");
+    } catch (error: any) {
+      console.error('Error generating PDF:', error);
+      alert(`Failed to generate PDF: ${error.message || error}`);
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
 
   // Handle order submission (update only)
   const handleSubmitOrder = async (isDraft: boolean = false) => {
@@ -640,18 +888,18 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         },
         orderLines: orderProducts.map(product => ({
           ...(product.orderLineId ? { Id: product.orderLineId } : {}),
+          Status__c: isDraft ? "Draft" : "Submitted",
           Customer_Order_Line_Notes__c: "",
           Product_Name__c: product.id,
-          Customer_Order__c: id,
           Order_Qty__c: product.orderQty,
           MOQ__c: product.moq,
           Unit_Price__c: product.unitPrice,
           Inventory_Account__c: SF_ACCOUNT_ID,
-          IsTaxable__c: true
+          IsTaxable__c: true,
         })),
+
         accountId: SF_ACCOUNT_ID,
-        contactId: LOGGED_IN_CONTACT_ID, // Use actual Contact ID
-        isDraft: isDraft
+        contactId: SF_CONTACT_ID, // Use actual Contact ID
       };
 
       // Submit to API (always PATCH for edit mode)
@@ -751,7 +999,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               <div className="w-12 h-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
                 <svg className="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M3 3h18v4H3z" />
-                  <path d="M21 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7" />
+                  <path d="M21 7v11a2 2 0 0 1-2 2H5a2 2 0 01-2-2V7" />
                   <path d="M7 12h10" />
                 </svg>
               </div>
@@ -1161,11 +1409,22 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
             {/* Download PDF Button */}
             <div className="border-t border-gray-300 dark:border-gray-600 pt-3 mt-3">
-              <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:text-white dark:hover:border-primary transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Download PDF
+              <button
+                onClick={handleDownloadPDF}
+                disabled={isGeneratingPDF}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:text-white dark:hover:border-primary transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isGeneratingPDF ? (
+                  <svg className="animate-spin h-4 w-4 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                )}
+                {isGeneratingPDF ? 'Generating...' : 'Download PDF'}
               </button>
             </div>
 
@@ -1189,6 +1448,20 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               {/* Uploaded Files List */}
               {uploadedFiles.length > 0 && (
                 <div className="mt-2 space-y-1">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{uploadedFiles.length} file(s) attached</span>
+                    {uploadedFiles.length > 1 && (
+                      <button
+                        onClick={handleDownloadAll}
+                        className="text-xs text-primary hover:text-primary-dark hover:underline flex items-center gap-1"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download All
+                      </button>
+                    )}
+                  </div>
                   {uploadedFiles.map((file, index) => (
                     <div key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded px-2 py-1">
                       <div className="flex items-center gap-2 min-w-0">
@@ -1197,18 +1470,32 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                         </svg>
                         <span className="text-xs text-gray-700 dark:text-gray-300 truncate">{file.name}</span>
                       </div>
-                      <button
-                        onClick={() => handleRemoveFile(index)}
-                        className="text-red-500 hover:text-red-700 dark:hover:text-red-400 flex-shrink-0 ml-2"
-                      >
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleDownloadFile(file)}
+                          className="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary p-1"
+                          title="Download"
+                        >
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleRemoveFile(index)}
+                          className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1"
+                          title="Remove"
+                        >
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
               )}
+
+
             </div>
           </div>
         </div>
@@ -1231,6 +1518,15 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             </div>
             <div className="flex gap-2 ml-4">
               <button
+                onClick={() => setViewMode("files")}
+                className={`px-4 py-2 rounded-lg transition-colors ${viewMode === "files"
+                  ? "bg-primary text-white"
+                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                  }`}
+              >
+                Files
+              </button>
+              <button
                 onClick={() => setViewMode("catalog")}
                 className={`px-4 py-2 rounded-lg transition-colors ${viewMode === "catalog"
                   ? "bg-primary text-white"
@@ -1251,76 +1547,207 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
+          {/* Files Tab */}
+          {viewMode === "files" && (
+            <FilesTab
+              orderId={id}
+              accountId={SF_ACCOUNT_ID}
+              contactId={SF_CONTACT_ID}
+            />
+          )}
+
           {/* Products Catalog Table */}
           {viewMode === "catalog" && (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-primary-light dark:bg-gray-900">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Image</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Product Name</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Manufacturer</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Product Family</th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
-                    <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Order Qty</th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Subtotal</th>
-                    <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {paginatedCatalogProducts.length === 0 ? (
+            <>
+              <div className="flex justify-end mb-2">
+                {selectedProductIds.size > 0 && (
+                  <button
+                    onClick={handleAddSelectedProducts}
+                    className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors shadow-sm"
+                  >
+                    Add Selected ({selectedProductIds.size})
+                  </button>
+                )}
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                      <td colSpan={8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                        {searchQuery ? "No products found matching your search." : "All products have been added to your order."}
-                      </td>
+                      <th className="px-4 py-2 text-left w-10">
+                        <input
+                          type="checkbox"
+                          onChange={handleSelectAll}
+                          checked={paginatedCatalogProducts.length > 0 && paginatedCatalogProducts.every(p => selectedProductIds.has(p.id))}
+                          className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                        />
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Image</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Product Name</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Manufacturer</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Family</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Unit Price</th>
+                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Available Qty</th>
+                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Qty to Order</th>
+                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Action</th>
                     </tr>
-                  ) : (
-                    paginatedCatalogProducts.map((product) => (
-                      <tr key={product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td className="px-4 py-3">
-                          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
-                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                            </svg>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">{product.name}</div>
-                          <div className="text-xs font-mono text-gray-500 dark:text-gray-400">{product.sku}</div>
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{product.manufacturer}</td>
-                        <td className="px-4 py-3">
-                          <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary">
-                            {product.productFamily}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
-                          {formatCurrency(product.unitPrice)}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-center text-gray-900 dark:text-white">
-                          <div>{formatNumber(product.availableQty)}</div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">(MOQ {formatNumber(product.moq)})</div>
-                        </td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-500 dark:text-gray-400">
-                          -
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <button
-                            onClick={() => handleAddProduct(product)}
-                            className="p-2 bg-primary text-white rounded-full hover:bg-primary-dark transition-colors"
-                            title="Add to Order"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M11 9h2V6h3V4h-3V1h-2v3H8v2h3v3zm-4 9c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm-8.9-5h7.45c.75 0 1.41-.41 1.75-1.03l3.86-7.01L19.42 4l-3.87 7H8.53L4.27 2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7l1.1-2z" />
-                            </svg>
-                          </button>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {paginatedCatalogProducts.length === 0 ? (
+                      <tr>
+                        <td colSpan={8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                          {searchQuery ? "No products found matching your search." : "All products have been added to your order."}
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    ) : (
+                      paginatedCatalogProducts.map((product) => (
+                        <tr key={product.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${selectedProductIds.has(product.id) ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
+                          <td className="px-4 py-2">
+                            <input
+                              type="checkbox"
+                              checked={selectedProductIds.has(product.id)}
+                              onChange={() => handleSelectProduct(product.id)}
+                              className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                            />
+                          </td>
+                          <td className="px-4 py-2">
+                            <div
+                              className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                              onClick={() => handleImageClick(product)}
+                            >
+                              <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                              </svg>
+                            </div>
+                          </td>
+                          <td className="px-4 py-2">
+                            <div className="text-sm font-medium text-gray-900 dark:text-white truncate max-w-[200px]" title={product.name}>{product.name}</div>
+                            <div className="text-xs font-mono text-gray-500 dark:text-gray-400">{product.sku}</div>
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-900 dark:text-white truncate max-w-[150px]">{product.manufacturer}</td>
+                          <td className="px-4 py-2">
+                            <span className="inline-block px-2 py-0.5 text-xs font-medium rounded bg-primary/10 text-primary truncate max-w-[100px]">
+                              {product.productFamily}
+                            </span>
+                          </td>
+                          <td className="px-4 py-2 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                            {formatCurrency(product.unitPrice)}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-center text-gray-900 dark:text-white">
+                            <div>{formatNumber(product.availableQty)}</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {product.moq || 1}</div>
+                          </td>
+                          <td className="px-4 py-2 text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              <button
+                                onClick={() => {
+                                  const currentQty = catalogQuantities[product.id] || product.moq || 1;
+                                  const moq = product.moq || 1;
+                                  const newQty = Math.max(currentQty - moq, moq);
+                                  handleCatalogQuantityChange(product.id, newQty, moq);
+                                }}
+                                className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                              >
+                                -
+                              </button>
+                              <input
+                                type="number"
+                                min={product.moq || 1}
+                                step={product.moq || 1}
+                                value={catalogQuantities[product.id] || product.moq || 1}
+                                onChange={(e) => handleCatalogQuantityChange(product.id, Number(e.target.value), product.moq || 1)}
+                                className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-center"
+                              />
+                              <button
+                                onClick={() => {
+                                  const currentQty = catalogQuantities[product.id] || product.moq || 1;
+                                  const moq = product.moq || 1;
+                                  const newQty = currentQty + moq;
+                                  handleCatalogQuantityChange(product.id, newQty, moq);
+                                }}
+                                className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </td>
+                          <td className="px-4 py-2 text-center">
+                            <button
+                              onClick={() => handleAddProduct(product)}
+                              className="p-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors"
+                              title="Add to Order"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M11 9h2V6h3V4h-3V1h-2v3H8v2h3v3zm-4 9c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm-8.9-5h7.45c.75 0 1.41-.41 1.75-1.03l3.86-7.01L19.42 4l-3.87 7H8.53L4.27 2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7l1.1-2z" />
+                              </svg>
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Image Popup Modal */}
+              {popupProduct && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={handleClosePopup}>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full p-6 relative" onClick={e => e.stopPropagation()}>
+                    <button
+                      className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                      onClick={handleClosePopup}
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+
+                    <div className="flex flex-col items-center">
+                      <div className="w-64 h-64 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center mb-6">
+                        <svg className="w-32 h-32 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                      </div>
+
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 text-center">{popupProduct.name}</h3>
+                      <p className="text-sm font-mono text-gray-500 dark:text-gray-400 mb-4">{popupProduct.sku}</p>
+
+                      <div className="w-full grid grid-cols-2 gap-4 mb-6">
+                        <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                          <span className="text-xs text-gray-500 dark:text-gray-400 block">Manufacturer</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">{popupProduct.manufacturer}</span>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                          <span className="text-xs text-gray-500 dark:text-gray-400 block">Family</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">{popupProduct.productFamily}</span>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                          <span className="text-xs text-gray-500 dark:text-gray-400 block">Price</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">{formatCurrency(popupProduct.unitPrice)}</span>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                          <span className="text-xs text-gray-500 dark:text-gray-400 block">Available</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">{formatNumber(popupProduct.availableQty)}</span>
+                        </div>
+                      </div>
+
+                      <p className="text-gray-600 dark:text-gray-300 text-center mb-6">
+                        {popupProduct.description || "No description available."}
+                      </p>
+
+                      <button
+                        onClick={() => {
+                          handleAddProduct(popupProduct);
+                          handleClosePopup();
+                        }}
+                        className="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-colors"
+                      >
+                        Add to Order
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           {/* Pagination for Catalog */}
@@ -1392,26 +1819,37 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                         </td>
                         <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                         <td className="px-4 py-3">
-                          <div className="flex items-center justify-center gap-2">
-                            <button
-                              onClick={() => handleQuantityChange(product.lineItemKey!, product.orderQty - 1)}
-                              className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                            >
-                              -
-                            </button>
-                            <input
-                              type="number"
-                              value={product.orderQty}
-                              onChange={(e) => handleQuantityChange(product.lineItemKey!, parseInt(e.target.value) || 0)}
-                              className="w-20 px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
-                              min="0"
-                            />
-                            <button
-                              onClick={() => handleQuantityChange(product.lineItemKey!, product.orderQty + 1)}
-                              className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                            >
-                              +
-                            </button>
+                          <div className="flex flex-col items-center">
+                            <div className="flex items-center justify-center gap-2">
+                              <button
+                                onClick={() => {
+                                  const moq = product.moq || 1;
+                                  const newQty = Math.max(product.orderQty - moq, moq);
+                                  handleQuantityChange(product.lineItemKey!, newQty);
+                                }}
+                                className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                              >
+                                -
+                              </button>
+                              <input
+                                type="number"
+                                value={product.orderQty}
+                                onChange={(e) => handleQuantityChange(product.lineItemKey!, parseInt(e.target.value) || 0)}
+                                className="w-20 px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
+                                min={product.moq || 1}
+                                step={product.moq || 1}
+                              />
+                              <button
+                                onClick={() => {
+                                  const moq = product.moq || 1;
+                                  handleQuantityChange(product.lineItemKey!, product.orderQty + moq);
+                                }}
+                                className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                              >
+                                +
+                              </button>
+                            </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">MOQ: {product.moq || 1}</div>
                           </div>
                         </td>
                         <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">${product.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
@@ -1437,6 +1875,135 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </table>
             </div>
           )}
+        </div>
+      </div>
+      {/* Hidden PDF Template - Positioned off-screen but visible to DOM */}
+      <div className="absolute top-0 left-[-9999px] w-[1000px] bg-white p-10 text-gray-900" id="pdf-template">
+        {/* Header */}
+        <div className="flex justify-between items-start mb-10">
+          <div>
+            <h1 className="text-4xl font-bold mb-2 text-primary" style={{ color: 'rgb(150, 194, 219)', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>WOVN</h1>
+            <div className="text-sm text-gray-600">
+              <p>123 Business Street</p>
+              <p>Business City, ST 12345</p>
+              <p>USA</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Purchase Order</h2>
+            <div className="text-sm">
+              <p><span className="font-semibold">PO No:</span> {formData.purchaseOrder || "N/A"}</p>
+              <p><span className="font-semibold">Date:</span> {new Date().toLocaleDateString()}</p>
+              <p><span className="font-semibold">Status:</span> {orderStatus}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Addresses */}
+        <div className="grid grid-cols-2 gap-8 mb-8">
+          {/* Billing (Left) */}
+          <div>
+            <div className="bg-primary-light dark:bg-gray-900 text-black px-4 font-semibold uppercase text-sm mb-2 flex items-center justify-center" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '35px' }}>
+              Billing Information
+            </div>
+            <div className="px-4 text-sm text-gray-700">
+              <p className="font-bold mb-1">{formData.billTo !== "same" ? shipLocations.find(l => l.Id === formData.billTo)?.Name : "Same as Shipping"}</p>
+              <p className="whitespace-pre-wrap">{formData.billingAddress}</p>
+              <div className="mt-4">
+                <p><span className="font-semibold">Contact:</span> {formData.locationContact}</p>
+                <p><span className="font-semibold">Email:</span> {formData.contactEmail}</p>
+                <p><span className="font-semibold">Phone:</span> {formData.contactPhone}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Shipping (Right) */}
+          <div>
+            <div className="bg-primary-light dark:bg-gray-900 text-black px-4 font-semibold uppercase text-sm mb-2 flex items-center justify-center" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '35px' }}>
+              Shipping Information
+            </div>
+            <div className="px-4 text-sm text-gray-700">
+              <p className="font-bold mb-1">{shipLocations.find(l => l.Id === formData.shipTo)?.Name}</p>
+              <p className="whitespace-pre-wrap">{formData.shippingAddress}</p>
+              <div className="mt-4">
+                <p><span className="font-semibold">Contact:</span> {formData.locationContact}</p>
+                <p><span className="font-semibold">Email:</span> {formData.contactEmail}</p>
+                <p><span className="font-semibold">Phone:</span> {formData.contactPhone}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Order Info Bar */}
+        <div className="bg-primary-light dark:bg-gray-900 text-black px-4 py-2 grid grid-cols-4 gap-4 text-sm font-semibold uppercase mb-8 items-center text-center" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', alignItems: 'center', height: '35px', display: 'grid' }}>
+          <div>Delivery Date</div>
+          <div>Requested By</div>
+          <div>Payment Terms</div>
+          <div>Shipping Method</div>
+        </div>
+        <div className="px-4 grid grid-cols-4 gap-4 text-sm text-gray-700 mb-8 -mt-6">
+          <div>{formData.requestedDeliveryDate || "N/A"}</div>
+          <div>{formData.locationContact || "N/A"}</div>
+          <div>{formData.paymentTerms || "N/A"}</div>
+          <div>{formData.dropShip ? "Drop Ship" : "Standard"}</div>
+        </div>
+
+        {/* Notes */}
+        {formData.orderNotes && (
+          <div className="mb-8">
+            <div className="bg-primary-light dark:bg-gray-900 text-black px-4 py-2 font-semibold uppercase text-sm mb-2 flex items-center justify-center" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '35px' }}>
+              Notes
+            </div>
+            <div className="px-4 text-sm text-gray-700 border border-gray-200 p-4 bg-gray-50">
+              {formData.orderNotes}
+            </div>
+          </div>
+        )}
+
+        {/* Items Table */}
+        <table className="w-full mb-8">
+          <thead>
+            <tr className="bg-primary-light dark:bg-gray-900 text-black text-sm uppercase font-semibold" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', verticalAlign: 'middle', height: '35px' }}>
+              <th className="px-4 py-2 text-left">Item Name</th>
+              <th className="px-4 py-2 text-left">SKU</th>
+              <th className="px-4 py-2 text-center">Qty</th>
+              <th className="px-4 py-2 text-right">Unit Price</th>
+              <th className="px-4 py-2 text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody className="text-sm text-gray-700">
+            {orderProducts.map((product, index) => (
+              <tr key={index} className="border-b border-gray-200">
+                <td className="px-4 py-3">{product.name}</td>
+                <td className="px-4 py-3">{product.sku}</td>
+                <td className="px-4 py-3 text-center">{product.orderQty}</td>
+                <td className="px-4 py-3 text-right">{formatCurrency(product.unitPrice)}</td>
+                <td className="px-4 py-3 text-right">{formatCurrency(product.subtotal)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Totals */}
+        <div className="flex justify-end">
+          <div className="w-1/3">
+            <div className="flex justify-between py-2 border-b border-gray-200 text-sm">
+              <span className="font-semibold">Subtotal</span>
+              <span>{formatCurrency(productsSubtotal)}</span>
+            </div>
+            <div className="flex justify-between py-2 border-b border-gray-200 text-sm">
+              <span className="font-semibold">Tax (15%)</span>
+              <span>{formatCurrency(totalExciseTax)}</span>
+            </div>
+            <div className="flex justify-between py-2 border-b border-gray-200 text-sm">
+              <span className="font-semibold">Shipping</span>
+              <span>{formatCurrency(shipping)}</span>
+            </div>
+            <div className="flex justify-between text-lg font-semibold bg-primary-light dark:bg-gray-900 text-black px-2 mt-2 items-center" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', display: 'flex', alignItems: 'center', height: '35px' }}>
+              <span>Order Total</span>
+              <span>{formatCurrency(grandTotal)}</span>
+            </div>
+          </div>
         </div>
       </div>
       {/* Action Buttons */}
@@ -1546,5 +2113,235 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         )
       }
     </Sidebar >
+  );
+}
+
+interface FileData {
+  Id: string;
+  Title: string;
+  FileType: string;
+  FileExtension: string;
+  FileSize: number;
+  CreatedDate: string;
+  CreatedBy: string;
+  VersionData?: string; // Base64 content
+  contentDocumentId?: string; // Document ID for deletion
+}
+
+function FilesTab({ orderId, accountId, contactId }: { orderId: string, accountId: string, contactId: string }) {
+  const [files, setFiles] = useState<FileData[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedFileIds, setSelectedFileIds] = useState<Set<string>>(new Set());
+
+  const fetchFiles = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/salesforce/orders?action=files&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&orderId=${encodeURIComponent(orderId)}`);
+      if (!res.ok) throw new Error("Failed to fetch files");
+      const data = await res.json();
+      setFiles(data);
+    } catch (error) {
+      console.error("Error fetching files:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFiles();
+  }, [orderId, accountId, contactId]);
+
+  const handleDownload = (file: FileData) => {
+    if (!file.VersionData) {
+      alert("File content not available");
+      return;
+    }
+    // Convert Base64 to Blob
+    const byteCharacters = atob(file.VersionData);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "application/octet-stream" });
+
+    // Create download link
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${file.Title}.${file.FileExtension}`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  };
+
+  const handleDelete = async (file: FileData) => {
+    if (!confirm("Are you sure you want to delete this file?")) return;
+    // Use ContentDocumentId (capital C) from Salesforce API response
+    const contentDocumentId = (file as any).ContentDocumentId || file.contentDocumentId;
+    try {
+      const res = await fetch(`/api/salesforce/orders?orderId=${encodeURIComponent(orderId)}&contentDocumentId=${encodeURIComponent(contentDocumentId)}&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`, {
+        method: "DELETE"
+      });
+      if (!res.ok) throw new Error("Failed to delete file");
+
+      // Remove from list
+      setFiles(prev => prev.filter(f => f.Id !== file.Id));
+      setSelectedFileIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(file.Id);
+        return newSet;
+      });
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      alert("Failed to delete file");
+    }
+  };
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedFileIds(new Set(files.map(f => f.Id)));
+    } else {
+      setSelectedFileIds(new Set());
+    }
+  };
+
+  const handleSelectFile = (fileId: string) => {
+    const newSet = new Set(selectedFileIds);
+    if (newSet.has(fileId)) {
+      newSet.delete(fileId);
+    } else {
+      newSet.add(fileId);
+    }
+    setSelectedFileIds(newSet);
+  };
+
+  const handleBulkDownload = () => {
+    files.filter(f => selectedFileIds.has(f.Id)).forEach(file => {
+      handleDownload(file);
+    });
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedFileIds.size === 0) return;
+    if (!confirm(`Are you sure you want to delete ${selectedFileIds.size} file(s)?`)) return;
+
+    // Get contentDocumentIds for selected files - use ContentDocumentId (capital C) from Salesforce API
+    const selectedFiles = files.filter(f => selectedFileIds.has(f.Id));
+    const contentDocumentIds = selectedFiles.map(f => (f as any).ContentDocumentId || f.contentDocumentId).join(',');
+
+    try {
+      const res = await fetch(`/api/salesforce/orders?orderId=${encodeURIComponent(orderId)}&contentDocumentId=${encodeURIComponent(contentDocumentIds)}&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`, {
+        method: "DELETE"
+      });
+      if (!res.ok) throw new Error("Failed to delete files");
+
+      // Remove deleted files from list
+      setFiles(prev => prev.filter(f => !selectedFileIds.has(f.Id)));
+      setSelectedFileIds(new Set());
+      alert("Files deleted successfully");
+    } catch (error) {
+      console.error("Error deleting files:", error);
+      alert("Failed to delete files");
+    }
+  };
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Files ({files.length})</h3>
+        <div className="flex gap-2">
+          {selectedFileIds.size > 0 && (
+            <>
+              <button
+                onClick={handleBulkDownload}
+                className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors"
+              >
+                Download Selected ({selectedFileIds.size})
+              </button>
+              <button
+                onClick={handleBulkDelete}
+                className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Delete Selected ({selectedFileIds.size})
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th className="px-4 py-3 text-left w-10">
+                <input
+                  type="checkbox"
+                  onChange={handleSelectAll}
+                  checked={files.length > 0 && files.every(f => selectedFileIds.has(f.Id))}
+                  className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                />
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Size</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            {loading ? (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">Loading files...</td>
+              </tr>
+            ) : files.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No files found.</td>
+              </tr>
+            ) : (
+              files.map(file => (
+                <tr key={file.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <td className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedFileIds.has(file.Id)}
+                      onChange={() => handleSelectFile(file.Id)}
+                      className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                    />
+                  </td>
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{file.Title}</td>
+                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{(file.FileSize / 1024).toFixed(2)} KB</td>
+                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{file.FileExtension}</td>
+                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedDate}</td>
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        onClick={() => handleDownload(file)}
+                        className="text-primary hover:text-primary-dark p-1"
+                        title="Download"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(file)}
+                        className="text-red-500 hover:text-red-700 p-1"
+                        title="Delete"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
