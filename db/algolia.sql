@@ -93,7 +93,23 @@ BEGIN
         'stock_quantity', COALESCE(product_row.gtherp__stock_quantity__c, 0),
         'available_quantity', COALESCE(product_row.gtherp__available_quantity__c, 0),
         'discount', COALESCE(product_row.gtherp__discount__c, 0),
-        'image_url', product_row.image_url,
+        
+        -- Primary image URL (first image for backward compatibility)
+        'image_url', CASE
+            WHEN product_row.image_url IS NOT NULL 
+                AND product_row.image_url->'images' IS NOT NULL
+                AND jsonb_array_length(product_row.image_url->'images') > 0
+                THEN product_row.image_url#>>'{images,0,url}'
+            ELSE NULL
+        END,
+        
+        -- All images array (for gallery/carousel)
+        'images', CASE
+            WHEN product_row.image_url IS NOT NULL 
+                AND product_row.image_url->'images' IS NOT NULL
+                THEN product_row.image_url->'images'
+            ELSE '[]'::jsonb
+        END,
         
         -- Categories and Family
         'category', product_row.gtherp__category__c,

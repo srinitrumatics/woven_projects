@@ -54,18 +54,22 @@ function InfiniteHits() {
         {hits.map((hit: any) => (
           <div key={hit.objectID} className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer">
             <div className="relative aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden">
-              {hit.image ? (
-                <img
-                  src={hit.image}
-                  alt={hit.title || hit.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  onError={(e) => (e.currentTarget.style.display = 'none')}
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full text-gray-400">
-                  <span className="text-4xl">📦</span>
-                </div>
-              )}
+              {(() => {
+                // Get thumbnail from images array, fallback to image_url
+                const thumbnail = hit.images?.[0]?.thumb || hit.image_url;
+                return thumbnail ? (
+                  <img
+                    src={thumbnail}
+                    alt={hit.title || hit.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => (e.currentTarget.style.display = 'none')}
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-400">
+                    <span className="text-4xl">📦</span>
+                  </div>
+                );
+              })()}
               {hit.price && (
                 <div className="absolute top-2 right-2 bg-indigo-600 text-white text-sm font-bold px-3 py-1.5 rounded-lg backdrop-blur-sm shadow-lg">
                   ${typeof hit.price === 'number' ? hit.price.toFixed(2) : hit.price}
