@@ -485,8 +485,18 @@ export async function deleteFileFromSalesforce(
   }
 }
 
-// Upload files to Salesforce
-export async function uploadFilesToSalesforce(uploadData: any): Promise<any> {
+// Upload files to Salesforce using ContentVersion and ContentDocumentLink
+export async function uploadFilesToSalesforce(uploadData: {
+  accountId: string;
+  contactId: string;
+  objectId: string; // The linked record ID (e.g., Order ID)
+  objectName: string;
+  files: Array<{
+    fileName: string;
+    fileType: string;
+    base64Data: string;
+  }>;
+}): Promise<any> {
   try {
     const session = await getSalesforceSession();
 
@@ -495,30 +505,210 @@ export async function uploadFilesToSalesforce(uploadData: any): Promise<any> {
       return null;
     }
 
-    const url = `${session.instanceUrl}/services/apexrest/gtherp/files`;
-    console.log('Uploading files to Salesforce URL:', url);
-    // console.log('Upload payload:', JSON.stringify(uploadData, null, 2));
+    const results = [];
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(uploadData),
+    for (const file of uploadData.files) {
+      try {
+        // Step 1: Create ContentVersion (upload file)
+        const contentVersionId = await createContentVersion(
+          session.instanceUrl,
+          session.accessToken,
+          file.fileName,
+          file.base64Data
+        );
+
+        if (!contentVersionId) {
+          console.error(`Failed to create ContentVersion for ${file.fileName}`);
+          continue;
+        }
+
+        // Step 2: Get ContentDocumentId from ContentVersion
+        const contentDocumentId = await getContentDocumentId(
+          session.instanceUrl,
+          session.accessToken,
+          contentVersionId
+        );
+
+        if (!contentDocumentId) {
+          console.error(`Failed to get ContentDocumentId for ${file.fileName}`);
+          continue;
+        }
+
+        // Step 3: Create ContentDocumentLink to link file to the record
+        const linkId = await createContentDocumentLink(
+          session.instanceUrl,
+          session.accessToken,
+          contentDocumentId,
+          uploadData.objectId
+        );
+
+        results.push({
+          fileName: file.fileName,
+          contentVersionId,
+          contentDocumentId,
+          linkId,
+          success: true
+        });
+
+        console.log(`File ${file.fileName} uploaded and linked successfully`);
+      } catch (fileError) {
+        console.error(`Error uploading file ${file.fileName}:`, fileError);
+        results.push({
+          fileName: file.fileName,
+          success: false,
+          error: fileError instanceof Error ? fileError.message : 'Unknown error'
+        });
+      }
+    }
+
+    return {
+      success: results.some(r => r.success),
+      results
+    };
+  } catch (error) {
+    console.error('Error uploading files to Salesforce:', error);
+    return null;
+  }
+}
+
+// Helper: Create ContentVersion (upload file)
+async function createContentVersion(
+  instanceUrl: string,
+  accessToken: string,
+  fileName: string,
+  base64Data: string
+): Promise<string | null> {
+  try {
+    // Use multipart/form-data approach for ContentVersion
+    const boundary = '----WebKitFormBoundary' + Math.random().toString(36).substring(2);
+
+    // Build multipart body
+    const entityContent = JSON.stringify({
+      Title: fileName,
+      PathOnClient: fileName
     });
+
+    let body = '';
+    body += `--${boundary}\r\n`;
+    body += 'Content-Disposition: form-data; name="entity_content"\r\n';
+    body += 'Content-Type: application/json\r\n\r\n';
+    body += entityContent + '\r\n';
+    body += `--${boundary}\r\n`;
+    body += `Content-Disposition: form-data; name="VersionData"; filename="${fileName}"\r\n`;
+    body += 'Content-Type: application/octet-stream\r\n';
+    body += 'Content-Transfer-Encoding: base64\r\n\r\n';
+    body += base64Data + '\r\n';
+    body += `--${boundary}--\r\n`;
+
+    const response = await fetch(
+      `${instanceUrl}/services/data/v60.0/sobjects/ContentVersion`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': `multipart/form-data; boundary=${boundary}`
+        },
+        body: body
+      }
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Salesforce upload failed:', response.status, errorText);
-      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+      console.error('ContentVersion creation failed:', response.status, errorText);
+      throw new Error(`Failed to create ContentVersion: ${response.status}`);
     }
 
     const result = await response.json();
-    console.log('Files uploaded successfully:', result);
-    return result;
+    console.log('ContentVersion created:', result.id);
+    return result.id;
   } catch (error) {
-    console.error('Error uploading files to Salesforce:', error);
+    console.error('Error creating ContentVersion:', error);
+    return null;
+  }
+}
+
+// Helper: Get ContentDocumentId from ContentVersion
+async function getContentDocumentId(
+  instanceUrl: string,
+  accessToken: string,
+  contentVersionId: string
+): Promise<string | null> {
+  try {
+    const query = `SELECT ContentDocumentId FROM ContentVersion WHERE Id = '${contentVersionId}'`;
+    const response = await fetch(
+      `${instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`,
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Failed to query ContentDocumentId:', response.status, errorText);
+      return null;
+    }
+
+    const result = await response.json();
+    if (result.records && result.records.length > 0) {
+      const contentDocumentId = result.records[0].ContentDocumentId;
+      console.log('ContentDocumentId:', contentDocumentId);
+      return contentDocumentId;
+    }
+
+    console.log('ContentDocumentId not found');
+    return null;
+  } catch (error) {
+    console.error('Error querying ContentDocumentId:', error);
+    return null;
+  }
+}
+
+// Helper: Create ContentDocumentLink to link file to a record
+async function createContentDocumentLink(
+  instanceUrl: string,
+  accessToken: string,
+  contentDocumentId: string,
+  linkedEntityId: string
+): Promise<string | null> {
+  try {
+    const payload = {
+      ContentDocumentId: contentDocumentId,
+      LinkedEntityId: linkedEntityId,
+      ShareType: 'V', // V = Viewer, C = Collaborator, I = Inferred
+      Visibility: 'AllUsers' // Or 'InternalUsers', 'SharedUsers'
+    };
+
+    const response = await fetch(
+      `${instanceUrl}/services/data/v60.0/sobjects/ContentDocumentLink`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      // Check for duplicate link error (already linked)
+      if (errorData && Array.isArray(errorData) && errorData[0]?.errorCode === 'DUPLICATE_VALUE') {
+        console.log('ContentDocumentLink already exists');
+        return 'existing';
+      }
+      console.error('Failed to create ContentDocumentLink:', errorData);
+      throw new Error(`Failed to create ContentDocumentLink: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('ContentDocumentLink created:', result.id);
+    return result.id;
+  } catch (error) {
+    console.error('Error creating ContentDocumentLink:', error);
     return null;
   }
 }
