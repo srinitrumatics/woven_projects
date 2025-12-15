@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { exit } from "process";
-import { getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, getProductsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce, cloneOrderFromSalesforce, deleteOrderFromSalesforce, getFilesFromSalesforce, deleteFileFromSalesforce, uploadFilesToSalesforce } from '@/lib/salesforce-service';
+import { getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, getProductsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce, cloneOrderFromSalesforce, deleteOrderFromSalesforce, getFilesFromSalesforce, deleteFileFromSalesforce, uploadFilesToSalesforce, downloadFileFromSalesforce, getFileUrl } from '@/lib/salesforce-service';
 
 
 export async function GET(req: Request) {
@@ -9,6 +9,7 @@ export async function GET(req: Request) {
     const accountId = searchParams.get("accountId");
     const orderId = searchParams.get("orderId");
     const contactId = searchParams.get("contactId") ?? "abc";
+    const contentVersionId = searchParams.get("contentVersionId");
 
     const rawAction = (searchParams.get("action") || "").toLowerCase();
     console.log("action:", rawAction);
@@ -40,6 +41,28 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "Missing orderId for files action" }, { status: 400 });
       }
       result = await getFilesFromSalesforce(accountId, contactId, orderId);
+    } else if (rawAction === "download") {
+      //const contentDocumentId = searchParams.get("contentDocumentId");
+      if (!orderId) {
+        return NextResponse.json({ error: "Missing orderId for download action" }, { status: 400 });
+      }
+      if (!contentVersionId) {
+        return NextResponse.json({ error: "Missing contentVersionId for download action" }, { status: 400 });
+      }
+      result = await getFileUrl(contentVersionId);
+      if (!result) {
+        return NextResponse.json({ error: "Failed to download file" }, { status: 500 });
+      }
+    } else if (rawAction === "preview") {
+      const contentVersionId = searchParams.get("contentVersionId");
+      if (!contentVersionId) {
+        return NextResponse.json({ error: "Missing contentVersionId for preview action" }, { status: 400 });
+      }
+      result = await getFileUrl(contentVersionId);
+      //console.log('preview', result);
+      if (!result) {
+        return NextResponse.json({ error: "Failed to get preview URL" }, { status: 500 });
+      }
     } else if (orderId) {
       // support direct order fetch when orderId provided without explicit action
       orderUrl = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
@@ -47,7 +70,7 @@ export async function GET(req: Request) {
     } else {
       return NextResponse.json({ error: "Unsupported action or missing orderId" }, { status: 400 });
     }
-
+    console.log('result', result);
     // The service functions return the data directly (or empty array on error)
     return NextResponse.json(result);
   } catch (err) {
@@ -103,10 +126,6 @@ export async function PATCH(req: Request) {
     else {
       result = await cloneOrderFromSalesforce(orderData);
     }
-
-
-
-
     if (!result) {
       return NextResponse.json({
         error: orderId ? "Failed to update order" : "Failed to clone order"

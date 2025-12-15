@@ -114,12 +114,14 @@ export async function POST() {
     const result = await index.saveObjects(sampleData);
 
     // Wait for the indexing task to complete
-    await client.waitTask(result.taskID);
+    if (result.taskIDs && result.taskIDs.length > 0) {
+      await index.waitTask(result.taskIDs[0]);
+    }
 
     return NextResponse.json({
       message: "Algolia index seeded successfully",
       count: sampleData.length,
-      taskID: result.taskID
+      taskIDs: result.taskIDs
     });
   } catch (error) {
     console.error("Error seeding Algolia:", error);

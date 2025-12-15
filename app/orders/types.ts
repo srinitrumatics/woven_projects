@@ -62,3 +62,82 @@ export interface UIOrder {
 }
 
 export type OrderStatus = 'Success' | 'Pending' | 'Draft' | 'Cancelled' | string;
+
+export interface Address {
+  city: string;
+  country: string;
+  countryCode: string;
+  postalCode: string;
+  state: string;
+  stateCode: string;
+  street: string;
+}
+
+export interface AuthorizedLocation {
+  Id: string;
+  Name: string;
+  Account_Name__c: string;
+  Active__c: boolean;
+  Lift_Gate__c: boolean;
+  Inside_Delivery__c: boolean;
+  Address__c: Address;
+}
+
+export interface LocationResponse {
+  Payment_Terms__c: string;
+  AuthorizedLocation: AuthorizedLocation[];
+}
+
+export interface Contact {
+  Id: string;
+  Name: string;
+  Email: string;
+  Phone: string;
+}
+
+export interface OrderItem {
+  Id: string;
+  Name: string;
+  Product_Name__c: string; // Product ID
+  ProductName: string; // Product Name
+  Product_Description__c?: string;
+  Order_Qty__c: number;
+  Unit_Price__c: number;
+  Total_Price__c: number;
+  MOQ__c?: number;
+  Status__c?: string;
+  Manufacturer_Name__c?: string;
+  ProductFamily?: string;
+}
+
+export interface OrderDetail {
+  Id: string;
+  Name: string;
+  Status__c: string;
+  Total_Price__c: number;
+  Grand_Total__c: number;
+  Total_Taxes_Amount__c: number;
+  Total_Shipping_Charges__c: number;
+  Request_Date__c: string;
+  Customer_PO__c?: string;
+  Customer_Order_Notes__c?: string;
+  Drop_Ship__c?: boolean;
+  Authorized_Ship_To_Location__c?: string;
+  Authorized_Bill_To_Location__c?: string;
+  Ship_to_Contact__c?: string;
+  CustomerOrderLines?: OrderItem[];
+  [key: string]: any;
+}
+
+export interface FileData {
+  Id: string;
+  Title: string;
+  FileType: string;
+  FileExtension: string;
+  FileSize: number;
+  CreatedDate: string;
+  CreatedBy: string;
+  ContentDocumentId?: string; // Document ID for downloading and deletion
+  ContentVersionId?: string; // Version ID for preview
+  DownloadUrl?: string; // Direct download URL from Salesforce
+}

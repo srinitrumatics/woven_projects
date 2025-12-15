@@ -436,6 +436,55 @@ export async function getFilesFromSalesforce(accountId: string, contactId: strin
   }
 }
 
+// Download file(s) from Salesforce - returns download URLs for the specified content document IDs
+export async function downloadFileFromSalesforce(
+  accountId: string,
+  contactId: string,
+  objectId: string,
+  contentDocumentIds: string | string[]
+): Promise<Array<{ DownloadUrl: string; Title: string; FileExtension: string; Id: string; ContentDocumentId: string }> | null> {
+  try {
+    const session = await getSalesforceSession();
+
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return null;
+    }
+
+    // Convert to comma-separated string if array
+    const documentIds = Array.isArray(contentDocumentIds)
+      ? contentDocumentIds.join(',')
+      : contentDocumentIds;
+
+    // Construct URL with query parameters for download
+    const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
+    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(objectId)}&objectName=Customer_Order__c&contentDocumentId=${encodeURIComponent(documentIds)}`;
+
+    console.log('Downloading file from Salesforce with URL:', url);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+    }
+
+    const resultdata = await response.json();
+    console.log('File download resultdata received:', resultdata);
+
+    // Return the file data array with download URLs
+    return resultdata.data || null;
+  } catch (error) {
+    console.error('Error downloading file from Salesforce:', error);
+    return null;
+  }
+}
+
 // Delete file(s) from Salesforce
 export async function deleteFileFromSalesforce(
   accountId: string,
@@ -709,6 +758,117 @@ async function createContentDocumentLink(
     return result.id;
   } catch (error) {
     console.error('Error creating ContentDocumentLink:', error);
+    return null;
+  }
+}
+
+// Create ContentDistribution for public file access (no login required)
+export async function createContentDistribution(
+  contentVersionId: string
+): Promise<string | null> {
+  try {
+    const session = await getSalesforceSession();
+
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return null;
+    }
+
+    const payload = {
+      Name: "Public File",
+      ContentVersionId: contentVersionId,
+      PreferencesAllowOriginalDownload: true,
+      PreferencesAllowViewInBrowser: true,
+      PreferencesAllowPDFDownload: true
+    };
+
+    const response = await fetch(
+      `${session.instanceUrl}/services/data/v60.0/sobjects/ContentDistribution`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('ContentDistribution creation failed:', response.status, errorText);
+      throw new Error(`Failed to create ContentDistribution: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('ContentDistribution created:', result.id);
+    return result.id;
+  } catch (error) {
+    console.error('Error creating ContentDistribution:', error);
+    return null;
+  }
+}
+
+// Get public distribution URL from distribution ID
+export async function getPublicDistributionUrl(
+  distributionId: string
+): Promise<string | null> {
+  try {
+    const session = await getSalesforceSession();
+
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return null;
+    }
+
+    const response = await fetch(
+      `${session.instanceUrl}/services/data/v60.0/sobjects/ContentDistribution/${distributionId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${session.accessToken}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Failed to get ContentDistribution:', response.status, errorText);
+      return null;
+    }
+
+    const result = await response.json();
+    console.log('ContentDistribution URL:', result.DistributionPublicUrl);
+    return result.DistributionPublicUrl;
+  } catch (error) {
+    console.error('Error getting public distribution URL:', error);
+    return null;
+  }
+}
+
+// Get file preview URL - creates ContentDistribution and returns public URLs
+export async function getFileUrl(
+  contentVersionId: string
+): Promise<{ previewUrl: string; } | null> {
+  try {
+    // Step 1: Create ContentDistribution
+    const distributionId = await createContentDistribution(contentVersionId);
+    if (!distributionId) {
+      console.error('Failed to create ContentDistribution');
+      return null;
+    }
+    // Step 2: Get public URL
+    const publicUrl = await getPublicDistributionUrl(distributionId);
+
+    if (!publicUrl) {
+      console.error('Failed to get public URL');
+      return null;
+    }
+
+    return { previewUrl: publicUrl };
+
+  } catch (error) {
+    console.error('Error getting file preview URL:', error);
     return null;
   }
 }

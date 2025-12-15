@@ -3,6 +3,7 @@ export type ProposalStatus = "Draft" | "Pending Review" | "Under Review" | "Appr
 export interface Proposal {
   id: string;
   proposalNumber: string;
+  proposalName: string;
   accountName: string;
   contactName: string;
   status: ProposalStatus;
@@ -11,6 +12,8 @@ export interface Proposal {
   expirationDate: string;
   description: string;
   productCount: number;
+  billTo: string;
+  shipTo: string;
   opportunityName?: string;
   submittedBy?: string;
 }

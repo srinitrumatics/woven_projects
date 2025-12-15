@@ -1,56 +1,451 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
 import { formatCurrency } from "@/lib/utils/formatting";
-import { Proposal, ProposalStatus } from "./types";
-import { mockProposals, mockProposalStats } from "./mockData";
-import { requireAuth } from "@/lib/session";
+import { ProposalStatus } from "./types";
+import { mockProposals } from "./mockData";
 
-interface ProposalsPageProps {
-  searchParams?: {
-    page?: string;
-    search?: string;
-    status?: string;
-  };
-}
+type TabFilter = "All" | "Draft" | "Pending Review" | "Under Review" | "Approved" | "Accepted" | "Rejected" | "Expired";
 
-type SearchParams = Promise<{
-  page?: string;
-  search?: string;
-  status?: string;
-}>;
+const ITEMS_PER_PAGE = 10;
 
-export default async function ProposalsPage({ searchParams: rawSearchParams }: { searchParams?: SearchParams }) {
-  const searchParams = await rawSearchParams;
-  // Server-side authentication and permission check
-  await requireAuth(['proposal-list', 'proposal-read']); // Requires either proposal-list or proposal-read permission
+export default function ProposalsPage() {
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<TabFilter>("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const currentPage = searchParams?.page ? Number(searchParams.page) : 1;
-  const searchQuery = searchParams?.search || '';
-  const statusFilter = searchParams?.status as ProposalStatus | 'All' || 'All';
-  const itemsPerPage = 10;
+  // Calculate stats from all proposals
+  const stats = useMemo(() => {
+    const total = mockProposals.length;
+    const totalValue = mockProposals.reduce((sum, p) => sum + p.totalAmount, 0);
+
+    const drafts = mockProposals.filter(p => p.status === "Draft");
+    const draftCount = drafts.length;
+    const draftValue = drafts.reduce((sum, p) => sum + p.totalAmount, 0);
+
+    const pending = mockProposals.filter(p => p.status === "Pending Review");
+    const pendingCount = pending.length;
+    const pendingValue = pending.reduce((sum, p) => sum + p.totalAmount, 0);
+
+    const approved = mockProposals.filter(p => p.status === "Approved");
+    const approvedCount = approved.length;
+    const approvedValue = approved.reduce((sum, p) => sum + p.totalAmount, 0);
+
+    const accepted = mockProposals.filter(p => p.status === "Accepted");
+    const acceptedCount = accepted.length;
+    const acceptedValue = accepted.reduce((sum, p) => sum + p.totalAmount, 0);
+
+    return {
+      total, totalValue,
+      draftCount, draftValue,
+      pendingCount, pendingValue,
+      approvedCount, approvedValue,
+      acceptedCount, acceptedValue
+    };
+  }, []);
 
   // Filter proposals based on search and status
-  const filteredProposals = mockProposals.filter((proposal) => {
-    const matchesSearch =
-      proposal.proposalNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      proposal.accountName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      proposal.contactName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      proposal.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      proposal.opportunityName?.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredAndSearchedProposals = useMemo(() => {
+    let filtered = mockProposals;
 
-    const matchesStatus = statusFilter === "All" || proposal.status === statusFilter;
+    // Apply tab filter
+    if (activeTab !== "All") {
+      filtered = filtered.filter(proposal => proposal.status === activeTab);
+    }
 
-    return matchesSearch && matchesStatus;
-  });
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(proposal =>
+        proposal.proposalNumber.toLowerCase().includes(query) ||
+        proposal.proposalName.toLowerCase().includes(query) ||
+        proposal.accountName.toLowerCase().includes(query) ||
+        proposal.billTo.toLowerCase().includes(query) ||
+        proposal.shipTo.toLowerCase().includes(query) ||
+        proposal.status.toLowerCase().includes(query)
+      );
+    }
+
+    return filtered;
+  }, [activeTab, searchQuery]);
 
   // Pagination
-  const totalPages = Math.ceil(filteredProposals.length / itemsPerPage);
-  const paginatedProposals = filteredProposals.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const totalPages = Math.ceil(filteredAndSearchedProposals.length / ITEMS_PER_PAGE);
+  const paginatedProposals = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredAndSearchedProposals.slice(startIndex, endIndex);
+  }, [filteredAndSearchedProposals, currentPage]);
 
-  const getStatusColor = (status: ProposalStatus) => {
+  // Reset to page 1 when filters change
+  useMemo(() => {
+    setCurrentPage(1);
+  }, [activeTab, searchQuery]);
+
+  const handleCardClick = (filter: TabFilter) => {
+    setActiveTab(filter);
+  };
+
+  const handleViewProposal = (proposalId: string) => {
+    router.push(`/proposals/${proposalId}`);
+  };
+
+  const handleDownloadProposal = (e: React.MouseEvent, proposalId: string) => {
+    e.stopPropagation();
+    console.log("Downloading proposal:", proposalId);
+    alert(`Downloading proposal ${proposalId}`);
+  };
+
+  return (
+    <Sidebar>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Proposals</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and track sales proposals</p>
+      </div>
+
+      {/* Stats Cards - Compact & Engaging Design */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* Total Proposals Card */}
+        <button
+          onClick={() => handleCardClick("All")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${
+            activeTab === "All"
+              ? "border-primary ring-2 ring-primary/20"
+              : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
+          }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-dark"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Total Pipeline</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.total}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">proposals</span>
+                </div>
+                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${
+                activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
+              } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline">
+                View all proposals
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </button>
+
+        {/* Draft Proposals Card */}
+        <button
+          onClick={() => handleCardClick("Draft")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${
+            activeTab === "Draft"
+              ? "border-gray-500 ring-2 ring-gray-500/20"
+              : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
+          }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-400 to-gray-500"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">In Progress</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">drafts</span>
+                </div>
+                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.draftValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${
+                activeTab === "Draft" ? "bg-gray-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-600 group-hover:text-white"
+              } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white group-hover:underline">
+                Continue editing
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </button>
+
+        {/* Pending Review Card */}
+        <button
+          onClick={() => handleCardClick("Pending Review")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${
+            activeTab === "Pending Review"
+              ? "border-yellow-500 ring-2 ring-yellow-500/20"
+              : "border-gray-200 dark:border-gray-700 hover:border-yellow-400"
+          }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-orange-400"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Awaiting Review</p>
+                  {stats.pendingCount > 0 && (
+                    <span className="flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-yellow-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.pendingCount}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">pending</span>
+                </div>
+                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.pendingValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${
+                activeTab === "Pending Review" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
+              } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline">
+                Review now
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </button>
+
+        {/* Approved Card */}
+        <button
+          onClick={() => handleCardClick("Approved")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${
+            activeTab === "Approved"
+              ? "border-green-500 ring-2 ring-green-500/20"
+              : "border-gray-200 dark:border-gray-700 hover:border-green-400"
+          }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-emerald-500"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Ready to Convert</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.approvedCount}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">approved</span>
+                </div>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.approvedValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${
+                activeTab === "Approved" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
+              } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline">
+                Convert to orders
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      {/* Proposals Table */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        {/* Tabs and Search */}
+        <div className="border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center gap-6">
+              {(["All", "Pending Review", "Approved", "Draft", "Rejected"] as TabFilter[]).map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`pb-2 text-sm font-medium transition-colors relative ${
+                    activeTab === tab
+                      ? "text-gray-900 dark:text-white"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  }`}
+                >
+                  {tab}
+                  {activeTab === tab && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900 dark:bg-white"></div>
+                  )}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Search Input */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search proposals..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                </svg>
+              </button>
+              <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-primary-light dark:bg-gray-900">
+              <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                  Proposal #
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                  Status
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                  Proposal Name
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                  Bill To
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                  Ship To
+                </th>
+                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 dark:text-white">
+                  Items
+                </th>
+                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 dark:text-white">
+                  Total
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                  Expires
+                </th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              {paginatedProposals.length === 0 ? (
+                <tr>
+                  <td colSpan={9} className="px-6 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No proposals found</p>
+                      <p className="text-gray-400 dark:text-gray-500 text-sm">
+                        {searchQuery || activeTab !== "All"
+                          ? "Try adjusting your filters"
+                          : "Get started by creating your first proposal"}
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                paginatedProposals.map((proposal) => (
+                  <tr key={proposal.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                    <td className="px-6 py-4">
+                      <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
+                        {proposal.proposalNumber}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4">
+                      <StatusBadge status={proposal.status} />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-900 dark:text-white font-medium max-w-[200px] line-clamp-2">{proposal.proposalName}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{proposal.billTo}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{proposal.shipTo}</div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{proposal.productCount}</td>
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{proposal.expirationDate}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => handleViewProposal(proposal.id)}
+                          className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                          title="View proposal"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={(e) => handleDownloadProposal(e, proposal.id)}
+                          className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                          title="Download proposal"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredAndSearchedProposals.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+          itemName="proposals"
+        />
+      </div>
+    </Sidebar>
+  );
+}
+
+function StatusBadge({ status }: { status: ProposalStatus }) {
+  const getStyles = () => {
     switch (status) {
       case "Approved":
         return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
@@ -67,314 +462,13 @@ export default async function ProposalsPage({ searchParams: rawSearchParams }: {
       case "Expired":
         return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
     }
   };
 
-  // Generate query string for pagination links
-  const generateQueryString = (newPage: number) => {
-    const params = new URLSearchParams();
-    if (searchQuery) params.set('search', searchQuery);
-    if (statusFilter && statusFilter !== 'All') params.set('status', statusFilter);
-    params.set('page', newPage.toString());
-    return params.toString();
-  };
-
   return (
-    <Sidebar>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Proposals</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and track sales proposals</p>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        {/* Total Proposals Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
-              <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            {mockProposalStats.totalProposals}
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Total Proposals</p>
-        </div>
-
-        {/* Pending Review Card with CTA */}
-        <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-lg p-6 shadow-md border-2 border-yellow-300 dark:border-yellow-700">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-full bg-yellow-500/20 dark:bg-yellow-500/30 flex items-center justify-center">
-              <svg className="w-6 h-6 text-yellow-700 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            {mockProposalStats.pendingReview}
-          </h3>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">Pending Review</p>
-          <a
-            href={`/proposals?status=Pending Review`}
-            className="w-full px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-colors text-sm font-medium block text-center"
-          >
-            Review Now
-          </a>
-        </div>
-
-        {/* Approved Proposals Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-              <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            {mockProposalStats.approvedProposals}
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Approved</p>
-        </div>
-
-        {/* Total Value Card with CTA */}
-        <div className="bg-gradient-to-br from-primary/10 to-primary/20 dark:from-primary/20 dark:to-primary/30 rounded-lg p-6 shadow-md border-2 border-primary dark:border-primary">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-full bg-primary/30 dark:bg-primary/40 flex items-center justify-center">
-              <svg className="w-6 h-6 text-primary-dark dark:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            ${mockProposalStats.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </h3>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">Total Value</p>
-          <a
-            href="/proposals/new"
-            className="w-full px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors text-sm font-medium block text-center"
-          >
-            Create Proposal
-          </a>
-        </div>
-      </div>
-
-      {/* Filters and Search */}
-      <form className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700 mb-6">
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-          {/* Search */}
-          <div className="flex-1 w-full lg:max-w-md">
-            <div className="relative">
-              <input
-                type="text"
-                name="search"
-                defaultValue={searchQuery}
-                placeholder="Search proposals by number, account, or description..."
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
-              <svg
-                className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-          </div>
-
-          {/* Status Filter */}
-          <div className="flex flex-wrap gap-2">
-            <select
-              name="status"
-              defaultValue={statusFilter}
-              className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-            >
-              <option value="All">All Status</option>
-              <option value="Draft">Draft</option>
-              <option value="Pending Review">Pending Review</option>
-              <option value="Under Review">Under Review</option>
-              <option value="Approved">Approved</option>
-              <option value="Accepted">Accepted</option>
-              <option value="Rejected">Rejected</option>
-              <option value="Expired">Expired</option>
-            </select>
-            
-            <button 
-              type="submit"
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-            >
-              Apply
-            </button>
-          </div>
-        </div>
-      </form>
-
-      {/* Proposals Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-primary-light dark:bg-gray-900">
-              <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Proposal #</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Account</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Contact</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 dark:text-white">Amount</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Expires</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">Products</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {paginatedProposals.length === 0 ? (
-                <tr>
-                  <td colSpan={9} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center justify-center">
-                      <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No proposals found</p>
-                      <p className="text-gray-400 dark:text-gray-500 text-sm mb-4">
-                        {searchQuery || statusFilter !== "All"
-                          ? "Try adjusting your filters"
-                          : "Get started by creating your first proposal"}
-                      </p>
-                      {!searchQuery && statusFilter === "All" && (
-                        <a
-                          href="/proposals/new"
-                          className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-                        >
-                          Create Proposal
-                        </a>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                paginatedProposals.map((proposal) => (
-                  <tr
-                    key={proposal.id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <a href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
-                        {proposal.proposalNumber}
-                      </a>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">{proposal.proposalDate}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <a href={`/proposals/${proposal.id}`} className="text-sm text-gray-900 dark:text-white font-medium hover:underline">
-                        {proposal.accountName}
-                      </a>
-                      {proposal.opportunityName && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{proposal.opportunityName}</div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{proposal.contactName}</td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[250px] line-clamp-2">
-                        {proposal.description}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(proposal.status)}`}>
-                        {proposal.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">
-                      {formatCurrency(proposal.totalAmount)}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{proposal.expirationDate}</td>
-                    <td className="px-6 py-4 text-sm text-center text-gray-900 dark:text-white">
-                      {proposal.productCount}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center gap-2">
-                        <a
-                          href={`/proposals/${proposal.id}`}
-                          className="px-3 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-xs font-medium"
-                        >
-                          View
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="border-t border-gray-200 dark:border-gray-700 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-700 dark:text-gray-300">
-              Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
-              <span className="font-medium">
-                {Math.min(currentPage * itemsPerPage, filteredProposals.length)}
-              </span>{' '}
-              of <span className="font-medium">{filteredProposals.length}</span> results
-            </div>
-            
-            <div className="flex space-x-2">
-              {currentPage > 1 && (
-                <a
-                  href={`?${generateQueryString(currentPage - 1)}`}
-                  className="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  Previous
-                </a>
-              )}
-              
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                // Calculate the page numbers to display
-                let pageNum;
-                if (totalPages <= 5) {
-                  // If total pages <= 5, show all
-                  pageNum = i + 1;
-                } else if (currentPage <= 3) {
-                  // If near the beginning, show first 5
-                  pageNum = i + 1;
-                } else if (currentPage >= totalPages - 2) {
-                  // If near the end, show last 5
-                  pageNum = totalPages - 4 + i;
-                } else {
-                  // Show around current page
-                  pageNum = currentPage - 2 + i;
-                }
-                
-                return (
-                  <a
-                    key={pageNum}
-                    href={`?${generateQueryString(pageNum)}`}
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${
-                      currentPage === pageNum
-                        ? 'bg-primary text-white'
-                        : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
-                    }`}
-                  >
-                    {pageNum}
-                  </a>
-                );
-              })}
-              
-              {currentPage < totalPages && (
-                <a
-                  href={`?${generateQueryString(currentPage + 1)}`}
-                  className="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  Next
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </Sidebar>
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStyles()}`}>
+      {status}
+    </span>
   );
 }

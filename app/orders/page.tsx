@@ -499,7 +499,7 @@ export default function OrdersPage() {
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Bill To</th>
                   <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 dark:text-white">Items</th>
                   <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 dark:text-white">Total</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -543,7 +543,7 @@ export default function OrdersPage() {
                       <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{order.items}</td>
                       <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total)}</td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center justify-center gap-2">
+                        <div className="flex items-center justify-start gap-2">
                           <button
                             onClick={() => handleEditOrder(order.Id)}
                             className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
