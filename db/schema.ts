@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { uuid, pgTable, text, primaryKey } from 'drizzle-orm/pg-core';
+import { uuid, pgTable, text, primaryKey, integer, boolean } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 // Users table
@@ -229,3 +229,26 @@ export type NewUserRole = typeof userRoles.$inferInsert;
 
 export type RolePermission = typeof rolePermissions.$inferSelect;
 export type NewRolePermission = typeof rolePermissions.$inferInsert;
+
+// API Keys table
+export const apiKeys = pgTable('api_keys', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id'), // Optional: Link to a specific user if needed, or null for service accounts
+  keyHash: text('key_hash').notNull().unique(), // Store hashed key
+  prefix: text('prefix').notNull(), // e.g. 'sk_live_...'
+  name: text('name').notNull(),
+  isActive: boolean('is_active').default(true).notNull(),
+  rateLimit: integer('rate_limit').default(60).notNull(), // Requests per minute
+  createdAt: text('created_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: text('updated_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  lastUsedAt: text('last_used_at'),
+});
+
+export type ApiKey = typeof apiKeys.$inferSelect;
+export type NewApiKey = typeof apiKeys.$inferInsert;
+
+export * from './salesforce-schema';

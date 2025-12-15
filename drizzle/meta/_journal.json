@@ -50,6 +50,13 @@
       "when": 1763966100240,
       "tag": "0006_tranquil_the_executioner",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1765788455776,
+      "tag": "0007_quick_captain_stacy",
+      "breakpoints": true
     }
   ]
 }
