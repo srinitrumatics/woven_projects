@@ -16,6 +16,23 @@ export interface Proposal {
   shipTo: string;
   opportunityName?: string;
   submittedBy?: string;
+  accountExecutive?: string;
+  issuedDate?: string;
+  orderNumber?: string;
+  billingAddress?: string;
+  paymentTerms?: string;
+  customerPO?: string;
+  shippingAddress?: string;
+  requestedDeliveryDate?: string;
+  dropShip?: boolean;
+  specialTerms?: string;
+  internalNotes?: string;
+  clientSignedBy?: string;
+  clientSignedTitle?: string;
+  clientSignedDate?: string;
+  companySignedBy?: string;
+  companySignedTitle?: string;
+  companySignedDate?: string;
 }
 
 export interface ProposalStats {

@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
 import { formatCurrency } from "@/lib/utils/formatting";
-import { ProposalStatus } from "./types";
-import { mockProposals } from "./mockData";
+import { Proposal, ProposalStatus } from "./types";
 
 type TabFilter = "All" | "Draft" | "Pending Review" | "Under Review" | "Approved" | "Accepted" | "Rejected" | "Expired";
 
@@ -18,27 +17,66 @@ export default function ProposalsPage() {
   const [activeTab, setActiveTab] = useState<TabFilter>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProposals() {
+      try {
+        const res = await fetch('/api/salesforce/proposals');
+        if (!res.ok) throw new Error('Failed to fetch proposals');
+        const data = await res.json();
+        console.log("Fetched proposals data:", data);
+
+        const mappedProposals: Proposal[] = data.map((item: any) => ({
+          id: item.Id,
+          proposalNumber: item.Name || 'N/A',
+          proposalName: item.Proposal_Name__c || item.Name || 'Untitled Proposal',
+          accountName: item.Account_Name__c || item.Account__r?.Name || 'Unknown Account',
+          contactName: item.Contact_Name__c || item.Contact__r?.Name || 'Unknown Contact',
+          status: (item.Status__c as ProposalStatus) || 'Draft',
+          totalAmount: item.Total_Amount__c || 0,
+          proposalDate: item.CreatedDate ? item.CreatedDate.split('T')[0] : new Date().toISOString().split('T')[0],
+          expirationDate: item.Expiration_Date__c || '',
+          description: item.Description || '',
+          productCount: item.Product_Count__c || 0,
+          billTo: item.Bill_To_Address__c || '',
+          shipTo: item.Ship_To_Address__c || '',
+          opportunityName: item.Opportunity_Name__c || '',
+          submittedBy: item.Owner?.Name || 'System'
+        }));
+
+        setProposals(mappedProposals);
+      } catch (error) {
+        console.error("Error fetching proposals:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProposals();
+  }, []);
 
   // Calculate stats from all proposals
   const stats = useMemo(() => {
-    const total = mockProposals.length;
-    const totalValue = mockProposals.reduce((sum, p) => sum + p.totalAmount, 0);
+    const total = proposals.length;
+    const totalValue = proposals.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const drafts = mockProposals.filter(p => p.status === "Draft");
+    const drafts = proposals.filter(p => p.status === "Draft");
     const draftCount = drafts.length;
-    const draftValue = drafts.reduce((sum, p) => sum + p.totalAmount, 0);
+    const draftValue = drafts.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const pending = mockProposals.filter(p => p.status === "Pending Review");
+    const pending = proposals.filter(p => p.status === "Pending Review");
     const pendingCount = pending.length;
-    const pendingValue = pending.reduce((sum, p) => sum + p.totalAmount, 0);
+    const pendingValue = pending.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const approved = mockProposals.filter(p => p.status === "Approved");
+    const approved = proposals.filter(p => p.status === "Approved");
     const approvedCount = approved.length;
-    const approvedValue = approved.reduce((sum, p) => sum + p.totalAmount, 0);
+    const approvedValue = approved.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const accepted = mockProposals.filter(p => p.status === "Accepted");
+    const accepted = proposals.filter(p => p.status === "Accepted");
     const acceptedCount = accepted.length;
-    const acceptedValue = accepted.reduce((sum, p) => sum + p.totalAmount, 0);
+    const acceptedValue = accepted.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
     return {
       total, totalValue,
@@ -47,11 +85,11 @@ export default function ProposalsPage() {
       approvedCount, approvedValue,
       acceptedCount, acceptedValue
     };
-  }, []);
+  }, [proposals]);
 
   // Filter proposals based on search and status
   const filteredAndSearchedProposals = useMemo(() => {
-    let filtered = mockProposals;
+    let filtered = proposals;
 
     // Apply tab filter
     if (activeTab !== "All") {
@@ -62,17 +100,17 @@ export default function ProposalsPage() {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(proposal =>
-        proposal.proposalNumber.toLowerCase().includes(query) ||
-        proposal.proposalName.toLowerCase().includes(query) ||
-        proposal.accountName.toLowerCase().includes(query) ||
-        proposal.billTo.toLowerCase().includes(query) ||
-        proposal.shipTo.toLowerCase().includes(query) ||
-        proposal.status.toLowerCase().includes(query)
+        (proposal.proposalNumber?.toLowerCase() || '').includes(query) ||
+        (proposal.proposalName?.toLowerCase() || '').includes(query) ||
+        (proposal.accountName?.toLowerCase() || '').includes(query) ||
+        (proposal.billTo?.toLowerCase() || '').includes(query) ||
+        (proposal.shipTo?.toLowerCase() || '').includes(query) ||
+        (proposal.status?.toLowerCase() || '').includes(query)
       );
     }
 
     return filtered;
-  }, [activeTab, searchQuery]);
+  }, [activeTab, searchQuery, proposals]);
 
   // Pagination
   const totalPages = Math.ceil(filteredAndSearchedProposals.length / ITEMS_PER_PAGE);
@@ -101,6 +139,16 @@ export default function ProposalsPage() {
     alert(`Downloading proposal ${proposalId}`);
   };
 
+  if (loading) {
+    return (
+      <Sidebar>
+        <div className="flex h-[80vh] items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      </Sidebar>
+    );
+  }
+
   return (
     <Sidebar>
       <div className="mb-6">
@@ -113,11 +161,10 @@ export default function ProposalsPage() {
         {/* Total Proposals Card */}
         <button
           onClick={() => handleCardClick("All")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${
-            activeTab === "All"
-              ? "border-primary ring-2 ring-primary/20"
-              : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
-          }`}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "All"
+            ? "border-primary ring-2 ring-primary/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
+            }`}
         >
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-dark"></div>
           <div className="p-4">
@@ -130,9 +177,8 @@ export default function ProposalsPage() {
                 </div>
                 <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${
-                activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
-              } transition-colors`}>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
+                } transition-colors`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
@@ -152,11 +198,10 @@ export default function ProposalsPage() {
         {/* Draft Proposals Card */}
         <button
           onClick={() => handleCardClick("Draft")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${
-            activeTab === "Draft"
-              ? "border-gray-500 ring-2 ring-gray-500/20"
-              : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
-          }`}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Draft"
+            ? "border-gray-500 ring-2 ring-gray-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
+            }`}
         >
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-400 to-gray-500"></div>
           <div className="p-4">
@@ -169,9 +214,8 @@ export default function ProposalsPage() {
                 </div>
                 <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.draftValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${
-                activeTab === "Draft" ? "bg-gray-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-600 group-hover:text-white"
-              } transition-colors`}>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-gray-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-600 group-hover:text-white"
+                } transition-colors`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
@@ -191,11 +235,10 @@ export default function ProposalsPage() {
         {/* Pending Review Card */}
         <button
           onClick={() => handleCardClick("Pending Review")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${
-            activeTab === "Pending Review"
-              ? "border-yellow-500 ring-2 ring-yellow-500/20"
-              : "border-gray-200 dark:border-gray-700 hover:border-yellow-400"
-          }`}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Pending Review"
+            ? "border-yellow-500 ring-2 ring-yellow-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-yellow-400"
+            }`}
         >
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-orange-400"></div>
           <div className="p-4">
@@ -216,9 +259,8 @@ export default function ProposalsPage() {
                 </div>
                 <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.pendingValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${
-                activeTab === "Pending Review" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
-              } transition-colors`}>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Pending Review" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
+                } transition-colors`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -238,11 +280,10 @@ export default function ProposalsPage() {
         {/* Approved Card */}
         <button
           onClick={() => handleCardClick("Approved")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${
-            activeTab === "Approved"
-              ? "border-green-500 ring-2 ring-green-500/20"
-              : "border-gray-200 dark:border-gray-700 hover:border-green-400"
-          }`}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Approved"
+            ? "border-green-500 ring-2 ring-green-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-green-400"
+            }`}
         >
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-emerald-500"></div>
           <div className="p-4">
@@ -255,9 +296,8 @@ export default function ProposalsPage() {
                 </div>
                 <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.approvedValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${
-                activeTab === "Approved" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
-              } transition-colors`}>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Approved" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
+                } transition-colors`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -285,11 +325,10 @@ export default function ProposalsPage() {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`pb-2 text-sm font-medium transition-colors relative ${
-                    activeTab === tab
-                      ? "text-gray-900 dark:text-white"
-                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                  }`}
+                  className={`pb-2 text-sm font-medium transition-colors relative ${activeTab === tab
+                    ? "text-gray-900 dark:text-white"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                    }`}
                 >
                   {tab}
                   {activeTab === tab && (

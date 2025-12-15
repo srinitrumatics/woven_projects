@@ -24,7 +24,7 @@ const SALESFORCE_CONFIG = {
   securityToken: process.env.SALESFORCE_SECURITY_TOKEN || '',
 };
 // Get Salesforce session info (this would normally come from your session management)
-async function getSalesforceSession() {
+export async function getSalesforceSession() {
   // obtain or reuse token
   const tokenUrl = "https://test.salesforce.com/services/oauth2/token";
   const body = new URLSearchParams({

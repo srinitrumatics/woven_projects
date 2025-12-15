@@ -1,15 +1,16 @@
 "use client";
 
-import { use, useState, useMemo } from "react";
+import { use, useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
-import { ProposalStatus } from "../types";
+import { ProposalStatus, Proposal } from "../types";
 
 interface ProposalElement {
   id: string;
   wbs: string;
   proposalElement: string;
   description: string;
+  proposalId?: string;
 }
 
 interface ProposalFile {
@@ -34,146 +35,8 @@ interface ProposedProduct {
   subtotal: number;
 }
 
-// Mock proposed products
-const mockProposedProducts: ProposedProduct[] = [
-  {
-    id: "1",
-    productName: "Room Display License - 3 Year",
-    productSku: "HUM10093",
-    description: "Room Display License - 3 Year",
-    manufacturer: "Humanly Solutions AB",
-    productFamily: "AV Equipment",
-    quantity: 10,
-    unitPrice: 245.00,
-    subtotal: 2450.00
-  },
-  {
-    id: "2",
-    productName: "Apple TV 4K Wi-Fi + Ethernet",
-    productSku: "MNBB1LL/A",
-    description: "Apple TV 4K Wi-Fi + Ethernet",
-    manufacturer: "Apple Inc.",
-    productFamily: "Streaming and Recording Devices",
-    quantity: 25,
-    unitPrice: 159.00,
-    subtotal: 3975.00
-  },
-  {
-    id: "3",
-    productName: "CAT6 24-Port Patch Panel",
-    productSku: "4K-C6PPK5",
-    description: "ADTPRO 4K-C6PPK5 CAT6 24-Port Patch Panel",
-    manufacturer: "Adderco Inc",
-    productFamily: "AV Equipment",
-    quantity: 15,
-    unitPrice: 175.00,
-    subtotal: 2625.00
-  }
-];
 
-// Mock proposal files
-const mockProposalFiles: ProposalFile[] = [
-  {
-    id: "1",
-    fileName: "PROP-2024-001_Full_Proposal.pdf",
-    fileType: "PDF",
-    fileSize: "2.4 MB",
-    uploadedBy: "John Doe",
-    uploadedDate: "2024-10-20",
-    category: "Proposal Document"
-  },
-  {
-    id: "2",
-    fileName: "Equipment_Specifications.pdf",
-    fileType: "PDF",
-    fileSize: "1.8 MB",
-    uploadedBy: "Sarah Johnson",
-    uploadedDate: "2024-10-18",
-    category: "Technical Specs"
-  },
-  {
-    id: "3",
-    fileName: "Site_Survey_Photos.zip",
-    fileType: "ZIP",
-    fileSize: "15.2 MB",
-    uploadedBy: "Mike Chen",
-    uploadedDate: "2024-10-15",
-    category: "Site Documentation"
-  },
-  {
-    id: "4",
-    fileName: "Wiring_Diagram_v2.dwg",
-    fileType: "DWG",
-    fileSize: "856 KB",
-    uploadedBy: "Lisa Wang",
-    uploadedDate: "2024-10-12",
-    category: "Technical Drawings"
-  },
-  {
-    id: "5",
-    fileName: "Project_Timeline.xlsx",
-    fileType: "XLSX",
-    fileSize: "245 KB",
-    uploadedBy: "John Doe",
-    uploadedDate: "2024-10-20",
-    category: "Project Planning"
-  },
-  {
-    id: "6",
-    fileName: "Cost_Breakdown.xlsx",
-    fileType: "XLSX",
-    fileSize: "312 KB",
-    uploadedBy: "Sarah Johnson",
-    uploadedDate: "2024-10-19",
-    category: "Financial"
-  }
-];
 
-// Mock proposal elements
-const mockProposalElements: ProposalElement[] = [
-  {
-    id: "1",
-    wbs: "1.0",
-    proposalElement: "Project Management",
-    description: "Overall project coordination, timeline management, and stakeholder communication"
-  },
-  {
-    id: "2",
-    wbs: "1.1",
-    proposalElement: "Site Assessment",
-    description: "Initial site survey and infrastructure evaluation for AV equipment installation"
-  },
-  {
-    id: "3",
-    wbs: "2.0",
-    proposalElement: "Equipment Procurement",
-    description: "Sourcing and procurement of all AV equipment and accessories"
-  },
-  {
-    id: "4",
-    wbs: "2.1",
-    proposalElement: "Hardware Installation",
-    description: "Physical installation of displays, panels, and networking equipment"
-  },
-  {
-    id: "5",
-    wbs: "2.2",
-    proposalElement: "Software Configuration",
-    description: "Configuration of room display licenses, streaming devices, and control systems"
-  },
-  {
-    id: "6",
-    wbs: "3.0",
-    proposalElement: "Testing & QA",
-    description: "Comprehensive testing of all installed equipment and systems integration"
-  },
-  {
-    id: "7",
-    wbs: "3.1",
-    proposalElement: "Training & Handover",
-    description: "End-user training and documentation for system operation and maintenance"
-  }
-];
 
 type ProposalTabType = "products" | "elements" | "files" | "signatures";
 type SortDirection = "asc" | "desc";
@@ -183,21 +46,123 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const router = useRouter();
 
   // Tab and sorting state
+  // State
+  const [proposal, setProposal] = useState<Proposal | null>(null);
+  const [proposedProducts, setProposedProducts] = useState<ProposedProduct[]>([]);
+  const [proposalElements, setProposalElements] = useState<ProposalElement[]>([]);
+  const [proposalFiles, setProposalFiles] = useState<ProposalFile[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Tab and sorting state
   const [activeTab, setActiveTab] = useState<ProposalTabType>("products");
   const [elementSortField, setElementSortField] = useState<keyof ProposalElement>("wbs");
   const [elementSortDirection, setElementSortDirection] = useState<SortDirection>("asc");
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
 
+  useEffect(() => {
+    async function fetchProposal() {
+      try {
+        const res = await fetch(`/api/salesforce/proposals?proposalId=${id}`);
+        if (!res.ok) throw new Error('Failed to fetch proposal');
+        const data = await res.json();
+
+        if (data && data.length > 0) {
+          const item = data[0]; // API returns an array
+          const mappedProposal: Proposal = {
+            id: item.Id,
+            proposalNumber: item.Proposal_Number__c || 'N/A',
+            proposalName: item.Name || 'Untitled Proposal',
+            accountName: item.Inventory_Account_Name || 'Unknown Account',
+            contactName: item.Client_Signed_By__c || 'Unknown Contact', // Using Client Signer as contact placeholder if contact not explicit
+            status: (item.Status__c as ProposalStatus) || 'Draft',
+            totalAmount: item.Total_Price__c || 0,
+            proposalDate: item.Issued_Date__c || item.CreatedDate?.split('T')[0] || '',
+            expirationDate: item.Expiration_Date__c || '',
+            description: item.Scope__c?.replace(/<[^>]*>?/gm, '') || item.Name || '',
+            productCount: item.Total_Lines__c || 0,
+            billTo: item.Authorized_Bill_To_Location__c || 'N/A', // JSON has ID, using as placeholder
+            shipTo: item.Authorized_Ship_To_Location__c || 'N/A', // JSON has ID, using as placeholder
+            opportunityName: '',
+            submittedBy: item.Company_Signed_By__c || ''
+          };
+
+          const detailedProposal = {
+            ...mappedProposal,
+            accountExecutive: item.Company_Signed_By__c || '',
+            issuedDate: item.Issued_Date__c || '',
+            orderNumber: item.Customer_Order__c || '',
+            billingAddress: item.Authorized_Bill_To_Location__c || '', // Placeholder until address fields available
+            paymentTerms: item.Inventory_Account_Payment_Terms || '',
+            customerPO: item.Customer_PO__c || '',
+            shippingAddress: item.Authorized_Ship_To_Location__c || '', // Placeholder until address fields available
+            requestedDeliveryDate: item.Request_Date__c || '',
+            dropShip: item.Drop_Ship__c || false,
+            specialTerms: item.Scope__c?.replace(/<[^>]*>?/gm, '') || '',
+            internalNotes: '',
+            clientSignedBy: item.Client_Signed_By__c,
+            clientSignedTitle: item.Client_Signed_Title__c,
+            clientSignedDate: item.Client_Signed_Date__c,
+            companySignedBy: item.Company_Signed_By__c,
+            companySignedTitle: item.Company_Signed_Title__c,
+            companySignedDate: item.Company_Signed_Date__c
+          };
+
+          setProposal(detailedProposal as any); // Casting to any to match existing usage in component or we need to update Proposal interface
+
+          // Map Lines to ProposedProducts
+          if (item.Proposal_Lines__r && item.Proposal_Lines__r.records) {
+            const lines = item.Proposal_Lines__r.records.map((line: any) => ({
+              id: line.Id,
+              productName: line.Product_Name__c || 'Unknown Product',
+              productSku: line.Product_SKU__c || 'N/A',
+              description: line.Description__c || '',
+              manufacturer: line.Manufacturer__c || '',
+              productFamily: line.Product_Family__c || 'General',
+              quantity: line.Quantity__c || 0,
+              unitPrice: line.Sales_Price__c || 0,
+              subtotal: line.Total_Price__c || 0
+            }));
+            setProposedProducts(lines);
+          }
+
+          // Map Elements if available (assuming relationship name Proposal_Elements__r for now, or empty)
+          if (item.Proposal_Elements__r && item.Proposal_Elements__r.records) {
+            const elements = item.Proposal_Elements__r.records.map((el: any) => ({
+              id: el.Id,
+              wbs: el.WBS__c || '',
+              proposalElement: el.Name || '',
+              description: el.Description__c || ''
+            }));
+            setProposalElements(elements);
+          }
+
+          // Map Files (assuming ContentDocumentLinks or similar, leaving empty if not complex query needed)
+          // For now, initializing empty to replace mock data
+          setProposalFiles([]);
+        }
+      } catch (error) {
+        console.error("Error fetching proposal:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProposal();
+  }, [id]);
+
   // Sorted elements
   const sortedElements = useMemo(() => {
-    return [...mockProposalElements].sort((a, b) => {
+    return [...proposalElements].sort((a, b) => { // Use state instead of mock
       const aVal = a[elementSortField];
       const bVal = b[elementSortField];
+      // Safety check for undefined values if any
+      if (aVal === undefined || bVal === undefined) return 0;
+
       if (aVal < bVal) return elementSortDirection === "asc" ? -1 : 1;
       if (aVal > bVal) return elementSortDirection === "asc" ? 1 : -1;
       return 0;
     });
-  }, [elementSortField, elementSortDirection]);
+  }, [proposalElements, elementSortField, elementSortDirection]);
 
   const handleElementSort = (field: keyof ProposalElement) => {
     if (elementSortField === field) {
@@ -222,15 +187,15 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   };
 
   const handleSelectAllFiles = () => {
-    if (selectedFiles.size === mockProposalFiles.length) {
+    if (selectedFiles.size === proposalFiles.length) {
       setSelectedFiles(new Set());
     } else {
-      setSelectedFiles(new Set(mockProposalFiles.map(f => f.id)));
+      setSelectedFiles(new Set(proposalFiles.map(f => f.id)));
     }
   };
 
   const handleDownloadSelected = () => {
-    const filesToDownload = mockProposalFiles.filter(f => selectedFiles.has(f.id));
+    const filesToDownload = proposalFiles.filter(f => selectedFiles.has(f.id));
     // In a real app, this would trigger actual file downloads
     console.log("Downloading files:", filesToDownload.map(f => f.fileName));
     alert(`Downloading ${filesToDownload.length} file(s):\n${filesToDownload.map(f => f.fileName).join('\n')}`);
@@ -241,32 +206,32 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       case "PDF":
         return (
           <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zm-2.5 9.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/>
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zm-2.5 9.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z" />
           </svg>
         );
       case "XLSX":
       case "XLS":
         return (
           <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/>
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8 13h8v2H8v-2zm0 4h8v2H8v-2z" />
           </svg>
         );
       case "ZIP":
         return (
           <svg className="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zm-3 6h2v2h-2v2h2v2h-2v2h2v2h-2v-2H8v-2h2v-2H8v-2h2v-2H8v-2h2z"/>
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zm-3 6h2v2h-2v2h2v2h-2v2h2v2h-2v-2H8v-2h2v-2H8v-2h2v-2H8v-2h2z" />
           </svg>
         );
       case "DWG":
         return (
           <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM7 14l3 3-3 3m4-3h5"/>
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM7 14l3 3-3 3m4-3h5" />
           </svg>
         );
       default:
         return (
           <svg className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4z"/>
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4z" />
           </svg>
         );
     }
@@ -283,41 +248,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     </span>
   );
 
-  // Mock proposal data
-  const proposal = {
-    proposalNumber: "PROP-2024-001",
-    accountName: "Blum Oakland",
-    contactName: "Sarah Johnson",
-    status: "Approved" as ProposalStatus,
-    description: "Q1 2025 Product Line Expansion Proposal",
-    // Key Dates
-    accountExecutive: "John Doe",
-    issuedDate: "2024-10-20",
-    expirationDate: "2024-12-20",
-    orderNumber: "1002",
-    // Billing Information
-    billTo: "Blum - Oakland",
-    billingAddress: "C10-0000775-LIC | 578 West Grand Ave, Oakland, CA 94612",
-    paymentTerms: "NET 30",
-    customerPO: "PO-2024-00892",
-    // Shipping Information
-    shipTo: "Blum - Oakland",
-    shippingAddress: "C10-0000775-LIC | 578 West Grand Ave, Oakland, CA 94612",
-    requestedDeliveryDate: "2024-11-15",
-    dropShip: false,
-    specialTerms: "Volume discount applied for orders over 100 units. Free shipping on orders over $1000.",
-    internalNotes: "Client has expressed interest in expanding edibles line. Follow up in 30 days if no response.",
-    // Signature/Acceptance Fields
-    clientSignedBy: "Sarah Johnson",
-    clientSignedTitle: "Procurement Manager",
-    clientSignedDate: "2024-11-01",
-    companySignedBy: "John Doe",
-    companySignedTitle: "Account Executive",
-    companySignedDate: "2024-10-28"
-  };
-
   // Calculate totals
-  const productsSubtotal = mockProposedProducts.reduce((sum, product) => sum + product.subtotal, 0);
+  const productsSubtotal = proposedProducts.reduce((sum, product) => sum + product.subtotal, 0);
   const taxRate = 0.15;
   const taxTotal = productsSubtotal * taxRate;
   const shippingCost = 65.00;
@@ -343,6 +275,16 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
     }
   };
+
+  if (loading || !proposal) {
+    return (
+      <Sidebar>
+        <div className="flex items-center justify-center h-96">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </Sidebar>
+    );
+  }
 
   return (
     <Sidebar>
@@ -521,7 +463,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
             <div className="space-y-3 mb-4">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-700 dark:text-gray-300">{mockProposedProducts.length} Product{mockProposedProducts.length !== 1 ? 's' : ''} - Subtotal</span>
+                <span className="text-gray-700 dark:text-gray-300">{proposedProducts.length} Product{proposedProducts.length !== 1 ? 's' : ''} - Subtotal</span>
                 <span className="text-gray-900 dark:text-white font-semibold">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
 
@@ -609,41 +551,37 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               <div className="flex gap-2">
                 <button
                   onClick={() => setActiveTab("products")}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    activeTab === "products"
-                      ? "bg-primary text-white"
-                      : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                  }`}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === "products"
+                    ? "bg-primary text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    }`}
                 >
                   Products
                 </button>
                 <button
                   onClick={() => setActiveTab("elements")}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    activeTab === "elements"
-                      ? "bg-primary text-white"
-                      : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                  }`}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === "elements"
+                    ? "bg-primary text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    }`}
                 >
                   Elements
                 </button>
                 <button
                   onClick={() => setActiveTab("files")}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    activeTab === "files"
-                      ? "bg-primary text-white"
-                      : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                  }`}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === "files"
+                    ? "bg-primary text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    }`}
                 >
                   Files
                 </button>
                 <button
                   onClick={() => setActiveTab("signatures")}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    activeTab === "signatures"
-                      ? "bg-primary text-white"
-                      : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                  }`}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === "signatures"
+                    ? "bg-primary text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    }`}
                 >
                   Signatures
                 </button>
@@ -668,7 +606,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {mockProposedProducts.map((product) => (
+                  {proposedProducts.map((product) => (
                     <tr key={product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                       <td className="px-4 py-3">
                         <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
@@ -791,7 +729,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                       <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white w-12">
                         <input
                           type="checkbox"
-                          checked={selectedFiles.size === mockProposalFiles.length && mockProposalFiles.length > 0}
+                          checked={selectedFiles.size === proposalFiles.length && proposalFiles.length > 0}
                           onChange={handleSelectAllFiles}
                           className="w-4 h-4 text-primary rounded focus:ring-2 focus:ring-primary cursor-pointer"
                         />
@@ -806,7 +744,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                     </tr>
                   </thead>
                   <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {mockProposalFiles.map((file) => (
+                    {proposalFiles.map((file) => (
                       <tr
                         key={file.id}
                         className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer ${selectedFiles.has(file.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}
