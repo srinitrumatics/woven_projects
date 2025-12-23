@@ -33,6 +33,7 @@ BEGIN
         'category', product_row.gtherp__category__c,
         'sub_category', product_row.gtherp__sub_category__c,
         'family', product_row.family,
+        'manufacturer', product_row.manufacturer_name__c,
         
         'status', CASE WHEN product_row.isactive THEN 'active' ELSE 'inactive' END,
         'is_active', product_row.isactive,
@@ -44,7 +45,8 @@ BEGIN
         '_tags', ARRAY_REMOVE(ARRAY[
             product_row.family, 
             product_row.gtherp__category__c, 
-            product_row.gtherp__sub_category__c
+            product_row.gtherp__sub_category__c,
+            product_row.manufacturer_name__c
         ], NULL)
     ));
 END;

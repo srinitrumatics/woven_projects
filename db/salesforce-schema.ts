@@ -22,6 +22,7 @@ export const product2 = salesforceSchema.table('product2', {
     discount: numeric('gtherp__discount__c'),
     category: varchar('gtherp__category__c', { length: 255 }),
     subCategory: varchar('gtherp__sub_category__c', { length: 255 }),
+    manufacturerName: varchar('manufacturer_name__c', { length: 255 }),
 
     createdDate: timestamp('createddate'),
     systemModStamp: timestamp('systemmodstamp'),

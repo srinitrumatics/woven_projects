@@ -81,8 +81,14 @@ export async function PUT(
                 description: body.description,
                 isActive: body.isActive,
                 family: body.family,
+                imageUrl: body.imageUrl !== undefined ? body.imageUrl : undefined, // Allow updating imageUrl
                 price: body.price ? String(body.price) : undefined,
                 stockQuantity: body.stockQuantity ? String(body.stockQuantity) : undefined,
+                availableQuantity: body.availableQuantity ? String(body.availableQuantity) : undefined,
+                discount: body.discount ? String(body.discount) : undefined,
+                category: body.category,
+                subCategory: body.subCategory,
+                manufacturerName: body.manufacturerName,
                 systemModStamp: new Date(), // touch update time
             })
             .where(eq(product2.sfid, id))

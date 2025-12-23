@@ -1,0 +1,42 @@
+{
+    "productCode": "PostmanTest_product",
+    "name": "Postman Refrigeratorccccccs Model N0N5D",
+    "description": "refrigerators designed for durability and performance.",
+    "isActive": true,
+    "family": null,
+    "imageUrl": {
+        "images": [
+            {
+                "isDisplay": false,
+                "isCover": false,
+                "sortOrder": 2,
+                "thumb": "https://firebasestorage.googleapis.com/v0/b/trinternal.firebasestorage.app/o/thumb_1765539036260_head1.webp?alt=media",
+                "url": "https://firebasestorage.googleapis.com/v0/b/trinternal.firebasestorage.app/o/1765539036260_head1.webp?alt=media",
+                "id": "a00E200000ZRUcBIAX"
+            },
+            {
+                "isDisplay": true,
+                "isCover": true,
+                "sortOrder": 9,
+                "thumb": "https://res.cloudinary.com/dnsh0vsky/image/upload/v1766050986/01tE200000GebJ0IAJ/thumb_1_iqon4i.png",
+                "url": "https://res.cloudinary.com/dnsh0vsky/image/upload/v1766050985/01tE200000GebJ0IAJ/1_mz2ygt.jpg",
+                "id": "a00E200000ZdSYEIA3"
+            },
+            {
+                "isDisplay": false,
+                "isCover": false,
+                "sortOrder": 14,
+                "thumb": "https://res.cloudinary.com/dnsh0vsky/image/upload/v1766130332/01tE200000GebJ0IAJ/01tE200000GebJ0IAJ_1766130331322_thumb_sample_1280_853_fwaq2r.png",
+                "url": "https://res.cloudinary.com/dnsh0vsky/image/upload/v1766130331/01tE200000GebJ0IAJ/01tE200000GebJ0IAJ_1766130331322_sample_1280_853_hgfn4h.jpg",
+                "id": "a00E200000ZfhHIIAZ"
+            }
+        ]
+    },
+    "price": "33737",
+    "stockQuantity": "173",
+    "availableQuantity": "11",
+    "discount": "32",
+    "category": "Home Appliances",
+    "subCategory": "Refrigerators",
+    "manufacturerName": "Samsung Electronics"
+}

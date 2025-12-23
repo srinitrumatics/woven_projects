@@ -66,6 +66,11 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
 
+        // Debug logging
+        console.log('Received body:', JSON.stringify(body, null, 2));
+        console.log('imageUrl field:', body.imageUrl);
+        console.log('imageUrl type:', typeof body.imageUrl);
+
         // Basic validation
         if (!body.name || !body.productCode) {
             return NextResponse.json(
@@ -86,8 +91,14 @@ export async function POST(request: NextRequest) {
             description: body.description,
             isActive: body.isActive ?? true,
             family: body.family,
+            imageUrl: body.imageUrl || null, // JSONB field for image data
             price: body.price ? String(body.price) : undefined, // Numeric is string in JS/Drizzle usually
             stockQuantity: body.stockQuantity ? String(body.stockQuantity) : undefined,
+            availableQuantity: body.availableQuantity ? String(body.availableQuantity) : undefined,
+            discount: body.discount ? String(body.discount) : undefined,
+            category: body.category,
+            subCategory: body.subCategory,
+            manufacturerName: body.manufacturerName,
             // Add other fields as necessary
             createdDate: new Date(),
             systemModStamp: new Date(),
