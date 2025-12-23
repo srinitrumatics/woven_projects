@@ -28,7 +28,24 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
 
             <div className="px-6 pb-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="md:col-span-3">
+                    <div className="md:col-span-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Ship To Account
+                        </label>
+                        <input
+                            type="text"
+                            value={(() => {
+                                if (formData.shipToAccountName) return formData.shipToAccountName;
+                                const location = shipLocations.find(l => l.Id === formData.shipTo);
+                                return location?.Account_Name__c || '';
+                            })()}
+                            readOnly
+                            disabled
+                            className="w-full h-11 px-4 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                        />
+                    </div>
+
+                    <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Ship To Location <span className="text-red-500">*</span>
                         </label>

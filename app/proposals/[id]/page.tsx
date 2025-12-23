@@ -97,7 +97,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   useEffect(() => {
     async function fetchProposal() {
       try {
-        const res = await fetch(`/api/salesforce/proposals?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=view`);
+        const res = await fetch(`/api/salesforce/proposals?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&proposalId=${id}&action=view`);
         if (!res.ok) throw new Error('Failed to fetch proposal');
         const data = await res.json();
 

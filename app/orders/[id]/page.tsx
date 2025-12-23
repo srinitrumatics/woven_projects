@@ -632,6 +632,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             billingContact: order.Bill_to_Contact_Name || prev.billingContact,
             billingPhone: order.Ship_to_Contact_Phone || prev.billingPhone, // Fallback to ship contact phone if bill contact phone missing in API
             billingEmail: order.Ship_to_Contact_Email || prev.billingEmail, // Fallback to ship contact email
+            billToAccountName: order.Bill_to_Account_Name || "",
+            shipToAccountName: order.Ship_to_Account_Name || "",
           }));
 
           if (order.Authorized_Ship_To_Location__c) {
