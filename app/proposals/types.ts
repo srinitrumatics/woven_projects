@@ -8,6 +8,8 @@ export interface Proposal {
   contactName: string;
   status: ProposalStatus;
   totalAmount: number;
+  totalShippingCharges: number;
+  totalTaxesAmount: number;
   proposalDate: string;
   expirationDate: string;
   description: string;
@@ -33,6 +35,13 @@ export interface Proposal {
   companySignedBy?: string;
   companySignedTitle?: string;
   companySignedDate?: string;
+  // Salesforce IDs for API calls
+  accountId?: string;
+  contactId?: string;
+  orderId?: string;
+  proposalType?: string;
+  priceBook?: string;
+  site?: string;
 }
 
 export interface ProposalStats {

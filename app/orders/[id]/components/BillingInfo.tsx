@@ -20,13 +20,13 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                 </div>
                 <div className="text-left">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Billing Information</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Payment details for this order</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Invoice Destination</p>
                 </div>
             </div>
 
             <div className="px-6 pb-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="md:col-span-3">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Bill To Location <span className="text-red-500">*</span>
                         </label>
@@ -45,7 +45,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         </select>
                     </div>
 
-                    <div className="md:col-span-2">
+                    <div className="md:col-span-3">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Billing Address <span className="text-red-500">*</span>
                         </label>
@@ -71,13 +71,33 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Terms</label>
-                        <input
-                            placeholder="Payment Terms"
-                            type="text" name="paymentTerms"
+                        <label className="block text-sm h-11font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Terms</label>
+                        <select
                             value={formData.paymentTerms}
                             onChange={(e) => setFormData({ ...formData, paymentTerms: e.target.value })}
                             className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                        >
+                            {formData.paymentTerms && !["Net 30", "Net 45", "Net 60", "Due on Receipt"].includes(formData.paymentTerms) && (
+                                <option value={formData.paymentTerms}>{formData.paymentTerms}</option>
+                            )}
+                            <option value="">Select Terms</option>
+                            <option value="Net 30">Net 30</option>
+                            <option value="Net 45">Net 45</option>
+                            <option value="Net 60">Net 60</option>
+                            <option value="Due on Receipt">Due on Receipt</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assigned Price Book</label>
+                        <input
+                            placeholder="Price Book"
+                            type="text"
+                            name="priceBook"
+                            value={formData.priceBook || ''}
+                            readOnly
+                            disabled
+                            className="w-full h-11 px-4 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed"
                         />
                     </div>
                 </div>

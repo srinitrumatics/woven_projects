@@ -22,13 +22,13 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                 </div>
                 <div className="text-left">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Shipping Information</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Where should we deliver your order?</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Delivery Destination</p>
                 </div>
             </div>
 
             <div className="px-6 pb-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="md:col-span-3">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Ship To Location <span className="text-red-500">*</span>
                         </label>
@@ -60,7 +60,7 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                     </div>
 
 
-                    <div className="md:col-span-2">
+                    <div className="md:col-span-3">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Shipping Address <span className="text-red-500">*</span>
                         </label>
@@ -95,6 +95,18 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                             />
                             <span className="text-sm text-gray-700 dark:text-gray-300">Direct to customer</span>
                         </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Site</label>
+                        <input
+                            placeholder="Site"
+                            type="text"
+                            name="site"
+                            value={formData.site || ''}
+                            onChange={(e) => setFormData({ ...formData, site: e.target.value })}
+                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                        />
                     </div>
                 </div>
             </div>

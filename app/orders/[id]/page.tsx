@@ -81,6 +81,20 @@ interface Order {
   Customer_Order_Notes__c?: string;
   Drop_Ship__c?: boolean;
   Authorized_Ship_To_Location__c?: string;
+  Authorized_Bill_To_Location__c?: string;
+  Incoterms__c?: string;
+  Shipping_Method__c?: string;
+  Assigned_Price_Book__c?: string;
+  Site_Name?: string;
+  Total_Lines__c?: number;
+  Ship_to_Contact_Name?: string;
+  Ship_to_Contact_Phone?: string;
+  Ship_to_Contact_Email?: string;
+  Ship_to_Contact__c?: string;
+  Bill_to_Contact_Name?: string;
+  Authorized_Ship_To_Location__Address?: Address;
+  Authorized_Bill_To_Location_Address?: Address;
+
   CustomerOrderLines?: OrderItem[];
   [key: string]: any;
 }
@@ -217,10 +231,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
     // Delivery Preferences
     paymentTerms: "",
+    priceBook: "",
     dropShip: false,
     liftGateRequired: false,
     insideDelivery: false,
     deliveryNotes: "",
+    site: "",
+    shippingMethod: "",
+    incoterms: "",
 
     // Order Notes
     orderNotes: ""
@@ -321,6 +339,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           if (paymentTerms) {
             console.log('Setting payment terms:', paymentTerms);
             setFormData(prev => ({ ...prev, paymentTerms }));
+          }
+          // Set price book if available (using Payment_Terms__c as placeholder or new field if available)
+          if (data.Assigned_Price_Book__c) {
+            setFormData(prev => ({ ...prev, priceBook: data.Assigned_Price_Book__c }));
           }
         }
 
@@ -535,7 +557,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         const accountId = SF_ACCOUNT_ID;
         const orderId = id;
 
-        const res = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(accountId)}&orderId=${encodeURIComponent(orderId)}&contactId=abc`);
+        const res = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(accountId)}&orderId=${encodeURIComponent(orderId)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}`);
 
         if (!res.ok) {
           throw new Error(`Failed to fetch order: ${res.status} ${res.statusText}`);
@@ -552,29 +574,29 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           if (order.Status__c) setOrderStatus(order.Status__c);
 
           // Map Order Items to Products
-          if (order.CustomerOrderLines) {
-            const mappedProducts: Product[] = order.CustomerOrderLines.map((item: OrderItem, index: number) => ({
-              id: item.Product_Name__c || item.Id, // Use Product_Name__c as product ID if available
-              name: item.ProductName || "Unknown Product",
-              sku: item.Name || "", // Using Name as SKU/Line ID for now
-              description: item.Product_Description__c || "",
-              unitPrice: item.Unit_Price__c,
-              listPrice: item.Unit_Price__c, // Assuming list price same as unit price for now
-              brand: "", // Not in API response
-              manufacturer: item.Manufacturer_Name__c || "",
-              productFamily: item.ProductFamily || "", // Not in API response
-              availableQty: 999,
-              moq: item.MOQ__c || 1,
-              orderQty: item.Order_Qty__c,
-              subtotal: item.Total_Price__c,
-              // Store the original order line ID for updates
-              orderLineId: item.Id,
-              // Add unique lineItemKey for proper tracking and deletion
-              lineItemKey: `${item.Id}-${Date.now()}-${index}-${Math.random()}`
-            }));
-            console.log("Mapped products:", mappedProducts);
-            setOrderProducts(mappedProducts);
-          }
+          // if (order.CustomerOrderLines) {
+          //   const mappedProducts: Product[] = order.CustomerOrderLines.map((item: OrderItem, index: number) => ({
+          //     id: item.Product_Name__c || item.Id, // Use Product_Name__c as product ID if available
+          //     name: item.ProductName || "Unknown Product",
+          //     sku: item.Name || "", // Using Name as SKU/Line ID for now
+          //     description: item.Product_Description__c || "",
+          //     unitPrice: item.Unit_Price__c,
+          //     listPrice: item.Unit_Price__c, // Assuming list price same as unit price for now
+          //     brand: "", // Not in API response
+          //     manufacturer: item.Manufacturer_Name__c || "",
+          //     productFamily: item.ProductFamily || "", // Not in API response
+          //     availableQty: 999,
+          //     moq: item.MOQ__c || 1,
+          //     orderQty: item.Order_Qty__c,
+          //     subtotal: item.Total_Price__c,
+          //     // Store the original order line ID for updates
+          //     orderLineId: item.Id,
+          //     // Add unique lineItemKey for proper tracking and deletion
+          //     lineItemKey: `${item.Id}-${Date.now()}-${index}-${Math.random()}`
+          //   }));
+          //   console.log("Mapped products:", mappedProducts);
+          //   setOrderProducts(mappedProducts);
+          // }
 
           // Update Form Data with Order Details
           setFormData(prev => ({
@@ -582,12 +604,34 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             purchaseOrder: order.Customer_PO__c || prev.purchaseOrder,
             requestedDeliveryDate: order.Request_Date__c || prev.requestedDeliveryDate,
             orderNotes: order.Customer_Order_Notes__c || prev.orderNotes,
+            priceBook: order.Assigned_Price_Book__c || prev.priceBook,
             dropShip: order.Drop_Ship__c || prev.dropShip,
             // Set Bill To and Ship To from order data
             billTo: order.Authorized_Bill_To_Location__c || prev.billTo,
+            site: order.Site_Name || prev.site,
+            shippingMethod: order.Shipping_Method__c || prev.shippingMethod,
+            incoterms: order.Incoterms__c || prev.incoterms,
             // We set shipTo via handleLocationSelect when initialOrderShipToId triggers, 
             // but we can also set it here as a fallback or initial value
             shipTo: order.Authorized_Ship_To_Location__c || prev.shipTo,
+
+            // formatted address from API response objects if available
+            shippingAddress: order.Authorized_Ship_To_Location__Address ?
+              `${order.Authorized_Ship_To_Location__Address.street}, ${order.Authorized_Ship_To_Location__Address.city}, ${order.Authorized_Ship_To_Location__Address.state} ${order.Authorized_Ship_To_Location__Address.postalCode}`
+              : prev.shippingAddress,
+
+            billingAddress: order.Authorized_Bill_To_Location_Address ?
+              `${order.Authorized_Bill_To_Location_Address.street}, ${order.Authorized_Bill_To_Location_Address.city}, ${order.Authorized_Bill_To_Location_Address.state} ${order.Authorized_Bill_To_Location_Address.postalCode}`
+              : prev.billingAddress,
+
+            // Contact details
+            locationContact: order.Ship_to_Contact_Name || prev.locationContact,
+            contactPhone: order.Ship_to_Contact_Phone || prev.contactPhone,
+            contactEmail: order.Ship_to_Contact_Email || prev.contactEmail,
+
+            billingContact: order.Bill_to_Contact_Name || prev.billingContact,
+            billingPhone: order.Ship_to_Contact_Phone || prev.billingPhone, // Fallback to ship contact phone if bill contact phone missing in API
+            billingEmail: order.Ship_to_Contact_Email || prev.billingEmail, // Fallback to ship contact email
           }));
 
           if (order.Authorized_Ship_To_Location__c) {
@@ -623,7 +667,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const productsSubtotal = orderProducts.reduce((sum, product) => sum + product.subtotal, 0);
   const totalExciseTax = productsSubtotal > 0 ? productsSubtotal * 0.15 : 0;
   const orderProcessing = 0; // Not in API response example, assuming 0
-  const shipping = productsSubtotal > 0 ? 65.00 : 0;
+  const shipping = productsSubtotal > 0 ? (orderData?.Total_Shipping_Charges__c ?? 0) : 0;
   const grandTotal = productsSubtotal + totalExciseTax + orderProcessing + shipping;
 
   const handleAddProduct = (product: Product, quantity?: number) => {
@@ -1032,6 +1076,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             handleDownloadAll={handleDownloadAll}
             handleDownloadFile={handleDownloadFile}
             handleRemoveFile={handleRemoveFile}
+            productsCount={orderProducts.length}
           />
         </div>
       </div>
@@ -1123,6 +1168,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               handleRemoveProduct={handleRemoveProduct}
               searchQuery={searchQuery}
               setHoveredTooltip={setTooltipState}
+              accountId={SF_ACCOUNT_ID}
+              contactId={SF_CONTACT_ID}
+              setOrderProducts={setOrderProducts}
             />
           )}
         </div>

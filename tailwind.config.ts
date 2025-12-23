@@ -14,10 +14,15 @@ const config: Config = {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         primary: {
-          DEFAULT: 'var(--primary)',
-          light: 'var(--primary-light)',
-          dark: 'var(--primary-dark)',
+          DEFAULT: "#96C2DB",
+          light: "#E5EDF1",
+          dark: "#6B9DB8",
         },
+        brand: {
+          blue: "#96C2DB",
+          lightBlue: "#E5EDF1",
+        },
+
       },
     },
   },

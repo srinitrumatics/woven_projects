@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { exit } from "process";
-import { getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, getProductsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce, cloneOrderFromSalesforce, deleteOrderFromSalesforce, getFilesFromSalesforce, deleteFileFromSalesforce, uploadFilesToSalesforce, downloadFileFromSalesforce, getFileUrl } from '@/lib/salesforce-service';
+import { getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, getProductsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce, cloneOrderFromSalesforce, deleteOrderFromSalesforce, getFilesFromSalesforce, deleteFileFromSalesforce, uploadFilesToSalesforce, downloadFileFromSalesforce, getFileUrl, getOrderLinesFromSalesforce } from '@/lib/salesforce-service';
 
 
 export async function GET(req: Request) {
@@ -41,6 +41,11 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "Missing orderId for files action" }, { status: 400 });
       }
       result = await getFilesFromSalesforce(accountId, contactId, orderId);
+    } else if (rawAction === "orderlines") {
+      if (!orderId) {
+        return NextResponse.json({ error: "Missing orderId for orderlines action" }, { status: 400 });
+      }
+      result = await getOrderLinesFromSalesforce(accountId, contactId, orderId);
     } else if (rawAction === "download") {
       //const contentDocumentId = searchParams.get("contentDocumentId");
       if (!orderId) {

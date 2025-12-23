@@ -19,11 +19,13 @@ export default function ProposalsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
+  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "001QL00001Kbvt3YAB"; // override with real value
+  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "003QL00001EzLjZYAV" //TODO: Get this from session / auth context
 
   useEffect(() => {
     async function fetchProposals() {
       try {
-        const res = await fetch('/api/salesforce/proposals');
+        const res = await fetch(`/api/salesforce/proposals?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&action=list`);
         if (!res.ok) throw new Error('Failed to fetch proposals');
         const data = await res.json();
         console.log("Fetched proposals data:", data);

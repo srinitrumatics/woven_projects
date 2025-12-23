@@ -1,17 +1,73 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getProposalsFromSalesforce } from "@/lib/proposal-service";
+import { getProposalsFromSalesforce, getFilesFromSalesforce, getProposalElementsFromSalesforce, getProposedProductsFromSalesforce } from "@/lib/proposal-service";
+import { uploadFilesToSalesforce } from "@/lib/salesforce-service";
+
 
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
-        const accountId = searchParams.get("accountId") || '001QL00001Kbvt3YAB';
-        const contactId = searchParams.get("contactId") || '003QL00001KkXyqYAF'; // Default placeholder
-        const proposalId = searchParams.get("proposalId") || undefined;
+        const accountId = searchParams.get("accountId");
+        const contactId = searchParams.get("contactId"); // Default placeholder
+        const proposalId = searchParams.get("proposalId") || ""
+        const action = searchParams.get("action") || "";
 
-        const data = await getProposalsFromSalesforce(accountId, contactId, proposalId);
+        if (!accountId || !contactId) {
+            return NextResponse.json(
+                { error: "Missing required parameters: accountId, contactId" },
+                { status: 400 }
+            );
+        }
+
+        let data;
+
+        if ((action == "list") || (action == "view")) {
+            data = await getProposalsFromSalesforce(accountId, contactId, proposalId);
+        }
+        else if (action == "files") {
+            data = await getFilesFromSalesforce(accountId, contactId, proposalId);
+        }
+        else if (action == "elements") {
+            data = await getProposalElementsFromSalesforce(accountId, contactId, proposalId);
+        }
+        else if (action == "products") {
+            data = await getProposedProductsFromSalesforce(accountId, contactId, proposalId);
+        }
+        console.log("result data", NextResponse.json(data));
         return NextResponse.json(data);
     } catch (error) {
         console.error("Error in proposals API:", error);
         return NextResponse.json({ error: "Failed to fetch proposals" }, { status: 500 });
+    }
+}
+
+export async function POST(req: NextRequest) {
+    try {
+        const body = await req.json();
+        const { accountId, contactId, objectId, files } = body;
+
+        if (!accountId || !contactId || !objectId || !files || !Array.isArray(files)) {
+            return NextResponse.json(
+                { error: "Missing required parameters or invalid format" },
+                { status: 400 }
+            );
+        }
+
+        const uploadData = {
+            accountId,
+            contactId,
+            objectId,
+            objectName: "Proposal__c",
+            files
+        };
+
+        const result = await uploadFilesToSalesforce(uploadData);
+        return NextResponse.json(result);
+
+    } catch (error) {
+        console.error("Error in proposal file upload API:", error);
+        return NextResponse.json(
+            { error: "Failed to upload files" },
+            { status: 500 }
+        );
     }
 }

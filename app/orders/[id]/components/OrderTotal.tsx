@@ -15,6 +15,7 @@ interface OrderTotalProps {
     handleDownloadAll: () => void;
     handleDownloadFile: (file: File) => void;
     handleRemoveFile: (index: number) => void;
+    productsCount: number;
 }
 
 export default function OrderTotal({
@@ -31,7 +32,8 @@ export default function OrderTotal({
     handleFileUpload,
     handleDownloadAll,
     handleDownloadFile,
-    handleRemoveFile
+    handleRemoveFile,
+    productsCount
 }: OrderTotalProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md border border-gray-200 dark:border-gray-700 h-full w-full flex flex-col" role="region" aria-label="Order total">
@@ -50,42 +52,35 @@ export default function OrderTotal({
             {/* Price Breakdown */}
             <div className="space-y-2 mb-3">
                 <div className="flex justify-between text-sm">
-                    <span className="text-gray-700 dark:text-gray-300">Subtotal</span>
+                    <span className="text-gray-700 dark:text-gray-300">{productsCount} Product{productsCount !== 1 ? 's' : ''} - Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                </div>
+
+                <div className="flex justify-between text-sm">
+                    <div className="flex items-center gap-1">
+                        <span className="text-gray-700 dark:text-gray-300">Order Processing</span>
+                        <svg className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                    </div>
+                    <span className="text-gray-900 dark:text-white">${orderProcessing.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                </div>
+
+                <div className="flex justify-between text-sm">
+                    <span className="text-gray-700 dark:text-gray-300">Shipping</span>
+                    <span className="text-gray-900 dark:text-white">${shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
 
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-700 dark:text-gray-300">Total Taxes</span>
                     <span className="text-gray-900 dark:text-white font-semibold">${totalExciseTax.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
-                <div className="border-t border-gray-300 dark:border-gray-600 pt-3">
-                    <div className="flex justify-between text-lg font-bold">
-                        <span className="text-gray-900 dark:text-white">Grand Total</span>
-                        <span className="text-primary dark:text-primary">${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
-                </div>
-                <div className="space-y-2 text-sm border-t border-gray-300 dark:border-gray-600 pt-3">
-                    <div className="flex justify-between">
-                        <div className="flex items-center gap-1">
-                            <span className="text-gray-700 dark:text-gray-300">Order Processing</span>
-                            <svg className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                            </svg>
-                        </div>
-                        <span className="text-gray-900 dark:text-white">${orderProcessing.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
-
-                    <div className="flex justify-between">
-                        <span className="text-gray-700 dark:text-gray-300">Shipping</span>
-                        <span className="text-gray-900 dark:text-white">${shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
-                </div>
             </div>
 
             {/* Grand Total */}
             <div className="border-t border-gray-200 dark:border-gray-700 pt-3 pb-3 mb-3">
                 <div className="flex justify-between items-center">
-                    <span className="text-base font-bold text-gray-900 dark:text-white">Total</span>
+                    <span className="text-base font-bold text-gray-900 dark:text-white">Grand Total</span>
                     <span className="text-xl font-bold text-primary">${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Link from "next/link";
 import { Product } from "@/app/orders/types";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
@@ -13,6 +13,9 @@ interface MyOrderTableProps {
     handleRemoveProduct: (lineItemKey: string) => void;
     searchQuery: string;
     setHoveredTooltip: Dispatch<SetStateAction<{ product: Product; x: number; y: number } | null>>;
+    accountId: string;
+    contactId: string;
+    setOrderProducts: Dispatch<SetStateAction<Product[]>>;
 }
 
 export default function MyOrderTable({
@@ -22,10 +25,55 @@ export default function MyOrderTable({
     handleQuantityChange,
     handleRemoveProduct,
     searchQuery,
-    setHoveredTooltip
+    setHoveredTooltip,
+    accountId,
+    contactId,
+    setOrderProducts
 }: MyOrderTableProps) {
 
-    // Internal state removed in favor of parent state passed via props
+    // Fetch order lines on component mount or when dependencies change
+    useEffect(() => {
+        if (!orderId || orderId === "new" || !accountId) return;
+
+        const fetchOrderLines = async () => {
+            try {
+                // Using the specific API endpoint logic requested
+                const res = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(accountId)}&orderId=${encodeURIComponent(orderId)}&contactId=${encodeURIComponent(contactId)}&action=orderlines`);
+
+                if (!res.ok) {
+                    console.error("Failed to fetch order lines:", res.statusText);
+                    return;
+                }
+
+                const data = await res.json();
+
+                if (data && Array.isArray(data)) {
+                    const mappedProducts: Product[] = data.map((item: any, index: number) => ({
+                        id: item.Product_Name__c || item.Id,
+                        name: item.ProductName || "N/A",
+                        sku: item.Name || "",
+                        description: item.Product_Description__c || "",
+                        unitPrice: item.Unit_Price__c,
+                        listPrice: item.Unit_Price__c,
+                        brand: "",
+                        manufacturer: item.Manufacturer_Name__c || "",
+                        productFamily: item.ProductFamily || "",
+                        availableQty: 999,
+                        moq: item.MOQ__c || 1,
+                        orderQty: item.Order_Qty__c,
+                        subtotal: item.Total_Price__c,
+                        orderLineId: item.Id,
+                        lineItemKey: `${item.Id}-${Date.now()}-${index}-${Math.random()}`
+                    }));
+                    setOrderProducts(mappedProducts);
+                }
+            } catch (error) {
+                console.error("Error fetching order lines in MyOrderTable:", error);
+            }
+        };
+
+        fetchOrderLines();
+    }, [orderId, accountId, contactId, setOrderProducts]);
 
     const handleTooltipEnter = (e: React.MouseEvent<HTMLElement>, product: Product) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -82,7 +130,7 @@ export default function MyOrderTable({
                                 </td>
                                 <td className="px-4 py-3 text-center">
                                     <Link
-                                        href={`/orders/${orderId}/lines/${product.orderLineId || product.orderLineId}`} // Wait, product.orderLineId is repeated. It was in original code.
+                                        href={`/orders/${orderId}/lines/${product.orderLineId || product.orderLineId}`}
                                         className="text-sm font-semibold text-primary hover:underline"
                                         title="View line details"
                                     >

@@ -98,7 +98,7 @@ export async function getOrderFromSalesforce(accountId?: string, contactId?: str
     console.log('Fetching orders from Salesforce with session:', session);
 
     const separator = orderUrl?.includes('?') ? '&' : '?';
-    let Url = orderUrl + `${separator}accountId=${encodeURIComponent(accountId ?? '001WL00000bapRiYAI')}&orderId=${encodeURIComponent(orderId ?? '')}&contactId=${encodeURIComponent(contactId ?? 'abc')}`;
+    let Url = orderUrl + `${separator}accountId=${encodeURIComponent(accountId ?? '001WL00000bapRiYAI')}&orderId=${encodeURIComponent(orderId ?? '')}&contactId=${encodeURIComponent(contactId ?? 'NEXT_PUBLIC_SALESFORCE_CONTACT_ID=003QL00001EzLjZYAV')}`;
 
     console.log('Fetching orders from Salesforce with URL:', Url);
     // Make API call to Salesforce
@@ -160,6 +160,44 @@ export async function getOrderslocationsFromSalesforce(accountId?: string, conta
   } catch (error) {
     console.error('Error fetching orders from Salesforce:', error);
     return []; // Return empty array on error
+  }
+}
+
+// Fetch order lines from Salesforce
+export async function getOrderLinesFromSalesforce(accountId: string, contactId: string, orderId: string): Promise<any[]> {
+  try {
+    const session = await getSalesforceSession();
+
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return [];
+    }
+
+    // Construct URL with query parameters
+    const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/orderlines`;
+    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&orderId=${encodeURIComponent(orderId)}&contactId=${encodeURIComponent(contactId)}`;
+
+    console.log('Fetching order lines from Salesforce with URL:', url);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+    }
+
+    const resultdata = await response.json();
+    console.log('Order lines resultdata:', resultdata);
+
+    return resultdata.data || [];
+  } catch (error) {
+    console.error('Error fetching order lines from Salesforce:', error);
+    return [];
   }
 }
 
@@ -628,26 +666,51 @@ async function createContentVersion(
   base64Data: string
 ): Promise<string | null> {
   try {
-    // Use multipart/form-data approach for ContentVersion
     const boundary = '----WebKitFormBoundary' + Math.random().toString(36).substring(2);
+    const CRLF = '\r\n';
 
-    // Build multipart body
+    // 1. entity_content part (JSON metadata)
     const entityContent = JSON.stringify({
       Title: fileName,
       PathOnClient: fileName
     });
 
-    let body = '';
-    body += `--${boundary}\r\n`;
-    body += 'Content-Disposition: form-data; name="entity_content"\r\n';
-    body += 'Content-Type: application/json\r\n\r\n';
-    body += entityContent + '\r\n';
-    body += `--${boundary}\r\n`;
-    body += `Content-Disposition: form-data; name="VersionData"; filename="${fileName}"\r\n`;
-    body += 'Content-Type: application/octet-stream\r\n';
-    body += 'Content-Transfer-Encoding: base64\r\n\r\n';
-    body += base64Data + '\r\n';
-    body += `--${boundary}--\r\n`;
+    const part1Headers = [
+      `--${boundary}`,
+      `Content-Disposition: form-data; name="entity_content"`,
+      `Content-Type: application/json; charset=UTF-8`,
+      ``,
+      ``
+    ].join(CRLF);
+
+    const part1 = Buffer.concat([
+      Buffer.from(part1Headers, 'utf-8'),
+      Buffer.from(entityContent, 'utf-8'),
+      Buffer.from(CRLF)
+    ]);
+
+    // 2. VersionData part (File content)
+    const part2Headers = [
+      `--${boundary}`,
+      `Content-Disposition: form-data; name="VersionData"; filename="${fileName}"`,
+      `Content-Type: application/octet-stream`,
+      ``,
+      ``
+    ].join(CRLF);
+
+    const fileContent = Buffer.from(base64Data, 'base64');
+
+    const part2 = Buffer.concat([
+      Buffer.from(part2Headers, 'utf-8'),
+      fileContent,
+      Buffer.from(CRLF)
+    ]);
+
+    // 3. Footer
+    const footer = Buffer.from(`--${boundary}--${CRLF}`);
+
+    // Combine all parts
+    const body = Buffer.concat([part1, part2, footer]);
 
     const response = await fetch(
       `${instanceUrl}/services/data/v60.0/sobjects/ContentVersion`,
