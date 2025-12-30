@@ -1,4 +1,4 @@
-export type ProposalStatus = "Draft" | "Pending Review" | "Under Review" | "Approved" | "Rejected" | "Expired" | "Accepted";
+export type ProposalStatus = "Draft" | "Pending Review" | "Under Review" | "Approved" | "Rejected" | "Expired" | "Accepted" | "Lead";
 
 export interface Proposal {
   id: string;
@@ -15,7 +15,9 @@ export interface Proposal {
   description: string;
   productCount: number;
   billTo: string;
+  billToAccount?: string;
   shipTo: string;
+  shipToAccount?: string;
   opportunityName?: string;
   submittedBy?: string;
   accountExecutive?: string;

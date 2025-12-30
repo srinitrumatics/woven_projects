@@ -65,14 +65,14 @@ export default function ProductCatalog({
                                     className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
                                 />
                             </th>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Image</th>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Product Name</th>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Manufacturer</th>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Family</th>
-                            <th className="px-4 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Unit Price</th>
-                            <th className="px-4 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Available Qty</th>
-                            <th className="px-4 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Qty to Order</th>
-                            <th className="px-4 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Action</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">&nbsp;</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Product Name</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Manufacturer</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Family</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Pric</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Availble Qty</th>
+                            <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Qty To Order </th>
+                            <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Action</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

@@ -28,6 +28,7 @@ const formatAddress = (addressConfig: any) => {
 
 import { use, useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Sidebar from "@/components/layouts/Sidebar";
 import { ProposalStatus, Proposal } from "../types";
 import jsPDF from "jspdf";
@@ -126,7 +127,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             accountId: item.Inventory_Account__c || item.AccountId || '',
             contactId: item.Client_Signed_By__c || item.ContactId || '',
             orderId: item.Customer_Order__c || item.Id || '',
-            site: item.Site_Name || ''
+            site: item.Site_Name || '',
+            billToAccount: item.Authorized_Bill_To_Account_Name || item.Bill_To_Account_Name || item.Inventory_Account_Name || '',
+            shipToAccount: item.Authorized_Ship_To_Account_Name || item.Ship_To_Account_Name || item.Inventory_Account_Name || ''
           };
 
           const detailedProposal = {
@@ -697,6 +700,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
       case "Expired":
         return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
+      case "Lead":
+        return "bg-green-200 text-green-800 dark:bg-green-900/30 dark:text-green-400";
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
     }
@@ -793,9 +798,15 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bill To Location</label>
-                  <p className="text-gray-900 dark:text-white font-medium">{proposal.billTo}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bill To Account</label>
+                    <p className="text-gray-900 dark:text-white font-medium">{proposal.billToAccount}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bill To Location</label>
+                    <p className="text-gray-900 dark:text-white font-medium">{proposal.billTo}</p>
+                  </div>
                 </div>
 
                 <div>
@@ -836,9 +847,15 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ship To Location</label>
-                  <p className="text-gray-900 dark:text-white font-medium">{proposal.shipTo}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ship To Account</label>
+                    <p className="text-gray-900 dark:text-white font-medium">{proposal.shipToAccount}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ship To Location</label>
+                    <p className="text-gray-900 dark:text-white font-medium">{proposal.shipTo}</p>
+                  </div>
                 </div>
 
                 <div>
@@ -1042,14 +1059,14 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 <table className="w-full">
                   <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Image</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Product Name</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Manufacturer</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Product Family</th>
-                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
-                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Total Order Qty</th>
-                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Subtotal</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Action</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">&nbsp;</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">PRODUCT NAME</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">MANUFACTURER</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">PRODUCT FAMILY</th>
+                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">UNIT PRICE</th>
+                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">TOTAL ORDER QTY</th>
+                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">SUBTOTAL</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">ACTION</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -1089,12 +1106,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                           <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{product.quantity}</td>
                           <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">${product.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                           <td className="px-4 py-3 text-center">
-                            <button className="px-4 py-1.5  text-primary rounded font-medium">
+                            <Link href={`/proposals/${proposal.id}/lines/${product.id}`} className="px-4 py-1.5 text-primary rounded font-medium inline-block">
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                               </svg>
-                            </button>
+                            </Link>
                           </td>
                         </tr>
                       ))
@@ -1120,7 +1137,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                         className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group"
                         onClick={() => handleElementSort("wbs")}>
                         <div className="flex items-center">
-                          WBS
+                          WBS:
                           <SortIcon field="wbs" />
                         </div>
                       </th>
@@ -1128,14 +1145,14 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                         className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group"
                         onClick={() => handleElementSort("proposalElement")} >
                         <div className="flex items-center">
-                          ProposalElement
+                          PROPOSAL ELEMENT:
                           <SortIcon field="proposalElement" />
                         </div>
                       </th>
 
                       <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
                         <div className="flex items-center">
-                          Description
+                          DESCRIPTION:
                           <SortIcon field="proposalElement" />
                         </div></th>
                     </tr>
@@ -1200,13 +1217,13 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                             onChange={handleSelectAllFiles}
                           />
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">File Name</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Category</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Type</th>
-                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Size</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Uploaded By</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Date</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Action</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">FILE NAME</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">CATEGORY</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">TYPE</th>
+                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">SIZE</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">UPLOADED BY</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">DATE</th>
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">ACTION</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -1294,7 +1311,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                           <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                           </svg>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white">Signed By</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">SIGNED BY </span>
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -1310,7 +1327,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                           <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                           </svg>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white">Signed Title</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">SIGNED TITLE</span>
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -1326,7 +1343,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                           <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white">Signed Date</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">SIGNED DATE</span>
                         </div>
                       </td>
                       <td className="px-6 py-4">

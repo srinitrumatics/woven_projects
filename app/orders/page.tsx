@@ -491,7 +491,7 @@ export default function OrdersPage() {
             <table className="w-full table-auto ">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Order</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Order#</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Proposal</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">CPO</th>

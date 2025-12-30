@@ -172,10 +172,10 @@ export default function ProposalsPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Total Pipeline</p>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400  tracking-wide mb-1">Total Pipeline</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.total}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">proposals</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Proposals</span>
                 </div>
                 <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
               </div>
@@ -209,10 +209,10 @@ export default function ProposalsPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">In Progress</p>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">In Progress</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">drafts</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Drafts</span>
                 </div>
                 <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.draftValue)}</p>
               </div>
@@ -247,7 +247,7 @@ export default function ProposalsPage() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Awaiting Review</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Awaiting Review</p>
                   {stats.pendingCount > 0 && (
                     <span className="flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-yellow-400 opacity-75"></span>
@@ -257,7 +257,7 @@ export default function ProposalsPage() {
                 </div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.pendingCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">pending</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Pending</span>
                 </div>
                 <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.pendingValue)}</p>
               </div>
@@ -291,10 +291,10 @@ export default function ProposalsPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Ready to Convert</p>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Ready to Convert</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.approvedCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">approved</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Approved</span>
                 </div>
                 <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.approvedValue)}</p>
               </div>
@@ -323,7 +323,7 @@ export default function ProposalsPage() {
         <div className="border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center gap-6">
-              {(["All", "Pending Review", "Approved", "Draft", "Rejected"] as TabFilter[]).map(tab => (
+              {(["All", "Pending Review", "Approved", "Draft", "Rejected", "Lead"] as TabFilter[]).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -373,7 +373,7 @@ export default function ProposalsPage() {
             <thead className="bg-primary-light dark:bg-gray-900">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                  Proposal #
+                  Porposal #
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
                   Status
@@ -502,6 +502,8 @@ function StatusBadge({ status }: { status: ProposalStatus }) {
         return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
       case "Expired":
         return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
+      case "Lead":
+        return "bg-green-200 text-green-800 dark:bg-green-900/30 dark:text-green-400";
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
     }

@@ -113,7 +113,7 @@ export default function PDFTemplate({
             <table className="w-full mb-8">
                 <thead>
                     <tr className="bg-primary-light dark:bg-gray-900 text-black text-sm uppercase font-semibold" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', verticalAlign: 'middle', height: '35px' }}>
-                        <th className="px-4 py-2 text-left">Item Name</th>
+                        <th className="px-4 py-2 text-left">Item name</th>
                         <th className="px-4 py-2 text-left">SKU</th>
                         <th className="px-4 py-2 text-center">Qty</th>
                         <th className="px-4 py-2 text-right">Unit Price</th>

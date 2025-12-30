@@ -8,8 +8,9 @@ interface BillingInfoProps {
     shipLocations: AuthorizedLocation[];
     handleBillToChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
-
 export default function BillingInfo({ formData, setFormData, shipLocations, handleBillToChange }: BillingInfoProps) {
+    //console.log('billinginfo page', formData);
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-fit">
             <div className="w-full flex items-center gap-2 justify-start p-4">
@@ -109,7 +110,6 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assigned Price Book</label>
                         <input
-                            placeholder="Price Book"
                             type="text"
                             name="priceBook"
                             value={formData.priceBook || ''}

@@ -277,19 +277,21 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         }
 
         const data = await res.json();
-
+        //console.log('locations', data);
         if (mounted) {
           // Handle the actual API response structure
           let locations: AuthorizedLocation[] = [];
           let paymentTerms = '';
+          let priceBook = '';
 
           // The API route returns resultdata.data directly, so check if data is an array first
           if (Array.isArray(data)) {
-            console.log('Response is a direct array, length:', data.length);
+            //console.log('Response is a direct array, length:', data.length);
             // If it's an array, check if first element has AuthorizedLocation
             if (data.length > 0 && data[0].AuthorizedLocation && Array.isArray(data[0].AuthorizedLocation)) {
               locations = data[0].AuthorizedLocation;
               paymentTerms = data[0].Payment_Terms__c || '';
+              priceBook = data[0].Assigned_Price_Book_Name || '';
             } else {
               // Otherwise treat the array itself as locations
               locations = data;
@@ -300,6 +302,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               if (firstRecord.AuthorizedLocation && Array.isArray(firstRecord.AuthorizedLocation)) {
                 locations = firstRecord.AuthorizedLocation;
                 paymentTerms = firstRecord.Payment_Terms__c || '';
+                priceBook = firstRecord.Assigned_Price_Book_Name || '';
               } else {
                 locations = data.data;
               }
@@ -307,6 +310,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           } else if (data.AuthorizedLocation && Array.isArray(data.AuthorizedLocation)) {
             locations = data.AuthorizedLocation;
             paymentTerms = data.Payment_Terms__c || '';
+            priceBook = data.Assigned_Price_Book_Name || '';
           }
 
           if (locations.length > 0) {
@@ -326,8 +330,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               new Map(validLocations.map(item => [item.Id, item])).values()
             );
 
-            console.log('Unique locations count:', uniqueLocations.length);
-            console.log('Location names:', uniqueLocations.map(loc => `${loc.Id}: ${loc.Name}`));
+            //console.log('Unique locations count:', uniqueLocations.length);
+            //console.log('Location names:', uniqueLocations.map(loc => `${loc.Id}: ${loc.Name}`));
 
             setShipLocations(uniqueLocations);
           } else {
@@ -341,8 +345,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             setFormData(prev => ({ ...prev, paymentTerms }));
           }
           // Set price book if available (using Payment_Terms__c as placeholder or new field if available)
-          if (data.Assigned_Price_Book__c) {
-            setFormData(prev => ({ ...prev, priceBook: data.Assigned_Price_Book__c }));
+          if (priceBook) {
+            setFormData(prev => ({ ...prev, priceBook }));
           }
         }
 
@@ -604,7 +608,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             purchaseOrder: order.Customer_PO__c || prev.purchaseOrder,
             requestedDeliveryDate: order.Request_Date__c || prev.requestedDeliveryDate,
             orderNotes: order.Customer_Order_Notes__c || prev.orderNotes,
-            priceBook: order.Assigned_Price_Book__c || prev.priceBook,
+            priceBook: order.Assigned_Price_Book_Name || prev.priceBook,
             dropShip: order.Drop_Ship__c || prev.dropShip,
             // Set Bill To and Ship To from order data
             billTo: order.Authorized_Bill_To_Location__c || prev.billTo,

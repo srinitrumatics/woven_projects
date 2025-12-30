@@ -50,7 +50,7 @@ export default function MyOrderTable({
                 if (data && Array.isArray(data)) {
                     const mappedProducts: Product[] = data.map((item: any, index: number) => ({
                         id: item.Product_Name__c || item.Id,
-                        name: item.ProductName || "N/A",
+                        name: item.Product_Name_Name || "N/A",
                         sku: item.Name || "",
                         description: item.Product_Description__c || "",
                         unitPrice: item.Unit_Price__c,
@@ -93,7 +93,7 @@ export default function MyOrderTable({
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Image</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">&nbsp;</th>
                         <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Order Line #</th>
                         <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Product Name</th>
                         <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Manufacturer</th>

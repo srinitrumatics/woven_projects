@@ -252,7 +252,7 @@ export default function FilesTab({ orderId, accountId, contactId }: FilesTabProp
 
             <div className="overflow-x-auto">
                 <table className="w-full">
-                    <thead className="bg-gray-50 dark:bg-gray-700">
+                    <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
                             <th className="px-4 py-3 text-left w-10">
                                 <input
@@ -262,11 +262,11 @@ export default function FilesTab({ orderId, accountId, contactId }: FilesTabProp
                                     className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
                                 />
                             </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Size</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Name</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Size</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Type</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Date</th>
+                            <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -293,8 +293,8 @@ export default function FilesTab({ orderId, accountId, contactId }: FilesTabProp
                                     <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{(file.FileSize / 1024).toFixed(2)} KB</td>
                                     <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{file.FileExtension}</td>
                                     <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedDate}</td>
-                                    <td className="px-4 py-3 text-right">
-                                        <div className="flex justify-end gap-2">
+                                    <td className="px-4 py-3 text-center">
+                                        <div className="px-4 py-2 text-center">
                                             {/* View / Preview button */}
                                             <button
                                                 onClick={() => handlePreview(file)}
