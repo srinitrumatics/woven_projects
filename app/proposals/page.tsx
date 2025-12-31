@@ -323,7 +323,7 @@ export default function ProposalsPage() {
         <div className="border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center gap-6">
-              {(["All", "Pending Review", "Approved", "Draft", "Rejected", "Lead"] as TabFilter[]).map(tab => (
+              {(["All", "Lead", "Draft", "Pending Review", "Approved", "Rejected"] as TabFilter[]).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}

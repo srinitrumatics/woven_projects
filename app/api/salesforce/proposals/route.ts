@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getProposalsFromSalesforce, getFilesFromSalesforce, getProposalElementsFromSalesforce, getProposedProductsFromSalesforce } from "@/lib/proposal-service";
+import { getProposalsFromSalesforce, getFilesFromSalesforce, getProposalElementsFromSalesforce, getProposedProductsFromSalesforce, getGenericTabDataFromSalesforce } from "@/lib/proposal-service";
 import { uploadFilesToSalesforce } from "@/lib/salesforce-service";
 
 
@@ -31,6 +31,17 @@ export async function GET(req: NextRequest) {
         }
         else if (action == "products") {
             data = await getProposedProductsFromSalesforce(accountId, contactId, proposalId);
+        }
+        else if (action == "projects" || action == "orders" || action == "fulfillments" || action == "purchases" || action == "returns") {
+            // Map action to correct tabName
+            let tabName;
+            if (action == "projects") tabName = "Projects";
+            else if (action == "orders") tabName = "Orders";
+            else if (action == "purchases") tabName = "Purchases"; // Assumed tab name
+            else if (action == "returns") tabName = "Returns"; // Assumed tab name
+            else tabName = "Fulfillment"; // Note: singular, not plural
+
+            data = await getGenericTabDataFromSalesforce(accountId, contactId, proposalId, tabName);
         }
         console.log("result data", NextResponse.json(data));
         return NextResponse.json(data);

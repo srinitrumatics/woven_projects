@@ -1,0 +1,110 @@
+import { Project } from "../types";
+
+interface ProjectsTabProps {
+    projects: Project[];
+    loading: boolean;
+}
+
+export default function ProjectsTab({ projects, loading }: ProjectsTabProps) {
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="overflow-x-auto">
+            <table className="w-full">
+                <thead className="bg-primary-light dark:bg-gray-900">
+                    <tr>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Project Number</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Project Name</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Customer Account</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Customer Contact</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Project Manager</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Billing Type</th>
+                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Estimated Budget</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Start Date</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">End Date</th>
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Progress</th>
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Milestones</th>
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Tasks</th>
+                    </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {projects.length === 0 ? (
+                        <tr>
+                            <td colSpan={13} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                                <div className="flex flex-col items-center justify-center">
+                                    <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                    </svg>
+                                    <p className="text-lg font-medium">No projects found</p>
+                                    <p className="text-sm">There are no projects associated with this proposal.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    ) : (
+                        projects.map((project) => (
+                            <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium">{project.projectNumber}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">{project.name}</td>
+                                <td className="px-4 py-3">
+                                    <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${project.status === 'New' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
+                                            project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                                project.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
+                                                    project.status === 'On Hold' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
+                                                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                        }`}>
+                                        {project.status}
+                                    </span>
+                                </td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.customerAccountName}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.customerContactName}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.projectManagerName}</td>
+                                <td className="px-4 py-3">
+                                    <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary">
+                                        {project.billingType}
+                                    </span>
+                                </td>
+                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                    ${project.estimatedBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.estimatedStartDate}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.estimatedEndDate}</td>
+                                <td className="px-4 py-3 text-center">
+                                    {project.percentCompleted !== null ? (
+                                        <div className="flex items-center justify-center gap-2">
+                                            <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                                <div
+                                                    className="bg-primary h-2 rounded-full"
+                                                    style={{ width: `${project.percentCompleted}%` }}
+                                                ></div>
+                                            </div>
+                                            <span className="text-xs text-gray-600 dark:text-gray-400">{project.percentCompleted}%</span>
+                                        </div>
+                                    ) : (
+                                        <span className="text-xs text-gray-400">-</span>
+                                    )}
+                                </td>
+                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
+                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 font-semibold">
+                                        {project.totalMilestones}
+                                    </span>
+                                </td>
+                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
+                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                        {project.totalTasks}
+                                    </span>
+                                </td>
+                            </tr>
+                        ))
+                    )}
+                </tbody>
+            </table>
+        </div>
+    );
+}
