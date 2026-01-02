@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
         const contactId = searchParams.get("contactId"); // Default placeholder
         const proposalId = searchParams.get("proposalId") || ""
         const action = searchParams.get("action") || "";
+        const objectName = searchParams.get("objectName");
 
         if (!accountId || !contactId) {
             return NextResponse.json(
@@ -41,7 +42,7 @@ export async function GET(req: NextRequest) {
             else if (action == "returns") tabName = "Returns"; // Assumed tab name
             else tabName = "Fulfillment"; // Note: singular, not plural
 
-            data = await getGenericTabDataFromSalesforce(accountId, contactId, proposalId, tabName);
+            data = await getGenericTabDataFromSalesforce(accountId, contactId, proposalId, tabName, objectName || "Proposal__c");
         }
         console.log("result data", NextResponse.json(data));
         return NextResponse.json(data);

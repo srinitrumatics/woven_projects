@@ -187,6 +187,25 @@ export interface Purchase {
     totalAmount: number;
 }
 
+export interface SupplierBill {
+    id: string;
+    name: string;
+    status: string;
+    supplierBillName: string;
+    billAmount: number;
+    totalBillAmount: number;
+    billedQty: number;
+    unitCost: number;
+    manufacturerDBA: string;
+    productName: string;
+    purchaseOrderLineName: string;
+}
+
+export interface PurchasesData {
+    purchaseOrders: Purchase[];
+    supplierBills: SupplierBill[];
+}
+
 // Basic Return interface for table display
 export interface Return {
     id: string;

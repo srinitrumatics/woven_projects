@@ -158,7 +158,8 @@ export async function getGenericTabDataFromSalesforce(
   accountId: string,
   contactId: string,
   proposalId: string,
-  tabName: string
+  tabName: string,
+  objectName?: string
 ): Promise<any[]> {
   try {
     const session = await getSalesforceSession();
@@ -167,8 +168,9 @@ export async function getGenericTabDataFromSalesforce(
       return [];
     }
 
+    const targetObjectName = objectName || "Proposal__c";
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/generic/tab`;
-    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(proposalId)}&objectName=Proposal__c&tabName=${encodeURIComponent(tabName)}`;
+    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(proposalId)}&objectName=${encodeURIComponent(targetObjectName)}&tabName=${encodeURIComponent(tabName)}`;
 
     console.log(`Fetching ${tabName} from Salesforce with URL:`, url);
 

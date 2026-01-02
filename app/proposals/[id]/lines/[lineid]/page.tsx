@@ -4,6 +4,10 @@ import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
+import LineFulfillmentsTab from "./components/LineFulfillmentsTab";
+import LinePurchasesTab from "./components/LinePurchasesTab";
+import LineReturnsTab from "./components/LineReturnsTab";
+import { FulfillmentTabType, FulfillmentData, ReturnsData, SalesOrder, CustomerQuote, Purchase, SupplierBill, PurchasesData } from "../../types";
 
 // Interface for proposal product item from Salesforce (matching what we saw in proposal list logic)
 interface ProposalProductItem {
@@ -166,6 +170,309 @@ export default function ProposalProductDetailPage({
     const shippingCharges = 0;
     const taxes = 0;
     const grandTotal = subtotal + shippingCharges + taxes;
+
+    // Tabs State
+    const [activeTab, setActiveTab] = useState<"fulfillments" | "purchases" | "returns">("fulfillments");
+    const [fulfillmentActiveTab, setFulfillmentActiveTab] = useState<FulfillmentTabType>("invoices");
+    const [fulfillmentData, setFulfillmentData] = useState<FulfillmentData>({
+        invoices: [],
+        shippingManifests: [],
+        salesOrders: [],
+        customerQuotes: []
+    });
+    const [fulfillmentLoading, setFulfillmentLoading] = useState(false);
+
+    const [purchasesData, setPurchasesData] = useState<PurchasesData>({
+        purchaseOrders: [],
+        supplierBills: []
+    });
+    const [purchasesLoading, setPurchasesLoading] = useState(false);
+
+    const [returnsData, setReturnsData] = useState<ReturnsData>({
+        rma: [],
+        rtv: [],
+        creditMemos: [],
+        debitMemos: []
+    });
+    const [returnsLoading, setReturnsLoading] = useState(false);
+
+    // Fetch Fulfillment Data
+    useEffect(() => {
+        async function fetchFulfillmentData() {
+            if (activeTab === "fulfillments" && lineid) {
+                try {
+                    setFulfillmentLoading(true);
+                    // Use the generic tab API via our proxy
+                    // key params: proposalId -> objectId (lineid), action -> fulfillments, objectName -> Proposed_Product__c
+                    const res = await fetch(`/api/salesforce/proposals?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&proposalId=${encodeURIComponent(lineid)}&action=fulfillments&objectName=Proposed_Product__c`);
+
+                    if (!res.ok) {
+                        throw new Error(`Failed to fetch fulfillments: ${res.status}`);
+                    }
+
+                    const data = await res.json();
+                    console.log("Fetched line fulfillments:", data);
+
+                    if (data) {
+                        // Map the API response to our FulfillmentData structure
+                        // The API returns distinct arrays for each type, map them accordingly.
+                        // Based on potential API structure (deduced from previous patterns):
+                        // data.Invoice_Line__c -> invoices
+                        // data.Shipping_Manifest_Line__c -> shippingManifests
+                        // data.Sales_Order_Line__c -> salesOrders
+                        // data.Customer_Quote_Line__c -> customerQuotes
+
+                        // NOTE: The user provided example output shows:
+                        // { "data": [ { "Invoice_Line__c": [...], ... } ] }
+                        // But our route proxy returns `getGenericTabDataFromSalesforce`, which returns `result.data[0]` for 'Fulfillments'.
+                        // So `data` here should be that inner object { Invoice_Line__c: [], ... }
+
+                        const mappedData: FulfillmentData = {
+                            invoices: (data.Invoice_Line__c || []).map((inv: any) => ({
+                                id: inv.Id,
+                                name: inv.Name, // or inv.Invoice_Name
+                                status: inv.Status__c || "Draft",
+                                customerPO: "N/A", // Not in example payload
+                                billToAccountName: "N/A",
+                                billToLocationName: "N/A",
+                                billToContactName: "N/A",
+                                totalLines: 0,
+                                totalPrice: inv.Total_Price__c || 0,
+                                totalShippingCharges: inv.Shipping_Charges__c || 0,
+                                totalTaxesAmount: inv.Total_Taxes_Amount__c || 0,
+                                grandTotal: inv.Line_Grand_Total__c || 0,
+                                issuedDate: "",
+                                dueDate: "",
+                                paymentTerms: "",
+                                collectionStatus: "",
+                                openBalance: 0,
+                                daysOutstanding: 0,
+                                settledDate: ""
+                            })),
+                            shippingManifests: (data.Shipping_Manifest_Line__c || []).map((sm: any) => ({
+                                id: sm.Id,
+                                name: sm.Name, // or sm.Shipping_Manifest_Name
+                                status: sm.Status__c,
+                                customerQuoteName: sm.Customer_Quote_Line_Name,
+                                salesOrderName: sm.Sales_Order_Line_Name,
+                                customerOrderName: "",
+                                customerPO: "",
+                                shipToAccountName: "N/A",
+                                shipToLocationName: "",
+                                shipToContactName: "",
+                                dropShip: false,
+                                totalLines: sm.Total_Order_Qty__c || 0,
+                                totalPrice: sm.Total_Price__c || 0,
+                                shippingMethod: "",
+                                shipDate: "",
+                                deliveredDate: "",
+                                estimatedDeliveryDate: sm.Estimated_Delivery_Date__c,
+                                actualDeliveryDate: "",
+                                trackingNumber: sm.Tracking_Number__c || "",
+                                trackingStatus: sm.Tracking_Status__c || "",
+                                logisticsPartnerName: "",
+                                logisticsContactName: ""
+                            })),
+                            salesOrders: (data.Sales_Order_Line__c || []).map((so: any) => ({
+                                id: so.Id,
+                                name: so.Name, // or so.Sales_Order_Name
+                                status: so.Status__c,
+                                customerQuoteName: so.Customer_Quote_Line_Name,
+                                customerOrderName: "",
+                                customerPO: "",
+                                billToAccountName: "N/A",
+                                billToLocationName: "",
+                                billToContactName: "",
+                                shipToAccountName: "N/A",
+                                shipToLocationName: "",
+                                shipToContactName: "",
+                                dropShip: false,
+                                totalLines: so.Total_Order_Qty__c || 0,
+                                totalPrice: so.Total_Price__c || 0,
+                                totalShippingCharges: so.Shipping_Charges__c || 0,
+                                totalTaxesAmount: so.Total_Taxes_Amount__c || 0,
+                                grandTotal: so.Line_Grand_Total__c || 0,
+                                requestDate: "", // Not in example payload
+                                pickDate: "",
+                                pickCompleteDate: "",
+                                shipDate: "",
+                                deliveredDate: ""
+                            })),
+                            customerQuotes: (data.Customer_Quote_Line__c || []).map((cq: any) => ({
+                                id: cq.Id,
+                                name: cq.Name, // or cq.Customer_Quote_Name
+                                status: cq.Status__c || "Draft",
+                                customerOrderName: "",
+                                customerPO: "",
+                                billToAccountName: "N/A",
+                                billToLocationName: "",
+                                billToContactName: "",
+                                shipToAccountName: "N/A",
+                                shipToLocationName: "",
+                                shipToContactName: "",
+                                dropShip: false,
+                                totalLines: cq.Total_Order_Qty__c || 0,
+                                totalPrice: cq.Total_Price__c || 0,
+                                totalShippingCharges: cq.Shipping_Charges__c || 0,
+                                totalTaxesAmount: cq.Total_Taxes_Amount__c || 0,
+                                grandTotal: cq.Line_Grand_Total__c || 0,
+                                issuedDate: "",
+                                expirationDate: "",
+                                requestDate: "",
+                                shipDate: "",
+                                deliveredDate: ""
+                            }))
+                        };
+                        setFulfillmentData(mappedData);
+                    }
+                } catch (err) {
+                    console.error("Error fetching line fulfillments:", err);
+                } finally {
+                    setFulfillmentLoading(false);
+                }
+            }
+        }
+
+        fetchFulfillmentData();
+        fetchFulfillmentData();
+    }, [activeTab, lineid, SF_ACCOUNT_ID, SF_CONTACT_ID]);
+
+    // Fetch Purchases Data
+    useEffect(() => {
+        async function fetchPurchasesData() {
+            if (activeTab === "purchases" && lineid) {
+                try {
+                    setPurchasesLoading(true);
+                    // Use the generic tab API via our proxy
+                    const res = await fetch(`/api/salesforce/proposals?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&proposalId=${encodeURIComponent(lineid)}&action=purchases&objectName=Proposed_Product__c`);
+
+                    if (!res.ok) {
+                        throw new Error(`Failed to fetch purchases: ${res.status}`);
+                    }
+
+                    const data = await res.json();
+                    console.log("Fetched line purchases:", data);
+
+                    if (data) {
+                        const mappedPurchases: Purchase[] = (data.Purchase_Order_Line__c || []).map((item: any) => ({
+                            id: item.Id,
+                            name: item.Name,
+                            status: item.Status__c || "Draft",
+                            vendorName: item.Manufacturer_DBA__c || "Unknown",
+                            vendorPO: item.Purchase_Order_Name || "",
+                            orderDate: "", // Not available in response
+                            expectedDate: item.Estimated_Delivery_Date__c || "",
+                            totalAmount: item.Total_Cost__c || 0
+                        }));
+
+                        const mappedSupplierBills: SupplierBill[] = (data.Supplier_Bill_Line__c || []).map((item: any) => ({
+                            id: item.Id,
+                            name: item.Name,
+                            status: item.Status__c || "Draft",
+                            supplierBillName: item.Supplier_Bill_Name || "",
+                            billAmount: item.BillAmount__c || 0,
+                            totalBillAmount: item.Total_Bill_Amount__c || 0,
+                            billedQty: item.Billed_Qty__c || 0,
+                            unitCost: item.Unit_Cost__c || 0,
+                            manufacturerDBA: item.Manufacturer_DBA__c || "Unknown",
+                            productName: item.Product_Name || "",
+                            purchaseOrderLineName: item.Purchase_Order_Line_Name || ""
+                        }));
+
+                        setPurchasesData({
+                            purchaseOrders: mappedPurchases,
+                            supplierBills: mappedSupplierBills
+                        });
+                    }
+                } catch (err) {
+                    console.error("Error fetching line purchases:", err);
+                } finally {
+                    setPurchasesLoading(false);
+                }
+            }
+        }
+
+        fetchPurchasesData();
+    }, [activeTab, lineid, SF_ACCOUNT_ID, SF_CONTACT_ID]);
+
+    // Fetch Returns Data
+    useEffect(() => {
+        async function fetchReturnsData() {
+            if (activeTab === "returns" && lineid) {
+                try {
+                    setReturnsLoading(true);
+                    // Use the generic tab API via our proxy
+                    const res = await fetch(`/api/salesforce/proposals?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&proposalId=${encodeURIComponent(lineid)}&action=returns&objectName=Proposed_Product__c`);
+
+                    if (!res.ok) {
+                        throw new Error(`Failed to fetch returns: ${res.status}`);
+                    }
+
+                    const data = await res.json();
+                    console.log("Fetched line returns:", data);
+
+                    if (data) {
+                        // Map the API response to ReturnsData structure
+                        const mappedData: ReturnsData = {
+                            rma: (data.RMA_Line__c || []).map((item: any) => ({
+                                id: item.Id,
+                                name: item.Name, // or item.RMA_Name
+                                status: item.Status__c || "Draft",
+                                description: item.Reason_Code__c || "", // Mapping Reason Code to Description if Description not defined
+                                requestDate: "", // Not in response
+                                type: "RMA",
+                                reason: item.Reason_Code__c || "",
+                                totalAmount: item.Total_Price__c || 0,
+                                shipFromAccountName: "N/A" // Not in response explicitly
+                            })),
+                            rtv: (data.RTV_Line__c || []).map((item: any) => ({
+                                id: item.Id,
+                                name: item.Name, // or item.RTV_Name
+                                status: item.Status__c || "Draft",
+                                description: item.Product_Description__c || "",
+                                requestDate: "",
+                                type: "RTV",
+                                reason: item.Reason_Code__c || "",
+                                totalAmount: item.Total_Cost__c || 0,
+                                supplierName: item.Manufacturer_DBA__c || "Unknown",
+                                rtvType: "Return" // Defaulting since not in line item
+                            })),
+                            creditMemos: (data.Credit_Memo_Line__c || []).map((item: any) => ({
+                                id: item.Id,
+                                name: item.Name, // or item.Credit_Memo_Name
+                                status: item.Status__c || "Draft",
+                                description: item.Product_Description__c || "",
+                                requestDate: "",
+                                type: "Credit Memo",
+                                reason: "",
+                                totalAmount: item.Line_Grand_Total__c || 0,
+                                creditToAccountName: "N/A",
+                                invoiceName: item.Invoice_Line_Name || ""
+                            })),
+                            debitMemos: (data.Debit_Memo_Line__c || []).map((item: any) => ({
+                                id: item.Id,
+                                name: item.Name, // or item.Debit_Memo_Name
+                                status: item.Status__c || "Draft",
+                                description: item.Product_Description__c || "",
+                                requestDate: "",
+                                type: "Debit Memo",
+                                reason: "",
+                                totalAmount: item.Line_Grand_Total__c || 0,
+                                debitToAccountName: "N/A"
+                            }))
+                        };
+                        setReturnsData(mappedData);
+                    }
+                } catch (err) {
+                    console.error("Error fetching line returns:", err);
+                } finally {
+                    setReturnsLoading(false);
+                }
+            }
+        }
+
+        fetchReturnsData();
+    }, [activeTab, lineid, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
     // New Fields from Screenshot (Mocked)
 
@@ -569,6 +876,64 @@ export default function ProposalProductDetailPage({
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            {/* Row 3: Related Items Tabs (Fulfillments, Purchases, Returns) */}
+            <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+                {/* Tabs Header */}
+                <div className="flex gap-6 border-b border-gray-200 dark:border-gray-700 mb-6">
+                    <button
+                        onClick={() => setActiveTab("fulfillments")}
+                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "fulfillments"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            }`}
+                    >
+                        Fulfillments
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("purchases")}
+                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "purchases"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            }`}
+                    >
+                        Purchases
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("returns")}
+                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "returns"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            }`}
+                    >
+                        Returns
+                    </button>
+                </div>
+
+                {/* Tab Content */}
+                <div>
+                    {activeTab === "fulfillments" && (
+                        <LineFulfillmentsTab
+                            fulfillmentData={fulfillmentData}
+                            loading={fulfillmentLoading}
+                            activeTab={fulfillmentActiveTab}
+                            onTabChange={setFulfillmentActiveTab}
+                        />
+                    )}
+                    {activeTab === "purchases" && (
+                        <LinePurchasesTab
+                            purchasesData={purchasesData}
+                            loading={purchasesLoading}
+                        />
+                    )}
+                    {activeTab === "returns" && (
+                        <LineReturnsTab
+                            returnsData={returnsData}
+                            loading={returnsLoading}
+                        />
+                    )}
                 </div>
             </div>
 
