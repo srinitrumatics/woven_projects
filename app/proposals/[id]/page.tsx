@@ -20,7 +20,8 @@ import {
   CustomerQuote,
   Purchase,
   Return,
-  ReturnsData
+  ReturnsData,
+  SupplierBill
 } from "./types";
 import { formatDate, formatAddress } from "./utils";
 import jsPDF from "jspdf";
@@ -51,6 +52,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const [projects, setProjects] = useState<Project[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [supplierBills, setSupplierBills] = useState<SupplierBill[]>([]);
   const [returnsData, setReturnsData] = useState<ReturnsData>({
     rma: [],
     rtv: [],
@@ -311,6 +313,25 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           } else {
             setPurchases([]);
           }
+
+          const sBills = (json.Supplier_Bill__c || []);
+          if (Array.isArray(sBills) && sBills.length > 0) {
+            setSupplierBills(sBills.map((sb: any) => ({
+              id: sb.Id,
+              name: sb.Name || '',
+              status: sb.Status__c || '',
+              supplierBillName: sb.Name || '',
+              billAmount: sb.Bill_Amount__c || 0,
+              totalBillAmount: sb.Total_Bill_Amount__c || 0,
+              billedQty: sb.Billed_Quantity__c || 0,
+              unitCost: sb.Unit_Cost__c || 0,
+              manufacturerDBA: sb.Manufacturer_DBA__c || '',
+              productName: sb.Product_Name__c || '',
+              purchaseOrderLineName: sb.Purchase_Order_Line_Name__c || ''
+            })));
+          } else {
+            setSupplierBills([]);
+          }
           break;
         case 'returns':
           setReturnsData({
@@ -474,6 +495,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         setOrders([]);
       } else if (tab === 'purchases') {
         setPurchases([]);
+        setSupplierBills([]);
       } else if (tab === 'returns') {
         setReturnsData({
           rma: [],
@@ -929,6 +951,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         {activeTab === 'purchases' && (
           <PurchasesTab
             purchases={purchases}
+            supplierBills={supplierBills}
             loading={tabLoading}
           />
         )}
