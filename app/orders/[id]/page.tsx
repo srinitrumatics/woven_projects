@@ -260,8 +260,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [catalogProducts, setCatalogProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
 
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "001QL00001Kbvt3YAB"; // override with real value
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "003QL00001EzLjZYAV" //TODO: Get this from session / auth context
+  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
+  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "" //TODO: Get this from session / auth context
 
   useEffect(() => {
     let mounted = true;

@@ -77,8 +77,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const [elementSortDirection, setElementSortDirection] = useState<SortDirection>("asc");
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
 
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "001QL00001Kbvt3YAB";
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "003QL00001EzLjZYAV";
+  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
+  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "" //TODO: Get this from session / auth context
 
   // Fetch Proposal
   useEffect(() => {

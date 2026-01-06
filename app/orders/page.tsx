@@ -24,8 +24,8 @@ export default function OrdersPage() {
   const [dateRange, setDateRange] = useState("Jan 1 - Jan 30, 2024");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "001QL00001Kbvt3YAB"; // override with real value
-  const contactId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "003QL00001EzLjZYAV" //TODO: Get this from session / auth context
+  const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
+  const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? ""; //TODO: Get this from session / auth context
 
 
   // Fetch from backend API (backend should handle Salesforce auth)
