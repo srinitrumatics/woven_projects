@@ -99,7 +99,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             status: (item.Status__c as ProposalStatus) || 'Draft',
             totalAmount: item.Total_Price__c || 0,
             totalShippingCharges: item.Total_Shipping_Charges__c || 0,
-            totalTaxesAmount: item.Total_Taxes__c || 0,
+            totalTaxesAmount: item.Total_Taxes_Amount__c || item.Total_Taxes__c || 0,
             proposalDate: formatDate(item.Issued_Date__c || item.CreatedDate),
             expirationDate: formatDate(item.Expiration_Date__c),
             description: item.Scope__c?.replace(/<[^>]*>?/gm, '') || item.Name || '',

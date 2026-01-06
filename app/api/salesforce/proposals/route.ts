@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getProposalsFromSalesforce, getFilesFromSalesforce, getProposalElementsFromSalesforce, getProposedProductsFromSalesforce, getGenericTabDataFromSalesforce } from "@/lib/proposal-service";
+import { getFilesFromSalesforce, getGenericTabDataFromSalesforce } from "@/lib/proposal-service";
 import { uploadFilesToSalesforce } from "@/lib/salesforce-service";
 
 
@@ -21,27 +21,21 @@ export async function GET(req: NextRequest) {
 
         let data;
 
-        if (action == "view") {
-            data = await getProposalsFromSalesforce(accountId, contactId, proposalId);
-        }
-        else if (action == "files") {
+        if (action == "files") {
             data = await getFilesFromSalesforce(accountId, contactId, proposalId);
         }
-        else if (action == "elements") {
-            data = await getProposalElementsFromSalesforce(accountId, contactId, proposalId);
-        }
-        else if (action == "products") {
-            data = await getProposedProductsFromSalesforce(accountId, contactId, proposalId);
-        }
-        else if (action == "list" || action == "projects" || action == "orders" || action == "fulfillments" || action == "purchases" || action == "returns") {
+
+        else {
             // Map action to correct tabName
             console.log("action", action);
             let tabName;
-            if (action == "projects") tabName = "Projects";
+            if (action == "products") tabName = "Products";
+            else if (action == "elements") tabName = "Elements";
+            else if (action == "projects") tabName = "Projects";
             else if (action == "orders") tabName = "Orders";
             else if (action == "purchases") tabName = "Purchases"; // Assumed tab name
             else if (action == "returns") tabName = "Returns"; // Assumed tab name
-            else if (action == "fulfillments") tabName = "Fulfillments"; // Note: singular, not plural
+            else if (action == "fulfillments") tabName = "Fulfillment"; // Note: singular, not plural
             else tabName = "Proposal";
             data = await getGenericTabDataFromSalesforce(accountId, contactId, proposalId, tabName, objectName || "Proposal__c");
         }
