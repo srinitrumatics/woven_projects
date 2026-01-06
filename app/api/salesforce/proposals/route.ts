@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
 
         let data;
 
-        if ((action == "list") || (action == "view")) {
+        if (action == "view") {
             data = await getProposalsFromSalesforce(accountId, contactId, proposalId);
         }
         else if (action == "files") {
@@ -33,15 +33,16 @@ export async function GET(req: NextRequest) {
         else if (action == "products") {
             data = await getProposedProductsFromSalesforce(accountId, contactId, proposalId);
         }
-        else if (action == "projects" || action == "orders" || action == "fulfillments" || action == "purchases" || action == "returns") {
+        else if (action == "list" || action == "projects" || action == "orders" || action == "fulfillments" || action == "purchases" || action == "returns") {
             // Map action to correct tabName
+            console.log("action", action);
             let tabName;
             if (action == "projects") tabName = "Projects";
             else if (action == "orders") tabName = "Orders";
             else if (action == "purchases") tabName = "Purchases"; // Assumed tab name
             else if (action == "returns") tabName = "Returns"; // Assumed tab name
-            else tabName = "Fulfillment"; // Note: singular, not plural
-
+            else if (action == "fulfillments") tabName = "Fulfillments"; // Note: singular, not plural
+            else tabName = "Proposal";
             data = await getGenericTabDataFromSalesforce(accountId, contactId, proposalId, tabName, objectName || "Proposal__c");
         }
         console.log("result data", NextResponse.json(data));

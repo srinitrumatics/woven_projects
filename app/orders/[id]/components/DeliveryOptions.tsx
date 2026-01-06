@@ -48,7 +48,7 @@ export default function DeliveryOptions({ formData, setFormData }: DeliveryOptio
                         <input
                             type="text"
                             placeholder="Special delivery instructions..."
-                            value={formData.deliveryNotes}
+                            value={formData.deliveryNotes || ''}
                             onChange={(e) => setFormData({ ...formData, deliveryNotes: e.target.value })}
                             className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400"
                         />

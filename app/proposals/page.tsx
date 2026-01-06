@@ -32,20 +32,22 @@ export default function ProposalsPage() {
 
         const mappedProposals: Proposal[] = data.map((item: any) => ({
           id: item.Id,
-          proposalNumber: item.Name || 'N/A',
-          proposalName: item.Proposal_Name__c || item.Name || 'Untitled Proposal',
-          accountName: item.Account_Name__c || item.Account__r?.Name || 'Unknown Account',
-          contactName: item.Contact_Name__c || item.Contact__r?.Name || 'Unknown Contact',
+          proposalNumber: item.Proposal_Number__c || item.Name || 'N/A',
+          proposalName: item.Name || item.Proposal_Name__c || 'Untitled Proposal',
+          accountName: item.Bill_to_Account_Name || item.Ship_to_Account_Name || 'Unknown Account',
+          contactName: item.Bill_to_Contact_Name || item.Ship_to_Contact_Name || 'Unknown Contact',
           status: (item.Status__c as ProposalStatus) || 'Draft',
-          totalAmount: item.Total_Amount__c || 0,
-          proposalDate: item.CreatedDate ? item.CreatedDate.split('T')[0] : new Date().toISOString().split('T')[0],
+          totalAmount: item.Total_Price__c || item.Total_Amount__c || 0,
+          totalShippingCharges: item.Total_Shipping_Charges__c || 0,
+          totalTaxesAmount: item.Total_Taxes_Amount__c || 0,
+          proposalDate: item.Request_Date__c || (item.CreatedDate ? item.CreatedDate.split('T')[0] : new Date().toISOString().split('T')[0]),
           expirationDate: item.Expiration_Date__c || '',
           description: item.Description || '',
-          productCount: item.Product_Count__c || 0,
-          billTo: item.Bill_To_Address__c || '',
-          shipTo: item.Ship_To_Address__c || '',
+          productCount: item.Total_Lines__c || item.Product_Count__c || 0,
+          billTo: item.Authorized_Bill_To_Location_Name || item.Bill_To_Address__c || '',
+          shipTo: item.Authorized_Ship_To_Location_Name || item.Ship_To_Address__c || '',
           opportunityName: item.Opportunity_Name__c || '',
-          submittedBy: item.Owner?.Name || 'System'
+          submittedBy: item.Owner_Name || item.Owner?.Name || 'System'
         }));
 
         setProposals(mappedProposals);

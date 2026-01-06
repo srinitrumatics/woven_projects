@@ -459,13 +459,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     if (selectedContact) {
       setFormData(prev => ({
         ...prev,
-        locationContact: selectedContact.Name,
-        contactPhone: selectedContact.Phone,
-        contactEmail: selectedContact.Email,
+        locationContact: selectedContact.Name || "",
+        contactPhone: selectedContact.Phone || "",
+        contactEmail: selectedContact.Email || "",
         // Copy to billing contact fields
-        billingContact: selectedContact.Name,
-        billingPhone: selectedContact.Phone,
-        billingEmail: selectedContact.Email,
+        billingContact: selectedContact.Name || "",
+        billingPhone: selectedContact.Phone || "",
+        billingEmail: selectedContact.Email || "",
       }));
     }
   };
@@ -605,37 +605,37 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           // Update Form Data with Order Details
           setFormData(prev => ({
             ...prev,
-            purchaseOrder: order.Customer_PO__c || prev.purchaseOrder,
-            requestedDeliveryDate: order.Request_Date__c || prev.requestedDeliveryDate,
-            orderNotes: order.Customer_Order_Notes__c || prev.orderNotes,
-            priceBook: order.Assigned_Price_Book_Name || prev.priceBook,
-            dropShip: order.Drop_Ship__c || prev.dropShip,
+            purchaseOrder: order.Customer_PO__c || prev.purchaseOrder || "",
+            requestedDeliveryDate: order.Request_Date__c || prev.requestedDeliveryDate || "",
+            orderNotes: order.Customer_Order_Notes__c || prev.orderNotes || "",
+            priceBook: order.Assigned_Price_Book_Name || prev.priceBook || "",
+            dropShip: order.Drop_Ship__c || prev.dropShip || false,
             // Set Bill To and Ship To from order data
-            billTo: order.Authorized_Bill_To_Location__c || prev.billTo,
-            site: order.Site_Name || prev.site,
-            shippingMethod: order.Shipping_Method__c || prev.shippingMethod,
-            incoterms: order.Incoterms__c || prev.incoterms,
+            billTo: order.Authorized_Bill_To_Location__c || prev.billTo || "",
+            site: order.Site_Name || prev.site || "",
+            shippingMethod: order.Shipping_Method__c || prev.shippingMethod || "",
+            incoterms: order.Incoterms__c || prev.incoterms || "",
             // We set shipTo via handleLocationSelect when initialOrderShipToId triggers, 
             // but we can also set it here as a fallback or initial value
-            shipTo: order.Authorized_Ship_To_Location__c || prev.shipTo,
+            shipTo: order.Authorized_Ship_To_Location__c || prev.shipTo || "",
 
             // formatted address from API response objects if available
             shippingAddress: order.Authorized_Ship_To_Location__Address ?
               `${order.Authorized_Ship_To_Location__Address.street}, ${order.Authorized_Ship_To_Location__Address.city}, ${order.Authorized_Ship_To_Location__Address.state} ${order.Authorized_Ship_To_Location__Address.postalCode}`
-              : prev.shippingAddress,
+              : prev.shippingAddress || "",
 
             billingAddress: order.Authorized_Bill_To_Location_Address ?
               `${order.Authorized_Bill_To_Location_Address.street}, ${order.Authorized_Bill_To_Location_Address.city}, ${order.Authorized_Bill_To_Location_Address.state} ${order.Authorized_Bill_To_Location_Address.postalCode}`
-              : prev.billingAddress,
+              : prev.billingAddress || "",
 
             // Contact details
-            locationContact: order.Ship_to_Contact_Name || prev.locationContact,
-            contactPhone: order.Ship_to_Contact_Phone || prev.contactPhone,
-            contactEmail: order.Ship_to_Contact_Email || prev.contactEmail,
+            locationContact: order.Ship_to_Contact_Name || prev.locationContact || "",
+            contactPhone: order.Ship_to_Contact_Phone || prev.contactPhone || "",
+            contactEmail: order.Ship_to_Contact_Email || prev.contactEmail || "",
 
-            billingContact: order.Bill_to_Contact_Name || prev.billingContact,
-            billingPhone: order.Ship_to_Contact_Phone || prev.billingPhone, // Fallback to ship contact phone if bill contact phone missing in API
-            billingEmail: order.Ship_to_Contact_Email || prev.billingEmail, // Fallback to ship contact email
+            billingContact: order.Bill_to_Contact_Name || prev.billingContact || "",
+            billingPhone: order.Ship_to_Contact_Phone || prev.billingPhone || "", // Fallback to ship contact phone if bill contact phone missing in API
+            billingEmail: order.Ship_to_Contact_Email || prev.billingEmail || "", // Fallback to ship contact email
             billToAccountName: order.Bill_to_Account_Name || "",
             shipToAccountName: order.Ship_to_Account_Name || "",
           }));
@@ -895,8 +895,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         setSubmitError("Please select a requested delivery date");
         return;
       }
-      if (!formData.locationContact || !formData.contactPhone || !formData.contactEmail) {
-        setSubmitError("Please fill in all contact information");
+      const missingContactFields = [];
+      if (!formData.locationContact) missingContactFields.push("Contact Name");
+      if (!formData.contactPhone) missingContactFields.push("Phone");
+      if (!formData.contactEmail) missingContactFields.push("Email");
+
+      if (missingContactFields.length > 0) {
+        setSubmitError(`Please fill in the following contact information: ${missingContactFields.join(", ")}`);
         return;
       }
       if (orderProducts.length === 0) {

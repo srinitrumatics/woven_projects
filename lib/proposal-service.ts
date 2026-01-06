@@ -170,7 +170,12 @@ export async function getGenericTabDataFromSalesforce(
 
     const targetObjectName = objectName || "Proposal__c";
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/generic/tab`;
-    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(proposalId)}&objectName=${encodeURIComponent(targetObjectName)}&tabName=${encodeURIComponent(tabName)}`;
+
+    let url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectName=${encodeURIComponent(targetObjectName)}&tabName=${encodeURIComponent(tabName)}`;
+
+    if (proposalId) {
+      url += `&objectId=${encodeURIComponent(proposalId)}`;
+    }
 
     console.log(`Fetching ${tabName} from Salesforce with URL:`, url);
 

@@ -38,7 +38,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                                 const locationId = formData.billTo === 'same' ? formData.shipTo : formData.billTo;
                                 const location = shipLocations.find(l => l.Id === locationId);
                                 return location?.Account_Name__c || '';
-                            })()}
+                            })() || ''}
                             readOnly
                             disabled
                             className="w-full h-11 px-4 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed"
@@ -50,7 +50,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             Bill To Location <span className="text-red-500">*</span>
                         </label>
                         <select name="billTo"
-                            value={formData.billTo}
+                            value={formData.billTo || ''}
                             onChange={handleBillToChange}
                             className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                         >
@@ -70,7 +70,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         </label>
                         <input
                             type="text"
-                            value={formData.billingAddress}
+                            value={formData.billingAddress || ''}
                             onChange={(e) => setFormData({ ...formData, billingAddress: e.target.value })}
                             className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                         />
@@ -83,7 +83,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         <input
                             type="text"
                             placeholder="Enter PO number"
-                            value={formData.purchaseOrder}
+                            value={formData.purchaseOrder || ''}
                             onChange={(e) => setFormData({ ...formData, purchaseOrder: e.target.value })}
                             className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400"
                         />
@@ -92,7 +92,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                     <div>
                         <label className="block text-sm h-11font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Terms</label>
                         <select
-                            value={formData.paymentTerms}
+                            value={formData.paymentTerms || ''}
                             onChange={(e) => setFormData({ ...formData, paymentTerms: e.target.value })}
                             className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                         >

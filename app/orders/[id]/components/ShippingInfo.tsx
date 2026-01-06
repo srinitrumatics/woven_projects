@@ -38,7 +38,7 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                                 if (formData.shipToAccountName) return formData.shipToAccountName;
                                 const location = shipLocations.find(l => l.Id === formData.shipTo);
                                 return location?.Account_Name__c || '';
-                            })()}
+                            })() || ''}
                             readOnly
                             disabled
                             className="w-full h-11 px-4 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed"
@@ -83,7 +83,7 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                         </label>
                         <input
                             type="text"
-                            value={formData.shippingAddress}
+                            value={formData.shippingAddress || ''}
                             onChange={(e) => setFormData({ ...formData, shippingAddress: e.target.value })}
                             className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                         />
@@ -95,7 +95,7 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                         </label>
                         <input
                             type="date"
-                            value={formData.requestedDeliveryDate}
+                            value={formData.requestedDeliveryDate || ''}
                             onChange={(e) => setFormData({ ...formData, requestedDeliveryDate: e.target.value })}
                             className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                         />

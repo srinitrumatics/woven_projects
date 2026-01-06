@@ -26,7 +26,7 @@ const SALESFORCE_CONFIG = {
 // Get Salesforce session info (this would normally come from your session management)
 export async function getSalesforceSession() {
   // obtain or reuse token
-  const tokenUrl = "https://test.salesforce.com/services/oauth2/token";
+  const tokenUrl = process.env.SF_AUTH_URL || "";
   const body = new URLSearchParams({
     grant_type: "password",
     client_id: process.env.SF_CLIENT_ID || "",
@@ -41,6 +41,7 @@ export async function getSalesforceSession() {
     body: body.toString(),
   });
   const tokenData = await res.json();
+  console.log("tokenData", tokenData);
   return {
     accessToken: tokenData.access_token,
     instanceUrl: tokenData.instance_url,
