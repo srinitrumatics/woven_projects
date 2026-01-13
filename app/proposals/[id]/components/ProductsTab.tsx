@@ -1,13 +1,22 @@
 import Link from "next/link";
-import { ProposedProduct } from "../types";
+import { ProposedProduct, SortDirection } from "../types";
+import { SortableHeader } from "../../../../components/ui/SortableHeader";
 
 interface ProductsTabProps {
     products: ProposedProduct[];
     proposalId: string;
     loading: boolean;
+    sortField: keyof ProposedProduct;
+    sortDirection: SortDirection;
+    onSort: (field: keyof ProposedProduct) => void;
 }
 
-export default function ProductsTab({ products, proposalId, loading }: ProductsTabProps) {
+export default function ProductsTab({ products, proposalId, loading, sortField, sortDirection, onSort }: ProductsTabProps) {
+    //console.log("product ui res", products);
+
+    const sortConfig = { key: sortField as string, direction: sortDirection };
+    const requestSort = (key: string) => onSort(key as keyof ProposedProduct);
+
     if (loading) {
         return (
             <div className="flex justify-center items-center py-12">
@@ -21,14 +30,17 @@ export default function ProductsTab({ products, proposalId, loading }: ProductsT
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">IMAGE</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">PRODUCT NAME</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">MANUFACTURER</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">PRODUCT FAMILY</th>
-                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">UNIT PRICE</th>
-                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">TOTAL ORDER QTY</th>
-                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">SUBTOTAL</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">ACTION</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">&nbsp;</th>
+                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Unit Price" field="unitPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Total Order Qty" field="quantity" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Total Price" field="subtotal" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Shipping" field="shipping" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Taxes" field="taxes" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Grand Total" field="grandTotal" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Action</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -73,6 +85,15 @@ export default function ProductsTab({ products, proposalId, loading }: ProductsT
                                 <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
                                     ${product.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
+                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                    ${product.shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </td>
+                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                    ${product.taxes.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </td>
+                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                    ${product.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </td>
                                 <td className="px-4 py-3 text-center">
                                     <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="px-4 py-1.5 text-primary rounded font-medium inline-block">
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,6 +107,6 @@ export default function ProductsTab({ products, proposalId, loading }: ProductsT
                     )}
                 </tbody>
             </table>
-        </div>
+        </div >
     );
 }

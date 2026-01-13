@@ -1,6 +1,6 @@
 "use client";
 
-import { formatCurrency } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate } from "@/lib/utils/formatting";
 import { Product, AuthorizedLocation } from "@/app/orders/types";
 
 interface PDFTemplateProps {
@@ -42,7 +42,7 @@ export default function PDFTemplate({
                     <h2 className="text-3xl font-bold text-gray-900 mb-2">Purchase Order</h2>
                     <div className="text-sm">
                         <p><span className="font-semibold">PO No:</span> {formData.purchaseOrder || "N/A"}</p>
-                        <p><span className="font-semibold">Date:</span> {new Date().toLocaleDateString()}</p>
+                        <p><span className="font-semibold">Date:</span> {formatDate(new Date(), 'numeric-dash')}</p>
                         <p><span className="font-semibold">Status:</span> {orderStatus}</p>
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export default function PDFTemplate({
                 <div>Shipping Method</div>
             </div>
             <div className="px-4 grid grid-cols-4 gap-4 text-sm text-gray-700 mb-8 -mt-6">
-                <div>{formData.requestedDeliveryDate || "N/A"}</div>
+                <div>{formData.requestedDeliveryDate ? formatDate(formData.requestedDeliveryDate, 'numeric-dash') : "N/A"}</div>
                 <div>{formData.locationContact || "N/A"}</div>
                 <div>{formData.paymentTerms || "N/A"}</div>
                 <div>{formData.dropShip ? "Drop Ship" : "Standard"}</div>

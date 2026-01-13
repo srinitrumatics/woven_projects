@@ -5,9 +5,12 @@ import { useRouter } from "next/navigation";
 interface OrderHeaderProps {
     id: string;
     orderStatus: string;
+    name?: string;
+    isEditing?: boolean;
+    onEditToggle?: () => void;
 }
 
-export default function OrderHeader({ id, orderStatus }: OrderHeaderProps) {
+export default function OrderHeader({ id, orderStatus, name, isEditing, onEditToggle }: OrderHeaderProps) {
     const router = useRouter();
 
     return (
@@ -22,9 +25,9 @@ export default function OrderHeader({ id, orderStatus }: OrderHeaderProps) {
 
             {/* Order header card (full width) */}
             <div className="w-full dark:bg-gray-800 rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
+                    <div className="flex items-center gap-4 w-full sm:w-auto">
+                        <div className="w-12 h-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center shrink-0">
                             <svg className="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                 <path d="M3 3h18v4H3z" />
                                 <path d="M21 7v11a2 2 0 0 1-2 2H5a2 2 0 01-2-2V7" />
@@ -32,12 +35,28 @@ export default function OrderHeader({ id, orderStatus }: OrderHeaderProps) {
                             </svg>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Order #{id}</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Order #{name}</h2>
                             <div className="text-sm text-gray-500 dark:text-gray-400">Order details and summary</div>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                        <button
+                            onClick={onEditToggle}
+                            className={`p-2 rounded-lg transition-colors ms-auto ${isEditing
+                                ? "bg-primary/10 text-primary hover:bg-primary/20"
+                                : "bg-gray-100 dark:bg-gray-700 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600"
+                                }`}
+                            title={isEditing ? "Stop Editing" : "Edit Order"}
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                {isEditing ? (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                ) : (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                )}
+                            </svg>
+                        </button>
                         <span
                             className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${orderStatus === "Delivered"
                                 ? "bg-green-100 text-green-800"

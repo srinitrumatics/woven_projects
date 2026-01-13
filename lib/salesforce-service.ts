@@ -237,6 +237,43 @@ export async function getContactsFromSalesforce(accountId?: string, contactId?: 
     return []; // Return empty array on error
   }
 }
+
+// Fetch account from Salesforce
+export async function getAccountFromSalesforce(accountId?: string): Promise<any[]> {
+  try {
+    const session = await getSalesforceSession();
+
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return [];
+    }
+
+    const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/accounts`;
+    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId ?? '')}`;
+
+    console.log('Fetching account from Salesforce with URL:', url);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+    }
+
+    const resultdata = await response.json();
+    console.log('Account resultdata:', resultdata);
+
+    return resultdata.data || [];
+  } catch (error) {
+    console.error('Error fetching account from Salesforce:', error);
+    return [];
+  }
+}
 // Create a new order in Salesforce
 export async function createOrderFromSalesforce(orderData: any): Promise<SalesforceOrder | null> {
   try {

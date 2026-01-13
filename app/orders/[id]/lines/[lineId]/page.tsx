@@ -28,6 +28,8 @@ interface OrderLineItem {
   Unit_Cost__c?: number;
   Total_Cost__c?: number;
   Manufacturer_DBA__c?: string;
+  Site_Name?: string;
+  Inventory_Account_Name?: string;
 }
 
 // Interface for mapped product data
@@ -107,8 +109,8 @@ export default function OrderLineDetailPage({
               subtotal: item.Total_Price__c || 0,
               productGrouping: item.Product_Grouping__c || "-",
               grouping: item.Grouping__c || "-",
-              site: item.Site__c || "-",
-              inventoryAccount: item.Inventory_Account__c || "-",
+              site: item.Site_Name || item.Site__c || "-",
+              inventoryAccount: item.Inventory_Account_Name || item.Inventory_Account__c || "-",
               isTaxable: item.Is_Taxable__c === true ? "Yes" : "No",
               availableToSell: item.Product_Name_Available_To_Sell || 0,
               qtyShipped: item.Qty_Shipped__c || 0,
@@ -520,7 +522,7 @@ export default function OrderLineDetailPage({
                   <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Shipping</th>
                   <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Taxes</th>
                   <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Grand Total</th>
-                  <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Shipped</th>
+                  <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Qty Shipped</th>
                 </tr>
               </thead>
               <tbody>

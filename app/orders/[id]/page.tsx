@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
+import { useSortableData } from "@/hooks/useSortableData";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
-import { Product } from "@/app/orders/types";
+import { Product, ShippingMethodOption } from "@/app/orders/types";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import OrderHeader from "./components/OrderHeader";
@@ -35,6 +36,7 @@ interface AuthorizedLocation {
   Id: string;
   Name: string;
   Account_Name__c: string;
+  Account_Name__r?: { Name: string };
   Active__c: boolean;
   Lift_Gate__c: boolean;
   Inside_Delivery__c: boolean;
@@ -94,6 +96,8 @@ interface Order {
   Bill_to_Contact_Name?: string;
   Authorized_Ship_To_Location__Address?: Address;
   Authorized_Bill_To_Location_Address?: Address;
+  Bill_to_Account_Name?: string;
+  Ship_to_Account_Name?: string;
 
   CustomerOrderLines?: OrderItem[];
   [key: string]: any;
@@ -107,6 +111,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   // header order status
   const [orderStatus, setOrderStatus] = useState<string>("Draft");
+  const [isEditing, setIsEditing] = useState(false);
 
   // State management for product tables
   const [searchQuery, setSearchQuery] = useState("");
@@ -240,6 +245,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     shippingMethod: "",
     incoterms: "",
 
+    // Account Names
+    billToAccountName: "",
+    shipToAccountName: "",
+
+    // Order Name
+    orderName: "",
+
     // Order Notes
     orderNotes: ""
   });
@@ -251,10 +263,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [initialOrderBillToId, setInitialOrderBillToId] = useState<string | null>(null);
   const [initialOrderContactId, setInitialOrderContactId] = useState<string | null>(null);
 
+  // Shipping Methods
+  const [shippingMethods, setShippingMethods] = useState<ShippingMethodOption[]>([]);
+
   // Ship-to contacts loaded from Salesforce
   const [shipContacts, setShipContacts] = useState<Contact[]>([]);
   const [contactsLoading, setContactsLoading] = useState(false);
   const [selectedContactId, setSelectedContactId] = useState<string>("");
+  const [accountName, setAccountName] = useState<string>("");
 
   // Product catalog loaded from Salesforce
   const [catalogProducts, setCatalogProducts] = useState<Product[]>([]);
@@ -312,6 +328,28 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             paymentTerms = data.Payment_Terms__c || '';
             priceBook = data.Assigned_Price_Book_Name || '';
           }
+
+          // Extract Shipping Methods
+          if (Array.isArray(data) && data.length > 0 && data[0].Shipping_Method__c) {
+            setShippingMethods(data[0].Shipping_Method__c);
+          } else if (data.data && Array.isArray(data.data) && data.data.length > 0 && data.data[0].Shipping_Method__c) {
+            setShippingMethods(data.data[0].Shipping_Method__c);
+          } else if (data.Shipping_Method__c) {
+            setShippingMethods(data.Shipping_Method__c);
+            setShippingMethods(data.Shipping_Method__c);
+          }
+
+          // Fetch Account Name
+          try {
+            // We can fetch account details separately or assume accountName matches the contexts
+            const accRes = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&action=account`);
+            if (accRes.ok) {
+              const accData = await accRes.json();
+              if (accData && accData.Name) {
+                setAccountName(accData.Name);
+              }
+            }
+          } catch (e) { console.error("Error fetching account name:", e); }
 
           if (locations.length > 0) {
 
@@ -482,6 +520,12 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     const address = location.Address__c;
     const formattedAddress = address ? `${address.street}, ${address.city}, ${address.state} ${address.postalCode}` : "";
 
+    // Use fetched account name if available and location account ID matches (or just use it as it's the context account)
+    // Fallback to location.Account_Name__r?.Name if backend supports it, otherwise ID
+    const accName = location.Account_Name__r?.Name ||
+      (location.Account_Name__c === SF_ACCOUNT_ID ? accountName : location.Account_Name__c) ||
+      "";
+
     setFormData(prev => ({
       ...prev,
       shipTo: location.Id,
@@ -526,8 +570,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       if (selectedLoc) {
         const address = selectedLoc.Address__c;
         const formattedAddress = address ? `${address.street}, ${address.city}, ${address.state} ${address.postalCode}` : "";
+
+        const accName = selectedLoc.Account_Name__r?.Name ||
+          (selectedLoc.Account_Name__c === SF_ACCOUNT_ID ? accountName : selectedLoc.Account_Name__c) ||
+          "";
+
         setFormData(prev => ({
           ...prev,
+
           billTo: locationId,
           billingAddress: formattedAddress
         }));
@@ -578,29 +628,40 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           if (order.Status__c) setOrderStatus(order.Status__c);
 
           // Map Order Items to Products
-          // if (order.CustomerOrderLines) {
-          //   const mappedProducts: Product[] = order.CustomerOrderLines.map((item: OrderItem, index: number) => ({
-          //     id: item.Product_Name__c || item.Id, // Use Product_Name__c as product ID if available
-          //     name: item.ProductName || "Unknown Product",
-          //     sku: item.Name || "", // Using Name as SKU/Line ID for now
-          //     description: item.Product_Description__c || "",
-          //     unitPrice: item.Unit_Price__c,
-          //     listPrice: item.Unit_Price__c, // Assuming list price same as unit price for now
-          //     brand: "", // Not in API response
-          //     manufacturer: item.Manufacturer_Name__c || "",
-          //     productFamily: item.ProductFamily || "", // Not in API response
-          //     availableQty: 999,
-          //     moq: item.MOQ__c || 1,
-          //     orderQty: item.Order_Qty__c,
-          //     subtotal: item.Total_Price__c,
-          //     // Store the original order line ID for updates
-          //     orderLineId: item.Id,
-          //     // Add unique lineItemKey for proper tracking and deletion
-          //     lineItemKey: `${item.Id}-${Date.now()}-${index}-${Math.random()}`
-          //   }));
-          //   console.log("Mapped products:", mappedProducts);
-          //   setOrderProducts(mappedProducts);
-          // }
+          if (order.Id) {
+            try {
+              // Fetch order lines separately to ensure we get the latest data
+              const linesRes = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(accountId)}&orderId=${encodeURIComponent(order.Id)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&action=orderlines`);
+              if (linesRes.ok) {
+                const linesData = await linesRes.json();
+                if (linesData && Array.isArray(linesData)) {
+                  const mappedProducts: Product[] = linesData.map((item: any, index: number) => ({
+                    id: item.Product_Name__c || item.Id, // Use Product_Name__c as product ID if available
+                    name: item.Product_Name_Name || (item.ProductName || "Unknown Product"),
+                    sku: item.Name || "", // Using Name as SKU/Line ID for now
+                    description: item.Product_Description__c || "",
+                    unitPrice: item.Unit_Price__c,
+                    listPrice: item.Unit_Price__c, // Assuming list price same as unit price for now
+                    brand: "", // Not in API response
+                    manufacturer: item.Manufacturer_Name__c || "",
+                    productFamily: item.ProductFamily || "", // Not in API response
+                    availableQty: 999,
+                    moq: item.MOQ__c || 1,
+                    orderQty: item.Order_Qty__c,
+                    subtotal: item.Total_Price__c,
+                    // Store the original order line ID for updates
+                    orderLineId: item.Id,
+                    // Add unique lineItemKey for proper tracking and deletion
+                    lineItemKey: `${item.Id}-${Date.now()}-${index}-${Math.random()}`
+                  }));
+                  console.log("Mapped products:", mappedProducts);
+                  setOrderProducts(mappedProducts);
+                }
+              }
+            } catch (lineError) {
+              console.error("Error fetching order lines:", lineError);
+            }
+          }
 
           // Update Form Data with Order Details
           setFormData(prev => ({
@@ -638,6 +699,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             billingEmail: order.Ship_to_Contact_Email || prev.billingEmail || "", // Fallback to ship contact email
             billToAccountName: order.Bill_to_Account_Name || "",
             shipToAccountName: order.Ship_to_Account_Name || "",
+            orderName: order.Name || "",
           }));
 
           if (order.Authorized_Ship_To_Location__c) {
@@ -878,31 +940,32 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       setIsSubmitting(true);
       setSubmitError(null);
 
-      // Validate required fields
-      if (!formData.shipTo) {
-        setSubmitError("Please select a ship-to location");
-        return;
-      }
-      if (!formData.billTo) {
-        setSubmitError("Please select a bill-to location");
-        return;
-      }
-      if (!formData.purchaseOrder) {
-        setSubmitError("Please enter a purchase order number");
-        return;
-      }
-      if (!formData.requestedDeliveryDate) {
-        setSubmitError("Please select a requested delivery date");
-        return;
-      }
-      const missingContactFields = [];
-      if (!formData.locationContact) missingContactFields.push("Contact Name");
-      if (!formData.contactPhone) missingContactFields.push("Phone");
-      if (!formData.contactEmail) missingContactFields.push("Email");
+      // Validate required fields (only for submission)
+      if (!isDraft) {
+        const requiredFields = [
+          { key: 'billTo', label: 'Bill to Location' },
+          { key: 'billingAddress', label: 'Billing Address' },
+          { key: 'purchaseOrder', label: 'CPO #' },
+          { key: 'shipTo', label: 'Ship to Location' },
+          { key: 'shippingAddress', label: 'Shipping Address' },
+          { key: 'requestedDeliveryDate', label: 'Request Date' },
+          { key: 'locationContact', label: 'Contact Name' },
+          { key: 'contactPhone', label: 'Phone Number' },
+          { key: 'contactEmail', label: 'Email Address' },
+          { key: 'dropShip', label: 'Drop-Ship' },
+          { key: 'liftGateRequired', label: 'Lift Gate' },
+          { key: 'insideDelivery', label: 'Inside Delivery' },
+        ];
 
-      if (missingContactFields.length > 0) {
-        setSubmitError(`Please fill in the following contact information: ${missingContactFields.join(", ")}`);
-        return;
+        const missingFields = requiredFields
+          .filter(field => !(formData as any)[field.key])
+          .map(f => f.label);
+
+        if (missingFields.length > 0) {
+          setSubmitError(`Please fill in all required fields: ${missingFields.join(', ')}`);
+          setIsSubmitting(false);
+          return;
+        }
       }
       if (orderProducts.length === 0) {
         setSubmitError("Please add at least one product to the order");
@@ -1025,12 +1088,15 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     product.manufacturer.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Sorting for catalog
+  const { items: sortedCatalogProducts, requestSort: requestCatalogSort, sortConfig: catalogSortConfig } = useSortableData<Product>(filteredCatalogProducts);
+
   // Pagination for catalog
-  const totalPages = Math.ceil(filteredCatalogProducts.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedCatalogProducts.length / itemsPerPage);
   const paginatedCatalogProducts = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredCatalogProducts.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredCatalogProducts, currentPage, itemsPerPage]);
+    return sortedCatalogProducts.slice(startIndex, startIndex + itemsPerPage);
+  }, [sortedCatalogProducts, currentPage, itemsPerPage]);
 
   // Reset to page 1 when search changes or view mode changes
   useMemo(() => {
@@ -1039,17 +1105,24 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   return (
     <Sidebar>
-      <OrderHeader id={id} orderStatus={orderStatus} />
+      <OrderHeader
+        id={id}
+        orderStatus={orderStatus}
+        name={formData.orderName}
+        isEditing={isEditing}
+        onEditToggle={() => setIsEditing(!isEditing)}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
         {/* Left Column - Client Information (70%) */}
         <div className="lg:col-span-7 flex flex-col gap-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
             <BillingInfo
               formData={formData}
               setFormData={setFormData}
               shipLocations={shipLocations}
               handleBillToChange={handleBillToChange}
+              isEditing={isEditing}
             />
             <ShippingInfo
               formData={formData}
@@ -1057,6 +1130,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               shipLocations={shipLocations}
               locationsLoading={locationsLoading}
               handleLocationSelect={handleLocationSelect}
+              isEditing={isEditing}
             />
           </div>
           <ShipToContact
@@ -1066,8 +1140,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             handleContactSelect={handleContactSelect}
             formData={formData}
             setFormData={setFormData}
+            isEditing={isEditing}
           />
-          <DeliveryOptions formData={formData} setFormData={setFormData} />
+          <DeliveryOptions
+            formData={formData}
+            setFormData={setFormData}
+            isEditing={isEditing}
+          />
         </div>
 
         {/* Right Column - Order Total (30%) */}
@@ -1088,14 +1167,15 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             handleDownloadFile={handleDownloadFile}
             handleRemoveFile={handleRemoveFile}
             productsCount={orderProducts.length}
+            isEditing={isEditing}
           />
         </div>
       </div>
       {/* Products Search - Full Width */}
       <div className="mt-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex-1 relative">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4 sm:gap-0">
+            <div className="flex-1 relative w-full sm:w-auto">
               <input
                 type="text"
                 placeholder="Search by name, sku or price"
@@ -1107,10 +1187,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <div className="flex gap-2 ml-4">
+            <div className="flex flex-wrap gap-2 w-full sm:w-auto justify-end sm:ml-4">
               <button
                 onClick={() => setViewMode("files")}
-                className={`px-4 py-2 rounded-lg transition-colors ${viewMode === "files"
+                className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${viewMode === "files"
                   ? "bg-primary text-white"
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
@@ -1119,7 +1199,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </button>
               <button
                 onClick={() => setViewMode("catalog")}
-                className={`px-4 py-2 rounded-lg transition-colors ${viewMode === "catalog"
+                className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${viewMode === "catalog"
                   ? "bg-primary text-white"
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
@@ -1128,7 +1208,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </button>
               <button
                 onClick={() => setViewMode("myOrder")}
-                className={`px-4 py-2 rounded-lg transition-colors ${viewMode === "myOrder"
+                className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${viewMode === "myOrder"
                   ? "bg-primary text-white"
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
@@ -1144,6 +1224,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               orderId={id}
               accountId={SF_ACCOUNT_ID}
               contactId={SF_CONTACT_ID}
+              isEditing={isEditing}
             />
           )}
 
@@ -1166,6 +1247,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               setCurrentPage={setCurrentPage}
               itemsPerPage={itemsPerPage}
               searchQuery={searchQuery}
+              sortConfig={catalogSortConfig}
+              requestSort={requestCatalogSort}
+              isEditing={isEditing}
             />
           )}
 
@@ -1182,6 +1266,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               accountId={SF_ACCOUNT_ID}
               contactId={SF_CONTACT_ID}
               setOrderProducts={setOrderProducts}
+              isEditing={isEditing}
             />
           )}
         </div>
@@ -1201,30 +1286,30 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       />
 
       {/* Action Buttons */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex items-center justify-between shadow-lg" style={{ zIndex: 40 }}>
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between shadow-lg gap-4 sm:gap-0" style={{ zIndex: 40 }}>
         <button
           onClick={() => router.push("/orders")}
-          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           disabled={isSubmitting}
         >
           Cancel
         </button>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
           {submitError && (
-            <div className="text-sm text-red-600 dark:text-red-400 max-w-md">
+            <div className="text-sm text-red-600 dark:text-red-400 max-w-md text-center sm:text-left">
               {submitError}
             </div>
           )}
 
           {/* Action Buttons Logic */}
-          {!["Approved", "Delivered", "Canceled"].includes(orderStatus) && (
+          {!["Approved", "Delivered", "Canceled"].includes(orderStatus) && isEditing && (
             <>
               {/* Save Draft - Only visible in Draft mode */}
               {orderStatus === "Draft" && (
                 <button
                   onClick={handleSaveDraft}
                   disabled={isSubmitting}
-                  className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "Saving..." : "Save Draft"}
                 </button>
@@ -1235,7 +1320,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Order"}
                 </button>
@@ -1250,7 +1335,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                       handleSaveDraft();
                     }
                   }}
-                  className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors"
+                  className="w-full sm:w-auto px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors"
                 >
                   Recall
                 </button>

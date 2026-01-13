@@ -144,14 +144,21 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           <span>&gt;</span>
           <span className="text-gray-900 dark:text-white">{invoice.invoiceNumber}</span>
         </div>
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{invoice.invoiceNumber}</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">{invoice.description}</p>
+        {/* Header */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
+                {invoice.invoiceNumber}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400">
+                Order #{invoice.relatedOrderNumber} • {invoice.accountName}
+              </p>
+            </div>
+            <span className={`inline-flex px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(invoice.status)}`}>
+              {invoice.status}
+            </span>
           </div>
-          <span className={`inline-flex px-4 py-2 text-sm font-medium rounded-full ${getStatusColor(invoice.status)}`}>
-            {invoice.status}
-          </span>
         </div>
       </div>
 
@@ -172,7 +179,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Account Name</label>
                 <p className="text-gray-900 dark:text-white font-semibold">{invoice.accountName}</p>
@@ -210,7 +217,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Invoice Date</label>
                 <p className="text-gray-900 dark:text-white">{invoice.invoiceDate}</p>
@@ -445,20 +452,20 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
       </div>
 
       {/* Action Buttons */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex items-center justify-between shadow-lg" style={{ zIndex: 40 }}>
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between shadow-lg gap-4 sm:gap-0" style={{ zIndex: 40 }}>
         <button
           onClick={() => router.push("/invoices")}
-          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         >
           Back to Invoices
         </button>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           {amountDue > 0 && (
-            <button className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+            <button className="w-full sm:w-auto px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
               Make Payment
             </button>
           )}
-          <button className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
+          <button className="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
             Download PDF
           </button>
         </div>

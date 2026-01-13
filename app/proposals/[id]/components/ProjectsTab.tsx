@@ -1,11 +1,19 @@
-import { Project } from "../types";
+import { Project, SortDirection } from "../types";
+import { SortableHeader } from "../../../../components/ui/SortableHeader";
 
 interface ProjectsTabProps {
     projects: Project[];
     loading: boolean;
+    sortField: keyof Project;
+    sortDirection: SortDirection;
+    onSort: (field: keyof Project) => void;
 }
 
-export default function ProjectsTab({ projects, loading }: ProjectsTabProps) {
+export default function ProjectsTab({ projects, loading, sortField, sortDirection, onSort }: ProjectsTabProps) {
+
+    const sortConfig = { key: sortField as string, direction: sortDirection };
+    const requestSort = (key: string) => onSort(key as keyof Project);
+
     if (loading) {
         return (
             <div className="flex justify-center items-center py-12">
@@ -19,19 +27,19 @@ export default function ProjectsTab({ projects, loading }: ProjectsTabProps) {
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Project Number</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Project Name</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Customer Account</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Customer Contact</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Project Manager</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Billing Type</th>
-                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Estimated Budget</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Start Date</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">End Date</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Progress</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Milestones</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Tasks</th>
+                        <SortableHeader label="Project Number" field="projectNumber" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Project Name" field="name" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Customer Account" field="customerAccountName" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Customer Contact" field="customerContactName" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Billing Type" field="billingType" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Project Manager" field="projectManagerName" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Estimated Budget" field="estimatedBudget" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Total Milestones" field="totalMilestones" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Total Task" field="totalTasks" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="% Completed" field="percentCompleted" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Estimated Start Date" field="estimatedStartDate" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Estimated End Date" field="estimatedEndDate" sortConfig={sortConfig} requestSort={requestSort} />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -51,30 +59,38 @@ export default function ProjectsTab({ projects, loading }: ProjectsTabProps) {
                         projects.map((project) => (
                             <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                 <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium">{project.projectNumber}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">{project.name}</td>
                                 <td className="px-4 py-3">
                                     <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${project.status === 'New' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
-                                            project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                                                project.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                                    project.status === 'On Hold' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
-                                                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                        project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                            project.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
+                                                project.status === 'On Hold' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
+                                                    'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                         }`}>
                                         {project.status}
                                     </span>
                                 </td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">{project.name}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.customerAccountName}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.customerContactName}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.projectManagerName}</td>
                                 <td className="px-4 py-3">
                                     <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary">
                                         {project.billingType}
                                     </span>
                                 </td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.projectManagerName}</td>
                                 <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
                                     ${project.estimatedBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.estimatedStartDate}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.estimatedEndDate}</td>
+                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
+                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 font-semibold">
+                                        {project.totalMilestones}
+                                    </span>
+                                </td>
+                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
+                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                        {project.totalTasks}
+                                    </span>
+                                </td>
                                 <td className="px-4 py-3 text-center">
                                     {project.percentCompleted !== null ? (
                                         <div className="flex items-center justify-center gap-2">
@@ -90,16 +106,8 @@ export default function ProjectsTab({ projects, loading }: ProjectsTabProps) {
                                         <span className="text-xs text-gray-400">-</span>
                                     )}
                                 </td>
-                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
-                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 font-semibold">
-                                        {project.totalMilestones}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
-                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
-                                        {project.totalTasks}
-                                    </span>
-                                </td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.estimatedStartDate}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.estimatedEndDate}</td>
                             </tr>
                         ))
                     )}

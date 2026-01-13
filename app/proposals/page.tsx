@@ -5,8 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
-import { formatCurrency } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate } from "@/lib/utils/formatting";
 import { Proposal, ProposalStatus } from "./types";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { useSortableData } from "@/hooks/useSortableData";
 
 type TabFilter = "All" | "Draft" | "Pending Review" | "Under Review" | "Approved" | "Accepted" | "Rejected" | "Expired";
 
@@ -116,13 +118,16 @@ export default function ProposalsPage() {
     return filtered;
   }, [activeTab, searchQuery, proposals]);
 
+  // Sorting
+  const { items: sortedProposals, requestSort, sortConfig } = useSortableData<Proposal>(filteredAndSearchedProposals);
+
   // Pagination
-  const totalPages = Math.ceil(filteredAndSearchedProposals.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(sortedProposals.length / ITEMS_PER_PAGE);
   const paginatedProposals = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
-    return filteredAndSearchedProposals.slice(startIndex, endIndex);
-  }, [filteredAndSearchedProposals, currentPage]);
+    return sortedProposals.slice(startIndex, endIndex);
+  }, [sortedProposals, currentPage]);
 
   // Reset to page 1 when filters change
   useMemo(() => {
@@ -143,15 +148,7 @@ export default function ProposalsPage() {
     alert(`Downloading proposal ${proposalId}`);
   };
 
-  if (loading) {
-    return (
-      <Sidebar>
-        <div className="flex h-[80vh] items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        </div>
-      </Sidebar>
-    );
-  }
+  // REMOVED EARLY RETURN for loading
 
   return (
     <Sidebar>
@@ -371,106 +368,116 @@ export default function ProposalsPage() {
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-primary-light dark:bg-gray-900">
-              <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                  Porposal #
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                  Proposal Name
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                  Bill To
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                  Ship To
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 dark:text-white">
-                  Items
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 dark:text-white">
-                  Total
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                  Expires
-                </th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {paginatedProposals.length === 0 ? (
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+              <svg
+                className="animate-spin h-10 w-10 text-primary mb-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+              <p className="text-sm">Loading proposals...</p>
+            </div>
+          ) : (
+            <table className="w-full">
+              <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <td colSpan={9} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center justify-center">
-                      <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No proposals found</p>
-                      <p className="text-gray-400 dark:text-gray-500 text-sm">
-                        {searchQuery || activeTab !== "All"
-                          ? "Try adjusting your filters"
-                          : "Get started by creating your first proposal"}
-                      </p>
-                    </div>
-                  </td>
+                  <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Bill To" field="billTo" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Ship To" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Items" field="productCount" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Total" field="totalAmount" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Expires" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} />
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
+                    Actions
+                  </th>
                 </tr>
-              ) : (
-                paginatedProposals.map((proposal) => (
-                  <tr key={proposal.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
-                        {proposal.proposalNumber}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4">
-                      <StatusBadge status={proposal.status} />
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900 dark:text-white font-medium max-w-[200px] line-clamp-2">{proposal.proposalName}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{proposal.billTo}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{proposal.shipTo}</div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{proposal.productCount}</td>
-                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{proposal.expirationDate}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-center gap-2">
-                        <button
-                          onClick={() => handleViewProposal(proposal.id)}
-                          className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
-                          title="View proposal"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={(e) => handleDownloadProposal(e, proposal.id)}
-                          className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
-                          title="Download proposal"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                          </svg>
-                        </button>
+              </thead>
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                {paginatedProposals.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} className="px-6 py-12 text-center">
+                      <div className="flex flex-col items-center justify-center">
+                        <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No proposals found</p>
+                        <p className="text-gray-400 dark:text-gray-500 text-sm">
+                          {searchQuery || activeTab !== "All"
+                            ? "Try adjusting your filters"
+                            : "Get started by creating your first proposal"}
+                        </p>
                       </div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  paginatedProposals.map((proposal) => (
+                    <tr key={proposal.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                      <td className="px-6 py-4">
+                        <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
+                          {proposal.proposalNumber}
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4">
+                        <StatusBadge status={proposal.status} />
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-900 dark:text-white font-medium max-w-[200px] line-clamp-2">{proposal.proposalName}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{proposal.billTo}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{proposal.shipTo}</div>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{proposal.productCount}</td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => handleViewProposal(proposal.id)}
+                            className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                            title="View proposal"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={(e) => handleDownloadProposal(e, proposal.id)}
+                            className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                            title="Download proposal"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* Pagination */}

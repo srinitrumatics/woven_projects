@@ -6,6 +6,7 @@ import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
 import { ShippingManifest, ShipmentStatus } from "./types";
 import { mockShipments, mockShipmentStats } from "./mockData";
+import { formatDate } from "@/lib/utils/formatting";
 
 export default function ShipmentsPage() {
   const router = useRouter();
@@ -152,9 +153,8 @@ export default function ShipmentsPage() {
               <button
                 key={status}
                 onClick={() => setStatusFilter(status as ShipmentStatus | "All")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  statusFilter === status ? "bg-primary text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${statusFilter === status ? "bg-primary text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                  }`}
               >
                 {status}
               </button>
@@ -212,8 +212,8 @@ export default function ShipmentsPage() {
                         {shipment.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{shipment.shipDate}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{shipment.estimatedDelivery}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{formatDate(shipment.shipDate, 'numeric-dash')}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{formatDate(shipment.estimatedDelivery, 'numeric-dash')}</td>
                     <td className="px-6 py-4 text-center">
                       <button
                         onClick={(e) => {

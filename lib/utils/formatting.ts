@@ -33,10 +33,13 @@ export function formatNumber(value: number, decimals: number = 0): string {
  * @returns Formatted date string
  */
 export function formatDate(
-  dateString: string | Date,
-  format: 'short' | 'medium' | 'long' = 'medium'
+  dateString: string | Date | null | undefined,
+  format: 'short' | 'medium' | 'long' | 'numeric-dash' = 'medium'
 ): string {
+  if (!dateString) return '';
   const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+
+  if (isNaN(date.getTime())) return '';
 
   let options: Intl.DateTimeFormatOptions;
   switch (format) {
@@ -49,6 +52,12 @@ export function formatDate(
     case 'long':
       options = { month: 'long', day: 'numeric', year: 'numeric' };
       break;
+    case 'numeric-dash':
+      return new Intl.DateTimeFormat('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+      }).format(date).replace(/\//g, '-');
     default:
       options = { month: 'short', day: 'numeric', year: 'numeric' };
   }

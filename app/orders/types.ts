@@ -46,9 +46,32 @@ export interface SalesforceOrder {
   Status__c?: string;
   Bill_To_Contact_Name?: string;
   Ship_To_Contact_Name?: string;
+  Bill_to_Account_Name?: string;
+  Ship_to_Account_Name?: string;
   Total_Lines__c?: number;
   Total_Price__c?: number;
   [key: string]: any; // Allow additional fields
+}
+
+export interface OrderDetail {
+  Id: string;
+  Name: string;
+  Status__c: string;
+  Total_Price__c: number;
+  Grand_Total__c: number;
+  Total_Taxes_Amount__c: number;
+  Total_Shipping_Charges__c: number;
+  Request_Date__c: string;
+  Customer_PO__c?: string;
+  Customer_Order_Notes__c?: string;
+  Drop_Ship__c?: boolean;
+  Authorized_Ship_To_Location__c?: string;
+  Authorized_Bill_To_Location__c?: string;
+  Ship_to_Contact__c?: string;
+  Bill_to_Account_Name?: string;
+  Ship_to_Account_Name?: string;
+  CustomerOrderLines?: OrderItem[];
+  [key: string]: any;
 }
 
 export interface UIOrder {
@@ -77,14 +100,22 @@ export interface AuthorizedLocation {
   Id: string;
   Name: string;
   Account_Name__c: string;
+  Account_Name__r?: { Name: string };
   Active__c: boolean;
   Lift_Gate__c: boolean;
   Inside_Delivery__c: boolean;
   Address__c: Address;
 }
 
+export interface ShippingMethodOption {
+  label: string;
+  value: string;
+}
+
 export interface LocationResponse {
   Payment_Terms__c: string;
+  Assigned_Price_Book_Name?: string;
+  Shipping_Method__c?: ShippingMethodOption[];
   AuthorizedLocation: AuthorizedLocation[];
 }
 
@@ -110,24 +141,7 @@ export interface OrderItem {
   ProductFamily?: string;
 }
 
-export interface OrderDetail {
-  Id: string;
-  Name: string;
-  Status__c: string;
-  Total_Price__c: number;
-  Grand_Total__c: number;
-  Total_Taxes_Amount__c: number;
-  Total_Shipping_Charges__c: number;
-  Request_Date__c: string;
-  Customer_PO__c?: string;
-  Customer_Order_Notes__c?: string;
-  Drop_Ship__c?: boolean;
-  Authorized_Ship_To_Location__c?: string;
-  Authorized_Bill_To_Location__c?: string;
-  Ship_to_Contact__c?: string;
-  CustomerOrderLines?: OrderItem[];
-  [key: string]: any;
-}
+
 
 export interface FileData {
   Id: string;

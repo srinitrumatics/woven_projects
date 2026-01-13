@@ -18,12 +18,14 @@ import {
   ShippingManifest,
   SalesOrder,
   CustomerQuote,
-  Purchase,
+  PurchaseOrder,
   Return,
   ReturnsData,
-  SupplierBill
+  SupplierBill,
+  TaxDetail
 } from "./types";
-import { formatDate, formatAddress } from "./utils";
+import { formatAddress } from "./utils";
+import { formatDate } from "@/lib/utils/formatting";
 import jsPDF from "jspdf";
 
 // Component Imports
@@ -39,6 +41,7 @@ import OrdersTab from "./components/OrdersTab";
 import FulfillmentsTab from "./components/FulfillmentsTab";
 import PurchasesTab from "./components/PurchasesTab";
 import ReturnsTab from "./components/ReturnsTab";
+import TaxesTab from "./components/TaxesTab";
 
 export default function ProposalDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -51,7 +54,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const [proposalFiles, setProposalFiles] = useState<ProposalFile[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [purchases, setPurchases] = useState<PurchaseOrder[]>([]);
   const [supplierBills, setSupplierBills] = useState<SupplierBill[]>([]);
   const [returnsData, setReturnsData] = useState<ReturnsData>({
     rma: [],
@@ -65,6 +68,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     salesOrders: [],
     customerQuotes: []
   });
+  const [taxesData, setTaxesData] = useState<TaxDetail[]>([]);
 
   const [loading, setLoading] = useState(true);
   const [tabLoading, setTabLoading] = useState(false);
@@ -73,8 +77,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   // Tab and sorting state
   const [activeTab, setActiveTab] = useState<ProposalTabType>("products");
-  const [elementSortField, setElementSortField] = useState<keyof ProposalElement>("wbs");
-  const [elementSortDirection, setElementSortDirection] = useState<SortDirection>("asc");
+
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
 
   const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
@@ -100,14 +103,14 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             totalAmount: item.Total_Price__c || 0,
             totalShippingCharges: item.Total_Shipping_Charges__c || 0,
             totalTaxesAmount: item.Total_Taxes_Amount__c || item.Total_Taxes__c || 0,
-            proposalDate: formatDate(item.Issued_Date__c || item.CreatedDate),
-            expirationDate: formatDate(item.Expiration_Date__c),
+            proposalDate: formatDate(item.Issued_Date__c || item.CreatedDate, 'numeric-dash'),
+            expirationDate: formatDate(item.Expiration_Date__c, 'numeric-dash'),
             description: item.Scope__c?.replace(/<[^>]*>?/gm, '') || item.Name || '',
             productCount: item.Total_Lines__c || 0,
             billTo: item.Authorized_Bill_To_Location_Name || 'N/A',
             shipTo: item.Authorized_Ship_To_Location_Name || 'N/A',
             opportunityName: '',
-            companySignedDate: formatDate(item.Company_Signed_Date__c),
+            companySignedDate: formatDate(item.Company_Signed_Date__c, 'numeric-dash'),
             submittedBy: item.Company_Signed_By__c || '',
             accountId: item.Inventory_Account__c || item.AccountId || '',
             contactId: item.Client_Signed_By__c || item.ContactId || '',
@@ -120,20 +123,20 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           const detailedProposal = {
             ...mappedProposal,
             accountExecutive: item.Company_Signed_By_Name || '',
-            issuedDate: formatDate(item.Issued_Date__c),
+            issuedDate: formatDate(item.Issued_Date__c, 'numeric-dash'),
             orderNumber: item.Customer_Order_Name || '',
             billingAddress: formatAddress(item.Authorized_Bill_To_Location_Address),
             paymentTerms: item.Payment_Terms__c || '',
             customerPO: item.Customer_PO__c || '',
             shippingAddress: formatAddress(item.Authorized_Ship_To_Location_Address),
-            requestedDeliveryDate: formatDate(item.Request_Date__c),
+            requestedDeliveryDate: formatDate(item.Request_Date__c, 'numeric-dash'),
             dropShip: item.Drop_Ship__c || false,
             site: item.Site_Name || '',
             specialTerms: item.Scope__c?.replace(/<[^>]*>?/gm, '') || '',
             internalNotes: '',
             clientSignedBy: item.Company_Signed_By_Name,
             clientSignedTitle: item.Client_Signed_Title__c,
-            clientSignedDate: formatDate(item.Client_Signed_Date__c),
+            clientSignedDate: formatDate(item.Client_Signed_Date__c, 'numeric-dash'),
             companySignedBy: item.Company_Signed_By_Name,
             companySignedTitle: item.Company_Signed_Title__c,
             proposalType: item.Proposal_Type__c || '',
@@ -195,6 +198,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         case 'returns':
           url += '&action=returns';
           break;
+        case 'taxes':
+          url += '&action=taxes';
+          break;
         default:
           if (!isBackground) setTabLoading(false);
           return;
@@ -218,6 +224,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           break;
         case 'products':
           if (json.length > 0) {
+            console.log('result data', json);
             setProposedProducts(json.map((item: any) => ({
               id: item.Id,
               productName: item.Product_Name || 'Unknown Product',
@@ -227,7 +234,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               productFamily: item.Product_Family__c || 'General',
               quantity: item.Total_Order_Qty__c || 0,
               unitPrice: item.Unit_Price__c || 0,
-              subtotal: item.Line_Grand_Total__c || 0
+              subtotal: item.Line_Grand_Total__c || 0,
+              shipping: item.Shipping_Charges__c || 0,
+              taxes: item.Tax_Amount__c || 0,
+              grandTotal: (item.Line_Grand_Total__c || 0) + (item.Shipping_Charges__c || 0) + (item.Tax_Amount__c || 0)
             })));
           }
           break;
@@ -238,9 +248,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               contentDocumentId: f.ContentDocumentId,
               fileName: f.Title,
               fileType: f.FileExtension,
-              fileSize: `${f.ContentSize} MB`,
+              fileSize: f.ContentSize ? (f.ContentSize / 1024 / 1024).toFixed(2) + ' MB' : '0 MB', // Approximate formatting
+              sizeInBytes: f.ContentSize || 0,
               uploadedBy: f.CreatedBy,
-              uploadedDate: formatDate(f.CreatedDate),
+              uploadedDate: formatDate(f.CreatedDate, 'numeric-dash'),
               category: 'General',
               downloadUrl: f.DownloadUrl
             })));
@@ -261,8 +272,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               totalMilestones: proj.Total_Milestones__c || 0,
               totalTasks: proj.Total_Tasks__c || 0,
               percentCompleted: proj.Percent_Completed__c,
-              estimatedStartDate: formatDate(proj.Estimated_Start_Date__c),
-              estimatedEndDate: formatDate(proj.Estimated_End_Date__c)
+              estimatedStartDate: formatDate(proj.Estimated_Start_Date__c, 'numeric-dash'),
+              estimatedEndDate: formatDate(proj.Estimated_End_Date__c, 'numeric-dash')
             })));
           } else {
             setProjects([]);
@@ -275,7 +286,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               name: order.Name || '',
               status: order.Status__c || '',
               customerPO: order.Customer_PO__c || '',
-              customerPODate: formatDate(order.Customer_PO_Date__c),
+              customerPODate: formatDate(order.Customer_PO_Date__c, 'numeric-dash'),
               billToAccountName: order.Bill_to_Account_Name || '',
               billToLocationName: order.Authorized_Bill_To_Location_Name || '',
               billToContactName: order.Bill_to_Contact_Name || '',
@@ -288,9 +299,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               totalShippingCharges: order.Total_Shipping_Charges__c || 0,
               totalTaxesAmount: order.Total_Taxes_Amount__c || 0,
               grandTotal: order.Grand_Total__c || 0,
-              requestDate: formatDate(order.Request_Date__c),
-              shipDate: formatDate(order.Ship_Date__c),
-              deliveredDate: formatDate(order.Delivered_Date__c)
+              requestDate: formatDate(order.Request_Date__c, 'numeric-dash'),
+              shipDate: formatDate(order.Ship_Date__c, 'numeric-dash'),
+              deliveredDate: formatDate(order.Delivered_Date__c, 'numeric-dash')
             })));
           } else {
             setOrders([]);
@@ -304,11 +315,32 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               id: p.Id,
               name: p.Name || '',
               status: p.Status__c || '',
-              vendorName: p.Supplier_Name || p.Supplier_Bill__c?.[0]?.Supplier_Name || '',
-              vendorPO: p.Customer_PO__c || '', // Using Customer_PO__c as fallback/proxy
-              orderDate: formatDate(p.Request_Date__c),
-              expectedDate: formatDate(p.Estimated_Delivery_Date__c),
-              totalAmount: p.Total_Cost__c || 0
+              customerQuoteName: p.Customer_Quote_Name || '',
+              customerOrderName: p.Customer_Order_Name || '',
+              customerPO: p.Customer_PO__c || '',
+              supplierName: p.Supplier_Name__c || '',
+              supplierDBA: p.Supplier_DBA__c || '',
+              supplierContact: p.Supplier_Contact__c || '',
+              shipToAccountName: p.Ship_to_Account_Name || '',
+              shipToLocationName: p.Authorized_Ship_To_Location_Name || '',
+              shipToContactName: p.Ship_to_Contact_Name || '',
+              dropShip: p.Drop_Ship__c || false,
+              totalLines: p.Total_Lines__c || 0,
+              productCost: p.Total_Product_Cost__c || 0,
+              shippingCost: p.Total_Shipping_Charges__c || 0,
+              totalCost: p.Total_Cost__c || 0,
+              issuedDate: formatDate(p.Issued_Date__c, 'numeric-dash'),
+              acknowledgedDate: formatDate(p.Acknowledged_Date__c, 'numeric-dash'),
+              requestDate: formatDate(p.Request_Date__c, 'numeric-dash'),
+              promiseDate: formatDate(p.Promise_Date__c, 'numeric-dash'),
+              shippingMethod: p.Shipping_Method__c || '',
+              logisticsPartner: p.Logistics_Partner__c || '',
+              logisticsContact: p.Logistics_Contact__c || '',
+              trackingNumber: p.Tracking_Number__c || '',
+              estimatedDeliveryDate: formatDate(p.Estimated_Delivery_Date__c, 'numeric-dash'),
+              trackingStatus: p.Tracking_Status__c || '',
+              actualDeliveryDate: formatDate(p.Actual_Delivery_Date__c, 'numeric-dash'),
+              goodsReceiptsDate: formatDate(p.Goods_Receipt_Date__c, 'numeric-dash')
             })));
           } else {
             setPurchases([]);
@@ -320,14 +352,23 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               id: sb.Id,
               name: sb.Name || '',
               status: sb.Status__c || '',
-              supplierBillName: sb.Name || '',
-              billAmount: sb.Bill_Amount__c || 0,
-              totalBillAmount: sb.Total_Bill_Amount__c || 0,
-              billedQty: sb.Billed_Quantity__c || 0,
-              unitCost: sb.Unit_Cost__c || 0,
-              manufacturerDBA: sb.Manufacturer_DBA__c || '',
-              productName: sb.Product_Name__c || '',
-              purchaseOrderLineName: sb.Purchase_Order_Line_Name__c || ''
+              purchaseOrderName: sb.Purchase_Order_Name || sb.gtherp__Purchase_Order__r?.Name || sb.gtherp__Purchase_Order__c || '',
+              customerQuoteName: sb.Customer_Quote_Name || '',
+              customerOrderName: sb.Customer_Order_Name || '',
+              supplierName: sb.Supplier_Name__c || '',
+              supplierDBA: sb.Supplier_DBA__c || '',
+              supplierContact: sb.Supplier_Contact__c || '',
+              totalLines: sb.Total_Lines__c || 0,
+              totalProductAmount: sb.Total_Product_Amount__c || 0,
+              totalShippingCharges: sb.Total_Shipping_Charges__c || 0,
+              totalAmount: sb.Total_Amount__c || 0,
+              billedDate: formatDate(sb.Billed_Date__c, 'numeric-dash'),
+              paymentTerms: sb.Payment_Terms__c || '',
+              dueDate: formatDate(sb.Due_Date__c, 'numeric-dash'),
+              remittanceStatus: sb.Remittance_Status__c || '',
+              openBalance: sb.Open_Balance__c || 0,
+              daysOutstanding: sb.Days_Outstanding__c || 0,
+              settledDate: formatDate(sb.Settled_Date__c, 'numeric-dash')
             })));
           } else {
             setSupplierBills([]);
@@ -339,49 +380,153 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               id: r.Id,
               name: r.Name || '',
               status: r.Status__c || '',
-              description: r.Name || '', // Using Name as description placeholder
-              requestDate: formatDate(r.Goods_Receipt_Date__c), // Or other relevant date
+              salesOrderName: r.Sales_Order_Name || r.gtherp__Sales_Order__c || '',
+              customerQuoteName: r.Customer_Quote_Name || '',
+              customerOrderName: r.Customer_Order_Name || '',
+              rmaType: r.RMA_Type__c || '',
+              shipFromAccountName: r.Ship_From_Account_Name || '',
+              shipFromContactName: r.Ship_from_Contact_Name || '',
+              returnToAccountName: r.Return_to_Account_Name || '',
+              returnToContactName: r.Return_to_Contact_Name || '',
+              dropShip: r.Drop_Ship__c || false,
+              totalLines: r.Total_Lines__c || 0,
+              totalPrice: r.Total_Price__c || 0,
+              issuedDate: formatDate(r.Issued_Date__c, 'numeric-dash'),
+              returnByDate: formatDate(r.Return_by_Date__c, 'numeric-dash'),
+              shippingMethod: r.Shipping_Method__c || '',
+              logisticsPartner: r.Logistics_Partner__c || '',
+              logisticsContact: r.Logistics_Contact__c || '',
+              trackingNumber: r.Tracking_Number__c || '',
+              estimatedDeliveryDate: formatDate(r.Estimated_Delivery_Date__c, 'numeric-dash'),
+              trackingStatus: r.Tracking_Status__c || '',
+              actualDeliveryDate: formatDate(r.Actual_Delivery_Date__c, 'numeric-dash'),
+              goodsReceiptsDate: formatDate(r.Goods_Receipt_Date__c, 'numeric-dash'),
+              // Existing fields for compatibility if needed (Base Return interface requirements)
+              description: r.Name || '',
+              requestDate: formatDate(r.Goods_Receipt_Date__c, 'numeric-dash'),
               type: 'RMA',
               reason: r.RMA_Type__c || '',
-              totalAmount: r.Total_Price__c || 0,
-              shipFromAccountName: r.Ship_From_Account_Name || ''
+              totalAmount: r.Total_Price__c || 0
             })),
             rtv: (json.RTV__c || []).map((r: any) => ({
               id: r.Id,
               name: r.Name || '',
               status: r.Status__c || '',
+              purchaseOrderName: r.Purchase_Order_Name || r.gtherp__Purchase_Order__c || '',
+              customerQuoteName: r.Customer_Quote_Name || '',
+              customerOrderName: r.Customer_Order_Name || '',
+              rtvType: r.RTV_Type__c || '',
+              rmaNumber: r.Supplier_RMA_Number__c || '',
+              shipFromAccountName: r.Ship_from_Account_Name || '',
+              shipFromContactName: r.Ship_from_Contact_Name || '',
+              supplierName: r.Supplier_Name__c || '',
+              supplierContact: r.Supplier_Contact__c || '',
+              totalLines: r.Total_Lines__c || 0,
+              totalCost: r.Total_Cost__c || 0,
+              issuedDate: formatDate(r.Issued_Date__c, 'numeric-dash'),
+              approvalDate: formatDate(r.Approval_Date__c, 'numeric-dash'),
+              returnByDate: formatDate(r.Return_by_Date__c, 'numeric-dash'),
+              // Existing fields for compatibility if needed (Base Return interface)
               description: r.Name || '',
-              requestDate: formatDate(r.Issued_Date__c),
+              requestDate: formatDate(r.Issued_Date__c, 'numeric-dash'),
               type: r.RTV_Type__c || 'RTV',
               reason: '',
-              totalAmount: r.Total_Cost__c || 0,
-              supplierName: r.Supplier_Name || '',
-              rtvType: r.RTV_Type__c || ''
+              totalAmount: r.Total_Cost__c || 0
             })),
             creditMemos: (json.Credit_Memo__c || []).map((c: any) => ({
               id: c.Id,
               name: c.Name || '',
               status: c.Status__c || '',
+              invoiceName: c.Invoice__c || c.gtherp__Invoice__c || '',
+              customerQuoteName: c.Customer_Quote__c || c.gtherp__Customer_Quote__c || '',
+              customerOrderName: c.Customer_Order__c || c.gtherp__Customer_Order__c || '',
+              creditToAccountName: c.Credit_to_Account__c || c.gtherp__Credit_to_Account__c || '',
+              creditToContactName: c.Credit_to_Contact__c || c.gtherp__Credit_to_Contact__c || '',
+              totalLines: c.Total_Lines__c || 0,
+              totalPrice: c.Total_Price__c || 0,
+              totalShippingCharges: c.Total_Shipping_Charges__c || 0,
+              totalTaxesAmount: c.Total_Taxes_Amount__c || 0,
+              totalCreditAmount: c.Total_Credit_Amount__c || 0,
+              issuedDate: formatDate(c.Issued_Date__c, 'numeric-dash'),
+              expirationDate: formatDate(c.Expiration_Date__c, 'numeric-dash'),
+              availableCreditBalance: c.Available_Credit_Balance__c || 0,
+              settledDate: formatDate(c.Settled_Date__c, 'numeric-dash'),
+              // Existing fields for compatibility
               description: c.Name || '',
-              requestDate: formatDate(c.Issued_Date__c),
+              requestDate: formatDate(c.Issued_Date__c, 'numeric-dash'),
               type: 'Credit Memo',
               reason: '',
-              totalAmount: c.Total_Credit_Amount__c || 0,
-              creditToAccountName: c.Credit_to_Account_Name || '',
-              invoiceName: c.Invoice_Name || ''
+              totalAmount: c.Total_Credit_Amount__c || 0
             })),
             debitMemos: (json.Debit_Memo__c || []).map((d: any) => ({
               id: d.Id,
               name: d.Name || '',
               status: d.Status__c || '',
+              supplierBillName: d.Supplier_Bill__c || d.gtherp__Supplier_Bill__c || '',
+              purchaseOrderName: d.Purchase_Order__c || d.gtherp__Purchase_Order__c || '',
+              customerOrderName: d.Customer_Order__c || d.gtherp__Customer_Order__c || '',
+              supplierCreditMemoName: d.Supplier_Credit_Memo__c || d.gtherp__Supplier_Credit_Memo__c || '',
+              debitToAccountName: d.Debit_to_Account__c || d.gtherp__Debit_to_Account__c || '',
+              debitToContactName: d.Debit_to_Contact__c || d.gtherp__Debit_to_Contact__c || '',
+              totalLines: d.Total_Lines__c || 0,
+              totalCost: d.Total_Cost__c || 0,
+              totalShippingCharges: d.Total_Shipping_Charges__c || 0,
+              totalDebitAmount: d.Total_Debit_Amount__c || 0,
+              issuedDate: formatDate(d.Issued_Date__c, 'numeric-dash'),
+              approvalDate: formatDate(d.Approval_Date__c, 'numeric-dash'),
+              availableDebitBalance: d.Available_Debit_Balance__c || 0,
+              settledDate: formatDate(d.Settled_Date__c, 'numeric-dash'),
+              // Existing fields for compatibility
               description: d.Name || '',
-              requestDate: formatDate(d.Issued_Date__c), // Or Settled_Date__c
+              requestDate: formatDate(d.Issued_Date__c, 'numeric-dash'),
               type: 'Debit Memo',
               reason: '',
-              totalAmount: d.Total_Debit_Amount__c || 0,
-              debitToAccountName: d.Debit_to_Account_Name || ''
-            }))
+              totalAmount: d.Total_Debit_Amount__c || 0
+            })),
           });
+          break;
+        case 'taxes':
+          console.log("Taxes Raw JSON:", json);
+          let taxDataArray: any[] = [];
+
+          if (Array.isArray(json)) {
+            taxDataArray = json;
+          } else if (Array.isArray(json?.data) && json.data.length > 0 && json.data[0].Proposal__c) {
+            taxDataArray = json.data[0].Proposal__c;
+          } else if (Array.isArray(json?.Proposal__c)) {
+            taxDataArray = json.Proposal__c;
+          } else if (json?.data && Array.isArray(json.data)) {
+            // Fallback: try to find any array in the data
+            const potentialData = json.data[0];
+            if (potentialData) {
+              const key = Object.keys(potentialData).find(k => Array.isArray(potentialData[k]));
+              if (key) taxDataArray = potentialData[key];
+            }
+          }
+
+          console.log("Resolved Tax Array:", taxDataArray);
+
+          if (taxDataArray.length > 0) {
+            setTaxesData(taxDataArray.map((t: any) => ({
+              id: t.Id,
+              salesTaxRate: t.Sales_Tax_Rate__c || 0,
+              salesTaxAmount: t.Total_Sales_Tax_Amount__c || 0,
+              useTaxRate: t.Use_Tax_Rate__c || 0,
+              useTaxAmount: t.Total_Use_Tax_Amount__c || 0,
+              localTaxRate: t.Local_Tax_Rate__c || 0,
+              localTaxAmount: t.Total_Local_Tax_Amount__c || 0,
+              exciseTaxRate: t.Excise_Tax_Rate__c || 0,
+              exciseTaxAmount: t.Total_Excise_Tax_Amount__c || 0,
+              grossReceiptsTaxRate: t.Gross_Receipts_Tax_Rate__c || 0,
+              grossReceiptsTaxAmount: t.Total_Gross_Receipts_Tax_Amount__c || 0,
+              gstRate: t.GST_Rate__c || 0,
+              gstAmount: t.Total_GST_Amount__c || 0,
+              vatRate: t.VAT_Rate__c || 0,
+              vatAmount: t.Total_VAT_Amount__c || 0
+            })));
+          } else {
+            setTaxesData([]);
+          }
           break;
         case 'fulfillments':
           setFulfillmentData({
@@ -401,13 +546,13 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               totalShippingCharges: inv.Total_Shipping_Charges__c || 0,
               totalTaxesAmount: inv.Total_Taxes_Amount__c || 0,
               grandTotal: inv.Grand_Total__c || 0,
-              issuedDate: formatDate(inv.Issued_Date__c),
-              dueDate: formatDate(inv.gtherp__Due_Date__c),
+              issuedDate: formatDate(inv.Issued_Date__c, 'numeric-dash'),
+              dueDate: formatDate(inv.gtherp__Due_Date__c, 'numeric-dash'),
               paymentTerms: inv.Payment_Terms__c || '',
               collectionStatus: inv.Collection_Status__c || '',
               openBalance: inv.Open_Balance__c || 0,
               daysOutstanding: inv.Days_Outstanding__c || 0,
-              settledDate: formatDate(inv.Settled_Date__c)
+              settledDate: formatDate(inv.Settled_Date__c, 'numeric-dash')
             })),
             shippingManifests: (json.Shipping_Manifest__c || []).map((sm: any) => ({
               id: sm.Id,
@@ -424,14 +569,18 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               totalLines: sm.Total_Lines__c || 0,
               totalPrice: sm.Total_Price__c || 0,
               shippingMethod: sm.Shipping_Method__c || '',
-              shipDate: formatDate(sm.Ship_Date__c),
-              deliveredDate: formatDate(sm.Delivered_Date__c),
-              estimatedDeliveryDate: formatDate(sm.Estimated_Delivery_Date__c),
-              actualDeliveryDate: formatDate(sm.Actual_Delivery_Date__c),
+              shipDate: formatDate(sm.Ship_Date__c, 'numeric-dash'),
+              deliveredDate: formatDate(sm.Delivered_Date__c, 'numeric-dash'),
+              estimatedDeliveryDate: formatDate(sm.Estimated_Delivery_Date__c, 'numeric-dash'),
+              actualDeliveryDate: formatDate(sm.Actual_Delivery_Date__c, 'numeric-dash'),
               trackingNumber: sm.Tracking_Number__c || '',
               trackingStatus: sm.Tracking_Status__c || '',
               logisticsPartnerName: sm.Logistics_Partner_Name || '',
-              logisticsContactName: sm.Logistics_Contact_Name || ''
+              logisticsContactName: sm.Logistics_Contact_Name || '',
+              boxCount: sm.Box__c || 0,
+              boxNetWeight: sm.Case__Net_Weight__c || 0,
+              boxGrossWeight: sm.Case__Gross_Weight__c || 0,
+              requestDate: formatDate(sm.Request_Date__c, 'numeric-dash')
             })),
             salesOrders: (json.Sales_Order__c || []).map((so: any) => ({
               id: so.Id,
@@ -452,11 +601,11 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               totalShippingCharges: so.Total_Shipping_Charges__c || 0,
               totalTaxesAmount: so.Total_Taxes_Amount__c || 0,
               grandTotal: so.Grand_Total__c || 0,
-              requestDate: formatDate(so.Request_Date__c),
-              pickDate: formatDate(so.Pick_Date__c),
-              pickCompleteDate: formatDate(so.Pick_Complete_Date__c),
-              shipDate: formatDate(so.Ship_Date__c),
-              deliveredDate: formatDate(so.Delivered_Date__c)
+              requestDate: formatDate(so.Request_Date__c, 'numeric-dash'),
+              pickDate: formatDate(so.Pick_Date__c, 'numeric-dash'),
+              pickCompleteDate: formatDate(so.Pick_Complete_Date__c, 'numeric-dash'),
+              shipDate: formatDate(so.Ship_Date__c, 'numeric-dash'),
+              deliveredDate: formatDate(so.Delivered_Date__c, 'numeric-dash')
             })),
             customerQuotes: (json.Customer_Quote__c || []).map((cq: any) => ({
               id: cq.Id,
@@ -476,11 +625,11 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               totalShippingCharges: cq.Total_Shipping_Charges__c || 0,
               totalTaxesAmount: cq.Total_Taxes_Amount__c || 0,
               grandTotal: cq.Grand_Total__c || 0,
-              issuedDate: formatDate(cq.Issued_Date__c),
-              expirationDate: formatDate(cq.Expiration_Date__c),
-              requestDate: formatDate(cq.Request_Date__c),
-              shipDate: formatDate(cq.Ship_Date__c),
-              deliveredDate: formatDate(cq.Delivered_Date__c)
+              issuedDate: formatDate(cq.Issued_Date__c, 'numeric-dash'),
+              expirationDate: formatDate(cq.Expiration_Date__c, 'numeric-dash'),
+              requestDate: formatDate(cq.Request_Date__c, 'numeric-dash'),
+              shipDate: formatDate(cq.Ship_Date__c, 'numeric-dash'),
+              deliveredDate: formatDate(cq.Delivered_Date__c, 'numeric-dash')
             }))
           });
           break;
@@ -503,6 +652,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           creditMemos: [],
           debitMemos: []
         });
+      } else if (tab === 'taxes') {
+        setTaxesData([]);
       }
     } finally {
       if (!isBackground) setTabLoading(false);
@@ -517,7 +668,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   // Fetch all other tabs data in background to populate counts
   useEffect(() => {
     if (!proposal?.id) return;
-    const tabs = ['elements', 'products', 'files', 'projects', 'orders', 'fulfillments', 'purchases', 'returns'];
+    const tabs = ['elements', 'products', 'files', 'projects', 'orders', 'fulfillments', 'purchases', 'returns', 'taxes'];
     // Filter out active tab to avoid double fetch (optional but cleaner)
     tabs.filter(t => t !== activeTab).forEach(tab => {
       fetchTabData(tab, true);
@@ -531,6 +682,35 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     return proposal.totalAmount + proposal.totalShippingCharges + proposal.totalTaxesAmount;
   }, [proposal]);
 
+  // Sorting states
+  const [elementSortField, setElementSortField] = useState<keyof ProposalElement>("wbs");
+  const [elementSortDirection, setElementSortDirection] = useState<SortDirection>("asc");
+
+  const [productSortField, setProductSortField] = useState<keyof ProposedProduct>("productName");
+  const [productSortDirection, setProductSortDirection] = useState<SortDirection>("asc");
+
+  const [fileSortField, setFileSortField] = useState<keyof ProposalFile>("fileName");
+  const [fileSortDirection, setFileSortDirection] = useState<SortDirection>("asc");
+
+  const [projectSortField, setProjectSortField] = useState<keyof Project>("projectNumber");
+  const [projectSortDirection, setProjectSortDirection] = useState<SortDirection>("asc");
+
+  const [orderSortField, setOrderSortField] = useState<keyof Order>("name");
+  const [orderSortDirection, setOrderSortDirection] = useState<SortDirection>("asc");
+
+  // Generic Sort Function
+  const sortData = <T,>(data: T[], field: keyof T, direction: SortDirection): T[] => {
+    return [...data].sort((a, b) => {
+      const aValue = a[field];
+      const bValue = b[field];
+
+      if (aValue === bValue) return 0;
+
+      const comparison = aValue > bValue ? 1 : -1;
+      return direction === "asc" ? comparison : -comparison;
+    });
+  };
+
   // Sorting handlers
   const handleElementSort = (field: keyof ProposalElement) => {
     if (elementSortField === field) {
@@ -538,6 +718,42 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     } else {
       setElementSortField(field);
       setElementSortDirection("asc");
+    }
+  };
+
+  const handleProductSort = (field: keyof ProposedProduct) => {
+    if (productSortField === field) {
+      setProductSortDirection(productSortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setProductSortField(field);
+      setProductSortDirection("asc");
+    }
+  };
+
+  const handleFileSort = (field: keyof ProposalFile) => {
+    if (fileSortField === field) {
+      setFileSortDirection(fileSortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setFileSortField(field);
+      setFileSortDirection("asc");
+    }
+  };
+
+  const handleProjectSort = (field: keyof Project) => {
+    if (projectSortField === field) {
+      setProjectSortDirection(projectSortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setProjectSortField(field);
+      setProjectSortDirection("asc");
+    }
+  };
+
+  const handleOrderSort = (field: keyof Order) => {
+    if (orderSortField === field) {
+      setOrderSortDirection(orderSortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setOrderSortField(field);
+      setOrderSortDirection("asc");
     }
   };
 
@@ -614,9 +830,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             contentDocumentId: f.ContentDocumentId,
             fileName: f.Title,
             fileType: f.FileExtension,
-            fileSize: `${f.ContentSize} MB`,
+            fileSize: f.ContentSize ? (f.ContentSize / 1024 / 1024).toFixed(2) + ' MB' : '0 MB',
+            sizeInBytes: f.ContentSize || 0,
             uploadedBy: f.CreatedBy,
-            uploadedDate: formatDate(f.CreatedDate),
+            uploadedDate: formatDate(f.CreatedDate, 'numeric-dash'),
             category: 'General',
             downloadUrl: f.DownloadUrl
           })));
@@ -817,165 +1034,194 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     doc.save(`Proposal_${proposal.proposalNumber}.pdf`);
   };
 
-  if (loading || !proposal) {
-    return (
-      <Sidebar>
-        <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      </Sidebar>
-    );
-  }
-
   return (
     <Sidebar>
-      <ProposalHeader
-        proposalNumber={proposal.proposalNumber}
-        status={proposal.status}
-        onDownloadPDF={handleDownloadPDF}
-        onBack={() => router.push("/proposals")}
-      />
+      {(loading || !proposal) ? (
+        <>
+          <div className="flex items-center justify-between mb-6 opacity-60 pointer-events-none">
+            <div className="flex flex-col gap-2">
+              <div className="h-8 w-64 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"></div>
+              <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"></div>
+            </div>
+            <div className="h-10 w-32 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"></div>
+          </div>
+          <div className="space-y-6 opacity-60">
+            <div className="h-64 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-lg bg-white shadow-sm border border-gray-200 dark:border-gray-700"></div>
+            <div className="flex items-center justify-center h-48">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <ProposalHeader
+            proposalNumber={proposal.proposalNumber}
+            status={proposal.status}
+            description={proposal.description}
+            onBack={() => router.push("/proposals")}
+          />
 
-      <ProposalDetails
-        proposal={proposal}
-        proposedProducts={proposedProducts}
-        grandTotal={grandTotal}
-        isUploading={isUploading}
-        handleFileUpload={handleFileUpload}
-        handleDownloadPDF={handleDownloadPDF}
-      />
+          <ProposalDetails
+            proposal={proposal}
+            proposedProducts={proposedProducts}
+            grandTotal={grandTotal}
+            isUploading={isUploading}
+            handleFileUpload={handleFileUpload}
+            handleDownloadPDF={handleDownloadPDF}
+          />
 
-      <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-5 border-b border-gray-200 dark:border-gray-700 gap-4">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              {activeTab === 'products' ? 'Proposed Products' :
-                activeTab === 'elements' ? 'Proposal Elements' :
-                  activeTab === 'files' ? 'Attachments' :
-                    activeTab === 'signatures' ? 'Signatures' :
-                      activeTab === 'projects' ? 'Active Projects' :
-                        activeTab === 'orders' ? 'Customer Orders' :
-                          activeTab === 'fulfillments' ? 'Fulfillment' :
-                            activeTab === 'purchases' ? 'Purchase Orders' :
-                              activeTab === 'returns' ? 'Returns' : 'Details'}
-            </h2>
+          <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="flex flex-col px-6 py-5 border-b border-gray-200 dark:border-gray-700 gap-4">
+              <div className="flex flex-col gap-1 shrink-0">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                  {activeTab === 'products' ? 'Products in Proposal' :
+                    activeTab === 'elements' ? 'Proposal Elements' :
+                      activeTab === 'files' ? 'Attachments' :
+                        activeTab === 'signatures' ? 'Signatures' :
+                          activeTab === 'projects' ? 'Active Projects' :
+                            activeTab === 'orders' ? 'Customer Orders' :
+                              activeTab === 'fulfillments' ? 'Fulfillment' :
+                                activeTab === 'purchases' ? 'Purchase Orders' :
+                                  activeTab === 'taxes' ? 'Proposal Taxes' :
+                                    activeTab === 'returns' ? 'Returns' : 'Details'}
+                </h2>
 
-            <p className="text-sm text-gray-500">
-              {activeTab === "products" ? "Products included in this proposal"
-                : activeTab === "elements" ? "Work breakdown structure and deliverables"
-                  : activeTab === "files" ? "Documents and files attached to this proposal"
-                    : activeTab === "signatures" ? "Client and company signature tracking"
-                      : activeTab === "projects" ? "Active projects"
-                        : activeTab === "orders" ? "Customer orders"
-                          : activeTab === "fulfillments" ? "Fulfillment"
-                            : activeTab === "purchases" ? "Purchase orders"
-                              : activeTab === "returns" ? "Returns"
-                                : "Details"
-              }
-            </p>
+                <p className="text-sm text-gray-500 hidden sm:block">
+                  {activeTab === "products" ? "Products included in this proposal"
+                    : activeTab === "elements" ? "Work breakdown structure and deliverables"
+                      : activeTab === "files" ? "Documents and files attached to this proposal"
+                        : activeTab === "signatures" ? "Client and company signature tracking"
+                          : activeTab === "projects" ? "Active projects"
+                            : activeTab === "orders" ? "Customer orders"
+                              : activeTab === "fulfillments" ? "Fulfillment"
+                                : activeTab === "purchases" ? "Purchase orders"
+                                  : activeTab === "returns" ? "Returns"
+                                    : activeTab === "taxes" ? "Taxes included in this proposal"
+                                      : "Details"
+                  }
+                </p>
+              </div>
 
+              <div className="w-full overflow-x-auto pb-1 sm:pb-0">
+                <ProposalTabs
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                  counts={{
+                    products: proposedProducts.length,
+                    elements: proposalElements.length,
+                    files: proposalFiles.length,
+                    projects: projects.length,
+                    orders: orders.length,
+                    fulfillments: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
+                    purchases: purchases.length,
+                    returns: returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length,
+                    taxes: taxesData.length
+                  }}
+                />
+
+              </div>
+            </div>
+            {activeTab === 'products' && (
+              <ProductsTab
+                products={sortData(proposedProducts, productSortField, productSortDirection)}
+                loading={tabLoading}
+                proposalId={proposal.id}
+                sortField={productSortField}
+                sortDirection={productSortDirection}
+                onSort={handleProductSort}
+              />
+            )}
+
+            {activeTab === 'taxes' && (
+              <TaxesTab taxes={taxesData} loading={tabLoading} />
+            )}
+
+            {activeTab === 'elements' && (
+              <ElementsTab
+                elements={sortData(proposalElements, elementSortField, elementSortDirection)}
+                loading={tabLoading}
+                sortField={elementSortField}
+                sortDirection={elementSortDirection}
+                onSort={handleElementSort}
+              />
+            )}
+
+            {activeTab === 'files' && (
+              <FilesTab
+                files={sortData(proposalFiles, fileSortField, fileSortDirection)}
+                loading={tabLoading}
+                selectedFiles={selectedFiles}
+                onFileSelect={handleFileSelect}
+                onSelectAll={handleSelectAllFiles}
+                sortField={fileSortField}
+                sortDirection={fileSortDirection}
+                onSort={handleFileSort}
+              />
+            )}
+
+            {activeTab === 'signatures' && (
+              <SignaturesTab proposal={proposal} />
+            )}
+
+            {activeTab === 'projects' && (
+              <ProjectsTab
+                projects={sortData(projects, projectSortField, projectSortDirection)}
+                loading={tabLoading}
+                sortField={projectSortField}
+                sortDirection={projectSortDirection}
+                onSort={handleProjectSort}
+              />
+            )}
+
+            {activeTab === 'orders' && (
+              <OrdersTab
+                orders={sortData(orders, orderSortField, orderSortDirection)}
+                loading={tabLoading}
+                sortField={orderSortField}
+                sortDirection={orderSortDirection}
+                onSort={handleOrderSort}
+              />
+            )}
+
+            {activeTab === 'fulfillments' && (
+              <FulfillmentsTab
+                fulfillmentData={fulfillmentData}
+                loading={tabLoading}
+                activeTab={activeFulfillmentTab}
+                onTabChange={setActiveFulfillmentTab}
+              />
+            )}
+
+            {activeTab === 'purchases' && (
+              <PurchasesTab
+                purchases={purchases}
+                supplierBills={supplierBills}
+                loading={tabLoading}
+              />
+            )}
+
+            {activeTab === 'returns' && (
+              <ReturnsTab
+                returnsData={returnsData}
+                loading={tabLoading}
+              />
+            )}
           </div>
 
-          <div className="ml-auto">
-            <ProposalTabs
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              counts={{
-                products: proposedProducts.length,
-                elements: proposalElements.length,
-                files: proposalFiles.length,
-                projects: projects.length,
-                orders: orders.length,
-                fulfillments: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
-                purchases: purchases.length,
-                returns: returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length
-              }}
-            />
+
+          {/* Footer */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between shadow-lg gap-4 sm:gap-0" style={{ zIndex: 40 }}>
+            <button
+              onClick={() => router.push("/proposals")}
+              className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              Cancel
+            </button>
           </div>
-        </div>
-        {activeTab === 'products' && (
-          <ProductsTab
-            products={proposedProducts}
-            loading={tabLoading}
-            proposalId={proposal.id}
-          />
-        )}
 
-        {activeTab === 'elements' && (
-          <ElementsTab
-            elements={proposalElements}
-            loading={tabLoading}
-            sortField={elementSortField}
-            sortDirection={elementSortDirection}
-            onSort={handleElementSort}
-          />
-        )}
-
-        {activeTab === 'files' && (
-          <FilesTab
-            files={proposalFiles}
-            loading={tabLoading}
-            selectedFiles={selectedFiles}
-            onFileSelect={handleFileSelect}
-            onSelectAll={handleSelectAllFiles}
-          />
-        )}
-
-        {activeTab === 'signatures' && (
-          <SignaturesTab proposal={proposal} />
-        )}
-
-        {activeTab === 'projects' && (
-          <ProjectsTab
-            projects={projects}
-            loading={tabLoading}
-          />
-        )}
-
-        {activeTab === 'orders' && (
-          <OrdersTab
-            orders={orders}
-            loading={tabLoading}
-          />
-        )}
-
-        {activeTab === 'fulfillments' && (
-          <FulfillmentsTab
-            fulfillmentData={fulfillmentData}
-            loading={tabLoading}
-            activeTab={activeFulfillmentTab}
-            onTabChange={setActiveFulfillmentTab}
-          />
-        )}
-
-        {activeTab === 'purchases' && (
-          <PurchasesTab
-            purchases={purchases}
-            supplierBills={supplierBills}
-            loading={tabLoading}
-          />
-        )}
-
-        {activeTab === 'returns' && (
-          <ReturnsTab
-            returnsData={returnsData}
-            loading={tabLoading}
-          />
-        )}
-      </div>
-
-
-      {/* Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex items-center justify-between shadow-lg" style={{ zIndex: 40 }}>
-        <button
-          onClick={() => router.push("/proposals")}
-          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-        >
-          Back to Proposals
-        </button>
-      </div>
-
-      <div className="h-20"></div>
+          <div className="h-20"></div>
+        </>
+      )}
     </Sidebar >
   );
 }

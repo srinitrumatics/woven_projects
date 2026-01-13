@@ -1,4 +1,5 @@
-import { ProposalFile } from "../types";
+import { ProposalFile, SortDirection } from "../types";
+import { SortableHeader } from "../../../../components/ui/SortableHeader";
 
 interface FilesTabProps {
     files: ProposalFile[];
@@ -6,6 +7,9 @@ interface FilesTabProps {
     selectedFiles: Set<string>;
     onFileSelect: (id: string) => void;
     onSelectAll: () => void;
+    sortField: keyof ProposalFile;
+    sortDirection: SortDirection;
+    onSort: (field: keyof ProposalFile) => void;
 }
 
 export default function FilesTab({
@@ -13,8 +17,14 @@ export default function FilesTab({
     loading,
     selectedFiles,
     onFileSelect,
-    onSelectAll
+    onSelectAll,
+    sortField,
+    sortDirection,
+    onSort
 }: FilesTabProps) {
+
+    const sortConfig = { key: sortField as string, direction: sortDirection };
+    const requestSort = (key: string) => onSort(key as keyof ProposalFile);
 
     const getFileIcon = (fileType: string) => {
         switch (fileType.toUpperCase()) {
@@ -34,7 +44,7 @@ export default function FilesTab({
             case "ZIP":
                 return (
                     <svg className="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zm-3 6h2v2h-2v2h2v2h-2v2h2v2h-2v-2H8v-2h2v-2H8v-2h2v-2H8v-2h2z" />
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zm-3 6h2v2h-2v2h2v2h-2v2h2v2h-2v-2H8v-2h2v-2H8v-2h2v-2H8v-2h2v-2H8v-2h2z" />
                     </svg>
                 );
             case "DWG":
@@ -73,13 +83,13 @@ export default function FilesTab({
                                 onChange={onSelectAll}
                             />
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">FILE NAME</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">CATEGORY</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">TYPE</th>
-                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">SIZE</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">UPLOADED BY</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">DATE</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">ACTION</th>
+                        <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Category" field="category" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Size" field="sizeInBytes" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} />
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Action</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

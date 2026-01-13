@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { ReturnsData, ReturnsTabType, Return, RMA, RTV, CreditMemo, DebitMemo } from "../types";
+import { useSortableData } from "../../../../hooks/useSortableData";
+import { SortableHeader } from "../../../../components/ui/SortableHeader";
 
 interface ReturnsTabProps {
     returnsData: ReturnsData;
@@ -9,14 +11,6 @@ interface ReturnsTabProps {
 export default function ReturnsTab({ returnsData, loading }: ReturnsTabProps) {
     const [activeTab, setActiveTab] = useState<ReturnsTabType>("rma");
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
-    }
-
     const tabs: { id: ReturnsTabType; label: string; count: number }[] = [
         { id: "rma", label: "RMAs", count: returnsData.rma.length },
         { id: "rtv", label: "RTVs", count: returnsData.rtv.length },
@@ -24,7 +18,7 @@ export default function ReturnsTab({ returnsData, loading }: ReturnsTabProps) {
         { id: "debit", label: "Debit Memos", count: returnsData.debitMemos.length },
     ];
 
-    const getActiveData = (): Return[] => {
+    const getActiveData = () => {
         switch (activeTab) {
             case "rma": return returnsData.rma;
             case "rtv": return returnsData.rtv;
@@ -35,6 +29,15 @@ export default function ReturnsTab({ returnsData, loading }: ReturnsTabProps) {
     };
 
     const activeData = getActiveData();
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<RMA | RTV | CreditMemo | DebitMemo>(activeData);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+        );
+    }
 
     return (
         <div>
@@ -63,32 +66,97 @@ export default function ReturnsTab({ returnsData, loading }: ReturnsTabProps) {
             {/* Content */}
             <div className="overflow-x-auto">
                 <table className="w-full">
-                    <thead className="bg-gray-50 dark:bg-gray-800/50">
+                    <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Number</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                            {activeTab === 'rma' && <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Ship From Account</th>}
-                            {activeTab === 'rtv' && (
+                            <SortableHeader label={activeTab === 'rma' ? 'RMA' : 'Number'} field="name" sortConfig={sortConfig} requestSort={requestSort} />
+                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
+
+                            {activeTab === 'rma' ? (
                                 <>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Supplier</th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Type</th>
+                                    <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="RMA Type" field="rmaType" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Ship from Account" field="shipFromAccountName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Ship from Contact" field="shipFromContactName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Return to Account" field="returnToAccountName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Return to Contact" field="returnToContactName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Drop Ship" field="dropShip" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Total Lines" field="totalLines" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Total Price" field="totalPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Return by Date" field="returnByDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Logistics Contact" field="logisticsContact" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Goods Receipts Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                </>
+                            ) : activeTab === 'rtv' ? (
+                                <>
+                                    <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="RTV Type" field="rtvType" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="RMA Number" field="rmaNumber" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Ship from Account" field="shipFromAccountName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Ship from Contact" field="shipFromContactName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Total Lines" field="totalLines" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Total Cost" field="totalCost" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Approval Date" field="approvalDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Return by Date" field="returnByDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                </>
+                            ) : activeTab === 'credit' ? (
+                                <>
+                                    <SortableHeader label="Invoice" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Credit to Account" field="creditToAccountName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Credit to Contact" field="creditToContactName" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Total Lines" field="totalLines" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Total Price" field="totalPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Shipping" field="totalShippingCharges" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Taxes" field="totalTaxesAmount" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Total Credit Amount" field="totalCreditAmount" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Available Credit Balance" field="availableCreditBalance" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                    <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                </>
+                            ) : (
+                                <>
+                                    {activeTab === 'debit' && (
+                                        <>
+                                            <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Supplier Credit Memo" field="supplierCreditMemoName" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Debit to Account" field="debitToAccountName" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Debit to Contact" field="debitToContactName" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Total Lines" field="totalLines" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Total Cost" field="totalCost" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Shipping" field="totalShippingCharges" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Total Debit Amount" field="totalDebitAmount" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Approval Date" field="approvalDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Available Debit Balance" field="availableDebitBalance" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                            <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                        </>
+                                    )}
                                 </>
                             )}
-                            {activeTab === 'credit' && (
-                                <>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Credit To Account</th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Invoice</th>
-                                </>
-                            )}
-                            {activeTab === 'debit' && <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Debit To Account</th>}
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Date</th>
-                            <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Amount</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                        {activeData.length === 0 ? (
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {sortedData.length === 0 ? (
                             <tr>
-                                <td colSpan={8} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">
+                                <td colSpan={activeTab === 'rma' ? 23 : activeTab === 'rtv' || activeTab === 'credit' || activeTab === 'debit' ? 16 : 8} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">
                                     <div className="flex flex-col items-center justify-center">
                                         <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
@@ -98,7 +166,7 @@ export default function ReturnsTab({ returnsData, loading }: ReturnsTabProps) {
                                 </td>
                             </tr>
                         ) : (
-                            activeData.map((item) => {
+                            sortedData.map((item) => {
                                 // Type guards or casting can be used here if needed, or simple property access if common
                                 const rma = item as RMA;
                                 const rtv = item as RTV;
@@ -116,24 +184,132 @@ export default function ReturnsTab({ returnsData, loading }: ReturnsTabProps) {
                                                 {item.status}
                                             </span>
                                         </td>
-                                        {activeTab === 'rma' && <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rma.shipFromAccountName}</td>}
-                                        {activeTab === 'rtv' && (
+
+                                        {activeTab === 'rma' ? (
                                             <>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.supplierName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rma.salesOrderName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rma.customerQuoteName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rma.customerOrderName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rma.rmaType}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rma.shipFromAccountName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rma.shipFromContactName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rma.returnToAccountName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rma.returnToContactName}</td>
+                                                <td className="px-4 py-3 text-center">
+                                                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${rma.dropShip
+                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                                        : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                                        }`}>
+                                                        {rma.dropShip ? 'Yes' : 'No'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
+                                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                        {rma.totalLines}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                    ${rma.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                                </td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.issuedDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.returnByDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.shippingMethod}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.logisticsPartner}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.logisticsContact}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.trackingNumber}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.estimatedDeliveryDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.trackingStatus}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.actualDeliveryDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.goodsReceiptDate}</td>
+                                            </>
+                                        ) : activeTab === 'rtv' ? (
+                                            <>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.purchaseOrderName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.customerQuoteName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.customerOrderName}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.rtvType}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.rmaNumber}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.shipFromAccountName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.shipFromContactName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.supplierName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.supplierContact}</td>
+                                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
+                                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                        {rtv.totalLines}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                    ${rtv.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                                </td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rtv.issuedDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rtv.approvalDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rtv.returnByDate}</td>
                                             </>
-                                        )}
-                                        {activeTab === 'credit' && (
+                                        ) : activeTab === 'credit' ? (
                                             <>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.creditToAccountName}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.invoiceName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.customerQuoteName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.customerOrderName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.creditToAccountName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.creditToContactName}</td>
+                                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
+                                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                        {credit.totalLines}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                    ${credit.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                                </td>
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                    ${credit.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                                </td>
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                    ${credit.totalTaxesAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                                </td>
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                    ${credit.totalCreditAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                                </td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{credit.issuedDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{credit.expirationDate}</td>
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                    ${credit.availableCreditBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                                </td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{credit.settledDate}</td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                {activeTab === 'debit' && (
+                                                    <>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.supplierBillName}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.purchaseOrderName}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.customerOrderName}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.supplierCreditMemoName}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.debitToAccountName}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.debitToContactName}</td>
+                                                        <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
+                                                            <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                                {debit.totalLines}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                            ${debit.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                                        </td>
+                                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                            ${debit.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                                        </td>
+                                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                            ${debit.totalDebitAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                                        </td>
+                                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{debit.issuedDate}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{debit.approvalDate}</td>
+                                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                            ${debit.availableDebitBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                                        </td>
+                                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{debit.settledDate}</td>
+                                                    </>
+                                                )}
                                             </>
                                         )}
-                                        {activeTab === 'debit' && <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.debitToAccountName}</td>}
-                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{item.requestDate}</td>
-                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
-                                            ${item.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                        </td>
                                     </tr>
                                 );
                             })

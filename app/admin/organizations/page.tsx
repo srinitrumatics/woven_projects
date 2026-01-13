@@ -325,16 +325,19 @@ const OrganizationManagement: React.FC = () => {
             {/* Table */}
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Organization
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
+                      Organization Name
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Description
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
+                      Domains
                     </th>
-                    <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Actions
+                    <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
+                      Members
+                    </th>
+                    <th className="relative px-6 py-4">
+                      <span className="sr-only">Actions</span>
                     </th>
                   </tr>
                 </thead>
@@ -420,8 +423,8 @@ const OrganizationManagement: React.FC = () => {
                             key={pageNum}
                             onClick={() => setCurrentPage(pageNum)}
                             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${currentPage === pageNum
-                                ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
-                                : 'border border-gray-300 hover:bg-gray-100'
+                              ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
+                              : 'border border-gray-300 hover:bg-gray-100'
                               }`}
                           >
                             {pageNum}

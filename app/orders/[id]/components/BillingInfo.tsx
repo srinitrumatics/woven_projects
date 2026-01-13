@@ -7,8 +7,9 @@ interface BillingInfoProps {
     setFormData: (data: any) => void;
     shipLocations: AuthorizedLocation[];
     handleBillToChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    isEditing?: boolean;
 }
-export default function BillingInfo({ formData, setFormData, shipLocations, handleBillToChange }: BillingInfoProps) {
+export default function BillingInfo({ formData, setFormData, shipLocations, handleBillToChange, isEditing = false }: BillingInfoProps) {
     //console.log('billinginfo page', formData);
 
     return (
@@ -26,33 +27,29 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
             </div>
 
             <div className="px-6 pb-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="md:col-span-1">
+                <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                    <div className="md:col-span-3">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Bill To Account
+                            Bill to Account
                         </label>
                         <input
                             type="text"
-                            value={(() => {
-                                if (formData.billToAccountName) return formData.billToAccountName;
-                                const locationId = formData.billTo === 'same' ? formData.shipTo : formData.billTo;
-                                const location = shipLocations.find(l => l.Id === locationId);
-                                return location?.Account_Name__c || '';
-                            })() || ''}
+                            value={formData.billToAccountName || ''}
                             readOnly
                             disabled
                             className="w-full h-11 px-4 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed"
                         />
                     </div>
 
-                    <div className="md:col-span-2">
+                    <div className="md:col-span-3">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Bill To Location <span className="text-red-500">*</span>
+                            Bill to Location <span className="text-red-500">*</span>
                         </label>
                         <select name="billTo"
                             value={formData.billTo || ''}
                             onChange={handleBillToChange}
-                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                            disabled={!isEditing}
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         >
                             <option key="select-bill" value="">Select a location...</option>
                             <option key="same-as-shipping" value="same">Same as Shipping</option>
@@ -64,7 +61,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         </select>
                     </div>
 
-                    <div className="md:col-span-3">
+                    <div className="md:col-span-6">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Billing Address <span className="text-red-500">*</span>
                         </label>
@@ -72,29 +69,32 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             type="text"
                             value={formData.billingAddress || ''}
                             onChange={(e) => setFormData({ ...formData, billingAddress: e.target.value })}
-                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                            readOnly={!isEditing}
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
-                    <div>
+                    <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Purchase Order # <span className="text-red-500">*</span>
+                            CPO # <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             placeholder="Enter PO number"
                             value={formData.purchaseOrder || ''}
                             onChange={(e) => setFormData({ ...formData, purchaseOrder: e.target.value })}
-                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400"
+                            readOnly={!isEditing}
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm h-11font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Terms</label>
+                    <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Terms</label>
                         <select
                             value={formData.paymentTerms || ''}
                             onChange={(e) => setFormData({ ...formData, paymentTerms: e.target.value })}
-                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                            disabled={!isEditing}
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         >
                             {formData.paymentTerms && !["Net 30", "Net 45", "Net 60", "Due on Receipt"].includes(formData.paymentTerms) && (
                                 <option value={formData.paymentTerms}>{formData.paymentTerms}</option>
@@ -107,8 +107,8 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         </select>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assigned Price Book</label>
+                    <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Price Book</label>
                         <input
                             type="text"
                             name="priceBook"

@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import { formatCurrency } from "@/lib/utils/formatting";
 import { OrderStatus } from "./types";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { useSortableData } from "@/hooks/useSortableData";
 
 type TabFilter = "All" | "Pending" | "Success" | "Draft" | "Cancelled";
 
@@ -134,12 +136,15 @@ export default function OrdersPage() {
     return filtered;
   }, [uiOrders, activeTab, searchQuery]);
 
+  // Sorting
+  const { items: sortedOrders, requestSort, sortConfig } = useSortableData(filteredAndSearchedOrders);
+
   // pagination calculations
-  const totalPages = Math.max(1, Math.ceil(filteredAndSearchedOrders.length / ITEMS_PER_PAGE));
+  const totalPages = Math.max(1, Math.ceil(sortedOrders.length / ITEMS_PER_PAGE));
   const paginatedOrders = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredAndSearchedOrders.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredAndSearchedOrders, currentPage]);
+    return sortedOrders.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [sortedOrders, currentPage]);
 
   // Ensure currentPage stays within bounds when totalPages changes
   useEffect(() => {
@@ -491,14 +496,14 @@ export default function OrdersPage() {
             <table className="w-full table-auto ">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Order#</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Proposal</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">CPO</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Ship To</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Bill To</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 dark:text-white">Items</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 dark:text-white">Total</th>
+                  <SortableHeader label="Order#" field="name" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Proposal" field="proposal_name" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="CPO" field="cpo" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Ship To" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Bill To" field="billTo" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Items" field="items" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Total" field="total" align="right" sortConfig={sortConfig} requestSort={requestSort} />
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
                 </tr>
               </thead>
@@ -708,4 +713,4 @@ function StatusBadge({ status }: { status: OrderStatus }) {
       {status || "N/A"}
     </span>
   );
-} 
+}

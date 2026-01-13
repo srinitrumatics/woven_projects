@@ -12,6 +12,7 @@ interface ProposalTabsProps {
         fulfillments?: number;
         purchases?: number;
         returns?: number;
+        taxes?: number;
     };
 }
 
@@ -19,6 +20,7 @@ export default function ProposalTabs({ activeTab, onTabChange, counts = {} }: Pr
     const tabs: { id: ProposalTabType; label: string; count?: number }[] = [
         { id: "products", label: "Products", count: counts.products },
         { id: "elements", label: "Elements", count: counts.elements },
+        { id: "taxes", label: "Taxes", count: counts.taxes },
         { id: "files", label: "Files", count: counts.files },
         { id: "signatures", label: "Signatures" },
         { id: "projects", label: "Projects", count: counts.projects },
@@ -29,12 +31,12 @@ export default function ProposalTabs({ activeTab, onTabChange, counts = {} }: Pr
     ];
 
     return (
-        <div className="flex gap-2">
+        <div className="flex flex-nowrap gap-2 overflow-x-auto no-scrollbar">
             {tabs.map((tab) => (
                 <button
                     key={tab.id}
                     onClick={() => onTabChange(tab.id)}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${activeTab === tab.id
+                    className={`px-3 py-1 sm:px-4 sm:py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${activeTab === tab.id
                         ? "bg-primary text-white shadow-sm"
                         : "bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200"
                         }`}

@@ -7,7 +7,9 @@ import Sidebar from "@/components/layouts/Sidebar";
 import LineFulfillmentsTab from "./components/LineFulfillmentsTab";
 import LinePurchasesTab from "./components/LinePurchasesTab";
 import LineReturnsTab from "./components/LineReturnsTab";
-import { FulfillmentTabType, FulfillmentData, ReturnsData, SalesOrder, CustomerQuote, Purchase, SupplierBill, PurchasesData } from "../../types";
+
+import LineTaxesTab from "./components/LineTaxesTab";
+import { FulfillmentTabType, FulfillmentData, ReturnsData, SalesOrder, CustomerQuote, PurchaseOrderLine, SupplierBillLine, PurchasesData, TaxDetail } from "../../types";
 
 // Interface for proposal product item from Salesforce (matching what we saw in proposal list logic)
 interface ProposalProductItem {
@@ -31,6 +33,21 @@ interface ProposalProductItem {
     Unit_Cost__c?: number;
     Total_Cost__c?: number;
     Manufacturer_DBA__c?: string;
+    // Tax Fields
+    Total_VAT_Amount__c?: number;
+    VAT_Rate__c?: number;
+    GST_Amount__c?: number;
+    GST_Rate__c?: number;
+    Gross_Receipts_Tax_Amount__c?: number;
+    Gross_Receipts_Tax_Rate__c?: number;
+    Excise_Tax_Amount__c?: number;
+    Excise_Tax_Rate__c?: number;
+    Local_Tax_Amount__c?: number;
+    Local_Tax_Rate__c?: number;
+    Use_Tax_Amount__c?: number;
+    Use_Tax_Rate__c?: number;
+    Sales_Tax_Amount__c?: number;
+    Sales_Tax_Rate__c?: number;
 }
 
 // Interface for mapped product data
@@ -55,6 +72,7 @@ interface ProductData {
     unitCost: string;
     totalCost: string;
     moq: number;
+    taxDetail: TaxDetail;
 }
 
 export default function ProposalProductDetailPage({
@@ -81,6 +99,7 @@ export default function ProposalProductDetailPage({
             try {
                 setLoading(true);
                 // Using the existing API endpoint logic for products
+                // Note: This action=products corresponds to tabName=Products which includes tax fields
                 const res = await fetch(`/api/salesforce/proposals?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&proposalId=${encodeURIComponent(id)}&action=products`);
 
                 if (!res.ok) {
@@ -115,6 +134,24 @@ export default function ProposalProductDetailPage({
                         unitCost: item.Unit_Cost__c != null ? `$${item.Unit_Cost__c.toFixed(2)}` : "Hide",
                         totalCost: item.Total_Cost__c != null ? `$${item.Total_Cost__c.toFixed(2)}` : "Hide",
                         moq: item.MOQ__c || 1,
+
+                        taxDetail: {
+                            id: item.Id,
+                            salesTaxRate: item.Sales_Tax_Rate__c || 0,
+                            salesTaxAmount: item.Sales_Tax_Amount__c || 0,
+                            useTaxRate: item.Use_Tax_Rate__c || 0,
+                            useTaxAmount: item.Use_Tax_Amount__c || 0,
+                            localTaxRate: item.Local_Tax_Rate__c || 0,
+                            localTaxAmount: item.Local_Tax_Amount__c || 0,
+                            exciseTaxRate: item.Excise_Tax_Rate__c || 0,
+                            exciseTaxAmount: item.Excise_Tax_Amount__c || 0,
+                            grossReceiptsTaxRate: item.Gross_Receipts_Tax_Rate__c || 0,
+                            grossReceiptsTaxAmount: item.Gross_Receipts_Tax_Amount__c || 0,
+                            gstRate: item.GST_Rate__c || 0,
+                            gstAmount: item.GST_Amount__c || 0,
+                            vatRate: item.VAT_Rate__c || 0,
+                            vatAmount: item.Total_VAT_Amount__c || 0,
+                        }
                     }));
 
                     setProposalProducts(mappedProducts);
@@ -172,7 +209,7 @@ export default function ProposalProductDetailPage({
     const grandTotal = subtotal + shippingCharges + taxes;
 
     // Tabs State
-    const [activeTab, setActiveTab] = useState<"fulfillments" | "purchases" | "returns">("fulfillments");
+    const [activeTab, setActiveTab] = useState<"fulfillments" | "purchases" | "returns" | "taxes">("fulfillments");
     const [fulfillmentActiveTab, setFulfillmentActiveTab] = useState<FulfillmentTabType>("invoices");
     const [fulfillmentData, setFulfillmentData] = useState<FulfillmentData>({
         invoices: [],
@@ -230,97 +267,78 @@ export default function ProposalProductDetailPage({
                         const mappedData: FulfillmentData = {
                             invoices: (data.Invoice_Line__c || []).map((inv: any) => ({
                                 id: inv.Id,
-                                name: inv.Name, // or inv.Invoice_Name
+                                name: inv.Name,
                                 status: inv.Status__c || "Draft",
-                                customerPO: "N/A", // Not in example payload
-                                billToAccountName: "N/A",
-                                billToLocationName: "N/A",
-                                billToContactName: "N/A",
-                                totalLines: 0,
-                                totalPrice: inv.Total_Price__c || 0,
-                                totalShippingCharges: inv.Shipping_Charges__c || 0,
-                                totalTaxesAmount: inv.Total_Taxes_Amount__c || 0,
-                                grandTotal: inv.Line_Grand_Total__c || 0,
-                                issuedDate: "",
-                                dueDate: "",
-                                paymentTerms: "",
-                                collectionStatus: "",
-                                openBalance: 0,
-                                daysOutstanding: 0,
-                                settledDate: ""
+                                invoiceName: inv.Invoice_Name || inv.Invoice__c || "",
+                                salesOrderLineName: inv.Sales_Order_Line_Name || inv.Sales_Order_Line__c || "",
+                                customerQuoteLineName: inv.Customer_Quote_Line_Name || inv.Customer_Order_Line__c || "", // API likely Customer_Order_Line__c based on screenshot
+                                purchaseOrderLineName: inv.Purchase_Order_Line_Name || inv.Purchase_Order_Line__c || "",
+                                productName: inv.Product_Name__c || "",
+                                productDescription: inv.Product_Description__c || "",
+                                manufacturerDBA: inv.Manufacturer_DBA__c || "",
+                                unitPrice: inv.Unit_Price__c || 0,
+                                invoiceQty: inv.Invoiced_Qty__c || 0,
+                                totalPrice: inv.Invoiced_Amount__c || 0,
+                                shipping: inv.Shipping_Charges__c || 0,
+                                taxes: inv.Total_Taxes_Amount__c || 0,
+                                lineGrandTotal: inv.Line_Grand_Total__c || 0,
                             })),
                             shippingManifests: (data.Shipping_Manifest_Line__c || []).map((sm: any) => ({
                                 id: sm.Id,
-                                name: sm.Name, // or sm.Shipping_Manifest_Name
-                                status: sm.Status__c,
-                                customerQuoteName: sm.Customer_Quote_Line_Name,
-                                salesOrderName: sm.Sales_Order_Line_Name,
-                                customerOrderName: "",
-                                customerPO: "",
-                                shipToAccountName: "N/A",
-                                shipToLocationName: "",
-                                shipToContactName: "",
-                                dropShip: false,
-                                totalLines: sm.Total_Order_Qty__c || 0,
+                                name: sm.Name,
+                                status: sm.Status__c || "Draft",
+                                shippingManifestName: sm.Shipping_Manifest_Name || sm.Shipping_Manifest__c || "",
+                                salesOrderLineName: sm.Sales_Order_Line_Name || sm.Sales_Order_Line__c || "",
+                                customerQuoteLineName: sm.Customer_Quote_Line_Name || sm.Customer_Order_Line__c || "",
+                                productName: sm.Product_Name__c || "",
+                                productDescription: sm.Product_Description__c || "",
+                                manufacturerDBA: sm.Manufacturer_DBA__c || "",
+                                boxCount: sm.Box__c || 0,
+                                boxNetWeight: sm.Case_Net_Weight__c || 0,
+                                boxGrossWeight: sm.Case_Gross_Weight__c || 0,
+                                unitPrice: sm.Unit_Price__c || 0,
+                                totalOrderQty: sm.Total_Order_Qty__c || 0,
                                 totalPrice: sm.Total_Price__c || 0,
-                                shippingMethod: "",
-                                shipDate: "",
-                                deliveredDate: "",
-                                estimatedDeliveryDate: sm.Estimated_Delivery_Date__c,
-                                actualDeliveryDate: "",
+                                qtyShipped: sm.Qty_Shipped__c || 0,
                                 trackingNumber: sm.Tracking_Number__c || "",
+                                estimatedDeliveryDate: sm.Estimated_Delivery_Date__c || "",
                                 trackingStatus: sm.Tracking_Status__c || "",
-                                logisticsPartnerName: "",
-                                logisticsContactName: ""
+                                actualDeliveryDate: sm.Actual_Delivery_Date__c || ""
                             })),
                             salesOrders: (data.Sales_Order_Line__c || []).map((so: any) => ({
                                 id: so.Id,
-                                name: so.Name, // or so.Sales_Order_Name
-                                status: so.Status__c,
-                                customerQuoteName: so.Customer_Quote_Line_Name,
-                                customerOrderName: "",
-                                customerPO: "",
-                                billToAccountName: "N/A",
-                                billToLocationName: "",
-                                billToContactName: "",
-                                shipToAccountName: "N/A",
-                                shipToLocationName: "",
-                                shipToContactName: "",
-                                dropShip: false,
-                                totalLines: so.Total_Order_Qty__c || 0,
+                                name: so.Name,
+                                status: so.Status__c || "Draft",
+                                salesOrderName: so.Sales_Order_Name || so.Sales_Order__c || "",
+                                customerQuoteLineName: so.Customer_Quote_Line_Name || so.Customer_Order_Line__c || "",
+                                productName: so.Product_Name__c || "",
+                                productDescription: so.Product_Description__c || "",
+                                manufacturerDBA: so.Manufacturer_DBA__c || "",
+                                unitPrice: so.Unit_Price__c || 0,
+                                totalOrderQty: so.Total_Order_Qty__c || 0,
                                 totalPrice: so.Total_Price__c || 0,
-                                totalShippingCharges: so.Shipping_Charges__c || 0,
-                                totalTaxesAmount: so.Total_Taxes_Amount__c || 0,
-                                grandTotal: so.Line_Grand_Total__c || 0,
-                                requestDate: "", // Not in example payload
-                                pickDate: "",
-                                pickCompleteDate: "",
-                                shipDate: "",
-                                deliveredDate: ""
+                                shipping: so.Shipping_Charges__c || 0,
+                                taxes: so.Total_Taxes_Amount__c || 0,
+                                lineGrandTotal: so.Line_Grand_Total__c || 0,
+                                qtyPicked: so.Qty_Picked__c || 0,
+                                backOrderQty: so.Back_Order_Qty__c || 0,
+                                qtyShipped: so.Qty_Shipped__c || 0,
                             })),
                             customerQuotes: (data.Customer_Quote_Line__c || []).map((cq: any) => ({
                                 id: cq.Id,
-                                name: cq.Name, // or cq.Customer_Quote_Name
+                                name: cq.Name,
                                 status: cq.Status__c || "Draft",
-                                customerOrderName: "",
-                                customerPO: "",
-                                billToAccountName: "N/A",
-                                billToLocationName: "",
-                                billToContactName: "",
-                                shipToAccountName: "N/A",
-                                shipToLocationName: "",
-                                shipToContactName: "",
-                                dropShip: false,
-                                totalLines: cq.Total_Order_Qty__c || 0,
+                                customerQuoteName: cq.Customer_Quote_Name || cq.Customer_Quote__c || "",
+                                productName: cq.Product_Name__c || "",
+                                productDescription: cq.Product_Description__c || "",
+                                manufacturerDBA: cq.Manufacturer_DBA__c || "",
+                                unitPrice: cq.Unit_Price__c || 0,
+                                totalOrderQty: cq.Total_Order_Qty__c || 0,
                                 totalPrice: cq.Total_Price__c || 0,
-                                totalShippingCharges: cq.Shipping_Charges__c || 0,
-                                totalTaxesAmount: cq.Total_Taxes_Amount__c || 0,
-                                grandTotal: cq.Line_Grand_Total__c || 0,
-                                issuedDate: "",
-                                expirationDate: "",
-                                requestDate: "",
-                                shipDate: "",
-                                deliveredDate: ""
+                                shipping: cq.Shipping_Charges__c || 0,
+                                taxes: cq.Total_Taxes_Amount__c || 0,
+                                lineGrandTotal: cq.Line_Grand_Total__c || 0,
+                                qtyShipped: cq.Qty_Shipped__c || 0,
                             }))
                         };
                         setFulfillmentData(mappedData);
@@ -354,29 +372,47 @@ export default function ProposalProductDetailPage({
                     console.log("Fetched line purchases:", data);
 
                     if (data) {
-                        const mappedPurchases: Purchase[] = (data.Purchase_Order_Line__c || []).map((item: any) => ({
+                        const mappedPurchases: PurchaseOrderLine[] = (data.Purchase_Order_Line__c || []).map((item: any) => ({
                             id: item.Id,
                             name: item.Name,
                             status: item.Status__c || "Draft",
-                            vendorName: item.Manufacturer_DBA__c || "Unknown",
-                            vendorPO: item.Purchase_Order_Name || "",
-                            orderDate: "", // Not available in response
-                            expectedDate: item.Estimated_Delivery_Date__c || "",
-                            totalAmount: item.Total_Cost__c || 0
+                            purchaseOrderName: item.Purchase_Order_Name || item.Purchase_Order__c || "",
+                            customerQuoteLineName: item.Customer_Quote_Line_Name || item.Customer_Quote_Line__c || "",
+                            productName: item.Product_Name__c || "",
+                            productDescription: item.Product_Description__c || "",
+                            manufacturerDBA: item.Manufacturer_DBA__c || "",
+                            unitCost: item.Unit_Cost__c || 0,
+                            totalOrderQty: item.Total_Order_Qty__c || 0,
+                            totalCost: item.Total_Product_Cost__c || 0,
+                            shipping: item.Shipping_Charges__c || 0,
+                            lineTotalCost: item.Total_Cost__c || 0,
+                            openBalanceQty: item.Open_Balance_Qty__c || 0,
+                            trackingNumber: item.Tracking_Number__c || "",
+                            estimatedDeliveryDate: item.Estimated_Delivery_Date__c || "",
+                            trackingStatus: item.Tracking_Status__c || "",
+                            actualDeliveryDate: item.Actual_Delivery_Date__c || "",
+                            goodsReceiptDate: item.Goods_Receipt_Date__c || "",
+                            invoiceStatus: item.Invoice_Status__c || ""
                         }));
 
-                        const mappedSupplierBills: SupplierBill[] = (data.Supplier_Bill_Line__c || []).map((item: any) => ({
+                        const mappedSupplierBills: SupplierBillLine[] = (data.Supplier_Bill_Line__c || []).map((item: any) => ({
                             id: item.Id,
                             name: item.Name,
                             status: item.Status__c || "Draft",
-                            supplierBillName: item.Supplier_Bill_Name || "",
-                            billAmount: item.BillAmount__c || 0,
-                            totalBillAmount: item.Total_Bill_Amount__c || 0,
-                            billedQty: item.Billed_Qty__c || 0,
-                            unitCost: item.Unit_Cost__c || 0,
-                            manufacturerDBA: item.Manufacturer_DBA__c || "Unknown",
-                            productName: item.Product_Name || "",
-                            purchaseOrderLineName: item.Purchase_Order_Line_Name || ""
+                            supplierBillName: item.Supplier_Bill_Name || "", // gtherp__Supplier_Bill__c
+                            purchaseOrderLineName: item.Purchase_Order_Line_Name || "", // gtherp__Purchase_Order_Line__c
+                            productName: item.Product_Name || "", // gtherp__Product_Name__c
+                            productDescription: item.Product_Description || "", // gtherp__Product_Description__c
+                            manufacturerDBA: item.Manufacturer_DBA__c || "Unknown", // gtherp__Manufacturer_DBA__c
+                            unitCost: item.Unit_Cost__c || 0, // gtherp__Unit_Cost__c
+                            billedQty: item.Billed_Qty__c || 0, // gtherp__Billed_Qty__c
+                            billAmount: item.BillAmount__c || 0, // gtherp__BillAmount__c
+                            shipping: item.Shipping_Charges__c || 0, // gtherp__Shipping_Charges__c
+                            totalBillAmount: item.Total_Bill_Amount__c || 0, // gtherp__Total_Bill_Amount__c
+                            billedDate: new Date(item.Billed_Date__c).toLocaleDateString() === 'Invalid Date' ? (item.Billed_Date__c || "") : new Date(item.Billed_Date__c).toLocaleDateString(), // gtherp__Billed_Date__c
+                            remittanceStatus: item.Remittance_Status__c || "", // gtherp__Remittance_Status__c
+                            holdStatus: item.Hold_Status__c || "", // gtherp__Hold_Status__c
+                            goodsReceiptDate: item.Goods_Receipt_Date__c || "" // gtherp__Goods_Receipt_Date__c
                         }));
 
                         setPurchasesData({
@@ -416,46 +452,89 @@ export default function ProposalProductDetailPage({
                         const mappedData: ReturnsData = {
                             rma: (data.RMA_Line__c || []).map((item: any) => ({
                                 id: item.Id,
-                                name: item.Name, // or item.RMA_Name
+                                name: item.Name, // RMA Line Name
                                 status: item.Status__c || "Draft",
-                                description: item.Reason_Code__c || "", // Mapping Reason Code to Description if Description not defined
-                                requestDate: "", // Not in response
+                                rmaName: item.RMA_Name || "", // gtherp__RMA__c
+                                salesOrderLineName: item.Sales_Order_Line_Name || "", // gtherp__Sales_Order_Line__c
+                                customerQuoteLineName: item.Customer_Order_Line_Name || item.Customer_Order_Line__c || "", // gtherp__Customer_Order_Line__c
+                                reason: item.Reason_Code__c || "", // gtherp__Reason_Code__c
+                                productName: item.Product_Name__c || "", // gtherp__Product_Name__c
+                                productDescription: item.Product_Description__c || "", // gtherp__Product_Description__c
+                                manufacturerDBA: item.Manufacturer_DBA__c || "Unknown", // gtherp__Manufacturer_DBA__c
+                                unitPrice: item.Unit_Price__c || 0, // gtherp__Unit_Price__c
+                                returnQty: item.Return_Qty__c || 0, // gtherp__Return_Qty__c
+                                totalAmount: item.Total_Price__c || 0, // gtherp__Total_Price__c
+                                openBalanceQty: item.Open_Balance_Qty__c || 0, // gtherp__Open_Balance_Qty__c
+                                trackingNumber: item.Tracking_Number__c || "", // gtherp__Tracking_Number__c
+                                estimatedDeliveryDate: item.Estimated_Delivery_Date__c || "", // gtherp__Estimated_Delivery_Date__c
+                                trackingStatus: item.Tracking_Status__c || "", // gtherp__Tracking_Status__c
+                                actualDeliveryDate: item.Actual_Delivery_Date__c || "", // gtherp__Actual_Delivery_Date__c
+                                goodsReceiptDate: item.Goods_Receipts_Date__c || "", // gtherp__Goods_Receipts_Date__c
                                 type: "RMA",
-                                reason: item.Reason_Code__c || "",
-                                totalAmount: item.Total_Price__c || 0,
-                                shipFromAccountName: "N/A" // Not in response explicitly
+                                requestDate: "",
+                                description: item.Reason_Code__c || "",
+                                shipFromAccountName: "N/A"
                             })),
                             rtv: (data.RTV_Line__c || []).map((item: any) => ({
                                 id: item.Id,
-                                name: item.Name, // or item.RTV_Name
+                                name: item.Name, // RTV Line Name
                                 status: item.Status__c || "Draft",
-                                description: item.Product_Description__c || "",
-                                requestDate: "",
+                                rtvName: item.RTV_Name || "", // gtherp__RTV__c
+                                purchaseOrderLineName: item.Purchase_Order_Line_Name || "", // gtherp__Purchase_Order_Line__c
+                                customerQuoteLineName: item.Customer_Order_Line_Name || item.Customer_Order_Line__c || "", // gtherp__Customer_Order_Line__c
+                                reason: item.Reason_Code__c || "", // gtherp__Reason_Code__c
+                                productName: item.Product_Name_Formula_Field__c || item.Product_Name__c || "", // gtherp__Product_Name__c (checking formula field first as fallback or vice versa, stick to Product_Name__c usually but check screenshots/data) -> Screenshot says gtherp__Product_Name__c
+                                productDescription: item.Product_Description__c || "", // gtherp__Product_Description__c
+                                manufacturerDBA: item.Manufacturer_DBA__c || "Unknown", // gtherp__Manufacturer_DBA__c
+                                unitCost: item.Unit_Cost__c || 0, // gtherp__Unit_Cost__c
+                                returnQty: item.Return_Qty__c || 0, // gtherp__Return_Qty__c
+                                totalCost: item.Total_Cost__c || 0, // gtherp__Total_Cost__c
                                 type: "RTV",
-                                reason: item.Reason_Code__c || "",
-                                totalAmount: item.Total_Cost__c || 0,
+                                requestDate: "",
+                                description: item.Product_Description__c || "",
                                 supplierName: item.Manufacturer_DBA__c || "Unknown",
-                                rtvType: "Return" // Defaulting since not in line item
+                                rtvType: "Return"
                             })),
                             creditMemos: (data.Credit_Memo_Line__c || []).map((item: any) => ({
                                 id: item.Id,
-                                name: item.Name, // or item.Credit_Memo_Name
+                                name: item.Name, // Credit Memo Line Name
                                 status: item.Status__c || "Draft",
-                                description: item.Product_Description__c || "",
-                                requestDate: "",
+                                creditMemoName: item.Credit_Memo_Name || "", // gtherp__Credit_Memo__c
+                                invoiceLineName: item.Invoice_Line_Name || item.Invoice_Line__c || "", // gtherp__Invoice_Line__c
+                                salesOrderLineName: item.Sales_Order_Line_Name || item.Sales_Order_Line__c || "", // gtherp__Sales_Order_Line__c
+                                productName: item.Product_Name__c || "", // gtherp__Product_Name__c
+                                productDescription: item.Product_Description__c || "", // gtherp__Product_Description__c
+                                manufacturerDBA: item.Manufacturer_DBA__c || "Unknown", // gtherp__Manufacturer_DBA__c
+                                unitPrice: item.Unit_Price__c || 0, // gtherp__Unit_Price__c
+                                creditQty: item.Credit_Qty__c || 0, // gtherp__Credit_Qty__c
+                                totalPrice: item.Total_Price__c || 0, // gtherp__Total_Price__c
+                                shipping: item.Shipping_Charges__c || 0, // gtherp__Shipping_Charges__c
+                                taxes: item.Total_Taxes_Amount__c || 0, // gtherp__Total_Taxes_Amount__c
+                                lineGrandTotal: item.Line_Grand_Total__c || 0, // gtherp__Line_Grand_Total__c
                                 type: "Credit Memo",
-                                reason: "",
-                                totalAmount: item.Line_Grand_Total__c || 0,
+                                requestDate: "",
+                                description: item.Product_Description__c || "",
                                 creditToAccountName: "N/A",
                                 invoiceName: item.Invoice_Line_Name || ""
                             })),
                             debitMemos: (data.Debit_Memo_Line__c || []).map((item: any) => ({
                                 id: item.Id,
-                                name: item.Name, // or item.Debit_Memo_Name
+                                name: item.Name, // Debit Memo Line Name
                                 status: item.Status__c || "Draft",
-                                description: item.Product_Description__c || "",
-                                requestDate: "",
+                                debitMemoName: item.Debit_Memo_Name || "", // gtherp__Debit_Memo__c
+                                supplierBillLineName: item.Supplier_Bill_Line_Name || item.Supplier_Bill_Line__c || "", // gtherp__Supplier_Bill_Line__c
+                                purchaseOrderLineName: item.Purchase_Order_Line_Name || item.Purchase_Order_Line__c || "", // gtherp__Purchase_Order_Line__c
+                                productName: item.Product_Name__c || "", // gtherp__Product_Name__c
+                                productDescription: item.Product_Description__c || "", // gtherp__Product_Description__c
+                                manufacturerDBA: item.Manufacturer_DBA__c || "Unknown", // gtherp__Manufacturer_DBA__c
+                                unitCost: item.Unit_Cost__c || 0, // gtherp__Unit_Cost__c
+                                debitQty: item.Debit_Qty__c || 0, // gtherp__Debit_Qty__c
+                                totalCost: item.Total_Cost__c || 0, // gtherp__Total_Cost__c
+                                shipping: item.Shipping_Charges__c || 0, // gtherp__Shipping_Charges__c
+                                lineGrandTotal: item.Line_Grand_Total__c || 0, // gtherp__Line_Grand_Total__c
                                 type: "Debit Memo",
+                                requestDate: "",
+                                description: item.Product_Description__c || "",
                                 reason: "",
                                 totalAmount: item.Line_Grand_Total__c || 0,
                                 debitToAccountName: "N/A"
@@ -493,6 +572,30 @@ export default function ProposalProductDetailPage({
     if (loading) {
         return (
             <Sidebar>
+                {/* Breadcrumb - Compact (Skeleton) */}
+                <div className="mb-4">
+                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
+                        <button className="hover:text-gray-700 dark:hover:text-gray-300">Proposals</button>
+                        <span>&gt;</span>
+                        <button className="hover:text-gray-700 dark:hover:text-gray-300">Proposal Details</button>
+                        <span>&gt;</span>
+                        <span className="text-gray-900 dark:text-white">Product Details</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="h-8 w-64 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"></div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Link href={`/proposals/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors inline-flex items-center gap-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Back to Proposal
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="flex items-center justify-center h-64">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
@@ -503,8 +606,8 @@ export default function ProposalProductDetailPage({
         );
     }
 
-    // No data state
-    if (!product) {
+    // No data state (only if not loading and no product)
+    if (!loading && !product) {
         return (
             <Sidebar>
                 <div className="flex items-center justify-center h-64">
@@ -910,6 +1013,15 @@ export default function ProposalProductDetailPage({
                     >
                         Returns
                     </button>
+                    <button
+                        onClick={() => setActiveTab("taxes")}
+                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "taxes"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            }`}
+                    >
+                        Taxes
+                    </button>
                 </div>
 
                 {/* Tab Content */}
@@ -932,6 +1044,12 @@ export default function ProposalProductDetailPage({
                         <LineReturnsTab
                             returnsData={returnsData}
                             loading={returnsLoading}
+                        />
+                    )}
+                    {activeTab === "taxes" && (
+                        <LineTaxesTab
+                            taxData={product.taxDetail}
+                            loading={loading}
                         />
                     )}
                 </div>

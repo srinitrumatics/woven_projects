@@ -64,6 +64,9 @@ export interface ProposedProduct {
   discount: number;
   margin: number;
   subtotal: number;
+  shipping: number;
+  taxes: number;
+  grandTotal: number;
   notes?: string;
 }
 

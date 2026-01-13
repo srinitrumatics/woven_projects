@@ -11,7 +11,7 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
                 <table className="w-full">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white w-1/3">Field</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white w-1/3">&nbsp;</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white w-1/3">Client</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white w-1/3">Company</th>
                         </tr>
@@ -23,7 +23,7 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
                                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
-                                    <span className="text-sm font-medium text-gray-900 dark:text-white">SIGNED BY </span>
+                                    <span className="text-sm font-medium text-gray-900 dark:text-white">Signed By</span>
                                 </div>
                             </td>
                             <td className="px-6 py-4">
@@ -39,7 +39,7 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
                                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
-                                    <span className="text-sm font-medium text-gray-900 dark:text-white">SIGNED TITLE</span>
+                                    <span className="text-sm font-medium text-gray-900 dark:text-white">Signed Title</span>
                                 </div>
                             </td>
                             <td className="px-6 py-4">
@@ -55,7 +55,7 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
                                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
-                                    <span className="text-sm font-medium text-gray-900 dark:text-white">SIGNED DATE</span>
+                                    <span className="text-sm font-medium text-gray-900 dark:text-white">Signed Date</span>
                                 </div>
                             </td>
                             <td className="px-6 py-4">

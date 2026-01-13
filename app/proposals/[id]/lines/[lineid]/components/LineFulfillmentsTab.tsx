@@ -1,4 +1,7 @@
-import { FulfillmentData, FulfillmentTabType } from "../../../types";
+import { useMemo } from "react";
+import { FulfillmentData, FulfillmentTabType, Invoice, ShippingManifest, SalesOrder, CustomerQuote } from "../../../types";
+import { SortableHeader } from "../../../../../../components/ui/SortableHeader";
+import { useSortableData } from "../../../../../../hooks/useSortableData";
 
 interface LineFulfillmentsTabProps {
     fulfillmentData: FulfillmentData;
@@ -13,6 +16,18 @@ export default function LineFulfillmentsTab({
     activeTab,
     onTabChange
 }: LineFulfillmentsTabProps) {
+
+    const activeData = useMemo(() => {
+        switch (activeTab) {
+            case "invoices": return fulfillmentData.invoices;
+            case "shipping": return fulfillmentData.shippingManifests;
+            case "sales": return fulfillmentData.salesOrders;
+            case "quotes": return fulfillmentData.customerQuotes;
+            default: return [];
+        }
+    }, [activeTab, fulfillmentData]);
+
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<Invoice | ShippingManifest | SalesOrder | CustomerQuote>(activeData);
 
     if (loading) {
         return (
@@ -70,43 +85,70 @@ export default function LineFulfillmentsTab({
                 {/* Invoices Table */}
                 {activeTab === "invoices" && (
                     <div className="overflow-x-auto">
-                        {fulfillmentData.invoices.length === 0 ? (
+                        {sortedData.length === 0 ? (
                             <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                                 <p className="text-lg font-medium">No invoices found</p>
                             </div>
                         ) : (
-                            <table className="w-full">
-                                <thead className="bg-primary-light dark:bg-gray-900">
+                            <table className="w-full min-w-[1800px]">
+                                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Invoice Number</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Customer PO</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Bill To Account</th>
-                                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
-                                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Open Balance</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Payment Terms</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Collection Status</th>
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10">
+                                            <div className="flex items-center cursor-pointer" onClick={() => requestSort('name')}>
+                                                Invoice
+                                                {sortConfig?.key === 'name' && (
+                                                    <span className="ml-1">{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
+                                                )}
+                                            </div>
+                                        </th>
+                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Invoice" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Unit Price" field="unitPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Invoice Qty" field="invoiceQty" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Total Price" field="totalPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Shipping" field="shipping" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Taxes" field="taxes" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Line Grand Total" field="lineGrandTotal" align="right" sortConfig={sortConfig} requestSort={requestSort} />
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                    {fulfillmentData.invoices.map((invoice) => (
+                                    {(sortedData as Invoice[]).map((invoice) => (
                                         <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium">{invoice.name}</td>
+                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800">{invoice.name}</td>
                                             <td className="px-4 py-3">
                                                 <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {invoice.status}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{invoice.customerPO}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{invoice.billToAccountName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{invoice.invoiceName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{invoice.salesOrderLineName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{invoice.customerQuoteLineName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{invoice.purchaseOrderLineName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{invoice.productName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={invoice.productDescription}>{invoice.productDescription}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{invoice.manufacturerDBA}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
+                                                ${invoice.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{invoice.invoiceQty}</td>
                                             <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
-                                                ${invoice.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                ${invoice.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
                                             <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
-                                                ${invoice.openBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                ${invoice.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{invoice.paymentTerms}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{invoice.collectionStatus}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                ${invoice.taxes?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-right text-primary font-bold">
+                                                ${invoice.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -118,39 +160,72 @@ export default function LineFulfillmentsTab({
                 {/* Shipping Manifests Table */}
                 {activeTab === "shipping" && (
                     <div className="overflow-x-auto">
-                        {fulfillmentData.shippingManifests.length === 0 ? (
+                        {sortedData.length === 0 ? (
                             <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                                 <p className="text-lg font-medium">No shipping manifests found</p>
                             </div>
                         ) : (
-                            <table className="w-full">
-                                <thead className="bg-primary-light dark:bg-gray-900">
+                            <table className="w-full min-w-[2400px]">
+                                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Manifest Number</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Ship To Account</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipping Method</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Ship Date</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Tracking Number</th>
-                                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Total Price</th>
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10">
+                                            <div className="flex items-center cursor-pointer" onClick={() => requestSort('name')}>
+                                                Shipping Manifest Line
+                                                {sortConfig?.key === 'name' && (
+                                                    <span className="ml-1">{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
+                                                )}
+                                            </div>
+                                        </th>
+                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Shipping Manifest" field="shippingManifestName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Box Count" field="boxCount" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Box Net Weight" field="boxNetWeight" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Box Gross Weight" field="boxGrossWeight" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Unit Price" field="unitPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Total Order Qty" field="totalOrderQty" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Total Price" field="totalPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Qty Shipped" field="qtyShipped" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} />
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                    {fulfillmentData.shippingManifests.map((manifest) => (
+                                    {(sortedData as ShippingManifest[]).map((manifest) => (
                                         <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium">{manifest.name}</td>
+                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800">{manifest.name}</td>
                                             <td className="px-4 py-3">
                                                 <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {manifest.status}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.shipToAccountName}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.shippingMethod}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{manifest.shipDate}</td>
-                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white">{manifest.trackingNumber || '-'}</td>
-                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
-                                                ${manifest.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.shippingManifestName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.salesOrderLineName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.customerQuoteLineName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.productName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={manifest.productDescription}>{manifest.productDescription}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.manufacturerDBA}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{manifest.boxCount}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{manifest.boxNetWeight}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{manifest.boxGrossWeight}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
+                                                ${manifest.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{manifest.totalOrderQty}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                ${manifest.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{manifest.qtyShipped}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-mono">{manifest.trackingNumber}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.estimatedDeliveryDate}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.trackingStatus}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.actualDeliveryDate}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -162,41 +237,72 @@ export default function LineFulfillmentsTab({
                 {/* Sales Orders Table */}
                 {activeTab === "sales" && (
                     <div className="overflow-x-auto">
-                        {fulfillmentData.salesOrders.length === 0 ? (
+                        {sortedData.length === 0 ? (
                             <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                                 <p className="text-lg font-medium">No sales orders found</p>
                             </div>
                         ) : (
-                            <table className="w-full">
-                                <thead className="bg-primary-light dark:bg-gray-900">
+                            <table className="w-full min-w-[2200px]">
+                                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Sales Order Number</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Customer PO</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Bill To Account</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Ship To Account</th>
-                                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Request Date</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Ship Date</th>
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10">
+                                            <div className="flex items-center cursor-pointer" onClick={() => requestSort('name')}>
+                                                Sales Order Line
+                                                {sortConfig?.key === 'name' && (
+                                                    <span className="ml-1">{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
+                                                )}
+                                            </div>
+                                        </th>
+                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Unit Price" field="unitPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Total Order Qty" field="totalOrderQty" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Total Price" field="totalPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Shipping" field="shipping" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Taxes" field="taxes" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Line Grand Total" field="lineGrandTotal" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Qty Picked" field="qtyPicked" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Back Order Qty" field="backOrderQty" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Qty Shipped" field="qtyShipped" align="right" sortConfig={sortConfig} requestSort={requestSort} />
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                    {fulfillmentData.salesOrders.map((order) => (
+                                    {(sortedData as SalesOrder[]).map((order) => (
                                         <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium">{order.name}</td>
+                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800">{order.name}</td>
                                             <td className="px-4 py-3">
                                                 <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
                                                     {order.status}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.customerPO}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.billToAccountName}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.shipToAccountName}</td>
-                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
-                                                ${order.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.salesOrderName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.customerQuoteLineName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.productName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={order.productDescription}>{order.productDescription}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.manufacturerDBA}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
+                                                ${order.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{order.requestDate}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{order.shipDate}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{order.totalOrderQty}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                ${order.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                ${order.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                ${order.taxes?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-right text-primary font-bold">
+                                                ${order.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{order.qtyPicked}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{order.backOrderQty}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{order.qtyShipped}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -208,39 +314,66 @@ export default function LineFulfillmentsTab({
                 {/* Customer Quotes Table */}
                 {activeTab === "quotes" && (
                     <div className="overflow-x-auto">
-                        {fulfillmentData.customerQuotes.length === 0 ? (
+                        {sortedData.length === 0 ? (
                             <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                                 <p className="text-lg font-medium">No customer quotes found</p>
                             </div>
                         ) : (
-                            <table className="w-full">
-                                <thead className="bg-primary-light dark:bg-gray-900">
+                            <table className="w-full min-w-[2000px]">
+                                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Quote Number</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Customer PO</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Bill To Account</th>
-                                        <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Issued Date</th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Expiration Date</th>
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10">
+                                            <div className="flex items-center cursor-pointer" onClick={() => requestSort('name')}>
+                                                Customer Quote Line
+                                                {sortConfig?.key === 'name' && (
+                                                    <span className="ml-1">{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
+                                                )}
+                                            </div>
+                                        </th>
+                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Unit Price" field="unitPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Total Order Qty" field="totalOrderQty" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Total Price" field="totalPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Shipping" field="shipping" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Taxes" field="taxes" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Line Grand Total" field="lineGrandTotal" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                                        <SortableHeader label="Qty Shipped" field="qtyShipped" align="right" sortConfig={sortConfig} requestSort={requestSort} />
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                    {fulfillmentData.customerQuotes.map((quote) => (
+                                    {(sortedData as CustomerQuote[]).map((quote) => (
                                         <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium">{quote.name}</td>
+                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800">{quote.name}</td>
                                             <td className="px-4 py-3">
                                                 <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {quote.status}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{quote.customerPO}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{quote.billToAccountName}</td>
-                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
-                                                ${quote.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{quote.customerQuoteName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{quote.productName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={quote.productDescription}>{quote.productDescription}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{quote.manufacturerDBA}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
+                                                ${quote.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{quote.issuedDate}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{quote.expirationDate}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{quote.totalOrderQty}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                ${quote.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                ${quote.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                                ${quote.taxes?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-right text-primary font-bold">
+                                                ${quote.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{quote.qtyShipped}</td>
                                         </tr>
                                     ))}
                                 </tbody>

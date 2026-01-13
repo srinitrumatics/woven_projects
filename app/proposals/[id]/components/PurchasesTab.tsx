@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { Purchase, SupplierBill } from "../types";
+import { useState, useMemo } from "react";
+import { PurchaseOrder, SupplierBill } from "../types";
+import { SortableHeader } from "../../../../components/ui/SortableHeader";
+import { useSortableData } from "../../../../hooks/useSortableData";
 
 interface PurchasesTabProps {
-    purchases: Purchase[];
+    purchases: PurchaseOrder[];
     supplierBills: SupplierBill[];
     loading: boolean;
 }
@@ -11,6 +13,10 @@ type TabType = "orders" | "bills";
 
 export default function PurchasesTab({ purchases, supplierBills, loading }: PurchasesTabProps) {
     const [activeTab, setActiveTab] = useState<TabType>("orders");
+
+    // Use separate sort states for each tab to avoid type conflicts and preserve state
+    const { items: sortedPurchases, requestSort: requestSortPurchases, sortConfig: sortConfigPurchases } = useSortableData<PurchaseOrder>(purchases);
+    const { items: sortedBills, requestSort: requestSortBills, sortConfig: sortConfigBills } = useSortableData<SupplierBill>(supplierBills);
 
     if (loading) {
         return (
@@ -64,30 +70,51 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                     <table className="w-full">
                         <thead className="bg-primary-light dark:bg-gray-900">
                             <tr>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Name</th>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Vendor</th>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Vendor PO</th>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Order Date</th>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Expected Date</th>
-                                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Total Amount</th>
+                                <SortableHeader label="Purchase Order" field="name" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Status" field="status" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="CPO" field="customerPO" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Supplier DBA" field="supplierDBA" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Drop Ship" field="dropShip" align="center" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Total Lines" field="totalLines" align="center" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Product Cost" field="productCost" align="right" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Shipping" field="shippingCost" align="right" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Total Cost" field="totalCost" align="right" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Acknowledged Date" field="acknowledgedDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Promise Date" field="promiseDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Logistics Contact" field="logisticsContact" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Goods Receipts Date" field="goodsReceiptsDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            {purchases.length === 0 ? (
+                            {sortedPurchases.length === 0 ? (
                                 <tr>
-                                    <td colSpan={7} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                                    <td colSpan={28} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                                         <div className="flex flex-col items-center justify-center">
                                             <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                             </svg>
-                                            <p className="text-lg font-medium">No purchases found</p>
+                                            <p className="text-lg font-medium">No purchase orders found</p>
                                             <p className="text-sm">There are no purchase orders associated with this proposal.</p>
                                         </div>
                                     </td>
                                 </tr>
                             ) : (
-                                purchases.map((purchase) => (
+                                sortedPurchases.map((purchase) => (
                                     <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                         <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium">{purchase.name}</td>
                                         <td className="px-4 py-3">
@@ -99,13 +126,49 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                                                 {purchase.status}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{purchase.vendorName}</td>
-                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.vendorPO}</td>
-                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.orderDate}</td>
-                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.expectedDate}</td>
-                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
-                                            ${purchase.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{purchase.customerQuoteName}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{purchase.customerOrderName}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{purchase.customerPO}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{purchase.supplierName}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{purchase.supplierDBA}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{purchase.supplierContact}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{purchase.shipToAccountName}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{purchase.shipToLocationName}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{purchase.shipToContactName}</td>
+                                        <td className="px-4 py-3 text-center">
+                                            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${purchase.dropShip
+                                                ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                                : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                                }`}>
+                                                {purchase.dropShip ? 'Yes' : 'No'}
+                                            </span>
                                         </td>
+                                        <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
+                                            <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                {purchase.totalLines}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                            ${(purchase.productCost ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                            ${(purchase.shippingCost ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                            ${purchase.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.issuedDate}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.acknowledgedDate}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.requestDate}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.promiseDate}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.shippingMethod}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.logisticsPartner}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.logisticsContact}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.trackingNumber}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.estimatedDeliveryDate}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.trackingStatus}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.actualDeliveryDate}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{purchase.goodsReceiptsDate}</td>
                                     </tr>
                                 ))
                             )}
@@ -115,19 +178,31 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                     <table className="w-full">
                         <thead className="bg-primary-light dark:bg-gray-900">
                             <tr>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Name</th>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Amount</th>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Billed Qty</th>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Cost</th>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Product</th>
-                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">PO Line</th>
+                                <SortableHeader label="Supplier Bill" field="name" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Status" field="status" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Supplier DBA" field="supplierDBA" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Total Lines" field="totalLines" align="center" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Total Cost" field="totalProductAmount" align="right" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Shipping" field="totalShippingCharges" align="right" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Total Amount" field="totalAmount" align="right" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Billed Date" field="billedDate" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Remittance Status" field="remittanceStatus" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Open Balance" field="openBalance" align="right" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Days Outstanding" field="daysOutstanding" align="center" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfigBills} requestSort={requestSortBills} />
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            {supplierBills.length === 0 ? (
+                            {sortedBills.length === 0 ? (
                                 <tr>
-                                    <td colSpan={7} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                                    <td colSpan={19} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                                         <div className="flex flex-col items-center justify-center">
                                             <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -138,25 +213,45 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                                     </td>
                                 </tr>
                             ) : (
-                                supplierBills.map((bill) => (
+                                sortedBills.map((bill) => (
                                     <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                         <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium">{bill.name}</td>
                                         <td className="px-4 py-3">
                                             <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${bill.status === 'Posted' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                                    'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                                'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                 }`}>
                                                 {bill.status || 'N/A'}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
-                                            ${bill.totalBillAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{bill.purchaseOrderName}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{bill.customerQuoteName}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{bill.customerOrderName}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{bill.supplierName}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{bill.supplierDBA}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{bill.supplierContact}</td>
+                                        <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
+                                            <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                {bill.totalLines}
+                                            </span>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{bill.billedQty}</td>
-                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
-                                            ${bill.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                            ${bill.totalProductAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{bill.productName}</td>
-                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{bill.purchaseOrderLineName}</td>
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                            ${bill.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                            ${bill.totalAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{bill.billedDate}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{bill.paymentTerms}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{bill.dueDate}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{bill.remittanceStatus}</td>
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                            ${bill.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
+                                        </td>
+                                        <td className="px-4 py-3 text-center text-sm text-gray-600 dark:text-gray-400">{bill.daysOutstanding}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{bill.settledDate}</td>
                                     </tr>
                                 ))
                             )}

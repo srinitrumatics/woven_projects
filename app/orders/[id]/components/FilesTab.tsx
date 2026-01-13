@@ -1,15 +1,16 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { FileData } from "@/app/orders/types";
+import { SortableHeader } from "../../../../components/ui/SortableHeader";
+import { useSortableData } from "../../../../hooks/useSortableData";
 
 interface FilesTabProps {
     orderId: string;
     accountId: string;
     contactId: string;
+    isEditing?: boolean;
 }
 
-export default function FilesTab({ orderId, accountId, contactId }: FilesTabProps) {
+export default function FilesTab({ orderId, accountId, contactId, isEditing = false }: FilesTabProps) {
     const [files, setFiles] = useState<FileData[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedFileIds, setSelectedFileIds] = useState<Set<string>>(new Set());
@@ -21,7 +22,12 @@ export default function FilesTab({ orderId, accountId, contactId }: FilesTabProp
             const res = await fetch(`/api/salesforce/orders?action=files&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&orderId=${encodeURIComponent(orderId)}`);
             if (!res.ok) throw new Error("Failed to fetch files");
             const data = await res.json();
-            setFiles(data);
+            // Map ContentSize (Salesforce) to FileSize (UI)
+            const mappedData = Array.isArray(data) ? data.map((f: any) => ({
+                ...f,
+                FileSize: f.FileSize ?? f.ContentSize ?? 0
+            })) : [];
+            setFiles(mappedData);
         } catch (error) {
             console.error("Error fetching files:", error);
         } finally {
@@ -32,6 +38,8 @@ export default function FilesTab({ orderId, accountId, contactId }: FilesTabProp
     useEffect(() => {
         fetchFiles();
     }, [orderId, accountId, contactId]);
+
+    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<FileData>(files);
 
     // helpers
     function decodeHtmlEntities(s: string) {
@@ -239,12 +247,14 @@ export default function FilesTab({ orderId, accountId, contactId }: FilesTabProp
                             >
                                 Download Selected ({selectedFileIds.size})
                             </button>
-                            <button
-                                onClick={handleBulkDelete}
-                                className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
-                            >
-                                Delete Selected ({selectedFileIds.size})
-                            </button>
+                            {isEditing && (
+                                <button
+                                    onClick={handleBulkDelete}
+                                    className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
+                                >
+                                    Delete Selected ({selectedFileIds.size})
+                                </button>
+                            )}
                         </>
                     )}
                 </div>
@@ -254,41 +264,45 @@ export default function FilesTab({ orderId, accountId, contactId }: FilesTabProp
                 <table className="w-full">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
-                            <th className="px-4 py-3 text-left w-10">
-                                <input
-                                    type="checkbox"
-                                    onChange={handleSelectAll}
-                                    checked={files.length > 0 && files.every(f => selectedFileIds.has(f.Id))}
-                                    className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
-                                />
-                            </th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Name</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Size</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Type</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Date</th>
+                            {isEditing && (
+                                <th className="px-4 py-3 text-left w-10">
+                                    <input
+                                        type="checkbox"
+                                        onChange={handleSelectAll}
+                                        checked={files.length > 0 && files.every(f => selectedFileIds.has(f.Id))}
+                                        className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                                    />
+                                </th>
+                            )}
+                            <SortableHeader label="Name" field="Title" sortConfig={sortConfig} requestSort={requestSort} />
+                            <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} />
+                            <SortableHeader label="Type" field="FileExtension" sortConfig={sortConfig} requestSort={requestSort} />
+                            <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} />
                             <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {loading ? (
                             <tr>
-                                <td colSpan={6} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">Loading files...</td>
+                                <td colSpan={isEditing ? 6 : 5} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">Loading files...</td>
                             </tr>
-                        ) : files.length === 0 ? (
+                        ) : sortedFiles.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No files found.</td>
+                                <td colSpan={isEditing ? 6 : 5} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No files found.</td>
                             </tr>
                         ) : (
-                            files.map(file => (
+                            sortedFiles.map(file => (
                                 <tr key={file.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                    <td className="px-4 py-3">
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedFileIds.has(file.Id)}
-                                            onChange={() => handleSelectFile(file.Id)}
-                                            className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
-                                        />
-                                    </td>
+                                    {isEditing && (
+                                        <td className="px-4 py-3">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedFileIds.has(file.Id)}
+                                                onChange={() => handleSelectFile(file.Id)}
+                                                className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                                            />
+                                        </td>
+                                    )}
                                     <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{file.Title}</td>
                                     <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{(file.FileSize / 1024).toFixed(2)} KB</td>
                                     <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{file.FileExtension}</td>
@@ -328,15 +342,17 @@ export default function FilesTab({ orderId, accountId, contactId }: FilesTabProp
                                                 )}
                                             </button>
                                             {/* Delete button */}
-                                            <button
-                                                onClick={() => handleDelete(file)}
-                                                className="text-red-500 hover:text-red-700 p-1"
-                                                title="Delete"
-                                            >
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                </svg>
-                                            </button>
+                                            {isEditing && (
+                                                <button
+                                                    onClick={() => handleDelete(file)}
+                                                    className="text-red-500 hover:text-red-700 p-1"
+                                                    title="Delete"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>

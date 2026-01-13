@@ -1,4 +1,5 @@
 import { ProposalElement, SortDirection } from "../types";
+import { SortableHeader } from "../../../../components/ui/SortableHeader";
 
 interface ElementsTabProps {
     elements: ProposalElement[];
@@ -9,21 +10,8 @@ interface ElementsTabProps {
 }
 
 export default function ElementsTab({ elements, sortField, sortDirection, onSort, loading }: ElementsTabProps) {
-    const SortIcon = ({ field }: { field: keyof ProposalElement }) => (
-        <svg
-            className={`w-4 h-4 ml-1 transition-opacity ${sortField === field ? "opacity-100" : "opacity-0 group-hover:opacity-50"
-                }`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-        >
-            {sortField === field && sortDirection === "asc" ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-            ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            )}
-        </svg>
-    );
+    const sortConfig = { key: sortField as string, direction: sortDirection };
+    const requestSort = (key: string) => onSort(key as keyof ProposalElement);
 
     if (loading) {
         return (
@@ -38,30 +26,9 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <th
-                            className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group"
-                            onClick={() => onSort("wbs")}
-                        >
-                            <div className="flex items-center">
-                                WBS:
-                                <SortIcon field="wbs" />
-                            </div>
-                        </th>
-                        <th
-                            className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group"
-                            onClick={() => onSort("proposalElement")}
-                        >
-                            <div className="flex items-center">
-                                PROPOSAL ELEMENT:
-                                <SortIcon field="proposalElement" />
-                            </div>
-                        </th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                            <div className="flex items-center">
-                                DESCRIPTION:
-                                <SortIcon field="proposalElement" />
-                            </div>
-                        </th>
+                        <SortableHeader label="WBS" field="wbs" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Proposal Element" field="proposalElement" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

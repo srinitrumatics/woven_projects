@@ -16,6 +16,7 @@ interface OrderTotalProps {
     handleDownloadFile: (file: File) => void;
     handleRemoveFile: (index: number) => void;
     productsCount: number;
+    isEditing?: boolean;
 }
 
 export default function OrderTotal({
@@ -33,7 +34,8 @@ export default function OrderTotal({
     handleDownloadAll,
     handleDownloadFile,
     handleRemoveFile,
-    productsCount
+    productsCount,
+    isEditing = false
 }: OrderTotalProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md border border-gray-200 dark:border-gray-700 h-full w-full flex flex-col" role="region" aria-label="Order total">
@@ -46,7 +48,7 @@ export default function OrderTotal({
                 </div>
                 <div>
                     <h2 className="text-base font-semibold text-gray-900 dark:text-white">Order Total</h2>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Review your order summary</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Review Order Summary</p>
                 </div>
             </div>
             {/* Price Breakdown */}
@@ -92,7 +94,8 @@ export default function OrderTotal({
                     placeholder="Add special instructions or notes..."
                     value={formData.orderNotes}
                     onChange={(e) => setFormData({ ...formData, orderNotes: e.target.value })}
-                    className="w-full flex-1 min-h-[60px] px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 resize-none"
+                    readOnly={!isEditing}
+                    className={`w-full flex-1 min-h-[60px] px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 resize-none ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                 />
             </div>
 
@@ -120,19 +123,21 @@ export default function OrderTotal({
             {/* Upload Attachments */}
             <div className="border-t border-gray-300 dark:border-gray-600 pt-3 mt-3">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Upload Attachments</label>
-                <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 cursor-pointer hover:border-primary dark:hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all">
-                    <svg className="w-5 h-5 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                    <span className="text-xs text-gray-500 dark:text-gray-400 text-center">PDF, JPEG, or PNG</span>
-                    <input
-                        type="file"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        multiple
-                        onChange={handleFileUpload}
-                        className="hidden"
-                    />
-                </label>
+                {isEditing && (
+                    <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 cursor-pointer hover:border-primary dark:hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all">
+                        <svg className="w-5 h-5 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <span className="text-xs text-gray-500 dark:text-gray-400 text-center">Upload Attachments (Max 10MB). Allow pdf, jpeg, png, csv, xls, xlsx, doc,text</span>
+                        <input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png,.csv,.xls,.xlsx,.doc,.text"
+                            multiple
+                            onChange={handleFileUpload}
+                            className="hidden"
+                        />
+                    </label>
+                )}
 
                 {/* Uploaded Files List */}
                 {uploadedFiles.length > 0 && (
@@ -169,15 +174,17 @@ export default function OrderTotal({
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                         </svg>
                                     </button>
-                                    <button
-                                        onClick={() => handleRemoveFile(index)}
-                                        className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1"
-                                        title="Remove"
-                                    >
-                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
+                                    {isEditing && (
+                                        <button
+                                            onClick={() => handleRemoveFile(index)}
+                                            className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1"
+                                            title="Remove"
+                                        >
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         ))}

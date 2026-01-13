@@ -1,11 +1,15 @@
 "use client";
 
+import { ShippingMethodOption } from "../../types";
+
 interface DeliveryOptionsProps {
     formData: any;
     setFormData: (data: any) => void;
+    shippingMethods?: ShippingMethodOption[];
+    isEditing?: boolean;
 }
 
-export default function DeliveryOptions({ formData, setFormData }: DeliveryOptionsProps) {
+export default function DeliveryOptions({ formData, setFormData, shippingMethods = [], isEditing = false }: DeliveryOptionsProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="w-full flex items-center gap-2 justify-start p-4">
@@ -16,20 +20,44 @@ export default function DeliveryOptions({ formData, setFormData }: DeliveryOptio
                 </div>
                 <div className="text-left">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Delivery Options</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Previously Store Location Delivery Details</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Previously Stored Location Delivery Details</p>
                 </div>
             </div>
             <div className="px-6 pb-6">
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Shipping Method</label>
-                        <input
-                            type="text"
-                            placeholder="Shipping Method"
+                        <select
                             value={formData.shippingMethod || ''}
                             onChange={(e) => setFormData({ ...formData, shippingMethod: e.target.value })}
-                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400"
-                        />
+                            disabled={!isEditing}
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                        >
+                            <option value="">Select Shipping Method</option>
+                            {formData.shippingMethod && !["Best Way", "Ground", "2nd Day Air", "Overnight", "Freight", "Customer Account", "Pick Up"].includes(formData.shippingMethod) && (
+                                <option value={formData.shippingMethod}>{formData.shippingMethod}</option>
+                            )}
+                            {shippingMethods.length > 0 ? (
+                                <>
+                                    {shippingMethods.map((method) => (
+                                        <option key={method.value} value={method.value}>
+                                            {method.label}
+                                        </option>
+                                    ))}
+                                </>
+                            ) : (
+                                <>
+                                    {/* Fallback hardcoded options if no API data */}
+                                    <option value="Best Way">Best Way</option>
+                                    <option value="Ground">Ground</option>
+                                    <option value="2nd Day Air">2nd Day Air</option>
+                                    <option value="Overnight">Overnight</option>
+                                    <option value="Freight">Freight</option>
+                                    <option value="Customer Account">Customer Account</option>
+                                    <option value="Pick Up">Pick Up</option>
+                                </>
+                            )}
+                        </select>
                     </div>
 
                     <div>
@@ -39,7 +67,8 @@ export default function DeliveryOptions({ formData, setFormData }: DeliveryOptio
                             placeholder="Incoterms"
                             value={formData.incoterms || ''}
                             onChange={(e) => setFormData({ ...formData, incoterms: e.target.value })}
-                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400"
+                            readOnly={!isEditing}
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
@@ -50,31 +79,34 @@ export default function DeliveryOptions({ formData, setFormData }: DeliveryOptio
                             placeholder="Special delivery instructions..."
                             value={formData.deliveryNotes || ''}
                             onChange={(e) => setFormData({ ...formData, deliveryNotes: e.target.value })}
-                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400"
+                            readOnly={!isEditing}
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Lift Gate</label>
-                        <div className="flex items-center h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
+                        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Lift Gate <span className="text-red-500">*</span></label>
+                        <div className={`flex items-center h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}>
                             <input
                                 type="checkbox"
                                 checked={formData.liftGateRequired}
+                                disabled={!isEditing}
                                 onChange={(e) => setFormData({ ...formData, liftGateRequired: e.target.checked })}
-                                className="w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3"
+                                className={`w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3 ${!isEditing ? 'cursor-not-allowed opacity-60' : ''}`}
                             />
                             <span className="text-sm text-gray-700 dark:text-gray-300">Equipment needed</span>
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Inside Delivery</label>
-                        <div className="flex items-center h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
+                        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Inside Delivery <span className="text-red-500">*</span></label>
+                        <div className={`flex items-center h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}>
                             <input
                                 type="checkbox"
                                 checked={formData.insideDelivery}
+                                disabled={!isEditing}
                                 onChange={(e) => setFormData({ ...formData, insideDelivery: e.target.checked })}
-                                className="w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3"
+                                className={`w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3 ${!isEditing ? 'cursor-not-allowed opacity-60' : ''}`}
                             />
                             <span className="text-sm text-gray-700 dark:text-gray-300">Bring inside facility</span>
                         </div>

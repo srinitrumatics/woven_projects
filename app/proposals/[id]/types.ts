@@ -17,6 +17,7 @@ export interface ProposalFile {
     fileName: string;
     fileType: string;
     fileSize: string;
+    sizeInBytes: number; // Added for sorting
     uploadedBy: string;
     uploadedDate: string;
     category: string;
@@ -33,6 +34,9 @@ export interface ProposedProduct {
     quantity: number;
     unitPrice: number;
     subtotal: number;
+    shipping: number;
+    taxes: number;
+    grandTotal: number;
 }
 
 export interface Project {
@@ -77,133 +81,293 @@ export interface Order {
 
 export interface Invoice {
     id: string;
-    name: string;
+    name: string; // This is the Invoice Line Name
+    status: string;
+    invoiceName: string; // The parent Invoice Name
+    salesOrderLineName: string;
+    customerQuoteLineName: string;
+    purchaseOrderLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitPrice: number;
+    invoiceQty: number;
+    totalPrice: number; // Invoiced Amount
+    shipping: number;
+    taxes: number;
+    lineGrandTotal: number;
+    // Keeping old fields just in case, but they might not be used in the new table view
+    customerPO?: string;
+    billToAccountName?: string;
+    billToLocationName?: string;
+    billToContactName?: string;
+    totalLines?: number;
+    totalShippingCharges?: number;
+    totalTaxesAmount?: number;
+    grandTotal?: number;
+    issuedDate?: string;
+    dueDate?: string;
+    paymentTerms?: string;
+    collectionStatus?: string;
+    openBalance?: number;
+    daysOutstanding?: number;
+    settledDate?: string;
+}
+
+export interface ShippingManifest {
+    id: string;
+    name: string; // Shipping Manifest Line Name
+    status: string;
+    shippingManifestName: string; // Parent Manifest
+    salesOrderLineName: string;
+    customerQuoteLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    boxCount: number;
+    boxNetWeight: number;
+    boxGrossWeight: number;
+    unitPrice: number;
+    totalOrderQty: number;
+    totalPrice: number;
+    qtyShipped: number;
+    trackingNumber: string;
+    estimatedDeliveryDate: string;
+    trackingStatus: string;
+    actualDeliveryDate: string;
+    // Keeping old fields as optional/legacy
+    customerQuoteName?: string;
+    salesOrderName?: string;
+    customerOrderName?: string;
+    customerPO?: string;
+    shipToAccountName?: string;
+    shipToLocationName?: string;
+    shipToContactName?: string;
+    dropShip?: boolean;
+    totalLines?: number;
+    shippingMethod?: string;
+    shipDate?: string;
+    deliveredDate?: string;
+    logisticsPartnerName?: string;
+    logisticsContactName?: string;
+    requestDate?: string;
+}
+
+export interface SalesOrder {
+    id: string;
+    name: string; // Sales Order Line Name
+    status: string;
+    salesOrderName: string; // Parent Sales Order
+    customerQuoteLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitPrice: number;
+    totalOrderQty: number;
+    totalPrice: number;
+    shipping: number;
+    taxes: number;
+    lineGrandTotal: number;
+    qtyPicked: number;
+    backOrderQty: number;
+    qtyShipped: number;
+    // Keeping old fields as optional/legacy
+    customerQuoteName?: string;
+    customerOrderName?: string;
+    customerPO?: string;
+    billToAccountName?: string;
+    billToLocationName?: string;
+    billToContactName?: string;
+    shipToAccountName?: string;
+    shipToLocationName?: string;
+    shipToContactName?: string;
+    dropShip?: boolean;
+    totalLines?: number;
+    totalShippingCharges?: number;
+    totalTaxesAmount?: number;
+    grandTotal?: number;
+    requestDate?: string;
+    pickDate?: string;
+    pickCompleteDate?: string;
+    shipDate?: string;
+    deliveredDate?: string;
+}
+
+export interface CustomerQuote {
+    id: string;
+    name: string; // Customer Quote Line Name
+    status: string;
+    customerQuoteName: string; // Parent Customer Quote
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitPrice: number;
+    totalOrderQty: number;
+    totalPrice: number;
+    shipping: number;
+    taxes: number;
+    lineGrandTotal: number;
+    qtyShipped: number;
+    // Keeping old fields as optional/legacy
+    customerOrderName?: string;
+    customerPO?: string;
+    billToAccountName?: string;
+    billToLocationName?: string;
+    billToContactName?: string;
+    shipToAccountName?: string;
+    shipToLocationName?: string;
+    shipToContactName?: string;
+    dropShip?: boolean;
+    totalLines?: number;
+    totalShippingCharges?: number;
+    totalTaxesAmount?: number;
+    grandTotal?: number;
+    issuedDate?: string;
+    expirationDate?: string;
+    requestDate?: string;
+    shipDate?: string;
+    deliveredDate?: string;
+}
+
+export interface PurchaseOrder {
+    id: string;
+    name: string; // Purchase Order Name
     status: string;
     customerQuoteName: string;
-    salesOrderName: string;
     customerOrderName: string;
     customerPO: string;
-    billToAccountName: string;
-    billToLocationName: string;
-    billToContactName: string;
+    supplierName: string;
+    supplierDBA: string;
+    supplierContact: string;
+    shipToAccountName: string;
+    shipToLocationName: string;
+    shipToContactName: string;
+    dropShip: boolean;
     totalLines: number;
-    totalPrice: number;
-    totalShippingCharges: number;
-    totalTaxesAmount: number;
-    grandTotal: number;
+    productCost: number;
+    shippingCost: number;
+    totalCost: number;
     issuedDate: string;
-    dueDate: string;
+    acknowledgedDate: string;
+    requestDate: string;
+    promiseDate: string;
+    shippingMethod: string;
+    logisticsPartner: string;
+    logisticsContact: string;
+    trackingNumber: string;
+    estimatedDeliveryDate: string;
+    trackingStatus: string;
+    actualDeliveryDate: string;
+    goodsReceiptsDate: string;
+}
+
+export interface PurchaseOrderLine {
+    id: string;
+    name: string; // Purchase Order Line Name
+    status: string;
+    purchaseOrderName: string; // Parent Purchase Order
+    customerQuoteLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitCost: number;
+    totalOrderQty: number;
+    totalCost: number; // Total Product Cost
+    shipping: number;
+    lineTotalCost: number; // Total Cost (with shipping etc)
+    openBalanceQty: number;
+    trackingNumber: string;
+    estimatedDeliveryDate: string;
+    trackingStatus: string;
+    actualDeliveryDate: string;
+    goodsReceiptDate: string;
+    invoiceStatus: string;
+    // Keeping old fields as optional/legacy
+    customerQuoteName?: string;
+    customerOrderName?: string;
+    customerPO?: string;
+    supplierName?: string;
+    supplierDBA?: string;
+    supplierContact?: string;
+    shipToAccountName?: string;
+    shipToLocationName?: string;
+    shipToContactName?: string;
+    dropShip?: boolean;
+    totalLines?: number;
+    productCost?: number;
+    shippingCost?: number;
+    issuedDate?: string;
+    acknowledgedDate?: string;
+    requestDate?: string;
+    promiseDate?: string;
+    shippingMethod?: string;
+    logisticsPartner?: string;
+    logisticsContact?: string;
+    goodsReceiptsDate?: string;
+}
+
+export interface SupplierBill {
+    id: string;
+    name: string; // Supplier Bill Name
+    status: string;
+    purchaseOrderName: string;
+    customerQuoteName: string;
+    customerOrderName: string;
+    supplierName: string;
+    supplierDBA: string;
+    supplierContact: string;
+    totalLines: number;
+    totalProductAmount: number;
+    totalShippingCharges: number;
+    totalAmount: number;
+    billedDate: string;
     paymentTerms: string;
-    collectionStatus: string;
+    dueDate: string;
+    remittanceStatus: string;
     openBalance: number;
     daysOutstanding: number;
     settledDate: string;
 }
 
-export interface ShippingManifest {
+export interface SupplierBillLine {
     id: string;
-    name: string;
+    name: string; // Supplier Bill Line Name
     status: string;
-    customerQuoteName: string;
-    salesOrderName: string;
-    customerOrderName: string;
-    customerPO: string;
-    shipToAccountName: string;
-    shipToLocationName: string;
-    shipToContactName: string;
-    dropShip: boolean;
-    totalLines: number;
-    totalPrice: number;
-    shippingMethod: string;
-    shipDate: string;
-    deliveredDate: string;
-    estimatedDeliveryDate: string;
-    actualDeliveryDate: string;
-    trackingNumber: string;
-    trackingStatus: string;
-    logisticsPartnerName: string;
-    logisticsContactName: string;
-}
-
-export interface SalesOrder {
-    id: string;
-    name: string;
-    status: string;
-    customerQuoteName: string;
-    customerOrderName: string;
-    customerPO: string;
-    billToAccountName: string;
-    billToLocationName: string;
-    billToContactName: string;
-    shipToAccountName: string;
-    shipToLocationName: string;
-    shipToContactName: string;
-    dropShip: boolean;
-    totalLines: number;
-    totalPrice: number;
-    totalShippingCharges: number;
-    totalTaxesAmount: number;
-    grandTotal: number;
-    requestDate: string;
-    pickDate: string;
-    pickCompleteDate: string;
-    shipDate: string;
-    deliveredDate: string;
-}
-
-export interface CustomerQuote {
-    id: string;
-    name: string;
-    status: string;
-    customerOrderName: string;
-    customerPO: string;
-    billToAccountName: string;
-    billToLocationName: string;
-    billToContactName: string;
-    shipToAccountName: string;
-    shipToLocationName: string;
-    shipToContactName: string;
-    dropShip: boolean;
-    totalLines: number;
-    totalPrice: number;
-    totalShippingCharges: number;
-    totalTaxesAmount: number;
-    grandTotal: number;
-    issuedDate: string;
-    expirationDate: string;
-    requestDate: string;
-    shipDate: string;
-    deliveredDate: string;
-}
-
-export interface Purchase {
-    id: string;
-    name: string;
-    status: string;
-    vendorName: string;
-    vendorPO: string;
-    orderDate: string;
-    expectedDate: string;
-    totalAmount: number;
-}
-
-export interface SupplierBill {
-    id: string;
-    name: string;
-    status: string;
-    supplierBillName: string;
-    billAmount: number;
-    totalBillAmount: number;
-    billedQty: number;
-    unitCost: number;
-    manufacturerDBA: string;
-    productName: string;
+    supplierBillName: string; // Parent Supplier Bill
     purchaseOrderLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitCost: number;
+    billedQty: number;
+    billAmount: number;
+    shipping: number;
+    totalBillAmount: number;
+    goodsReceiptDate: string;
+    // Keeping old fields as optional/legacy
+    purchaseOrderName?: string;
+    customerQuoteName?: string;
+    customerOrderName?: string;
+    supplierName?: string;
+    supplierDBA?: string;
+    supplierContact?: string;
+    totalLines?: number;
+    totalProductAmount?: number;
+    totalShippingCharges?: number;
+    totalAmount?: number;
+    billedDate?: string;
+    paymentTerms?: string;
+    dueDate?: string;
+    remittanceStatus?: string;
+    openBalance?: number;
+    daysOutstanding?: number;
+    holdStatus?: string;
+    settledDate?: string;
 }
 
 export interface PurchasesData {
-    purchaseOrders: Purchase[];
-    supplierBills: SupplierBill[];
+    purchaseOrders: PurchaseOrderLine[];
+    supplierBills: SupplierBillLine[];
 }
 
 // Basic Return interface for table display
@@ -219,23 +383,124 @@ export interface Return {
 }
 
 export interface DebitMemo extends Return {
-    debitToAccountName: string;
+    debitMemoName: string; // Parent Debit Memo
+    supplierBillLineName: string;
+    purchaseOrderLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitCost: number;
+    debitQty: number;
+    totalCost: number;
+    shipping: number;
+    lineGrandTotal: number;
+    // Keeping old fields as optional/legacy
+    supplierBillName?: string;
+    purchaseOrderName?: string;
+    customerOrderName?: string;
+    supplierCreditMemoName?: string;
+    debitToAccountName?: string;
+    debitToContactName?: string;
+    totalLines?: number;
+    totalShippingCharges?: number;
+    totalDebitAmount?: number;
+    issuedDate?: string;
+    approvalDate?: string;
+    availableDebitBalance?: number;
+    settledDate?: string;
 }
 
-export interface RTV extends Return {
-    supplierName: string;
-    rtvType: string;
-}
+
 
 export interface CreditMemo extends Return {
-    creditToAccountName: string;
-    invoiceName: string;
+    creditMemoName: string; // Parent Credit Memo
+    invoiceLineName: string;
+    salesOrderLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitPrice: number;
+    creditQty: number;
+    totalPrice: number;
+    shipping: number;
+    taxes: number;
+    lineGrandTotal: number;
+    // Keeping old fields as optional/legacy
+    invoiceName?: string;
+    customerQuoteName?: string;
+    customerOrderName?: string;
+    creditToAccountName?: string;
+    creditToContactName?: string;
+    totalLines?: number;
+    totalShippingCharges?: number;
+    totalTaxesAmount?: number;
+    totalCreditAmount?: number;
+    issuedDate?: string;
+    expirationDate?: string;
+    availableCreditBalance?: number;
+    settledDate?: string;
 }
 
 export interface RMA extends Return {
-    shipFromAccountName: string;
+    rmaName: string; // Parent RMA
+    salesOrderLineName: string;
+    customerQuoteLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitPrice: number;
+    returnQty: number;
+    openBalanceQty: number;
+    trackingNumber: string; // Already in Return but explicit here for clarity if needed or removed from Return? Inherited is fine.
+    estimatedDeliveryDate: string;
+    trackingStatus: string;
+    actualDeliveryDate: string;
+    goodsReceiptDate: string;
+    // Keeping old fields as optional/legacy
+    salesOrderName?: string;
+    customerQuoteName?: string;
+    customerOrderName?: string;
+    rmaType?: string;
+    shipFromAccountName?: string;
+    shipFromContactName?: string;
+    returnToAccountName?: string;
+    returnToContactName?: string;
+    dropShip?: boolean;
+    totalLines?: number;
+    totalPrice?: number;
+    issuedDate?: string;
+    returnByDate?: string;
+    shippingMethod?: string;
+    logisticsPartner?: string;
+    logisticsContact?: string;
 }
 
+
+export interface RTV extends Return {
+    rtvName: string; // Parent RTV
+    purchaseOrderLineName: string;
+    customerQuoteLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitCost: number;
+    returnQty: number;
+    totalCost: number;
+    // Keeping old fields as optional/legacy
+    purchaseOrderName?: string;
+    customerQuoteName?: string;
+    customerOrderName?: string;
+    rtvType?: string;
+    rmaNumber?: string;
+    shipFromAccountName?: string;
+    shipFromContactName?: string;
+    supplierName?: string;
+    supplierContact?: string;
+    totalLines?: number;
+    issuedDate?: string;
+    approvalDate?: string;
+    returnByDate?: string;
+}
 
 export interface ReturnsData {
     rma: RMA[];
@@ -254,5 +519,23 @@ export interface FulfillmentData {
 }
 
 export type FulfillmentTabType = "invoices" | "shipping" | "sales" | "quotes";
-export type ProposalTabType = "products" | "elements" | "files" | "signatures" | "projects" | "orders" | "fulfillments" | "purchases" | "returns";
+export interface TaxDetail {
+    id: string;
+    salesTaxRate: number;
+    salesTaxAmount: number;
+    useTaxRate: number;
+    useTaxAmount: number;
+    localTaxRate: number;
+    localTaxAmount: number;
+    exciseTaxRate: number;
+    exciseTaxAmount: number;
+    grossReceiptsTaxRate: number;
+    grossReceiptsTaxAmount: number;
+    gstRate: number;
+    gstAmount: number;
+    vatRate: number;
+    vatAmount: number;
+}
+
+export type ProposalTabType = "products" | "elements" | "files" | "signatures" | "projects" | "orders" | "fulfillments" | "purchases" | "returns" | "taxes";
 export type SortDirection = "asc" | "desc";

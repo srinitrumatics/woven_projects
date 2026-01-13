@@ -8,9 +8,10 @@ interface ShippingInfoProps {
     shipLocations: AuthorizedLocation[];
     locationsLoading: boolean;
     handleLocationSelect: (location: AuthorizedLocation) => void;
+    isEditing?: boolean;
 }
 
-export default function ShippingInfo({ formData, setFormData, shipLocations, locationsLoading, handleLocationSelect }: ShippingInfoProps) {
+export default function ShippingInfo({ formData, setFormData, shipLocations, locationsLoading, handleLocationSelect, isEditing = false }: ShippingInfoProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-fit">
             <div className="w-full flex items-center gap-2 justify-start p-4">
@@ -27,17 +28,17 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
             </div>
 
             <div className="px-6 pb-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="md:col-span-1">
+                <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                    <div className="md:col-span-3">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Ship To Account
+                            Ship to Account
                         </label>
                         <input
                             type="text"
                             value={(() => {
                                 if (formData.shipToAccountName) return formData.shipToAccountName;
                                 const location = shipLocations.find(l => l.Id === formData.shipTo);
-                                return location?.Account_Name__c || '';
+                                return location?.Account_Name__r?.Name || location?.Account_Name__c || '';
                             })() || ''}
                             readOnly
                             disabled
@@ -45,9 +46,9 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                         />
                     </div>
 
-                    <div className="md:col-span-2">
+                    <div className="md:col-span-3">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Ship To Location <span className="text-red-500">*</span>
+                            Ship to Location <span className="text-red-500">*</span>
                         </label>
                         <select name="shipTo"
                             value={formData.shipTo}
@@ -59,7 +60,8 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                                     setFormData({ ...formData, shipTo: e.target.value });
                                 }
                             }}
-                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                            disabled={!isEditing}
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         >
                             <option key="select-ship" value="">Select a location...</option>
                             {locationsLoading ? (
@@ -77,7 +79,7 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                     </div>
 
 
-                    <div className="md:col-span-3">
+                    <div className="md:col-span-6">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Shipping Address <span className="text-red-500">*</span>
                         </label>
@@ -85,44 +87,48 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                             type="text"
                             value={formData.shippingAddress || ''}
                             onChange={(e) => setFormData({ ...formData, shippingAddress: e.target.value })}
-                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                            readOnly={!isEditing}
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
-                    <div>
+                    <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Requested Date <span className="text-red-500">*</span>
+                            Request Date <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="date"
                             value={formData.requestedDeliveryDate || ''}
                             onChange={(e) => setFormData({ ...formData, requestedDeliveryDate: e.target.value })}
-                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                            readOnly={!isEditing}
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Drop-Ship</label>
-                        <div className="flex items-center h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
+                    <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Drop-Ship <span className="text-red-500">*</span></label>
+                        <div className={`flex items-center h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}>
                             <input
                                 type="checkbox"
                                 checked={formData.dropShip}
+                                disabled={!isEditing}
                                 onChange={(e) => setFormData({ ...formData, dropShip: e.target.checked })}
-                                className="w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3"
+                                className={`w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3 ${!isEditing ? 'cursor-not-allowed opacity-60' : ''}`}
                             />
                             <span className="text-sm text-gray-700 dark:text-gray-300">Direct to customer</span>
                         </div>
                     </div>
 
-                    <div>
+                    <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Site</label>
                         <input
                             placeholder="Site"
                             type="text"
                             name="site"
                             value={formData.site || ''}
+                            readOnly={!isEditing}
                             onChange={(e) => setFormData({ ...formData, site: e.target.value })}
-                            className="w-full h-11 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
                 </div>

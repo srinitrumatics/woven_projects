@@ -60,7 +60,7 @@ export default function ProposalDetails({
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Account Rep</label>
                             <p className="text-gray-900 dark:text-white font-medium">{proposal.accountExecutive}</p>
@@ -78,10 +78,6 @@ export default function ProposalDetails({
                             <p className="text-gray-900 dark:text-white font-semibold">{proposal.expirationDate}</p>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price Book</label>
-                            <p className="text-gray-900 dark:text-white">{proposal.priceBook}</p>
-                        </div>
-                        <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Customer Order</label>
                             <p className="text-gray-900 dark:text-white font-mono">{proposal.orderNumber}</p>
                         </div>
@@ -89,7 +85,7 @@ export default function ProposalDetails({
                 </div>
 
                 {/* Billing and Shipping Information Cards - Side by Side */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                     {/* Billing Information Card */}
                     <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700 h-full">
                         <div className="flex items-center gap-3 mb-4">
@@ -107,11 +103,11 @@ export default function ProposalDetails({
                         <div className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bill To Account</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bill to Account</label>
                                     <p className="text-gray-900 dark:text-white font-medium">{proposal.billToAccount}</p>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bill To Location</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bill to Location</label>
                                     <p className="text-gray-900 dark:text-white font-medium">{proposal.billTo}</p>
                                 </div>
                             </div>
@@ -156,11 +152,11 @@ export default function ProposalDetails({
                         <div className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ship To Account</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ship to Account</label>
                                     <p className="text-gray-900 dark:text-white font-medium">{proposal.shipToAccount}</p>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ship To Location</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ship to Location</label>
                                     <p className="text-gray-900 dark:text-white font-medium">{proposal.shipTo}</p>
                                 </div>
                             </div>
@@ -200,7 +196,7 @@ export default function ProposalDetails({
                         </div>
                         <div>
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Scope Summary</h2>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Project scope and deliverables overview</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Project Scope and Deliverables Overview</p>
                         </div>
                     </div>
 
@@ -222,7 +218,7 @@ export default function ProposalDetails({
                         </div>
                         <div>
                             <h2 className="text-base font-semibold text-gray-900 dark:text-white">Proposal Summary</h2>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">Review your proposal summary</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">Review proposal summary</p>
                         </div>
                     </div>
 
@@ -285,7 +281,8 @@ export default function ProposalDetails({
                             <svg className="w-5 h-5 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                             </svg>
-                            <span className="text-xs text-gray-500 dark:text-gray-400 text-center">PDF, JPEG, or PNG</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400 text-center">Upload Attachments (Max 10MB).Allow pdf, jpeg, png, csv, xls, xlsx, doc,text
+                            </span>
                             <input
                                 type="file"
                                 accept=".pdf,.jpg,.jpeg,.png"
