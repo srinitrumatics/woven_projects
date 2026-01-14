@@ -54,7 +54,7 @@ export default function MyOrderTable({
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
                         <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white w-[5%]">&nbsp;</th>
-                        <SortableHeader label="Order Line #" field="orderLineId" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Order Line #" field="sku" align="center" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} />
@@ -92,11 +92,11 @@ export default function MyOrderTable({
                                 </td>
                                 <td className="px-4 py-3 text-center">
                                     <Link
-                                        href={`/orders/${orderId}/lines/${product.orderLineId || product.orderLineId}`}
+                                        href={`/orders/${orderId}/lines/${product.orderLineId || product.id}`}
                                         className="text-sm font-semibold text-primary hover:underline"
                                         title="View line details"
                                     >
-                                        {product.orderLineId}
+                                        {product.sku}
                                     </Link>
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">

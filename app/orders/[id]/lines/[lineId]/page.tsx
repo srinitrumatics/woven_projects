@@ -3,7 +3,8 @@
 import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Sidebar from "@/components/layouts/Sidebar";
+
+import LineTaxesTab from "../../components/LineTaxesTab";
 
 // Interface for order line item from Salesforce
 interface OrderLineItem {
@@ -30,6 +31,23 @@ interface OrderLineItem {
   Manufacturer_DBA__c?: string;
   Site_Name?: string;
   Inventory_Account_Name?: string;
+
+  // Tax Fields
+  Sales_Tax_Rate__c?: number;
+  Sales_Tax_Amount__c?: number;
+  Use_Tax_Rate__c?: number;
+  Use_Tax_Amount__c?: number;
+  Local_Tax_Rate__c?: number;
+  Local_Tax_Amount__c?: number;
+  Excise_Tax_Rate__c?: number;
+  Excise_Tax_Amount__c?: number;
+  Gross_Receipts_Tax_Rate__c?: number;
+  Gross_Receipts_Tax_Amount__c?: number;
+  GST_Rate__c?: number;
+  GST_Amount__c?: number;
+  VAT_Rate__c?: number;
+  Total_VAT_Amount__c?: number;
+  Total_Taxes_Amount__c?: number;
 }
 
 // Interface for mapped product data
@@ -55,6 +73,23 @@ interface ProductData {
   qtyShipped: number;
   unitCost: string;
   totalCost: string;
+
+  // Tax Fields
+  Sales_Tax_Rate__c?: number;
+  Sales_Tax_Amount__c?: number;
+  Use_Tax_Rate__c?: number;
+  Use_Tax_Amount__c?: number;
+  Local_Tax_Rate__c?: number;
+  Local_Tax_Amount__c?: number;
+  Excise_Tax_Rate__c?: number;
+  Excise_Tax_Amount__c?: number;
+  Gross_Receipts_Tax_Rate__c?: number;
+  Gross_Receipts_Tax_Amount__c?: number;
+  GST_Rate__c?: number;
+  GST_Amount__c?: number;
+  VAT_Rate__c?: number;
+  Total_VAT_Amount__c?: number;
+  Total_Taxes_Amount__c?: number;
 }
 
 export default function OrderLineDetailPage({
@@ -68,6 +103,7 @@ export default function OrderLineDetailPage({
   // State for order data
   const [loading, setLoading] = useState(true);
   const [orderLines, setOrderLines] = useState<ProductData[]>([]);
+  const [orderName, setOrderName] = useState<string>("");
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
 
   // Salesforce credentials
@@ -80,17 +116,29 @@ export default function OrderLineDetailPage({
     async function fetchOrderData() {
       try {
         setLoading(true);
-        const res = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&orderId=${encodeURIComponent(id)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&action=orderlines`);
 
-        if (!res.ok) {
-          throw new Error(`Failed to fetch order: ${res.status} ${res.statusText}`);
+        // Fetch Order Details (for name) and Order Lines in parallel
+        const [orderRes, linesRes] = await Promise.all([
+          fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&orderId=${encodeURIComponent(id)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}`),
+          fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&orderId=${encodeURIComponent(id)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&action=orderlines`)
+        ]);
+
+        if (!orderRes.ok || !linesRes.ok) {
+          throw new Error("Failed to fetch order data");
         }
 
-        const data = await res.json();
-        console.log("Fetched order data for line details:", data);
+        const orderData = await orderRes.json();
+        const linesData = await linesRes.json();
 
-        if (data && data.length > 0) {
-          const orderlines = data;
+        console.log("Fetched order data:", orderData);
+        console.log("Fetched order lines data:", linesData);
+
+        if (orderData && orderData.length > 0) {
+          setOrderName(orderData[0].Name || orderData[0].OrderNumber || id);
+        }
+
+        if (linesData && linesData.length > 0) {
+          const orderlines = linesData;
 
           // Map Order Lines to products
           if (orderlines && orderlines.length > 0) {
@@ -116,6 +164,23 @@ export default function OrderLineDetailPage({
               qtyShipped: item.Qty_Shipped__c || 0,
               unitCost: item.Unit_Cost__c != null ? `$${item.Unit_Cost__c.toFixed(2)}` : "Hide",
               totalCost: item.Total_Cost__c != null ? `$${item.Total_Cost__c.toFixed(2)}` : "Hide",
+
+              // Map Tax Fields
+              Sales_Tax_Rate__c: item.Sales_Tax_Rate__c,
+              Sales_Tax_Amount__c: item.Sales_Tax_Amount__c,
+              Use_Tax_Rate__c: item.Use_Tax_Rate__c,
+              Use_Tax_Amount__c: item.Use_Tax_Amount__c,
+              Local_Tax_Rate__c: item.Local_Tax_Rate__c,
+              Local_Tax_Amount__c: item.Local_Tax_Amount__c,
+              Excise_Tax_Rate__c: item.Excise_Tax_Rate__c,
+              Excise_Tax_Amount__c: item.Excise_Tax_Amount__c,
+              Gross_Receipts_Tax_Rate__c: item.Gross_Receipts_Tax_Rate__c,
+              Gross_Receipts_Tax_Amount__c: item.Gross_Receipts_Tax_Amount__c,
+              GST_Rate__c: item.GST_Rate__c,
+              GST_Amount__c: item.GST_Amount__c,
+              VAT_Rate__c: item.VAT_Rate__c,
+              Total_VAT_Amount__c: item.Total_VAT_Amount__c,
+              Total_Taxes_Amount__c: item.Total_Taxes_Amount__c,
             }));
 
             setOrderLines(mappedProducts);
@@ -193,21 +258,21 @@ export default function OrderLineDetailPage({
   // Loading state
   if (loading) {
     return (
-      <Sidebar>
+      <>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
             <p className="text-gray-500 dark:text-gray-400">Loading order line details...</p>
           </div>
         </div>
-      </Sidebar>
+      </>
     );
   }
 
   // No data state
   if (!product) {
     return (
-      <Sidebar>
+      <>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -222,12 +287,12 @@ export default function OrderLineDetailPage({
             </Link>
           </div>
         </div>
-      </Sidebar>
+      </>
     );
   }
 
   return (
-    <Sidebar>
+    <>
       {/* Breadcrumb - Compact */}
       <div className="mb-4">
         <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
@@ -242,15 +307,15 @@ export default function OrderLineDetailPage({
             onClick={() => router.push(`/orders/${id}`)}
             className="hover:text-gray-700 dark:hover:text-gray-300"
           >
-            Order #{id}
+            {orderName || `Order #${id}`}
           </button>
           <span>&gt;</span>
-          <span className="text-gray-900 dark:text-white">Line #{lineId}</span>
+          <span className="text-gray-900 dark:text-white">{product?.sku || `Line #${lineId}`}</span>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Order Line #{lineId}
+              {product?.sku || `Order Line #${lineId}`}
             </h1>
             <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
               Line {lineNumber} of {totalLines}
@@ -510,6 +575,11 @@ export default function OrderLineDetailPage({
 
         {/* Order Details Card - Full width */}
         <div className="lg:col-span-5 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+              Order Details
+            </h2>
+          </div>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -550,6 +620,11 @@ export default function OrderLineDetailPage({
               </tbody>
             </table>
           </div>
+        </div>
+
+        {/* Taxes Card - Separate Card */}
+        <div className="lg:col-span-5">
+          <LineTaxesTab product={product} />
         </div>
       </div>
 
@@ -640,6 +715,6 @@ export default function OrderLineDetailPage({
           </span>
         )}
       </div>
-    </Sidebar>
+    </>
   );
 }

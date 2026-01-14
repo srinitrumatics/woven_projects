@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Sidebar from "@/components/layouts/Sidebar";
+
 import { formatCurrency } from "@/lib/utils/formatting";
 import { OrderStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
@@ -355,7 +355,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <Sidebar>
+    <>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Orders</h1>
         <div className="flex items-center gap-3">
@@ -653,7 +653,7 @@ export default function OrdersPage() {
           </div>
         </div>
       </div>
-    </Sidebar>
+    </>
   );
 }
 

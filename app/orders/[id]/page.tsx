@@ -3,7 +3,7 @@
 import { use, useState, useMemo, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Sidebar from "@/components/layouts/Sidebar";
+
 import Pagination from "@/components/ui/Pagination";
 import { useSortableData } from "@/hooks/useSortableData";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
@@ -20,6 +20,7 @@ import FilesTab from "./components/FilesTab";
 import ProductCatalog from "./components/ProductCatalog";
 import MyOrderTable from "./components/MyOrderTable";
 import PDFTemplate from "./components/PDFTemplate";
+import TaxesTab from "./components/TaxesTab";
 // import { mockProducts } from "@/app/products/mockData"; // Removed in favor of API data
 
 interface Address {
@@ -100,6 +101,23 @@ interface Order {
   Ship_to_Account_Name?: string;
 
   CustomerOrderLines?: OrderItem[];
+
+  // Tax fields
+  Sales_Tax_Rate__c?: number;
+  Total_Sales_Tax_Amount__c?: number;
+  Use_Tax_Rate__c?: number;
+  Total_Use_Tax_Amount__c?: number;
+  Local_Tax_Rate__c?: number;
+  Total_Local_Tax_Amount__c?: number;
+  Excise_Tax_Rate__c?: number;
+  Total_Excise_Tax_Amount__c?: number;
+  Gross_Receipts_Tax_Rate__c?: number;
+  Total_Gross_Receipts_Tax_Amount__c?: number;
+  GST_Rate__c?: number;
+  Total_GST_Amount__c?: number;
+  VAT_Rate__c?: number;
+  Total_VAT_Amount__c?: number;
+
   [key: string]: any;
 }
 
@@ -115,7 +133,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   // State management for product tables
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"myOrder" | "catalog" | "files">("myOrder"); // Default to My Order table
+  const [viewMode, setViewMode] = useState<"myOrder" | "catalog" | "files" | "taxes">("myOrder"); // Default to My Order table
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [orderProducts, setOrderProducts] = useState<Product[]>([]);
@@ -1104,7 +1122,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   }, [searchQuery, viewMode]);
 
   return (
-    <Sidebar>
+    <>
       <OrderHeader
         id={id}
         orderStatus={orderStatus}
@@ -1188,15 +1206,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </svg>
             </div>
             <div className="flex flex-wrap gap-2 w-full sm:w-auto justify-end sm:ml-4">
-              <button
-                onClick={() => setViewMode("files")}
-                className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${viewMode === "files"
-                  ? "bg-primary text-white"
-                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                  }`}
-              >
-                Files
-              </button>
+
               <button
                 onClick={() => setViewMode("catalog")}
                 className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${viewMode === "catalog"
@@ -1214,6 +1224,25 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   }`}
               >
                 My Order ({orderProducts.length})
+              </button>
+
+              <button
+                onClick={() => setViewMode("taxes")}
+                className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${viewMode === "taxes"
+                  ? "bg-primary text-white"
+                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                  }`}
+              >
+                Taxes
+              </button>
+              <button
+                onClick={() => setViewMode("files")}
+                className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${viewMode === "files"
+                  ? "bg-primary text-white"
+                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                  }`}
+              >
+                Files
               </button>
             </div>
           </div>
@@ -1268,6 +1297,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               setOrderProducts={setOrderProducts}
               isEditing={isEditing}
             />
+          )}
+
+          {viewMode === "taxes" && (
+            <TaxesTab order={orderData} loading={loadingOrder} />
           )}
         </div>
       </div>
@@ -1391,6 +1424,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       )}
 
-    </Sidebar>
+    </>
   );
 }
