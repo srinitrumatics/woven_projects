@@ -73,16 +73,17 @@ export default function ProductCatalog({
                                     />
                                 </th>
                             )}
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">&nbsp;</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">&nbsp;</th>
                             <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Unit Price" field="unitPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                            <SortableHeader label="List Price" field="listPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                            <SortableHeader label="Selling Price" field="unitPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Available Qty" field="availableQty" align="center" sortConfig={sortConfig} requestSort={requestSort} />
                             {isEditing && (
                                 <>
                                     <SortableHeader label="Qty to Order" field="orderQty" align="center" sortConfig={sortConfig} requestSort={requestSort} />
-                                    <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Action</th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Action</th>
                                 </>
                             )}
                         </tr>
@@ -118,19 +119,30 @@ export default function ProductCatalog({
                                         </div>
                                     </td>
                                     <td className="px-4 py-2">
-                                        <div className="text-sm font-medium text-gray-900 dark:text-white truncate max-w-[200px]" title={product.name}>{product.name}</div>
-                                        <div className="text-xs font-mono text-gray-500 dark:text-gray-400">{product.sku}</div>
+                                        <div className="text-xs font-medium text-gray-900 dark:text-white line-clamp-2" title={product.name}>{product.name}</div>
+                                        {product.description && (
+                                            <div className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 break-words" title={product.description}>
+                                                {product.description}
+                                            </div>
+                                        )}
                                     </td>
-                                    <td className="px-4 py-2 text-sm text-gray-900 dark:text-white truncate max-w-[150px]">{product.manufacturer}</td>
+                                    <td className="px-4 py-2 text-xs text-gray-900 dark:text-white">
+                                        <div className="line-clamp-2" title={product.manufacturer}>{product.manufacturer}</div>
+                                    </td>
                                     <td className="px-4 py-2">
-                                        <span className="inline-block px-2 py-0.5 text-xs font-medium rounded bg-primary/10 text-primary truncate max-w-[100px]">
-                                            {product.productFamily}
-                                        </span>
+                                        <div className="line-clamp-2" title={product.productFamily}>
+                                            <span className="inline-block px-2 py-0.5 text-xs font-medium rounded bg-primary/10 text-primary">
+                                                {product.productFamily}
+                                            </span>
+                                        </div>
                                     </td>
-                                    <td className="px-4 py-2 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                    <td className="px-4 py-2 text-xs text-right text-gray-500 dark:text-gray-400 line-through">
+                                        {formatCurrency(product.listPrice)}
+                                    </td>
+                                    <td className="px-4 py-2 text-xs text-right text-gray-900 dark:text-white font-semibold">
                                         {formatCurrency(product.unitPrice)}
                                     </td>
-                                    <td className="px-4 py-2 text-sm text-center text-gray-900 dark:text-white">
+                                    <td className="px-4 py-2 text-xs text-center text-gray-900 dark:text-white">
                                         <div>{formatNumber(product.availableQty)}</div>
                                         <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {product.moq || 1}</div>
                                     </td>
@@ -155,7 +167,7 @@ export default function ProductCatalog({
                                                         step={product.moq || 1}
                                                         value={catalogQuantities[product.id] || product.moq || 1}
                                                         onChange={(e) => handleCatalogQuantityChange(product.id, Number(e.target.value), product.moq || 1)}
-                                                        className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-center"
+                                                        className="w-16 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-center"
                                                     />
                                                     <button
                                                         onClick={() => {

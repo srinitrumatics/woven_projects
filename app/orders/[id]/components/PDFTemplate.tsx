@@ -110,28 +110,30 @@ export default function PDFTemplate({
             )}
 
             {/* Items Table */}
-            <table className="w-full mb-8">
-                <thead>
-                    <tr className="bg-primary-light dark:bg-gray-900 text-black text-sm uppercase font-semibold" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', verticalAlign: 'middle', height: '35px' }}>
-                        <th className="px-4 py-2 text-left">Item name</th>
-                        <th className="px-4 py-2 text-left">SKU</th>
-                        <th className="px-4 py-2 text-center">Qty</th>
-                        <th className="px-4 py-2 text-right">Unit Price</th>
-                        <th className="px-4 py-2 text-right">Total</th>
-                    </tr>
-                </thead>
-                <tbody className="text-sm text-gray-700">
-                    {orderProducts.map((product, index) => (
-                        <tr key={index} className="border-b border-gray-200">
-                            <td className="px-4 py-3">{product.name}</td>
-                            <td className="px-4 py-3">{product.sku}</td>
-                            <td className="px-4 py-3 text-center">{product.orderQty}</td>
-                            <td className="px-4 py-3 text-right">{formatCurrency(product.unitPrice)}</td>
-                            <td className="px-4 py-3 text-right">{formatCurrency(product.subtotal)}</td>
+            <div className="overflow-x-auto">
+                <table className="w-full mb-8">
+                    <thead>
+                        <tr className="bg-primary-light dark:bg-gray-900 text-black text-sm uppercase font-semibold" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', verticalAlign: 'middle', height: '35px' }}>
+                            <th className="px-4 py-2 text-left">Item name</th>
+                            <th className="px-4 py-2 text-left">SKU</th>
+                            <th className="px-4 py-2 text-left">Qty</th>
+                            <th className="px-4 py-2 text-left">Unit Price</th>
+                            <th className="px-4 py-2 text-left">Total</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="text-xs text-gray-700">
+                        {orderProducts.map((product, index) => (
+                            <tr key={index} className="border-b border-gray-200">
+                                <td className="px-4 py-3">{product.name}</td>
+                                <td className="px-4 py-3">{product.sku}</td>
+                                <td className="px-4 py-3 text-center">{product.orderQty}</td>
+                                <td className="px-4 py-3 text-right">{formatCurrency(product.unitPrice)}</td>
+                                <td className="px-4 py-3 text-right">{formatCurrency(product.subtotal)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
             {/* Totals */}
             <div className="flex justify-end">

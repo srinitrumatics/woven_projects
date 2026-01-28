@@ -69,21 +69,21 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             type="text"
                             value={formData.billingAddress || ''}
                             onChange={(e) => setFormData({ ...formData, billingAddress: e.target.value })}
-                            readOnly={!isEditing}
+                            readOnly={isEditing === false}
                             className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
                     <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            CPO # <span className="text-red-500">*</span>
+                            Customer PO # <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             placeholder="Enter PO number"
                             value={formData.purchaseOrder || ''}
                             onChange={(e) => setFormData({ ...formData, purchaseOrder: e.target.value })}
-                            readOnly={!isEditing}
+                            readOnly={isEditing === false}
                             className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
@@ -93,8 +93,8 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         <select
                             value={formData.paymentTerms || ''}
                             onChange={(e) => setFormData({ ...formData, paymentTerms: e.target.value })}
-                            disabled={!isEditing}
-                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            disabled
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-gray-100 dark:bg-gray-700 cursor-not-allowed`}
                         >
                             {formData.paymentTerms && !["Net 30", "Net 45", "Net 60", "Due on Receipt"].includes(formData.paymentTerms) && (
                                 <option value={formData.paymentTerms}>{formData.paymentTerms}</option>

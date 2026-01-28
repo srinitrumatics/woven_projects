@@ -359,12 +359,7 @@ export default function OrdersPage() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Orders</h1>
         <div className="flex items-center gap-3">
-          <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            Export
-          </button>
-          <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            More actions
-          </button>
+
           <button
             onClick={handleCreateOrder}
             disabled={loading}
@@ -493,18 +488,18 @@ export default function OrdersPage() {
               <p className="text-sm">Loading orders...</p>
             </div>
           ) : (
-            <table className="w-full table-auto ">
+            <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Order#" field="name" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Order Number" field="name" sortConfig={sortConfig} requestSort={requestSort} />
                   <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
                   <SortableHeader label="Proposal" field="proposal_name" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="CPO" field="cpo" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Ship To" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Bill To" field="billTo" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Items" field="items" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Total" field="total" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
+                  <SortableHeader label="Customer PO" field="cpo" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Items" field="items" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Total" field="total" sortConfig={sortConfig} requestSort={requestSort} />
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -516,7 +511,7 @@ export default function OrdersPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
                         <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No orders found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-sm">
+                        <p className="text-gray-400 dark:text-gray-500 text-xs">
                           {searchQuery || activeTab !== "All"
                             ? "Try adjusting your filters"
                             : "Get started by creating your first order"}
@@ -527,26 +522,26 @@ export default function OrdersPage() {
                 ) : (
                   paginatedOrders.map((order) => (
                     <tr key={`order-row-${order.Id ?? order.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-6 py-4 text-sm font-semibold text-primary">
-                        <Link href={`/orders/${order.id}`}>#{order.name}</Link>
+                      <td className="px-6 py-4 text-xs font-semibold text-primary">
+                        <Link href={`/orders/${order.id}`}>{order.name}</Link>
                       </td>
                       <td className="px-6 py-4">
                         <StatusBadge status={order.status as OrderStatus} />
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{order.proposal_name}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={order.proposal_name}>{order.proposal_name}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{order.cpo}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={order.cpo}>{order.cpo}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{order.shipTo}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={order.billTo}>{order.billTo}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{order.billTo}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={order.shipTo}>{order.shipTo}</div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{order.items}</td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total)}</td>
+                      <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white">{order.items}</td>
+                      <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total)}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-start gap-2">
                           <button

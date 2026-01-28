@@ -10,7 +10,7 @@ import { Proposal, ProposalStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 
-type TabFilter = "All" | "Draft" | "Pending Review" | "Under Review" | "Approved" | "Accepted" | "Rejected" | "Expired";
+type TabFilter = "All" | "Lead" | "Draft" | "Pending Review" | "Under Review" | "Approved" | "Accepted" | "Rejected" | "Expired";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -122,17 +122,23 @@ export default function ProposalsPage() {
   const { items: sortedProposals, requestSort, sortConfig } = useSortableData<Proposal>(filteredAndSearchedProposals);
 
   // Pagination
-  const totalPages = Math.ceil(sortedProposals.length / ITEMS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(sortedProposals.length / ITEMS_PER_PAGE));
   const paginatedProposals = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    return sortedProposals.slice(startIndex, endIndex);
+    return sortedProposals.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [sortedProposals, currentPage]);
 
   // Reset to page 1 when filters change
-  useMemo(() => {
+  useEffect(() => {
     setCurrentPage(1);
-  }, [activeTab, searchQuery]);
+  }, [activeTab, searchQuery, sortedProposals.length]);
+
+  // Ensure currentPage is safe
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages]);
 
   const handleCardClick = (filter: TabFilter) => {
     setActiveTab(filter);
@@ -321,8 +327,8 @@ export default function ProposalsPage() {
         {/* Tabs and Search */}
         <div className="border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-6">
-              {(["All", "Lead", "Draft", "Pending Review", "Approved", "Rejected"] as TabFilter[]).map(tab => (
+            <div className="flex items-center gap-6 overflow-x-auto no-scrollbar">
+              {(["All", "Lead", "Draft", "Pending Review", "Under Review", "Approved", "Accepted", "Rejected", "Expired"] as TabFilter[]).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -396,15 +402,15 @@ export default function ProposalsPage() {
             <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Proposal Number" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} />
                   <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
                   <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Bill To" field="billTo" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Ship To" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} />
+                  <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} />
                   <SortableHeader label="Items" field="productCount" align="right" sortConfig={sortConfig} requestSort={requestSort} />
                   <SortableHeader label="Total" field="totalAmount" align="right" sortConfig={sortConfig} requestSort={requestSort} />
                   <SortableHeader label="Expires" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} />
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">
                     Actions
                   </th>
                 </tr>
@@ -418,7 +424,7 @@ export default function ProposalsPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No proposals found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-sm">
+                        <p className="text-gray-400 dark:text-gray-500 text-xs">
                           {searchQuery || activeTab !== "All"
                             ? "Try adjusting your filters"
                             : "Get started by creating your first proposal"}
@@ -430,7 +436,7 @@ export default function ProposalsPage() {
                   paginatedProposals.map((proposal) => (
                     <tr key={proposal.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                       <td className="px-6 py-4">
-                        <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
+                        <Link href={`/proposals/${proposal.id}`} className="text-xs font-semibold text-primary hover:underline">
                           {proposal.proposalNumber}
                         </Link>
                       </td>
@@ -438,17 +444,17 @@ export default function ProposalsPage() {
                         <StatusBadge status={proposal.status} />
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium max-w-[200px] line-clamp-2">{proposal.proposalName}</div>
+                        <div className="text-xs text-gray-900 dark:text-white font-medium line-clamp-2" title={proposal.proposalName}>{proposal.proposalName}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{proposal.billTo}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={proposal.billTo}>{proposal.billTo}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[200px] line-clamp-2">{proposal.shipTo}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={proposal.shipTo}>{proposal.shipTo}</div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{proposal.productCount}</td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
+                      <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white">{proposal.productCount}</td>
+                      <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
+                      <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center gap-2">
                           <button

@@ -187,11 +187,10 @@ export default function InvoicesPage() {
               <button
                 key={status}
                 onClick={() => setStatusFilter(status as InvoiceStatus | "All")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  statusFilter === status
-                    ? "bg-primary text-white"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${statusFilter === status
+                  ? "bg-primary text-white"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                  }`}
               >
                 {status}
               </button>
@@ -206,15 +205,15 @@ export default function InvoicesPage() {
           <table className="w-full">
             <thead className="bg-primary-light dark:bg-gray-900">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Invoice #</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Account</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Contact</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 dark:text-white">Total</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900 dark:text-white">Amount Due</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Due Date</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Invoice #</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Account</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Contact</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Description</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Status</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Total</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Amount Due</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Due Date</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -226,7 +225,7 @@ export default function InvoicesPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
                       </svg>
                       <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No invoices found</p>
-                      <p className="text-gray-400 dark:text-gray-500 text-sm">
+                      <p className="text-gray-400 dark:text-gray-500 text-xs">
                         {searchQuery || statusFilter !== "All"
                           ? "Try adjusting your filters"
                           : "No invoices available"}
@@ -242,18 +241,24 @@ export default function InvoicesPage() {
                     className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
                   >
                     <td className="px-6 py-4">
-                      <div className="text-sm font-semibold text-primary">{invoice.invoiceNumber}</div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">{invoice.invoiceDate}</div>
+                      <div className="line-clamp-2" title={invoice.invoiceNumber}>
+                        <div className="text-xs font-semibold text-primary">{invoice.invoiceNumber}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{invoice.invoiceDate}</div>
+                      </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900 dark:text-white font-medium">{invoice.accountName}</div>
-                      {invoice.relatedOrderNumber && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{invoice.relatedOrderNumber}</div>
-                      )}
+                      <div className="line-clamp-2" title={invoice.accountName}>
+                        <div className="text-xs text-gray-900 dark:text-white font-medium">{invoice.accountName}</div>
+                        {invoice.relatedOrderNumber && (
+                          <div className="text-xs text-gray-500 dark:text-gray-400">{invoice.relatedOrderNumber}</div>
+                        )}
+                      </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{invoice.contactName}</td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[250px] line-clamp-2">
+                      <div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={invoice.contactName}>{invoice.contactName}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-xs text-gray-600 dark:text-gray-400 max-w-[250px] line-clamp-2" title={invoice.description}>
                         {invoice.description}
                       </div>
                     </td>
@@ -262,15 +267,15 @@ export default function InvoicesPage() {
                         {invoice.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                    <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white font-semibold">
                       {formatCurrency(invoice.totalAmount)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-right">
+                    <td className="px-6 py-4 text-xs text-right">
                       <span className={`font-semibold ${invoice.amountDue > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
                         {formatCurrency(invoice.amountDue)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{invoice.dueDate}</td>
+                    <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">{invoice.dueDate}</td>
                     <td className="px-6 py-4 text-center">
                       <div className="flex items-center justify-center gap-2">
                         <button

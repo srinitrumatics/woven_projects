@@ -6,10 +6,11 @@ interface DeliveryOptionsProps {
     formData: any;
     setFormData: (data: any) => void;
     shippingMethods?: ShippingMethodOption[];
+    incotermsOptions?: ShippingMethodOption[];
     isEditing?: boolean;
 }
 
-export default function DeliveryOptions({ formData, setFormData, shippingMethods = [], isEditing = false }: DeliveryOptionsProps) {
+export default function DeliveryOptions({ formData, setFormData, shippingMethods = [], incotermsOptions = [], isEditing = false }: DeliveryOptionsProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="w-full flex items-center gap-2 justify-start p-4">
@@ -62,14 +63,22 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
 
                     <div>
                         <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Incoterms</label>
-                        <input
-                            type="text"
-                            placeholder="Incoterms"
+                        <select
                             value={formData.incoterms || ''}
                             onChange={(e) => setFormData({ ...formData, incoterms: e.target.value })}
-                            readOnly={!isEditing}
-                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
-                        />
+                            disabled={!isEditing}
+                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                        >
+                            <option value="">Select Incoterms</option>
+                            {formData.incoterms && !incotermsOptions.some(opt => opt.value === formData.incoterms) && (
+                                <option value={formData.incoterms}>{formData.incoterms}</option>
+                            )}
+                            {incotermsOptions.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     <div>
@@ -85,7 +94,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Lift Gate <span className="text-red-500">*</span></label>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Lift Gate</label>
                         <div className={`flex items-center h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}>
                             <input
                                 type="checkbox"
@@ -94,12 +103,12 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                                 onChange={(e) => setFormData({ ...formData, liftGateRequired: e.target.checked })}
                                 className={`w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3 ${!isEditing ? 'cursor-not-allowed opacity-60' : ''}`}
                             />
-                            <span className="text-sm text-gray-700 dark:text-gray-300">Equipment needed</span>
+                            <span className="text-sm text-gray-700 dark:text-gray-300">{formData.liftGateRequired ? "Required" : "Not Required"}</span>
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Inside Delivery <span className="text-red-500">*</span></label>
+                        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Inside Delivery</label>
                         <div className={`flex items-center h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}>
                             <input
                                 type="checkbox"
@@ -108,7 +117,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                                 onChange={(e) => setFormData({ ...formData, insideDelivery: e.target.checked })}
                                 className={`w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3 ${!isEditing ? 'cursor-not-allowed opacity-60' : ''}`}
                             />
-                            <span className="text-sm text-gray-700 dark:text-gray-300">Bring inside facility</span>
+                            <span className="text-sm text-gray-700 dark:text-gray-300">{formData.insideDelivery ? "Required" : "Not Required"}</span>
                         </div>
                     </div>
                 </div>

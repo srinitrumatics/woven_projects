@@ -30,7 +30,7 @@ export default function ProductsTab({ products, proposalId, loading, sortField, 
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">&nbsp;</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">&nbsp;</th>
                         <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} />
@@ -40,7 +40,7 @@ export default function ProductsTab({ products, proposalId, loading, sortField, 
                         <SortableHeader label="Shipping" field="shipping" align="right" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Taxes" field="taxes" align="right" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Grand Total" field="grandTotal" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Action</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Action</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -54,7 +54,7 @@ export default function ProductsTab({ products, proposalId, loading, sortField, 
                                         </svg>
                                     </div>
                                     <p className="text-lg font-medium">No products found</p>
-                                    <p className="text-sm">There are no products listed in this proposal.</p>
+                                    <p className="text-xs">There are no products listed in this proposal.</p>
                                 </div>
                             </td>
                         </tr>
@@ -68,30 +68,30 @@ export default function ProductsTab({ products, proposalId, loading, sortField, 
                                         </svg>
                                     </div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">
-                                    <div className="text-sm font-medium text-gray-900 dark:text-white">{product.productName}</div>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium">
+                                    <div className="text-xs font-medium text-gray-900 dark:text-white">{product.productName}</div>
                                     <div className="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1">{product.productSku}</div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{product.manufacturer}</td>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{product.manufacturer}</td>
                                 <td className="px-4 py-3">
                                     <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary">
                                         {product.productFamily}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                     ${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{product.quantity}</td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{product.quantity}</td>
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
                                     ${product.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                     ${product.shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
-                                    ${product.taxes.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                    ${product.taxes.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
                                     ${product.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                                 <td className="px-4 py-3 text-center">

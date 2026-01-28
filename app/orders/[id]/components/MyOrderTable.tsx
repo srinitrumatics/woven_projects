@@ -53,16 +53,15 @@ export default function MyOrderTable({
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white w-[5%]">&nbsp;</th>
-                        <SortableHeader label="Order Line #" field="sku" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Order Line " field="sku" align="center" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Unit Price" field="unitPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Order Qty" field="orderQty" align="center" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Subtotal" field="subtotal" align="right" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Total Order Qty" field="orderQty" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Total Price" field="subtotal" align="right" sortConfig={sortConfig} requestSort={requestSort} />
                         {isEditing && (
-                            <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white w-[5%]">Action</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white w-20">Action</th>
                         )}
                     </tr>
                 </thead>
@@ -83,39 +82,35 @@ export default function MyOrderTable({
                         sortedProducts.map((product) => (
                             <tr key={product.lineItemKey || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
 
-                                <td className="px-4 py-3">
-                                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
-                                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                        </svg>
-                                    </div>
-                                </td>
                                 <td className="px-4 py-3 text-center">
                                     <Link
                                         href={`/orders/${orderId}/lines/${product.orderLineId || product.id}`}
-                                        className="text-sm font-semibold text-primary hover:underline"
+                                        className="text-xs font-semibold text-primary hover:underline"
                                         title="View line details"
                                     >
                                         {product.sku}
                                     </Link>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium">
                                     {/* Product name with hover tooltip showing full details */}
                                     <span
-                                        className="underline cursor-help"
+                                        className="underline cursor-help block line-clamp-2"
                                         onMouseEnter={(e) => handleTooltipEnter(e, product)}
                                         onMouseLeave={handleTooltipLeave}
                                     >
                                         {product.name}
                                     </span>
+                                    {product.description && (
+                                        <div className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 break-words" title={product.description}>
+                                            {product.description}
+                                        </div>
+                                    )}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{product.manufacturer}</td>
-                                <td className="px-4 py-3">
-                                    <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary">
-                                        {product.productFamily}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={product.manufacturer}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{product.manufacturer}</div></td>
+                                <td className="px-4 py-3" title={product.productFamily}><div className="line-clamp-2"><span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary">
+                                    {product.productFamily}
+                                </span></div></td>
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                 <td className="px-4 py-3">
                                     {isEditing ? (
                                         <div className="flex flex-col items-center">
@@ -151,12 +146,12 @@ export default function MyOrderTable({
                                             <div className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">MOQ: {product.moq || 1}</div>
                                         </div>
                                     ) : (
-                                        <div className="text-center text-sm text-gray-900 dark:text-white font-medium">
+                                        <div className="text-center text-xs text-gray-900 dark:text-white font-medium">
                                             {product.orderQty}
                                         </div>
                                     )}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">${product.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">${product.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                 {isEditing && (
                                     <td className="px-4 py-3 text-center">
                                         <button

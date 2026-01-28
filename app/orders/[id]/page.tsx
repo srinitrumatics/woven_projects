@@ -16,6 +16,7 @@ import ShippingInfo from "./components/ShippingInfo";
 import ShipToContact from "./components/ShipToContact";
 import DeliveryOptions from "./components/DeliveryOptions";
 import OrderTotal from "./components/OrderTotal";
+import OrderNotes from "./components/OrderNotes";
 import FilesTab from "./components/FilesTab";
 import ProductCatalog from "./components/ProductCatalog";
 import MyOrderTable from "./components/MyOrderTable";
@@ -283,6 +284,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   // Shipping Methods
   const [shippingMethods, setShippingMethods] = useState<ShippingMethodOption[]>([]);
+  const [incotermsOptions, setIncotermsOptions] = useState<ShippingMethodOption[]>([]);
 
   // Ship-to contacts loaded from Salesforce
   const [shipContacts, setShipContacts] = useState<Contact[]>([]);
@@ -317,6 +319,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           let locations: AuthorizedLocation[] = [];
           let paymentTerms = '';
           let priceBook = '';
+          let incoterms: any[] = [];
 
           // The API route returns resultdata.data directly, so check if data is an array first
           if (Array.isArray(data)) {
@@ -354,11 +357,19 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             setShippingMethods(data.data[0].Shipping_Method__c);
           } else if (data.Shipping_Method__c) {
             setShippingMethods(data.Shipping_Method__c);
-            setShippingMethods(data.Shipping_Method__c);
+          }
+
+          // Extract Incoterms
+          if (Array.isArray(data) && data.length > 0 && data[0].Incoterms__c) {
+            setIncotermsOptions(data[0].Incoterms__c);
+          } else if (data.data && Array.isArray(data.data) && data.data.length > 0 && data.data[0].Incoterms__c) {
+            setIncotermsOptions(data.data[0].Incoterms__c);
+          } else if (data.Incoterms__c) {
+            setIncotermsOptions(data.Incoterms__c);
           }
 
           // Fetch Account Name
-          try {
+          /*try {
             // We can fetch account details separately or assume accountName matches the contexts
             const accRes = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&action=account`);
             if (accRes.ok) {
@@ -367,7 +378,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 setAccountName(accData.Name);
               }
             }
-          } catch (e) { console.error("Error fetching account name:", e); }
+          } catch (e) { console.error("Error fetching account name:", e); }*/
 
           if (locations.length > 0) {
 
@@ -480,6 +491,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         const res = await fetch(`/api/salesforce/orders?action=products&accountId=${SF_ACCOUNT_ID}`);
         if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();
+        console.log('Products API Response (first item):', data[0]); // Debug: Check actual structure
 
         if (Array.isArray(data)) {
           const mappedProducts: Product[] = data.map((item: any) => ({
@@ -488,8 +500,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             description: item.Description || "",
             productFamily: item.Family || "General",
             sku: item.Name || "", // Using Name as SKU since StockKeepingUnit is not in response
-            manufacturer: item.Manufacturer_Name__r?.Name || "Unknown",
-            brand: item.Manufacturer_Name__r?.Name || "Unknown", // Using Manufacturer as Brand
+            manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
+            brand: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__c || item.Manufacturer__c || item.ManufacturerName || "", // Using Manufacturer as Brand
             availableQty: item.Available_To_Sell__c || 0,
             moq: item.MOQ__c || 1, // Use MOQ from API or default to 1
             listPrice: item.List_Price__c || 0,
@@ -655,14 +667,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 if (linesData && Array.isArray(linesData)) {
                   const mappedProducts: Product[] = linesData.map((item: any, index: number) => ({
                     id: item.Product_Name__c || item.Id, // Use Product_Name__c as product ID if available
-                    name: item.Product_Name_Name || (item.ProductName || "Unknown Product"),
+                    name: item.Product_Name_Name || (item.ProductName || ""),
                     sku: item.Name || "", // Using Name as SKU/Line ID for now
                     description: item.Product_Description__c || "",
                     unitPrice: item.Unit_Price__c,
                     listPrice: item.Unit_Price__c, // Assuming list price same as unit price for now
                     brand: "", // Not in API response
-                    manufacturer: item.Manufacturer_Name__c || "",
-                    productFamily: item.ProductFamily || "", // Not in API response
+                    manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__r?.Name || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
+                    productFamily: item.Product_Name_Family || "", // Not in API response
                     availableQty: 999,
                     moq: item.MOQ__c || 1,
                     orderQty: item.Order_Qty__c,
@@ -883,6 +895,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       if (!res.ok) throw new Error("Failed to upload files");
 
       alert("Files uploaded successfully");
+
+      // Reload the page to reflect the uploaded files
+      window.location.reload();
     } catch (error) {
       console.error("Error uploading files:", error);
       alert("Failed to upload files. Please try smaller files.");
@@ -1091,6 +1106,93 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const handleSaveDraft = () => handleSubmitOrder(true);
   const handleSubmit = () => handleSubmitOrder(false);
 
+  const handleClone = async () => {
+    if (!confirm("Are you sure you want to clone this order?")) return;
+
+    try {
+      setIsSubmitting(true);
+      setSubmitError(null);
+
+      // Use the selected contact ID or the contactId from the loaded order
+      const shipToContactId = selectedContactId || contactId;
+
+      // Prepare order data similar to submit, but for cloning (no ID, status Draft)
+      const orderPayload = {
+        order: {
+          // Id removed for clone
+          Authorized_Bill_To_Location__c: formData.billTo === "same" ? formData.shipTo : formData.billTo,
+          Authorized_Ship_To_Location__c: formData.shipTo,
+          Bill_to_Account__c: SF_ACCOUNT_ID,
+          Bill_to_Contact__c: shipToContactId,
+          Request_Date__c: formData.requestedDeliveryDate,
+          Customer_PO__c: formData.purchaseOrder,
+          Drop_Ship__c: formData.dropShip,
+          Customer_Order_Notes__c: formData.orderNotes,
+          Ship_to_Account__c: SF_ACCOUNT_ID,
+          Ship_to_Contact__c: shipToContactId,
+          Payment_Term__c: formData.paymentTerms,
+          Inventory_Account__c: SF_ACCOUNT_ID,
+          Status__c: "Draft" // Always Draft for clones
+        },
+        shipToContact: {
+          Id: shipToContactId,
+          Phone: formData.contactPhone,
+          Email: formData.contactEmail
+        },
+        orderLines: orderProducts.map(product => ({
+          // Id removed for clone
+          Status__c: "Draft",
+          Customer_Order_Line_Notes__c: "",
+          Product_Name__c: product.id,
+          Order_Qty__c: product.orderQty,
+          MOQ__c: product.moq,
+          Unit_Price__c: product.unitPrice,
+          Inventory_Account__c: SF_ACCOUNT_ID,
+          IsTaxable__c: true,
+        })),
+
+        accountId: SF_ACCOUNT_ID,
+        contactId: SF_CONTACT_ID,
+      };
+
+      // PATCH without orderId implies clone in our API
+      const endpoint = "/api/salesforce/orders";
+      const method = "PATCH";
+      const url = endpoint;
+
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(orderPayload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Failed to clone order" }));
+        throw new Error(errorData.error || "Failed to clone order");
+      }
+
+      const result = await response.json();
+      console.log("Order cloned successfully:", result);
+
+      if (result.orderId) {
+        // Redirect to the new order
+        router.push(`/orders/${result.orderId}`);
+      } else {
+        alert("Order cloned, but could not retrieve new ID.");
+      }
+
+    } catch (error) {
+      console.error("Error cloning order:", error);
+      setSubmitError(error instanceof Error ? error.message : "Failed to clone order");
+      alert("Failed to clone order: " + (error instanceof Error ? error.message : "Unknown error"));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+
   // Filter products for catalog view
   const filteredCatalogProducts = catalogProducts.filter(product =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -1129,6 +1231,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         name={formData.orderName}
         isEditing={isEditing}
         onEditToggle={() => setIsEditing(!isEditing)}
+        onClone={handleClone}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
@@ -1163,12 +1266,19 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           <DeliveryOptions
             formData={formData}
             setFormData={setFormData}
+            shippingMethods={shippingMethods}
+            incotermsOptions={incotermsOptions}
             isEditing={isEditing}
           />
         </div>
 
-        {/* Right Column - Order Total (30%) */}
-        <div className="lg:col-span-3 flex flex-col">
+        {/* Right Column - Order Notes and Order Total (30%) */}
+        <div className="lg:col-span-3 flex flex-col gap-4">
+          <OrderNotes
+            formData={formData}
+            setFormData={setFormData}
+            isEditing={isEditing}
+          />
           <OrderTotal
             productsSubtotal={productsSubtotal}
             totalExciseTax={totalExciseTax}

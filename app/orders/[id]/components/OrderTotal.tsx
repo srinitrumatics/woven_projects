@@ -47,7 +47,7 @@ export default function OrderTotal({
                     </svg>
                 </div>
                 <div>
-                    <h2 className="text-base font-semibold text-gray-900 dark:text-white">Order Total</h2>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Order Total</h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400">Review Order Summary</p>
                 </div>
             </div>
@@ -57,17 +57,6 @@ export default function OrderTotal({
                     <span className="text-gray-700 dark:text-gray-300">{productsCount} Product{productsCount !== 1 ? 's' : ''} - Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
-
-                <div className="flex justify-between text-sm">
-                    <div className="flex items-center gap-1">
-                        <span className="text-gray-700 dark:text-gray-300">Order Processing</span>
-                        <svg className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                        </svg>
-                    </div>
-                    <span className="text-gray-900 dark:text-white">${orderProcessing.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-700 dark:text-gray-300">Shipping</span>
                     <span className="text-gray-900 dark:text-white">${shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
@@ -75,7 +64,7 @@ export default function OrderTotal({
 
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-700 dark:text-gray-300">Total Taxes</span>
-                    <span className="text-gray-900 dark:text-white font-semibold">${totalExciseTax.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span className="text-gray-900 dark:text-white font-semibold">${totalExciseTax.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
                 </div>
             </div>
 
@@ -85,18 +74,6 @@ export default function OrderTotal({
                     <span className="text-base font-bold text-gray-900 dark:text-white">Grand Total</span>
                     <span className="text-xl font-bold text-primary">${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
-            </div>
-
-            {/* Order Notes - grows to fill remaining space */}
-            <div className="border-t border-gray-300 dark:border-gray-600 pt-3 flex-1 flex flex-col">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Order Notes</label>
-                <textarea
-                    placeholder="Add special instructions or notes..."
-                    value={formData.orderNotes}
-                    onChange={(e) => setFormData({ ...formData, orderNotes: e.target.value })}
-                    readOnly={!isEditing}
-                    className={`w-full flex-1 min-h-[60px] px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 resize-none ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
-                />
             </div>
 
             {/* Download PDF Button */}
@@ -122,22 +99,21 @@ export default function OrderTotal({
 
             {/* Upload Attachments */}
             <div className="border-t border-gray-300 dark:border-gray-600 pt-3 mt-3">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Upload Attachments</label>
-                {isEditing && (
-                    <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 cursor-pointer hover:border-primary dark:hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all">
-                        <svg className="w-5 h-5 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 text-center">Upload Attachments (Max 10MB). Allow pdf, jpeg, png, csv, xls, xlsx, doc,text</span>
-                        <input
-                            type="file"
-                            accept=".pdf,.jpg,.jpeg,.png,.csv,.xls,.xlsx,.doc,.text"
-                            multiple
-                            onChange={handleFileUpload}
-                            className="hidden"
-                        />
-                    </label>
-                )}
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Upload Files (Max 10MB)</label>
+                <label className={`flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 transition-all ${isEditing ? 'cursor-pointer hover:border-primary dark:hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10' : 'cursor-not-allowed opacity-60'}`}>
+                    <svg className="w-5 h-5 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 text-center">Accepted: PDF · JPEG · PNG · CSV · XLS · XLSX · DOC · TXT</span>
+                    <input
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png,.csv,.xls,.xlsx,.doc,.text"
+                        multiple
+                        onChange={handleFileUpload}
+                        disabled={!isEditing}
+                        className="hidden"
+                    />
+                </label>
 
                 {/* Uploaded Files List */}
                 {uploadedFiles.length > 0 && (
@@ -162,7 +138,7 @@ export default function OrderTotal({
                                     <svg className="w-3 h-3 text-gray-500 dark:text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
-                                    <span className="text-xs text-gray-700 dark:text-gray-300 truncate">{file.name}</span>
+                                    <span className="text-xs text-gray-700 dark:text-gray-300 line-clamp-2">{file.name}</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <button

@@ -944,37 +944,37 @@ export default function ProposalProductDetailPage({
                             <thead>
                                 <tr className="border-b border-gray-200 dark:border-gray-700">
                                     <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Unit Price</th>
-                                    <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Order Qty</th>
-                                    <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">MOQ</th>
-                                    <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Total Qty</th>
-                                    <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Total Price</th>
-                                    <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Shipping</th>
-                                    <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Taxes</th>
-                                    <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Grand Total</th>
-                                    <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">Shipped</th>
+                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Order Qty</th>
+                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">MOQ</th>
+                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Total Qty</th>
+                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Total Price</th>
+                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Shipping</th>
+                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Taxes</th>
+                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Grand Total</th>
+                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Shipped</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white">
+                                    <td className="px-2 py-3 text-xs text-gray-900 dark:text-white">
                                         ${unitPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{quantity}</td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{product.moq}</td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{product.quantity}</td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">{quantity}</td>
+                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">{product.moq}</td>
+                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">{product.quantity}</td>
+                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">
                                         ${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">
                                         ${shippingCharges.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">
                                         ${taxes.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-right font-bold text-primary">
+                                    <td className="px-2 py-3 text-xs text-right font-bold text-primary">
                                         ${grandTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{product.qtyShipped}</td>
+                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">{product.qtyShipped}</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -15,7 +15,7 @@ export default function Pagination({
   onPageChange,
   itemName = "items"
 }: PaginationProps) {
-  if (totalPages <= 1) return null;
+  if (totalItems === 0) return null;
 
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
@@ -68,7 +68,7 @@ export default function Pagination({
         <div className="flex items-center gap-2">
           <button
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
+            disabled={currentPage <= 1}
             className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Previous
@@ -88,11 +88,10 @@ export default function Pagination({
                 <button
                   key={page}
                   onClick={() => onPageChange(page)}
-                  className={`min-w-[36px] px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                    currentPage === page
+                  className={`min-w-[36px] px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${currentPage === page
                       ? "bg-primary text-white"
                       : "border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  }`}
+                    }`}
                 >
                   {page}
                 </button>
@@ -102,7 +101,7 @@ export default function Pagination({
 
           <button
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-            disabled={currentPage === totalPages}
+            disabled={currentPage >= totalPages}
             className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Next

@@ -28,6 +28,7 @@ function Content() {
 
   // Infinite Hits Hook
   const { hits, isLastPage, showMore } = useInfiniteHits();
+  console.log("Algolia Hits:", hits);
   const sentinelRef = useRef(null);
 
   // Intersection Observer for infinite scroll
@@ -235,7 +236,11 @@ export default function ProductClientPage() {
   }
 
   return (
-    <InstantSearch searchClient={searchClient} indexName={indexName}>
+    <InstantSearch
+      searchClient={searchClient}
+      indexName={indexName}
+      future={{ preserveSharedStateOnUnmount: true }}
+    >
       <Configure
         hitsPerPage={9}
         facets={['category', 'genre']}
@@ -261,12 +266,14 @@ const CardView = ({ products }: ViewProps) => (
         // Cast to access Algolia fields
         const p = product as any;
         const thumbnail = p.images?.[0]?.thumb || p.image_url;
-        // Use mapped price or fallback to known fields
-        const displayPrice = typeof p.price === 'number' ? p.price : (product.unitPrice || product.listPrice);
+
+        // Price logic
+        const sellingPrice = typeof p.price === 'number' ? p.price : (product.unitPrice || 0);
+        const listPrice = product.listPrice || 0;
         const category = p.category || product.productFamily || product.manufacturer || "Product";
 
         return (
-          <div key={product.id} className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer">
+          <div key={p.objectID || product.id} className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer">
             <div className="relative aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden">
               {thumbnail ? (
                 <img
@@ -280,11 +287,10 @@ const CardView = ({ products }: ViewProps) => (
                   <span className="text-4xl">📦</span>
                 </div>
               )}
-              {displayPrice && (
-                <div className="absolute top-2 right-2 bg-primary text-white text-sm font-bold px-3 py-1.5 rounded-lg backdrop-blur-sm shadow-lg">
-                  {formatCurrency(displayPrice)}
-                </div>
-              )}
+              {/* Badge for Selling Price */}
+              <div className="absolute top-2 right-2 bg-primary text-white text-sm font-bold px-3 py-1.5 rounded-lg backdrop-blur-sm shadow-lg">
+                {formatCurrency(sellingPrice)}
+              </div>
             </div>
 
             <div className="p-4 flex flex-col flex-grow">
@@ -301,11 +307,18 @@ const CardView = ({ products }: ViewProps) => (
                 {product.description}
               </p>
 
-              <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                <span className="text-lg font-bold text-gray-900 dark:text-white">
-                  {formatCurrency(displayPrice)}
-                </span>
-                <button className="px-3 py-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-medium rounded-lg transition-colors">
+              <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700 flex flex-col gap-1">
+                <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
+                  <span>List Price:</span>
+                  <span className="line-through">{formatCurrency(listPrice)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Selling Price:</span>
+                  <span className="text-lg font-bold text-gray-900 dark:text-white">
+                    {formatCurrency(sellingPrice)}
+                  </span>
+                </div>
+                <button className="w-full mt-2 px-3 py-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-medium rounded-lg transition-colors">
                   Add to Order
                 </button>
               </div>
@@ -317,35 +330,36 @@ const CardView = ({ products }: ViewProps) => (
   </div>
 );
 
-
-
 const ListView = ({ products }: ViewProps) => (
   <div className="overflow-x-auto">
     <table className="w-full">
       <thead className="bg-primary-light dark:bg-gray-900">
         <tr>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Image</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Product Name</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Category</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
-          <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">Price</th>
-          <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Action</th>
+          <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">&nbsp;</th>
+          <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Product Name</th>
+          <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Category</th>
+          <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Description</th>
+          <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">List Price</th>
+          <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Selling Price</th>
+          <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Action</th>
         </tr>
       </thead>
       <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
         {products.length === 0 ? (
-          <tr key="no-matches"><td colSpan={6} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">No products found.</td></tr>
+          <tr key="no-matches"><td colSpan={7} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">No products found.</td></tr>
         ) : (
           products.map((product) => {
             // Cast to access Algolia fields
             const p = product as any;
             const thumbnail = p.images?.[0]?.thumb || p.image_url;
-            // Use mapped price or fallback to known fields
-            const displayPrice = typeof p.price === 'number' ? p.price : (product.unitPrice || product.listPrice);
+
+            // Price logic
+            const sellingPrice = typeof p.price === 'number' ? p.price : (product.unitPrice || 0);
+            const listPrice = product.listPrice || 0;
             const category = p.category || product.productFamily || product.manufacturer || "Product";
 
             return (
-              <tr key={product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+              <tr key={p.objectID || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td className="px-4 py-3">
                   <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden">
                     {thumbnail ? (
@@ -356,13 +370,20 @@ const ListView = ({ products }: ViewProps) => (
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  <div className="text-sm font-bold text-gray-900 dark:text-white">{product.name}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 font-mono">{product.sku}</div>
+                  <div className="line-clamp-2" title={product.name}>
+                    <div className="text-xs font-bold text-gray-900 dark:text-white">{product.name}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 font-mono">{product.sku}</div>
+                  </div>
                 </td>
-                <td className="px-4 py-3"><span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary">{category}</span></td>
-                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400" style={{ maxWidth: '300px' }}><div className="line-clamp-2">{product.description}</div></td>
-                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(displayPrice)}</td>
-                <td className="px-4 py-3 text-center"><button className="px-4 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-sm font-medium whitespace-nowrap">Add to Order</button></td>
+                <td className="px-4 py-3">
+                  <div className="line-clamp-2" title={category}>
+                    <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary">{category}</span>
+                  </div>
+                </td>
+                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400" style={{ maxWidth: '300px' }}><div className="line-clamp-2">{product.description}</div></td>
+                <td className="px-4 py-3 text-xs text-right text-gray-500 dark:text-gray-400 line-through">{formatCurrency(listPrice)}</td>
+                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(sellingPrice)}</td>
+                <td className="px-4 py-3 text-center"><button className="px-4 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-xs font-medium whitespace-nowrap">Add to Order</button></td>
               </tr>
             );
           })

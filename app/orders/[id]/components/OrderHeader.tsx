@@ -8,9 +8,10 @@ interface OrderHeaderProps {
     name?: string;
     isEditing?: boolean;
     onEditToggle?: () => void;
+    onClone?: () => void;
 }
 
-export default function OrderHeader({ id, orderStatus, name, isEditing, onEditToggle }: OrderHeaderProps) {
+export default function OrderHeader({ id, orderStatus, name, isEditing, onEditToggle, onClone }: OrderHeaderProps) {
     const router = useRouter();
 
     return (
@@ -20,7 +21,7 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
                 <span>&gt;</span>
                 <span className="hover:text-gray-700 dark:text-gray-300">Edit Order</span>
                 <span>&gt;</span>
-                <span className="text-gray-900 dark:text-white">Order #{name || id}</span>
+                <span className="text-gray-900 dark:text-white">Order {name || id}</span>
             </div>
 
             {/* Order header card (full width) */}
@@ -35,12 +36,21 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
                             </svg>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Order #{name}</h2>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">Order details and summary</div>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Order {name}</h2>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">Order Details and Summary</div>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                        <button
+                            onClick={onClone}
+                            className="bg-gray-100 dark:bg-gray-700 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 p-2 rounded-lg transition-colors"
+                            title="Clone Order"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                            </svg>
+                        </button>
                         <button
                             onClick={onEditToggle}
                             className={`p-2 rounded-lg transition-colors ms-auto ${isEditing

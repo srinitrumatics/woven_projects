@@ -31,8 +31,10 @@ export interface ProposedProduct {
     description: string;
     manufacturer: string;
     productFamily: string;
+    category?: string; // Syncing with main types
     quantity: number;
     unitPrice: number;
+    margin: number; // Added for financial calculations
     subtotal: number;
     shipping: number;
     taxes: number;

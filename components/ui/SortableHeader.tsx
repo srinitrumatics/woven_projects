@@ -22,10 +22,10 @@ export function SortableHeader({
 
     return (
         <th
-            className={`px-4 py-3 text-${align} text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none ${className}`}
+            className={`px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none ${className}`}
             onClick={() => requestSort(field)}
         >
-            <div className={`flex items-center gap-1 ${align === "right" ? "justify-end" : align === "center" ? "justify-center" : "justify-start"}`}>
+            <div className={`flex items-center gap-1 justify-start`}>
                 {label}
                 <span className="text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300 w-4">
                     {isSorted ? (

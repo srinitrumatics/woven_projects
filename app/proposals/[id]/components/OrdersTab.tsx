@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Order, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 
@@ -24,28 +25,28 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed min-w-[2800px]">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <SortableHeader label="Customer Order" field="name" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="CPO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="CPO Date" field="customerPODate" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Bill to Contact" field="billToContactName" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Drop Ship" field="dropShip" align="center" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Total Lines" field="totalLines" align="center" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Total Price" field="totalPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Shipping" field="totalShippingCharges" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Taxes" field="totalTaxesAmount" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Grand Total" field="grandTotal" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Customer Order" field="name" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
+                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} className="w-[120px]" />
+                        <SortableHeader label="CPO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
+                        <SortableHeader label="CPO Date" field="customerPODate" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
+                        <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
+                        <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
+                        <SortableHeader label="Bill to Contact" field="billToContactName" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
+                        <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
+                        <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
+                        <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
+                        <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} className="w-[100px]" />
+                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} className="w-[100px]" />
+                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} className="w-[120px]" />
+                        <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} className="w-[120px]" />
+                        <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} className="w-[120px]" />
+                        <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
+                        <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
+                        <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
+                        <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -57,14 +58,21 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                                     </svg>
                                     <p className="text-lg font-medium">No orders found</p>
-                                    <p className="text-sm">There are no customer orders associated with this proposal.</p>
+                                    <p className="text-xs">There are no customer orders associated with this proposal.</p>
                                 </div>
                             </td>
                         </tr>
                     ) : (
                         orders.map((order) => (
                             <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium">{order.name}</td>
+                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium" title={order.name}>
+                                    <div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2">
+                                        {/*<Link href={`/orders/${order.id}`} className="text-primary hover:underline font-semibold">
+                                            {order.name}
+                                        </Link>*/}
+                                        {order.name}
+                                    </div>
+                                </td>
                                 <td className="px-4 py-3">
                                     <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${order.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                         order.status === 'Submitted' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
@@ -76,14 +84,14 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                                         {order.status}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.customerPO}</td>
-                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{order.customerPODate}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.billToAccountName}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.billToLocationName}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.billToContactName}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.shipToAccountName}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.shipToLocationName}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.shipToContactName}</td>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={order.customerPO}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{order.customerPO}</div></td>
+                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{order.customerPODate}</td>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={order.billToAccountName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{order.billToAccountName}</div></td>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={order.billToLocationName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{order.billToLocationName}</div></td>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={order.billToContactName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{order.billToContactName}</div></td>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={order.shipToAccountName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{order.shipToAccountName}</div></td>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={order.shipToLocationName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{order.shipToLocationName}</div></td>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={order.shipToContactName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{order.shipToContactName}</div></td>
                                 <td className="px-4 py-3 text-center">
                                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${order.dropShip
                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
@@ -92,26 +100,26 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                                         {order.dropShip ? 'Yes' : 'No'}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-center text-xs text-gray-900 dark:text-white">
                                     <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                         {order.totalLines}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                     ${order.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                     ${order.totalShippingCharges.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
-                                    ${order.totalTaxesAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                    ${order.totalTaxesAmount.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
                                     ${order.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{order.requestDate}</td>
-                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{order.shipDate}</td>
-                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{order.deliveredDate}</td>
+                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{order.requestDate}</td>
+                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{order.shipDate}</td>
+                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{order.deliveredDate}</td>
                             </tr>
                         ))
                     )}

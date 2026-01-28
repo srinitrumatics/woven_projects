@@ -26,12 +26,18 @@ export async function POST() {
     // Map mockProducts to Algolia format
     const productsToSeed = mockProducts.map(product => ({
       objectID: product.id,
-      title: product.name,
-      ...product,
+      name: product.name,
+      description: product.description,
+      sku: product.sku,
+      brand: product.brand,
       category: product.productFamily,
-      genre: product.manufacturer, // Mapping manufacturer to genre to match "Type" filter in search page
-      price: product.unitPrice,
-      image_url: "", // Placeholder for compatibility with search UI logic
+      genre: product.manufacturer, // Mapping manufacturer to genre to match "Type" filter
+      price: product.unitPrice,    // Selling price
+      listPrice: product.listPrice,
+      unitPrice: product.unitPrice,
+      availableQty: product.availableQty,
+      moq: product.moq,
+      image_url: "", // Placeholder
     }));
 
     // Clear the index and add mock data
@@ -65,12 +71,14 @@ export async function POST() {
     if (result.taskIDs && result.taskIDs.length > 0) {
       await index.waitTask(result.taskIDs[0]);
     }
-
-    return NextResponse.json({
+    let response = NextResponse.json({
       message: "Algolia index seeded successfully with mock products",
       count: productsToSeed.length,
       taskIDs: result.taskIDs
     });
+    console.log('Searcch', response);
+    return response;
+
   } catch (error) {
     console.error("Error seeding Algolia:", error);
     return NextResponse.json(
@@ -101,12 +109,13 @@ export async function GET() {
     const indexInfo = await index.search("", {
       hitsPerPage: 0, // We don't need the actual hits, just stats
     });
-
-    return NextResponse.json({
+    let response = NextResponse.json({
       indexName,
       recordCount: indexInfo.nbHits,
       status: "available"
     });
+    console.log('Searcch ag', response);
+    return response;
   } catch (error) {
     console.error("Error checking Algolia index:", error);
     return NextResponse.json(

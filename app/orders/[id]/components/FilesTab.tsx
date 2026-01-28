@@ -278,7 +278,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                             <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Type" field="FileExtension" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} />
-                            <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -303,10 +303,10 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                                             />
                                         </td>
                                     )}
-                                    <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{file.Title}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{(file.FileSize / 1024).toFixed(2)} KB</td>
-                                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{file.FileExtension}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedDate}</td>
+                                    <td className="px-4 py-3 text-xs font-medium text-gray-900 dark:text-white" title={file.Title}><div className="text-xs font-medium text-gray-900 dark:text-white line-clamp-2">{file.Title}</div></td>
+                                    <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">{(file.FileSize / 1024).toFixed(2)} KB</td>
+                                    <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">{file.FileExtension}</td>
+                                    <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">{file.CreatedDate}</td>
                                     <td className="px-4 py-3 text-center">
                                         <div className="px-4 py-2 text-center">
                                             {/* View / Preview button */}

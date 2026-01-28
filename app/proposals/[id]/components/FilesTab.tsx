@@ -72,10 +72,10 @@ export default function FilesTab({
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed min-w-[1200px]">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white w-8">
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white w-[50px]">
                             <input
                                 type="checkbox"
                                 className="rounded border-gray-300 text-primary focus:ring-primary"
@@ -83,13 +83,13 @@ export default function FilesTab({
                                 onChange={onSelectAll}
                             />
                         </th>
-                        <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Category" field="category" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Size" field="sizeInBytes" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} />
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Action</th>
+                        <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} className="w-[300px]" />
+                        <SortableHeader label="Category" field="category" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
+                        <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} className="w-[100px]" />
+                        <SortableHeader label="Size" field="sizeInBytes" align="right" sortConfig={sortConfig} requestSort={requestSort} className="w-[120px]" />
+                        <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
+                        <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white w-[120px]">Action</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -101,7 +101,7 @@ export default function FilesTab({
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                     </svg>
                                     <p className="text-lg font-medium">No files found</p>
-                                    <p className="text-sm">There are no files attached to this proposal.</p>
+                                    <p className="text-xs">There are no files attached to this proposal.</p>
                                 </div>
                             </td>
                         </tr>
@@ -123,7 +123,7 @@ export default function FilesTab({
                                 <td className="px-4 py-3">
                                     <div className="flex items-center gap-3">
                                         {getFileIcon(file.fileType)}
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate max-w-[200px]">{file.fileName}</span>
+                                        <span className="text-xs font-medium text-gray-900 dark:text-white line-clamp-2" title={file.fileName}>{file.fileName}</span>
                                     </div>
                                 </td>
                                 <td className="px-4 py-3">
@@ -132,14 +132,14 @@ export default function FilesTab({
                                     </span>
                                 </td>
                                 <td className="px-4 py-3">
-                                    <span className="text-sm font-mono text-gray-600 dark:text-gray-400">{file.fileType}</span>
+                                    <span className="text-xs font-mono text-gray-600 dark:text-gray-400">{file.fileType}</span>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{file.fileSize}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{file.uploadedBy}</td>
-                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{file.uploadedDate}</td>
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{file.fileSize}</td>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={file.uploadedBy}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{file.uploadedBy}</div></td>
+                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{file.uploadedDate}</td>
                                 <td className="px-4 py-3 text-center" onClick={(e) => e.stopPropagation()}>
                                     <button
-                                        className="px-4 py-1.5 bg-primary/10 text-primary rounded hover:bg-primary hover:text-white transition-all duration-200 text-sm font-medium"
+                                        className="px-4 py-1.5 bg-primary/10 text-primary rounded hover:bg-primary hover:text-white transition-all duration-200 text-xs font-medium"
                                         onClick={() => file.downloadUrl && window.open(file.downloadUrl, '_blank')}
                                         title="Download File"
                                     >

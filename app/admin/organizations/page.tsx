@@ -333,7 +333,7 @@ const OrganizationManagement: React.FC = () => {
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
                       Domains
                     </th>
-                    <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
                       Members
                     </th>
                     <th className="relative px-6 py-4">
@@ -350,18 +350,18 @@ const OrganizationManagement: React.FC = () => {
                       transition={{ delay: index * 0.02 }}
                       className="hover:bg-orange-50/50 transition-colors duration-150"
                     >
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center flex-shrink-0">
                             <Building2 className="w-5 h-5 text-white" />
                           </div>
-                          <div className="text-sm font-semibold text-gray-900">
+                          <div className="text-xs font-semibold text-gray-900 line-clamp-2" title={org.name}>
                             {org.name}
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-600">
+                        <div className="text-xs text-gray-600 line-clamp-2" title={org.description || 'No description'}>
                           {org.description || <span className="italic text-gray-400">No description</span>}
                         </div>
                       </td>
