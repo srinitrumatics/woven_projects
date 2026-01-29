@@ -40,7 +40,7 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                                     </svg>
                                     <p className="text-lg font-medium">No elements found</p>
-                                    <p className="text-xs">There are no breakdown elements for this proposal.</p>
+                                    <p className="text-sm">There are no breakdown elements for this proposal.</p>
                                 </div>
                             </td>
                         </tr>
@@ -48,12 +48,12 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
                         elements.map(element => (
                             <tr key={element.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 ">
                                 <td className="px-4 py-4 text-center">
-                                    <span className="inline-block px-3 py-1 text-xs font-mono font-semibold  rounded bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+                                    <span className="inline-block px-3 py-1 text-sm font-mono font-semibold  rounded bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
                                         {element.wbs}
                                     </span>
                                 </td>
-                                <td className="px-4 py-4" title={element.proposalElement}><div className="line-clamp-2 text-center"><div className="text-xs font-medium text-gray-900 dark:text-white">{element.proposalElement}</div></div></td>
-                                <td className="px-4 py-4" title={element.description}><div className="line-clamp-2 text-center"><div className="text-xs text-gray-600 dark:text-gray-400">{element.description}</div></div></td>
+                                <td className="px-4 py-4" title={element.proposalElement}><div className="line-clamp-2 text-center"><div className="text-sm font-medium text-gray-900 dark:text-white">{element.proposalElement}</div></div></td>
+                                <td className="px-4 py-4" title={element.description}><div className="line-clamp-2 text-center"><div className="text-sm text-gray-600 dark:text-gray-400">{element.description}</div></div></td>
                             </tr>
                         ))
                     )}

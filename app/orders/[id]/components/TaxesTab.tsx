@@ -43,70 +43,70 @@ export default function TaxesTab({ order, loading }: TaxesTabProps) {
                 <table className="w-full">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">Sales Tax Rate</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">Sales Tax Amount</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">Use Tax Rate</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">Use Tax Amount</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">Local Tax Rate</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">Local Tax Amount</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">Excise Tax Rate</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">Excise Tax Amount</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">GRT Rate</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">GRT Amount</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">GST Rate</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">GST Amount</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">VAT Rate</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap">VAT Amount</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">Sales Tax Rate</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">Sales Tax Amount</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">Use Tax Rate</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">Use Tax Amount</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">Local Tax Rate</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">Local Tax Amount</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">Excise Tax Rate</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">Excise Tax Amount</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">GRT Rate</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">GRT Amount</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">GST Rate</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">GST Amount</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">VAT Rate</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">VAT Amount</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         <tr className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
                                 {formatPercent(order.Sales_Tax_Rate__c)}
                             </td>
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-right">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_Sales_Tax_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
                                 {formatPercent(order.Use_Tax_Rate__c)}
                             </td>
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-right">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_Use_Tax_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
                                 {formatPercent(order.Local_Tax_Rate__c)}
                             </td>
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-right">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_Local_Tax_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
                                 {formatPercent(order.Excise_Tax_Rate__c)}
                             </td>
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-right">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_Excise_Tax_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
                                 {formatPercent(order.Gross_Receipts_Tax_Rate__c)}
                             </td>
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-right">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_Gross_Receipts_Tax_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
                                 {formatPercent(order.GST_Rate__c)}
                             </td>
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-right">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_GST_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
                                 {formatPercent(order.VAT_Rate__c)}
                             </td>
-                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-right">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_VAT_Amount__c)}
                             </td>
                         </tr>

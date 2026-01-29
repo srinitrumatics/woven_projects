@@ -123,23 +123,23 @@ export default function FilesTab({
                                 <td className="px-4 py-3">
                                     <div className="flex items-center justify-center gap-3">
                                         {getFileIcon(file.fileType)}
-                                        <span className="text-xs font-medium text-gray-900 dark:text-white line-clamp-2" title={file.fileName}>{file.fileName}</span>
+                                        <span className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2" title={file.fileName}>{file.fileName}</span>
                                     </div>
                                 </td>
                                 <td className="px-4 py-3 text-center">
-                                    <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                         {file.category}
                                     </span>
                                 </td>
                                 <td className="px-4 py-3 text-center">
-                                    <span className="text-xs font-mono text-gray-600 dark:text-gray-400">{file.fileType}</span>
+                                    <span className="text-sm font-mono text-gray-600 dark:text-gray-400">{file.fileType}</span>
                                 </td>
-                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{file.fileSize}</td>
-                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-center" title={file.uploadedBy}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{file.uploadedBy}</div></td>
-                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400 text-center">{file.uploadedDate}</td>
+                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{file.fileSize}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-center" title={file.uploadedBy}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{file.uploadedBy}</div></td>
+                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 text-center">{file.uploadedDate}</td>
                                 <td className="px-4 py-3 text-center" onClick={(e) => e.stopPropagation()}>
                                     <button
-                                        className="px-4 py-1.5 bg-primary/10 text-primary rounded hover:bg-primary hover:text-white transition-all duration-200 text-xs font-medium"
+                                        className="px-4 py-1.5 bg-primary/10 text-primary rounded hover:bg-primary hover:text-white transition-all duration-200 text-sm font-medium"
                                         onClick={() => file.downloadUrl && window.open(file.downloadUrl, '_blank')}
                                         title="Download File"
                                     >

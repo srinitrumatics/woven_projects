@@ -195,7 +195,7 @@ const PermissionList: React.FC<PermissionListProps> = ({
                                 {permission.name}
                               </h4>
                               {permission.description && (
-                                <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                                <p className="text-sm text-gray-600 mt-1 line-clamp-2">
                                   {permission.description}
                                 </p>
                               )}

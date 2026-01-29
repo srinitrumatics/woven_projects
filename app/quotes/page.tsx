@@ -187,15 +187,15 @@ export default function QuotesPage() {
           <table className="w-full">
             <thead className="bg-primary-light dark:bg-gray-900">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Quote #</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Account</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Contact</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Description</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Status</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Amount</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Valid Until</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Items</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Quote #</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Account</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Contact</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Amount</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Valid Until</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Items</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -207,7 +207,7 @@ export default function QuotesPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                       <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No quotes found</p>
-                      <p className="text-gray-400 dark:text-gray-500 text-xs mb-4">
+                      <p className="text-gray-400 dark:text-gray-500 text-sm mb-4">
                         {searchQuery || statusFilter !== "All"
                           ? "Try adjusting your filters"
                           : "Get started by creating your first quote"}
@@ -232,36 +232,36 @@ export default function QuotesPage() {
                   >
                     <td className="px-6 py-4">
                       <div className="line-clamp-2" title={quote.quoteNumber}>
-                        <div className="text-xs font-semibold text-primary">{quote.quoteNumber}</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{quote.createdDate}</div>
+                        <div className="text-sm font-semibold text-primary">{quote.quoteNumber}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{quote.createdDate}</div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="line-clamp-2" title={quote.accountName}>
-                        <div className="text-xs text-gray-900 dark:text-white font-medium">{quote.accountName}</div>
+                        <div className="text-sm text-gray-900 dark:text-white font-medium">{quote.accountName}</div>
                         {quote.opportunityName && (
-                          <div className="text-xs text-gray-500 dark:text-gray-400">{quote.opportunityName}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{quote.opportunityName}</div>
                         )}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={quote.contactName}>{quote.contactName}</div>
+                      <div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={quote.contactName}>{quote.contactName}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-xs text-gray-600 dark:text-gray-400 max-w-[250px] line-clamp-2" title={quote.description}>
+                      <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[250px] line-clamp-2" title={quote.description}>
                         {quote.description}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(quote.status)}`}>
+                      <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(quote.status)}`}>
                         {quote.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">
                       {formatCurrency(quote.totalAmount)}
                     </td>
-                    <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">{quote.validUntil}</td>
-                    <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{quote.validUntil}</td>
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">
                       {quote.lineItemCount}
                     </td>
                     <td className="px-6 py-4 text-left">
@@ -271,7 +271,7 @@ export default function QuotesPage() {
                             e.stopPropagation();
                             router.push(`/quotes/${quote.id}`);
                           }}
-                          className="px-3 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-xs font-medium"
+                          className="px-3 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-sm font-medium"
                         >
                           View
                         </button>

@@ -24,7 +24,7 @@ export function SortableHeader({
 
     return (
         <th
-            className={`px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none ${className}`}
+            className={`px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none ${className}`}
             onClick={() => requestSort(field)}
             style={width ? { width, minWidth: width, maxWidth: width } : {}}
         >

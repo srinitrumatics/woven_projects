@@ -73,7 +73,7 @@ export default function ProductCatalog({
                                     />
                                 </th>
                             )}
-                            <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white">&nbsp;</th>
+                            <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">&nbsp;</th>
                             <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} />
@@ -119,7 +119,7 @@ export default function ProductCatalog({
                                         </div>
                                     </td>
                                     <td className="px-4 py-2 text-center">
-                                        <div className="text-xs font-medium text-gray-900 dark:text-white line-clamp-2" title={product.name}>{product.name}</div>
+                                        <div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2" title={product.name}>{product.name}</div>
                                         {product.description && (
                                             <div className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 break-words" title={product.description}>
                                                 {product.description}

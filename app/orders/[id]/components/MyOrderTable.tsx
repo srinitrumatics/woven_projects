@@ -61,20 +61,20 @@ export default function MyOrderTable({
                         <SortableHeader label="Total Order Qty" field="orderQty" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
                         <SortableHeader label="Total Price" field="subtotal" sortConfig={sortConfig} requestSort={requestSort} width="100px" />
                         {isEditing && (
-                            <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white w-20">Action</th>
+                            <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white w-20">Action</th>
                         )}
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {loadingOrder ? (
                         <tr>
-                            <td colSpan={isEditing ? 9 : 8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                            <td colSpan={isEditing ? 9 : 8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400 text-sm">
                                 Loading order details...
                             </td>
                         </tr>
                     ) : sortedProducts.length === 0 ? (
                         <tr>
-                            <td colSpan={isEditing ? 9 : 8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                            <td colSpan={isEditing ? 9 : 8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400 text-sm">
                                 {searchQuery ? "No products found matching your search." : "Your order is empty. Click 'Add Products' to start adding items."}
                             </td>
                         </tr>
@@ -85,13 +85,13 @@ export default function MyOrderTable({
                                 <td className="px-4 py-3 text-center w-[120px]">
                                     <Link
                                         href={`/orders/${orderId}/lines/${product.orderLineId || product.id}`}
-                                        className="text-xs font-semibold text-primary hover:underline line-clamp-2"
+                                        className="text-sm font-semibold text-primary hover:underline line-clamp-2"
                                         title={product.sku}
                                     >
                                         {product.sku}
                                     </Link>
                                 </td>
-                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium text-center">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-center">
                                     {/* Product name with hover tooltip showing full details */}
                                     <span
                                         className="underline cursor-help block line-clamp-2"
@@ -101,16 +101,16 @@ export default function MyOrderTable({
                                         {product.name}
                                     </span>
                                     {product.description && (
-                                        <div className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 break-words" title={product.description}>
+                                        <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 break-words" title={product.description}>
                                             {product.description}
                                         </div>
                                     )}
                                 </td>
-                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white w-[150px] text-center" title={product.manufacturer}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{product.manufacturer}</div></td>
-                                <td className="px-4 py-3 w-[150px] text-center" title={product.productFamily}><div className="line-clamp-2"><span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white w-[150px] text-center" title={product.manufacturer}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{product.manufacturer}</div></td>
+                                <td className="px-4 py-3 w-[150px] text-center" title={product.productFamily}><div className="line-clamp-2"><span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
                                     {product.productFamily}
                                 </span></div></td>
-                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white w-[100px]">${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white w-[100px]">${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                 <td className="px-4 py-3 text-center">
                                     {isEditing ? (
                                         <div className="flex flex-col items-center">
@@ -147,15 +147,15 @@ export default function MyOrderTable({
                                                     +
                                                 </button>
                                             </div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">MOQ: {product.moq || 1}</div>
+                                            <div className="text-sm text-gray-500 dark:text-gray-400 text-center mt-1">MOQ: {product.moq || 1}</div>
                                         </div>
                                     ) : (
-                                        <div className="text-center text-xs text-gray-900 dark:text-white font-medium">
+                                        <div className="text-center text-sm text-gray-900 dark:text-white font-medium">
                                             {product.orderQty}
                                         </div>
                                     )}
                                 </td>
-                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold w-[100px]">${product.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold w-[100px]">${product.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                 {isEditing && (
                                     <td className="px-4 py-3 text-center">
                                         <button

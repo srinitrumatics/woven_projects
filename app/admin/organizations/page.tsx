@@ -327,13 +327,13 @@ const OrganizationManagement: React.FC = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
                       Organization Name
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
                       Domains
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
                       Members
                     </th>
                     <th className="relative px-6 py-4 text-left">
@@ -355,13 +355,13 @@ const OrganizationManagement: React.FC = () => {
                           <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center flex-shrink-0">
                             <Building2 className="w-5 h-5 text-white" />
                           </div>
-                          <div className="text-xs font-semibold text-gray-900 line-clamp-2" title={org.name}>
+                          <div className="text-sm font-semibold text-gray-900 line-clamp-2" title={org.name}>
                             {org.name}
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-xs text-gray-600 line-clamp-2" title={org.description || 'No description'}>
+                        <div className="text-sm text-gray-600 line-clamp-2" title={org.description || 'No description'}>
                           {org.description || <span className="italic text-gray-400">No description</span>}
                         </div>
                       </td>

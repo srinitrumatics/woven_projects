@@ -93,7 +93,7 @@ export default function LineFulfillmentsTab({
                             <table className="w-full min-w-[1800px] table-fixed">
                                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
-                                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10 w-[180px]">
+                                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10 w-[180px]">
                                             <div className="flex items-center justify-start cursor-pointer" onClick={() => requestSort('name')}>
                                                 Invoice
                                                 {sortConfig?.key === 'name' && (
@@ -120,49 +120,49 @@ export default function LineFulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as Invoice[]).map((invoice) => (
                                         <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center">
+                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center">
                                                 <div className="line-clamp-2" title={invoice.name}>{invoice.name}</div>
                                             </td>
                                             <td className="px-4 py-3 text-center">
-                                                <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {invoice.status}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                                                 <div className="line-clamp-2" title={invoice.invoiceName}>{invoice.invoiceName}</div>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                                                 <div className="line-clamp-2" title={invoice.salesOrderLineName}>{invoice.salesOrderLineName}</div>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                                                 <div className="line-clamp-2" title={invoice.customerQuoteLineName}>{invoice.customerQuoteLineName}</div>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                                                 <div className="line-clamp-2" title={invoice.purchaseOrderLineName}>{invoice.purchaseOrderLineName}</div>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                                                 <div className="line-clamp-2" title={invoice.productName}>{invoice.productName}</div>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                                                 <div className="max-w-xs line-clamp-2" title={invoice.productDescription}>{invoice.productDescription}</div>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-center">
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-center">
                                                 <div className="line-clamp-2" title={invoice.manufacturerDBA}>{invoice.manufacturerDBA}</div>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-mono">
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
                                                 ${invoice.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{invoice.invoiceQty}</td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{invoice.invoiceQty}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
                                                 ${invoice.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                 ${invoice.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                 ${invoice.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-primary font-bold">
+                                            <td className="px-4 py-3 text-sm text-right text-primary font-bold">
                                                 ${invoice.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
                                         </tr>
@@ -184,7 +184,7 @@ export default function LineFulfillmentsTab({
                             <table className="w-full min-w-[2400px]">
                                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
-                                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10">
+                                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10">
                                             <div className="flex items-center justify-start cursor-pointer" onClick={() => requestSort('name')}>
                                                 Shipping Manifest Line
                                                 {sortConfig?.key === 'name' && (
@@ -215,33 +215,33 @@ export default function LineFulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as ShippingManifest[]).map((manifest) => (
                                         <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center" title={manifest.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{manifest.name}</div></td>
+                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center" title={manifest.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{manifest.name}</div></td>
                                             <td className="px-4 py-3">
-                                                <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {manifest.status}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={manifest.shippingManifestName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{manifest.shippingManifestName}</div></td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={manifest.salesOrderLineName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{manifest.salesOrderLineName}</div></td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={manifest.customerQuoteLineName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{manifest.customerQuoteLineName}</div></td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={manifest.productName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{manifest.productName}</div></td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white max-w-xs" title={manifest.productDescription}><div className="text-xs text-gray-900 dark:text-white max-w-xs line-clamp-2">{manifest.productDescription}</div></td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={manifest.manufacturerDBA}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{manifest.manufacturerDBA}</div></td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{manifest.boxCount}</td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{manifest.boxNetWeight}</td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{manifest.boxGrossWeight}</td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-mono">
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={manifest.shippingManifestName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{manifest.shippingManifestName}</div></td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={manifest.salesOrderLineName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{manifest.salesOrderLineName}</div></td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={manifest.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{manifest.customerQuoteLineName}</div></td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={manifest.productName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{manifest.productName}</div></td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs" title={manifest.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{manifest.productDescription}</div></td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={manifest.manufacturerDBA}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{manifest.manufacturerDBA}</div></td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{manifest.boxCount}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{manifest.boxNetWeight}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{manifest.boxGrossWeight}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
                                                 ${manifest.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{manifest.totalOrderQty}</td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{manifest.totalOrderQty}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
                                                 ${manifest.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{manifest.qtyShipped}</td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-mono">{manifest.trackingNumber}</td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{manifest.estimatedDeliveryDate}</td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{manifest.trackingStatus}</td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{manifest.actualDeliveryDate}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{manifest.qtyShipped}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-mono">{manifest.trackingNumber}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.estimatedDeliveryDate}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.trackingStatus}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{manifest.actualDeliveryDate}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -261,7 +261,7 @@ export default function LineFulfillmentsTab({
                             <table className="w-full min-w-[2200px]">
                                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
-                                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10">
+                                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10">
                                             <div className="flex items-center justify-start cursor-pointer" onClick={() => requestSort('name')}>
                                                 Sales Order Line
                                                 {sortConfig?.key === 'name' && (
@@ -289,36 +289,36 @@ export default function LineFulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as SalesOrder[]).map((order) => (
                                         <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center">{order.name}</td>
+                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center">{order.name}</td>
                                             <td className="px-4 py-3">
-                                                <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
                                                     {order.status}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{order.salesOrderName}</td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{order.customerQuoteLineName}</td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{order.productName}</td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white max-w-xs" title={order.productDescription}><div className="text-xs text-gray-900 dark:text-white max-w-xs line-clamp-2">{order.productDescription}</div></td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{order.manufacturerDBA}</td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-mono">
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.salesOrderName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.customerQuoteLineName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.productName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs" title={order.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{order.productDescription}</div></td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{order.manufacturerDBA}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
                                                 ${order.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{order.totalOrderQty}</td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{order.totalOrderQty}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
                                                 ${order.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                 ${order.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                 ${order.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-primary font-bold">
+                                            <td className="px-4 py-3 text-sm text-right text-primary font-bold">
                                                 ${order.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{order.qtyPicked}</td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{order.backOrderQty}</td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{order.qtyShipped}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{order.qtyPicked}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{order.backOrderQty}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{order.qtyShipped}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -338,7 +338,7 @@ export default function LineFulfillmentsTab({
                             <table className="w-full min-w-[2000px]">
                                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
-                                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10">
+                                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10">
                                             <div className="flex items-center justify-start cursor-pointer" onClick={() => requestSort('name')}>
                                                 Customer Quote Line
                                                 {sortConfig?.key === 'name' && (
@@ -363,33 +363,33 @@ export default function LineFulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as CustomerQuote[]).map((quote) => (
                                         <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center">{quote.name}</td>
+                                            <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center">{quote.name}</td>
                                             <td className="px-4 py-3">
-                                                <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {quote.status}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{quote.customerQuoteName}</td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{quote.productName}</td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white max-w-xs" title={quote.productDescription}><div className="text-xs text-gray-900 dark:text-white max-w-xs line-clamp-2">{quote.productDescription}</div></td>
-                                            <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{quote.manufacturerDBA}</td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-mono">
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{quote.customerQuoteName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{quote.productName}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs" title={quote.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{quote.productDescription}</div></td>
+                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{quote.manufacturerDBA}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
                                                 ${quote.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{quote.totalOrderQty}</td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{quote.totalOrderQty}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
                                                 ${quote.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                 ${quote.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                 ${quote.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-primary font-bold">
+                                            <td className="px-4 py-3 text-sm text-right text-primary font-bold">
                                                 ${quote.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{quote.qtyShipped}</td>
+                                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{quote.qtyShipped}</td>
                                         </tr>
                                     ))}
                                 </tbody>

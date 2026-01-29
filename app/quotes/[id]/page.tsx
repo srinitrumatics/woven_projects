@@ -314,33 +314,33 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Product</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">SKU</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Description</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Quantity</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Unit Price</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Discount</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Subtotal</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Product</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">SKU</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Quantity</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Discount</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Subtotal</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {mockQuoteLines.map((line) => (
                   <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                    <td className="px-6 py-4 text-xs text-gray-900 dark:text-white font-medium">
+                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">
                       <div className="line-clamp-2" title={line.productName}>{line.productName}</div>
                     </td>
-                    <td className="px-6 py-4 text-xs font-mono text-gray-600 dark:text-gray-400">{line.productSku}</td>
-                    <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">
+                    <td className="px-6 py-4 text-sm font-mono text-gray-600 dark:text-gray-400">{line.productSku}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                       <div className="max-w-xs line-clamp-2" title={line.description}>{line.description}</div>
                     </td>
-                    <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white">{line.quantity}</td>
-                    <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white">
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{line.quantity}</td>
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">
                       ${line.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
-                    <td className="px-6 py-4 text-xs text-right text-gray-600 dark:text-gray-400">
+                    <td className="px-6 py-4 text-sm text-right text-gray-600 dark:text-gray-400">
                       {line.discount > 0 ? `${line.discount}%` : '-'}
                     </td>
-                    <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">
                       ${line.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                   </tr>

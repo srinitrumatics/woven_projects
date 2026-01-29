@@ -205,15 +205,15 @@ export default function InvoicesPage() {
           <table className="w-full">
             <thead className="bg-primary-light dark:bg-gray-900">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Invoice #</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Account</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Contact</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Description</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Status</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Total</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Amount Due</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Due Date</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Invoice #</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Account</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Contact</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Total</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Amount Due</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Due Date</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -242,40 +242,40 @@ export default function InvoicesPage() {
                   >
                     <td className="px-6 py-4">
                       <div className="line-clamp-2" title={invoice.invoiceNumber}>
-                        <div className="text-xs font-semibold text-primary">{invoice.invoiceNumber}</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{invoice.invoiceDate}</div>
+                        <div className="text-sm font-semibold text-primary">{invoice.invoiceNumber}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{invoice.invoiceDate}</div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="line-clamp-2" title={invoice.accountName}>
-                        <div className="text-xs text-gray-900 dark:text-white font-medium">{invoice.accountName}</div>
+                        <div className="text-sm text-gray-900 dark:text-white font-medium">{invoice.accountName}</div>
                         {invoice.relatedOrderNumber && (
-                          <div className="text-xs text-gray-500 dark:text-gray-400">{invoice.relatedOrderNumber}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{invoice.relatedOrderNumber}</div>
                         )}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={invoice.contactName}>{invoice.contactName}</div>
+                      <div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={invoice.contactName}>{invoice.contactName}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-xs text-gray-600 dark:text-gray-400 max-w-[250px] line-clamp-2" title={invoice.description}>
+                      <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[250px] line-clamp-2" title={invoice.description}>
                         {invoice.description}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(invoice.status)}`}>
+                      <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(invoice.status)}`}>
                         {invoice.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">
                       {formatCurrency(invoice.totalAmount)}
                     </td>
-                    <td className="px-6 py-4 text-xs text-right">
+                    <td className="px-6 py-4 text-sm text-right">
                       <span className={`font-semibold ${invoice.amountDue > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
                         {formatCurrency(invoice.amountDue)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">{invoice.dueDate}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{invoice.dueDate}</td>
                     <td className="px-6 py-4 text-center">
                       <div className="flex items-center justify-start gap-2">
                         <button
@@ -283,7 +283,7 @@ export default function InvoicesPage() {
                             e.stopPropagation();
                             router.push(`/invoices/${invoice.id}`);
                           }}
-                          className="px-3 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-xs font-medium"
+                          className="px-3 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-sm font-medium"
                         >
                           View
                         </button>
@@ -293,7 +293,7 @@ export default function InvoicesPage() {
                               e.stopPropagation();
                               // Handle payment action
                             }}
-                            className="px-3 py-1.5 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-xs font-medium"
+                            className="px-3 py-1.5 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm font-medium"
                           >
                             Pay
                           </button>

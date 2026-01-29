@@ -53,7 +53,7 @@ export default function ReturnsTab({ returnsData, loading }: ReturnsTabProps) {
                             }`}
                     >
                         {tab.label}
-                        <span className={`ml-2 px-1.5 py-0.5 text-xs rounded-full ${activeTab === tab.id
+                        <span className={`ml-2 px-1.5 py-0.5 text-sm rounded-full ${activeTab === tab.id
                             ? "bg-primary/10 text-primary"
                             : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
                             }`}>
@@ -175,9 +175,9 @@ export default function ReturnsTab({ returnsData, loading }: ReturnsTabProps) {
 
                                 return (
                                     <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                        <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium" title={item.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{item.name}</div></td>
+                                        <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium" title={item.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{item.name}</div></td>
                                         <td className="px-4 py-3">
-                                            <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
+                                            <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                 item.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                     'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                 }`}>
@@ -187,125 +187,125 @@ export default function ReturnsTab({ returnsData, loading }: ReturnsTabProps) {
 
                                         {activeTab === 'rma' ? (
                                             <>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={rma.salesOrderName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{rma.salesOrderName}</div></td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={rma.customerQuoteName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{rma.customerQuoteName}</div></td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={rma.customerOrderName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{rma.customerOrderName}</div></td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={rma.rmaType}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{rma.rmaType}</div></td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={rma.shipFromAccountName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{rma.shipFromAccountName}</div></td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={rma.shipFromContactName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{rma.shipFromContactName}</div></td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={rma.returnToAccountName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{rma.returnToAccountName}</div></td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={rma.returnToContactName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{rma.returnToContactName}</div></td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rma.salesOrderName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rma.salesOrderName}</div></td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rma.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rma.customerQuoteName}</div></td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rma.customerOrderName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rma.customerOrderName}</div></td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rma.rmaType}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rma.rmaType}</div></td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rma.shipFromAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rma.shipFromAccountName}</div></td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rma.shipFromContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rma.shipFromContactName}</div></td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rma.returnToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rma.returnToAccountName}</div></td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rma.returnToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rma.returnToContactName}</div></td>
                                                 <td className="px-4 py-3 text-center">
-                                                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${rma.dropShip
+                                                    <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${rma.dropShip
                                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                         }`}>
                                                         {rma.dropShip ? 'Yes' : 'No'}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-center text-xs text-gray-900 dark:text-white">
+                                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
                                                     <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                         {rma.totalLines}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                     ${rma.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rma.issuedDate}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rma.returnByDate}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rma.shippingMethod}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rma.logisticsPartner}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rma.logisticsContact}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rma.trackingNumber}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rma.estimatedDeliveryDate}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rma.trackingStatus}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rma.actualDeliveryDate}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rma.goodsReceiptDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.issuedDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.returnByDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.shippingMethod}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.logisticsPartner}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.logisticsContact}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.trackingNumber}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.estimatedDeliveryDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.trackingStatus}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.actualDeliveryDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.goodsReceiptDate}</td>
                                             </>
                                         ) : activeTab === 'rtv' ? (
                                             <>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{rtv.purchaseOrderName}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{rtv.customerQuoteName}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{rtv.customerOrderName}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{rtv.rtvType}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{rtv.rmaNumber}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{rtv.shipFromAccountName}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{rtv.shipFromContactName}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{rtv.supplierName}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{rtv.supplierContact}</td>
-                                                <td className="px-4 py-3 text-center text-xs text-gray-900 dark:text-white">
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.purchaseOrderName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.customerQuoteName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.customerOrderName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.rtvType}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.rmaNumber}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.shipFromAccountName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.shipFromContactName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.supplierName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rtv.supplierContact}</td>
+                                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
                                                     <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                         {rtv.totalLines}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                     ${rtv.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rtv.issuedDate}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rtv.approvalDate}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{rtv.returnByDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rtv.issuedDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rtv.approvalDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rtv.returnByDate}</td>
                                             </>
                                         ) : activeTab === 'credit' ? (
                                             <>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{credit.invoiceName}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{credit.customerQuoteName}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{credit.customerOrderName}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{credit.creditToAccountName}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{credit.creditToContactName}</td>
-                                                <td className="px-4 py-3 text-center text-xs text-gray-900 dark:text-white">
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.invoiceName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.customerQuoteName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.customerOrderName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.creditToAccountName}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.creditToContactName}</td>
+                                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
                                                     <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                         {credit.totalLines}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                     ${credit.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                     ${credit.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                     ${credit.totalTaxesAmount?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) ?? '0.000'}
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
                                                     ${credit.totalCreditAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{credit.issuedDate}</td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{credit.expirationDate}</td>
-                                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{credit.issuedDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{credit.expirationDate}</td>
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                     ${credit.availableCreditBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{credit.settledDate}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{credit.settledDate}</td>
                                             </>
                                         ) : (
                                             <>
                                                 {activeTab === 'debit' && (
                                                     <>
-                                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{debit.supplierBillName}</td>
-                                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{debit.purchaseOrderName}</td>
-                                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{debit.customerOrderName}</td>
-                                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{debit.supplierCreditMemoName}</td>
-                                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{debit.debitToAccountName}</td>
-                                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{debit.debitToContactName}</td>
-                                                        <td className="px-4 py-3 text-center text-xs text-gray-900 dark:text-white">
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.supplierBillName}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.purchaseOrderName}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.customerOrderName}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.supplierCreditMemoName}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.debitToAccountName}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.debitToContactName}</td>
+                                                        <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
                                                             <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                                 {debit.totalLines}
                                                             </span>
                                                         </td>
-                                                        <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                             ${debit.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                         </td>
-                                                        <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                             ${debit.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                         </td>
-                                                        <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
                                                             ${debit.totalDebitAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                         </td>
-                                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{debit.issuedDate}</td>
-                                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{debit.approvalDate}</td>
-                                                        <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{debit.issuedDate}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{debit.approvalDate}</td>
+                                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                                             ${debit.availableDebitBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                         </td>
-                                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{debit.settledDate}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{debit.settledDate}</td>
                                                     </>
                                                 )}
                                             </>

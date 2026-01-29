@@ -25,7 +25,7 @@ interface RoleListProps {
   roles: Role[];
   loading: boolean;
   error: string | null;
-  allRolePermissions: {[key: string]: RolePermission[]};
+  allRolePermissions: { [key: string]: RolePermission[] };
   groupedPermissions: GroupedPermission[];
   handleEdit: (role: Role) => void;
   handleDelete: (id: string) => void;
@@ -83,7 +83,7 @@ const RoleList: React.FC<RoleListProps> = ({
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
       variants={container}
       initial="hidden"
@@ -92,7 +92,7 @@ const RoleList: React.FC<RoleListProps> = ({
       {roles.map((role) => {
         const permissions = allRolePermissions[role.id] || [];
         const permissionCount = permissions.length;
-        
+
         return (
           <motion.div
             key={role.id}
@@ -102,7 +102,7 @@ const RoleList: React.FC<RoleListProps> = ({
           >
             {/* Gradient overlay on hover */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#96C2DB]/5 to-[#6B9DB8]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            
+
             <div className="relative p-6">
               {/* Header with Icon */}
               <div className="flex items-start justify-between mb-4">
@@ -114,7 +114,7 @@ const RoleList: React.FC<RoleListProps> = ({
                     <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#6B9DB8] transition-colors">
                       {role.name}
                     </h3>
-                    <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
+                    <div className="flex items-center gap-1 text-sm text-gray-500 mt-0.5">
                       <Key className="w-3 h-3" />
                       <span>{permissionCount} {permissionCount === 1 ? 'permission' : 'permissions'}</span>
                     </div>
@@ -134,13 +134,13 @@ const RoleList: React.FC<RoleListProps> = ({
                     {permissions.slice(0, 3).map((perm) => (
                       <span
                         key={perm.permissionId}
-                        className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gradient-to-r from-purple-100 to-purple-50 text-purple-700 border border-purple-200"
+                        className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-medium bg-gradient-to-r from-purple-100 to-purple-50 text-purple-700 border border-purple-200"
                       >
                         {perm.permissionName}
                       </span>
                     ))}
                     {permissions.length > 3 && (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-600">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-medium bg-gray-100 text-gray-600">
                         +{permissions.length - 3} more
                       </span>
                     )}
@@ -148,7 +148,7 @@ const RoleList: React.FC<RoleListProps> = ({
                 </div>
               ) : (
                 <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                  <p className="text-xs text-gray-500 text-center">No permissions assigned</p>
+                  <p className="text-sm text-gray-500 text-center">No permissions assigned</p>
                 </div>
               )}
 

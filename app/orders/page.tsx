@@ -499,7 +499,7 @@ export default function OrdersPage() {
                   <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} />
                   <SortableHeader label="Items" field="items" sortConfig={sortConfig} requestSort={requestSort} />
                   <SortableHeader label="Total" field="total" sortConfig={sortConfig} requestSort={requestSort} />
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -522,26 +522,26 @@ export default function OrdersPage() {
                 ) : (
                   paginatedOrders.map((order) => (
                     <tr key={`order-row-${order.Id ?? order.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-6 py-4 text-xs font-semibold text-primary">
+                      <td className="px-6 py-4 text-sm font-semibold text-primary">
                         <Link href={`/orders/${order.id}`}>{order.name}</Link>
                       </td>
                       <td className="px-6 py-4">
                         <StatusBadge status={order.status as OrderStatus} />
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={order.proposal_name}>{order.proposal_name}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.proposal_name}>{order.proposal_name}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={order.cpo}>{order.cpo}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.cpo}>{order.cpo}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={order.billTo}>{order.billTo}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.billTo}>{order.billTo}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={order.shipTo}>{order.shipTo}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.shipTo}>{order.shipTo}</div>
                       </td>
-                      <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white">{order.items}</td>
-                      <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total)}</td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{order.items}</td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total)}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-start gap-2">
                           <button
@@ -704,7 +704,7 @@ function StatusBadge({ status }: { status: OrderStatus }) {
   };
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStyles()}`}>
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
       {status || "N/A"}
     </span>
   );

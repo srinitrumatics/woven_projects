@@ -39,7 +39,7 @@ export default function ShippingInfo({ proposal }: ShippingInfoProps) {
 
                 <div className="grid grid-cols-3 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Requested Date</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Request Date</label>
                         <input type="text" readOnly value={proposal.requestedDeliveryDate} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={proposal.requestedDeliveryDate} />
                     </div>
                     <div>

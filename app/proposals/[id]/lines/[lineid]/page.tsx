@@ -704,7 +704,7 @@ export default function ProposalProductDetailPage({
                                         d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                                     />
                                 </svg>
-                                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 block">
+                                <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block">
                                     {productImages[currentImageIndex].label}
                                 </span>
                             </div>
@@ -777,7 +777,7 @@ export default function ProposalProductDetailPage({
                         </h2>
                     </div>
                     <div className="flex-1 flex flex-col">
-                        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                             Notes
                         </label>
                         <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-900 dark:text-white min-h-[200px]">
@@ -814,7 +814,7 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Product Name */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     Product Name
                                 </label>
                                 <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
@@ -823,7 +823,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Description */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     Description
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white line-clamp-2">
@@ -832,7 +832,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Manufacturer DBA */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     Manufacturer DBA
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -841,10 +841,10 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Product Family */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     Product Family
                                 </label>
-                                <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-primary/10 text-primary">
+                                <span className="inline-block px-2 py-0.5 text-sm font-medium rounded-full bg-primary/10 text-primary">
                                     {product.productFamily}
                                 </span>
                             </div>
@@ -854,7 +854,7 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Product Grouping */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     Product Grouping
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -863,7 +863,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Grouping */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     Grouping
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -872,7 +872,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* IsTaxable */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     IsTaxable
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -881,7 +881,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Available to Sell */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     Available to Sell
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white  font-mono">
@@ -894,7 +894,7 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Site */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     Site
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -903,7 +903,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Inventory Account */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     Inventory Account
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -912,7 +912,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Unit Cost */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     Unit Cost
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -921,7 +921,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Total Cost */}
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                                     Total Cost
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -943,38 +943,38 @@ export default function ProposalProductDetailPage({
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b border-gray-200 dark:border-gray-700">
-                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Unit Price</th>
-                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Order Qty</th>
-                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">MOQ</th>
-                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Total Qty</th>
-                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Total Price</th>
-                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Shipping</th>
-                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Taxes</th>
-                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Grand Total</th>
-                                    <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Shipped</th>
+                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
+                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Order Qty</th>
+                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">MOQ</th>
+                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Qty</th>
+                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Price</th>
+                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipping</th>
+                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Taxes</th>
+                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
+                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipped</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className="px-2 py-3 text-xs text-gray-900 dark:text-white">
+                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white">
                                         ${unitPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">{quantity}</td>
-                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">{product.moq}</td>
-                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">{product.quantity}</td>
-                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{quantity}</td>
+                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{product.moq}</td>
+                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{product.quantity}</td>
+                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">
                                         ${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">
                                         ${shippingCharges.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">
                                         ${taxes.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-xs text-right font-bold text-primary">
+                                    <td className="px-2 py-3 text-sm text-right font-bold text-primary">
                                         ${grandTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">{product.qtyShipped}</td>
+                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{product.qtyShipped}</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -169,15 +169,15 @@ export default function ShipmentsPage() {
           <table className="w-full">
             <thead className="bg-primary-light dark:bg-gray-900">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Manifest #</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Order #</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Account</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Carrier</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Tracking #</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Status</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Ship Date</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Est. Delivery</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Manifest #</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Order #</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Account</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Carrier</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Tracking #</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Ship Date</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Est. Delivery</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -189,7 +189,7 @@ export default function ShipmentsPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                       </svg>
                       <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No shipments found</p>
-                      <p className="text-gray-400 dark:text-gray-500 text-xs">
+                      <p className="text-gray-400 dark:text-gray-500 text-sm">
                         {searchQuery || statusFilter !== "All" ? "Try adjusting your filters" : "No shipments available"}
                       </p>
                     </div>
@@ -203,34 +203,34 @@ export default function ShipmentsPage() {
                     className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
                   >
                     <td className="px-6 py-4">
-                      <div className="text-xs font-semibold text-primary line-clamp-2" title={shipment.manifestNumber}>{shipment.manifestNumber}</div>
+                      <div className="text-sm font-semibold text-primary line-clamp-2" title={shipment.manifestNumber}>{shipment.manifestNumber}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-xs text-gray-900 dark:text-white font-medium line-clamp-2" title={shipment.orderNumber}>{shipment.orderNumber}</div>
+                      <div className="text-sm text-gray-900 dark:text-white font-medium line-clamp-2" title={shipment.orderNumber}>{shipment.orderNumber}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={shipment.accountName}>{shipment.accountName}</div>
+                      <div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={shipment.accountName}>{shipment.accountName}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={shipment.carrier}>{shipment.carrier}</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={shipment.carrier}>{shipment.carrier}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-xs font-mono text-gray-600 dark:text-gray-400 line-clamp-2" title={shipment.trackingNumber}>{shipment.trackingNumber}</div>
+                      <div className="text-sm font-mono text-gray-600 dark:text-gray-400 line-clamp-2" title={shipment.trackingNumber}>{shipment.trackingNumber}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(shipment.status)}`}>
+                      <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(shipment.status)}`}>
                         {shipment.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">{formatDate(shipment.shipDate, 'numeric-dash')}</td>
-                    <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">{formatDate(shipment.estimatedDelivery, 'numeric-dash')}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{formatDate(shipment.shipDate, 'numeric-dash')}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{formatDate(shipment.estimatedDelivery, 'numeric-dash')}</td>
                     <td className="px-6 py-4 text-left">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           router.push(`/shipments/${shipment.id}`);
                         }}
-                        className="px-3 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-xs font-medium"
+                        className="px-3 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-sm font-medium"
                       >
                         Track
                       </button>

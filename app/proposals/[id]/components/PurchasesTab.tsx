@@ -42,7 +42,7 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                         `}
                     >
                         Purchase Orders
-                        <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === "orders" ? "bg-primary-light text-primary-dark" : "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100"}`}>
+                        <span className={`ml-2 py-0.5 px-2.5 rounded-full text-sm font-medium ${activeTab === "orders" ? "bg-primary-light text-primary-dark" : "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100"}`}>
                             {purchases.length}
                         </span>
                     </button>
@@ -57,7 +57,7 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                         `}
                     >
                         Supplier Bills
-                        <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === "bills" ? "bg-primary-light text-primary-dark" : "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100"}`}>
+                        <span className={`ml-2 py-0.5 px-2.5 rounded-full text-sm font-medium ${activeTab === "bills" ? "bg-primary-light text-primary-dark" : "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100"}`}>
                             {supplierBills.length}
                         </span>
                     </button>
@@ -111,16 +111,16 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                             </svg>
                                             <p className="text-lg font-medium">No purchase orders found</p>
-                                            <p className="text-xs">There are no purchase orders associated with this proposal.</p>
+                                            <p className="text-sm">There are no purchase orders associated with this proposal.</p>
                                         </div>
                                     </td>
                                 </tr>
                             ) : (
                                 sortedPurchases.map((purchase) => (
                                     <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium" title={purchase.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2" title={purchase.name}>{purchase.name}</div></td>
+                                        <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium" title={purchase.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2" title={purchase.name}>{purchase.name}</div></td>
                                         <td className="px-4 py-3">
-                                            <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${purchase.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
+                                            <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${purchase.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                 purchase.status === 'Submitted' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
                                                     purchase.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                         'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -128,49 +128,49 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                                                 {purchase.status}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.customerQuoteName}>{purchase.customerQuoteName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.customerOrderName}>{purchase.customerOrderName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.customerPO}>{purchase.customerPO}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.supplierName}>{purchase.supplierName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.supplierDBA}>{purchase.supplierDBA}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.supplierContact}>{purchase.supplierContact}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.shipToAccountName}>{purchase.shipToAccountName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.shipToLocationName}>{purchase.shipToLocationName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.shipToContactName}>{purchase.shipToContactName}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={purchase.customerQuoteName}>{purchase.customerQuoteName}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={purchase.customerOrderName}>{purchase.customerOrderName}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={purchase.customerPO}>{purchase.customerPO}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={purchase.supplierName}>{purchase.supplierName}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={purchase.supplierDBA}>{purchase.supplierDBA}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={purchase.supplierContact}>{purchase.supplierContact}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={purchase.shipToAccountName}>{purchase.shipToAccountName}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={purchase.shipToLocationName}>{purchase.shipToLocationName}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={purchase.shipToContactName}>{purchase.shipToContactName}</div></td>
                                         <td className="px-4 py-3 text-center">
-                                            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${purchase.dropShip
+                                            <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${purchase.dropShip
                                                 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                                 : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                 }`}>
                                                 {purchase.dropShip ? 'Yes' : 'No'}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-center text-xs text-gray-900 dark:text-white">
+                                        <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
                                             <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                 {purchase.totalLines}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                             ${(purchase.productCost ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                             ${(purchase.shippingCost ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
                                             ${purchase.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.issuedDate}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.acknowledgedDate}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.requestDate}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.promiseDate}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.shippingMethod}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.logisticsPartner}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.logisticsContact}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.trackingNumber}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.estimatedDeliveryDate}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.trackingStatus}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.actualDeliveryDate}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.goodsReceiptsDate}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.issuedDate}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.acknowledgedDate}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.requestDate}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.promiseDate}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.shippingMethod}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.logisticsPartner}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.logisticsContact}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.trackingNumber}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.estimatedDeliveryDate}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.trackingStatus}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.actualDeliveryDate}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.goodsReceiptsDate}</div></td>
                                     </tr>
                                 ))
                             )}
@@ -211,50 +211,50 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                             </svg>
                                             <p className="text-lg font-medium">No supplier bills found</p>
-                                            <p className="text-xs">There are no supplier bills associated with this proposal.</p>
+                                            <p className="text-sm">There are no supplier bills associated with this proposal.</p>
                                         </div>
                                     </td>
                                 </tr>
                             ) : (
                                 sortedBills.map((bill) => (
                                     <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium" title={bill.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2" title={bill.name}>{bill.name}</div></td>
+                                        <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium" title={bill.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2" title={bill.name}>{bill.name}</div></td>
                                         <td className="px-4 py-3">
-                                            <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${bill.status === 'Posted' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
+                                            <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${bill.status === 'Posted' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                 }`}>
                                                 {bill.status || 'N/A'}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.purchaseOrderName}>{bill.purchaseOrderName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.customerQuoteName}>{bill.customerQuoteName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.customerOrderName}>{bill.customerOrderName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.supplierName}>{bill.supplierName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.supplierDBA}>{bill.supplierDBA}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.supplierContact}>{bill.supplierContact}</div></td>
-                                        <td className="px-4 py-3 text-center text-xs text-gray-900 dark:text-white">
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={bill.purchaseOrderName}>{bill.purchaseOrderName}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={bill.customerQuoteName}>{bill.customerQuoteName}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={bill.customerOrderName}>{bill.customerOrderName}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={bill.supplierName}>{bill.supplierName}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={bill.supplierDBA}>{bill.supplierDBA}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={bill.supplierContact}>{bill.supplierContact}</div></td>
+                                        <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
                                             <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                 {bill.totalLines}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                             ${bill.totalProductAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                             ${bill.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
                                             ${bill.totalAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.billedDate}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.paymentTerms}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.dueDate}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.remittanceStatus}</div></td>
-                                        <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.billedDate}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.paymentTerms}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.dueDate}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.remittanceStatus}</div></td>
+                                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">
                                             ${bill.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
                                         </td>
-                                        <td className="px-4 py-3 text-center text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.daysOutstanding}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.settledDate}</div></td>
+                                        <td className="px-4 py-3 text-center text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.daysOutstanding}</div></td>
+                                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.settledDate}</div></td>
                                     </tr>
                                 ))
                             )}

@@ -51,16 +51,16 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                     </svg>
                                     <p className="text-lg font-medium">No projects found</p>
-                                    <p className="text-xs">There are no projects associated with this proposal.</p>
+                                    <p className="text-sm">There are no projects associated with this proposal.</p>
                                 </div>
                             </td>
                         </tr>
                     ) : (
                         projects.map((project) => (
                             <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium">{project.projectNumber}</td>
+                                <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium">{project.projectNumber}</td>
                                 <td className="px-4 py-3">
-                                    <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${project.status === 'New' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
+                                    <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${project.status === 'New' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
                                         project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
                                             project.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                 project.status === 'On Hold' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
@@ -69,24 +69,24 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                                         {project.status}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium" title={project.name}><div className="text-xs font-medium text-gray-900 dark:text-white line-clamp-2">{project.name}</div></td>
-                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={project.customerAccountName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{project.customerAccountName}</div></td>
-                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={project.customerContactName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{project.customerContactName}</div></td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium" title={project.name}><div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">{project.name}</div></td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={project.customerAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{project.customerAccountName}</div></td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={project.customerContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{project.customerContactName}</div></td>
                                 <td className="px-4 py-3">
-                                    <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary">
+                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
                                         {project.billingType}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={project.projectManagerName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{project.projectManagerName}</div></td>
-                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={project.projectManagerName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{project.projectManagerName}</div></td>
+                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
                                     ${project.estimatedBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-4 py-3 text-center text-xs text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
                                     <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 font-semibold">
                                         {project.totalMilestones}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-center text-xs text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-center text-sm text-gray-900 dark:text-white">
                                     <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                         {project.totalTasks}
                                     </span>
@@ -100,14 +100,14 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                                                     style={{ width: `${project.percentCompleted}%` }}
                                                 ></div>
                                             </div>
-                                            <span className="text-xs text-gray-600 dark:text-gray-400">{project.percentCompleted}%</span>
+                                            <span className="text-sm text-gray-600 dark:text-gray-400">{project.percentCompleted}%</span>
                                         </div>
                                     ) : (
-                                        <span className="text-xs text-gray-400">-</span>
+                                        <span className="text-sm text-gray-400">-</span>
                                     )}
                                 </td>
-                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{project.estimatedStartDate}</td>
-                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{project.estimatedEndDate}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.estimatedStartDate}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{project.estimatedEndDate}</td>
                             </tr>
                         ))
                     )}

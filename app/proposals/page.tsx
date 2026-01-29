@@ -410,7 +410,7 @@ export default function ProposalsPage() {
                   <SortableHeader label="Items" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width="100px" />
                   <SortableHeader label="Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
                   <SortableHeader label="Expires" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white w-[100px]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white w-[100px]">
                     Actions
                   </th>
                 </tr>
@@ -436,7 +436,7 @@ export default function ProposalsPage() {
                   paginatedProposals.map((proposal) => (
                     <tr key={proposal.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                       <td className="px-6 py-4">
-                        <Link href={`/proposals/${proposal.id}`} className="text-xs font-semibold text-primary hover:underline">
+                        <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
                           <div className="line-clamp-2" title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
                         </Link>
                       </td>
@@ -444,17 +444,17 @@ export default function ProposalsPage() {
                         <StatusBadge status={proposal.status} />
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-xs text-gray-900 dark:text-white font-medium line-clamp-2" title={proposal.proposalName}>{proposal.proposalName}</div>
+                        <div className="text-sm text-gray-900 dark:text-white font-medium line-clamp-2" title={proposal.proposalName}>{proposal.proposalName}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={proposal.billTo}>{proposal.billTo}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={proposal.billTo}>{proposal.billTo}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2" title={proposal.shipTo}>{proposal.shipTo}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={proposal.shipTo}>{proposal.shipTo}</div>
                       </td>
-                      <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white">{proposal.productCount}</td>
-                      <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
-                      <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{proposal.productCount}</td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center gap-2">
                           <button
@@ -525,7 +525,7 @@ function StatusBadge({ status }: { status: ProposalStatus }) {
   };
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStyles()}`}>
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
       {status}
     </span>
   );

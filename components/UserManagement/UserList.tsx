@@ -123,16 +123,16 @@ const UserList: React.FC<UserListProps> = ({
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
                 User
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
                 Organizations
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
                 Roles
               </th>
-              <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -167,7 +167,7 @@ const UserList: React.FC<UserListProps> = ({
                         <div className="text-sm font-semibold text-gray-900 truncate">
                           {user.name}
                         </div>
-                        <div className="flex items-center gap-1 text-xs text-gray-500 truncate">
+                        <div className="flex items-center gap-1 text-sm text-gray-500 truncate">
                           <Mail className="w-3 h-3 flex-shrink-0" />
                           <span className="truncate">{user.email}</span>
                         </div>
@@ -182,17 +182,17 @@ const UserList: React.FC<UserListProps> = ({
                         <>
                           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-100 border border-blue-200">
                             <Building2 className="w-3.5 h-3.5 text-blue-700" />
-                            <span className="text-xs font-medium text-blue-700">
+                            <span className="text-sm font-medium text-blue-700">
                               {orgCount}
                             </span>
                           </div>
-                          <div className="text-xs text-gray-600 truncate max-w-[200px]">
+                          <div className="text-sm text-gray-600 truncate max-w-[200px]">
                             {userOrganizations[0].organizationName}
                             {orgCount > 1 && ` +${orgCount - 1}`}
                           </div>
                         </>
                       ) : (
-                        <span className="text-xs text-gray-400 italic">No organizations</span>
+                        <span className="text-sm text-gray-400 italic">No organizations</span>
                       )}
                     </div>
                   </td>
@@ -203,12 +203,12 @@ const UserList: React.FC<UserListProps> = ({
                       {totalRoles > 0 ? (
                         <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-100 border border-purple-200">
                           <Shield className="w-3.5 h-3.5 text-purple-700" />
-                          <span className="text-xs font-medium text-purple-700">
+                          <span className="text-sm font-medium text-purple-700">
                             {totalRoles} {totalRoles === 1 ? 'role' : 'roles'}
                           </span>
                         </div>
                       ) : (
-                        <span className="text-xs text-gray-400 italic">No roles</span>
+                        <span className="text-sm text-gray-400 italic">No roles</span>
                       )}
                     </div>
                   </td>
@@ -273,8 +273,8 @@ const UserList: React.FC<UserListProps> = ({
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
                       className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${currentPage === pageNum
-                          ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white'
-                          : 'border border-gray-300 hover:bg-gray-100'
+                        ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white'
+                        : 'border border-gray-300 hover:bg-gray-100'
                         }`}
                     >
                       {pageNum}

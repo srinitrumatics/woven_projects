@@ -266,17 +266,17 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold text-gray-900 dark:text-white">{payment.paymentNumber}</span>
-                          <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${getPaymentStatusColor(payment.status)}`}>
+                          <span className={`inline-flex px-2 py-0.5 text-sm font-medium rounded-full ${getPaymentStatusColor(payment.status)}`}>
                             {payment.status}
                           </span>
                         </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Transaction: {payment.transactionId}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Transaction: {payment.transactionId}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-lg font-bold text-green-600 dark:text-green-400">
                           ${payment.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">{payment.paymentDate}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{payment.paymentDate}</p>
                       </div>
                     </div>
 
@@ -295,7 +295,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
 
                     {payment.notes && (
                       <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                           <span className="font-medium">Notes:</span> {payment.notes}
                         </p>
                       </div>
@@ -416,33 +416,33 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
             <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Product</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">SKU</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Description</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Quantity</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Unit Price</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Discount</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">Subtotal</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Product</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">SKU</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Quantity</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Discount</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Subtotal</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {mockInvoiceLines.map((line) => (
                   <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                    <td className="px-6 py-4 text-xs text-gray-900 dark:text-white font-medium">
+                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">
                       <div className="line-clamp-2" title={line.productName}>{line.productName}</div>
                     </td>
-                    <td className="px-6 py-4 text-xs font-mono text-gray-600 dark:text-gray-400">{line.productSku}</td>
-                    <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">
+                    <td className="px-6 py-4 text-sm font-mono text-gray-600 dark:text-gray-400">{line.productSku}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                       <div className="max-w-xs line-clamp-2" title={line.description}>{line.description}</div>
                     </td>
-                    <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white">{line.quantity}</td>
-                    <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white">
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{line.quantity}</td>
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">
                       ${line.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
-                    <td className="px-6 py-4 text-xs text-right text-gray-600 dark:text-gray-400">
+                    <td className="px-6 py-4 text-sm text-right text-gray-600 dark:text-gray-400">
                       {line.discount > 0 ? `${line.discount}%` : '-'}
                     </td>
-                    <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white font-semibold">
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">
                       ${line.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                   </tr>
