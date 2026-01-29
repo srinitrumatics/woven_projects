@@ -265,7 +265,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
                             {isEditing && (
-                                <th className="px-4 py-3 text-left w-10">
+                                <th className="px-4 py-3 text-center w-10">
                                     <input
                                         type="checkbox"
                                         onChange={handleSelectAll}
@@ -278,7 +278,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                             <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Type" field="FileExtension" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} />
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Actions</th>
+                            <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

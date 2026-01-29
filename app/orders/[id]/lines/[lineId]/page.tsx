@@ -597,7 +597,7 @@ export default function OrderLineDetailPage({
               </thead>
               <tbody>
                 <tr>
-                  <td className="px-2 py-3 text-xs text-gray-900 dark:text-white">
+                  <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">
                     ${unitPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                   <td className="px-2 py-3 text-xs text-right text-gray-900 dark:text-white">{orderQty}</td>

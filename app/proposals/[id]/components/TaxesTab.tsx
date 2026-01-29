@@ -57,43 +57,43 @@ export default function TaxesTab({ taxes, loading }: TaxesTabProps) {
                                     {tax.salesTaxRate?.toFixed(3)}%
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
-                                    ${tax.salesTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                                    ${tax.salesTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                     {tax.useTaxRate?.toFixed(3)}%
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
-                                    ${tax.useTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                                    ${tax.useTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                     {tax.localTaxRate?.toFixed(3)}%
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
-                                    ${tax.localTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                                    ${tax.localTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                     {tax.exciseTaxRate?.toFixed(3)}%
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
-                                    ${tax.exciseTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                                    ${tax.exciseTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                     {tax.grossReceiptsTaxRate?.toFixed(3)}%
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
-                                    ${tax.grossReceiptsTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                                    ${tax.grossReceiptsTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                     {tax.gstRate?.toFixed(3)}%
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
-                                    ${tax.gstAmount?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                                    ${tax.gstAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                     {tax.vatRate?.toFixed(3)}%
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
-                                    ${tax.vatAmount?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                                    ${tax.vatAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                             </tr>
                         ))

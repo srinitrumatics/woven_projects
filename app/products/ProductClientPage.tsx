@@ -383,7 +383,7 @@ const ListView = ({ products }: ViewProps) => (
                 <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400" style={{ maxWidth: '300px' }}><div className="line-clamp-2">{product.description}</div></td>
                 <td className="px-4 py-3 text-xs text-right text-gray-500 dark:text-gray-400 line-through">{formatCurrency(listPrice)}</td>
                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(sellingPrice)}</td>
-                <td className="px-4 py-3 text-center"><button className="px-4 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-xs font-medium whitespace-nowrap">Add to Order</button></td>
+                <td className="px-4 py-3 text-left"><button className="px-4 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-xs font-medium whitespace-nowrap">Add to Order</button></td>
               </tr>
             );
           })

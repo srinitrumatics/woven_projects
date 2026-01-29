@@ -224,7 +224,7 @@ export default function ShipmentsPage() {
                     </td>
                     <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">{formatDate(shipment.shipDate, 'numeric-dash')}</td>
                     <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">{formatDate(shipment.estimatedDelivery, 'numeric-dash')}</td>
-                    <td className="px-6 py-4 text-center">
+                    <td className="px-6 py-4 text-left">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();

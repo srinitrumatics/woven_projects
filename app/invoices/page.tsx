@@ -277,7 +277,7 @@ export default function InvoicesPage() {
                     </td>
                     <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">{invoice.dueDate}</td>
                     <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center gap-2">
+                      <div className="flex items-center justify-start gap-2">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();

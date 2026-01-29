@@ -1273,7 +1273,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
 
         {/* Right Column - Order Notes and Order Total (30%) */}
-        <div className="lg:col-span-3 flex flex-col gap-4">
+        <div className="lg:col-span-3 flex flex-col gap-4 h-full">
           <OrderNotes
             formData={formData}
             setFormData={setFormData}

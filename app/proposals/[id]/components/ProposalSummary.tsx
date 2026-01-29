@@ -37,7 +37,7 @@ export default function ProposalSummary({
     const grossMargin = proposal.totalAmount > 0 ? (grossProfit / proposal.totalAmount) * 100 : 0;
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col flex-1">
             <div className="flex items-center gap-3 mb-3">
                 <div className="w-9 h-9 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
                     <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,21 +84,6 @@ export default function ProposalSummary({
                     </div>
                 </div>
 
-                {/* Internal Financials - Only visible if has profit data */}
-                <div className="border-t border-gray-300 dark:border-gray-600 pt-3 mt-2 space-y-2">
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Total Cost</span>
-                        <span className="text-gray-900 dark:text-white font-medium">${totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Gross Profit</span>
-                        <span className="text-gray-900 dark:text-white font-medium">${grossProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Gross Margin</span>
-                        <span className="text-gray-900 dark:text-white font-semibold">{grossMargin.toFixed(2)}%</span>
-                    </div>
-                </div>
             </div>
 
             {/* Download PDF Button */}

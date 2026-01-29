@@ -67,38 +67,40 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
             {/* Content using existing layout styles */}
             <div className="overflow-x-auto">
                 {activeTab === "orders" ? (
-                    <table className="w-full">
+                    <table className="w-full min-w-[3200px]">
                         <thead className="bg-primary-light dark:bg-gray-900">
                             <tr>
-                                <SortableHeader label="Purchase Order" field="name" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Status" field="status" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="CPO" field="customerPO" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Supplier DBA" field="supplierDBA" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Product Cost" field="productCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Shipping" field="shippingCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Acknowledged Date" field="acknowledgedDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Promise Date" field="promiseDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Logistics Contact" field="logisticsContact" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
-                                <SortableHeader label="Goods Receipts Date" field="goodsReceiptsDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} />
+                                <SortableHeader label="Purchase Order" field="name" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="180px" />
+                                <SortableHeader label="Status" field="status" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="120px" />
+                                <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="180px" />
+                                <SortableHeader label="Supplier DBA" field="supplierDBA" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="180px" />
+                                <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="180px" />
+                                <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="100px" />
+                                <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="100px" />
+                                <SortableHeader label="Product Cost" field="productCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="120px" />
+                                <SortableHeader label="Shipping" field="shippingCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="120px" />
+                                <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="120px" />
+                                <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="120px" />
+                                <SortableHeader label="Acknowledged Date" field="acknowledgedDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="120px" />
+                                <SortableHeader label="Promise Date" field="promiseDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="120px" />
+                                <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Logistics Contact" field="logisticsContact" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="180px" />
+                                <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
+                                <SortableHeader label="Goods Receipts Date" field="goodsReceiptsDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width="150px" />
                             </tr>
+                            {/* Force minimum height for header to prevent collapse */}
+                            <tr aria-hidden="true" className="h-0 border-none"></tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             {sortedPurchases.length === 0 ? (
@@ -116,7 +118,7 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                             ) : (
                                 sortedPurchases.map((purchase) => (
                                     <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium" title={purchase.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{purchase.name}</div></td>
+                                        <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium" title={purchase.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2" title={purchase.name}>{purchase.name}</div></td>
                                         <td className="px-4 py-3">
                                             <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${purchase.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                 purchase.status === 'Submitted' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
@@ -126,15 +128,15 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                                                 {purchase.status}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={purchase.customerQuoteName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{purchase.customerQuoteName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={purchase.customerOrderName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{purchase.customerOrderName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={purchase.customerPO}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{purchase.customerPO}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={purchase.supplierName}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{purchase.supplierName}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={purchase.supplierDBA}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{purchase.supplierDBA}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white" title={purchase.supplierContact}><div className="text-xs text-gray-900 dark:text-white line-clamp-2">{purchase.supplierContact}</div></td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{purchase.shipToAccountName}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{purchase.shipToLocationName}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{purchase.shipToContactName}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.customerQuoteName}>{purchase.customerQuoteName}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.customerOrderName}>{purchase.customerOrderName}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.customerPO}>{purchase.customerPO}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.supplierName}>{purchase.supplierName}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.supplierDBA}>{purchase.supplierDBA}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.supplierContact}>{purchase.supplierContact}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.shipToAccountName}>{purchase.shipToAccountName}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.shipToLocationName}>{purchase.shipToLocationName}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={purchase.shipToContactName}>{purchase.shipToContactName}</div></td>
                                         <td className="px-4 py-3 text-center">
                                             <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${purchase.dropShip
                                                 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
@@ -157,46 +159,47 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                                         <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
                                             ${purchase.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.issuedDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.acknowledgedDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.requestDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.promiseDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.shippingMethod}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.logisticsPartner}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.logisticsContact}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.trackingNumber}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.estimatedDeliveryDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.trackingStatus}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.actualDeliveryDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.goodsReceiptsDate}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.issuedDate}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.acknowledgedDate}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.requestDate}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.promiseDate}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.shippingMethod}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.logisticsPartner}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.logisticsContact}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.trackingNumber}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.estimatedDeliveryDate}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.trackingStatus}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.actualDeliveryDate}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{purchase.goodsReceiptsDate}</div></td>
                                     </tr>
                                 ))
                             )}
                         </tbody>
                     </table>
                 ) : (
-                    <table className="w-full">
+
+                    <table className="w-full min-w-[2200px]">
                         <thead className="bg-primary-light dark:bg-gray-900">
                             <tr>
-                                <SortableHeader label="Supplier Bill" field="name" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Status" field="status" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Supplier DBA" field="supplierDBA" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Total Cost" field="totalProductAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Total Amount" field="totalAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Billed Date" field="billedDate" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Remittance Status" field="remittanceStatus" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Open Balance" field="openBalance" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Days Outstanding" field="daysOutstanding" sortConfig={sortConfigBills} requestSort={requestSortBills} />
-                                <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfigBills} requestSort={requestSortBills} />
+                                <SortableHeader label="Supplier Bill" field="name" sortConfig={sortConfigBills} requestSort={requestSortBills} width="180px" />
+                                <SortableHeader label="Status" field="status" sortConfig={sortConfigBills} requestSort={requestSortBills} width="120px" />
+                                <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfigBills} requestSort={requestSortBills} width="150px" />
+                                <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfigBills} requestSort={requestSortBills} width="150px" />
+                                <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfigBills} requestSort={requestSortBills} width="150px" />
+                                <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfigBills} requestSort={requestSortBills} width="180px" />
+                                <SortableHeader label="Supplier DBA" field="supplierDBA" sortConfig={sortConfigBills} requestSort={requestSortBills} width="150px" />
+                                <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfigBills} requestSort={requestSortBills} width="150px" />
+                                <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfigBills} requestSort={requestSortBills} width="100px" />
+                                <SortableHeader label="Total Cost" field="totalProductAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} width="120px" />
+                                <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfigBills} requestSort={requestSortBills} width="120px" />
+                                <SortableHeader label="Total Amount" field="totalAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} width="120px" />
+                                <SortableHeader label="Billed Date" field="billedDate" sortConfig={sortConfigBills} requestSort={requestSortBills} width="120px" />
+                                <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfigBills} requestSort={requestSortBills} width="150px" />
+                                <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfigBills} requestSort={requestSortBills} width="120px" />
+                                <SortableHeader label="Remittance Status" field="remittanceStatus" sortConfig={sortConfigBills} requestSort={requestSortBills} width="150px" />
+                                <SortableHeader label="Open Balance" field="openBalance" sortConfig={sortConfigBills} requestSort={requestSortBills} width="120px" />
+                                <SortableHeader label="Days Outstanding" field="daysOutstanding" sortConfig={sortConfigBills} requestSort={requestSortBills} width="120px" />
+                                <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfigBills} requestSort={requestSortBills} width="120px" />
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -215,7 +218,7 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                             ) : (
                                 sortedBills.map((bill) => (
                                     <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium" title={bill.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{bill.name}</div></td>
+                                        <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium" title={bill.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2" title={bill.name}>{bill.name}</div></td>
                                         <td className="px-4 py-3">
                                             <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${bill.status === 'Posted' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -223,12 +226,12 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                                                 {bill.status || 'N/A'}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{bill.purchaseOrderName}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{bill.customerQuoteName}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{bill.customerOrderName}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{bill.supplierName}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{bill.supplierDBA}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{bill.supplierContact}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.purchaseOrderName}>{bill.purchaseOrderName}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.customerQuoteName}>{bill.customerQuoteName}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.customerOrderName}>{bill.customerOrderName}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.supplierName}>{bill.supplierName}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.supplierDBA}>{bill.supplierDBA}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white"><div className="text-xs text-gray-900 dark:text-white line-clamp-2" title={bill.supplierContact}>{bill.supplierContact}</div></td>
                                         <td className="px-4 py-3 text-center text-xs text-gray-900 dark:text-white">
                                             <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                 {bill.totalLines}
@@ -243,22 +246,23 @@ export default function PurchasesTab({ purchases, supplierBills, loading }: Purc
                                         <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
                                             ${bill.totalAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{bill.billedDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{bill.paymentTerms}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{bill.dueDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{bill.remittanceStatus}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.billedDate}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.paymentTerms}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.dueDate}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.remittanceStatus}</div></td>
                                         <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                             ${bill.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
                                         </td>
-                                        <td className="px-4 py-3 text-center text-xs text-gray-600 dark:text-gray-400">{bill.daysOutstanding}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{bill.settledDate}</td>
+                                        <td className="px-4 py-3 text-center text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.daysOutstanding}</div></td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400"><div className="line-clamp-2">{bill.settledDate}</div></td>
                                     </tr>
                                 ))
                             )}
                         </tbody>
-                    </table>
-                )}
-            </div>
-        </div>
+                    </table >
+                )
+                }
+            </div >
+        </div >
     );
 }

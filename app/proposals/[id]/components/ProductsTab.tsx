@@ -27,20 +27,20 @@ export default function ProductsTab({ products, proposalId, loading, sortField, 
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[500px]">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">&nbsp;</th>
-                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Unit Price" field="unitPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Total Order Qty" field="quantity" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Total Price" field="subtotal" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Shipping" field="shipping" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Taxes" field="taxes" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Grand Total" field="grandTotal" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Action</th>
+                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white w-[100px]">&nbsp;</th>
+                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width="250px" />
+                        <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
+                        <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
+                        <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
+                        <SortableHeader label="Total Order Qty" field="quantity" sortConfig={sortConfig} requestSort={requestSort} width="140px" />
+                        <SortableHeader label="Total Price" field="subtotal" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
+                        <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width="100px" />
+                        <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
+                        <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
+                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white w-[100px]">Action</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -68,17 +68,17 @@ export default function ProductsTab({ products, proposalId, loading, sortField, 
                                         </svg>
                                     </div>
                                 </td>
-                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium">
-                                    <div className="text-xs font-medium text-gray-900 dark:text-white">{product.productName}</div>
-                                    <div className="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1">{product.productSku}</div>
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-medium text-center">
+                                    <div className="text-xs font-medium text-gray-900 dark:text-white line-clamp-2" title={product.productName || ''}>{product.productName}</div>
+                                    <div className="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{product.description}</div>
                                 </td>
-                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{product.manufacturer}</td>
-                                <td className="px-4 py-3">
-                                    <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary">
+                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-center"><div className="line-clamp-2">{product.manufacturer}</div></td>
+                                <td className="px-4 py-3 text-center">
+                                    <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary line-clamp-2">
                                         {product.productFamily}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white ">
                                     ${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{product.quantity}</td>

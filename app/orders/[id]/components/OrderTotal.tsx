@@ -38,7 +38,7 @@ export default function OrderTotal({
     isEditing = false
 }: OrderTotalProps) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md border border-gray-200 dark:border-gray-700 h-full w-full flex flex-col" role="region" aria-label="Order total">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md border border-gray-200 dark:border-gray-700 flex-1 w-full flex flex-col" role="region" aria-label="Order total">
             {/* Header */}
             <div className="flex items-center gap-3 mb-3">
                 <div className="w-9 h-9 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
@@ -69,10 +69,10 @@ export default function OrderTotal({
             </div>
 
             {/* Grand Total */}
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-3 pb-3 mb-3">
-                <div className="flex justify-between items-center">
-                    <span className="text-base font-bold text-gray-900 dark:text-white">Grand Total</span>
-                    <span className="text-xl font-bold text-primary">${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <div className="border-t-2 border-primary/20 dark:border-primary/40 pt-3">
+                <div className="flex justify-between text-lg font-bold">
+                    <span className="text-gray-900 dark:text-white">Grand Total</span>
+                    <span className="text-primary dark:text-primary">${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
             </div>
 

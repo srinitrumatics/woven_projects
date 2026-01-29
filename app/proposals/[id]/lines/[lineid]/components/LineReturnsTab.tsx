@@ -39,11 +39,11 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
         );
     }
 
-    const SortableHeader = ({ label, field, className = "", align = "left" }: { label: string, field: string, className?: string, align?: "left" | "right" | "center" }) => {
+    const SortableHeader = ({ label, field, className = "", align = "center" }: { label: string, field: string, className?: string, align?: "left" | "right" | "center" }) => {
         const isSorted = sortConfig?.key === field;
         return (
             <th
-                className={`px-4 py-3 text-${align} text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none ${className}`}
+                className={`px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none ${className}`}
                 onClick={() => requestSort(field as any)}
             >
                 <div className={`flex items-center gap-1 ${align === "right" ? "justify-end" : align === "center" ? "justify-center" : "justify-start"}`}>
@@ -128,10 +128,8 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                         const rma = item as RMA;
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800">
-                                                    <div className="line-clamp-2" title={rma.name}>{rma.name}</div>
-                                                </td>
-                                                <td className="px-4 py-3">
+                                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center" title={rma.name}><div className="line-clamp-2" title={rma.name}>{rma.name}</div></td>
+                                                <td className="px-4 py-3 text-center">
                                                     <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${rma.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         rma.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                             'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -139,7 +137,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                         {rma.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">
+                                                <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-center">
                                                     <div className="line-clamp-2" title={rma.rmaName}>{rma.rmaName}</div>
                                                 </td>
                                                 <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">
@@ -216,7 +214,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                         const rtv = item as RTV;
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800" title={rtv.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{rtv.name}</div></td>
+                                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center" title={rtv.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{rtv.name}</div></td>
                                                 <td className="px-4 py-3">
                                                     <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${rtv.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -283,7 +281,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                         const credit = item as CreditMemo;
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800">{credit.name}</td>
+                                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center">{credit.name}</td>
                                                 <td className="px-4 py-3">
                                                     <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${credit.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -357,7 +355,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                         const debit = item as DebitMemo;
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800">{debit.name}</td>
+                                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center">{debit.name}</td>
                                                 <td className="px-4 py-3">
                                                     <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${debit.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -396,10 +394,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                         <table className="w-full">
                             <thead className="bg-gray-50 dark:bg-gray-800/50">
                                 <tr>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Number</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Status</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Date</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">Amount</th>
+                                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white">Amount</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -418,8 +413,8 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     activeData.map((item) => {
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium">{item.name}</td>
-                                                <td className="px-4 py-3">
+                                                <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium text-center">{item.name}</td>
+                                                <td className="px-4 py-3 text-center">
                                                     <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         item.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                             'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -427,7 +422,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                         {item.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{item.requestDate}</td>
+                                                <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400 text-center">{item.requestDate}</td>
                                                 <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white font-semibold">
                                                     ${item.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </td>
@@ -440,6 +435,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }

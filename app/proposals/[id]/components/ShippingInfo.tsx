@@ -24,35 +24,32 @@ export default function ShippingInfo({ proposal }: ShippingInfoProps) {
                 <div className="grid grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Ship to Account</label>
-                        <p className="text-gray-900 dark:text-white font-medium truncate" title={proposal.shipToAccount}>{proposal.shipToAccount}</p>
+                        <input type="text" readOnly value={proposal.shipToAccount} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={proposal.shipToAccount} />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Ship to Location</label>
-                        <p className="text-gray-900 dark:text-white font-medium truncate" title={proposal.shipTo}>{proposal.shipTo}</p>
+                        <input type="text" readOnly value={proposal.shipTo} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={proposal.shipTo} />
                     </div>
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Shipping Address</label>
-                    <p className="text-gray-900 dark:text-white">{proposal.shippingAddress}</p>
+                    <input type="text" readOnly value={proposal.shippingAddress} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={proposal.shippingAddress} />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Requested Date</label>
-                        <p className="text-gray-900 dark:text-white truncate" title={proposal.requestedDeliveryDate}>{proposal.requestedDeliveryDate}</p>
+                        <input type="text" readOnly value={proposal.requestedDeliveryDate} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={proposal.requestedDeliveryDate} />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Drop-Ship</label>
-                        <span className={`block w-fit px-2 py-1 text-xs font-medium rounded whitespace-nowrap ${proposal.dropShip ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}`}>
-                            {proposal.dropShip ? 'Yes' : 'No'}
-                        </span>
+                        <input type="text" readOnly value={proposal.dropShip ? 'Yes' : 'No'} className={`w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 sm:text-sm focus:ring-0 focus:border-gray-300 ${proposal.dropShip ? 'text-green-600 font-medium' : 'text-gray-900 dark:text-white'}`} />
                     </div>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Site</label>
-                    <p className="text-gray-900 dark:text-white truncate" title={proposal.site}>{proposal.site}</p>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Site</label>
+                        <input type="text" readOnly value={proposal.site} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={proposal.site} />
+                    </div>
                 </div>
             </div>
         </div>

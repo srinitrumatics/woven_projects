@@ -336,7 +336,7 @@ const OrganizationManagement: React.FC = () => {
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 tracking-wider">
                       Members
                     </th>
-                    <th className="relative px-6 py-4">
+                    <th className="relative px-6 py-4 text-left">
                       <span className="sr-only">Actions</span>
                     </th>
                   </tr>

@@ -75,16 +75,18 @@ export default function ProposalDetails({
                         </div>
                     </div>
 
-                    <div className="w-full min-h-[120px] px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white leading-relaxed">
-                        {proposal.description || "No scope summary provided for this proposal."}
-                    </div>
+                    <textarea
+                        readOnly
+                        className="w-full min-h-[120px] px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white leading-relaxed resize-none focus:ring-0 focus:border-gray-300"
+                        value={proposal.description || "No scope summary provided for this proposal."}
+                    />
                 </div>
             </div>
 
             {/* Right Column - Proposal Summary (30%) */}
             <div className="lg:col-span-3 flex flex-col gap-6 h-full">
                 {/* Proposal Notes Card */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md border border-gray-200 dark:border-gray-700 w-full flex-1 flex flex-col">
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col h-[175px]">
                     <div className="flex items-center gap-3 mb-3">
                         <div className="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                             <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,9 +99,11 @@ export default function ProposalDetails({
                         </div>
                     </div>
 
-                    <div className="flex-1 w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white overflow-y-auto">
-                        {proposal.specialTerms || "No special notes for this proposal."}
-                    </div>
+                    <textarea
+                        readOnly
+                        className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white resize-none h-[100px] focus:ring-0 focus:border-gray-300"
+                        value={proposal.specialTerms || "No special notes for this proposal."}
+                    />
                 </div>
 
                 {/* Proposal Summary Card */}

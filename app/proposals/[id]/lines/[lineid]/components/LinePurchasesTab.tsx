@@ -73,8 +73,8 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                     <table className="w-full min-w-[2800px] table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                             <tr>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10 w-[180px]">
-                                    <div className="flex items-center cursor-pointer" onClick={() => requestSortPurchases('name')}>
+                                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10 w-[180px]">
+                                    <div className="flex items-center justify-start cursor-pointer" onClick={() => requestSortPurchases('name')}>
                                         Purchase Order Line
                                         {sortConfigPurchases?.key === 'name' && (
                                             <span className="ml-1">{sortConfigPurchases.direction === 'asc' ? '↑' : '↓'}</span>
@@ -116,13 +116,13 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                             ) : (
                                 sortedPurchases.map((purchase) => (
                                     <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800" title={purchase.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{purchase.name}</div></td>
+                                        <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center" title={purchase.name}><div className="text-xs font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{purchase.name}</div></td>
                                         <td className="px-4 py-3">
                                             <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                 {purchase.status}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3">
+                                        <td className="px-4 py-3 text-center">
                                             <div className="line-clamp-2" title={purchase.purchaseOrderName}>{purchase.purchaseOrderName}</div>
                                         </td>
                                         <td className="px-4 py-3">
@@ -152,11 +152,11 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                         </td>
                                         <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">{purchase.openBalanceQty}</td>
                                         <td className="px-4 py-3 text-xs text-gray-900 dark:text-white font-mono">{purchase.trackingNumber}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.estimatedDeliveryDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{purchase.trackingStatus}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.actualDeliveryDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{purchase.goodsReceiptDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{purchase.invoiceStatus}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400 text-center">{purchase.estimatedDeliveryDate}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-center">{purchase.trackingStatus}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400 text-center">{purchase.actualDeliveryDate}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400 text-center">{purchase.goodsReceiptDate}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-center">{purchase.invoiceStatus}</td>
                                     </tr>
                                 ))
                             )}
@@ -168,8 +168,8 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                     <table className="w-full min-w-[2000px] table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                             <tr>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10 w-[180px]">
-                                    <div className="flex items-center cursor-pointer" onClick={() => requestSortBills('name')}>
+                                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white sticky left-0 bg-primary-light dark:bg-gray-900 z-10 w-[180px]">
+                                    <div className="flex items-center justify-start cursor-pointer" onClick={() => requestSortBills('name')}>
                                         Supplier Bill
                                         {sortConfigBills?.key === 'name' && (
                                             <span className="ml-1">{sortConfigBills.direction === 'asc' ? '↑' : '↓'}</span>
@@ -212,7 +212,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                             ) : (
                                 sortedBills.map((bill) => (
                                     <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800">
+                                        <td className="px-4 py-3 text-xs font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center">
                                             <div className="line-clamp-2" title={bill.name}>{bill.name}</div>
                                         </td>
                                         <td className="px-4 py-3">
@@ -248,16 +248,16 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                         <td className="px-4 py-3 text-xs text-right text-red-600 font-bold">
                                             ${bill.totalBillAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{bill.billedDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{bill.paymentTerms}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{bill.dueDate}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{bill.remittanceStatus}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400 text-center">{bill.billedDate}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-center">{bill.paymentTerms}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400 text-center">{bill.dueDate}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-center">{bill.remittanceStatus}</td>
                                         <td className="px-4 py-3 text-xs text-right text-gray-900 dark:text-white">
                                             ${bill.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                         </td>
                                         <td className="px-4 py-3 text-center text-xs text-gray-900 dark:text-white">{bill.daysOutstanding}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white">{bill.holdStatus}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{bill.settledDate}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-900 dark:text-white text-center">{bill.holdStatus}</td>
+                                        <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400 text-center">{bill.settledDate}</td>
                                     </tr>
                                 ))
                             )}

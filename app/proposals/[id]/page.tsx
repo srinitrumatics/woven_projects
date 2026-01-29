@@ -311,6 +311,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           break;
         case 'purchases':
           // JSON returns object with Purchase_Order__c and Supplier_Bill__c arrays
+          console.log(json);
           const purchaseOrders = (json.Purchase_Order__c || []);
           if (Array.isArray(purchaseOrders) && purchaseOrders.length > 0) {
             setPurchases(purchaseOrders.map((p: any) => ({
@@ -320,9 +321,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               customerQuoteName: p.Customer_Quote_Name || '',
               customerOrderName: p.Customer_Order_Name || '',
               customerPO: p.Customer_PO__c || '',
-              supplierName: p.Supplier_Name__c || '',
+              supplierName: p.Supplier_Name || p.Supplier__r?.Name || p.Supplier_Name__c || '',
               supplierDBA: p.Supplier_DBA__c || '',
-              supplierContact: p.Supplier_Contact__c || '',
+              supplierContact: p.Supplier_Contact_Name || p.Supplier_Contact__c || '',
               shipToAccountName: p.Ship_to_Account_Name || '',
               shipToLocationName: p.Authorized_Ship_To_Location_Name || '',
               shipToContactName: p.Ship_to_Contact_Name || '',
@@ -336,8 +337,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               requestDate: formatDate(p.Request_Date__c, 'numeric-dash'),
               promiseDate: formatDate(p.Promise_Date__c, 'numeric-dash'),
               shippingMethod: p.Shipping_Method__c || '',
-              logisticsPartner: p.Logistics_Partner__c || '',
-              logisticsContact: p.Logistics_Contact__c || '',
+              logisticsPartner: p.Logistics_Partner_Name || '',
+              logisticsContact: p.Logistics_Contact_Name || '',
               trackingNumber: p.Tracking_Number__c || '',
               estimatedDeliveryDate: formatDate(p.Estimated_Delivery_Date__c, 'numeric-dash'),
               trackingStatus: p.Tracking_Status__c || '',
@@ -357,9 +358,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               purchaseOrderName: sb.Purchase_Order_Name || sb.gtherp__Purchase_Order__r?.Name || sb.gtherp__Purchase_Order__c || '',
               customerQuoteName: sb.Customer_Quote_Name || '',
               customerOrderName: sb.Customer_Order_Name || '',
-              supplierName: sb.Supplier_Name__c || '',
+              supplierName: sb.Supplier_Name || sb.Supplier__r?.Name || sb.Supplier_Name__c || '',
               supplierDBA: sb.Supplier_DBA__c || '',
-              supplierContact: sb.Supplier_Contact__c || '',
+              supplierContact: sb.Supplier_Contact_Name || sb.Supplier_Contact__c || '',
               totalLines: sb.Total_Lines__c || 0,
               totalProductAmount: sb.Total_Product_Amount__c || 0,
               totalShippingCharges: sb.Total_Shipping_Charges__c || 0,
@@ -377,6 +378,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           }
           break;
         case 'returns':
+          console.log("returns", json);
           setReturnsData({
             rma: (json.RMA__c || []).map((r: any) => ({
               id: r.Id,
@@ -396,8 +398,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               issuedDate: formatDate(r.Issued_Date__c, 'numeric-dash'),
               returnByDate: formatDate(r.Return_by_Date__c, 'numeric-dash'),
               shippingMethod: r.Shipping_Method__c || '',
-              logisticsPartner: r.Logistics_Partner__c || '',
-              logisticsContact: r.Logistics_Contact__c || '',
+              logisticsPartner: r.Logistics_Partner_Name || '',
+              logisticsContact: r.Logistics_Contact_Name || '',
               trackingNumber: r.Tracking_Number__c || '',
               estimatedDeliveryDate: formatDate(r.Estimated_Delivery_Date__c, 'numeric-dash'),
               trackingStatus: r.Tracking_Status__c || '',
@@ -421,8 +423,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               rmaNumber: r.Supplier_RMA_Number__c || '',
               shipFromAccountName: r.Ship_from_Account_Name || '',
               shipFromContactName: r.Ship_from_Contact_Name || '',
-              supplierName: r.Supplier_Name__c || '',
-              supplierContact: r.Supplier_Contact__c || '',
+              supplierName: r.Supplier_Name || '',
+              supplierContact: r.Supplier_Contact_Name || '',
               totalLines: r.Total_Lines__c || 0,
               totalCost: r.Total_Cost__c || 0,
               issuedDate: formatDate(r.Issued_Date__c, 'numeric-dash'),
@@ -439,11 +441,11 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               id: c.Id,
               name: c.Name || '',
               status: c.Status__c || '',
-              invoiceName: c.Invoice__c || c.gtherp__Invoice__c || '',
-              customerQuoteName: c.Customer_Quote__c || c.gtherp__Customer_Quote__c || '',
-              customerOrderName: c.Customer_Order__c || c.gtherp__Customer_Order__c || '',
-              creditToAccountName: c.Credit_to_Account__c || c.gtherp__Credit_to_Account__c || '',
-              creditToContactName: c.Credit_to_Contact__c || c.gtherp__Credit_to_Contact__c || '',
+              invoiceName: c.Invoice_Name || c.gtherp__Invoice__c || '',
+              customerQuoteName: c.Customer_Quote_Name || c.gtherp__Customer_Quote__c || '',
+              customerOrderName: c.Customer_Order_Name || c.gtherp__Customer_Order__c || '',
+              creditToAccountName: c.Credit_to_Account_Name || c.gtherp__Credit_to_Account__c || '',
+              creditToContactName: c.Credit_to_Contact_Name || c.gtherp__Credit_to_Contact__c || '',
               totalLines: c.Total_Lines__c || 0,
               totalPrice: c.Total_Price__c || 0,
               totalShippingCharges: c.Total_Shipping_Charges__c || 0,
@@ -464,12 +466,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               id: d.Id,
               name: d.Name || '',
               status: d.Status__c || '',
-              supplierBillName: d.Supplier_Bill__c || d.gtherp__Supplier_Bill__c || '',
-              purchaseOrderName: d.Purchase_Order__c || d.gtherp__Purchase_Order__c || '',
-              customerOrderName: d.Customer_Order__c || d.gtherp__Customer_Order__c || '',
+              supplierBillName: d.Supplier_Bill_Name || d.gtherp__Supplier_Bill__c || '',
+              purchaseOrderName: d.Purchase_Order_Name || d.gtherp__Purchase_Order__c || '',
+              customerOrderName: d.Customer_Order_Name || d.gtherp__Customer_Order__c || '',
               supplierCreditMemoName: d.Supplier_Credit_Memo__c || d.gtherp__Supplier_Credit_Memo__c || '',
-              debitToAccountName: d.Debit_to_Account__c || d.gtherp__Debit_to_Account__c || '',
-              debitToContactName: d.Debit_to_Contact__c || d.gtherp__Debit_to_Contact__c || '',
+              debitToAccountName: d.Debit_to_Account_Name || d.gtherp__Debit_to_Account__c || '',
+              debitToContactName: d.Debit_to_Contact_Name || d.gtherp__Debit_to_Contact__c || '',
               totalLines: d.Total_Lines__c || 0,
               totalCost: d.Total_Cost__c || 0,
               totalShippingCharges: d.Total_Shipping_Charges__c || 0,

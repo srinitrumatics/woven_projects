@@ -402,15 +402,15 @@ export default function ProposalsPage() {
             <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Proposal Number" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Items" field="productCount" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Total" field="totalAmount" align="right" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Expires" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} />
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white">
+                  <SortableHeader label="Proposal Number" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
+                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
+                  <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width="200px" />
+                  <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} width="180px" />
+                  <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} width="180px" />
+                  <SortableHeader label="Items" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width="100px" />
+                  <SortableHeader label="Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
+                  <SortableHeader label="Expires" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 dark:text-white w-[100px]">
                     Actions
                   </th>
                 </tr>
@@ -437,7 +437,7 @@ export default function ProposalsPage() {
                     <tr key={proposal.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                       <td className="px-6 py-4">
                         <Link href={`/proposals/${proposal.id}`} className="text-xs font-semibold text-primary hover:underline">
-                          {proposal.proposalNumber}
+                          <div className="line-clamp-2" title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
                         </Link>
                       </td>
                       <td className="px-6 py-4">

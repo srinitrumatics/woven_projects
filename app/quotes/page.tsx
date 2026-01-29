@@ -261,11 +261,11 @@ export default function QuotesPage() {
                       {formatCurrency(quote.totalAmount)}
                     </td>
                     <td className="px-6 py-4 text-xs text-gray-600 dark:text-gray-400">{quote.validUntil}</td>
-                    <td className="px-6 py-4 text-xs text-center text-gray-900 dark:text-white">
+                    <td className="px-6 py-4 text-xs text-right text-gray-900 dark:text-white">
                       {quote.lineItemCount}
                     </td>
-                    <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center gap-2">
+                    <td className="px-6 py-4 text-left">
+                      <div className="flex items-center justify-start gap-2">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
