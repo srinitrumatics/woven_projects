@@ -7,6 +7,9 @@ import Pagination from "@/components/ui/Pagination";
 import { formatCurrency } from "@/lib/utils/formatting";
 import { Invoice, InvoiceStatus } from "./types";
 import { mockInvoices, mockInvoiceStats } from "./mockData";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { useSortableData } from "@/hooks/useSortableData";
 
 export default function InvoicesPage() {
   const router = useRouter();
@@ -15,9 +18,25 @@ export default function InvoicesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  // Initialize resizable columns
+  const { widths, handleResize } = useResizableColumns({
+    invoiceNumber: 150,
+    accountName: 180,
+    contactName: 180,
+    description: 250,
+    status: 120,
+    totalAmount: 120,
+    amountDue: 120,
+    dueDate: 120,
+    actions: 120
+  });
+
+  // Sorting
+  const { items: sortedInvoices, requestSort, sortConfig } = useSortableData<Invoice>(mockInvoices);
+
   // Filter invoices based on search and status
   const filteredInvoices = useMemo(() => {
-    return mockInvoices.filter((invoice) => {
+    return sortedInvoices.filter((invoice) => {
       const matchesSearch =
         invoice.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         invoice.accountName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -30,7 +49,7 @@ export default function InvoicesPage() {
 
       return matchesSearch && matchesStatus;
     });
-  }, [searchQuery, statusFilter]);
+  }, [searchQuery, statusFilter, sortedInvoices]);
 
   // Pagination
   const totalPages = Math.ceil(filteredInvoices.length / itemsPerPage);
@@ -202,18 +221,23 @@ export default function InvoicesPage() {
       {/* Invoices Table */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full table-fixed">
             <thead className="bg-primary-light dark:bg-gray-900">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Invoice #</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Account</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Contact</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Total</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Amount Due</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Due Date</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
+                <SortableHeader label="Invoice #" field="invoiceNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={handleResize} />
+                <SortableHeader label="Account" field="accountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
+                <SortableHeader label="Contact" field="contactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.contactName} onResize={handleResize} />
+                <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
+                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                <SortableHeader label="Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
+                <SortableHeader label="Amount Due" field="amountDue" sortConfig={sortConfig} requestSort={requestSort} width={widths.amountDue} onResize={handleResize} />
+                <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.dueDate} onResize={handleResize} />
+                <th
+                  className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                  style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                >
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

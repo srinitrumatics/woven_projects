@@ -24,6 +24,8 @@ interface ProductCatalogProps {
     sortConfig: SortConfig<Product> | null;
     requestSort: (key: keyof Product) => void;
     isEditing?: boolean;
+    widths: Record<string, number>;
+    onResize: (field: string, width: number) => void;
 }
 
 export default function ProductCatalog({
@@ -45,7 +47,9 @@ export default function ProductCatalog({
     searchQuery,
     sortConfig,
     requestSort,
-    isEditing = false
+    isEditing = false,
+    widths,
+    onResize
 }: ProductCatalogProps) {
     return (
         <>
@@ -60,11 +64,14 @@ export default function ProductCatalog({
                 )}
             </div>
             <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
                             {isEditing && (
-                                <th className="px-4 py-2 text-center w-10">
+                                <th
+                                    className="px-4 py-2 text-center"
+                                    style={{ width: widths.selection, minWidth: widths.selection, maxWidth: widths.selection }}
+                                >
                                     <input
                                         type="checkbox"
                                         onChange={handleSelectAll}
@@ -73,17 +80,23 @@ export default function ProductCatalog({
                                     />
                                 </th>
                             )}
-                            <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">&nbsp;</th>
-                            <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="List Price" field="listPrice" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Selling Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Available Qty" field="availableQty" align="center" sortConfig={sortConfig} requestSort={requestSort} />
+                            <th
+                                className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white"
+                                style={{ width: widths.image, minWidth: widths.image, maxWidth: widths.image }}
+                            >&nbsp;</th>
+                            <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
+                            <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
+                            <SortableHeader label="Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
+                            <SortableHeader label="List Price" field="listPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={onResize} />
+                            <SortableHeader label="Selling Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
+                            <SortableHeader label="Available Qty" field="availableQty" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.availableQty} onResize={onResize} />
                             {isEditing && (
                                 <>
-                                    <SortableHeader label="Qty to Order" field="orderQty" align="center" sortConfig={sortConfig} requestSort={requestSort} />
-                                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white">Action</th>
+                                    <SortableHeader label="Qty to Order" field="orderQty" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
+                                    <th
+                                        className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white"
+                                        style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                                    >Action</th>
                                 </>
                             )}
                         </tr>

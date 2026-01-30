@@ -9,9 +9,20 @@ interface ProductsTabProps {
     sortField: keyof ProposedProduct;
     sortDirection: SortDirection;
     onSort: (field: keyof ProposedProduct) => void;
+    widths: Record<string, number>;
+    onResize: (field: string, width: number) => void;
 }
 
-export default function ProductsTab({ products, proposalId, loading, sortField, sortDirection, onSort }: ProductsTabProps) {
+export default function ProductsTab({
+    products,
+    proposalId,
+    loading,
+    sortField,
+    sortDirection,
+    onSort,
+    widths,
+    onResize
+}: ProductsTabProps) {
     //console.log("product ui res", products);
 
     const sortConfig = { key: sortField as string, direction: sortDirection };
@@ -27,20 +38,20 @@ export default function ProductsTab({ products, proposalId, loading, sortField, 
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full min-w-[500px]">
+            <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white w-[100px]">&nbsp;</th>
-                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width="250px" />
-                        <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
-                        <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
-                        <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
-                        <SortableHeader label="Total Order Qty" field="quantity" sortConfig={sortConfig} requestSort={requestSort} width="140px" />
-                        <SortableHeader label="Total Price" field="subtotal" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
-                        <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width="100px" />
-                        <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
-                        <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white w-[100px]">Action</th>
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.image }}>&nbsp;</th>
+                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={onResize} />
+                        <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
+                        <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
+                        <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
+                        <SortableHeader label="Total Order Qty" field="quantity" sortConfig={sortConfig} requestSort={requestSort} width={widths.quantity} onResize={onResize} />
+                        <SortableHeader label="Total Price" field="subtotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} />
+                        <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={onResize} />
+                        <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={onResize} />
+                        <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={onResize} />
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.actions }}>Action</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

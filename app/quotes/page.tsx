@@ -7,6 +7,9 @@ import Pagination from "@/components/ui/Pagination";
 import { formatCurrency } from "@/lib/utils/formatting";
 import { Quote, QuoteStatus } from "./types";
 import { mockQuotes, mockQuoteStats } from "./mockData";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { useSortableData } from "@/hooks/useSortableData";
 
 export default function QuotesPage() {
   const router = useRouter();
@@ -15,9 +18,25 @@ export default function QuotesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  // Initialize resizable columns
+  const { widths, handleResize } = useResizableColumns({
+    quoteNumber: 150,
+    accountName: 180,
+    contactName: 180,
+    description: 250,
+    status: 120,
+    totalAmount: 120,
+    validUntil: 120,
+    items: 100,
+    actions: 100
+  });
+
+  // Sorting
+  const { items: sortedQuotes, requestSort, sortConfig } = useSortableData<Quote>(mockQuotes);
+
   // Filter quotes based on search and status
   const filteredQuotes = useMemo(() => {
-    return mockQuotes.filter((quote) => {
+    return sortedQuotes.filter((quote) => {
       const matchesSearch =
         quote.quoteNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         quote.accountName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -29,7 +48,7 @@ export default function QuotesPage() {
 
       return matchesSearch && matchesStatus;
     });
-  }, [searchQuery, statusFilter]);
+  }, [searchQuery, statusFilter, sortedQuotes]);
 
   // Pagination
   const totalPages = Math.ceil(filteredQuotes.length / itemsPerPage);
@@ -184,18 +203,23 @@ export default function QuotesPage() {
       {/* Quotes Table */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full table-fixed">
             <thead className="bg-primary-light dark:bg-gray-900">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Quote #</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Account</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Contact</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Amount</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Valid Until</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Items</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
+                <SortableHeader label="Quote #" field="quoteNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.quoteNumber} onResize={handleResize} />
+                <SortableHeader label="Account" field="accountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
+                <SortableHeader label="Contact" field="contactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.contactName} onResize={handleResize} />
+                <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
+                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                <SortableHeader label="Amount" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
+                <SortableHeader label="Valid Until" field="validUntil" sortConfig={sortConfig} requestSort={requestSort} width={widths.validUntil} onResize={handleResize} />
+                <SortableHeader label="Items" field="lineItemCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
+                <th
+                  className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                  style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                >
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

@@ -7,6 +7,9 @@ import Pagination from "@/components/ui/Pagination";
 import { ShippingManifest, ShipmentStatus } from "./types";
 import { mockShipments, mockShipmentStats } from "./mockData";
 import { formatDate } from "@/lib/utils/formatting";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { useSortableData } from "@/hooks/useSortableData";
 
 export default function ShipmentsPage() {
   const router = useRouter();
@@ -15,9 +18,25 @@ export default function ShipmentsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  // Initialize resizable columns
+  const { widths, handleResize } = useResizableColumns({
+    manifestNumber: 150,
+    orderNumber: 150,
+    accountName: 180,
+    carrier: 150,
+    trackingNumber: 180,
+    status: 120,
+    shipDate: 120,
+    estimatedDelivery: 120,
+    actions: 100
+  });
+
+  // Sorting
+  const { items: sortedShipments, requestSort, sortConfig } = useSortableData<ShippingManifest>(mockShipments);
+
   // Filter shipments
   const filteredShipments = useMemo(() => {
-    return mockShipments.filter((shipment) => {
+    return sortedShipments.filter((shipment) => {
       const matchesSearch =
         shipment.manifestNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         shipment.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -29,7 +48,7 @@ export default function ShipmentsPage() {
 
       return matchesSearch && matchesStatus;
     });
-  }, [searchQuery, statusFilter]);
+  }, [searchQuery, statusFilter, sortedShipments]);
 
   // Pagination
   const totalPages = Math.ceil(filteredShipments.length / itemsPerPage);
@@ -166,18 +185,23 @@ export default function ShipmentsPage() {
       {/* Shipments Table */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full table-fixed">
             <thead className="bg-primary-light dark:bg-gray-900">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Manifest #</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Order #</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Account</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Carrier</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Tracking #</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Ship Date</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Est. Delivery</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
+                <SortableHeader label="Manifest #" field="manifestNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.manifestNumber} onResize={handleResize} />
+                <SortableHeader label="Order #" field="orderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderNumber} onResize={handleResize} />
+                <SortableHeader label="Account" field="accountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
+                <SortableHeader label="Carrier" field="carrier" sortConfig={sortConfig} requestSort={requestSort} width={widths.carrier} onResize={handleResize} />
+                <SortableHeader label="Tracking #" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} />
+                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                <SortableHeader label="Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipDate} onResize={handleResize} />
+                <SortableHeader label="Est. Delivery" field="estimatedDelivery" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDelivery} onResize={handleResize} />
+                <th
+                  className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                  style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                >
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

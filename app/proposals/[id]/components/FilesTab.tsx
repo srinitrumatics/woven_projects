@@ -83,13 +83,13 @@ export default function FilesTab({
                                 onChange={onSelectAll}
                             />
                         </th>
-                        <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} className="w-[300px]" />
-                        <SortableHeader label="Category" field="category" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
-                        <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} className="w-[100px]" />
-                        <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} className="w-[120px]" />
-                        <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
-                        <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
-                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white w-[120px]">Action</th>
+                        <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Category" field="category" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} />
+                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white">Action</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

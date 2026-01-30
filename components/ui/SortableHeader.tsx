@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { SortConfig } from '../../hooks/useSortableData';
 
 interface SortableHeaderProps {
@@ -8,7 +8,8 @@ interface SortableHeaderProps {
     requestSort: (key: any) => void;
     className?: string;
     align?: 'left' | 'right' | 'center';
-    width?: string;
+    width?: string | number;
+    onResize?: (field: string, newWidth: number) => void;
 }
 
 export function SortableHeader({
@@ -18,15 +19,45 @@ export function SortableHeader({
     requestSort,
     className = "",
     align = "center",
-    width
+    width,
+    onResize
 }: SortableHeaderProps) {
     const isSorted = sortConfig?.key === field;
+    const thRef = useRef<HTMLTableHeaderCellElement>(null);
+
+    const handleMouseDown = useCallback((e: React.MouseEvent) => {
+        if (!onResize || !thRef.current) return;
+
+        e.stopPropagation();
+        e.preventDefault();
+
+        const startX = e.pageX;
+        const startWidth = thRef.current.offsetWidth;
+
+        const handleMouseMove = (mouseMoveEvent: MouseEvent) => {
+            const newWidth = startWidth + (mouseMoveEvent.pageX - startX);
+            onResize(field, newWidth);
+        };
+
+        const handleMouseUp = () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+            document.body.style.cursor = 'default';
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+        document.body.style.cursor = 'col-resize';
+    }, [field, onResize]);
+
+    const displayWidth = typeof width === 'number' ? `${width}px` : width;
 
     return (
         <th
-            className={`px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none ${className}`}
+            ref={thRef}
+            className={`px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none relative ${className}`}
             onClick={() => requestSort(field)}
-            style={width ? { width, minWidth: width, maxWidth: width } : {}}
+            style={displayWidth ? { width: displayWidth, minWidth: displayWidth, maxWidth: displayWidth } : {}}
         >
             <div className={`flex items-center gap-1 ${align === 'right' ? 'justify-end' : align === 'center' ? 'justify-center' : 'justify-start'}`}>
                 <span className="line-clamp-2" title={label}>{label}</span>
@@ -38,6 +69,14 @@ export function SortableHeader({
                     )}
                 </span>
             </div>
+
+            {onResize && (
+                <div
+                    className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/50 transition-colors z-10"
+                    onMouseDown={handleMouseDown}
+                    onClick={(e) => e.stopPropagation()}
+                />
+            )}
         </th>
     );
 }

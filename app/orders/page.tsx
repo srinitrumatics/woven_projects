@@ -8,6 +8,7 @@ import { formatCurrency } from "@/lib/utils/formatting";
 import { OrderStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
 
 type TabFilter = "All" | "Pending" | "Success" | "Draft" | "Cancelled";
 
@@ -26,6 +27,20 @@ export default function OrdersPage() {
   const [dateRange, setDateRange] = useState("Jan 1 - Jan 30, 2024");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Initialize resizable columns
+  const { widths, handleResize } = useResizableColumns({
+    name: 150,
+    status: 120,
+    proposal_name: 180,
+    cpo: 150,
+    billTo: 180,
+    shipTo: 180,
+    items: 100,
+    total: 120,
+    actions: 100
+  });
+
   const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
   const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? ""; //TODO: Get this from session / auth context
 
@@ -488,18 +503,23 @@ export default function OrdersPage() {
               <p className="text-sm">Loading orders...</p>
             </div>
           ) : (
-            <table className="w-full">
+            <table className="w-full table-fixed">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Order Number" field="name" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Proposal" field="proposal_name" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Customer PO" field="cpo" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Items" field="items" sortConfig={sortConfig} requestSort={requestSort} />
-                  <SortableHeader label="Total" field="total" sortConfig={sortConfig} requestSort={requestSort} />
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
+                  <SortableHeader label="Order Number" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
+                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                  <SortableHeader label="Proposal" field="proposal_name" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal_name} onResize={handleResize} />
+                  <SortableHeader label="Customer PO" field="cpo" sortConfig={sortConfig} requestSort={requestSort} width={widths.cpo} onResize={handleResize} />
+                  <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
+                  <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} />
+                  <SortableHeader label="Items" field="items" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
+                  <SortableHeader label="Total" field="total" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
+                  <th
+                    className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                    style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                  >
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

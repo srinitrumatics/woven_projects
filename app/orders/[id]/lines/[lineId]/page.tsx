@@ -477,7 +477,7 @@ export default function OrderLineDetailPage({
             <div className="space-y-3">
               {/* Product Name */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                   Product Name
                 </label>
                 <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
@@ -486,7 +486,7 @@ export default function OrderLineDetailPage({
               </div>
               {/* Description */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                   Description
                 </label>
                 <p className="text-sm text-gray-900 dark:text-white line-clamp-2">
@@ -495,7 +495,7 @@ export default function OrderLineDetailPage({
               </div>
               {/* Manufacturer Name */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                   Manufacturer Name
                 </label>
                 <p className="text-sm text-gray-900 dark:text-white">
@@ -508,7 +508,7 @@ export default function OrderLineDetailPage({
             <div className="space-y-3">
               {/* Manufacturer DBA */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                   Manufacturer DBA
                 </label>
                 <p className="text-sm text-gray-900 dark:text-white">
@@ -517,16 +517,16 @@ export default function OrderLineDetailPage({
               </div>
               {/* Product Family */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                   Product Family
                 </label>
-                <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-primary/10 text-primary">
+                <span className="inline-block px-2 py-0.5 text-sm font-medium rounded-full bg-primary/10 text-primary">
                   {product.productFamily}
                 </span>
               </div>
               {/* IsTaxable */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                   IsTaxable
                 </label>
                 <p className="text-sm text-gray-900 dark:text-white">
@@ -539,7 +539,7 @@ export default function OrderLineDetailPage({
             <div className="space-y-3">
               {/* Site */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                   Site
                 </label>
                 <p className="text-sm text-gray-900 dark:text-white">
@@ -548,7 +548,7 @@ export default function OrderLineDetailPage({
               </div>
               {/* Inventory Account */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                   Inventory Account
                 </label>
                 <p className="text-sm text-gray-900 dark:text-white">
@@ -557,7 +557,7 @@ export default function OrderLineDetailPage({
               </div>
               {/* Available to Sell */}
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
                   Available to Sell
                 </label>
                 <p className="text-sm text-gray-900 dark:text-white font-mono">

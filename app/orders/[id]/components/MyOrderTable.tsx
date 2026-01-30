@@ -16,6 +16,8 @@ interface MyOrderTableProps {
     contactId: string;
     setOrderProducts: Dispatch<SetStateAction<Product[]>>;
     isEditing?: boolean;
+    widths: Record<string, number>;
+    onResize: (field: string, width: number) => void;
 }
 
 export default function MyOrderTable({
@@ -26,7 +28,9 @@ export default function MyOrderTable({
     handleRemoveProduct,
     searchQuery,
     setHoveredTooltip,
-    isEditing = false
+    isEditing = false,
+    widths,
+    onResize
 }: MyOrderTableProps) {
 
     // Data fetching is now handled by the parent component (page.tsx) to prevent
@@ -50,18 +54,23 @@ export default function MyOrderTable({
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <SortableHeader label="Order Line " field="sku" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
-                        <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width="250px" />
-                        <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
-                        <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
-                        <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width="100px" />
-                        <SortableHeader label="Total Order Qty" field="orderQty" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
-                        <SortableHeader label="Total Price" field="subtotal" sortConfig={sortConfig} requestSort={requestSort} width="100px" />
+                        <SortableHeader label="Order Line " field="sku" sortConfig={sortConfig} requestSort={requestSort} width={widths.sku} onResize={onResize} />
+                        <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
+                        <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
+                        <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
+                        <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
+                        <SortableHeader label="Total Order Qty" field="orderQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
+                        <SortableHeader label="Total Price" field="subtotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} />
                         {isEditing && (
-                            <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white w-20">Action</th>
+                            <th
+                                className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white"
+                                style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                            >
+                                Action
+                            </th>
                         )}
                     </tr>
                 </thead>

@@ -42,6 +42,7 @@ import FulfillmentsTab from "./components/FulfillmentsTab";
 import PurchasesTab from "./components/PurchasesTab";
 import ReturnsTab from "./components/ReturnsTab";
 import TaxesTab from "./components/TaxesTab";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
 
 export default function ProposalDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -82,6 +83,206 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
   const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "" //TODO: Get this from session / auth context
+
+  // Resizable Columns hooks
+  const { widths: productWidths, handleResize: handleProductResize } = useResizableColumns({
+    productName: 250,
+    productSku: 150,
+    manufacturer: 150,
+    category: 150,
+    quantity: 100,
+    unitPrice: 120,
+    margin: 100,
+    subtotal: 120,
+    shipping: 120,
+    taxes: 120,
+    grandTotal: 150
+  });
+
+  const { widths: elementWidths, handleResize: handleElementResize } = useResizableColumns({
+    wbs: 100,
+    proposalElement: 300,
+    description: 500
+  });
+
+  const { widths: projectWidths, handleResize: handleProjectResize } = useResizableColumns({
+    projectNumber: 150,
+    status: 120,
+    name: 250,
+    customerAccountName: 200,
+    customerContactName: 200,
+    billingType: 150,
+    projectManagerName: 200,
+    estimatedBudget: 150,
+    totalMilestones: 120,
+    totalTasks: 120,
+    percentCompleted: 120,
+    estimatedStartDate: 150,
+    estimatedEndDate: 150
+  });
+
+  const { widths: orderWidths, handleResize: handleOrderResize } = useResizableColumns({
+    name: 180,
+    status: 120,
+    customerPO: 150,
+    customerPODate: 150,
+    billToAccountName: 180,
+    billToLocationName: 180,
+    billToContactName: 180,
+    shipToAccountName: 180,
+    shipToLocationName: 180,
+    shipToContactName: 180,
+    dropShip: 100,
+    totalLines: 100,
+    totalPrice: 120,
+    totalShippingCharges: 120,
+    totalTaxesAmount: 120,
+    grandTotal: 150,
+    requestDate: 150,
+    shipDate: 150,
+    deliveredDate: 150
+  });
+
+  const { widths: purchaseWidths, handleResize: handlePurchaseResize } = useResizableColumns({
+    name: 180,
+    status: 120,
+    customerQuoteName: 180,
+    customerOrderName: 180,
+    customerPO: 150,
+    supplierName: 180,
+    supplierDBA: 180,
+    supplierContact: 180,
+    shipToAccountName: 180,
+    shipToLocationName: 180,
+    shipToContactName: 180,
+    dropShip: 100,
+    totalLines: 100,
+    productCost: 120,
+    shippingCost: 120,
+    totalCost: 120,
+    issuedDate: 150,
+    acknowledgedDate: 150,
+    requestDate: 150,
+    promiseDate: 150,
+    shippingMethod: 150,
+    logisticsPartner: 180,
+    logisticsContact: 180,
+    trackingNumber: 180,
+    estimatedDeliveryDate: 150,
+    trackingStatus: 150,
+    actualDeliveryDate: 150,
+    goodsReceiptsDate: 150
+  });
+
+  const { widths: billWidths, handleResize: handleBillResize } = useResizableColumns({
+    name: 180,
+    status: 120,
+    purchaseOrderName: 180,
+    customerQuoteName: 180,
+    customerOrderName: 180,
+    supplierName: 180,
+    supplierDBA: 180,
+    supplierContact: 180,
+    totalLines: 100,
+    totalProductAmount: 120,
+    totalShippingCharges: 120,
+    totalAmount: 120,
+    billedDate: 150,
+    paymentTerms: 150,
+    dueDate: 150,
+    remittanceStatus: 120,
+    openBalance: 120,
+    daysOutstanding: 120,
+    settledDate: 150
+  });
+
+  const [fulfillmentWidths, setFulfillmentWidths] = useState({
+    invoices: {
+      name: 180, status: 120, salesOrderLineName: 200, customerQuoteLineName: 200, customerPO: 150,
+      billToAccountName: 180, billToLocationName: 180, billToContactName: 180, totalLines: 100,
+      totalPrice: 120, totalShippingCharges: 120, totalTaxesAmount: 120, grandTotal: 150,
+      issuedDate: 150, paymentTerms: 150, dueDate: 150, collectionStatus: 150, openBalance: 120,
+      daysOutstanding: 150, settledDate: 150
+    },
+    shipping: {
+      name: 180, status: 120, salesOrderName: 180, customerQuoteName: 180, customerOrderName: 180,
+      customerPO: 150, shipToAccountName: 180, shipToLocationName: 180, shipToContactName: 180,
+      dropShip: 100, boxCount: 100, boxNetWeight: 120, boxGrossWeight: 120, totalLines: 100,
+      totalPrice: 120, requestDate: 150, shipDate: 150, deliveredDate: 150, shippingMethod: 150,
+      logisticsPartnerName: 180, logisticsContactName: 180, trackingNumber: 180,
+      estimatedDeliveryDate: 150, trackingStatus: 150, actualDeliveryDate: 150
+    },
+    sales: {
+      name: 180, status: 120, customerQuoteName: 180, customerOrderName: 180, customerPO: 150,
+      billToAccountName: 180, billToLocationName: 180, billToContactName: 180, shipToAccountName: 180,
+      shipToLocationName: 180, shipToContactName: 180, dropShip: 100, totalLines: 100, totalPrice: 120,
+      totalShippingCharges: 120, totalTaxesAmount: 120, grandTotal: 150, requestDate: 150,
+      pickDate: 150, pickCompleteDate: 150, shipDate: 150, deliveredDate: 150
+    },
+    quotes: {
+      name: 180, status: 120, customerOrderName: 180, customerPO: 150, billToAccountName: 180,
+      billToLocationName: 180, billToContactName: 180, shipToAccountName: 180, shipToLocationName: 180,
+      shipToContactName: 180, dropShip: 100, totalLines: 100, totalPrice: 120, totalShippingCharges: 120,
+      totalTaxesAmount: 120, grandTotal: 150, issuedDate: 150, expirationDate: 150, requestDate: 150,
+      shipDate: 150, deliveredDate: 150
+    }
+  });
+
+  const handleFulfillmentResize = (tab: string, field: string, width: number) => {
+    setFulfillmentWidths(prev => ({
+      ...prev,
+      [tab]: {
+        ...prev[tab as keyof typeof prev],
+        [field]: Math.max(50, width)
+      }
+    }));
+  };
+
+  const [returnsWidths, setReturnsWidths] = useState({
+    rma: {
+      name: 180, status: 120, salesOrderName: 180, customerQuoteName: 180, customerOrderName: 180,
+      rmaType: 150, shipFromAccountName: 180, shipFromContactName: 180, returnToAccountName: 180,
+      returnToContactName: 180, dropShip: 100, totalLines: 100, totalPrice: 120, issuedDate: 150,
+      returnByDate: 150, shippingMethod: 150, logisticsPartner: 180, logisticsContact: 180,
+      trackingNumber: 180, estimatedDeliveryDate: 150, trackingStatus: 150, actualDeliveryDate: 150,
+      goodsReceiptDate: 150
+    },
+    rtv: {
+      purchaseOrderName: 180, customerQuoteName: 180, customerOrderName: 180, rtvType: 150,
+      rmaNumber: 150, shipFromAccountName: 180, shipFromContactName: 180, supplierName: 180,
+      supplierContact: 180, totalLines: 100, totalCost: 120, issuedDate: 150, approvalDate: 150,
+      returnByDate: 150, name: 180, status: 120
+    },
+    credit: {
+      invoiceName: 180, customerQuoteName: 180, customerOrderName: 180, creditToAccountName: 180,
+      creditToContactName: 180, totalLines: 100, totalPrice: 120, totalShippingCharges: 120,
+      totalTaxesAmount: 120, totalCreditAmount: 150, issuedDate: 150, expirationDate: 150,
+      availableCreditBalance: 150, settledDate: 150, name: 180, status: 120
+    },
+    debit: {
+      supplierBillName: 180, purchaseOrderName: 180, customerOrderName: 180, supplierCreditMemoName: 180,
+      debitToAccountName: 180, debitToContactName: 180, totalLines: 100, totalCost: 120,
+      totalShippingCharges: 120, totalDebitAmount: 150, issuedDate: 150, approvalDate: 150,
+      availableDebitBalance: 150, settledDate: 150, name: 180, status: 120
+    }
+  });
+
+  const handleReturnsResize = (tab: string, field: string, width: number) => {
+    setReturnsWidths(prev => ({
+      ...prev,
+      [tab]: {
+        ...prev[tab as keyof typeof prev],
+        [field]: Math.max(50, width)
+      }
+    }));
+  };
+
+  const { widths: taxWidths, handleResize: handleTaxResize } = useResizableColumns({
+    salesTaxRate: 150, salesTaxAmount: 150, useTaxRate: 150, useTaxAmount: 150,
+    localTaxRate: 150, localTaxAmount: 150, exciseTaxRate: 150, exciseTaxAmount: 150,
+    grossReceiptsTaxRate: 150, grossReceiptsTaxAmount: 150, gstRate: 150, gstAmount: 150,
+    vatRate: 150, vatAmount: 150
+  });
 
   // Fetch Proposal
   useEffect(() => {
@@ -1133,11 +1334,13 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 sortField={productSortField}
                 sortDirection={productSortDirection}
                 onSort={handleProductSort}
+                widths={productWidths}
+                onResize={handleProductResize}
               />
             )}
 
             {activeTab === 'taxes' && (
-              <TaxesTab taxes={taxesData} loading={tabLoading} />
+              <TaxesTab taxes={taxesData} loading={tabLoading} widths={taxWidths} onResize={handleTaxResize} />
             )}
 
             {activeTab === 'elements' && (
@@ -1147,6 +1350,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 sortField={elementSortField}
                 sortDirection={elementSortDirection}
                 onSort={handleElementSort}
+                widths={elementWidths}
+                onResize={handleElementResize}
               />
             )}
 
@@ -1174,6 +1379,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 sortField={projectSortField}
                 sortDirection={projectSortDirection}
                 onSort={handleProjectSort}
+                widths={projectWidths}
+                onResize={handleProjectResize}
               />
             )}
 
@@ -1184,6 +1391,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 sortField={orderSortField}
                 sortDirection={orderSortDirection}
                 onSort={handleOrderSort}
+                widths={orderWidths}
+                onResize={handleOrderResize}
               />
             )}
 
@@ -1193,6 +1402,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 loading={tabLoading}
                 activeTab={activeFulfillmentTab}
                 onTabChange={setActiveFulfillmentTab}
+                widths={fulfillmentWidths}
+                onResize={handleFulfillmentResize}
               />
             )}
 
@@ -1201,6 +1412,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 purchases={purchases}
                 supplierBills={supplierBills}
                 loading={tabLoading}
+                purchaseWidths={purchaseWidths}
+                onPurchaseResize={handlePurchaseResize}
+                billWidths={billWidths}
+                onBillResize={handleBillResize}
               />
             )}
 
@@ -1208,6 +1423,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               <ReturnsTab
                 returnsData={returnsData}
                 loading={tabLoading}
+                widths={returnsWidths}
+                onResize={handleReturnsResize}
               />
             )}
           </div>

@@ -7,9 +7,11 @@ interface ElementsTabProps {
     sortDirection: SortDirection;
     onSort: (field: keyof ProposalElement) => void;
     loading: boolean;
+    widths: Record<string, number>;
+    onResize: (field: string, width: number) => void;
 }
 
-export default function ElementsTab({ elements, sortField, sortDirection, onSort, loading }: ElementsTabProps) {
+export default function ElementsTab({ elements, sortField, sortDirection, onSort, loading, widths, onResize }: ElementsTabProps) {
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof ProposalElement);
 
@@ -23,12 +25,12 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full min-w-[300px]">
+            <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <SortableHeader label="WBS" field="wbs" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Proposal Element" field="proposalElement" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} />
+                        <SortableHeader label="WBS" field="wbs" sortConfig={sortConfig} requestSort={requestSort} width={widths.wbs} onResize={onResize} />
+                        <SortableHeader label="Proposal Element" field="proposalElement" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalElement} onResize={onResize} />
+                        <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={onResize} />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

@@ -7,9 +7,11 @@ interface ProjectsTabProps {
     sortField: keyof Project;
     sortDirection: SortDirection;
     onSort: (field: keyof Project) => void;
+    widths: Record<string, number>;
+    onResize: (field: string, width: number) => void;
 }
 
-export default function ProjectsTab({ projects, loading, sortField, sortDirection, onSort }: ProjectsTabProps) {
+export default function ProjectsTab({ projects, loading, sortField, sortDirection, onSort, widths, onResize }: ProjectsTabProps) {
 
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof Project);
@@ -24,22 +26,22 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full table-fixed min-w-[2000px]">
+            <table className="w-full table-fixed ">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <SortableHeader label="Project Number" field="projectNumber" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
-                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} className="w-[120px]" />
-                        <SortableHeader label="Project Name" field="name" sortConfig={sortConfig} requestSort={requestSort} className="w-[200px]" />
-                        <SortableHeader label="Customer Account" field="customerAccountName" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
-                        <SortableHeader label="Customer Contact" field="customerContactName" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
-                        <SortableHeader label="Billing Type" field="billingType" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
-                        <SortableHeader label="Project Manager" field="projectManagerName" sortConfig={sortConfig} requestSort={requestSort} className="w-[180px]" />
-                        <SortableHeader label="Estimated Budget" field="estimatedBudget" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
-                        <SortableHeader label="Total Milestones" field="totalMilestones" sortConfig={sortConfig} requestSort={requestSort} className="w-[120px]" />
-                        <SortableHeader label="Total Task" field="totalTasks" sortConfig={sortConfig} requestSort={requestSort} className="w-[120px]" />
-                        <SortableHeader label="% Completed" field="percentCompleted" sortConfig={sortConfig} requestSort={requestSort} className="w-[120px]" />
-                        <SortableHeader label="Estimated Start Date" field="estimatedStartDate" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
-                        <SortableHeader label="Estimated End Date" field="estimatedEndDate" sortConfig={sortConfig} requestSort={requestSort} className="w-[150px]" />
+                        <SortableHeader label="Project Number" field="projectNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectNumber} onResize={onResize} />
+                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} />
+                        <SortableHeader label="Project Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
+                        <SortableHeader label="Customer Account" field="customerAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerAccountName} onResize={onResize} />
+                        <SortableHeader label="Customer Contact" field="customerContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerContactName} onResize={onResize} />
+                        <SortableHeader label="Billing Type" field="billingType" sortConfig={sortConfig} requestSort={requestSort} width={widths.billingType} onResize={onResize} />
+                        <SortableHeader label="Project Manager" field="projectManagerName" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectManagerName} onResize={onResize} />
+                        <SortableHeader label="Estimated Budget" field="estimatedBudget" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedBudget} onResize={onResize} />
+                        <SortableHeader label="Total Milestones" field="totalMilestones" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalMilestones} onResize={onResize} />
+                        <SortableHeader label="Total Task" field="totalTasks" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalTasks} onResize={onResize} />
+                        <SortableHeader label="% Completed" field="percentCompleted" sortConfig={sortConfig} requestSort={requestSort} width={widths.percentCompleted} onResize={onResize} />
+                        <SortableHeader label="Estimated Start Date" field="estimatedStartDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedStartDate} onResize={onResize} />
+                        <SortableHeader label="Estimated End Date" field="estimatedEndDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedEndDate} onResize={onResize} />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

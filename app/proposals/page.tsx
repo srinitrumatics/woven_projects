@@ -9,6 +9,7 @@ import { formatCurrency, formatDate } from "@/lib/utils/formatting";
 import { Proposal, ProposalStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
 
 type TabFilter = "All" | "Lead" | "Draft" | "Pending Review" | "Under Review" | "Approved" | "Accepted" | "Rejected" | "Expired";
 
@@ -21,6 +22,20 @@ export default function ProposalsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Initialize resizable columns
+  const { widths, handleResize } = useResizableColumns({
+    proposalNumber: 150,
+    status: 120,
+    proposalName: 200,
+    billTo: 180,
+    shipTo: 180,
+    productCount: 100,
+    totalAmount: 120,
+    expirationDate: 120,
+    actions: 100
+  });
+
   const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
   const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "" //TODO: Get this from session / auth context
 
@@ -160,7 +175,7 @@ export default function ProposalsPage() {
     <Sidebar>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Proposals</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and track sales proposals</p>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and Track Sales Proposals</p>
       </div>
 
       {/* Stats Cards - Compact & Engaging Design */}
@@ -399,18 +414,21 @@ export default function ProposalsPage() {
               <p className="text-sm">Loading proposals...</p>
             </div>
           ) : (
-            <table className="w-full">
+            <table className="w-full table-fixed">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Proposal Number" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width="150px" />
-                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
-                  <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width="200px" />
-                  <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} width="180px" />
-                  <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} width="180px" />
-                  <SortableHeader label="Items" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width="100px" />
-                  <SortableHeader label="Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
-                  <SortableHeader label="Expires" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width="120px" />
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white w-[100px]">
+                  <SortableHeader label="Proposal Number" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
+                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                  <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                  <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
+                  <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} />
+                  <SortableHeader label="Items" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCount} onResize={handleResize} />
+                  <SortableHeader label="Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
+                  <SortableHeader label="Expires" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} />
+                  <th
+                    className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                    style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                  >
                     Actions
                   </th>
                 </tr>

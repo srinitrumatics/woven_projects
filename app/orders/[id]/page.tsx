@@ -22,6 +22,7 @@ import ProductCatalog from "./components/ProductCatalog";
 import MyOrderTable from "./components/MyOrderTable";
 import PDFTemplate from "./components/PDFTemplate";
 import TaxesTab from "./components/TaxesTab";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
 // import { mockProducts } from "@/app/products/mockData"; // Removed in favor of API data
 
 interface Address {
@@ -141,6 +142,32 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [orderData, setOrderData] = useState<Order | null>(null);
   const [loadingOrder, setLoadingOrder] = useState(true);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
+  // Initialize resizable columns for My Order Table
+  const myOrderColumns = useResizableColumns({
+    sku: 120,
+    name: 250,
+    manufacturer: 150,
+    productFamily: 150,
+    unitPrice: 100,
+    orderQty: 150,
+    subtotal: 100,
+    actions: 80
+  });
+
+  // Initialize resizable columns for Product Catalog
+  const catalogColumns = useResizableColumns({
+    selection: 50,
+    image: 60,
+    name: 250,
+    manufacturer: 150,
+    productFamily: 150,
+    listPrice: 100,
+    unitPrice: 100,
+    availableQty: 120,
+    orderQty: 120,
+    actions: 80
+  });
 
   // Store contact ID for order submission
   const [contactId, setContactId] = useState<string>("");
@@ -1389,6 +1416,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               sortConfig={catalogSortConfig}
               requestSort={requestCatalogSort}
               isEditing={isEditing}
+              widths={catalogColumns.widths}
+              onResize={catalogColumns.handleResize}
             />
           )}
 
@@ -1406,6 +1435,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               contactId={SF_CONTACT_ID}
               setOrderProducts={setOrderProducts}
               isEditing={isEditing}
+              widths={myOrderColumns.widths}
+              onResize={myOrderColumns.handleResize}
             />
           )}
 
