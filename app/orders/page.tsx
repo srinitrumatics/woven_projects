@@ -36,8 +36,8 @@ export default function OrdersPage() {
     cpo: 150,
     billTo: 180,
     shipTo: 180,
-    items: 100,
-    total: 120,
+    items: 120,
+    total: 140,
     actions: 100
   });
 
@@ -382,7 +382,7 @@ export default function OrdersPage() {
             disabled={loading}
             className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Creating...' : 'Create order'}
+            {loading ? 'Creating...' : 'Create Order'}
           </button>
         </div>
       </div>
@@ -404,25 +404,25 @@ export default function OrdersPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard
           title="Total Orders"
-          value={`${formatNumber(stats.totalOrders, 2)} -`}
+          value={`${formatNumber(stats.totalOrders, 0)} -`}
           change={stats.totalOrdersChange}
           trend="up"
         />
         <StatCard
           title="Order items over time"
-          value={`${formatNumber(stats.orderItems, 2)} -`}
+          value={`${formatNumber(stats.orderItems, 0)} -`}
           change={stats.orderItemsChange}
           trend="up"
         />
         <StatCard
           title="Returns Orders"
-          value={`${formatNumber(stats.returnsOrders, 2)} -`}
+          value={`${formatNumber(stats.returnsOrders, 0)} -`}
           change={stats.returnsOrdersChange}
           trend="down"
         />
         <StatCard
           title="Fulfilled orders over time"
-          value={`${formatNumber(stats.fulfilledOrders, 2)} -`}
+          value={`${formatNumber(stats.fulfilledOrders, 0)} -`}
           change={stats.fulfilledOrdersChange}
           trend="up"
         />
@@ -523,8 +523,8 @@ export default function OrdersPage() {
                   <SortableHeader label="Customer PO" field="cpo" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.cpo} onResize={handleResize} />
                   <SortableHeader label="Bill to Account" field="billTo" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
                   <SortableHeader label="Ship to Account" field="shipTo" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} />
-                  <SortableHeader label="Items" field="items" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
-                  <SortableHeader label="Total" field="total" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
+                  <SortableHeader label="Total Lines" field="items" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
+                  <SortableHeader label="Total Price" field="total" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
                   <th
                     className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
@@ -571,7 +571,7 @@ export default function OrdersPage() {
                       <td className="px-6 py-4 text-center">
                         <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.shipTo}>{order.shipTo}</div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-center text-gray-900 dark:text-white">{formatNumber(order.items, 2)}</td>
+                      <td className="px-6 py-4 text-sm text-center text-gray-900 dark:text-white">{formatNumber(order.items, 0)}</td>
                       <td className="px-6 py-4 text-sm text-center text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total, 'USD', 2)}</td>
                       <td className="px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-2">

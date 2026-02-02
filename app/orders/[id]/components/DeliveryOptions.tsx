@@ -95,13 +95,12 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
 
                     <div>
                         <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Lift Gate</label>
-                        <div className={`flex items-center h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}>
+                        <div className="flex items-center h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-not-allowed">
                             <input
                                 type="checkbox"
                                 checked={formData.liftGateRequired}
-                                disabled={!isEditing}
-                                onChange={(e) => setFormData({ ...formData, liftGateRequired: e.target.checked })}
-                                className={`w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3 ${!isEditing ? 'cursor-not-allowed opacity-60' : ''}`}
+                                disabled={true}
+                                className="w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3 cursor-not-allowed opacity-60"
                             />
                             <span className="text-sm text-gray-700 dark:text-gray-300">{formData.liftGateRequired ? "Required" : "Not Required"}</span>
                         </div>
@@ -109,13 +108,12 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
 
                     <div>
                         <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Inside Delivery</label>
-                        <div className={`flex items-center h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}>
+                        <div className="flex items-center h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-not-allowed">
                             <input
                                 type="checkbox"
                                 checked={formData.insideDelivery}
-                                disabled={!isEditing}
-                                onChange={(e) => setFormData({ ...formData, insideDelivery: e.target.checked })}
-                                className={`w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3 ${!isEditing ? 'cursor-not-allowed opacity-60' : ''}`}
+                                disabled={true}
+                                className="w-5 h-5 text-primary rounded focus:ring-2 focus:ring-primary mr-3 cursor-not-allowed opacity-60"
                             />
                             <span className="text-sm text-gray-700 dark:text-gray-300">{formData.insideDelivery ? "Required" : "Not Required"}</span>
                         </div>

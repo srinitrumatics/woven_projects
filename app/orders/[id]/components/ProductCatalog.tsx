@@ -81,9 +81,9 @@ export default function ProductCatalog({
                                 </th>
                             )}
                             <th
-                                className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white"
+                                className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white"
                                 style={{ width: widths.image, minWidth: widths.image, maxWidth: widths.image }}
-                            >&nbsp;</th>
+                            >Image</th>
                             <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
                             <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
                             <SortableHeader label="Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
@@ -104,7 +104,7 @@ export default function ProductCatalog({
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedCatalogProducts.length === 0 ? (
                             <tr>
-                                <td colSpan={isEditing ? 9 : 6} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                                <td colSpan={isEditing ? 10 : 7} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                                     {searchQuery ? "No products found matching your search." : "All products have been added to your order."}
                                 </td>
                             </tr>
@@ -123,7 +123,7 @@ export default function ProductCatalog({
                                     )}
                                     <td className="px-4 py-2 text-center">
                                         <div
-                                            className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                                            className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity mx-auto"
                                             onClick={() => handleImageClick(product)}
                                         >
                                             <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,19 +132,17 @@ export default function ProductCatalog({
                                         </div>
                                     </td>
                                     <td className="px-4 py-2 text-left">
-                                        <div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2" title={product.name}>{product.name}</div>
-                                        {product.description && (
-                                            <div className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 break-words" title={product.description}>
-                                                {product.description}
-                                            </div>
-                                        )}
+                                        <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.name}>{product.name}</div>
+                                        <div className="text-xs text-gray-500 dark:text-gray-400 truncate break-words" title={product.description || ""}>
+                                            {product.description || <span className="invisible">Empty Description</span>}
+                                        </div>
                                     </td>
                                     <td className="px-4 py-2 text-xs text-left text-gray-900 dark:text-white">
                                         <div className="line-clamp-2" title={product.manufacturer}>{product.manufacturer}</div>
                                     </td>
                                     <td className="px-4 py-2 text-left">
                                         <div className="line-clamp-2" title={product.productFamily}>
-                                            <span className="inline-block px-2 py-0.5 text-xs font-medium rounded bg-primary/10 text-primary">
+                                            <span className="inline-block px-2 py-0.5 text-[10px] font-medium rounded bg-primary/10 text-primary uppercase tracking-wider whitespace-normal">
                                                 {product.productFamily}
                                             </span>
                                         </div>

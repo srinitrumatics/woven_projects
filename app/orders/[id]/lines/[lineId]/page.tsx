@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import LineTaxesTab from "../../components/LineTaxesTab";
+import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 
 // Interface for order line item from Salesforce
 interface OrderLineItem {
@@ -561,7 +562,7 @@ export default function OrderLineDetailPage({
                   Available to Sell
                 </label>
                 <p className="text-sm text-gray-900 dark:text-white font-mono">
-                  {product.availableToSell?.toLocaleString()}
+                  {formatNumber(product.availableToSell, 2)}
                 </p>
               </div>
             </div>
@@ -581,41 +582,49 @@ export default function OrderLineDetailPage({
             </h2>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
-                  <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Order Qty</th>
-                  <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">MOQ</th>
-                  <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Total Qty</th>
-                  <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Total Price</th>
-                  <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Taxes</th>
-                  <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Shipping</th>
-                  <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
-                  <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Qty Shipped</th>
+                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Unit Price</th>
+                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Order Qty</th>
+                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">MOQ</th>
+                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Total Qty</th>
+                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Total Price</th>
+                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Taxes</th>
+                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Shipping</th>
+                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Grand Total</th>
+                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Qty Shipped</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="px-2 py-3 text-sm text-center text-gray-900 dark:text-white">
-                    ${unitPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </td>
-                  <td className="px-2 py-3 text-sm text-center text-gray-900 dark:text-white">{orderQty}</td>
-                  <td className="px-2 py-3 text-sm text-center text-gray-900 dark:text-white">{product.moq}</td>
-                  <td className="px-2 py-3 text-sm text-center text-gray-900 dark:text-white">{product.orderQty}</td>
                   <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
-                    ${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {formatCurrency(unitPrice)}
                   </td>
                   <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
-                    ${taxes.toLocaleString("en-US", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                    {formatNumber(orderQty, 2)}
                   </td>
                   <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
-                    ${shippingCharges.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {formatNumber(product.moq, 2)}
                   </td>
-                  <td className="px-2 py-3 text-sm text-center font-bold text-primary">
-                    ${grandTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                    {formatNumber(product.orderQty, 2)}
                   </td>
-                  <td className="px-2 py-3 text-sm text-center text-gray-900 dark:text-white">{product.qtyShipped}</td>
+                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                    {formatCurrency(subtotal)}
+                  </td>
+                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                    {formatCurrency(taxes)}
+                  </td>
+                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                    {formatCurrency(shippingCharges)}
+                  </td>
+                  <td className="px-2 py-3 text-xs text-center font-bold text-primary">
+                    {formatCurrency(grandTotal)}
+                  </td>
+                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                    {formatNumber(product.qtyShipped, 2)}
+                  </td>
                 </tr>
               </tbody>
             </table>

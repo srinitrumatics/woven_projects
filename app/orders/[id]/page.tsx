@@ -145,12 +145,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   // Initialize resizable columns for My Order Table
   const myOrderColumns = useResizableColumns({
-    sku: 120,
+    image: 60,
+    sku: 100,
     name: 250,
-    manufacturer: 150,
-    productFamily: 150,
+    manufacturer: 120,
+    productFamily: 120,
+    listPrice: 100,
     unitPrice: 100,
-    orderQty: 150,
+    orderQty: 100,
     subtotal: 100,
     actions: 80
   });
