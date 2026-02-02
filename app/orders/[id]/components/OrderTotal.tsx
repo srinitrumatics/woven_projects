@@ -58,26 +58,25 @@ export default function OrderTotal({
                     <span className="text-gray-900 dark:text-white font-medium">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex justify-between text-sm">
+                    <span className="text-gray-700 dark:text-gray-300">Taxes</span>
+                    <span className="text-gray-900 dark:text-white font-semibold">${totalExciseTax.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
+                </div>
+                <div className="flex justify-between text-sm">
                     <span className="text-gray-700 dark:text-gray-300">Shipping</span>
                     <span className="text-gray-900 dark:text-white">${shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-
-                <div className="flex justify-between text-sm">
-                    <span className="text-gray-700 dark:text-gray-300">Total Taxes</span>
-                    <span className="text-gray-900 dark:text-white font-semibold">${totalExciseTax.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
                 </div>
             </div>
 
             {/* Grand Total */}
-            <div className="border-t-2 border-primary/20 dark:border-primary/40 pt-3">
-                <div className="flex justify-between text-lg font-bold">
+            <div className="border-t-2 border-primary/20 dark:border-primary/40 py-3">
+                <div className="flex justify-between items-center text-lg font-bold">
                     <span className="text-gray-900 dark:text-white">Grand Total</span>
-                    <span className="text-primary dark:text-primary">${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span className="text-primary dark:text-primary font-extrabold">${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
             </div>
 
             {/* Download PDF Button */}
-            <div className="border-t border-gray-300 dark:border-gray-600 pt-3 mt-3">
+            <div className="border-t border-gray-300 dark:border-gray-600 pt-3">
                 <button
                     onClick={handleDownloadPDF}
                     disabled={isGeneratingPDF}

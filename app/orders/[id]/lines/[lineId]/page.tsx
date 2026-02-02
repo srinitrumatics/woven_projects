@@ -589,8 +589,8 @@ export default function OrderLineDetailPage({
                   <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">MOQ</th>
                   <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Total Qty</th>
                   <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Total Price</th>
-                  <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Shipping</th>
                   <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Taxes</th>
+                  <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Shipping</th>
                   <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
                   <th className="px-2 py-2 text-center text-sm font-semibold text-gray-900 dark:text-white">Qty Shipped</th>
                 </tr>
@@ -607,10 +607,10 @@ export default function OrderLineDetailPage({
                     ${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                   <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
-                    ${shippingCharges.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ${taxes.toLocaleString("en-US", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
                   </td>
                   <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
-                    ${taxes.toLocaleString("en-US", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                    ${shippingCharges.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                   <td className="px-2 py-3 text-sm text-center font-bold text-primary">
                     ${grandTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
