@@ -55,13 +55,16 @@ export function SortableHeader({
     return (
         <th
             ref={thRef}
-            className={`px-4 py-3 text-${align} text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none relative ${className}`}
+            className={`p-0 text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none relative ${className}`}
             onClick={() => requestSort(field)}
             style={displayWidth ? { width: displayWidth, minWidth: displayWidth, maxWidth: displayWidth } : {}}
         >
-            <div className={`flex items-center gap-1 ${align === 'right' ? 'justify-end' : align === 'center' ? 'justify-center' : 'justify-start'}`}>
-                <span className="line-clamp-2" title={label}>{label}</span>
-                <span className="text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300 w-4 flex-shrink-0">
+            <div
+                className={`px-4 py-3 flex items-start gap-1`}
+                style={{ width: '100%' }}
+            >
+                <span className={`line-clamp-2 text-${align} flex-1`} title={label}>{label}</span>
+                <span className="text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300 w-4 flex-shrink-0 mt-0.5">
                     {isSorted ? (
                         sortConfig?.direction === 'asc' ? '↑' : '↓'
                     ) : (

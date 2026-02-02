@@ -86,17 +86,19 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   // Resizable Columns hooks
   const { widths: productWidths, handleResize: handleProductResize } = useResizableColumns({
+    image: 100,
     productName: 250,
     productSku: 150,
     manufacturer: 150,
-    category: 150,
-    quantity: 100,
+    productFamily: 150,
+    quantity: 140,
     unitPrice: 120,
     margin: 100,
     subtotal: 120,
     shipping: 120,
     taxes: 120,
-    grandTotal: 150
+    grandTotal: 150,
+    actions: 100
   });
 
   const { widths: elementWidths, handleResize: handleElementResize } = useResizableColumns({

@@ -134,7 +134,7 @@ export default function ProposalsPage() {
   }, [activeTab, searchQuery, proposals]);
 
   // Sorting
-  const { items: sortedProposals, requestSort, sortConfig } = useSortableData<Proposal>(filteredAndSearchedProposals);
+  const { items: sortedProposals, requestSort, sortConfig } = useSortableData<Proposal>(filteredAndSearchedProposals, { key: 'proposalNumber', direction: 'desc' });
 
   // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedProposals.length / ITEMS_PER_PAGE));
@@ -192,11 +192,23 @@ export default function ProposalsPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400  tracking-wide mb-1">Total Pipeline</p>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.total}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Proposals</span>
-                </div>
+                <Link
+                  href="/admin/gth-config"
+                  onClick={(e) => e.stopPropagation()}
+                  className="hover:underline block"
+                >
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Total Pipeline</p>
+                </Link>
+                <Link
+                  href="/admin/gth-config"
+                  onClick={(e) => e.stopPropagation()}
+                  className="hover:underline block"
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.total}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Proposals</span>
+                  </div>
+                </Link>
                 <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
@@ -229,11 +241,23 @@ export default function ProposalsPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">In Progress</p>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Drafts</span>
-                </div>
+                <Link
+                  href="/admin/gth-config"
+                  onClick={(e) => e.stopPropagation()}
+                  className="hover:underline block"
+                >
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">In Progress</p>
+                </Link>
+                <Link
+                  href="/admin/gth-config"
+                  onClick={(e) => e.stopPropagation()}
+                  className="hover:underline block"
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Drafts</span>
+                  </div>
+                </Link>
                 <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.draftValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-gray-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-600 group-hover:text-white"
@@ -267,7 +291,13 @@ export default function ProposalsPage() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Awaiting Review</p>
+                  <Link
+                    href="/admin/gth-config"
+                    onClick={(e) => e.stopPropagation()}
+                    className="hover:underline"
+                  >
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Awaiting Review</p>
+                  </Link>
                   {stats.pendingCount > 0 && (
                     <span className="flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-yellow-400 opacity-75"></span>
@@ -275,10 +305,16 @@ export default function ProposalsPage() {
                     </span>
                   )}
                 </div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.pendingCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Pending</span>
-                </div>
+                <Link
+                  href="/admin/gth-config"
+                  onClick={(e) => e.stopPropagation()}
+                  className="hover:underline block"
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.pendingCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Pending</span>
+                  </div>
+                </Link>
                 <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.pendingValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Pending Review" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
@@ -311,11 +347,23 @@ export default function ProposalsPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Ready to Convert</p>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.approvedCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Approved</span>
-                </div>
+                <Link
+                  href="/admin/gth-config"
+                  onClick={(e) => e.stopPropagation()}
+                  className="hover:underline block"
+                >
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Ready to Convert</p>
+                </Link>
+                <Link
+                  href="/admin/gth-config"
+                  onClick={(e) => e.stopPropagation()}
+                  className="hover:underline block"
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.approvedCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Approved</span>
+                  </div>
+                </Link>
                 <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.approvedValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Approved" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
@@ -422,8 +470,8 @@ export default function ProposalsPage() {
                   <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
                   <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
                   <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} />
-                  <SortableHeader label="Items" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCount} onResize={handleResize} />
-                  <SortableHeader label="Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
+                  <SortableHeader label="Total Lines" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCount} onResize={handleResize} />
+                  <SortableHeader label="Total Price" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
                   <SortableHeader label="Expires" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} />
                   <th
                     className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white"
