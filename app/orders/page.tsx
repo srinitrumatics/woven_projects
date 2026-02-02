@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { formatCurrency } from "@/lib/utils/formatting";
+import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { OrderStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
@@ -53,6 +53,7 @@ export default function OrdersPage() {
         setError(null);
 
         // Change accountId as needed or make dynamic later
+        console.log("Fetching orders with accountId:", accountId, "contactId:", contactId);
         const res = await fetch(`/api/salesforce/orders?accountId=${accountId}&contactId=${contactId}&action=list`, {
           cache: "no-store",
         });
@@ -64,17 +65,18 @@ export default function OrdersPage() {
 
         const data = await res.json();
         console.log("Fetched orders data:", data);
-        // If API returns { records: [...] } or array directly, normalize
+
+        // Normalize the data from Salesforce
         let arrayData: any[] = [];
         if (Array.isArray(data)) {
           arrayData = data;
-        } else if (Array.isArray(data.records)) {
+        } else if (data && data.success && Array.isArray(data.data)) {
+          arrayData = data.data;
+        } else if (data && Array.isArray(data.records)) {
           arrayData = data.records;
-        } else if (data && data.length === undefined && Object.keys(data).length === 0) {
-          arrayData = [];
         } else {
-          // last resort: wrap single object
-          arrayData = Array.isArray(data) ? data : [data];
+          console.warn("Unexpected data format from orders API:", data);
+          arrayData = [];
         }
 
         setSfOrders(arrayData);
@@ -402,29 +404,38 @@ export default function OrdersPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard
           title="Total Orders"
-          value={`${stats.totalOrders} -`}
+          value={`${formatNumber(stats.totalOrders, 2)} -`}
           change={stats.totalOrdersChange}
           trend="up"
         />
         <StatCard
           title="Order items over time"
-          value={`${stats.orderItems} -`}
+          value={`${formatNumber(stats.orderItems, 2)} -`}
           change={stats.orderItemsChange}
           trend="up"
         />
         <StatCard
           title="Returns Orders"
-          value={`${stats.returnsOrders} -`}
+          value={`${formatNumber(stats.returnsOrders, 2)} -`}
           change={stats.returnsOrdersChange}
           trend="down"
         />
         <StatCard
           title="Fulfilled orders over time"
-          value={`${stats.fulfilledOrders} -`}
+          value={`${formatNumber(stats.fulfilledOrders, 2)} -`}
           change={stats.fulfilledOrdersChange}
           trend="up"
         />
       </div>
+
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center gap-3">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p>{error}</p>
+        </div>
+      )}
 
       {/* Orders Table */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
@@ -506,16 +517,16 @@ export default function OrdersPage() {
             <table className="w-full table-fixed">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Order Number" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
-                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                  <SortableHeader label="Proposal" field="proposal_name" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal_name} onResize={handleResize} />
-                  <SortableHeader label="Customer PO" field="cpo" sortConfig={sortConfig} requestSort={requestSort} width={widths.cpo} onResize={handleResize} />
-                  <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
-                  <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} />
-                  <SortableHeader label="Items" field="items" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
-                  <SortableHeader label="Total" field="total" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
+                  <SortableHeader label="Order Number" field="name" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
+                  <SortableHeader label="Status" field="status" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                  <SortableHeader label="Proposal" field="proposal_name" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal_name} onResize={handleResize} />
+                  <SortableHeader label="Customer PO" field="cpo" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.cpo} onResize={handleResize} />
+                  <SortableHeader label="Bill to Account" field="billTo" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
+                  <SortableHeader label="Ship to Account" field="shipTo" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} />
+                  <SortableHeader label="Items" field="items" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
+                  <SortableHeader label="Total" field="total" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
                   <th
-                    className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                    className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
                     Actions
@@ -542,28 +553,28 @@ export default function OrdersPage() {
                 ) : (
                   paginatedOrders.map((order) => (
                     <tr key={`order-row-${order.Id ?? order.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-6 py-4 text-sm font-semibold text-primary">
+                      <td className="px-6 py-4 text-sm font-semibold text-primary text-center">
                         <Link href={`/orders/${order.id}`}>{order.name}</Link>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-center">
                         <StatusBadge status={order.status as OrderStatus} />
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-center">
                         <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.proposal_name}>{order.proposal_name}</div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-center">
                         <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.cpo}>{order.cpo}</div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-center">
                         <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.billTo}>{order.billTo}</div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-center">
                         <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.shipTo}>{order.shipTo}</div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{order.items}</td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total)}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-start gap-2">
+                      <td className="px-6 py-4 text-sm text-center text-gray-900 dark:text-white">{formatNumber(order.items, 2)}</td>
+                      <td className="px-6 py-4 text-sm text-center text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total, 'USD', 2)}</td>
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => handleEditOrder(order.Id)}
                             className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
@@ -681,23 +692,23 @@ function StatCard({ title, value, change, trend }: {
   const isPositive = trend === "up";
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 flex flex-col items-center text-center">
       <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-2">{title}</h3>
-      <div className="flex items-baseline gap-2">
+      <div className="flex items-baseline justify-center gap-2">
         <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
         <span className={`text-sm flex items-center ${isPositive ? "text-green-600" : "text-red-600"}`}>
           {isPositive ? "▲" : "▼"} {Math.abs(change)}% last week
         </span>
       </div>
-      <div className="mt-4 h-12 flex items-end gap-1">
-        <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-sm h-[30%]"></div>
-        <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-sm h-[45%]"></div>
-        <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-sm h-[60%]"></div>
-        <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-sm h-[80%]"></div>
-        <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-sm h-[70%]"></div>
-        <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-sm h-[55%]"></div>
-        <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-sm h-[85%]"></div>
-        <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-sm h-[95%]"></div>
+      <div className="mt-4 h-12 w-full flex items-end justify-center gap-1">
+        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[30%]"></div>
+        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[45%]"></div>
+        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[60%]"></div>
+        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[80%]"></div>
+        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[70%]"></div>
+        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[55%]"></div>
+        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[85%]"></div>
+        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[95%]"></div>
       </div>
     </div>
   );

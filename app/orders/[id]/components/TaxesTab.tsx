@@ -25,7 +25,7 @@ export default function TaxesTab({ order, loading }: TaxesTabProps) {
 
     // Format percentage helper
     const formatPercent = (val: number | undefined | null) => {
-        return val !== undefined && val !== null ? `${Number(val).toFixed(2)}%` : '0.00%';
+        return val !== undefined && val !== null ? `${Number(val).toFixed(3)}%` : '0.000%';
     };
 
     // Format currency helper
@@ -61,49 +61,49 @@ export default function TaxesTab({ order, loading }: TaxesTabProps) {
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         <tr className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-right">
                                 {formatPercent(order.Sales_Tax_Rate__c)}
                             </td>
                             <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_Sales_Tax_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-right">
                                 {formatPercent(order.Use_Tax_Rate__c)}
                             </td>
                             <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_Use_Tax_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-right">
                                 {formatPercent(order.Local_Tax_Rate__c)}
                             </td>
                             <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_Local_Tax_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-right">
                                 {formatPercent(order.Excise_Tax_Rate__c)}
                             </td>
                             <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_Excise_Tax_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-right">
                                 {formatPercent(order.Gross_Receipts_Tax_Rate__c)}
                             </td>
                             <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_Gross_Receipts_Tax_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-right">
                                 {formatPercent(order.GST_Rate__c)}
                             </td>
                             <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">
                                 {formatTax(order.Total_GST_Amount__c)}
                             </td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-right">
                                 {formatPercent(order.VAT_Rate__c)}
                             </td>
                             <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">

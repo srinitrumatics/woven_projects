@@ -18,7 +18,7 @@ export function SortableHeader({
     sortConfig,
     requestSort,
     className = "",
-    align = "center",
+    align = "left",
     width,
     onResize
 }: SortableHeaderProps) {
@@ -55,7 +55,7 @@ export function SortableHeader({
     return (
         <th
             ref={thRef}
-            className={`px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none relative ${className}`}
+            className={`px-4 py-3 text-${align} text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none relative ${className}`}
             onClick={() => requestSort(field)}
             style={displayWidth ? { width: displayWidth, minWidth: displayWidth, maxWidth: displayWidth } : {}}
         >

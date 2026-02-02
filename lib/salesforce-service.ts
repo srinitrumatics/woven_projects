@@ -26,7 +26,7 @@ const SALESFORCE_CONFIG = {
 // Get Salesforce session info (this would normally come from your session management)
 export async function getSalesforceSession() {
   // obtain or reuse token
-  const tokenUrl = process.env.SF_AUTH_URL || "";
+  const tokenUrl = process.env.SF_AUTH_URL || "https://test.salesforce.com/services/oauth2/token";
   const body = new URLSearchParams({
     grant_type: "password",
     client_id: process.env.SF_CLIENT_ID || "",
@@ -41,7 +41,10 @@ export async function getSalesforceSession() {
     body: body.toString(),
   });
   const tokenData = await res.json();
-  console.log("tokenData", tokenData);
+  console.log("getSalesforceSession - tokenData received:", !!tokenData.access_token);
+  if (!tokenData.access_token) {
+    console.error("getSalesforceSession - FAILED to get access token:", tokenData);
+  }
   return {
     accessToken: tokenData.access_token,
     instanceUrl: tokenData.instance_url,
@@ -51,6 +54,7 @@ export async function getSalesforceSession() {
 // Fetch orders from Salesforce
 export async function getOrderslistFromSalesforce(accountId?: string, contactId?: string, orderUrl?: string): Promise<SalesforceOrder[]> {
   try {
+    console.log("getOrderslistFromSalesforce called with accountId:", accountId, "contactId:", contactId);
     const session = await getSalesforceSession();
 
     if (!session.accessToken) {

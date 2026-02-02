@@ -12,6 +12,11 @@ export async function GET(req: Request) {
     const contentVersionId = searchParams.get("contentVersionId");
 
     const rawAction = (searchParams.get("action") || "").toLowerCase();
+    console.log("=== Orders API Route ===");
+    console.log("Method: GET");
+    console.log("URL:", req.url);
+    console.log("accountId:", accountId);
+    console.log("contactId:", contactId);
     console.log("action:", rawAction);
 
     if (!accountId) {

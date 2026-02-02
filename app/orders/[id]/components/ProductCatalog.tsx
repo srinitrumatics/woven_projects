@@ -87,12 +87,12 @@ export default function ProductCatalog({
                             <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
                             <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
                             <SortableHeader label="Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
-                            <SortableHeader label="List Price" field="listPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={onResize} />
-                            <SortableHeader label="Selling Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
-                            <SortableHeader label="Available Qty" field="availableQty" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.availableQty} onResize={onResize} />
+                            <SortableHeader label="List Price" field="listPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={onResize} />
+                            <SortableHeader label="Selling Price" field="unitPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
+                            <SortableHeader label="Available Qty" field="availableQty" align="right" sortConfig={sortConfig} requestSort={requestSort} width={widths.availableQty} onResize={onResize} />
                             {isEditing && (
                                 <>
-                                    <SortableHeader label="Qty to Order" field="orderQty" align="center" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
+                                    <SortableHeader label="Qty to Order" field="orderQty" align="right" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
                                     <th
                                         className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white"
                                         style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
@@ -131,7 +131,7 @@ export default function ProductCatalog({
                                             </svg>
                                         </div>
                                     </td>
-                                    <td className="px-4 py-2 text-center">
+                                    <td className="px-4 py-2 text-left">
                                         <div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2" title={product.name}>{product.name}</div>
                                         {product.description && (
                                             <div className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 break-words" title={product.description}>
@@ -139,10 +139,10 @@ export default function ProductCatalog({
                                             </div>
                                         )}
                                     </td>
-                                    <td className="px-4 py-2 text-xs text-center text-gray-900 dark:text-white">
+                                    <td className="px-4 py-2 text-xs text-left text-gray-900 dark:text-white">
                                         <div className="line-clamp-2" title={product.manufacturer}>{product.manufacturer}</div>
                                     </td>
-                                    <td className="px-4 py-2 text-center">
+                                    <td className="px-4 py-2 text-left">
                                         <div className="line-clamp-2" title={product.productFamily}>
                                             <span className="inline-block px-2 py-0.5 text-xs font-medium rounded bg-primary/10 text-primary">
                                                 {product.productFamily}
@@ -161,8 +161,8 @@ export default function ProductCatalog({
                                     </td>
                                     {isEditing && (
                                         <>
-                                            <td className="px-4 py-2 text-center">
-                                                <div className="flex items-center justify-center gap-2">
+                                            <td className="px-4 py-2 text-right">
+                                                <div className="flex items-center justify-end gap-2">
                                                     <button
                                                         onClick={() => {
                                                             const currentQty = catalogQuantities[product.id] || product.moq || 1;
