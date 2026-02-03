@@ -12,7 +12,7 @@ export default function OrderNotes({
     isEditing = false
 }: OrderNotesProps) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col h-[353px]" role="region" aria-label="Order notes">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col h-[353px] pb-6 px-6" role="region" aria-label="Order notes">
             {/* Header */}
             <div className="flex items-center gap-3 mb-3 ">
                 <div className="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
@@ -22,7 +22,7 @@ export default function OrderNotes({
                 </div>
                 <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Order Notes</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Special Instructions or Notes</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Special Instructions or Notes</p>
                 </div>
             </div>
 
@@ -33,7 +33,7 @@ export default function OrderNotes({
                     value={formData.orderNotes}
                     onChange={(e) => setFormData({ ...formData, orderNotes: e.target.value })}
                     readOnly={!isEditing}
-                    className={`w-full flex-1 min-h-[120px] px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 resize-none ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                    className={`w-full flex-1  p-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 resize-none ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                 />
             </div>
         </div>

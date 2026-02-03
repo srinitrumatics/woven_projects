@@ -348,7 +348,7 @@ export default function OrderLineDetailPage({
       </div>
 
       {/* Row 1: Main Image + Order Notes + Product Information */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-2 items-stretch">
         {/* Main Image with Carousel - 25% width (3 of 12 cols) */}
         <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
           <div className="relative flex-1 flex flex-col">
@@ -436,12 +436,12 @@ export default function OrderLineDetailPage({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
             </div>
-            <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-white">
               Order Notes
-            </h2>
+            </h3>
           </div>
           <div className="flex-1 flex flex-col">
-            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+            <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
               Notes
             </label>
             <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-900 dark:text-white min-h-[200px]">
@@ -468,57 +468,57 @@ export default function OrderLineDetailPage({
                 />
               </svg>
             </div>
-            <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-white">
               Product Information
-            </h2>
+            </h3>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 ">
             {/* Column 1 */}
-            <div className="space-y-3">
+            <div className="space-y-3 py-6">
               {/* Product Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              <div className="pb-6">
+                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                   Product Name
                 </label>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                   {product.name}
                 </p>
               </div>
               {/* Description */}
-              <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              <div className="pb-6">
+                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                   Description
                 </label>
-                <p className="text-sm text-gray-900 dark:text-white line-clamp-2">
+                <p className="text-sm text-gray-900 dark:text-white line-clamp-1 font-medium">
                   {product.description || "No description available"}
                 </p>
               </div>
               {/* Manufacturer Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              <div className="pb-6">
+                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                   Manufacturer Name
                 </label>
-                <p className="text-sm text-gray-900 dark:text-white">
+                <p className="text-sm text-gray-900 dark:text-white font-medium">
                   {product.manufacturer}
                 </p>
               </div>
             </div>
 
             {/* Column 2 */}
-            <div className="space-y-3">
+            <div className="space-y-3 py-6">
               {/* Manufacturer DBA */}
-              <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              <div className="pb-6">
+                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                   Manufacturer DBA
                 </label>
-                <p className="text-sm text-gray-900 dark:text-white">
+                <p className="text-sm text-gray-900 font-medium dark:text-white">
                   {product.brand}
                 </p>
               </div>
               {/* Product Family */}
-              <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              <div className="pb-6">
+                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                   Product Family
                 </label>
                 <span className="inline-block px-2 py-0.5 text-sm font-medium rounded-full bg-primary/10 text-primary">
@@ -526,42 +526,42 @@ export default function OrderLineDetailPage({
                 </span>
               </div>
               {/* IsTaxable */}
-              <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              <div className="pb-6">
+                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                   IsTaxable
                 </label>
-                <p className="text-sm text-gray-900 dark:text-white">
+                <p className="text-sm text-gray-900 dark:text-white font-medium">
                   {product.isTaxable}
                 </p>
               </div>
             </div>
 
             {/* Column 3 */}
-            <div className="space-y-3">
+            <div className="space-y-3 py-6">
               {/* Site */}
-              <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              <div className="pb-6">
+                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                   Site
                 </label>
-                <p className="text-sm text-gray-900 dark:text-white">
+                <p className="text-sm text-gray-900 dark:text-white font-medium">
                   {product.site}
                 </p>
               </div>
               {/* Inventory Account */}
-              <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              <div className="pb-6">
+                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                   Inventory Account
                 </label>
-                <p className="text-sm text-gray-900 dark:text-white">
+                <p className="text-sm text-gray-900 dark:text-white font-medium">
                   {product.inventoryAccount}
                 </p>
               </div>
               {/* Available to Sell */}
-              <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+              <div className="pb-6">
+                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                   Available to Sell
                 </label>
-                <p className="text-sm text-gray-900 dark:text-white font-mono">
+                <p className="text-sm text-gray-900 dark:text-white font-medium">
                   {formatNumber(product.availableToSell, 0)}
                 </p>
               </div>
@@ -577,9 +577,7 @@ export default function OrderLineDetailPage({
         {/* Order Details Card - Full width */}
         <div className="lg:col-span-5 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
           <div className="flex items-center gap-2 mb-3">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-white">
-              Order Details
-            </h2>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-white">Order Details</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">

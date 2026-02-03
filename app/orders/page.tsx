@@ -441,13 +441,13 @@ export default function OrdersPage() {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
         {/* Tabs and Search */}
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center justify-between px-2 py-3">
             <div className="flex items-center gap-6">
               {(["All", "Pending", "Success", "Draft", "Cancelled"] as TabFilter[]).map(tab => (
                 <button
                   key={`orders-tab-${tab}`}
                   onClick={() => setActiveTab(tab)}
-                  className={`pb-2 text-sm font-medium transition-colors relative ${activeTab === tab
+                  className={`pb-2 text-sm font-medium transition-colors font-semibold text-gray-900 dark:text-white relative ${activeTab === tab
                     ? "text-gray-900 dark:text-white"
                     : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                     }`}
@@ -526,7 +526,7 @@ export default function OrdersPage() {
                   <SortableHeader label="Total Lines" field="items" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
                   <SortableHeader label="Total Price" field="total" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
                   <th
-                    className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                    className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
                     Actions
@@ -542,7 +542,7 @@ export default function OrdersPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
                         <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No orders found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-xs">
+                        <p className="text-gray-400 dark:text-gray-500 text-sm">
                           {searchQuery || activeTab !== "All"
                             ? "Try adjusting your filters"
                             : "Get started by creating your first order"}
@@ -553,27 +553,27 @@ export default function OrdersPage() {
                 ) : (
                   paginatedOrders.map((order) => (
                     <tr key={`order-row-${order.Id ?? order.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-6 py-4 text-sm font-semibold text-primary text-left">
+                      <td className="px-2 py-3 text-sm font-semibold text-primary text-left">
                         <Link href={`/orders/${order.id}`}>{order.name}</Link>
                       </td>
-                      <td className="px-6 py-4 text-left">
+                      <td className="px-2 py-3 text-left">
                         <StatusBadge status={order.status as OrderStatus} />
                       </td>
-                      <td className="px-6 py-4 text-left">
+                      <td className="px-2 py-3 text-left">
                         <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.proposal_name}>{order.proposal_name}</div>
                       </td>
-                      <td className="px-6 py-4 text-left">
+                      <td className="px-2 py-3 text-left">
                         <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.cpo}>{order.cpo}</div>
                       </td>
-                      <td className="px-6 py-4 text-left">
+                      <td className="px-2 py-3 text-left">
                         <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.billTo}>{order.billTo}</div>
                       </td>
-                      <td className="px-6 py-4 text-left">
+                      <td className="px-2 py-3 text-left">
                         <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.shipTo}>{order.shipTo}</div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-left text-gray-900 dark:text-white">{formatNumber(order.items, 0)}</td>
-                      <td className="px-6 py-4 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total, 'USD', 2)}</td>
-                      <td className="px-6 py-4 text-left">
+                      <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">{formatNumber(order.items, 0)}</td>
+                      <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total, 'USD', 2)}</td>
+                      <td className="px-2 py-3 text-left">
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleEditOrder(order.Id)}

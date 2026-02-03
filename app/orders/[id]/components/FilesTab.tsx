@@ -8,9 +8,10 @@ interface FilesTabProps {
     accountId: string;
     contactId: string;
     isEditing?: boolean;
+    onFilesCountChange?: (count: number) => void;
 }
 
-export default function FilesTab({ orderId, accountId, contactId, isEditing = false }: FilesTabProps) {
+export default function FilesTab({ orderId, accountId, contactId, isEditing = false, onFilesCountChange }: FilesTabProps) {
     const [files, setFiles] = useState<FileData[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedFileIds, setSelectedFileIds] = useState<Set<string>>(new Set());
@@ -28,6 +29,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                 FileSize: f.FileSize ?? f.ContentSize ?? 0
             })) : [];
             setFiles(mappedData);
+            onFilesCountChange?.(mappedData.length);
         } catch (error) {
             console.error("Error fetching files:", error);
         } finally {
@@ -136,8 +138,11 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
             });
             if (!res.ok) throw new Error("Failed to delete file");
 
-            // Remove from list
-            setFiles(prev => prev.filter(f => f.Id !== file.Id));
+            setFiles(prev => {
+                const newFiles = prev.filter(f => f.Id !== file.Id);
+                onFilesCountChange?.(newFiles.length);
+                return newFiles;
+            });
             setSelectedFileIds(prev => {
                 const newSet = new Set(prev);
                 newSet.delete(file.Id);
@@ -189,7 +194,11 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
             if (!res.ok) throw new Error("Failed to delete files");
 
             // Remove deleted files from list
-            setFiles(prev => prev.filter(f => !selectedFileIds.has(f.Id)));
+            setFiles(prev => {
+                const newFiles = prev.filter(f => !selectedFileIds.has(f.Id));
+                onFilesCountChange?.(newFiles.length);
+                return newFiles;
+            });
             setSelectedFileIds(new Set());
             alert("Files deleted successfully");
         } catch (error) {
@@ -237,7 +246,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Files ({files.length})</h3>
+                <div></div>
                 <div className="flex gap-2">
                     {selectedFileIds.size > 0 && (
                         <>
@@ -265,7 +274,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
                             {isEditing && (
-                                <th className="px-4 py-3 text-left w-10">
+                                <th className="px-2 py-3 text-left w-10">
                                     <input
                                         type="checkbox"
                                         onChange={handleSelectAll}
@@ -278,7 +287,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                             <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Type" field="FileExtension" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} />
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
+                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -294,7 +303,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                             sortedFiles.map(file => (
                                 <tr key={file.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                     {isEditing && (
-                                        <td className="px-4 py-3">
+                                        <td className="px-2 py-3">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedFileIds.has(file.Id)}
@@ -303,12 +312,12 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                                             />
                                         </td>
                                     )}
-                                    <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">{file.Title}</div></td>
-                                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{(file.FileSize / 1024).toFixed(2)} KB</td>
-                                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{file.FileExtension}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedDate}</td>
-                                    <td className="px-4 py-3 text-center">
-                                        <div className="px-4 py-2 text-center">
+                                    <td className="px-2 py-3 text-sm font-medium text-gray-900 dark:text-white" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">{file.Title}</div></td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{(file.FileSize / 1024).toFixed(2)} KB</td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.FileExtension}</td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedDate}</td>
+                                    <td className="px-2 py-3">
+                                        <div>
                                             {/* View / Preview button */}
                                             <button
                                                 onClick={() => handlePreview(file)}

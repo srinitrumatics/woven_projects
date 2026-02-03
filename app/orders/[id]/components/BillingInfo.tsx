@@ -37,7 +37,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             value={formData.billToAccountName || ''}
                             readOnly
                             disabled
-                            className="w-full h-11 px-4 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                            className="w-full h-11 px-2 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed"
                         />
                     </div>
 
@@ -49,7 +49,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             value={formData.billTo || ''}
                             onChange={handleBillToChange}
                             disabled={!isEditing}
-                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         >
                             <option key="select-bill" value="">Select a location...</option>
                             <option key="same-as-shipping" value="same">Same as Shipping</option>
@@ -70,13 +70,13 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             value={formData.billingAddress || ''}
                             onChange={(e) => setFormData({ ...formData, billingAddress: e.target.value })}
                             readOnly={isEditing === false}
-                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
                     <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Customer PO # <span className="text-red-500">*</span>
+                            Customer PO <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
@@ -84,7 +84,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             value={formData.purchaseOrder || ''}
                             onChange={(e) => setFormData({ ...formData, purchaseOrder: e.target.value })}
                             readOnly={isEditing === false}
-                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
@@ -94,7 +94,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             value={formData.paymentTerms || ''}
                             onChange={(e) => setFormData({ ...formData, paymentTerms: e.target.value })}
                             disabled
-                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-gray-100 dark:bg-gray-700 cursor-not-allowed`}
+                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-gray-100 dark:bg-gray-700 cursor-not-allowed`}
                         >
                             {formData.paymentTerms && !["Net 30", "Net 45", "Net 60", "Due on Receipt"].includes(formData.paymentTerms) && (
                                 <option value={formData.paymentTerms}>{formData.paymentTerms}</option>
@@ -115,7 +115,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             value={formData.priceBook || ''}
                             readOnly
                             disabled
-                            className="w-full h-11 px-4 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                            className="w-full h-11 px-2 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed"
                         />
                     </div>
                 </div>

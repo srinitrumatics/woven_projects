@@ -12,7 +12,7 @@ interface DeliveryOptionsProps {
 
 export default function DeliveryOptions({ formData, setFormData, shippingMethods = [], incotermsOptions = [], isEditing = false }: DeliveryOptionsProps) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-[200px]">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-[175px]">
             <div className="w-full flex items-center gap-2 justify-start p-4">
                 <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center">
                     <svg className="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,7 +32,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                             value={formData.shippingMethod || ''}
                             onChange={(e) => setFormData({ ...formData, shippingMethod: e.target.value })}
                             disabled={!isEditing}
-                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         >
                             <option value="">Select Shipping Method</option>
                             {formData.shippingMethod && !["Best Way", "Ground", "2nd Day Air", "Overnight", "Freight", "Customer Account", "Pick Up"].includes(formData.shippingMethod) && (
@@ -67,7 +67,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                             value={formData.incoterms || ''}
                             onChange={(e) => setFormData({ ...formData, incoterms: e.target.value })}
                             disabled={!isEditing}
-                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         >
                             <option value="">Select Incoterms</option>
                             {formData.incoterms && !incotermsOptions.some(opt => opt.value === formData.incoterms) && (
@@ -89,13 +89,13 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                             value={formData.deliveryNotes || ''}
                             onChange={(e) => setFormData({ ...formData, deliveryNotes: e.target.value })}
                             readOnly={!isEditing}
-                            className={`w-full h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Lift Gate</label>
-                        <div className="flex items-center h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-not-allowed">
+                        <div className="flex items-center h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-not-allowed">
                             <input
                                 type="checkbox"
                                 checked={formData.liftGateRequired}
@@ -108,7 +108,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
 
                     <div>
                         <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">Inside Delivery</label>
-                        <div className="flex items-center h-11 px-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-not-allowed">
+                        <div className="flex items-center h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-not-allowed">
                             <input
                                 type="checkbox"
                                 checked={formData.insideDelivery}

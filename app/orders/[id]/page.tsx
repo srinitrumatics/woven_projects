@@ -142,6 +142,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [orderData, setOrderData] = useState<Order | null>(null);
   const [loadingOrder, setLoadingOrder] = useState(true);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [filesCount, setFilesCount] = useState(0);
 
   // Initialize resizable columns for My Order Table
   const myOrderColumns = useResizableColumns({
@@ -789,6 +790,23 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     }
   }, [id, SF_ACCOUNT_ID]);
 
+  // Fetch files count for tab header
+  useEffect(() => {
+    if (!id || id === "new") return;
+    const fetchFilesCount = async () => {
+      try {
+        const res = await fetch(`/api/salesforce/orders?action=files&accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&orderId=${encodeURIComponent(id)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setFilesCount(Array.isArray(data) ? data.length : 0);
+        }
+      } catch (error) {
+        console.error("Error fetching files count:", error);
+      }
+    };
+    fetchFilesCount();
+  }, [id, SF_ACCOUNT_ID, SF_CONTACT_ID]);
+
   // Calculate dynamic order totals based on actual products in the order
   // Always calculate from orderProducts to ensure real-time updates when products are added/removed
   const productsSubtotal = orderProducts.reduce((sum, product) => sum + product.subtotal, 0);
@@ -1381,7 +1399,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
               >
-                Files
+                Files ({filesCount})
               </button>
             </div>
           </div>
@@ -1393,6 +1411,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               accountId={SF_ACCOUNT_ID}
               contactId={SF_CONTACT_ID}
               isEditing={isEditing}
+              onFilesCountChange={setFilesCount}
             />
           )}
 

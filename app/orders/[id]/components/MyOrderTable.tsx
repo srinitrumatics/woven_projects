@@ -67,7 +67,7 @@ export default function MyOrderTable({
                         <SortableHeader label="Total Price" field="subtotal" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} />
                         {isEditing && (
                             <th
-                                className="px-4 py-1 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                                className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"
                                 style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                             >
                                 Action
@@ -92,7 +92,7 @@ export default function MyOrderTable({
                         sortedProducts.map((product) => (
                             <tr key={product.lineItemKey || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
 
-                                <td className="px-4 py-3 text-left">
+                                <td className="px-2 py-3 text-left min-w-[100px]">
                                     <Link
                                         href={`/orders/${orderId}/lines/${product.orderLineId || product.id}`}
                                         className="text-sm font-semibold text-primary hover:underline truncate block"
@@ -101,7 +101,7 @@ export default function MyOrderTable({
                                         {product.sku}
                                     </Link>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white font-medium text-left w-[100px]">
                                     {/* Product name with hover tooltip showing full details */}
                                     <span
                                         className="underline cursor-help block truncate"
@@ -116,12 +116,13 @@ export default function MyOrderTable({
                                         </div>
                                     )}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left" title={product.manufacturer}><div className="text-sm text-gray-900 dark:text-white truncate">{product.manufacturer}</div></td>
-                                <td className="px-4 py-3 w-[150px] text-left" title={product.productFamily}><div className="truncate"><span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
-                                    {product.productFamily}
-                                </span></div></td>
-                                <td className="px-4 py-3 text-sm text-left text-gray-900 dark:text-white">{formatCurrency(product.unitPrice)}</td>
-                                <td className="px-4 py-3 text-left">
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left w-[100px]" title={product.manufacturer}><div className="text-sm text-gray-900 dark:text-white truncate">{product.manufacturer}</div></td>
+                                <td className="px-2 py-3 w-[150px] text-left" title={product.productFamily}>
+                                    <div className="truncate"><span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
+                                        {product.productFamily}
+                                    </span></div></td>
+                                <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white w-[100px]">{formatCurrency(product.unitPrice)}</td>
+                                <td className="px-2 py-3 text-left w-[150px]">
                                     {isEditing ? (
                                         <div className="flex flex-col">
                                             <div className="flex gap-2">
@@ -165,9 +166,9 @@ export default function MyOrderTable({
                                         </div>
                                     )}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold w-[100px]">{formatCurrency(product.subtotal)}</td>
+                                <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold w-[100px]">{formatCurrency(product.subtotal)}</td>
                                 {isEditing && (
-                                    <td className="px-4 py-3 text-left">
+                                    <td className="px-2 py-3 text-left">
                                         <button
                                             onClick={() => handleRemoveProduct(product.lineItemKey!)}
                                             title="Remove from order"

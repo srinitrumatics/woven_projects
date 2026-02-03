@@ -60,7 +60,7 @@ export function SortableHeader({
             style={displayWidth ? { width: displayWidth, minWidth: displayWidth, maxWidth: displayWidth } : {}}
         >
             <div
-                className={`px-4 py-3 flex items-start gap-1`}
+                className={`px-2 py-3 flex items-start gap-1`}
                 style={{ width: '100%' }}
             >
                 <span className={`line-clamp-2 text-${align} flex-1`} title={label}>{label}</span>

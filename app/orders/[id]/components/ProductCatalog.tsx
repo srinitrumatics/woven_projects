@@ -69,7 +69,7 @@ export default function ProductCatalog({
                         <tr>
                             {isEditing && (
                                 <th
-                                    className="px-4 py-2 text-left"
+                                    className="px-2 py-3 text-left"
                                     style={{ width: widths.selection, minWidth: widths.selection, maxWidth: widths.selection }}
                                 >
                                     <input
@@ -94,7 +94,7 @@ export default function ProductCatalog({
                                 <>
                                     <SortableHeader label="Qty to Order" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
                                     <th
-                                        className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white"
+                                        className="px-2 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white"
                                         style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                                     >Action</th>
                                 </>
@@ -112,7 +112,7 @@ export default function ProductCatalog({
                             paginatedCatalogProducts.map((product) => (
                                 <tr key={product.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${selectedProductIds.has(product.id) ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
                                     {isEditing && (
-                                        <td className="px-4 py-2 text-left">
+                                        <td className="px-3 py-2 text-left">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedProductIds.has(product.id)}
@@ -131,35 +131,35 @@ export default function ProductCatalog({
                                             </svg>
                                         </div>
                                     </td>*/}
-                                    <td className="px-4 py-2 text-left">
+                                    <td className="px-3 py-2 text-left">
                                         <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.name}>{truncateText(product.name, 50)}</div>
                                         <div className="text-sm text-gray-500 dark:text-gray-400 truncate break-words" title={product.description || ""}>
                                             {product.description ? truncateText(product.description, 50) : <span className="invisible">Empty Description</span>}
                                         </div>
                                     </td>
-                                    <td className="px-4 py-2 text-sm text-left text-gray-900 dark:text-white">
+                                    <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
                                         <div className="line-clamp-2" title={product.manufacturer}>{product.manufacturer}</div>
                                     </td>
-                                    <td className="px-4 py-2 text-left">
+                                    <td className="px-3 py-2 text-left">
                                         <div className="line-clamp-2" title={product.productFamily}>
                                             <span className="inline-block px-2 py-0.5 text-[10px] font-medium rounded bg-primary/10 text-primary uppercase tracking-wider whitespace-normal">
                                                 {product.productFamily}
                                             </span>
                                         </div>
                                     </td>
-                                    <td className="px-4 py-2 text-sm text-left text-gray-500 dark:text-gray-400 line-through">
+                                    <td className="px-3 py-2 text-sm text-left text-gray-500 dark:text-gray-400 line-through">
                                         {formatCurrency(product.listPrice)}
                                     </td>
-                                    <td className="px-4 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">
+                                    <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">
                                         {formatCurrency(product.unitPrice)}
                                     </td>
-                                    <td className="px-4 py-2 text-sm text-left text-gray-900 dark:text-white">
+                                    <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
                                         <div>{formatNumber(product.availableQty)}</div>
                                         <div className="text-sm text-gray-500 dark:text-gray-400">MOQ: {product.moq || 1}</div>
                                     </td>
                                     {isEditing && (
                                         <>
-                                            <td className="px-4 py-2 text-left">
+                                            <td className="px-3 py-2 text-left">
                                                 <div className="flex  gap-1">
                                                     <button
                                                         onClick={() => {
@@ -182,7 +182,7 @@ export default function ProductCatalog({
                                                                 handleCatalogQuantityChange(product.id, val === '' ? 0 : Number(val), product.moq || 1);
                                                             }
                                                         }}
-                                                        className="w-16 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-center"
+                                                        className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-center"
                                                     />
                                                     <button
                                                         onClick={() => {
@@ -197,7 +197,7 @@ export default function ProductCatalog({
                                                     </button>
                                                 </div>
                                             </td>
-                                            <td className="px-4 py-2 text-center">
+                                            <td className="px-3 py-2 text-left">
                                                 <button
                                                     onClick={() => handleAddProduct(product)}
                                                     className="p-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors"
