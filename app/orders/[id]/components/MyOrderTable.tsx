@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import Link from "next/link";
 import { Product } from "@/app/orders/types";
-import { formatCurrency } from "@/lib/utils/formatting";
+import { formatCurrency, truncateText } from "@/lib/utils/formatting";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 
@@ -55,19 +55,19 @@ export default function MyOrderTable({
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full table-fixed">
+            <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
                         <SortableHeader label="Order Line " field="sku" sortConfig={sortConfig} requestSort={requestSort} width={widths.sku} onResize={onResize} />
                         <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
                         <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
                         <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
-                        <SortableHeader label="Unit Price" field="unitPrice" align="right" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
-                        <SortableHeader label="Total Order Qty" field="orderQty" align="right" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
-                        <SortableHeader label="Total Price" field="subtotal" align="right" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} />
+                        <SortableHeader label="Unit Price" field="unitPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
+                        <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
+                        <SortableHeader label="Total Price" field="subtotal" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} />
                         {isEditing && (
                             <th
-                                className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white"
+                                className="px-4 py-1 text-left text-sm font-semibold text-gray-900 dark:text-white"
                                 style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                             >
                                 Action
@@ -92,10 +92,10 @@ export default function MyOrderTable({
                         sortedProducts.map((product) => (
                             <tr key={product.lineItemKey || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
 
-                                <td className="px-4 py-3 text-left w-[120px]">
+                                <td className="px-4 py-3 text-left">
                                     <Link
                                         href={`/orders/${orderId}/lines/${product.orderLineId || product.id}`}
-                                        className="text-sm font-semibold text-primary hover:underline line-clamp-2"
+                                        className="text-sm font-semibold text-primary hover:underline truncate block"
                                         title={product.sku}
                                     >
                                         {product.sku}
@@ -104,27 +104,27 @@ export default function MyOrderTable({
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
                                     {/* Product name with hover tooltip showing full details */}
                                     <span
-                                        className="underline cursor-help block line-clamp-2"
+                                        className="underline cursor-help block truncate"
                                         onMouseEnter={(e) => handleTooltipEnter(e, product)}
                                         onMouseLeave={handleTooltipLeave}
                                     >
-                                        {product.name}
+                                        {truncateText(product.name, 50)}
                                     </span>
                                     {product.description && (
-                                        <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 break-words" title={product.description}>
-                                            {product.description}
+                                        <div className="text-xs text-gray-500 dark:text-gray-400 truncate break-words" title={product.description}>
+                                            {truncateText(product.description, 50)}
                                         </div>
                                     )}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white w-[150px] text-left" title={product.manufacturer}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{product.manufacturer}</div></td>
-                                <td className="px-4 py-3 w-[150px] text-left" title={product.productFamily}><div className="line-clamp-2"><span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left" title={product.manufacturer}><div className="text-sm text-gray-900 dark:text-white truncate">{product.manufacturer}</div></td>
+                                <td className="px-4 py-3 w-[150px] text-left" title={product.productFamily}><div className="truncate"><span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
                                     {product.productFamily}
                                 </span></div></td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white w-[100px]">{formatCurrency(product.unitPrice)}</td>
-                                <td className="px-4 py-3 text-right">
+                                <td className="px-4 py-3 text-sm text-left text-gray-900 dark:text-white">{formatCurrency(product.unitPrice)}</td>
+                                <td className="px-4 py-3 text-left">
                                     {isEditing ? (
-                                        <div className="flex flex-col items-center">
-                                            <div className="flex items-center justify-center gap-2">
+                                        <div className="flex flex-col">
+                                            <div className="flex gap-2">
                                                 <button
                                                     onClick={() => {
                                                         const moq = product.moq || 1;
@@ -160,14 +160,14 @@ export default function MyOrderTable({
                                             <div className="text-sm text-gray-500 dark:text-gray-400 text-center mt-1">MOQ: {product.moq || 1}</div>
                                         </div>
                                     ) : (
-                                        <div className="text-right text-sm text-gray-900 dark:text-white font-medium">
+                                        <div className="text-left text-sm text-gray-900 dark:text-white font-medium">
                                             {product.orderQty}
                                         </div>
                                     )}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold w-[100px]">{formatCurrency(product.subtotal)}</td>
+                                <td className="px-4 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold w-[100px]">{formatCurrency(product.subtotal)}</td>
                                 {isEditing && (
-                                    <td className="px-4 py-3 text-center">
+                                    <td className="px-4 py-3 text-left">
                                         <button
                                             onClick={() => handleRemoveProduct(product.lineItemKey!)}
                                             title="Remove from order"

@@ -368,7 +368,7 @@ export default function OrderLineDetailPage({
                     d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                   />
                 </svg>
-                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 block">
+                <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block">
                   {productImages[currentImageIndex].label}
                 </span>
               </div>
@@ -441,7 +441,7 @@ export default function OrderLineDetailPage({
             </h2>
           </div>
           <div className="flex-1 flex flex-col">
-            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
               Notes
             </label>
             <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-900 dark:text-white min-h-[200px]">
@@ -582,47 +582,47 @@ export default function OrderLineDetailPage({
             </h2>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full table-fixed">
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Unit Price</th>
-                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Order Qty</th>
-                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">MOQ</th>
-                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Total Qty</th>
-                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Total Price</th>
-                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Taxes</th>
-                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Shipping</th>
-                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Grand Total</th>
-                  <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Qty Shipped</th>
+            <table className="w-full">
+              <thead className="bg-primary-light dark:bg-gray-900">
+                <tr>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Order Qty</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">MOQ</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Qty</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Price</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Taxes</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipping</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Qty Shipped</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
                     {formatCurrency(unitPrice)}
                   </td>
-                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
                     {formatNumber(orderQty, 2)}
                   </td>
-                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
                     {formatNumber(product.moq, 2)}
                   </td>
-                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
                     {formatNumber(product.orderQty, 2)}
                   </td>
-                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
                     {formatCurrency(subtotal)}
                   </td>
-                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
                     {formatCurrency(taxes)}
                   </td>
-                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
                     {formatCurrency(shippingCharges)}
                   </td>
-                  <td className="px-2 py-3 text-xs text-center font-bold text-primary">
+                  <td className="px-2 py-3 text-sm text-left font-bold text-primary">
                     {formatCurrency(grandTotal)}
                   </td>
-                  <td className="px-2 py-3 text-xs text-center text-gray-900 dark:text-white">
+                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
                     {formatNumber(product.qtyShipped, 2)}
                   </td>
                 </tr>
@@ -680,7 +680,7 @@ export default function OrderLineDetailPage({
         )}
 
         {/* Line indicator */}
-        <span className="text-xs text-gray-500 dark:text-gray-400 px-2">
+        <span className="text-sm text-gray-500 dark:text-gray-400 px-2">
           {lineNumber}/{totalLines}
         </span>
 
