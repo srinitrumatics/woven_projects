@@ -562,7 +562,7 @@ export default function OrderLineDetailPage({
                   Available to Sell
                 </label>
                 <p className="text-sm text-gray-900 dark:text-white font-mono">
-                  {formatNumber(product.availableToSell, 2)}
+                  {formatNumber(product.availableToSell, 0)}
                 </p>
               </div>
             </div>
@@ -585,15 +585,15 @@ export default function OrderLineDetailPage({
             <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Order Qty</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">MOQ</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Qty</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Price</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Taxes</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipping</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Qty Shipped</th>
+                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
+                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Order Qty</th>
+                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">MOQ</th>
+                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Qty</th>
+                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Price</th>
+                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Taxes</th>
+                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipping</th>
+                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
+                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Qty Shipped</th>
                 </tr>
               </thead>
               <tbody>
@@ -602,13 +602,13 @@ export default function OrderLineDetailPage({
                     {formatCurrency(unitPrice)}
                   </td>
                   <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatNumber(orderQty, 2)}
+                    {formatNumber(orderQty)}
                   </td>
                   <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatNumber(product.moq, 2)}
+                    {formatNumber(product.moq)}
                   </td>
                   <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatNumber(product.orderQty, 2)}
+                    {formatNumber(product.orderQty, 0)}
                   </td>
                   <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
                     {formatCurrency(subtotal)}
@@ -623,7 +623,7 @@ export default function OrderLineDetailPage({
                     {formatCurrency(grandTotal)}
                   </td>
                   <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatNumber(product.qtyShipped, 2)}
+                    {formatNumber(product.qtyShipped, 0)}
                   </td>
                 </tr>
               </tbody>
