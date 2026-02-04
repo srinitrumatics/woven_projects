@@ -94,7 +94,7 @@ export default function ProductCatalog({
                                 <>
                                     <SortableHeader label="Qty to Order" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
                                     <th
-                                        className="px-2 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white"
+                                        className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"
                                         style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                                     >Action</th>
                                 </>
@@ -112,7 +112,7 @@ export default function ProductCatalog({
                             paginatedCatalogProducts.map((product) => (
                                 <tr key={product.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${selectedProductIds.has(product.id) ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
                                     {isEditing && (
-                                        <td className="px-3 py-2 text-left">
+                                        <td className="px-2 py-2 text-left">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedProductIds.has(product.id)}
