@@ -89,7 +89,7 @@ export default function FilesTab({
                         <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} />
-                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white">Action</th>
+                        <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Action</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -101,7 +101,7 @@ export default function FilesTab({
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                     </svg>
                                     <p className="text-lg font-medium">No files found</p>
-                                    <p className="text-xs">There are no files attached to this proposal.</p>
+                                    <p className="text-sm">There are no files attached to this proposal.</p>
                                 </div>
                             </td>
                         </tr>
@@ -112,7 +112,7 @@ export default function FilesTab({
                                 className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer ${selectedFiles.has(file.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}
                                 onClick={() => onFileSelect(file.id)}
                             >
-                                <td className="px-4 py-3 text-center" onClick={(e) => e.stopPropagation()}>
+                                <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
                                     <input
                                         type="checkbox"
                                         className="rounded border-gray-300 text-primary focus:ring-primary"
@@ -120,29 +120,28 @@ export default function FilesTab({
                                         onChange={() => onFileSelect(file.id)}
                                     />
                                 </td>
-                                <td className="px-4 py-3">
-                                    <div className="flex items-center justify-center gap-3">
+                                <td className="px-3 py-2">
+                                    <div className="flex gap-3">
                                         {getFileIcon(file.fileType)}
                                         <span className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2" title={file.fileName}>{file.fileName}</span>
                                     </div>
                                 </td>
-                                <td className="px-4 py-3 text-center">
+                                <td className="px-3 py-2 text-left">
                                     <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                         {file.category}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-center">
-                                    <span className="text-sm font-mono text-gray-600 dark:text-gray-400">{file.fileType}</span>
+                                <td className="px-3 py-2 text-left">
+                                    <span className="text-sm  text-gray-600 dark:text-gray-400">{file.fileType}</span>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{file.fileSize}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-center" title={file.uploadedBy}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{file.uploadedBy}</div></td>
-                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 text-center">{file.uploadedDate}</td>
-                                <td className="px-4 py-3 text-center" onClick={(e) => e.stopPropagation()}>
+                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white">{file.fileSize}</td>
+                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white " title={file.uploadedBy}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{file.uploadedBy}</div></td>
+                                <td className="px-3 py-2 text-left text-sm text-gray-600 dark:text-gray-400 ">{file.uploadedDate}</td>
+                                <td className="px-3 py-2 text-left" onClick={(e) => e.stopPropagation()}>
                                     <button
-                                        className="px-4 py-1.5 bg-primary/10 text-primary rounded hover:bg-primary hover:text-white transition-all duration-200 text-sm font-medium"
+                                        className="bg-primary/10 text-primary rounded hover:bg-primary hover:text-white transition-all duration-200 text-sm font-medium"
                                         onClick={() => file.downloadUrl && window.open(file.downloadUrl, '_blank')}
-                                        title="Download File"
-                                    >
+                                        title="Download File">
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                         </svg>

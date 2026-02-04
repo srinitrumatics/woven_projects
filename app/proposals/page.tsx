@@ -388,15 +388,15 @@ export default function ProposalsPage() {
       {/* Proposals Table */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
         {/* Tabs and Search */}
-        <div className="border-b border-gray-200 dark:border-gray-700">
+        <div className="border-b border-gray-200 dark:border-gray-700 ">
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center gap-6 overflow-x-auto no-scrollbar">
               {(["All", "Lead", "Draft", "Pending Review", "Under Review", "Approved", "Accepted", "Rejected", "Expired"] as TabFilter[]).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`pb-2 text-sm font-medium transition-colors relative ${activeTab === tab
-                    ? "text-gray-900 dark:text-white"
+                  className={`pb-2 text-sm font-medium transition-colors relative font-semibold text-gray-900 dark:text-white ${activeTab === tab
+                    ? "text-gray-900 dark:text-white font-semibold text-gray-900 dark:text-white"
                     : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                     }`}
                 >
@@ -462,7 +462,7 @@ export default function ProposalsPage() {
               <p className="text-sm">Loading proposals...</p>
             </div>
           ) : (
-            <table className="w-full table-fixed">
+            <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
                   <SortableHeader label="Proposal Number" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
@@ -474,7 +474,7 @@ export default function ProposalsPage() {
                   <SortableHeader label="Total Price" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
                   <SortableHeader label="Expires" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} />
                   <th
-                    className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
                     Actions
@@ -490,7 +490,7 @@ export default function ProposalsPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No proposals found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-xs">
+                        <p className="text-gray-400 dark:text-gray-500 text-sm">
                           {searchQuery || activeTab !== "All"
                             ? "Try adjusting your filters"
                             : "Get started by creating your first proposal"}
@@ -501,28 +501,28 @@ export default function ProposalsPage() {
                 ) : (
                   paginatedProposals.map((proposal) => (
                     <tr key={proposal.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-2">
                         <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
-                          <div className="line-clamp-2" title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
+                          <div title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
                         </Link>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-2">
                         <StatusBadge status={proposal.status} />
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium line-clamp-2" title={proposal.proposalName}>{proposal.proposalName}</div>
+                      <td className="px-3 py-2">
+                        <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.proposalName}>{proposal.proposalName}</div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={proposal.billTo}>{proposal.billTo}</div>
+                      <td className="px-3 py-2">
+                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billTo}>{proposal.billTo}</div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={proposal.shipTo}>{proposal.shipTo}</div>
+                      <td className="px-3 py-2">
+                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipTo}>{proposal.shipTo}</div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{proposal.productCount}</td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-center gap-2">
+                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">{proposal.productCount}</td>
+                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-2">
+                        <div className="flex gap-2">
                           <button
                             onClick={() => handleViewProposal(proposal.id)}
                             className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"

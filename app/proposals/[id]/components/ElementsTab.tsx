@@ -25,7 +25,7 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full table-fixed">
+            <table className="w-full ">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
                         <SortableHeader label="WBS" field="wbs" sortConfig={sortConfig} requestSort={requestSort} width={widths.wbs} onResize={onResize} />
@@ -49,13 +49,21 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
                     ) : (
                         elements.map(element => (
                             <tr key={element.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 ">
-                                <td className="px-4 py-4 text-center">
+                                <td className="px-3 py-2 text-left">
                                     <span className="inline-block px-3 py-1 text-sm font-mono font-semibold  rounded bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
                                         {element.wbs}
                                     </span>
                                 </td>
-                                <td className="px-4 py-4" title={element.proposalElement}><div className="line-clamp-2 text-center"><div className="text-sm font-medium text-gray-900 dark:text-white">{element.proposalElement}</div></div></td>
-                                <td className="px-4 py-4" title={element.description}><div className="line-clamp-2 text-center"><div className="text-sm text-gray-600 dark:text-gray-400">{element.description}</div></div></td>
+                                <td className="px-3 py-2" title={element.proposalElement}>
+                                    <div className="line-clamp-1 text-left">
+                                        <div className="text-sm font-medium text-gray-900 dark:text-white">{element.proposalElement}</div>
+                                    </div>
+                                </td>
+                                <td className="px-3 py-2" title={element.description}>
+                                    <div className="line-clamp-1 text-left">
+                                        <div className="text-sm text-gray-600 dark:text-gray-400">{element.description}</div>
+                                    </div>
+                                </td>
                             </tr>
                         ))
                     )}
