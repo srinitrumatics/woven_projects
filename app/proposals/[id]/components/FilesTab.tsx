@@ -71,8 +71,8 @@ export default function FilesTab({
     }
 
     return (
-        <div className="overflow-x-auto">
-            <table className="w-full table-fixed min-w-[1200px]">
+        <div className="overflow-x-auto p-4">
+            <table className="w-full ">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
                         <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white w-[50px]">

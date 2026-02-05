@@ -48,6 +48,8 @@ interface ProposalProductItem {
     Use_Tax_Rate__c?: number;
     Sales_Tax_Amount__c?: number;
     Sales_Tax_Rate__c?: number;
+    Site_Name?: string;
+    Inventory_Account_Name?: string;
 }
 
 // Interface for mapped product data
@@ -126,8 +128,8 @@ export default function ProposalProductDetailPage({
                         subtotal: item.Line_Grand_Total__c || 0,
                         productGrouping: item.Product_Grouping__c || "-",
                         grouping: item.Grouping__c || "-",
-                        site: item.Site__c || "-",
-                        inventoryAccount: item.Inventory_Account__c || "-",
+                        site: item.Site_Name || "-",
+                        inventoryAccount: item.Inventory_Account_Name || "-",
                         isTaxable: item.Is_Taxable__c === true ? "Yes" : "No",
                         availableToSell: item.Available_To_Sell__c || 0,
                         qtyShipped: item.Qty_Shipped__c || 0,
@@ -273,7 +275,7 @@ export default function ProposalProductDetailPage({
                                 salesOrderLineName: inv.Sales_Order_Line_Name || inv.Sales_Order_Line__c || "",
                                 customerQuoteLineName: inv.Customer_Quote_Line_Name || inv.Customer_Order_Line__c || "", // API likely Customer_Order_Line__c based on screenshot
                                 purchaseOrderLineName: inv.Purchase_Order_Line_Name || inv.Purchase_Order_Line__c || "",
-                                productName: inv.Product_Name__c || "",
+                                productName: inv.Product_Name || "",
                                 productDescription: inv.Product_Description__c || "",
                                 manufacturerDBA: inv.Manufacturer_DBA__c || "",
                                 unitPrice: inv.Unit_Price__c || 0,
@@ -290,7 +292,7 @@ export default function ProposalProductDetailPage({
                                 shippingManifestName: sm.Shipping_Manifest_Name || sm.Shipping_Manifest__c || "",
                                 salesOrderLineName: sm.Sales_Order_Line_Name || sm.Sales_Order_Line__c || "",
                                 customerQuoteLineName: sm.Customer_Quote_Line_Name || sm.Customer_Order_Line__c || "",
-                                productName: sm.Product_Name__c || "",
+                                productName: sm.Product_Name || "",
                                 productDescription: sm.Product_Description__c || "",
                                 manufacturerDBA: sm.Manufacturer_DBA__c || "",
                                 boxCount: sm.Box__c || 0,
@@ -311,7 +313,7 @@ export default function ProposalProductDetailPage({
                                 status: so.Status__c || "Draft",
                                 salesOrderName: so.Sales_Order_Name || so.Sales_Order__c || "",
                                 customerQuoteLineName: so.Customer_Quote_Line_Name || so.Customer_Order_Line__c || "",
-                                productName: so.Product_Name__c || "",
+                                productName: so.Product_Name || "",
                                 productDescription: so.Product_Description__c || "",
                                 manufacturerDBA: so.Manufacturer_DBA__c || "",
                                 unitPrice: so.Unit_Price__c || 0,
@@ -329,7 +331,7 @@ export default function ProposalProductDetailPage({
                                 name: cq.Name,
                                 status: cq.Status__c || "Draft",
                                 customerQuoteName: cq.Customer_Quote_Name || cq.Customer_Quote__c || "",
-                                productName: cq.Product_Name__c || "",
+                                productName: cq.Product_Name || "",
                                 productDescription: cq.Product_Description__c || "",
                                 manufacturerDBA: cq.Manufacturer_DBA__c || "",
                                 unitPrice: cq.Unit_Price__c || 0,
@@ -378,7 +380,7 @@ export default function ProposalProductDetailPage({
                             status: item.Status__c || "Draft",
                             purchaseOrderName: item.Purchase_Order_Name || item.Purchase_Order__c || "",
                             customerQuoteLineName: item.Customer_Quote_Line_Name || item.Customer_Quote_Line__c || "",
-                            productName: item.Product_Name__c || "",
+                            productName: item.Product_Name || "",
                             productDescription: item.Product_Description__c || "",
                             manufacturerDBA: item.Manufacturer_DBA__c || "",
                             unitCost: item.Unit_Cost__c || 0,
@@ -458,7 +460,7 @@ export default function ProposalProductDetailPage({
                                 salesOrderLineName: item.Sales_Order_Line_Name || "", // gtherp__Sales_Order_Line__c
                                 customerQuoteLineName: item.Customer_Order_Line_Name || item.Customer_Order_Line__c || "", // gtherp__Customer_Order_Line__c
                                 reason: item.Reason_Code__c || "", // gtherp__Reason_Code__c
-                                productName: item.Product_Name__c || "", // gtherp__Product_Name__c
+                                productName: item.Product_Name || "", // gtherp__Product_Name__c
                                 productDescription: item.Product_Description__c || "", // gtherp__Product_Description__c
                                 manufacturerDBA: item.Manufacturer_DBA__c || "Unknown", // gtherp__Manufacturer_DBA__c
                                 unitPrice: item.Unit_Price__c || 0, // gtherp__Unit_Price__c
@@ -804,9 +806,9 @@ export default function ProposalProductDetailPage({
                                 />
                             </svg>
                         </div>
-                        <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+                        <h3 className="text-base font-semibold text-gray-900 dark:text-white">
                             Product Information
-                        </h2>
+                        </h3>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-3">
@@ -814,25 +816,25 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Product Name */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     Product Name
                                 </label>
-                                <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                                     {product.name}
                                 </p>
                             </div>
                             {/* Description */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     Description
                                 </label>
-                                <p className="text-sm text-gray-900 dark:text-white line-clamp-2">
+                                <p className="text-sm text-gray-900 dark:text-white line-clamp-1">
                                     {product.description || "No description available"}
                                 </p>
                             </div>
                             {/* Manufacturer DBA */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     Manufacturer DBA
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -841,10 +843,10 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Product Family */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     Product Family
                                 </label>
-                                <span className="inline-block px-2 py-0.5 text-sm font-medium rounded-full bg-primary/10 text-primary">
+                                <span className="inline-block px-2 text-sm font-medium rounded-full bg-primary/10 text-primary">
                                     {product.productFamily}
                                 </span>
                             </div>
@@ -854,7 +856,7 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Product Grouping */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     Product Grouping
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -863,7 +865,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Grouping */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     Grouping
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -872,7 +874,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* IsTaxable */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     IsTaxable
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -881,7 +883,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Available to Sell */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     Available to Sell
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white  font-mono">
@@ -894,7 +896,7 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Site */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     Site
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -903,7 +905,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Inventory Account */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     Inventory Account
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -912,7 +914,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Unit Cost */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     Unit Cost
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -921,7 +923,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Total Cost */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                                     Total Cost
                                 </label>
                                 <p className="text-sm text-gray-900 dark:text-white">
@@ -943,38 +945,38 @@ export default function ProposalProductDetailPage({
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b border-gray-200 dark:border-gray-700">
-                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
-                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Order Qty</th>
-                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">MOQ</th>
-                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Qty</th>
-                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Price</th>
-                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipping</th>
-                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Taxes</th>
-                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
-                                    <th className="px-2 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipped</th>
+                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
+                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Order Qty</th>
+                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">MOQ</th>
+                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Qty</th>
+                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Price</th>
+                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipping</th>
+                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Taxes</th>
+                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
+                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipped</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white">
+                                    <td className="py-2 text-sm text-gray-900 dark:text-white">
                                         ${unitPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{quantity}</td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{product.moq}</td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{product.quantity}</td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                    <td className="py-2 text-sm  text-gray-900 dark:text-white">{quantity}</td>
+                                    <td className="py-2 text-sm  text-gray-900 dark:text-white">{product.moq}</td>
+                                    <td className="py-2 text-sm  text-gray-900 dark:text-white">{product.quantity}</td>
+                                    <td className="py-2 text-sm  text-gray-900 dark:text-white">
                                         ${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                    <td className="py-2 text-sm  text-gray-900 dark:text-white">
                                         ${shippingCharges.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">
+                                    <td className="py-2 text-sm  text-gray-900 dark:text-white">
                                         ${taxes.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-right font-bold text-primary">
+                                    <td className="py-2 text-sm  text-gray-900 font-bold text-primary">
                                         ${grandTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-right text-gray-900 dark:text-white">{product.qtyShipped}</td>
+                                    <td className="py-2 text-sm  text-gray-900 dark:text-white">{product.qtyShipped}</td>
                                 </tr>
                             </tbody>
                         </table>

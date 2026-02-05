@@ -37,7 +37,7 @@ export default function ProductsTab({
     }
 
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto p-4">
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>

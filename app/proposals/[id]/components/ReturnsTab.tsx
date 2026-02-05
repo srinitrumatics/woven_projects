@@ -235,7 +235,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.shipFromContactName}</td>
                                                 <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.supplierName}</td>
                                                 <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.supplierContact}</td>
-                                                <td className="px-3 px-2  text-sm text-gray-900 dark:text-white min-w-[113px]">
+                                                <td className="px-3 px-2  text-sm text-gray-900 dark:text-white min-w-[115px]">
                                                     <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                         {(rtv.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </span>
@@ -254,8 +254,8 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{credit.customerOrderName}</td>
                                                 <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{credit.creditToAccountName}</td>
                                                 <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{credit.creditToContactName}</td>
-                                                <td className="px-3 px-2  text-sm text-gray-900 dark:text-white min-w-[117px]">
-                                                    <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white min-w-[125px]">
+                                                    <span className="inline-flex items-center justify-center h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                         {(credit.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </span>
                                                 </td>
@@ -268,12 +268,12 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white">
                                                     ${credit.totalTaxesAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white font-semibold min-w-[173px]">
+                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white font-semibold min-w-[176px]">
                                                     ${credit.totalCreditAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
                                                 <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{credit.issuedDate}</td>
                                                 <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{credit.expirationDate}</td>
-                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white min-w-[200px]">
+                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white min-w-[201px]">
                                                     ${credit.availableCreditBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
                                                 <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{credit.settledDate}</td>

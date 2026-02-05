@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { TaxDetail } from "../../../types";
+import { SortableHeader } from "../../../../../../components/ui/SortableHeader";
+import { useResizableColumns } from "../../../../../../hooks/useResizableColumns";
 
 interface LineTaxesTabProps {
     taxData: TaxDetail | null;
@@ -7,6 +9,23 @@ interface LineTaxesTabProps {
 }
 
 export default function LineTaxesTab({ taxData, loading }: LineTaxesTabProps) {
+    const { widths, handleResize } = useResizableColumns({
+        salesTaxRate: 150,
+        salesTaxAmount: 150,
+        useTaxRate: 150,
+        useTaxAmount: 150,
+        localTaxRate: 150,
+        localTaxAmount: 150,
+        exciseTaxRate: 150,
+        exciseTaxAmount: 150,
+        grossReceiptsTaxRate: 150,
+        grossReceiptsTaxAmount: 150,
+        gstRate: 150,
+        gstAmount: 150,
+        vatRate: 150,
+        vatAmount: 150
+    });
+
     if (loading) {
         return (
             <div className="p-6">
@@ -30,38 +49,38 @@ export default function LineTaxesTab({ taxData, loading }: LineTaxesTabProps) {
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Sales Tax Rate</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Sales Tax Amount</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Use Tax Rate</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Use Tax Amount</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Local Tax Rate</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Local Tax Amount</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Excise Tax Rate</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Excise Tax Amount</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">GRT Rate</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">GRT Amount</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">GST Rate</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">GST Amount</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">VAT Rate</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">VAT Amount</th>
+                        <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={null} requestSort={() => { }} width={widths.salesTaxRate} onResize={handleResize} />
+                        <SortableHeader label="Sales Tax Amount" field="salesTaxAmount" sortConfig={null} requestSort={() => { }} width={widths.salesTaxAmount} onResize={handleResize} />
+                        <SortableHeader label="Use Tax Rate" field="useTaxRate" sortConfig={null} requestSort={() => { }} width={widths.useTaxRate} onResize={handleResize} />
+                        <SortableHeader label="Use Tax Amount" field="useTaxAmount" sortConfig={null} requestSort={() => { }} width={widths.useTaxAmount} onResize={handleResize} />
+                        <SortableHeader label="Local Tax Rate" field="localTaxRate" sortConfig={null} requestSort={() => { }} width={widths.localTaxRate} onResize={handleResize} />
+                        <SortableHeader label="Local Tax Amount" field="localTaxAmount" sortConfig={null} requestSort={() => { }} width={widths.localTaxAmount} onResize={handleResize} />
+                        <SortableHeader label="Excise Tax Rate" field="exciseTaxRate" sortConfig={null} requestSort={() => { }} width={widths.exciseTaxRate} onResize={handleResize} />
+                        <SortableHeader label="Excise Tax Amount" field="exciseTaxAmount" sortConfig={null} requestSort={() => { }} width={widths.exciseTaxAmount} onResize={handleResize} />
+                        <SortableHeader label="GRT Rate" field="grossReceiptsTaxRate" sortConfig={null} requestSort={() => { }} width={widths.grossReceiptsTaxRate} onResize={handleResize} />
+                        <SortableHeader label="GRT Amount" field="grossReceiptsTaxAmount" sortConfig={null} requestSort={() => { }} width={widths.grossReceiptsTaxAmount} onResize={handleResize} />
+                        <SortableHeader label="GST Rate" field="gstRate" sortConfig={null} requestSort={() => { }} width={widths.gstRate} onResize={handleResize} />
+                        <SortableHeader label="GST Amount" field="gstAmount" sortConfig={null} requestSort={() => { }} width={widths.gstAmount} onResize={handleResize} />
+                        <SortableHeader label="VAT Rate" field="vatRate" sortConfig={null} requestSort={() => { }} width={widths.vatRate} onResize={handleResize} />
+                        <SortableHeader label="VAT Amount" field="vatAmount" sortConfig={null} requestSort={() => { }} width={widths.vatAmount} onResize={handleResize} />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800">
                     <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.salesTaxRate?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.salesTaxAmount?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.useTaxRate?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.useTaxAmount?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.localTaxRate?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.localTaxAmount?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.exciseTaxRate?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.exciseTaxAmount?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.grossReceiptsTaxRate?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.grossReceiptsTaxAmount?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.gstRate?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.gstAmount?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.vatRate?.toFixed(3) || '0.00'}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{taxData.vatAmount?.toFixed(3) || '0.00'}</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white">{taxData.salesTaxRate?.toFixed(3) || '0.000'}%</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white min-w-[165px]">${taxData.salesTaxAmount?.toFixed(2) || '0.00'}</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white">{taxData.useTaxRate?.toFixed(3) || '0.000'}%</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white">${taxData.useTaxAmount?.toFixed(2) || '0.00'}</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white">{taxData.localTaxRate?.toFixed(2) || '0.000'}%</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white min-w-[163px]">${taxData.localTaxAmount?.toFixed(2) || '0.00'}</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white">{taxData.exciseTaxRate?.toFixed(3) || '0.000'}%</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white min-w-[168px]">${taxData.exciseTaxAmount?.toFixed(2) || '0.00'}</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white">{taxData.grossReceiptsTaxRate?.toFixed(3) || '0.000'}%</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white">${taxData.grossReceiptsTaxAmount?.toFixed(2) || '0.00'}</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white">{taxData.gstRate?.toFixed(3) || '0.000'}%</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white">${taxData.gstAmount?.toFixed(2) || '0.00'}</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white">{taxData.vatRate?.toFixed(3) || '0.000'}%</td>
+                        <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white">${taxData.vatAmount?.toFixed(2) || '0.00'}</td>
                     </tr>
                 </tbody>
             </table>

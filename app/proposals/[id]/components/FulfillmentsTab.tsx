@@ -134,8 +134,8 @@ export default function FulfillmentsTab({
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.billToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.billToAccountName}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.billToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.billToLocationName}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.billToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.billToContactName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                                <span className="inline-flex min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[128px]">
+                                                <span className="py-1 inline-flex min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                     {(invoice.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </span>
                                             </td>
@@ -154,11 +154,11 @@ export default function FulfillmentsTab({
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{invoice.issuedDate}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{invoice.paymentTerms}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{invoice.dueDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{invoice.collectionStatus}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[179px]">{invoice.collectionStatus}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[133px]">
                                                 ${invoice.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{invoice.daysOutstanding}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[157px]">{invoice.daysOutstanding}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{invoice.settledDate}</td>
                                         </tr>
                                     ))}
@@ -222,7 +222,7 @@ export default function FulfillmentsTab({
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.shipToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{manifest.shipToAccountName}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.shipToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{manifest.shipToLocationName}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.shipToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{manifest.shipToContactName}</div></td>
-                                            <td className="px-3 py-2 ">
+                                            <td className="px-3 py-2 min-w-[105px]">
                                                 <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${manifest.dropShip
                                                     ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                                     : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -230,10 +230,10 @@ export default function FulfillmentsTab({
                                                     {manifest.dropShip ? 'Yes' : 'No'}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white">{manifest.boxCount}</td>
-                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white">{manifest.boxNetWeight}</td>
-                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white">{manifest.boxGrossWeight}</td>
-                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[161px]">{manifest.boxCount}</td>
+                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[141px]">{manifest.boxNetWeight}</td>
+                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[168px]">{manifest.boxGrossWeight}</td>
+                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[119px]">
                                                 <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                     {(manifest.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </span>
@@ -242,15 +242,15 @@ export default function FulfillmentsTab({
                                                 ${manifest.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{manifest.requestDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{manifest.shipDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{manifest.deliveredDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[161px]">{manifest.shipDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[178px]">{manifest.deliveredDate}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{manifest.shippingMethod}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{manifest.logisticsPartnerName}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{manifest.logisticsContactName}</td>
                                             <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white ">{manifest.trackingNumber || '-'}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{manifest.estimatedDeliveryDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[203px]">{manifest.estimatedDeliveryDate}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{manifest.trackingStatus}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{manifest.actualDeliveryDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[181px]">{manifest.actualDeliveryDate}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -312,7 +312,7 @@ export default function FulfillmentsTab({
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToAccountName}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToLocationName}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToContactName}</div></td>
-                                            <td className="px-3 py-2 ">
+                                            <td className="px-3 py-2 min-w-[103px]">
                                                 <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${order.dropShip
                                                     ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                                     : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -320,7 +320,7 @@ export default function FulfillmentsTab({
                                                     {order.dropShip ? 'Yes' : 'No'}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[116px]">
                                                 <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                     {(order.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </span>
@@ -339,9 +339,9 @@ export default function FulfillmentsTab({
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{order.requestDate}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{order.pickDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{order.pickCompleteDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{order.shipDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{order.deliveredDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[171px]">{order.pickCompleteDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[161px]">{order.shipDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[179px]">{order.deliveredDate}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -401,7 +401,7 @@ export default function FulfillmentsTab({
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.shipToAccountName}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.shipToLocationName}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.shipToContactName}</td>
-                                            <td className="px-3 py-2 ">
+                                            <td className="px-3 py-2 min-w-[114px]">
                                                 <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${quote.dropShip
                                                     ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                                     : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -409,7 +409,7 @@ export default function FulfillmentsTab({
                                                     {quote.dropShip ? 'Yes' : 'No'}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[114px]">
                                                 <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                     {(quote.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </span>
@@ -429,8 +429,8 @@ export default function FulfillmentsTab({
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{quote.issuedDate}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{quote.expirationDate}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{quote.requestDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{quote.shipDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{quote.deliveredDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[166px]">{quote.shipDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[180px]">{quote.deliveredDate}</td>
                                         </tr>
                                     ))}
                                 </tbody>

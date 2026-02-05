@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ReturnsData, ReturnsTabType, Return, RMA, RTV, CreditMemo, DebitMemo } from "../../../types";
 import { useSortableData } from "../../../../../../hooks/useSortableData";
 import { SortableHeader } from "../../../../../../components/ui/SortableHeader";
+import { useResizableColumns } from "../../../../../../hooks/useResizableColumns";
 
 interface LineReturnsTabProps {
     returnsData: ReturnsData;
@@ -31,34 +32,74 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
     const activeData = getActiveData();
     const { items: sortedData, requestSort, sortConfig } = useSortableData<RMA | RTV | CreditMemo | DebitMemo>(activeData);
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
-    }
+    const { widths: rmaWidths, handleResize: handleRmaResize } = useResizableColumns({
+        name: 180,
+        status: 120,
+        rmaName: 180,
+        salesOrderLineName: 180,
+        customerQuoteLineName: 180,
+        reason: 150,
+        productName: 200,
+        productDescription: 300,
+        manufacturerDBA: 150,
+        unitPrice: 120,
+        returnQty: 100,
+        totalAmount: 120,
+        openBalanceQty: 150,
+        trackingNumber: 180,
+        estimatedDeliveryDate: 150,
+        trackingStatus: 150,
+        actualDeliveryDate: 150,
+        goodsReceiptDate: 150
+    });
 
-    const SortableHeader = ({ label, field, className = "", align = "center" }: { label: string, field: string, className?: string, align?: "left" | "right" | "center" }) => {
-        const isSorted = sortConfig?.key === field;
-        return (
-            <th
-                className={`px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none ${className}`}
-                onClick={() => requestSort(field as any)}
-            >
-                <div className={`flex items-center gap-1 ${align === "right" ? "justify-end" : align === "center" ? "justify-center" : "justify-start"}`}>
-                    {label}
-                    <span className="text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300 w-4">
-                        {isSorted ? (
-                            sortConfig?.direction === 'asc' ? '↑' : '↓'
-                        ) : (
-                            <span className="opacity-0 group-hover:opacity-100 text-[10px]">↕</span>
-                        )}
-                    </span>
-                </div>
-            </th>
-        );
-    }
+    const { widths: rtvWidths, handleResize: handleRtvResize } = useResizableColumns({
+        name: 180,
+        status: 120,
+        rtvName: 180,
+        purchaseOrderLineName: 180,
+        customerQuoteLineName: 180,
+        reason: 150,
+        productName: 200,
+        productDescription: 300,
+        manufacturerDBA: 150,
+        unitCost: 120,
+        returnQty: 100,
+        totalCost: 120
+    });
+
+    const { widths: creditWidths, handleResize: handleCreditResize } = useResizableColumns({
+        name: 180,
+        status: 120,
+        creditMemoName: 180,
+        invoiceLineName: 180,
+        salesOrderLineName: 180,
+        productName: 200,
+        productDescription: 300,
+        manufacturerDBA: 150,
+        unitPrice: 120,
+        creditQty: 100,
+        totalPrice: 120,
+        shipping: 120,
+        taxes: 120,
+        lineGrandTotal: 150
+    });
+
+    const { widths: debitWidths, handleResize: handleDebitResize } = useResizableColumns({
+        name: 180,
+        status: 120,
+        debitMemoName: 180,
+        supplierBillLineName: 180,
+        purchaseOrderLineName: 180,
+        productName: 200,
+        productDescription: 300,
+        manufacturerDBA: 150,
+        unitCost: 120,
+        debitQty: 100,
+        totalCost: 120,
+        shipping: 120,
+        lineGrandTotal: 150
+    });
 
     return (
         <div>
@@ -88,27 +129,35 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
             <div className="overflow-x-auto">
                 {activeTab === 'rma' ? (
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[2800px] table-fixed">
+                        <table className="w-full">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
-                                    <SortableHeader label="RMA Line" field="name" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10 w-[180px]" />
-                                    <SortableHeader label="Status" field="status" className="w-[120px]" />
-                                    <SortableHeader label="RMA" field="rmaName" className="w-[180px]" />
-                                    <SortableHeader label="Sales Order Line" field="salesOrderLineName" className="w-[180px]" />
-                                    <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" className="w-[180px]" />
-                                    <SortableHeader label="Reason Code" field="reason" className="w-[150px]" />
-                                    <SortableHeader label="Product Name" field="productName" className="w-[200px]" />
-                                    <SortableHeader label="Product Description" field="productDescription" className="w-[300px]" />
-                                    <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" className="w-[150px]" />
-                                    <SortableHeader label="Unit Price" field="unitPrice" />
-                                    <SortableHeader label="Return Qty" field="returnQty" />
-                                    <SortableHeader label="Total Price" field="totalAmount" />
-                                    <SortableHeader label="Open Balance Qty" field="openBalanceQty" />
-                                    <SortableHeader label="Tracking Number" field="trackingNumber" className="w-[180px]" />
-                                    <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" className="w-[150px]" />
-                                    <SortableHeader label="Tracking Status" field="trackingStatus" className="w-[150px]" />
-                                    <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" className="w-[150px]" />
-                                    <SortableHeader label="Goods Receipts Date" field="goodsReceiptDate" className="w-[150px]" />
+                                    <SortableHeader
+                                        label="RMA Line"
+                                        field="name"
+                                        sortConfig={sortConfig}
+                                        requestSort={requestSort}
+                                        width={rmaWidths.name}
+                                        onResize={handleRmaResize}
+                                        className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
+                                    />
+                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.status} onResize={handleRmaResize} />
+                                    <SortableHeader label="RMA" field="rmaName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.rmaName} onResize={handleRmaResize} />
+                                    <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.salesOrderLineName} onResize={handleRmaResize} />
+                                    <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.customerQuoteLineName} onResize={handleRmaResize} />
+                                    <SortableHeader label="Reason Code" field="reason" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.reason} onResize={handleRmaResize} />
+                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.productName} onResize={handleRmaResize} />
+                                    <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.productDescription} onResize={handleRmaResize} />
+                                    <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.manufacturerDBA} onResize={handleRmaResize} />
+                                    <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.unitPrice} onResize={handleRmaResize} />
+                                    <SortableHeader label="Return Qty" field="returnQty" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.returnQty} onResize={handleRmaResize} />
+                                    <SortableHeader label="Total Price" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.totalAmount} onResize={handleRmaResize} />
+                                    <SortableHeader label="Open Balance Qty" field="openBalanceQty" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.openBalanceQty} onResize={handleRmaResize} />
+                                    <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.trackingNumber} onResize={handleRmaResize} />
+                                    <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.estimatedDeliveryDate} onResize={handleRmaResize} />
+                                    <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.trackingStatus} onResize={handleRmaResize} />
+                                    <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.actualDeliveryDate} onResize={handleRmaResize} />
+                                    <SortableHeader label="Goods Receipts Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.goodsReceiptDate} onResize={handleRmaResize} />
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -128,8 +177,8 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                         const rma = item as RMA;
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center" title={rma.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2" title={rma.name}>{rma.name}</div></td>
-                                                <td className="px-4 py-3 text-center">
+                                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 text-center" title={rma.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2" title={rma.name}>{rma.name}</div></td>
+                                                <td className="px-3 py-2 text-center">
                                                     <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${rma.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         rma.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                             'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -137,40 +186,40 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                         {rma.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-center">
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-center">
                                                     <div className="text-sm line-clamp-2" title={rma.rmaName}>{rma.rmaName}</div>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
                                                     <div className="text-sm line-clamp-2" title={rma.salesOrderLineName}>{rma.salesOrderLineName}</div>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
                                                     <div className="text-sm line-clamp-2" title={rma.customerQuoteLineName}>{rma.customerQuoteLineName}</div>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
                                                     <div className="text-sm line-clamp-2" title={rma.reason}>{rma.reason}</div>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
                                                     <div className="text-sm line-clamp-2" title={rma.productName}>{rma.productName}</div>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
                                                     <div className="text-sm max-w-xs line-clamp-2" title={rma.productDescription}>{rma.productDescription}</div>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px]">
                                                     <div className="text-sm line-clamp-2" title={rma.manufacturerDBA}>{rma.manufacturerDBA}</div>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
                                                     ${rma.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{rma.returnQty}</td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[112px]">{rma.returnQty}</td>
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                     ${rma.totalAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{rma.openBalanceQty}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rma.trackingNumber}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.estimatedDeliveryDate}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{rma.trackingStatus}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.actualDeliveryDate}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{rma.goodsReceiptDate}</td>
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[160px]">{rma.openBalanceQty}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{rma.trackingNumber}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[203px]">{rma.estimatedDeliveryDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{rma.trackingStatus}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[173px]">{rma.actualDeliveryDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[192px]">{rma.goodsReceiptDate}</td>
                                             </tr>
                                         );
                                     })
@@ -180,21 +229,29 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                     </div>
                 ) : activeTab === 'rtv' ? (
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[2000px]">
+                        <table className="w-full">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
-                                    <SortableHeader label="RTV Line" field="name" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                    <SortableHeader label="Status" field="status" />
-                                    <SortableHeader label="RTV" field="rtvName" />
-                                    <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" />
-                                    <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" />
-                                    <SortableHeader label="Reason Code" field="reason" />
-                                    <SortableHeader label="Product Name" field="productName" />
-                                    <SortableHeader label="Product Description" field="productDescription" />
-                                    <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" />
-                                    <SortableHeader label="Unit Cost" field="unitCost" />
-                                    <SortableHeader label="Return Qty" field="returnQty" />
-                                    <SortableHeader label="Total Cost" field="totalCost" />
+                                    <SortableHeader
+                                        label="RTV Line"
+                                        field="name"
+                                        sortConfig={sortConfig}
+                                        requestSort={requestSort}
+                                        width={rtvWidths.name}
+                                        onResize={handleRtvResize}
+                                        className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
+                                    />
+                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.status} onResize={handleRtvResize} />
+                                    <SortableHeader label="RTV" field="rtvName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.rtvName} onResize={handleRtvResize} />
+                                    <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.purchaseOrderLineName} onResize={handleRtvResize} />
+                                    <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.customerQuoteLineName} onResize={handleRtvResize} />
+                                    <SortableHeader label="Reason Code" field="reason" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.reason} onResize={handleRtvResize} />
+                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.productName} onResize={handleRtvResize} />
+                                    <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.productDescription} onResize={handleRtvResize} />
+                                    <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.manufacturerDBA} onResize={handleRtvResize} />
+                                    <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.unitCost} onResize={handleRtvResize} />
+                                    <SortableHeader label="Return Qty" field="returnQty" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.returnQty} onResize={handleRtvResize} />
+                                    <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.totalCost} onResize={handleRtvResize} />
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -214,26 +271,30 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                         const rtv = item as RTV;
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center" title={rtv.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{rtv.name}</div></td>
-                                                <td className="px-4 py-3">
+                                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 " title={rtv.name}>
+                                                    <div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{rtv.name}</div></td>
+                                                <td className="px-3 py-2">
                                                     <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${rtv.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                         }`}>
                                                         {rtv.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rtv.rtvName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.rtvName}</div></td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rtv.purchaseOrderLineName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.purchaseOrderLineName}</div></td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rtv.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.customerQuoteLineName}</div></td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rtv.reason}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.reason}</div></td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rtv.productName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.productName}</div></td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs" title={rtv.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{rtv.productDescription}</div></td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={rtv.manufacturerDBA}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.manufacturerDBA}</div></td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={rtv.rtvName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.rtvName}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={rtv.purchaseOrderLineName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.purchaseOrderLineName}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={rtv.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.customerQuoteLineName}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={rtv.reason}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.reason}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={rtv.productName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.productName}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={rtv.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{rtv.productDescription}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px]" title={rtv.manufacturerDBA}>
+                                                    <div className="text-sm text-gray-900 dark:text-white line-clamp-2">{rtv.manufacturerDBA}
+                                                    </div>
+                                                </td>
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
                                                     ${rtv.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{rtv.returnQty}</td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[111px]">{rtv.returnQty}</td>
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                     ${rtv.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
                                             </tr>
@@ -245,23 +306,31 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                     </div>
                 ) : activeTab === 'credit' ? (
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[2400px]">
+                        <table className="w-full">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
-                                    <SortableHeader label="Credit Memo Line" field="name" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                    <SortableHeader label="Status" field="status" />
-                                    <SortableHeader label="Credit Memo" field="creditMemoName" />
-                                    <SortableHeader label="Invoice Line" field="invoiceLineName" />
-                                    <SortableHeader label="Sales Order Line" field="salesOrderLineName" />
-                                    <SortableHeader label="Product Name" field="productName" />
-                                    <SortableHeader label="Product Description" field="productDescription" />
-                                    <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" />
-                                    <SortableHeader label="Unit Price" field="unitPrice" />
-                                    <SortableHeader label="Credit Qty" field="creditQty" />
-                                    <SortableHeader label="Total Price" field="totalPrice" />
-                                    <SortableHeader label="Shipping" field="shipping" />
-                                    <SortableHeader label="Taxes" field="taxes" />
-                                    <SortableHeader label="Line Grand Total" field="lineGrandTotal" />
+                                    <SortableHeader
+                                        label="Credit Memo Line"
+                                        field="name"
+                                        sortConfig={sortConfig}
+                                        requestSort={requestSort}
+                                        width={creditWidths.name}
+                                        onResize={handleCreditResize}
+                                        className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
+                                    />
+                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.status} onResize={handleCreditResize} />
+                                    <SortableHeader label="Credit Memo" field="creditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.creditMemoName} onResize={handleCreditResize} />
+                                    <SortableHeader label="Invoice Line" field="invoiceLineName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.invoiceLineName} onResize={handleCreditResize} />
+                                    <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.salesOrderLineName} onResize={handleCreditResize} />
+                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.productName} onResize={handleCreditResize} />
+                                    <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.productDescription} onResize={handleCreditResize} />
+                                    <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.manufacturerDBA} onResize={handleCreditResize} />
+                                    <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.unitPrice} onResize={handleCreditResize} />
+                                    <SortableHeader label="Credit Qty" field="creditQty" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.creditQty} onResize={handleCreditResize} />
+                                    <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.totalPrice} onResize={handleCreditResize} />
+                                    <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.shipping} onResize={handleCreditResize} />
+                                    <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.taxes} onResize={handleCreditResize} />
+                                    <SortableHeader label="Line Grand Total" field="lineGrandTotal" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.lineGrandTotal} onResize={handleCreditResize} />
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -281,34 +350,34 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                         const credit = item as CreditMemo;
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center">{credit.name}</td>
-                                                <td className="px-4 py-3">
+                                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800">{credit.name}</td>
+                                                <td className="px-3 py-2">
                                                     <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${credit.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                         }`}>
                                                         {credit.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.creditMemoName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.invoiceLineName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.salesOrderLineName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.productName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs" title={credit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{credit.productDescription}</div></td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{credit.manufacturerDBA}</td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{credit.creditMemoName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{credit.invoiceLineName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{credit.salesOrderLineName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{credit.productName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={credit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{credit.productDescription}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[161px]">{credit.manufacturerDBA}</td>
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
                                                     ${credit.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{credit.creditQty}</td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[116px]">{credit.creditQty}</td>
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                     ${credit.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                     ${credit.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                     ${credit.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                     ${credit.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
                                             </tr>
@@ -320,22 +389,30 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                     </div>
                 ) : activeTab === 'debit' ? (
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[2400px]">
+                        <table className="w-full">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
-                                    <SortableHeader label="Debit Memo Line" field="name" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                    <SortableHeader label="Status" field="status" />
-                                    <SortableHeader label="Debit Memo" field="debitMemoName" />
-                                    <SortableHeader label="Supplier Bill Line" field="supplierBillLineName" />
-                                    <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" />
-                                    <SortableHeader label="Product Name" field="productName" />
-                                    <SortableHeader label="Product Description" field="productDescription" />
-                                    <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" />
-                                    <SortableHeader label="Unit Cost" field="unitCost" />
-                                    <SortableHeader label="Debit Qty" field="debitQty" />
-                                    <SortableHeader label="Total Cost" field="totalCost" />
-                                    <SortableHeader label="Shipping" field="shipping" />
-                                    <SortableHeader label="Line Grand Total" field="lineGrandTotal" />
+                                    <SortableHeader
+                                        label="Debit Memo Line"
+                                        field="name"
+                                        sortConfig={sortConfig}
+                                        requestSort={requestSort}
+                                        width={debitWidths.name}
+                                        onResize={handleDebitResize}
+                                        className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
+                                    />
+                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.status} onResize={handleDebitResize} />
+                                    <SortableHeader label="Debit Memo" field="debitMemoName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.debitMemoName} onResize={handleDebitResize} />
+                                    <SortableHeader label="Supplier Bill Line" field="supplierBillLineName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.supplierBillLineName} onResize={handleDebitResize} />
+                                    <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.purchaseOrderLineName} onResize={handleDebitResize} />
+                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.productName} onResize={handleDebitResize} />
+                                    <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.productDescription} onResize={handleDebitResize} />
+                                    <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.manufacturerDBA} onResize={handleDebitResize} />
+                                    <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.unitCost} onResize={handleDebitResize} />
+                                    <SortableHeader label="Debit Qty" field="debitQty" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.debitQty} onResize={handleDebitResize} />
+                                    <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.totalCost} onResize={handleDebitResize} />
+                                    <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.shipping} onResize={handleDebitResize} />
+                                    <SortableHeader label="Line Grand Total" field="lineGrandTotal" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.lineGrandTotal} onResize={handleDebitResize} />
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -355,31 +432,31 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                         const debit = item as DebitMemo;
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center">{debit.name}</td>
-                                                <td className="px-4 py-3">
+                                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800">{debit.name}</td>
+                                                <td className="px-3 py-2">
                                                     <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${debit.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                         }`}>
                                                         {debit.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.debitMemoName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.supplierBillLineName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.purchaseOrderLineName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.productName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs" title={debit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{debit.productDescription}</div></td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{debit.manufacturerDBA}</td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-mono">
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{debit.debitMemoName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{debit.supplierBillLineName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{debit.purchaseOrderLineName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{debit.productName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={debit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{debit.productDescription}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px]">{debit.manufacturerDBA}</td>
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-mono">
                                                     ${debit.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{debit.debitQty}</td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">{debit.debitQty}</td>
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                     ${debit.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                     ${debit.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                     ${debit.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                 </td>
                                             </tr>
@@ -394,7 +471,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                         <table className="w-full">
                             <thead className="bg-gray-50 dark:bg-gray-800/50">
                                 <tr>
-                                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white">Amount</th>
+                                    <th className="px-3 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white">Amount</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -413,8 +490,8 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     activeData.map((item) => {
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white font-medium text-center">{item.name}</td>
-                                                <td className="px-4 py-3 text-center">
+                                                <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white font-medium">{item.name}</td>
+                                                <td className="px-3 py-2 text-center">
                                                     <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         item.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                             'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -422,8 +499,8 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                         {item.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 text-center">{item.requestDate}</td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{item.requestDate}</td>
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                     ${item.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </td>
                                             </tr>

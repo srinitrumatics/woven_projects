@@ -24,8 +24,8 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
     }
 
     return (
-        <div className="overflow-x-auto">
-            <table className="w-full ">
+        <div className="overflow-x-auto flex justify-center p-4">
+            <table className="w-[70%] ">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
                         <SortableHeader label="WBS" field="wbs" sortConfig={sortConfig} requestSort={requestSort} width={widths.wbs} onResize={onResize} />
@@ -50,7 +50,7 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
                         elements.map(element => (
                             <tr key={element.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 ">
                                 <td className="px-3 py-2 text-left">
-                                    <span className="inline-block px-3 py-1 text-sm font-mono font-semibold  rounded bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+                                    <span className="inline-block px-1  text-sm  font-semibold  rounded bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
                                         {element.wbs}
                                     </span>
                                 </td>

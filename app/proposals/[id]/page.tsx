@@ -442,7 +442,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               subtotal: item.Line_Grand_Total__c || 0,
               shipping: item.Shipping_Charges__c || 0,
               taxes: item.Tax_Amount__c || 0,
-              grandTotal: (item.Line_Grand_Total__c || 0) + (item.Shipping_Charges__c || 0) + (item.Tax_Amount__c || 0)
+              grandTotal: (item.Line_Grand_Total__c || 0) + (item.Shipping_Charges__c || 0) + (item.Tax_Amount__c || 0),
+              product_record_type: item.Product_Record_Type__c || item.product_record_type || item.RecordType?.Name || ''
             })));
           }
           break;

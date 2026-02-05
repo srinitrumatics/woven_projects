@@ -39,11 +39,11 @@ export default function BillingInfo({ proposal }: BillingInfoProps) {
                 <div className="grid grid-cols-3 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Payment Terms</label>
-                        <input type="text" readOnly value={proposal.paymentTerms} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm font-mono focus:ring-0 focus:border-gray-300" title={proposal.paymentTerms} />
+                        <input type="text" readOnly value={proposal.paymentTerms} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm  focus:ring-0 focus:border-gray-300" title={proposal.paymentTerms} />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Customer PO</label>
-                        <input type="text" readOnly value={proposal.customerPO} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm font-mono focus:ring-0 focus:border-gray-300" title={proposal.customerPO} />
+                        <input type="text" readOnly value={proposal.customerPO} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={proposal.customerPO} />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Price Book</label>

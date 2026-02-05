@@ -68,6 +68,7 @@ export interface ProposedProduct {
   taxes: number;
   grandTotal: number;
   notes?: string;
+  product_record_type?: string;
 }
 
 export interface ProposalDetails extends Proposal {

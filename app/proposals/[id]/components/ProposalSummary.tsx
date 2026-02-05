@@ -19,8 +19,8 @@ export default function ProposalSummary({
     handleDownloadPDF
 }: ProposalSummaryProps) {
     // Financial Calculations
-    const productItems = proposedProducts.filter(p => !p.productFamily?.toLowerCase().includes('service') && !p.category?.toLowerCase().includes('service'));
-    const serviceItems = proposedProducts.filter(p => p.productFamily?.toLowerCase().includes('service') || p.category?.toLowerCase().includes('service'));
+    const productItems = proposedProducts.filter(p => p.product_record_type === 'Product');
+    const serviceItems = proposedProducts.filter(p => p.product_record_type === 'Services');
 
     const productsSubtotal = productItems.reduce((sum, p) => sum + (p.subtotal || 0), 0);
     const servicesSubtotal = serviceItems.reduce((sum, p) => sum + (p.subtotal || 0), 0);
@@ -51,7 +51,7 @@ export default function ProposalSummary({
             </div>
 
             <div className="space-y-3 mb-4">
-                {/* Grouped Subtotals */}
+                {/* Individual Subtotals */}
                 <div className="flex justify-between text-sm pb-1">
                     <span className="text-gray-700 dark:text-gray-300">({productItems.length}) Products Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>

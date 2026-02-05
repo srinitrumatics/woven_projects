@@ -39,6 +39,7 @@ export interface ProposedProduct {
     shipping: number;
     taxes: number;
     grandTotal: number;
+    product_record_type?: string;
 }
 
 export interface Project {

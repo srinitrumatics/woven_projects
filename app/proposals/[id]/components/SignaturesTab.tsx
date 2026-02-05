@@ -7,8 +7,8 @@ interface SignaturesTabProps {
 export default function SignaturesTab({ proposal }: SignaturesTabProps) {
     return (
         <div className="p-6">
-            <div className="overflow-x-auto">
-                <table className="w-full">
+            <div className="overflow-x-auto flex justify-center">
+                <table className="w-full w-[70%]">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
                             <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">&nbsp;</th>
@@ -38,8 +38,8 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
                                     <span className="text-sm font-medium text-gray-900 dark:text-white">Signed Title</span>
                                 </div>
                             </td>
-                            <td className="px-3 py-2 text-left" title={proposal.clientSignedTitle || "-"}><div className="line-clamp-2"><span className="text-sm text-gray-600 dark:text-gray-400">{proposal.clientSignedTitle || "-"}</span></div></td>
-                            <td className="px-3 py-2 text-left" title={proposal.companySignedTitle || "-"}><div className="line-clamp-2"><span className="text-sm text-gray-600 dark:text-gray-400">{proposal.companySignedTitle || "-"}</span></div></td>
+                            <td className="px-3 py-2 text-left" title={proposal.clientSignedTitle || "-"}><div className="line-clamp-2"><span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.clientSignedTitle || "-"}</span></div></td>
+                            <td className="px-3 py-2 text-left" title={proposal.companySignedTitle || "-"}><div className="line-clamp-2"><span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.companySignedTitle || "-"}</span></div></td>
                         </tr>
                         <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td className="px-3 py-2">
@@ -51,10 +51,10 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
                                 </div>
                             </td>
                             <td className="px-3 py-2 text-left">
-                                <span className="text-sm text-gray-600 dark:text-gray-400">{proposal.clientSignedDate || "-"}</span>
+                                <span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.clientSignedDate || "-"}</span>
                             </td>
                             <td className="px-3 py-2 text-left">
-                                <span className="text-sm text-gray-600 dark:text-gray-400">{proposal.companySignedDate || "-"}</span>
+                                <span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.companySignedDate || "-"}</span>
                             </td>
                         </tr>
                     </tbody>
