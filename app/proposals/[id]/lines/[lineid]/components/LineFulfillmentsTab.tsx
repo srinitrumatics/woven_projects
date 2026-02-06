@@ -116,7 +116,7 @@ export default function LineFulfillmentsTab({
     }
 
     return (
-        <div className="p-6">
+        <div className="py-4">
             <div>
                 {/* Sub-tabs */}
                 <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-700">

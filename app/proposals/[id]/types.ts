@@ -26,6 +26,7 @@ export interface ProposalFile {
 
 export interface ProposedProduct {
     id: string;
+    Name: string;
     productName: string;
     productSku: string;
     description: string;

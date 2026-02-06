@@ -114,7 +114,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
             </div>
 
             {/* Content */}
-            <div className="overflow-x-auto px-6 pb-6">
+            <div className="overflow-x-auto ">
                 {activeTab === "purchases" && (
                     <table className="w-full">
                         <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
@@ -163,7 +163,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                             ) : (
                                 sortedPurchases.map((purchase) => (
                                     <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-center" title={purchase.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{purchase.name}</div></td>
+                                        <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 " title={purchase.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{purchase.name}</div></td>
                                         <td className="px-3 py-2">
                                             <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                 {purchase.status}

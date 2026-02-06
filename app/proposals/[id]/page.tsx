@@ -88,7 +88,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const { widths: productWidths, handleResize: handleProductResize } = useResizableColumns({
     image: 100,
     productName: 250,
-    productSku: 150,
+    Name: 150,
     manufacturer: 150,
     productFamily: 150,
     quantity: 140,
@@ -430,6 +430,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             console.log('result data', json);
             setProposedProducts(json.map((item: any) => ({
               id: item.Id,
+              Name: item.Name || 'N/A',
               productName: item.Product_Name || 'Unknown Product',
               productSku: item.Name || 'N/A',
               description: item.Product_Description__c || '',

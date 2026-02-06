@@ -82,7 +82,7 @@ export default function PurchasesTab({
                     <table className="w-full">
                         <thead className="bg-primary-light dark:bg-gray-900">
                             <tr>
-                                <SortableHeader label="Purchase Order" field="name" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.name} onResize={onPurchaseResize} />
+                                <SortableHeader label="Purchase Order" field="name" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.name} onResize={onPurchaseResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                 <SortableHeader label="Status" field="status" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.status} onResize={onPurchaseResize} />
                                 <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.customerQuoteName} onResize={onPurchaseResize} />
                                 <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.customerOrderName} onResize={onPurchaseResize} />
@@ -130,7 +130,9 @@ export default function PurchasesTab({
                             ) : (
                                 sortedPurchases.map((purchase) => (
                                     <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium " title={purchase.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2 " title={purchase.name}>{purchase.name}</div></td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={purchase.name}>
+                                            <div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2 " title={purchase.name}>{purchase.name}</div>
+                                        </td>
                                         <td className="px-3 py-2 ">
                                             <span className={`inline-block  text-sm font-medium rounded ${purchase.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                 purchase.status === 'Submitted' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
@@ -193,7 +195,7 @@ export default function PurchasesTab({
                     <table className="w-full ">
                         <thead className="bg-primary-light dark:bg-gray-900">
                             <tr>
-                                <SortableHeader label="Supplier Bill" field="name" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.name} onResize={onBillResize} />
+                                <SortableHeader label="Supplier Bill" field="name" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.name} onResize={onBillResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                 <SortableHeader label="Status" field="status" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.status} onResize={onBillResize} />
                                 <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.purchaseOrderName} onResize={onBillResize} />
                                 <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.customerQuoteName} onResize={onBillResize} />
@@ -230,7 +232,7 @@ export default function PurchasesTab({
                             ) : (
                                 sortedBills.map((bill) => (
                                     <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium " title={bill.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2 " title={bill.name}>{bill.name}</div></td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={bill.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2 " title={bill.name}>{bill.name}</div></td>
                                         <td className="px-3 py-2 ">
                                             <span className={`inline-block text-sm font-medium rounded ${bill.status === 'Posted' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'

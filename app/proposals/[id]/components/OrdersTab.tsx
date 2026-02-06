@@ -26,11 +26,11 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
     }
 
     return (
-        <div className="overflow-x-auto p-4">
+        <div className="overflow-x-auto py-4">
             <table className="w-full ">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
-                        <SortableHeader label="Customer Order" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} align="left" />
+                        <SortableHeader label="Customer Order" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                         <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
                         <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={onResize} align="left" />
                         <SortableHeader label="CPO Date" field="customerPODate" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPODate} onResize={onResize} align="left" />
@@ -67,7 +67,7 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                     ) : (
                         orders.map((order) => (
                             <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white" title={order.name}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={order.name}>
                                     <div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">
                                         {/*<Link href={`/orders/${order.id}`} className="text-primary hover:underline font-semibold">
                                             {order.name}

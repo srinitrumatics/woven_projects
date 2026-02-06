@@ -816,39 +816,52 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Product Name */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     Product Name
                                 </label>
-                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                    {product.name}
-                                </p>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.name}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                />
                             </div>
                             {/* Description */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     Description
                                 </label>
-                                <p className="text-sm text-gray-900 dark:text-white line-clamp-1">
-                                    {product.description || "No description available"}
-                                </p>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.description || "No description available"}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                    title={product.description}
+                                />
                             </div>
                             {/* Manufacturer DBA */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     Manufacturer DBA
                                 </label>
-                                <p className="text-sm text-gray-900 dark:text-white">
-                                    {product.manufacturer}
-                                </p>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.manufacturer}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                />
                             </div>
                             {/* Product Family */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     Product Family
                                 </label>
-                                <span className="inline-block px-2 text-sm font-medium rounded-full bg-primary/10 text-primary">
-                                    {product.productFamily}
-                                </span>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.productFamily}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-primary font-medium focus:outline-none cursor-default"
+                                />
                             </div>
                         </div>
 
@@ -856,39 +869,51 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Product Grouping */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     Product Grouping
                                 </label>
-                                <p className="text-sm text-gray-900 dark:text-white">
-                                    {product.productGrouping}
-                                </p>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.productGrouping}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                />
                             </div>
                             {/* Grouping */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     Grouping
                                 </label>
-                                <p className="text-sm text-gray-900 dark:text-white">
-                                    {product.grouping}
-                                </p>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.grouping}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                />
                             </div>
                             {/* IsTaxable */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     IsTaxable
                                 </label>
-                                <p className="text-sm text-gray-900 dark:text-white">
-                                    {product.isTaxable}
-                                </p>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.isTaxable}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                />
                             </div>
                             {/* Available to Sell */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     Available to Sell
                                 </label>
-                                <p className="text-sm text-gray-900 dark:text-white  font-mono">
-                                    {product.availableToSell?.toLocaleString()}
-                                </p>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.availableToSell?.toLocaleString() || "0"}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white font-mono focus:outline-none cursor-default"
+                                />
                             </div>
                         </div>
 
@@ -896,39 +921,51 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Site */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     Site
                                 </label>
-                                <p className="text-sm text-gray-900 dark:text-white">
-                                    {product.site}
-                                </p>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.site}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                />
                             </div>
                             {/* Inventory Account */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     Inventory Account
                                 </label>
-                                <p className="text-sm text-gray-900 dark:text-white">
-                                    {product.inventoryAccount}
-                                </p>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.inventoryAccount}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                />
                             </div>
                             {/* Unit Cost */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     Unit Cost
                                 </label>
-                                <p className="text-sm text-gray-900 dark:text-white">
-                                    {product.unitCost}
-                                </p>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.unitCost}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                />
                             </div>
                             {/* Total Cost */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
                                     Total Cost
                                 </label>
-                                <p className="text-sm text-gray-900 dark:text-white">
-                                    {product.totalCost}
-                                </p>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={product.totalCost}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                />
                             </div>
                         </div>
                     </div>

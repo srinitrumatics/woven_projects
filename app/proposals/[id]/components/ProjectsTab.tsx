@@ -25,11 +25,11 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
     }
 
     return (
-        <div className="overflow-x-auto p-4">
+        <div className="overflow-x-auto py-4">
             <table className="w-full ">
-                <thead className="bg-primary-light dark:bg-gray-900">
+                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
-                        <SortableHeader label="Project Number" field="projectNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectNumber} onResize={onResize} />
+                        <SortableHeader label="Project Number" field="projectNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectNumber} onResize={onResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                         <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} />
                         <SortableHeader label="Project Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
                         <SortableHeader label="Customer Account" field="customerAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerAccountName} onResize={onResize} />
@@ -59,8 +59,10 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                         </tr>
                     ) : (
                         projects.map((project) => (
-                            <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white font-medium">{project.projectNumber}</td>
+                            <tr key={project.id} className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left">
+                                    <div className="line-clamp-2" title={project.projectNumber}> {project.projectNumber} </div>
+                                </td>
                                 <td className="px-3 py-2">
                                     <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${project.status === 'New' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
                                         project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :

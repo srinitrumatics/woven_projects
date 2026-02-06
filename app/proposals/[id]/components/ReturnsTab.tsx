@@ -70,7 +70,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                 <table className="w-full">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
-                            <SortableHeader label={activeTab === 'rma' ? 'RMA' : 'Number'} field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} />
+                            <SortableHeader label={activeTab === 'rma' ? 'RMA' : 'Number'} field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} />
 
                             {activeTab === 'rma' ? (
@@ -177,7 +177,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
 
                                 return (
                                     <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                        <td className="px-3 px-2 text-sm font-mono text-gray-900 dark:text-white font-medium " title={item.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2 ">{item.name}</div></td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={item.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2 ">{item.name}</div></td>
                                         <td className="px-3 px-2 ">
                                             <span className={`inline-blocktext-sm font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                 item.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :

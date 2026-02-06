@@ -44,7 +44,7 @@ export default function FulfillmentsTab({
     }
 
     return (
-        <div className="p-6">
+        <div className="py-6">
             <div>
                 {/* Sub-tabs */}
                 <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-700">
@@ -97,7 +97,7 @@ export default function FulfillmentsTab({
                             <table className="w-full ">
                                 <thead className="bg-primary-light dark:bg-gray-900">
                                     <tr>
-                                        <SortableHeader label="Invoice" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.name} onResize={(f, w) => onResize('invoices', f, w)} />
+                                        <SortableHeader label="Invoice" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.name} onResize={(f, w) => onResize('invoices', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                         <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.status} onResize={(f, w) => onResize('invoices', f, w)} />
                                         <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.salesOrderLineName} onResize={(f, w) => onResize('invoices', f, w)} />
                                         <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerQuoteLineName} onResize={(f, w) => onResize('invoices', f, w)} />
@@ -122,7 +122,7 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as Invoice[]).map((invoice) => (
                                         <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" title={invoice.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{invoice.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={invoice.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{invoice.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {invoice.status}
@@ -179,7 +179,7 @@ export default function FulfillmentsTab({
                             <table className="w-full">
                                 <thead className="bg-primary-light dark:bg-gray-900">
                                     <tr>
-                                        <SortableHeader label="Shipping Manifest" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.name} onResize={(f, w) => onResize('shipping', f, w)} />
+                                        <SortableHeader label="Shipping Manifest" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.name} onResize={(f, w) => onResize('shipping', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                         <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.status} onResize={(f, w) => onResize('shipping', f, w)} />
                                         <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.salesOrderName} onResize={(f, w) => onResize('shipping', f, w)} />
                                         <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.customerQuoteName} onResize={(f, w) => onResize('shipping', f, w)} />
@@ -209,7 +209,7 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as ShippingManifest[]).map((manifest) => (
                                         <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white font-medium" title={manifest.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{manifest.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={manifest.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{manifest.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {manifest.status}
@@ -270,7 +270,7 @@ export default function FulfillmentsTab({
                             <table className="w-full">
                                 <thead className="bg-primary-light dark:bg-gray-900">
                                     <tr>
-                                        <SortableHeader label="Sales Order" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.name} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Sales Order" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.name} onResize={(f, w) => onResize('sales', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                         <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.status} onResize={(f, w) => onResize('sales', f, w)} />
                                         <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerQuoteName} onResize={(f, w) => onResize('sales', f, w)} />
                                         <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerOrderName} onResize={(f, w) => onResize('sales', f, w)} />
@@ -297,7 +297,7 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as SalesOrder[]).map((order) => (
                                         <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white font-medium" title={order.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{order.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={order.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{order.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {order.status}
@@ -361,7 +361,7 @@ export default function FulfillmentsTab({
                             <table className="w-full">
                                 <thead className="bg-primary-light dark:bg-gray-900">
                                     <tr>
-                                        <SortableHeader label="Customer Quote" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.name} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Customer Quote" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.name} onResize={(f, w) => onResize('quotes', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                         <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.status} onResize={(f, w) => onResize('quotes', f, w)} />
                                         <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.customerOrderName} onResize={(f, w) => onResize('quotes', f, w)} />
                                         <SortableHeader label="CPO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.customerPO} onResize={(f, w) => onResize('quotes', f, w)} />
@@ -387,7 +387,7 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as CustomerQuote[]).map((quote) => (
                                         <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white font-medium" title={quote.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{quote.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={quote.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{quote.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {quote.status}

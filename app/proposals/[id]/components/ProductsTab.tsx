@@ -39,8 +39,9 @@ export default function ProductsTab({
     return (
         <div className="overflow-x-auto p-4">
             <table className="w-full">
-                <thead className="bg-primary-light dark:bg-gray-900">
+                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
+                        <SortableHeader label="ProductLine" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.Name} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                         <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={onResize} align="left" />
                         <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} align="left" />
                         <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} align="left" />
@@ -71,6 +72,14 @@ export default function ProductsTab({
                     ) : (
                         products.map((product) => (
                             <tr key={product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" style={{ width: widths.Name }}>
+                                    <div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-1" title={product.Name || ''}>
+                                        <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary rounded font-medium inline-block">
+                                            {product.Name}
+                                        </Link>
+                                    </div>
+                                </td>
 
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left" style={{ width: widths.productName }}>
                                     <div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-1" title={product.productName || ''}>{product.productName}</div>

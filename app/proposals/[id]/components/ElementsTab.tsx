@@ -25,7 +25,7 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
 
     return (
         <div className="overflow-x-auto flex justify-center p-4">
-            <table className="w-[70%] ">
+            <table className="w-full ">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
                         <SortableHeader label="WBS" field="wbs" sortConfig={sortConfig} requestSort={requestSort} width={widths.wbs} onResize={onResize} />
