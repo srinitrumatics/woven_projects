@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
             else if (action == "purchases") tabName = "Purchases"; // Assumed tab name
             else if (action == "returns") tabName = "Returns"; // Assumed tab name
             else if (action == "taxes") tabName = "Proposal";
-            else if (action == "fulfillments") tabName = "Fulfillment"; // Note: singular, not plural
+            else if (action == "fulfillment" || action == "fulfillments") tabName = "Fulfillment"; // Standardized to Fulfillment
             else tabName = "Proposal";
             data = await getGenericTabDataFromSalesforce(accountId, contactId, proposalId, tabName, objectName || "Proposal__c");
         }

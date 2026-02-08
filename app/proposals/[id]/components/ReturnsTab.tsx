@@ -15,8 +15,8 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
 
     const tabs: { id: ReturnsTabType; label: string; count: number }[] = [
         { id: "rma", label: "RMAs", count: returnsData.rma.length },
-        { id: "rtv", label: "RTVs", count: returnsData.rtv.length },
         { id: "credit", label: "Credit Memos", count: returnsData.creditMemos.length },
+        { id: "rtv", label: "RTVs", count: returnsData.rtv.length },
         { id: "debit", label: "Debit Memos", count: returnsData.debitMemos.length },
     ];
 

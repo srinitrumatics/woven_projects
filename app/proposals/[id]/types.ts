@@ -541,5 +541,5 @@ export interface TaxDetail {
     vatAmount: number;
 }
 
-export type ProposalTabType = "products" | "elements" | "files" | "signatures" | "projects" | "orders" | "fulfillments" | "purchases" | "returns" | "taxes";
+export type ProposalTabType = "products" | "elements" | "files" | "signatures" | "projects" | "orders" | "fulfillment" | "purchases" | "returns" | "taxes";
 export type SortDirection = "asc" | "desc";

@@ -121,22 +121,13 @@ export default function LineFulfillmentsTab({
                 {/* Sub-tabs */}
                 <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-700">
                     <button
-                        onClick={() => onTabChange("invoices")}
-                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "invoices"
+                        onClick={() => onTabChange("quotes")}
+                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "quotes"
                             ? "border-primary text-primary"
                             : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                             }`}
                     >
-                        Invoices ({fulfillmentData.invoices.length})
-                    </button>
-                    <button
-                        onClick={() => onTabChange("shipping")}
-                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "shipping"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                            }`}
-                    >
-                        Shipping Manifests ({fulfillmentData.shippingManifests.length})
+                        Customer Quotes ({fulfillmentData.customerQuotes.length})
                     </button>
                     <button
                         onClick={() => onTabChange("sales")}
@@ -148,14 +139,24 @@ export default function LineFulfillmentsTab({
                         Sales Orders ({fulfillmentData.salesOrders.length})
                     </button>
                     <button
-                        onClick={() => onTabChange("quotes")}
-                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "quotes"
+                        onClick={() => onTabChange("shipping")}
+                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "shipping"
                             ? "border-primary text-primary"
                             : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                             }`}
                     >
-                        Customer Quotes ({fulfillmentData.customerQuotes.length})
+                        Shipping Manifests ({fulfillmentData.shippingManifests.length})
                     </button>
+                    <button
+                        onClick={() => onTabChange("invoices")}
+                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "invoices"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                            }`}
+                    >
+                        Invoices ({fulfillmentData.invoices.length})
+                    </button>
+
                 </div>
 
                 {/* Invoices Table */}

@@ -74,7 +74,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const [loading, setLoading] = useState(true);
   const [tabLoading, setTabLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [activeFulfillmentTab, setActiveFulfillmentTab] = useState<FulfillmentTabType>("invoices");
+  const [activeFulfillmentTab, setActiveFulfillmentTab] = useState<FulfillmentTabType>("quotes");
 
   // Tab and sorting state
   const [activeTab, setActiveTab] = useState<ProposalTabType>("products");
@@ -392,8 +392,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         case 'orders':
           url += '&action=orders';
           break;
-        case 'fulfillments':
-          url += '&action=fulfillments';
+        case 'fulfillment':
+          url += '&action=fulfillment';
           break;
         case 'purchases':
           url += '&action=purchases';
@@ -737,7 +737,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             setTaxesData([]);
           }
           break;
-        case 'fulfillments':
+        case 'fulfillment':
           setFulfillmentData({
             invoices: (json.Invoice__c || []).map((inv: any) => ({
               id: inv.Id,
@@ -845,7 +845,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       }
     } catch (error) {
       console.error(`Error fetching ${tab}:`, error);
-      if (tab === 'fulfillments') {
+      if (tab === 'fulfillment') {
         setFulfillmentData({ invoices: [], shippingManifests: [], salesOrders: [], customerQuotes: [] });
       } else if (tab === 'projects') {
         setProjects([]);
@@ -877,7 +877,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   // Fetch all other tabs data in background to populate counts
   useEffect(() => {
     if (!proposal?.id) return;
-    const tabs = ['elements', 'products', 'files', 'projects', 'orders', 'fulfillments', 'purchases', 'returns', 'taxes'];
+    const tabs = ['elements', 'products', 'files', 'projects', 'orders', 'fulfillment', 'purchases', 'returns', 'taxes'];
     // Filter out active tab to avoid double fetch (optional but cleaner)
     tabs.filter(t => t !== activeTab).forEach(tab => {
       fetchTabData(tab, true);
@@ -1289,7 +1289,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                         activeTab === 'signatures' ? 'Signatures' :
                           activeTab === 'projects' ? 'Active Projects' :
                             activeTab === 'orders' ? 'Customer Orders' :
-                              activeTab === 'fulfillments' ? 'Fulfillment' :
+                              activeTab === 'fulfillment' ? 'Fulfillment' :
                                 activeTab === 'purchases' ? 'Purchase Orders' :
                                   activeTab === 'taxes' ? 'Proposal Taxes' :
                                     activeTab === 'returns' ? 'Returns' : 'Details'}
@@ -1302,7 +1302,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                         : activeTab === "signatures" ? "Client and company signature tracking"
                           : activeTab === "projects" ? "Active projects"
                             : activeTab === "orders" ? "Customer orders"
-                              : activeTab === "fulfillments" ? "Fulfillment"
+                              : activeTab === "fulfillment" ? "Fulfillment"
                                 : activeTab === "purchases" ? "Purchase orders"
                                   : activeTab === "returns" ? "Returns"
                                     : activeTab === "taxes" ? "Taxes included in this proposal"
@@ -1321,7 +1321,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                     files: proposalFiles.length,
                     projects: projects.length,
                     orders: orders.length,
-                    fulfillments: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
+                    fulfillment: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
                     purchases: purchases.length,
                     returns: returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length,
                     taxes: taxesData.length
@@ -1400,7 +1400,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               />
             )}
 
-            {activeTab === 'fulfillments' && (
+            {activeTab === 'fulfillment' && (
               <FulfillmentsTab
                 fulfillmentData={fulfillmentData}
                 loading={tabLoading}

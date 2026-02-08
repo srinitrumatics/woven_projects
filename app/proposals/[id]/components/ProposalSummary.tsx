@@ -53,12 +53,12 @@ export default function ProposalSummary({
             <div className="space-y-3 mb-4">
                 {/* Individual Subtotals */}
                 <div className="flex justify-between text-sm pb-1">
-                    <span className="text-gray-700 dark:text-gray-300">({productItems.length}) Products Subtotal</span>
+                    <span className="text-gray-700 dark:text-gray-300">({productItems.length}) Products - Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
 
                 <div className="flex justify-between text-sm pb-1">
-                    <span className="text-gray-700 dark:text-gray-300">({serviceItems.length}) Services Subtotal</span>
+                    <span className="text-gray-700 dark:text-gray-300">({serviceItems.length}) Services - Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium">${servicesSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
 

@@ -59,7 +59,7 @@ export default function OrderTotal({
                 </div>
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-700 dark:text-gray-300">Taxes</span>
-                    <span className="text-gray-900 dark:text-white font-semibold">${totalExciseTax.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
+                    <span className="text-gray-900 dark:text-white font-semibold">${totalExciseTax.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-700 dark:text-gray-300">Shipping</span>

@@ -211,8 +211,8 @@ export default function ProposalProductDetailPage({
     const grandTotal = subtotal + shippingCharges + taxes;
 
     // Tabs State
-    const [activeTab, setActiveTab] = useState<"fulfillments" | "purchases" | "returns" | "taxes">("fulfillments");
-    const [fulfillmentActiveTab, setFulfillmentActiveTab] = useState<FulfillmentTabType>("invoices");
+    const [activeTab, setActiveTab] = useState<"fulfillment" | "purchases" | "returns" | "taxes">("taxes");
+    const [fulfillmentActiveTab, setFulfillmentActiveTab] = useState<FulfillmentTabType>("quotes");
     const [fulfillmentData, setFulfillmentData] = useState<FulfillmentData>({
         invoices: [],
         shippingManifests: [],
@@ -238,7 +238,7 @@ export default function ProposalProductDetailPage({
     // Fetch Fulfillment Data
     useEffect(() => {
         async function fetchFulfillmentData() {
-            if (activeTab === "fulfillments" && lineid) {
+            if (activeTab === "fulfillment" && lineid) {
                 try {
                     setFulfillmentLoading(true);
                     // Use the generic tab API via our proxy
@@ -1026,21 +1026,27 @@ export default function ProposalProductDetailPage({
                 {/* Tabs Header */}
                 <div className="flex gap-6 border-b border-gray-200 dark:border-gray-700 mb-6">
                     <button
-                        onClick={() => setActiveTab("fulfillments")}
-                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "fulfillments"
+                        onClick={() => setActiveTab("taxes")}
+                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "taxes"
                             ? "border-primary text-primary"
                             : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`}
-                    >
-                        Fulfillments
+                            }`}>
+                        Taxes
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("fulfillment")}
+                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "fulfillment"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            }`} >
+                        Fulfillment
                     </button>
                     <button
                         onClick={() => setActiveTab("purchases")}
                         className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "purchases"
                             ? "border-primary text-primary"
                             : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`}
-                    >
+                            }`} >
                         Purchases
                     </button>
                     <button
@@ -1052,20 +1058,12 @@ export default function ProposalProductDetailPage({
                     >
                         Returns
                     </button>
-                    <button
-                        onClick={() => setActiveTab("taxes")}
-                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "taxes"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`}
-                    >
-                        Taxes
-                    </button>
+
                 </div>
 
                 {/* Tab Content */}
                 <div>
-                    {activeTab === "fulfillments" && (
+                    {activeTab === "fulfillment" && (
                         <LineFulfillmentsTab
                             fulfillmentData={fulfillmentData}
                             loading={fulfillmentLoading}
