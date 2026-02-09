@@ -279,8 +279,8 @@ export default function FulfillmentsTab({
                                     <tr>
                                         <SortableHeader label="Invoice" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.name} onResize={(f, w) => onResize('invoices', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                         <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.status} onResize={(f, w) => onResize('invoices', f, w)} />
-                                        <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.salesOrderLineName} onResize={(f, w) => onResize('invoices', f, w)} />
-                                        <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerQuoteLineName} onResize={(f, w) => onResize('invoices', f, w)} />
+                                        <SortableHeader label="Sales Order Line" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.salesOrderName} onResize={(f, w) => onResize('invoices', f, w)} />
+                                        <SortableHeader label="Customer Quote Line" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerQuoteName} onResize={(f, w) => onResize('invoices', f, w)} />
                                         <SortableHeader label="CPO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerPO} onResize={(f, w) => onResize('invoices', f, w)} />
                                         <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.billToAccountName} onResize={(f, w) => onResize('invoices', f, w)} />
                                         <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.billToLocationName} onResize={(f, w) => onResize('invoices', f, w)} />
@@ -308,8 +308,8 @@ export default function FulfillmentsTab({
                                                     {invoice.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.salesOrderLineName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.salesOrderLineName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.customerQuoteLineName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.salesOrderName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.salesOrderName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.customerQuoteName}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.customerPO}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.customerPO}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.billToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.billToAccountName}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.billToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.billToLocationName}</div></td>

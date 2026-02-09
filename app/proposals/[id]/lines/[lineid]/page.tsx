@@ -458,7 +458,7 @@ export default function ProposalProductDetailPage({
                                 status: item.Status__c || "Draft",
                                 rmaName: item.RMA_Name || "", // gtherp__RMA__c
                                 salesOrderLineName: item.Sales_Order_Line_Name || "", // gtherp__Sales_Order_Line__c
-                                customerQuoteLineName: item.Customer_Order_Line_Name || item.Customer_Order_Line__c || "", // gtherp__Customer_Order_Line__c
+                                customerQuoteLineName: item.Customer_Quote_Line_Name || item.Customer_Order_Line__c || "", // gtherp__Customer_Quote_Line__c
                                 reason: item.Reason_Code__c || "", // gtherp__Reason_Code__c
                                 productName: item.Product_Name || "", // gtherp__Product_Name__c
                                 productDescription: item.Product_Description__c || "", // gtherp__Product_Description__c
@@ -483,7 +483,7 @@ export default function ProposalProductDetailPage({
                                 status: item.Status__c || "Draft",
                                 rtvName: item.RTV_Name || "", // gtherp__RTV__c
                                 purchaseOrderLineName: item.Purchase_Order_Line_Name || "", // gtherp__Purchase_Order_Line__c
-                                customerQuoteLineName: item.Customer_Order_Line_Name || item.Customer_Order_Line__c || "", // gtherp__Customer_Order_Line__c
+                                customerQuoteLineName: item.Customer_Quote_Line_Name || item.Customer_Order_Line__c || "", // gtherp__Customer_Order_Line__c
                                 reason: item.Reason_Code__c || "", // gtherp__Reason_Code__c
                                 productName: item.Product_Name_Formula_Field__c || item.Product_Name__c || "", // gtherp__Product_Name__c (checking formula field first as fallback or vice versa, stick to Product_Name__c usually but check screenshots/data) -> Screenshot says gtherp__Product_Name__c
                                 productDescription: item.Product_Description__c || "", // gtherp__Product_Description__c

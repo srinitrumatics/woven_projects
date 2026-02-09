@@ -88,6 +88,8 @@ export interface Invoice {
     name: string; // This is the Invoice Line Name
     status: string;
     invoiceName: string; // The parent Invoice Name
+    salesOrderName: string;
+    customerQuoteName: string;
     salesOrderLineName: string;
     customerQuoteLineName: string;
     purchaseOrderLineName: string;

@@ -83,28 +83,26 @@ export default function ProposalsPage() {
     const total = proposals.length;
     const totalValue = proposals.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const drafts = proposals.filter(p => p.status === "Draft");
-    const draftCount = drafts.length;
-    const draftValue = drafts.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
+    const inProgressStatuses: ProposalStatus[] = ["Draft", "Quote Requested", "Quote Ready"];
+    const inProgress = proposals.filter(p => inProgressStatuses.includes(p.status));
+    const inProgressCount = inProgress.length;
+    const inProgressValue = inProgress.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const pending = proposals.filter(p => p.status === "Pending Review");
-    const pendingCount = pending.length;
-    const pendingValue = pending.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
+    const awaitingReviewStatuses: ProposalStatus[] = ["Proposal Sent", "Negotiation", "Pending Review", "Under Review"];
+    const awaitingReview = proposals.filter(p => awaitingReviewStatuses.includes(p.status));
+    const awaitingReviewCount = awaitingReview.length;
+    const awaitingReviewValue = awaitingReview.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const approved = proposals.filter(p => p.status === "Approved");
-    const approvedCount = approved.length;
-    const approvedValue = approved.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
-
-    const accepted = proposals.filter(p => p.status === "Accepted");
-    const acceptedCount = accepted.length;
-    const acceptedValue = accepted.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
+    const awardedStatuses: ProposalStatus[] = ["Awarded", "Accepted", "Approved"];
+    const awarded = proposals.filter(p => awardedStatuses.includes(p.status));
+    const awardedCount = awarded.length;
+    const awardedValue = awarded.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
     return {
       total, totalValue,
-      draftCount, draftValue,
-      pendingCount, pendingValue,
-      approvedCount, approvedValue,
-      acceptedCount, acceptedValue
+      inProgressCount, inProgressValue,
+      awaitingReviewCount, awaitingReviewValue,
+      awardedCount, awardedValue
     };
   }, [proposals]);
 
@@ -112,9 +110,21 @@ export default function ProposalsPage() {
   const filteredAndSearchedProposals = useMemo(() => {
     let filtered = proposals;
 
-    // Apply tab filter
+    // Apply status/group filter
     if (activeTab !== "All") {
-      filtered = filtered.filter(proposal => proposal.status === activeTab);
+      const inProgressGroups = ["Draft", "Quote Requested", "Quote Ready"];
+      const awaitingReviewGroups = ["Proposal Sent", "Negotiation", "Pending Review", "Under Review"];
+      const awardedGroups = ["Awarded", "Accepted", "Approved"];
+
+      if (activeTab === "Draft") {
+        filtered = filtered.filter(proposal => inProgressGroups.includes(proposal.status));
+      } else if (activeTab === "Pending Review") {
+        filtered = filtered.filter(proposal => awaitingReviewGroups.includes(proposal.status));
+      } else if (activeTab === "Approved") {
+        filtered = filtered.filter(proposal => awardedGroups.includes(proposal.status));
+      } else {
+        filtered = filtered.filter(proposal => proposal.status === activeTab);
+      }
     }
 
     // Apply search filter
@@ -193,15 +203,15 @@ export default function ProposalsPage() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <Link
-                  href="/admin/gth-config"
-                  onClick={(e) => e.stopPropagation()}
+                  href="#"
+                  onClick={() => handleCardClick("All")}
                   className="hover:underline block"
                 >
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Total Pipeline</p>
                 </Link>
                 <Link
-                  href="/admin/gth-config"
-                  onClick={(e) => e.stopPropagation()}
+                  href="#"
+                  onClick={() => handleCardClick("All")}
                   className="hover:underline block"
                 >
                   <div className="flex items-baseline gap-2">
@@ -220,7 +230,11 @@ export default function ProposalsPage() {
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
               <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline">
-                View all proposals
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("All")}
+                  className="hover:underline block">
+                  View all proposals</Link>
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -229,7 +243,7 @@ export default function ProposalsPage() {
           </div>
         </button>
 
-        {/* Draft Proposals Card */}
+        {/* Draft/In Progress Proposals Card */}
         <button
           onClick={() => handleCardClick("Draft")}
           className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Draft"
@@ -242,23 +256,24 @@ export default function ProposalsPage() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <Link
-                  href="/admin/gth-config"
-                  onClick={(e) => e.stopPropagation()}
-                  className="hover:underline block"
-                >
+                  href="#"
+                  onClick={() => handleCardClick("Draft")}
+                  className="hover:underline block">
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">In Progress</p>
                 </Link>
                 <Link
-                  href="/admin/gth-config"
-                  onClick={(e) => e.stopPropagation()}
-                  className="hover:underline block"
-                >
+                  href="#"
+                  onClick={() => handleCardClick("Draft")}
+                  className="hover:underline block">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Drafts</span>
+
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.inProgressCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Proposals</span>
+
+
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.draftValue)}</p>
+                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.inProgressValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-gray-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-600 group-hover:text-white"
                 } transition-colors`}>
@@ -269,7 +284,11 @@ export default function ProposalsPage() {
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
               <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white group-hover:underline">
-                Continue editing
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Draft")}
+                  className="hover:underline block">
+                  View in progress</Link>
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -278,7 +297,7 @@ export default function ProposalsPage() {
           </div>
         </button>
 
-        {/* Pending Review Card */}
+        {/* Pending/Awaiting Review Card */}
         <button
           onClick={() => handleCardClick("Pending Review")}
           className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Pending Review"
@@ -292,13 +311,12 @@ export default function ProposalsPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <Link
-                    href="/admin/gth-config"
-                    onClick={(e) => e.stopPropagation()}
-                    className="hover:underline"
-                  >
+                    href="#"
+                    onClick={() => handleCardClick("Pending Review")}
+                    className="hover:underline block">
                     <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Awaiting Review</p>
                   </Link>
-                  {stats.pendingCount > 0 && (
+                  {stats.awaitingReviewCount > 0 && (
                     <span className="flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-yellow-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
@@ -306,16 +324,16 @@ export default function ProposalsPage() {
                   )}
                 </div>
                 <Link
-                  href="/admin/gth-config"
-                  onClick={(e) => e.stopPropagation()}
-                  className="hover:underline block"
-                >
+                  href="#"
+                  onClick={() => handleCardClick("Pending Review")}
+                  className="hover:underline block">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.pendingCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Pending</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.awaitingReviewCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Proposals</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.pendingValue)}</p>
+
+                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.awaitingReviewValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Pending Review" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
                 } transition-colors`}>
@@ -326,7 +344,11 @@ export default function ProposalsPage() {
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
               <span className="inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline">
-                Review now
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Pending Review")}
+                  className="hover:underline block">
+                  Review now</Link>
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -335,7 +357,7 @@ export default function ProposalsPage() {
           </div>
         </button>
 
-        {/* Approved Card */}
+        {/* Approved/Awarded Card */}
         <button
           onClick={() => handleCardClick("Approved")}
           className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Approved"
@@ -348,23 +370,21 @@ export default function ProposalsPage() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <Link
-                  href="/admin/gth-config"
-                  onClick={(e) => e.stopPropagation()}
-                  className="hover:underline block"
-                >
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Ready to Convert</p>
+                  href="#"
+                  onClick={() => handleCardClick("Approved")}
+                  className="hover:underline block">
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Awarded</p>
                 </Link>
                 <Link
-                  href="/admin/gth-config"
-                  onClick={(e) => e.stopPropagation()}
-                  className="hover:underline block"
-                >
+                  href="#"
+                  onClick={() => handleCardClick("Approved")}
+                  className="hover:underline block">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.approvedCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Approved</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.awardedCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Awarded</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.approvedValue)}</p>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.awardedValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Approved" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
                 } transition-colors`}>
@@ -375,7 +395,12 @@ export default function ProposalsPage() {
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
               <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline">
-                Convert to orders
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Approved")}
+                  className="hover:underline block">
+                  View awarded
+                </Link>
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -387,50 +412,61 @@ export default function ProposalsPage() {
 
       {/* Proposals Table */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-        {/* Tabs and Search */}
+        {/* Header with Search and Filter */}
         <div className="border-b border-gray-200 dark:border-gray-700 ">
-          <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-6 overflow-x-auto no-scrollbar">
-              {(["All", "Lead", "Draft", "Pending Review", "Under Review", "Approved", "Accepted", "Rejected", "Expired"] as TabFilter[]).map(tab => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`pb-2 text-sm font-medium transition-colors relative font-semibold text-gray-900 dark:text-white ${activeTab === tab
-                    ? "text-gray-900 dark:text-white font-semibold text-gray-900 dark:text-white"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                    }`}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-6 py-4 gap-4">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Proposal List</h2>
+            <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+              {/* Status Dropdown Filter */}
+              <div className="relative min-w-[160px]">
+                <select
+                  value={activeTab}
+                  onChange={(e) => setActiveTab(e.target.value as TabFilter)}
+                  className="w-full pl-3 pr-10 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
                 >
-                  {tab}
-                  {activeTab === tab && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900 dark:bg-white"></div>
-                  )}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
+                  <option value="All">All Statuses</option>
+                  <option value="Lead">Lead</option>
+                  <option value="Draft">In Progress (Draft/Requested)</option>
+                  <option value="Pending Review">Awaiting Review</option>
+                  <option value="Approved">Awarded/Approved</option>
+                  <option disabled>──────────</option>
+                  {(["Quote Requested", "Quote Ready", "Proposal Sent", "Negotiation", "Under Review", "Accepted", "Awarded", "Rejected", "Expired"] as TabFilter[]).map(tab => (
+                    <option key={tab} value={tab}>{tab}</option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+
               {/* Search Input */}
-              <div className="relative">
+              <div className="relative flex-1 sm:flex-initial min-w-[200px]">
                 <input
                   type="text"
                   placeholder="Search proposals..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-                </svg>
-              </button>
-              <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                </svg>
-              </button>
+
+              <div className="flex items-center gap-1">
+                <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors" title="Sort">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                  </svg>
+                </button>
+                <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors" title="Filter Settings">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -585,6 +621,16 @@ function StatusBadge({ status }: { status: ProposalStatus }) {
         return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
       case "Lead":
         return "bg-green-200 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+      case "Quote Requested":
+        return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400";
+      case "Quote Ready":
+        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400";
+      case "Proposal Sent":
+        return "bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400";
+      case "Negotiation":
+        return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400";
+      case "Awarded":
+        return "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400";
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
     }

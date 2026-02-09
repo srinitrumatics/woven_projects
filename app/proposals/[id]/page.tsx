@@ -199,7 +199,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   const [fulfillmentWidths, setFulfillmentWidths] = useState({
     invoices: {
-      name: 180, status: 120, salesOrderLineName: 200, customerQuoteLineName: 200, customerPO: 150,
+      name: 180, status: 120, salesOrderName: 200, customerQuoteName: 200, customerPO: 150,
       billToAccountName: 180, billToLocationName: 180, billToContactName: 180, totalLines: 100,
       totalPrice: 120, totalShippingCharges: 120, totalTaxesAmount: 120, grandTotal: 150,
       issuedDate: 150, paymentTerms: 150, dueDate: 150, collectionStatus: 150, openBalance: 120,
@@ -621,7 +621,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               name: r.Name || '',
               status: r.Status__c || '',
               purchaseOrderName: r.Purchase_Order_Name || r.gtherp__Purchase_Order__c || '',
-              customerQuoteName: r.Customer_Quote_Name || '',
+              customerQuoteName: r.Customer_Quote_Line_Name || '',
               customerOrderName: r.Customer_Order_Name || '',
               rtvType: r.RTV_Type__c || '',
               rmaNumber: r.Supplier_RMA_Number__c || '',
@@ -737,6 +737,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           }
           break;
         case 'fulfillment':
+          console.log("Fulfillments json:", json.Invoice__c);
           setFulfillmentData({
             invoices: (json.Invoice__c || []).map((inv: any) => ({
               id: inv.Id,
