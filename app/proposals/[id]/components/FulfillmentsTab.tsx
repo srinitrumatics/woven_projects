@@ -23,10 +23,10 @@ export default function FulfillmentsTab({
 
     const activeData = useMemo(() => {
         switch (activeTab) {
+            case "quotes": return fulfillmentData.customerQuotes;
+            case "sales": return fulfillmentData.salesOrders;
             case "invoices": return fulfillmentData.invoices;
             case "shipping": return fulfillmentData.shippingManifests;
-            case "sales": return fulfillmentData.salesOrders;
-            case "quotes": return fulfillmentData.customerQuotes;
             default: return [];
         }
     }, [activeTab, fulfillmentData]);
@@ -67,15 +67,6 @@ export default function FulfillmentsTab({
                         Sales Orders ({fulfillmentData.salesOrders.length})
                     </button>
                     <button
-                        onClick={() => onTabChange("shipping")}
-                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "shipping"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                            }`}
-                    >
-                        Shipping Manifests ({fulfillmentData.shippingManifests.length})
-                    </button>
-                    <button
                         onClick={() => onTabChange("invoices")}
                         className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "invoices"
                             ? "border-primary text-primary"
@@ -84,7 +75,196 @@ export default function FulfillmentsTab({
                     >
                         Invoices ({fulfillmentData.invoices.length})
                     </button>
+                    <button
+                        onClick={() => onTabChange("shipping")}
+                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "shipping"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                            }`}
+                    >
+                        Shipping Manifests ({fulfillmentData.shippingManifests.length})
+                    </button>
                 </div>
+
+                {/* Customer Quotes Table */}
+                {activeTab === "quotes" && (
+                    <div className="overflow-x-auto">
+                        {sortedData.length === 0 ? (
+                            <div className=" py-12 text-gray-500 dark:text-gray-400 text-center">
+                                <p className="text-lg font-medium">No customer quotes found</p>
+                            </div>
+                        ) : (
+                            <table className="w-full">
+                                <thead className="bg-primary-light dark:bg-gray-900">
+                                    <tr>
+                                        <SortableHeader label="Customer Quote" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.name} onResize={(f, w) => onResize('quotes', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.status} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.customerOrderName} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="CPO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.customerPO} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.billToAccountName} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.billToLocationName} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Bill to Contact" field="billToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.billToContactName} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.shipToAccountName} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.shipToLocationName} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.shipToContactName} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.dropShip} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.totalLines} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.totalPrice} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.totalShippingCharges} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.totalTaxesAmount} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.grandTotal} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Issue Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.issuedDate} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.expirationDate} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.requestDate} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.shipDate} onResize={(f, w) => onResize('quotes', f, w)} />
+                                        <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.deliveredDate} onResize={(f, w) => onResize('quotes', f, w)} />
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    {(sortedData as CustomerQuote[]).map((quote) => (
+                                        <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={quote.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{quote.name}</div></td>
+                                            <td className="px-3 py-2">
+                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                                    {quote.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.customerOrderName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.customerPO}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.billToAccountName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.billToLocationName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.billToContactName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.shipToAccountName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.shipToLocationName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.shipToContactName}</td>
+                                            <td className="px-3 py-2 min-w-[114px]">
+                                                <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${quote.dropShip
+                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                                    }`}>
+                                                    {quote.dropShip ? 'Yes' : 'No'}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[114px]">
+                                                <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                    {(quote.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                                ${quote.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            </td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                                ${quote.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                            </td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                                ${quote.totalTaxesAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                            </td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                                ${quote.grandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                            </td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{quote.issuedDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{quote.expirationDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{quote.requestDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[166px]">{quote.shipDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[180px]">{quote.deliveredDate}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                )}
+
+                {/* Sales Orders Table */}
+                {activeTab === "sales" && (
+                    <div className="overflow-x-auto">
+                        {sortedData.length === 0 ? (
+                            <div className=" py-12 text-gray-500 dark:text-gray-400 text-center">
+                                <p className="text-lg font-medium">No sales orders found</p>
+                            </div>
+                        ) : (
+                            <table className="w-full">
+                                <thead className="bg-primary-light dark:bg-gray-900">
+                                    <tr>
+                                        <SortableHeader label="Sales Order" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.name} onResize={(f, w) => onResize('sales', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.status} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerQuoteName} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerOrderName} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="CPO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerPO} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.billToAccountName} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.billToLocationName} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Bill to Contact" field="billToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.billToContactName} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.shipToAccountName} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.shipToLocationName} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.shipToContactName} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.dropShip} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.totalLines} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.totalPrice} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.totalShippingCharges} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.totalTaxesAmount} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.grandTotal} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.requestDate} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Pick Date" field="pickDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.pickDate} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Pick Complete Date" field="pickCompleteDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.pickCompleteDate} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.shipDate} onResize={(f, w) => onResize('sales', f, w)} />
+                                        <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.deliveredDate} onResize={(f, w) => onResize('sales', f, w)} />
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    {(sortedData as SalesOrder[]).map((order) => (
+                                        <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={order.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{order.name}</div></td>
+                                            <td className="px-3 py-2">
+                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                                    {order.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.customerQuoteName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerOrderName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.customerOrderName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerPO}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.customerPO}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.billToAccountName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.billToLocationName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.billToContactName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToAccountName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToLocationName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToContactName}</div></td>
+                                            <td className="px-3 py-2 min-w-[103px]">
+                                                <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${order.dropShip
+                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                                    }`}>
+                                                    {order.dropShip ? 'Yes' : 'No'}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[116px]">
+                                                <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                    {(order.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                                ${order.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            </td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                                ${order.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                            </td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                                ${order.totalTaxesAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                            </td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                                ${order.grandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
+                                            </td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{order.requestDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{order.pickDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[171px]">{order.pickCompleteDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[161px]">{order.shipDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[179px]">{order.deliveredDate}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                )}
 
                 {/* Invoices Table */}
                 {activeTab === "invoices" && (
@@ -259,185 +439,7 @@ export default function FulfillmentsTab({
                     </div>
                 )}
 
-                {/* Sales Orders Table */}
-                {activeTab === "sales" && (
-                    <div className="overflow-x-auto">
-                        {sortedData.length === 0 ? (
-                            <div className=" py-12 text-gray-500 dark:text-gray-400 text-center">
-                                <p className="text-lg font-medium">No sales orders found</p>
-                            </div>
-                        ) : (
-                            <table className="w-full">
-                                <thead className="bg-primary-light dark:bg-gray-900">
-                                    <tr>
-                                        <SortableHeader label="Sales Order" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.name} onResize={(f, w) => onResize('sales', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.status} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerQuoteName} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerOrderName} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="CPO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerPO} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.billToAccountName} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.billToLocationName} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Bill to Contact" field="billToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.billToContactName} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.shipToAccountName} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.shipToLocationName} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.shipToContactName} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.dropShip} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.totalLines} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.totalPrice} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.totalShippingCharges} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.totalTaxesAmount} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.grandTotal} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.requestDate} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Pick Date" field="pickDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.pickDate} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Pick Complete Date" field="pickCompleteDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.pickCompleteDate} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.shipDate} onResize={(f, w) => onResize('sales', f, w)} />
-                                        <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.deliveredDate} onResize={(f, w) => onResize('sales', f, w)} />
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                    {(sortedData as SalesOrder[]).map((order) => (
-                                        <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={order.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{order.name}</div></td>
-                                            <td className="px-3 py-2">
-                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                                                    {order.status}
-                                                </span>
-                                            </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.customerQuoteName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerOrderName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.customerOrderName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerPO}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.customerPO}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.billToAccountName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.billToLocationName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.billToContactName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToAccountName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToLocationName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToContactName}</div></td>
-                                            <td className="px-3 py-2 min-w-[103px]">
-                                                <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${order.dropShip
-                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                                    }`}>
-                                                    {order.dropShip ? 'Yes' : 'No'}
-                                                </span>
-                                            </td>
-                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[116px]">
-                                                <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
-                                                    {(order.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </span>
-                                            </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
-                                                ${order.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                            </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
-                                                ${order.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                            </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
-                                                ${order.totalTaxesAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                            </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
-                                                ${order.grandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                            </td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{order.requestDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{order.pickDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[171px]">{order.pickCompleteDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[161px]">{order.shipDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[179px]">{order.deliveredDate}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
-                )}
 
-                {/* Customer Quotes Table */}
-                {activeTab === "quotes" && (
-                    <div className="overflow-x-auto">
-                        {sortedData.length === 0 ? (
-                            <div className=" py-12 text-gray-500 dark:text-gray-400 text-center">
-                                <p className="text-lg font-medium">No customer quotes found</p>
-                            </div>
-                        ) : (
-                            <table className="w-full">
-                                <thead className="bg-primary-light dark:bg-gray-900">
-                                    <tr>
-                                        <SortableHeader label="Customer Quote" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.name} onResize={(f, w) => onResize('quotes', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.status} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.customerOrderName} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="CPO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.customerPO} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.billToAccountName} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.billToLocationName} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Bill to Contact" field="billToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.billToContactName} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.shipToAccountName} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.shipToLocationName} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.shipToContactName} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.dropShip} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.totalLines} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.totalPrice} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.totalShippingCharges} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.totalTaxesAmount} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.grandTotal} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Issue Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.issuedDate} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.expirationDate} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.requestDate} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.shipDate} onResize={(f, w) => onResize('quotes', f, w)} />
-                                        <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.deliveredDate} onResize={(f, w) => onResize('quotes', f, w)} />
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                    {(sortedData as CustomerQuote[]).map((quote) => (
-                                        <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={quote.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{quote.name}</div></td>
-                                            <td className="px-3 py-2">
-                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                                                    {quote.status}
-                                                </span>
-                                            </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.customerOrderName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.customerPO}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.billToAccountName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.billToLocationName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.billToContactName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.shipToAccountName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.shipToLocationName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{quote.shipToContactName}</td>
-                                            <td className="px-3 py-2 min-w-[114px]">
-                                                <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${quote.dropShip
-                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                                    }`}>
-                                                    {quote.dropShip ? 'Yes' : 'No'}
-                                                </span>
-                                            </td>
-                                            <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[114px]">
-                                                <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
-                                                    {(quote.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </span>
-                                            </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
-                                                ${quote.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                            </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
-                                                ${quote.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                            </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
-                                                ${quote.totalTaxesAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                            </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
-                                                ${quote.grandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                            </td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{quote.issuedDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{quote.expirationDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{quote.requestDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[166px]">{quote.shipDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[180px]">{quote.deliveredDate}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
-                )}
             </div>
         </div>
     );

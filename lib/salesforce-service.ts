@@ -400,21 +400,21 @@ export async function cloneOrderFromSalesforce(orderData: any): Promise<any> {
 // Fetch products from Salesforce
 export async function getProductsFromSalesforce(accountId?: string, contactId?: string, contactUrl?: string): Promise<any[]> {
   try {
+    console.log('DEBUG: getProductsFromSalesforce called', { accountId, contactId });
     const session = await getSalesforceSession();
 
     if (!session.accessToken) {
-      console.error('No Salesforce access token available');
+      console.error('DEBUG: No Salesforce access token available');
       return [];
     }
 
     // Use the specific Apex REST endpoint for products
-    // Default to the provided URL structure if contactUrl is not passed or doesn't match
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/products`;
 
     // Construct URL with query parameters
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId ?? '')}&contactId=${encodeURIComponent(contactId ?? '')}`;
 
-    console.log('Fetching products from Salesforce with URL:', url);
+    console.log('DEBUG: Fetching products from Salesforce with URL:', url);
 
     const response = await fetch(url, {
       method: "GET",
@@ -424,17 +424,46 @@ export async function getProductsFromSalesforce(accountId?: string, contactId?: 
       },
     });
 
+    console.log('DEBUG: Salesforce products response status:', response.status);
+
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('DEBUG: Salesforce products error text:', errorText);
       throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
     }
 
     const resultdata = await response.json();
-    //console.log('Products resultdata:', resultdata);
+    console.log('DEBUG: getProductsFromSalesforce resultdata received:', !!resultdata);
+    if (resultdata) {
+      console.log('DEBUG: resultdata keys:', Object.keys(resultdata));
+      console.log('DEBUG: resultdata.success:', resultdata.success);
+      if (resultdata.data) {
+        console.log('DEBUG: resultdata.data count/type:', Array.isArray(resultdata.data) ? resultdata.data.length : typeof resultdata.data);
+        if (Array.isArray(resultdata.data) && resultdata.data.length > 0) {
+          console.log('DEBUG: resultdata.data[0] keys:', Object.keys(resultdata.data[0]));
+        }
+      }
+    }
 
-    // The API returns { data: [...], message: "...", success: true }
-    return resultdata.data || [];
+    // Try to extract data robustly
+    if (resultdata.data) {
+      if (Array.isArray(resultdata.data)) {
+        // Check if it's the nested format: [{ Products__c: [...] }]
+        if (resultdata.data.length > 0) {
+          const firstItem = resultdata.data[0];
+          const objectKey = Object.keys(firstItem).find(key => key.endsWith('__c') && Array.isArray(firstItem[key]));
+          if (objectKey) {
+            console.log('DEBUG: found nested array in key:', objectKey);
+            return firstItem[objectKey];
+          }
+        }
+        return resultdata.data;
+      }
+    }
+
+    return [];
   } catch (error) {
-    console.error('Error fetching Products from Salesforce:', error);
+    console.error('DEBUG: Error fetching Products from Salesforce:', error);
     return [];
   }
 }

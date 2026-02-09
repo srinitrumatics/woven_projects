@@ -517,38 +517,57 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   useEffect(() => {
     async function loadProducts() {
       try {
-        setProductsLoading(true);
-        const res = await fetch(`/api/salesforce/orders?action=products&accountId=${SF_ACCOUNT_ID}`);
-        if (!res.ok) throw new Error("Failed to fetch products");
-        const data = await res.json();
-        console.log('Products API Response (first item):', data[0]); // Debug: Check actual structure
+        const currentAccountId = orderData?.AccountId || SF_ACCOUNT_ID;
+        const currentContactId = orderData?.Ship_to_Contact__c || SF_CONTACT_ID;
 
-        if (Array.isArray(data)) {
-          const mappedProducts: Product[] = data.map((item: any) => ({
-            id: item.Id,
-            name: item.Name,
-            description: item.Description || "",
-            productFamily: item.Family || "General",
-            sku: item.Name || "", // Using Name as SKU since StockKeepingUnit is not in response
-            manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
-            brand: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__c || item.Manufacturer__c || item.ManufacturerName || "", // Using Manufacturer as Brand
-            availableQty: item.Available_To_Sell__c || 0,
-            moq: item.MOQ__c || 1, // Use MOQ from API or default to 1
-            listPrice: item.List_Price__c || 0,
-            unitPrice: item.Unit_Price__c || 0,
-            orderQty: 0,
-            subtotal: 0
-          }));
-          setCatalogProducts(mappedProducts);
+        console.log('DEBUG: loadProducts started', { currentAccountId, currentContactId, orderDataId: orderData?.Id });
+        setProductsLoading(true);
+        const url = `/api/salesforce/orders?action=products&accountId=${currentAccountId}&contactId=${currentContactId}`;
+        console.log('DEBUG: loadProducts URL:', url);
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Failed to fetch products: ${res.status} ${res.statusText}`);
+        const responseData = await res.json();
+        console.log('DEBUG: loadProducts responseData received:', !!responseData);
+
+        // Handle potential different response structures
+        let data = [];
+        if (Array.isArray(responseData)) {
+          data = responseData;
+          console.log('DEBUG: responseData is array, count:', data.length);
+        } else if (responseData && responseData.data && Array.isArray(responseData.data)) {
+          data = responseData.data;
+          console.log('DEBUG: responseData has data property, count:', data.length);
+        } else {
+          console.warn('DEBUG: responseData structure unexpected:', responseData);
         }
+
+        const mappedProducts: Product[] = data.map((item: any) => ({
+          id: item.Id || item.id,
+          name: item.Name || item.name || "Unnamed Product",
+          description: item.Description || item.description || "",
+          productFamily: item.Family || item.productFamily || "General",
+          sku: item.StockKeepingUnit || item.SKU || item.sku || item.Name || "",
+          manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
+          brand: item.Brand__c || item.brand || item.Brand || item['Manufacturer_Name__r.Name'] || "",
+          availableQty: item.Available_To_Sell__c || item.availableQty || 0,
+          moq: item.MOQ__c || item.moq || 1,
+          listPrice: item.List_Price__c || item.listPrice || 0,
+          unitPrice: item.Unit_Price__c || item.unitPrice || 0,
+          orderQty: 0,
+          subtotal: 0
+        }));
+        console.log('DEBUG: mappedProducts count:', mappedProducts.length);
+        setCatalogProducts(mappedProducts);
       } catch (error) {
-        console.error("Error loading products:", error);
+        console.error("DEBUG: Error loading products:", error);
       } finally {
         setProductsLoading(false);
       }
     }
+
+    // Always load products initially, and reload if orderData provides specific IDs
     loadProducts();
-  }, [SF_ACCOUNT_ID]);
+  }, [SF_ACCOUNT_ID, SF_CONTACT_ID, orderData?.AccountId, orderData?.Ship_to_Contact__c]);
 
   // Handle contact selection
   const handleContactSelect = (contactId: string) => {
@@ -1241,19 +1260,25 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
 
   // Filter products for catalog view
-  const filteredCatalogProducts = catalogProducts.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.sku.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredCatalogProducts = catalogProducts.filter(product => {
+    const query = searchQuery.toLowerCase();
+    return (
+      (product.name?.toLowerCase() || "").includes(query) ||
+      (product.description?.toLowerCase() || "").includes(query) ||
+      (product.sku?.toLowerCase() || "").includes(query)
+    );
+  });
 
-  const filteredOrderProducts = orderProducts.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.manufacturer.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredOrderProducts = orderProducts.filter(product => {
+    const query = searchQuery.toLowerCase();
+    return (
+      (product.name?.toLowerCase() || "").includes(query) ||
+      (product.brand?.toLowerCase() || "").includes(query) ||
+      (product.sku?.toLowerCase() || "").includes(query) ||
+      (product.description?.toLowerCase() || "").includes(query) ||
+      (product.manufacturer?.toLowerCase() || "").includes(query)
+    );
+  });
 
   // Sorting for catalog
   const { items: sortedCatalogProducts, requestSort: requestCatalogSort, sortConfig: catalogSortConfig } = useSortableData<Product>(filteredCatalogProducts);
