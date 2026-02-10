@@ -756,7 +756,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               totalTaxesAmount: inv.Total_Taxes_Amount__c || 0,
               grandTotal: inv.Grand_Total__c || 0,
               issuedDate: formatDate(inv.Issued_Date__c, 'numeric-dash'),
-              dueDate: formatDate(inv.gtherp__Due_Date__c, 'numeric-dash'),
+              dueDate: formatDate(inv.Due_Date__c, 'numeric-dash'),
               paymentTerms: inv.Payment_Terms__c || '',
               collectionStatus: inv.Collection_Status__c || '',
               openBalance: inv.Open_Balance__c || 0,

@@ -404,7 +404,7 @@ export default function ProposalProductDetailPage({
                             supplierBillName: item.Supplier_Bill_Name || "", // gtherp__Supplier_Bill__c
                             purchaseOrderLineName: item.Purchase_Order_Line_Name || "", // gtherp__Purchase_Order_Line__c
                             productName: item.Product_Name || "", // gtherp__Product_Name__c
-                            productDescription: item.Product_Description || "", // gtherp__Product_Description__c
+                            productDescription: item.Product_Description__c || "", // gtherp__Product_Description__c
                             manufacturerDBA: item.Manufacturer_DBA__c || "Unknown", // gtherp__Manufacturer_DBA__c
                             unitCost: item.Unit_Cost__c || 0, // gtherp__Unit_Cost__c
                             billedQty: item.Billed_Qty__c || 0, // gtherp__Billed_Qty__c

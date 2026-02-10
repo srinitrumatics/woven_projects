@@ -56,17 +56,10 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
         manufacturerDBA: 150,
         unitCost: 120,
         billedQty: 100,
-        totalProductAmount: 120,
+        billAmount: 120,
         shipping: 120,
-        totalBillAmount: 150,
-        billedDate: 150,
-        paymentTerms: 150,
-        dueDate: 150,
-        remittanceStatus: 150,
-        openBalance: 120,
-        daysOutstanding: 150,
-        holdStatus: 150,
-        settledDate: 150
+        totalBillAmount: 160,
+        goodsReceiptDate: 170
     });
 
     if (loading) {
@@ -216,7 +209,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                         <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                             <tr>
                                 <SortableHeader
-                                    label="Supplier Bill"
+                                    label="Supplier Bill Line"
                                     field="name"
                                     sortConfig={sortConfigBills}
                                     requestSort={requestSortBills}
@@ -232,17 +225,10 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                 <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.manufacturerDBA} onResize={handleBillResize} />
                                 <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.unitCost} onResize={handleBillResize} />
                                 <SortableHeader label="Billed Qty" field="billedQty" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.billedQty} onResize={handleBillResize} />
-                                <SortableHeader label="Total Cost" field="totalProductAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.totalProductAmount} onResize={handleBillResize} />
+                                <SortableHeader label="Bill Amount" field="billAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.billAmount} onResize={handleBillResize} />
                                 <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.shipping} onResize={handleBillResize} />
-                                <SortableHeader label="Line Grand Total" field="totalBillAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.totalBillAmount} onResize={handleBillResize} />
-                                <SortableHeader label="Invoice Date" field="billedDate" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.billedDate} onResize={handleBillResize} />
-                                <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.paymentTerms} onResize={handleBillResize} />
-                                <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.dueDate} onResize={handleBillResize} />
-                                <SortableHeader label="Payment Status" field="remittanceStatus" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.remittanceStatus} onResize={handleBillResize} />
-                                <SortableHeader label="Open Balance" field="openBalance" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.openBalance} onResize={handleBillResize} />
-                                <SortableHeader label="Days Outstanding" field="daysOutstanding" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.daysOutstanding} onResize={handleBillResize} />
-                                <SortableHeader label="Hold Status" field="holdStatus" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.holdStatus} onResize={handleBillResize} />
-                                <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.settledDate} onResize={handleBillResize} />
+                                <SortableHeader label="Total Bill Amount" field="totalBillAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.totalBillAmount} onResize={handleBillResize} />
+                                <SortableHeader label="Goods Receipt Date" field="goodsReceiptDate" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.goodsReceiptDate} onResize={handleBillResize} />
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -288,24 +274,15 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                         </td>
                                         <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[110px]">{bill.billedQty}</td>
                                         <td className="px-3 py-2 text-sm px-3 py-2 text-gray-900 dark:text-white font-semibold">
-                                            ${bill.totalProductAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            ${bill.billAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                         </td>
                                         <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
                                             ${bill.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                         </td>
-                                        <td className="px-3 py-2 text-sm  text-red-600 font-bold">
+                                        <td className="px-3 py-2 text-sm  text-red-600 font-bold w-min-[158px]">
                                             ${bill.totalBillAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                         </td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{bill.billedDate}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{bill.paymentTerms}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{bill.dueDate}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{bill.remittanceStatus}</td>
-                                        <td className="px-3 py-2 text-sm px-3 py-2 text-gray-900 dark:text-white min-w-[145px]">
-                                            ${bill.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                        </td>
-                                        <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[169px]">{bill.daysOutstanding}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{bill.holdStatus}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{bill.settledDate}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{bill.goodsReceiptDate}</td>
                                     </tr>
                                 ))
                             )}
