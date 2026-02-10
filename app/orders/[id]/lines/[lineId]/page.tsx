@@ -11,7 +11,7 @@ import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 interface OrderLineItem {
   Id: string;
   Name: string;
-  Product_Name_Name?: string;
+  Product_Name?: string;
   Product_Name__c?: string;
   Product_Description__c?: string;
   Unit_Price__c: number;
@@ -25,14 +25,14 @@ interface OrderLineItem {
   Site__c?: string;
   Inventory_Account__c?: string;
   Is_Taxable__c?: boolean;
-  Product_Name_Available_To_Sell?: number;
+  Available_To_Sell__c?: number;
   Qty_Shipped__c?: number;
   Unit_Cost__c?: number;
   Total_Cost__c?: number;
   Manufacturer_DBA__c?: string;
   Site_Name?: string;
   Inventory_Account_Name?: string;
-
+  Customer_Order_Line_Notes__c?: string;
   // Tax Fields
   Sales_Tax_Rate__c?: number;
   Sales_Tax_Amount__c?: number;
@@ -74,7 +74,7 @@ interface ProductData {
   qtyShipped: number;
   unitCost: string;
   totalCost: string;
-
+  orderLineNotes: string;
   // Tax Fields
   Sales_Tax_Rate__c?: number;
   Sales_Tax_Amount__c?: number;
@@ -146,7 +146,7 @@ export default function OrderLineDetailPage({
             const mappedProducts: ProductData[] = orderlines.map((item: OrderLineItem) => ({
               id: item.Product_Name__c || item.Id,
               orderLineId: item.Id, // Store the actual order line ID
-              name: item.Product_Name_Name || "Unknown Product",
+              name: item.Product_Name || "Unknown Product",
               sku: item.Name || "",
               description: item.Product_Description__c || "",
               productFamily: item.ProductFamily || "General",
@@ -161,11 +161,11 @@ export default function OrderLineDetailPage({
               site: item.Site_Name || item.Site__c || "-",
               inventoryAccount: item.Inventory_Account_Name || item.Inventory_Account__c || "-",
               isTaxable: item.Is_Taxable__c === true ? "Yes" : "No",
-              availableToSell: item.Product_Name_Available_To_Sell || 0,
+              availableToSell: item.Available_To_Sell__c || 0,
               qtyShipped: item.Qty_Shipped__c || 0,
               unitCost: item.Unit_Cost__c != null ? `$${item.Unit_Cost__c.toFixed(2)}` : "Hide",
               totalCost: item.Total_Cost__c != null ? `$${item.Total_Cost__c.toFixed(2)}` : "Hide",
-
+              orderLineNotes: item.Customer_Order_Line_Notes__c || "",
               // Map Tax Fields
               Sales_Tax_Rate__c: item.Sales_Tax_Rate__c,
               Sales_Tax_Amount__c: item.Sales_Tax_Amount__c,
@@ -445,7 +445,7 @@ export default function OrderLineDetailPage({
               Notes
             </label>
             <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-900 dark:text-white min-h-[200px]">
-              <p className="text-gray-400 italic">No notes added.</p>
+              <p className="text-gray-400">{product.orderLineNotes}</p>
             </div>
           </div>
         </div>
