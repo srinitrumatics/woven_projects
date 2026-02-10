@@ -323,7 +323,7 @@ export default function LineFulfillmentsTab({
                                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
                                         <SortableHeader
-                                            label="Invoice"
+                                            label="Invoice Line"
                                             field="name"
                                             sortConfig={sortConfig}
                                             requestSort={requestSort}

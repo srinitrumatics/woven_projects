@@ -70,11 +70,11 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                 <table className="w-full">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
-                            <SortableHeader label={activeTab === 'rma' ? 'RMA' : 'Number'} field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} />
 
                             {activeTab === 'rma' ? (
                                 <>
+                                    <SortableHeader label="RMA" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.rma.name} onResize={(f, w) => onResize('rma', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} />
                                     <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.rma.salesOrderName} onResize={(f, w) => onResize('rma', f, w)} />
                                     <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.rma.customerQuoteName} onResize={(f, w) => onResize('rma', f, w)} />
                                     <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.rma.customerOrderName} onResize={(f, w) => onResize('rma', f, w)} />
@@ -99,6 +99,8 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                 </>
                             ) : activeTab === 'rtv' ? (
                                 <>
+                                    <SortableHeader label="RTV" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.rtv.name} onResize={(f, w) => onResize('rtv', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} />
                                     <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.rtv.purchaseOrderName} onResize={(f, w) => onResize('rtv', f, w)} />
                                     <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.rtv.customerQuoteName} onResize={(f, w) => onResize('rtv', f, w)} />
                                     <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.rtv.customerOrderName} onResize={(f, w) => onResize('rtv', f, w)} />
@@ -116,6 +118,8 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                 </>
                             ) : activeTab === 'credit' ? (
                                 <>
+                                    <SortableHeader label="Credit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.credit.name} onResize={(f, w) => onResize('credit', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} />
                                     <SortableHeader label="Invoice" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={widths.credit.invoiceName} onResize={(f, w) => onResize('credit', f, w)} />
                                     <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.credit.customerQuoteName} onResize={(f, w) => onResize('credit', f, w)} />
                                     <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.credit.customerOrderName} onResize={(f, w) => onResize('credit', f, w)} />
@@ -135,6 +139,8 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                 <>
                                     {activeTab === 'debit' && (
                                         <>
+                                            <SortableHeader label="Debit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.debit.name} onResize={(f, w) => onResize('debit', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} />
                                             <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={widths.debit.supplierBillName} onResize={(f, w) => onResize('debit', f, w)} />
                                             <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.debit.purchaseOrderName} onResize={(f, w) => onResize('debit', f, w)} />
                                             <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.debit.customerOrderName} onResize={(f, w) => onResize('debit', f, w)} />

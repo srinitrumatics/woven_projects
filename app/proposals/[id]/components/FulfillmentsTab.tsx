@@ -374,7 +374,6 @@ export default function FulfillmentsTab({
                                         <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.boxGrossWeight} onResize={(f, w) => onResize('shipping', f, w)} />
                                         <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.totalLines} onResize={(f, w) => onResize('shipping', f, w)} />
                                         <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.totalPrice} onResize={(f, w) => onResize('shipping', f, w)} />
-                                        <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.requestDate} onResize={(f, w) => onResize('shipping', f, w)} />
                                         <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.shipDate} onResize={(f, w) => onResize('shipping', f, w)} />
                                         <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.deliveredDate} onResize={(f, w) => onResize('shipping', f, w)} />
                                         <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.shippingMethod} onResize={(f, w) => onResize('shipping', f, w)} />
@@ -421,7 +420,6 @@ export default function FulfillmentsTab({
                                             <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                 ${manifest.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{manifest.requestDate}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[161px]">{manifest.shipDate}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[178px]">{manifest.deliveredDate}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{manifest.shippingMethod}</td>

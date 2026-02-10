@@ -24,7 +24,8 @@ interface ProposalProductItem {
     Line_Grand_Total__c: number;
     MOQ__c?: number;
     Product_Grouping__c?: string;
-    Grouping__c?: string;
+    Groupings__c?: string;
+    Proposed_Product_Notes__c?: string;
     Site__c?: string;
     Inventory_Account__c?: string;
     Is_Taxable__c?: boolean;
@@ -60,6 +61,7 @@ interface ProductData {
     sku: string;
     description: string;
     productFamily: string;
+    ProductNotes: string,
     manufacturer: string;
     quantity: number;
     unitPrice: number;
@@ -127,7 +129,8 @@ export default function ProposalProductDetailPage({
                         unitPrice: item.Unit_Price__c || 0,
                         subtotal: item.Line_Grand_Total__c || 0,
                         productGrouping: item.Product_Grouping__c || "-",
-                        grouping: item.Grouping__c || "-",
+                        grouping: item.Groupings__c || "-",
+                        ProductNotes: item.Proposed_Product_Notes__c,
                         site: item.Site_Name || "-",
                         inventoryAccount: item.Inventory_Account_Name || "-",
                         isTaxable: item.Is_Taxable__c === true ? "Yes" : "No",
@@ -471,7 +474,7 @@ export default function ProposalProductDetailPage({
                                 estimatedDeliveryDate: item.Estimated_Delivery_Date__c || "", // gtherp__Estimated_Delivery_Date__c
                                 trackingStatus: item.Tracking_Status__c || "", // gtherp__Tracking_Status__c
                                 actualDeliveryDate: item.Actual_Delivery_Date__c || "", // gtherp__Actual_Delivery_Date__c
-                                goodsReceiptDate: item.Goods_Receipts_Date__c || "", // gtherp__Goods_Receipts_Date__c
+                                goodsReceiptDate: item.Goods_Receipt_Date__c || "", // gtherp__Goods_Receipts_Date__c
                                 type: "RMA",
                                 requestDate: "",
                                 description: item.Reason_Code__c || "",
@@ -504,7 +507,7 @@ export default function ProposalProductDetailPage({
                                 creditMemoName: item.Credit_Memo_Name || "", // gtherp__Credit_Memo__c
                                 invoiceLineName: item.Invoice_Line_Name || item.Invoice_Line__c || "", // gtherp__Invoice_Line__c
                                 salesOrderLineName: item.Sales_Order_Line_Name || item.Sales_Order_Line__c || "", // gtherp__Sales_Order_Line__c
-                                productName: item.Product_Name__c || "", // gtherp__Product_Name__c
+                                productName: item.Product_Name || "", // gtherp__Product_Name__c
                                 productDescription: item.Product_Description__c || "", // gtherp__Product_Description__c
                                 manufacturerDBA: item.Manufacturer_DBA__c || "Unknown", // gtherp__Manufacturer_DBA__c
                                 unitPrice: item.Unit_Price__c || 0, // gtherp__Unit_Price__c
@@ -526,7 +529,7 @@ export default function ProposalProductDetailPage({
                                 debitMemoName: item.Debit_Memo_Name || "", // gtherp__Debit_Memo__c
                                 supplierBillLineName: item.Supplier_Bill_Line_Name || item.Supplier_Bill_Line__c || "", // gtherp__Supplier_Bill_Line__c
                                 purchaseOrderLineName: item.Purchase_Order_Line_Name || item.Purchase_Order_Line__c || "", // gtherp__Purchase_Order_Line__c
-                                productName: item.Product_Name__c || "", // gtherp__Product_Name__c
+                                productName: item.Product_Name || "", // gtherp__Product_Name__c
                                 productDescription: item.Product_Description__c || "", // gtherp__Product_Description__c
                                 manufacturerDBA: item.Manufacturer_DBA__c || "Unknown", // gtherp__Manufacturer_DBA__c
                                 unitCost: item.Unit_Cost__c || 0, // gtherp__Unit_Cost__c
@@ -783,7 +786,7 @@ export default function ProposalProductDetailPage({
                             Notes
                         </label>
                         <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-900 dark:text-white min-h-[200px]">
-                            <p className="text-gray-400 italic">No notes added.</p>
+                            <p className="text-gray-400 italic">{product.ProductNotes}</p>
                         </div>
                     </div>
                 </div>
