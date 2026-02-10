@@ -7,6 +7,7 @@ import Sidebar from "@/components/layouts/Sidebar";
 import LineFulfillmentsTab from "./components/LineFulfillmentsTab";
 import LinePurchasesTab from "./components/LinePurchasesTab";
 import LineReturnsTab from "./components/LineReturnsTab";
+import { formatDate } from "@/lib/utils/formatting";
 
 import LineTaxesTab from "./components/LineTaxesTab";
 import { FulfillmentTabType, FulfillmentData, ReturnsData, SalesOrder, CustomerQuote, PurchaseOrderLine, SupplierBillLine, PurchasesData, TaxDetail } from "../../types";
@@ -61,7 +62,7 @@ interface ProductData {
     sku: string;
     description: string;
     productFamily: string;
-    ProductNotes: string,
+    ProductNotes?: string;
     manufacturer: string;
     quantity: number;
     unitPrice: number;
@@ -306,9 +307,9 @@ export default function ProposalProductDetailPage({
                                 totalPrice: sm.Total_Price__c || 0,
                                 qtyShipped: sm.Qty_Shipped__c || 0,
                                 trackingNumber: sm.Tracking_Number__c || "",
-                                estimatedDeliveryDate: sm.Estimated_Delivery_Date__c || "",
+                                estimatedDeliveryDate: formatDate(sm.Estimated_Delivery_Date__c, 'numeric-dash') || "",
                                 trackingStatus: sm.Tracking_Status__c || "",
-                                actualDeliveryDate: sm.Actual_Delivery_Date__c || ""
+                                actualDeliveryDate: formatDate(sm.Actual_Delivery_Date__c, 'numeric-dash') || ""
                             })),
                             salesOrders: (data.Sales_Order_Line__c || []).map((so: any) => ({
                                 id: so.Id,
@@ -393,9 +394,9 @@ export default function ProposalProductDetailPage({
                             lineTotalCost: item.Total_Cost__c || 0,
                             openBalanceQty: item.Open_Balance_Qty__c || 0,
                             trackingNumber: item.Tracking_Number__c || "",
-                            estimatedDeliveryDate: item.Estimated_Delivery_Date__c || "",
+                            estimatedDeliveryDate: formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') || "",
                             trackingStatus: item.Tracking_Status__c || "",
-                            actualDeliveryDate: item.Actual_Delivery_Date__c || "",
+                            actualDeliveryDate: formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') || "",
                             goodsReceiptDate: item.Goods_Receipt_Date__c || "",
                             invoiceStatus: item.Invoice_Status__c || ""
                         }));
@@ -471,9 +472,9 @@ export default function ProposalProductDetailPage({
                                 totalAmount: item.Total_Price__c || 0, // gtherp__Total_Price__c
                                 openBalanceQty: item.Open_Balance_Qty__c || 0, // gtherp__Open_Balance_Qty__c
                                 trackingNumber: item.Tracking_Number__c || "", // gtherp__Tracking_Number__c
-                                estimatedDeliveryDate: item.Estimated_Delivery_Date__c || "", // gtherp__Estimated_Delivery_Date__c
+                                estimatedDeliveryDate: formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') || "", // gtherp__Estimated_Delivery_Date__c
                                 trackingStatus: item.Tracking_Status__c || "", // gtherp__Tracking_Status__c
-                                actualDeliveryDate: item.Actual_Delivery_Date__c || "", // gtherp__Actual_Delivery_Date__c
+                                actualDeliveryDate: formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') || "", // gtherp__Actual_Delivery_Date__c
                                 goodsReceiptDate: item.Goods_Receipt_Date__c || "", // gtherp__Goods_Receipts_Date__c
                                 type: "RMA",
                                 requestDate: "",
@@ -488,7 +489,7 @@ export default function ProposalProductDetailPage({
                                 purchaseOrderLineName: item.Purchase_Order_Line_Name || "", // gtherp__Purchase_Order_Line__c
                                 customerQuoteLineName: item.Customer_Quote_Line_Name || item.Customer_Order_Line__c || "", // gtherp__Customer_Order_Line__c
                                 reason: item.Reason_Code__c || "", // gtherp__Reason_Code__c
-                                productName: item.Product_Name_Formula_Field__c || item.Product_Name__c || "", // gtherp__Product_Name__c (checking formula field first as fallback or vice versa, stick to Product_Name__c usually but check screenshots/data) -> Screenshot says gtherp__Product_Name__c
+                                productName: item.Product_Name || item.Product_Name__c || "", // gtherp__Product_Name__c (checking formula field first as fallback or vice versa, stick to Product_Name__c usually but check screenshots/data) -> Screenshot says gtherp__Product_Name__c
                                 productDescription: item.Product_Description__c || "", // gtherp__Product_Description__c
                                 manufacturerDBA: item.Manufacturer_DBA__c || "Unknown", // gtherp__Manufacturer_DBA__c
                                 unitCost: item.Unit_Cost__c || 0, // gtherp__Unit_Cost__c

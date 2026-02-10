@@ -71,6 +71,10 @@ export interface OrderDetail {
   Bill_to_Account_Name?: string;
   Ship_to_Account_Name?: string;
   CustomerOrderLines?: OrderItem[];
+  Authorized_Ship_To_Location_Delivery_Notes?: string;
+  Authorized_Ship_To_Location_Inside_Delivery?: boolean;
+  Authorized_Ship_To_Location_Lift_Gate?: boolean;
+  Authorized_Ship_To_Location_Name?: string;
   [key: string]: any;
 }
 
@@ -105,6 +109,9 @@ export interface AuthorizedLocation {
   Lift_Gate__c: boolean;
   Inside_Delivery__c: boolean;
   Address__c: Address;
+  Authorized_Ship_To_Location_Delivery_Notes?: string;
+  Authorized_Ship_To_Location_Delivery_Notes__c?: string;
+  Delivery_Notes__c?: string;
 }
 
 export interface ShippingMethodOption {

@@ -44,6 +44,9 @@ interface AuthorizedLocation {
   Lift_Gate__c: boolean;
   Inside_Delivery__c: boolean;
   Address__c: Address;
+  Authorized_Ship_To_Location_Delivery_Notes?: string;
+  Authorized_Ship_To_Location_Delivery_Notes__c?: string;
+  Delivery_Notes__c?: string;
 }
 
 interface LocationResponse {
@@ -101,6 +104,10 @@ interface Order {
   Authorized_Bill_To_Location_Address?: Address;
   Bill_to_Account_Name?: string;
   Ship_to_Account_Name?: string;
+  Authorized_Ship_To_Location_Delivery_Notes?: string;
+  Authorized_Ship_To_Location_Inside_Delivery?: boolean;
+  Authorized_Ship_To_Location_Lift_Gate?: boolean;
+  Authorized_Ship_To_Location_Name?: string;
 
   CustomerOrderLines?: OrderItem[];
 
@@ -610,7 +617,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       shipTo: location.Id,
       shippingAddress: formattedAddress,
       liftGateRequired: location.Lift_Gate__c,
-      insideDelivery: location.Inside_Delivery__c
+      insideDelivery: location.Inside_Delivery__c,
+      deliveryNotes: location.Authorized_Ship_To_Location_Delivery_Notes || location.Authorized_Ship_To_Location_Delivery_Notes__c || location.Delivery_Notes__c || ""
     }));
   };
 
@@ -716,14 +724,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 if (linesData && Array.isArray(linesData)) {
                   const mappedProducts: Product[] = linesData.map((item: any, index: number) => ({
                     id: item.Product_Name__c || item.Id, // Use Product_Name__c as product ID if available
-                    name: item.Product_Name_Name || (item.ProductName || ""),
+                    name: item.Product_Name || "",
                     sku: item.Name || "", // Using Name as SKU/Line ID for now
                     description: item.Product_Description__c || "",
                     unitPrice: item.Unit_Price__c,
                     listPrice: item.Unit_Price__c, // Assuming list price same as unit price for now
                     brand: "", // Not in API response
                     manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__r?.Name || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
-                    productFamily: item.Product_Name_Family || "", // Not in API response
+                    productFamily: item.Product_Family__c || "", // Not in API response
                     availableQty: 999,
                     moq: item.MOQ__c || 1,
                     orderQty: item.Order_Qty__c,
@@ -779,6 +787,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             billToAccountName: order.Bill_to_Account_Name || "",
             shipToAccountName: order.Ship_to_Account_Name || "",
             orderName: order.Name || "",
+            deliveryNotes: order.Authorized_Ship_To_Location_Delivery_Notes || "",
+            liftGateRequired: order.Authorized_Ship_To_Location_Lift_Gate || false,
+            insideDelivery: order.Authorized_Ship_To_Location_Inside_Delivery || false
           }));
 
           if (order.Authorized_Ship_To_Location__c) {
