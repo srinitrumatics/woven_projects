@@ -24,7 +24,7 @@ interface OrderLineItem {
   Grouping__c?: string;
   Site__c?: string;
   Inventory_Account__c?: string;
-  Is_Taxable__c?: boolean;
+  IsTaxable__c?: boolean;
   Available_To_Sell__c?: number;
   Qty_Shipped__c?: number;
   Unit_Cost__c?: number;
@@ -160,7 +160,7 @@ export default function OrderLineDetailPage({
               grouping: item.Grouping__c || "-",
               site: item.Site_Name || item.Site__c || "-",
               inventoryAccount: item.Inventory_Account_Name || item.Inventory_Account__c || "-",
-              isTaxable: item.Is_Taxable__c === true ? "Yes" : "No",
+              isTaxable: item.IsTaxable__c === true ? "Yes" : "No",
               availableToSell: item.Available_To_Sell__c || 0,
               qtyShipped: item.Qty_Shipped__c || 0,
               unitCost: item.Unit_Cost__c != null ? `$${item.Unit_Cost__c.toFixed(2)}` : "Hide",
