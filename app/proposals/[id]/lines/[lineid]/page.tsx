@@ -397,7 +397,7 @@ export default function ProposalProductDetailPage({
                             estimatedDeliveryDate: formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') || "",
                             trackingStatus: item.Tracking_Status__c || "",
                             actualDeliveryDate: formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') || "",
-                            goodsReceiptDate: item.Goods_Receipt_Date__c || "",
+                            goodsReceiptDate: formatDate(item.Goods_Receipt_Date__c, 'numeric-dash') || "",
                             invoiceStatus: item.Invoice_Status__c || ""
                         }));
 
@@ -418,7 +418,7 @@ export default function ProposalProductDetailPage({
                             billedDate: new Date(item.Billed_Date__c).toLocaleDateString() === 'Invalid Date' ? (item.Billed_Date__c || "") : new Date(item.Billed_Date__c).toLocaleDateString(), // gtherp__Billed_Date__c
                             remittanceStatus: item.Remittance_Status__c || "", // gtherp__Remittance_Status__c
                             holdStatus: item.Hold_Status__c || "", // gtherp__Hold_Status__c
-                            goodsReceiptDate: item.Goods_Receipt_Date__c || "" // gtherp__Goods_Receipt_Date__c
+                            goodsReceiptDate: formatDate(item.Goods_Receipt_Date__c, 'numeric-dash') || ""  // gtherp__Goods_Receipt_Date__c
                         }));
 
                         setPurchasesData({
@@ -475,7 +475,7 @@ export default function ProposalProductDetailPage({
                                 estimatedDeliveryDate: formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') || "", // gtherp__Estimated_Delivery_Date__c
                                 trackingStatus: item.Tracking_Status__c || "", // gtherp__Tracking_Status__c
                                 actualDeliveryDate: formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') || "", // gtherp__Actual_Delivery_Date__c
-                                goodsReceiptDate: item.Goods_Receipt_Date__c || "", // gtherp__Goods_Receipts_Date__c
+                                goodsReceiptDate: formatDate(item.Goods_Receipt_Date__c, 'numeric-dash') || "", // gtherp__Goods_Receipts_Date__c
                                 type: "RMA",
                                 requestDate: "",
                                 description: item.Reason_Code__c || "",
