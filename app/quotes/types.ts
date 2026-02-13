@@ -3,6 +3,8 @@ export type QuoteStatus = "Draft" | "Pending" | "Approved" | "Rejected" | "Expir
 export interface Quote {
   id: string;
   quoteNumber: string;
+  accountName: string;
+  contactName: string;
   status: QuoteStatus;
   proposalName: string;
   customerOrder: string;
@@ -246,7 +248,5 @@ export interface QuoteDetails extends Quote {
   site?: string;
   description?: string; // for header
   validUntil?: string; // used in original page, maybe map to expirationDate
-  contactName?: string; // used in original page
   opportunityName?: string; // used in original page
-  accountName?: string; // used in original page
 }
