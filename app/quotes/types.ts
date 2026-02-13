@@ -13,7 +13,13 @@ export interface Quote {
   totalAmount: number;
   totalLines: number;
   requestDate: string;
-  plannedShipDate: string
+  plannedShipDate: string;
+  // Optional fields commonly used in listings and details
+  expirationDate?: string;
+  validUntil?: string; // Alias for expirationDate, used in some views
+  issuedDate?: string;
+  description?: string;
+  opportunityName?: string;
 }
 
 export interface QuoteStats {
@@ -236,8 +242,6 @@ export interface QuoteDetails extends Quote {
   // Added for layout compatibility
   accountExecutive?: string;
   proposalType?: string;
-  issuedDate?: string;
-  expirationDate?: string;
   billToAccount?: string;
   billToLocation?: string; // mapped from billTo in Proposal
   customerPO?: string;
@@ -246,7 +250,4 @@ export interface QuoteDetails extends Quote {
   shipToLocation?: string; // mapped from shipTo in Proposal
   dropShip?: boolean;
   site?: string;
-  description?: string; // for header
-  validUntil?: string; // used in original page, maybe map to expirationDate
-  opportunityName?: string; // used in original page
 }
