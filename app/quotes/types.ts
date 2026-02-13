@@ -3,15 +3,15 @@ export type QuoteStatus = "Draft" | "Pending" | "Approved" | "Rejected" | "Expir
 export interface Quote {
   id: string;
   quoteNumber: string;
-  accountName: string;
-  contactName: string;
   status: QuoteStatus;
+  proposalName: string;
+  customerOrder: string;
+  shipToAccountName: string;
+  billToAccountName: string;
   totalAmount: number;
-  validUntil: string;
-  createdDate: string;
-  description: string;
-  lineItemCount: number;
-  opportunityName?: string;
+  totalLines: number;
+  requestDate: string;
+  plannedShipDate: string
 }
 
 export interface QuoteStats {
@@ -34,6 +34,192 @@ export interface QuoteLine {
   total: number;
 }
 
+export interface QuoteTax {
+  id: string;
+  salesTaxRate: number;
+  salesTaxAmount: number;
+  useTaxRate: number;
+  useTaxAmount: number;
+  localTaxRate: number;
+  localTaxAmount: number;
+  exciseTaxRate: number;
+  exciseTaxAmount: number;
+  grtRate: number;
+  grtAmount: number;
+  gstRate: number;
+  gstAmount: number;
+  vatRate: number;
+  vatAmount: number;
+}
+
+export interface QuoteSalesOrder {
+  id: string;
+  salesOrderNumber: string;
+  status: string;
+  customerQuote: string;
+  customerOrder: string;
+  customerPO: string;
+  billToAccount: string;
+  billToLocation: string;
+  billToContact: string;
+  shipToAccount: string;
+  shipToLocation: string;
+  shipToContact: string;
+  dropShip: boolean;
+  totalLines: number;
+  totalPrice: number;
+  shipping: number;
+  taxes: number;
+  grandTotal: number;
+  requestDate: string;
+  pickDate: string;
+  pickCompleteDate: string;
+  plannedShipDate: string;
+  shipConfirmedDate: string;
+}
+
+export interface QuoteShippingManifest {
+  id: string;
+  manifestNumber: string;
+  status: string;
+  salesOrder: string;
+  customerQuote: string;
+  customerOrder: string;
+  customerPO: string;
+  shipToAccount: string;
+  shipToLocation: string;
+  shipToContact: string;
+  dropShip: boolean;
+  boxCount: number;
+  boxNetWeight: number;
+  boxGrossWeight: number;
+  totalLines: number;
+  totalPrice: number;
+  plannedShipDate: string;
+  shipConfirmedDate: string;
+  shippingMethod: string;
+  logisticsPartner: string;
+  logisticsContact: string;
+  trackingNumber: string;
+  estimatedDeliveryDate: string;
+  trackingStatus: string;
+  actualDeliveryDate: string;
+}
+
+export interface QuoteInvoice {
+  id: string;
+  invoiceNumber: string;
+  status: string;
+  salesOrder: string;
+  customerQuote: string;
+  customerOrder: string;
+  customerPO: string;
+  billToAccount: string;
+  billToLocation: string;
+  billToContact: string;
+  totalLines: number;
+  totalPrice: number;
+  shipping: number;
+  taxes: number;
+  grandTotal: number;
+  issuedDate: string;
+  paymentTerms: string;
+  dueDate: string;
+  collectionStatus: string;
+  openBalance: number;
+  daysOutstanding: number;
+  settledDate: string;
+}
+
+export interface QuotePurchase {
+  id: string;
+  purchaseOrderNumber: string;
+  status: string;
+  vendor: string;
+  date: string;
+  totalAmount: number;
+  expectedDeliveryDate: string;
+}
+
+export interface QuoteSupplierBill {
+  id: string;
+  billNumber: string;
+  status: string;
+  vendor: string;
+  purchaseOrder: string;
+  billDate: string;
+  dueDate: string;
+  totalAmount: number;
+}
+
+export interface QuoteRMA {
+  id: string;
+  rmaNumber: string;
+  status: string;
+  salesOrder: string;
+  customerQuote: string;
+  customerOrder: string;
+  rmaType: string;
+  shipFromAccount: string;
+  shipFromContact: string;
+  returnToAccount: string;
+  returnToContact: string;
+  dropShip: boolean;
+  totalLines: number;
+  totalPrice: number;
+  issuedDate: string;
+  returnByDate: string;
+  shippingMethod: string;
+  logisticsPartner: string;
+  logisticsContact: string;
+  trackingNumber: string;
+  estimatedDeliveryDate: string;
+  trackingStatus: string;
+  actualDeliveryDate: string;
+  goodsReceiptsDate: string;
+}
+
+export interface QuoteCreditMemo {
+  id: string;
+  memoNumber: string;
+  status: string;
+  customer: string;
+  date: string;
+  totalAmount: number;
+  relatedInvoice: string;
+}
+
+export interface QuoteRTV {
+  id: string;
+  rtvNumber: string;
+  status: string;
+  vendor: string;
+  date: string;
+  totalAmount: number;
+  reason: string;
+}
+
+export interface QuoteDebitMemo {
+  id: string;
+  memoNumber: string;
+  status: string;
+  supplierBill: string;
+  purchaseOrder: string;
+  customerQuote: string;
+  customerOrder: string;
+  supplierCredit: string;
+  debitToAccount: string;
+  debitToContact: string;
+  totalLines: number;
+  totalCost: number;
+  shipping: number;
+  totalDebitAmount: number;
+  issuedDate: string;
+  approvalDate: string;
+  availableBalance: number;
+  settledDate: string;
+}
+
 export interface QuoteDetails extends Quote {
   billingAddress: string;
   shippingAddress: string;
@@ -45,4 +231,22 @@ export interface QuoteDetails extends Quote {
   discountTotal: number;
   shippingCost: number;
   grandTotal: number;
+  // Added for layout compatibility
+  accountExecutive?: string;
+  proposalType?: string;
+  issuedDate?: string;
+  expirationDate?: string;
+  billToAccount?: string;
+  billToLocation?: string; // mapped from billTo in Proposal
+  customerPO?: string;
+  priceBook?: string;
+  shipToAccount?: string;
+  shipToLocation?: string; // mapped from shipTo in Proposal
+  dropShip?: boolean;
+  site?: string;
+  description?: string; // for header
+  validUntil?: string; // used in original page, maybe map to expirationDate
+  contactName?: string; // used in original page
+  opportunityName?: string; // used in original page
+  accountName?: string; // used in original page
 }

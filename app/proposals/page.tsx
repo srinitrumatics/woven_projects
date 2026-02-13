@@ -32,7 +32,9 @@ export default function ProposalsPage() {
     shipTo: 180,
     productCount: 100,
     totalAmount: 120,
+    totalLines: 160,
     expirationDate: 120,
+    proposalDate: 160,
     actions: 100
   });
 
@@ -501,7 +503,7 @@ export default function ProposalsPage() {
             <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Proposal Number" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
+                  <SortableHeader label="Proposal Number" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                   <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                   <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
                   <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
@@ -509,6 +511,8 @@ export default function ProposalsPage() {
                   <SortableHeader label="Total Lines" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCount} onResize={handleResize} />
                   <SortableHeader label="Total Price" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
                   <SortableHeader label="Expires" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} />
+                  <SortableHeader label="Request Date" field="proposalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} />
+
                   <th
                     className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
@@ -537,7 +541,7 @@ export default function ProposalsPage() {
                 ) : (
                   paginatedProposals.map((proposal) => (
                     <tr key={proposal.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0  text-left">
                         <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
                           <div title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
                         </Link>
@@ -554,9 +558,10 @@ export default function ProposalsPage() {
                       <td className="px-3 py-2">
                         <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipTo}>{proposal.shipTo}</div>
                       </td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">{proposal.productCount}</td>
+                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[130px]">{proposal.productCount}</td>
                       <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(proposal.proposalDate, 'numeric-dash')}</td>
                       <td className="px-3 py-2">
                         <div className="flex gap-2">
                           <button

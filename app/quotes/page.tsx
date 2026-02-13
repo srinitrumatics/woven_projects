@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatNumber, formatDate } from "@/lib/utils/formatting";
 import { Quote, QuoteStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -23,13 +23,15 @@ export default function QuotesPage() {
   // Initialize resizable columns
   const { widths, handleResize } = useResizableColumns({
     quoteNumber: 150,
-    accountName: 180,
-    contactName: 180,
-    description: 250,
     status: 120,
+    proposalName: 120,
+    customerOrder: 170,
+    shipToAccountName: 180,
+    billToAccountName: 180,
+    totalLines: 120,
     totalAmount: 120,
-    validUntil: 120,
-    items: 100,
+    requestDate: 128,
+    plannedShipDate: 150,
     actions: 100
   });
 
@@ -47,15 +49,15 @@ export default function QuotesPage() {
         const mappedQuotes: Quote[] = data.map((item: any) => ({
           id: item.Id,
           quoteNumber: item.Quote_Number__c || item.Name || 'N/A',
-          accountName: item.Account_Name__c || item.Account?.Name || 'Unknown Account',
-          contactName: item.Contact_Name__c || item.Contact?.Name || 'Unknown Contact',
           status: (item.Status__c || item.Status || 'Draft') as QuoteStatus,
+          proposalName: item.Proposal_Name || 'N/A',
+          customerOrder: item.Customer_Order_Name || 'N/A',
+          shipToAccountName: item.Ship_to_Account_Name || 'N/A',
+          billToAccountName: item.Bill_to_Account_Name || 'N/A',
+          totalLines: item.LineItemCount || item.Total_Lines__c || 0,
           totalAmount: item.Total_Price__c || item.GrandTotal || item.Total_Amount__c || 0,
-          validUntil: item.ExpirationDate || item.Valid_Until__c ? (item.ExpirationDate || item.Valid_Until__c).split('T')[0] : '',
-          createdDate: item.CreatedDate ? item.CreatedDate.split('T')[0] : new Date().toISOString().split('T')[0],
-          description: item.Description || '',
-          lineItemCount: item.LineItemCount || item.Total_Lines__c || 0,
-          opportunityName: item.Opportunity_Name__c || item.Opportunity?.Name || ''
+          requestDate: formatDate(item.Request_Date__c, 'numeric-dash') || '',
+          plannedShipDate: formatDate(item.Ship_Date__c, 'numeric-dash') || '',
         }));
 
         setQuotes(mappedQuotes);
@@ -92,10 +94,10 @@ export default function QuotesPage() {
     return sortedQuotes.filter((quote) => {
       const matchesSearch =
         (quote.quoteNumber?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-        (quote.accountName?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-        (quote.contactName?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-        (quote.description?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-        (quote.opportunityName?.toLowerCase() || '').includes(searchQuery.toLowerCase());
+        (quote.proposalName?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (quote.customerOrder?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (quote.shipToAccountName?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (quote.billToAccountName?.toLowerCase() || '').includes(searchQuery.toLowerCase());
 
       const matchesStatus = statusFilter === "All" || quote.status === statusFilter;
 
@@ -281,19 +283,21 @@ export default function QuotesPage() {
               <p className="text-sm">Loading quotes...</p>
             </div>
           ) : (
-            <table className="w-full table-fixed">
+            <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
                   <SortableHeader label="Quote Number" field="quoteNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.quoteNumber} onResize={handleResize} />
-                  <SortableHeader label="Account" field="accountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
-                  <SortableHeader label="Contact" field="contactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.contactName} onResize={handleResize} />
-                  <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
                   <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                  <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.contactName} onResize={handleResize} />
+                  <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
+                  <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.contactName} onResize={handleResize} />
+                  <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
+                  <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
                   <SortableHeader label="Amount" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
-                  <SortableHeader label="Valid Until" field="validUntil" sortConfig={sortConfig} requestSort={requestSort} width={widths.validUntil} onResize={handleResize} />
-                  <SortableHeader label="Total Lines" field="lineItemCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
+                  <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.validUntil} onResize={handleResize} />
+                  <SortableHeader label="Planned Ship Date" field="plannedShipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
                   <th
-                    className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
                     Actions
@@ -332,41 +336,39 @@ export default function QuotesPage() {
                       onClick={() => router.push(`/quotes/${quote.id}`)}
                       className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
                     >
-                      <td className="px-6 py-4">
-                        <div className="line-clamp-2" title={quote.quoteNumber}>
-                          <div className="text-sm font-semibold text-primary">{quote.quoteNumber}</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{quote.createdDate}</div>
+                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0  text-left">
+                        <div className="line-clamp-1" title={quote.quoteNumber}>
+                          <div className="text-sm font-semibold text-primary">
+                            <Link href={`/quotes/${quote.id}`} className="text-sm  text-primary hover:underline">
+                              {quote.quoteNumber}
+                            </Link>
+                          </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="line-clamp-2" title={quote.accountName}>
-                          <div className="text-sm text-gray-900 dark:text-white font-medium">{quote.accountName}</div>
-                          {quote.opportunityName && (
-                            <div className="text-sm text-gray-500 dark:text-gray-400">{quote.opportunityName}</div>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900 dark:text-white line-clamp-1" title={quote.contactName}>{quote.contactName}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 max-w-[250px] line-clamp-1" title={quote.description}>
-                          {quote.description}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(quote.status)}`}>
+                      <td className="px-3 py-2">
+                        <span className={`inline-flex px-2 py-1 text-sm font-medium rounded-full ${getStatusColor(quote.status)}`}>
                           {quote.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900 dark:text-white font-semibold">
-                        {formatCurrency(quote.totalAmount)}
+                      <td className="px-3 py-2">
+                        <div className="text-sm text-gray-900 dark:text-white line-clamp-1" title={quote.proposalName}>{quote.proposalName}</div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{formatDate(quote.validUntil, 'numeric-dash')}</td>
-                      <td className="px-6 py-4 text-sm  text-gray-900 dark:text-white">
-                        {quote.lineItemCount}
+                      <td className="px-3 py-2 ">
+                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerOrder}>{quote.customerOrder}</div>
                       </td>
-                      <td className="px-6 py-4 text-left">
+                      <td className="px-3 py-2">
+                        <div className="text-sm text-gray-900 dark:text-white line-clamp-1" title={quote.billToAccountName}>{quote.billToAccountName}</div>
+                      </td>
+                      <td className="px-3 py-2 ">
+                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.shipToAccountName}>{quote.shipToAccountName}</div>
+                      </td>
+                      <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold">
+                        {formatNumber(quote.totalLines)}
+                      </td>
+                      <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">{formatCurrency(quote.totalAmount)}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(quote.requestDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(quote.plannedShipDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-2 text-left">
                         <div className="flex start gap-2">
                           <Link href={`/quotes/${quote.id}`} className="text-primary rounded font-medium inline-block">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
