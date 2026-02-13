@@ -1,4 +1,4 @@
-import { QuoteRMA } from "../../types";
+import { QuoteRMA } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 
 type SortDirection = 'asc' | 'desc';

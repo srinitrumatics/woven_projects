@@ -1,25 +1,36 @@
 export type QuoteStatus = "Draft" | "Pending" | "Approved" | "Rejected" | "Expired" | "Converted";
 
+export interface QuoteCreditMemo {
+  id: string;
+  memoNumber: string;
+  status: string;
+  customer: string;
+  date: string;
+  totalAmount: number;
+  relatedInvoice: string;
+}
+
 export interface Quote {
   id: string;
   quoteNumber: string;
   accountName: string;
   contactName: string;
   status: QuoteStatus;
-  proposalName: string;
-  customerOrder: string;
-  shipToAccountName: string;
-  billToAccountName: string;
   totalAmount: number;
-  totalLines: number;
-  requestDate: string;
-  plannedShipDate: string;
-  // Optional fields commonly used in listings and details
+  proposalName?: string;
+  customerOrder?: string;
+  shipToAccountName?: string;
+  billToAccountName?: string;
+  totalLines?: number;
+  requestDate?: string;
+  plannedShipDate?: string;
   expirationDate?: string;
-  validUntil?: string; // Alias for expirationDate, used in some views
+  validUntil?: string;
   issuedDate?: string;
+  createdDate?: string;
   description?: string;
   opportunityName?: string;
+  lineItemCount?: number;
 }
 
 export interface QuoteStats {
@@ -187,15 +198,6 @@ export interface QuoteRMA {
   goodsReceiptsDate: string;
 }
 
-export interface QuoteCreditMemo {
-  id: string;
-  memoNumber: string;
-  status: string;
-  customer: string;
-  date: string;
-  totalAmount: number;
-  relatedInvoice: string;
-}
 
 export interface QuoteRTV {
   id: string;

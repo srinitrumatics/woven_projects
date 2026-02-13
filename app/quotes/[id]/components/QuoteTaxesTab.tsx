@@ -1,4 +1,4 @@
-import { QuoteTax } from "../../types";
+import { QuoteTax } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 
 type SortDirection = 'asc' | 'desc';

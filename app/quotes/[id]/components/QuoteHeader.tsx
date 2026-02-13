@@ -1,4 +1,4 @@
-import { QuoteStatus } from "../../types";
+import { QuoteStatus } from "@/app/quotes/types";
 
 interface QuoteHeaderProps {
     quoteNumber: string;

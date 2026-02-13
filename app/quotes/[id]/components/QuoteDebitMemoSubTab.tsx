@@ -1,4 +1,4 @@
-import { QuoteDebitMemo } from "../../types";
+import { QuoteDebitMemo } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 
 type SortDirection = 'asc' | 'desc';

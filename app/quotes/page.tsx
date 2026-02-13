@@ -363,9 +363,9 @@ export default function QuotesPage() {
                         <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.shipToAccountName}>{quote.shipToAccountName}</div>
                       </td>
                       <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold">
-                        {formatNumber(quote.totalLines)}
+                        {formatNumber(quote.totalLines || 0)}
                       </td>
-                      <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">{formatCurrency(quote.totalAmount)}</td>
+                      <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">{formatCurrency(quote.totalAmount || 0)}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(quote.requestDate, 'numeric-dash')}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(quote.plannedShipDate, 'numeric-dash')}</td>
                       <td className="px-3 py-2 text-left">

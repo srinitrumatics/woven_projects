@@ -1,5 +1,5 @@
 import React from 'react';
-import { QuoteDetails, QuoteLine } from "../../types";
+import { QuoteDetails, QuoteLine } from "@/app/quotes/types";
 
 interface QuoteSummaryProps {
     quote: QuoteDetails;

@@ -1,4 +1,4 @@
-import { QuoteStatus } from "../../types";
+import { QuoteStatus } from "@/app/quotes/types";
 
 export type QuoteTabType = "products" | "taxes" | "fulfillment" | "purchases" | "returns" | "files";
 

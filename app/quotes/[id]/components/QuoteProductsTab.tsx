@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { QuoteLine } from "../../types";
+import { QuoteLine } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 
 type SortDirection = 'asc' | 'desc';

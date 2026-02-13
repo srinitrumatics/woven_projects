@@ -1,4 +1,4 @@
-import { QuoteInvoice } from "../../types";
+import { QuoteInvoice } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 
 type SortDirection = 'asc' | 'desc';
@@ -72,9 +72,9 @@ export default function QuoteInvoicesSubTab({
                                 <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800" style={{ width: widths.invoiceNumber }}>{invoice.invoiceNumber}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.status }}>
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${invoice.status === 'Draft' ? 'bg-gray-100 text-gray-800' :
-                                            invoice.status === 'Posted' ? 'bg-blue-100 text-blue-800' :
-                                                invoice.status === 'Paid' ? 'bg-green-100 text-green-800' :
-                                                    'bg-red-100 text-red-800'
+                                        invoice.status === 'Posted' ? 'bg-blue-100 text-blue-800' :
+                                            invoice.status === 'Paid' ? 'bg-green-100 text-green-800' :
+                                                'bg-red-100 text-red-800'
                                         }`}>
                                         {invoice.status}
                                     </span>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { QuoteRMA, QuoteCreditMemo, QuoteRTV, QuoteDebitMemo } from "../../types";
+import { QuoteRMA, QuoteCreditMemo, QuoteRTV, QuoteDebitMemo } from "@/app/quotes/types";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import QuoteRMASubTab from "./QuoteRMASubTab";
 import QuoteCreditMemoSubTab from "./QuoteCreditMemoSubTab";

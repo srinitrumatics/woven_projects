@@ -1,0 +1,114 @@
+
+> client-partner-portal@0.1.0 build
+> next build
+
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /media/trumatics/New Volume/package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * /media/trumatics/New Volume/wovn/woven_projects-main/package-lock.json
+
+   ▲ Next.js 15.5.6
+   - Environments: .env
+   - Experiments (use with caution):
+     · serverActions
+
+   Creating an optimized production build ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ✓ Compiled successfully in 6.3s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/40) ...
+Sidebar user permissions: null
+   Generating static pages (10/40) 
+Sidebar user permissions: null
+Sidebar user permissions: null
+Sidebar user permissions: null
+Sidebar user permissions: null
+HomePage - isSignUp: false
+AuthPage - isSignUp: false
+   Generating static pages (20/40) 
+Sidebar user permissions: null
+   Generating static pages (30/40) 
+Sidebar user permissions: null
+Sidebar user permissions: null
+Sidebar user permissions: null
+Sidebar user permissions: null
+Sidebar user permissions: null
+Sidebar user permissions: null
+Sidebar user permissions: null
+Sidebar user permissions: null
+Sidebar user permissions: null
+ ✓ Generating static pages (40/40)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                           Size  First Load JS
+┌ ○ /                                              3.16 kB         109 kB
+├ ○ /_not-found                                       1 kB         103 kB
+├ ƒ /admin                                           166 B         105 kB
+├ ○ /admin/organizations                           3.43 kB         144 kB
+├ ○ /admin/permissions                             7.54 kB         147 kB
+├ ○ /admin/roles                                   8.21 kB         148 kB
+├ ○ /admin/users                                   5.21 kB         146 kB
+├ ƒ /api/algolia                                     204 B         102 kB
+├ ƒ /api/auth/login                                  204 B         102 kB
+├ ƒ /api/auth/logout                                 204 B         102 kB
+├ ƒ /api/auth/register                               204 B         102 kB
+├ ƒ /api/auth/session                                204 B         102 kB
+├ ƒ /api/auth/update-session                         204 B         102 kB
+├ ƒ /api/external/v1/products                        204 B         102 kB
+├ ƒ /api/external/v1/products/[id]                   204 B         102 kB
+├ ƒ /api/rbac/organizations                          204 B         102 kB
+├ ƒ /api/rbac/organizations/[id]                     204 B         102 kB
+├ ƒ /api/rbac/organizations/[id]/users               204 B         102 kB
+├ ƒ /api/rbac/permission-groups                      204 B         102 kB
+├ ƒ /api/rbac/permissions                            204 B         102 kB
+├ ƒ /api/rbac/permissions/[id]                       204 B         102 kB
+├ ƒ /api/rbac/roles                                  204 B         102 kB
+├ ƒ /api/rbac/roles/[id]                             204 B         102 kB
+├ ƒ /api/rbac/roles/[id]/organizations               204 B         102 kB
+├ ƒ /api/rbac/roles/[id]/permissions                 204 B         102 kB
+├ ƒ /api/rbac/users                                  204 B         102 kB
+├ ƒ /api/rbac/users/[id]                             204 B         102 kB
+├ ƒ /api/rbac/users/[id]/organizations               204 B         102 kB
+├ ƒ /api/rbac/users/[id]/roles                       204 B         102 kB
+├ ƒ /api/rbac/users/[id]/roles-with-organizations    204 B         102 kB
+├ ƒ /api/salesforce/orders                           204 B         102 kB
+├ ƒ /api/salesforce/proposals                        204 B         102 kB
+├ ƒ /api/salesforce/quotes                           204 B         102 kB
+├ ƒ /api/salesforce/token                            204 B         102 kB
+├ ○ /auth                                          3.16 kB         109 kB
+├ ○ /dashboard                                       612 B         111 kB
+├ ○ /inventory                                       612 B         111 kB
+├ ○ /invoices                                      7.27 kB         118 kB
+├ ƒ /invoices/[id]                                 6.27 kB         117 kB
+├ ○ /orders                                        6.99 kB         112 kB
+├ ƒ /orders/[id]                                     66 kB         299 kB
+├ ƒ /orders/[id]/lines/[lineId]                    4.33 kB         110 kB
+├ ○ /orders/create                                   552 B         102 kB
+├ ƒ /products                                      3.67 kB         165 kB
+├ ○ /proposals                                      7.2 kB         118 kB
+├ ƒ /proposals/[id]                                23.2 kB         261 kB
+├ ƒ /proposals/[id]/lines/[lineid]                 12.4 kB         123 kB
+├ ○ /quotes                                        5.77 kB         117 kB
+├ ƒ /quotes/[id]                                   11.8 kB         123 kB
+├ ○ /reports                                         612 B         111 kB
+├ ○ /search                                        4.08 kB         165 kB
+├ ○ /shipments                                     6.76 kB         118 kB
+├ ƒ /shipments/[id]                                5.41 kB         116 kB
+├ ○ /signin                                        3.58 kB         105 kB
+├ ○ /signup                                          344 B         106 kB
+└ ○ /unauthorized                                    204 B         102 kB
++ First Load JS shared by all                       102 kB
+  ├ chunks/1255-26f05d8bf86e016d.js                45.5 kB
+  ├ chunks/4bd1b696-100b9d70ed4e49c1.js            54.2 kB
+  └ other shared chunks (total)                    2.08 kB
+
+
+ƒ Middleware                                       33.6 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
