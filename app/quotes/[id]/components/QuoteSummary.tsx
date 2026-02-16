@@ -12,7 +12,7 @@ export default function QuoteSummary({
     lines,
     grandTotal
 }: QuoteSummaryProps) {
-    const productsSubtotal = lines.reduce((sum, line) => sum + line.subtotal, 0);
+    const productsSubtotal = lines.reduce((sum, line) => sum + line.totalPrice, 0);
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col flex-1">

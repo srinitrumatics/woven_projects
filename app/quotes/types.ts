@@ -43,15 +43,18 @@ export interface QuoteStats {
 
 export interface QuoteLine {
   id: string;
+  Name: string;
+  status: string;
   productName: string;
-  productSku: string;
   description: string;
-  quantity: number;
+  manufacturerDBA: string;
   unitPrice: number;
-  discount: number;
-  subtotal: number;
-  taxAmount: number;
-  total: number;
+  quantity: number;
+  totalPrice: number;
+  shipping: number;
+  taxes: number;
+  lineGrandTotal: number;
+  qtyShipped: number;
 }
 
 export interface QuoteTax {

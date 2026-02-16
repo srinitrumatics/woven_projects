@@ -7,7 +7,7 @@ import { QuoteDetails, QuoteLine, QuoteStatus, QuoteTax } from "../types";
 import QuoteHeader from "./components/QuoteHeader";
 import QuoteDetailsSection from "./components/QuoteDetails";
 import QuoteTabs, { QuoteTabType } from "./components/QuoteTabs";
-import QuoteProductsTab from "./components/QuoteProductsTab";
+import QuoteLinesTab from "./components/QuoteLinesTab";
 import QuoteTaxesTab from "./components/QuoteTaxesTab";
 import QuoteFulfillmentTab from "./components/QuoteFulfillmentTab";
 import QuotePurchasesTab from "./components/QuotePurchasesTab";
@@ -34,7 +34,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   const { id } = use(params);
   const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState<QuoteTabType>("products");
+  const [activeTab, setActiveTab] = useState<QuoteTabType>("quotelines");
   const [sortField, setSortField] = useState<keyof QuoteLine>("productName");
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
@@ -67,13 +67,18 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
 
   // Interactive column resizing
   const { widths, handleResize } = useResizableColumns({
-    productName: 250,
-    productSku: 150,
-    description: 300,
+    Name: 190,
+    status: 120,
+    productName: 180,
+    manufacturerDBA: 150,
+    description: 200,
     quantity: 100,
-    unitPrice: 120,
-    discount: 100,
-    subtotal: 120
+    unitPrice: 140,
+    totalPrice: 120,
+    shipping: 100,
+    taxes: 100,
+    lineGrandTotal: 170,
+    qtyShipped: 120
   });
 
   const fetchQuote = useCallback(async () => {
@@ -163,18 +168,21 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
       if (!res.ok) throw new Error(`Failed to fetch ${tab} data`);
       const json = await res.json();
 
-      if (tab === 'products') {
+      if (tab === 'quotelines') {
         const mappedLines: QuoteLine[] = (json || []).map((item: any) => ({
           id: item.Id,
-          productName: item.Product_Name || 'Unknown Product',
-          productSku: item.Name || 'N/A',
+          Name: item.Name || 'N/A',
+          status: item.Status__c || '',
+          productName: item.Product_Name || 'N/A',
           description: item.Product_Description__c || '',
-          quantity: item.Total_Order_Qty__c || 0,
+          manufacturerDBA: item.Manufacturer_DBA__c || '',
           unitPrice: item.Unit_Price__c || 0,
-          discount: item.Margin__c || 0,
-          subtotal: item.Line_Grand_Total__c || 0,
-          taxAmount: item.Tax_Amount__c || 0,
-          total: (item.Line_Grand_Total__c || 0) + (item.Tax_Amount__c || 0)
+          quantity: item.Total_Order_Qty__c || 0,
+          totalPrice: item.Total_Price__c || 0,
+          shipping: item.Shipping_Charges__c || 0,
+          taxes: item.Total_Taxes_Amount__c || 0,
+          lineGrandTotal: item.Line_Grand_Total__c || 0,
+          qtyShipped: item.Qty_Shipped__c || 0
         }));
         setQuoteLines(mappedLines);
       } else if (tab === 'fulfillment') {
@@ -367,7 +375,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   useEffect(() => {
     fetchQuote();
     // Initially fetch everything to get counts
-    fetchTabData('products');
+    fetchTabData('quotelines');
     fetchTabData('fulfillment');
     fetchTabData('purchases');
     fetchTabData('returns');
@@ -486,7 +494,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
                 }
               }}
               counts={{
-                products: quoteLines.length,
+                quotelines: quoteLines.length,
                 taxes: taxes.length,
                 fulfillment: (fulfillmentData.salesOrders?.length || 0) + (fulfillmentData.shippingManifests?.length || 0) + (fulfillmentData.invoices?.length || 0),
                 purchases: (purchasesData.purchases?.length || 0) + (purchasesData.supplierBills?.length || 0),
@@ -496,8 +504,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             />
           </div>
           <div className="p-0">
-            {activeTab === 'products' && (
-              <QuoteProductsTab
+            {activeTab === 'quotelines' && (
+              <QuoteLinesTab
                 products={sortedLines}
                 quoteId={id}
                 loading={tabLoading}
@@ -571,9 +579,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
               Edit Quote
             </button>
           )}
-          <button className="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
-            Download PDF
-          </button>
+
         </div>
       </div>
       <div className="h-16"></div>

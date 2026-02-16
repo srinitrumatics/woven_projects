@@ -22,10 +22,11 @@ export async function GET(req: NextRequest) {
         }
 
         let tabName = "Customer_Quote";
-        let objectName = "Customer_Quote__c";
+        let defaultObjectName = "Customer_Quote__c";
+        const objectName = searchParams.get("objectName") || defaultObjectName;
 
-        if (action === "products") tabName = "Products";
-        else if (action === "taxes") tabName = "Customer_Quote"; // Taxes are usually on the main record
+        if (action === "quotelines") tabName = "Products";
+        else if (action === "taxes") tabName = "Customer_Quote";
         else if (action === "fulfillment") tabName = "Fulfillment";
         else if (action === "purchases") tabName = "Purchases";
         else if (action === "returns") tabName = "Returns";

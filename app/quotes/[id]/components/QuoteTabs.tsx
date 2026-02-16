@@ -1,12 +1,12 @@
 import { QuoteStatus } from "@/app/quotes/types";
 
-export type QuoteTabType = "products" | "taxes" | "fulfillment" | "purchases" | "returns" | "files";
+export type QuoteTabType = "quotelines" | "taxes" | "fulfillment" | "purchases" | "returns" | "files";
 
 interface QuoteTabsProps {
     activeTab: QuoteTabType;
     onTabChange: (tab: QuoteTabType) => void;
     counts?: {
-        products?: number;
+        quotelines?: number;
         taxes?: number;
         fulfillment?: number;
         purchases?: number;
@@ -17,7 +17,7 @@ interface QuoteTabsProps {
 
 export default function QuoteTabs({ activeTab, onTabChange, counts = {} }: QuoteTabsProps) {
     const tabs: { id: QuoteTabType; label: string; count?: number }[] = [
-        { id: "products", label: "Quote Lines", count: counts.products },
+        { id: "quotelines", label: "Quote Lines", count: counts.quotelines },
         { id: "taxes", label: "Taxes", count: counts.taxes },
         { id: "fulfillment", label: "Fulfillment", count: counts.fulfillment },
         { id: "purchases", label: "Purchases", count: counts.purchases },
