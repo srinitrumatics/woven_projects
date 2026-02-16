@@ -10,10 +10,18 @@ type ReturnsSubTab = "rmas" | "creditMemo" | "rtvs" | "debitMemo";
 
 interface QuoteReturnsTabProps {
     quoteId: string;
+    data: {
+        rma: QuoteRMA[];
+        creditMemos: QuoteCreditMemo[];
+        rtv: QuoteRTV[];
+        debitMemos: QuoteDebitMemo[];
+    };
+    loading: boolean;
 }
 
-export default function QuoteReturnsTab({ quoteId }: QuoteReturnsTabProps) {
+export default function QuoteReturnsTab({ quoteId, data, loading }: QuoteReturnsTabProps) {
     const [activeSubTab, setActiveSubTab] = useState<ReturnsSubTab>("rmas");
+    const { rma = [], creditMemos = [], rtv = [], debitMemos = [] } = data;
 
     // RMA State
     const [rmaSortField, setRmaSortField] = useState<keyof QuoteRMA>("rmaNumber");
@@ -84,64 +92,6 @@ export default function QuoteReturnsTab({ quoteId }: QuoteReturnsTabProps) {
         settledDate: 120
     });
 
-    // Mock Data for RMA matching the new structure
-    const mockRMAs: QuoteRMA[] = [
-        {
-            id: "RMA-001",
-            rmaNumber: "RMA-2024-001",
-            status: "Approved",
-            salesOrder: "SO-1001",
-            customerQuote: "Q-2024-001",
-            customerOrder: "CO-5050",
-            rmaType: "Customer Return",
-            shipFromAccount: "Apple",
-            shipFromContact: "Sarah Johnson",
-            returnToAccount: "Woven",
-            returnToContact: "Returns Dept",
-            dropShip: false,
-            totalLines: 1,
-            totalPrice: 549.00,
-            issuedDate: "2024-11-28",
-            returnByDate: "2024-12-28",
-            shippingMethod: "Ground",
-            logisticsPartner: "FedEx",
-            logisticsContact: "Support",
-            trackingNumber: "TRK778899",
-            estimatedDeliveryDate: "2024-12-05",
-            trackingStatus: "In Transit",
-            actualDeliveryDate: "",
-            goodsReceiptsDate: ""
-        }
-    ];
-    const mockCMs: QuoteCreditMemo[] = [
-        { id: "CM-001", memoNumber: "CM-2024-001", status: "Applied", customer: "Apple", date: "2024-11-30", totalAmount: 549.00, relatedInvoice: "INV-2001" }
-    ];
-    const mockRTVs: QuoteRTV[] = [
-        { id: "RTV-001", rtvNumber: "RTV-2024-001", status: "Shipped", vendor: "Acme Corp", date: "2024-12-01", totalAmount: 500.00, reason: "Return to Vendor" }
-    ];
-    const mockDMs: QuoteDebitMemo[] = [
-        {
-            id: "DM-001",
-            memoNumber: "DM-2024-001",
-            status: "Applied",
-            supplierBill: "BILL-4001",
-            purchaseOrder: "PO-3001",
-            customerQuote: "Q-2024-001",
-            customerOrder: "CO-5050",
-            supplierCredit: "SC-001",
-            debitToAccount: "Acme Corp",
-            debitToContact: "Vendor Support",
-            totalLines: 1,
-            totalCost: 500.00,
-            shipping: 25.00,
-            totalDebitAmount: 525.00,
-            issuedDate: "2024-12-05",
-            approvalDate: "2024-12-06",
-            availableBalance: 525.00,
-            settledDate: ""
-        }
-    ];
-
     // Sorting Handlers
     const handleRmaSort = (field: keyof QuoteRMA) => {
         if (rmaSortField === field) setRmaSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
@@ -161,28 +111,28 @@ export default function QuoteReturnsTab({ quoteId }: QuoteReturnsTabProps) {
     };
 
     // Sorting Logic
-    const sortedRMAs = [...mockRMAs].sort((a, b) => {
+    const sortedRMAs = [...rma].sort((a, b) => {
         const aVal = a[rmaSortField];
         const bVal = b[rmaSortField];
         if (typeof aVal === 'string' && typeof bVal === 'string') return rmaSortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
         if (typeof aVal === 'number' && typeof bVal === 'number') return rmaSortDirection === 'asc' ? aVal - bVal : bVal - aVal;
         return 0;
     });
-    const sortedCMs = [...mockCMs].sort((a, b) => {
+    const sortedCMs = [...creditMemos].sort((a, b) => {
         const aVal = a[cmSortField];
         const bVal = b[cmSortField];
         if (typeof aVal === 'string' && typeof bVal === 'string') return cmSortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
         if (typeof aVal === 'number' && typeof bVal === 'number') return cmSortDirection === 'asc' ? aVal - bVal : bVal - aVal;
         return 0;
     });
-    const sortedRTVs = [...mockRTVs].sort((a, b) => {
+    const sortedRTVs = [...rtv].sort((a, b) => {
         const aVal = a[rtvSortField];
         const bVal = b[rtvSortField];
         if (typeof aVal === 'string' && typeof bVal === 'string') return rtvSortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
         if (typeof aVal === 'number' && typeof bVal === 'number') return rtvSortDirection === 'asc' ? aVal - bVal : bVal - aVal;
         return 0;
     });
-    const sortedDMs = [...mockDMs].sort((a, b) => {
+    const sortedDMs = [...debitMemos].sort((a, b) => {
         const aVal = a[dmSortField];
         const bVal = b[dmSortField];
         if (typeof aVal === 'string' && typeof bVal === 'string') return dmSortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
@@ -219,7 +169,7 @@ export default function QuoteReturnsTab({ quoteId }: QuoteReturnsTabProps) {
                 </nav>
             </div>
 
-            <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2 min-h-[300px]">
+            <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2">
                 {activeSubTab === "rmas" && (
                     <QuoteRMASubTab
                         rmas={sortedRMAs}

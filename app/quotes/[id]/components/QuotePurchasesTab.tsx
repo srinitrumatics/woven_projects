@@ -8,10 +8,16 @@ type PurchasesSubTab = "purchases" | "supplierBills";
 
 interface QuotePurchasesTabProps {
     quoteId: string;
+    data: {
+        purchases: QuotePurchase[];
+        supplierBills: QuoteSupplierBill[];
+    };
+    loading: boolean;
 }
 
-export default function QuotePurchasesTab({ quoteId }: QuotePurchasesTabProps) {
+export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurchasesTabProps) {
     const [activeSubTab, setActiveSubTab] = useState<PurchasesSubTab>("purchases");
+    const { purchases = [], supplierBills = [] } = data;
 
     // Purchases State
     const [purchaseSortField, setPurchaseSortField] = useState<keyof QuotePurchase>("purchaseOrderNumber");
@@ -42,31 +48,6 @@ export default function QuotePurchasesTab({ quoteId }: QuotePurchasesTabProps) {
         totalAmount: 120
     });
 
-    const mockPurchases: QuotePurchase[] = [
-        {
-            id: "PO-3001",
-            purchaseOrderNumber: "PO-3001",
-            status: "Issued",
-            vendor: "Acme Corp",
-            date: "2024-11-20",
-            totalAmount: 5000.00,
-            expectedDeliveryDate: "2024-11-30"
-        }
-    ];
-
-    const mockBills: QuoteSupplierBill[] = [
-        {
-            id: "BILL-4001",
-            billNumber: "BILL-4001",
-            status: "Posted",
-            vendor: "Acme Corp",
-            purchaseOrder: "PO-3001",
-            billDate: "2024-11-25",
-            dueDate: "2024-12-25",
-            totalAmount: 5000.00
-        }
-    ];
-
     const handlePurchaseSort = (field: keyof QuotePurchase) => {
         if (purchaseSortField === field) {
             setPurchaseSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
@@ -85,7 +66,7 @@ export default function QuotePurchasesTab({ quoteId }: QuotePurchasesTabProps) {
         }
     };
 
-    const sortedPurchases = [...mockPurchases].sort((a, b) => {
+    const sortedPurchases = [...purchases].sort((a, b) => {
         const aVal = a[purchaseSortField];
         const bVal = b[purchaseSortField];
 
@@ -98,7 +79,7 @@ export default function QuotePurchasesTab({ quoteId }: QuotePurchasesTabProps) {
         return 0;
     });
 
-    const sortedBills = [...mockBills].sort((a, b) => {
+    const sortedBills = [...supplierBills].sort((a, b) => {
         const aVal = a[billSortField];
         const bVal = b[billSortField];
 

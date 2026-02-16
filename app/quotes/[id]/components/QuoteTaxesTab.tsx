@@ -38,20 +38,20 @@ export default function QuoteTaxesTab({
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
-                        <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxRate} onResize={onResize} align="right" />
-                        <SortableHeader label="Sales Tax Amount" field="salesTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxAmount} onResize={onResize} align="right" />
-                        <SortableHeader label="Use Tax Rate" field="useTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.useTaxRate} onResize={onResize} align="right" />
-                        <SortableHeader label="Use Tax Amount" field="useTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.useTaxAmount} onResize={onResize} align="right" />
-                        <SortableHeader label="Local Tax Rate" field="localTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.localTaxRate} onResize={onResize} align="right" />
-                        <SortableHeader label="Local Tax Amount" field="localTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.localTaxAmount} onResize={onResize} align="right" />
-                        <SortableHeader label="Excise Tax Rate" field="exciseTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseTaxRate} onResize={onResize} align="right" />
-                        <SortableHeader label="Excise Tax Amount" field="exciseTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseTaxAmount} onResize={onResize} align="right" />
-                        <SortableHeader label="GRT Rate" field="grtRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.grtRate} onResize={onResize} align="right" />
-                        <SortableHeader label="GRT Amount" field="grtAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.grtAmount} onResize={onResize} align="right" />
-                        <SortableHeader label="GST Rate" field="gstRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstRate} onResize={onResize} align="right" />
-                        <SortableHeader label="GST Amount" field="gstAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstAmount} onResize={onResize} align="right" />
-                        <SortableHeader label="VAT Rate" field="vatRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatRate} onResize={onResize} align="right" />
-                        <SortableHeader label="VAT Amount" field="vatAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatAmount} onResize={onResize} align="right" />
+                        <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxRate} onResize={onResize} align="left" />
+                        <SortableHeader label="Sales Tax Amount" field="salesTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxAmount} onResize={onResize} align="left" />
+                        <SortableHeader label="Use Tax Rate" field="useTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.useTaxRate} onResize={onResize} align="left" />
+                        <SortableHeader label="Use Tax Amount" field="useTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.useTaxAmount} onResize={onResize} align="left" />
+                        <SortableHeader label="Local Tax Rate" field="localTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.localTaxRate} onResize={onResize} align="left" />
+                        <SortableHeader label="Local Tax Amount" field="localTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.localTaxAmount} onResize={onResize} align="left" />
+                        <SortableHeader label="Excise Tax Rate" field="exciseTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseTaxRate} onResize={onResize} align="left" />
+                        <SortableHeader label="Excise Tax Amount" field="exciseTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseTaxAmount} onResize={onResize} align="left" />
+                        <SortableHeader label="GRT Rate" field="grtRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.grtRate} onResize={onResize} align="left" />
+                        <SortableHeader label="GRT Amount" field="grtAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.grtAmount} onResize={onResize} align="left" />
+                        <SortableHeader label="GST Rate" field="gstRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstRate} onResize={onResize} align="left" />
+                        <SortableHeader label="GST Amount" field="gstAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstAmount} onResize={onResize} align="left" />
+                        <SortableHeader label="VAT Rate" field="vatRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatRate} onResize={onResize} align="left" />
+                        <SortableHeader label="VAT Amount" field="vatAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatAmount} onResize={onResize} align="left" />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -62,26 +62,26 @@ export default function QuoteTaxesTab({
                     ) : (
                         taxes.map((tax) => (
                             <tr key={tax.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.salesTaxRate }}>{tax.salesTaxRate}%</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.salesTaxAmount }}>${tax.salesTaxAmount?.toFixed(2)}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.salesTaxRate }}>{tax.salesTaxRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[160px]" style={{ width: widths.salesTaxAmount }}>${tax.salesTaxAmount?.toFixed(2)}</td>
 
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.useTaxRate }}>{tax.useTaxRate}%</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.useTaxAmount }}>${tax.useTaxAmount?.toFixed(2)}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.useTaxRate }}>{tax.useTaxRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.useTaxAmount }}>${tax.useTaxAmount?.toFixed(2)}</td>
 
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.localTaxRate }}>{tax.localTaxRate}%</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.localTaxAmount }}>${tax.localTaxAmount?.toFixed(2)}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.localTaxRate }}>{tax.localTaxRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[160px]" style={{ width: widths.localTaxAmount }}>${tax.localTaxAmount?.toFixed(2)}</td>
 
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.exciseTaxRate }}>{tax.exciseTaxRate}%</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.exciseTaxAmount }}>${tax.exciseTaxAmount?.toFixed(2)}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.exciseTaxRate }}>{tax.exciseTaxRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[165px]" style={{ width: widths.exciseTaxAmount }}>${tax.exciseTaxAmount?.toFixed(2)}</td>
 
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.grtRate }}>{tax.grtRate}%</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.grtAmount }}>${tax.grtAmount?.toFixed(2)}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.grtRate }}>{tax.grtRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.grtAmount }}>${tax.grtAmount?.toFixed(2)}</td>
 
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.gstRate }}>{tax.gstRate}%</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.gstAmount }}>${tax.gstAmount?.toFixed(2)}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.gstRate }}>{tax.gstRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.gstAmount }}>${tax.gstAmount?.toFixed(2)}</td>
 
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.vatRate }}>{tax.vatRate}%</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.vatAmount }}>${tax.vatAmount?.toFixed(2)}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.vatRate }}>{tax.vatRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.vatAmount }}>${tax.vatAmount?.toFixed(2)}</td>
                             </tr>
                         ))
                     )}

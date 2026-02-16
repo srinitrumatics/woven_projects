@@ -9,10 +9,17 @@ type FulfillmentSubTab = "salesOrders" | "shippingManifests" | "invoices";
 
 interface QuoteFulfillmentTabProps {
     quoteId: string;
+    data: {
+        salesOrders: QuoteSalesOrder[];
+        shippingManifests: QuoteShippingManifest[];
+        invoices: QuoteInvoice[];
+    };
+    loading: boolean;
 }
 
-export default function QuoteFulfillmentTab({ quoteId }: QuoteFulfillmentTabProps) {
+export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFulfillmentTabProps) {
     const [activeSubTab, setActiveSubTab] = useState<FulfillmentSubTab>("salesOrders");
+    const { salesOrders = [], shippingManifests = [], invoices = [] } = data;
 
     // Sales Orders State
     const [salesSortField, setSalesSortField] = useState<keyof QuoteSalesOrder>("salesOrderNumber");
@@ -105,91 +112,6 @@ export default function QuoteFulfillmentTab({ quoteId }: QuoteFulfillmentTabProp
         settledDate: 120
     });
 
-    const mockSalesOrders: QuoteSalesOrder[] = [
-        {
-            id: "SO-1001",
-            salesOrderNumber: "SO-1001",
-            status: "Open",
-            customerQuote: "Q-2024-001",
-            customerOrder: "CO-5050",
-            customerPO: "PO-998877",
-            billToAccount: "Apple",
-            billToLocation: "Corp Billing",
-            billToContact: "Sarah Johnson",
-            shipToAccount: "Apple",
-            shipToLocation: "Apple NSO #1",
-            shipToContact: "Mike Smith",
-            dropShip: false,
-            totalLines: 3,
-            totalPrice: 15000.00,
-            shipping: 65.00,
-            taxes: 1200.00,
-            grandTotal: 16265.00,
-            requestDate: "2024-11-20",
-            pickDate: "2024-11-22",
-            pickCompleteDate: "2024-11-23",
-            plannedShipDate: "2024-11-25",
-            shipConfirmedDate: ""
-        }
-    ];
-
-    const mockManifests: QuoteShippingManifest[] = [
-        {
-            id: "SM-5001",
-            manifestNumber: "SM-5001",
-            status: "Shipped",
-            salesOrder: "SO-1001",
-            customerQuote: "Q-2024-001",
-            customerOrder: "CO-5050",
-            customerPO: "PO-998877",
-            shipToAccount: "Apple",
-            shipToLocation: "Apple NSO #1",
-            shipToContact: "Mike Smith",
-            dropShip: false,
-            boxCount: 2,
-            boxNetWeight: 15.5,
-            boxGrossWeight: 17.0,
-            totalLines: 3,
-            totalPrice: 15000.00,
-            plannedShipDate: "2024-11-25",
-            shipConfirmedDate: "2024-11-25",
-            shippingMethod: "Ground",
-            logisticsPartner: "FedEx",
-            logisticsContact: "Support",
-            trackingNumber: "123456789012",
-            estimatedDeliveryDate: "2024-11-28",
-            trackingStatus: "In Transit",
-            actualDeliveryDate: ""
-        }
-    ];
-
-    const mockInvoices: QuoteInvoice[] = [
-        {
-            id: "INV-2001",
-            invoiceNumber: "INV-2001",
-            status: "Posted",
-            salesOrder: "SO-1001",
-            customerQuote: "Q-2024-001",
-            customerOrder: "CO-5050",
-            customerPO: "PO-998877",
-            billToAccount: "Apple",
-            billToLocation: "Corp Billing",
-            billToContact: "Sarah Johnson",
-            totalLines: 3,
-            totalPrice: 15000.00,
-            shipping: 65.00,
-            taxes: 1200.00,
-            grandTotal: 16265.00,
-            issuedDate: "2024-11-26",
-            paymentTerms: "Net 30",
-            dueDate: "2024-12-26",
-            collectionStatus: "Current",
-            openBalance: 16265.00,
-            daysOutstanding: 2,
-            settledDate: ""
-        }
-    ];
-
     const handleSalesSort = (field: keyof QuoteSalesOrder) => {
         if (salesSortField === field) {
             setSalesSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
@@ -217,7 +139,7 @@ export default function QuoteFulfillmentTab({ quoteId }: QuoteFulfillmentTabProp
         }
     };
 
-    const sortedSalesOrders = [...mockSalesOrders].sort((a, b) => {
+    const sortedSalesOrders = [...salesOrders].sort((a, b) => {
         const aVal = a[salesSortField];
         const bVal = b[salesSortField];
 
@@ -230,7 +152,7 @@ export default function QuoteFulfillmentTab({ quoteId }: QuoteFulfillmentTabProp
         return 0;
     });
 
-    const sortedManifests = [...mockManifests].sort((a, b) => {
+    const sortedManifests = [...shippingManifests].sort((a, b) => {
         const aVal = a[manifestSortField];
         const bVal = b[manifestSortField];
 
@@ -243,7 +165,7 @@ export default function QuoteFulfillmentTab({ quoteId }: QuoteFulfillmentTabProp
         return 0;
     });
 
-    const sortedInvoices = [...mockInvoices].sort((a, b) => {
+    const sortedInvoices = [...invoices].sort((a, b) => {
         const aVal = a[invoiceSortField];
         const bVal = b[invoiceSortField];
 

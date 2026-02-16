@@ -3,24 +3,18 @@ import { getSalesforceSession } from './salesforce-service';
 export async function getQuotesFromSalesforce(
     accountId: string,
     contactId: string,
-    quoteId?: string
-): Promise<any[]> {
+    quoteId?: string,
+    tabName: string = "Customer_Quote",
+    objectName: string = "Customer_Quote__c"
+): Promise<any> {
     try {
         const session = await getSalesforceSession();
         if (!session.accessToken) {
             console.error('No Salesforce access token available');
-            return [];
+            return tabName === "Customer_Quote" ? [] : {};
         }
 
-        // Using the generic tab endpoint or a specific quote endpoint if available
-        // For consistency with other modules, we'll follow the pattern of using the generic tab endpoint
-        // but encapsulated here for separation of concerns
         const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/generic/tab`;
-
-        // We request the "Quote" tab data for the "Quote__c" object (or standard Quote object if applicable)
-        // Adjust objectName if your Salesforce implementation uses standard 'Quote' object instead of custom 'Quote__c'
-        const objectName = "Customer_Quote__c";
-        const tabName = "Customer_Quote";
 
         let url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectName=${encodeURIComponent(objectName)}&tabName=${encodeURIComponent(tabName)}`;
 
@@ -28,7 +22,7 @@ export async function getQuotesFromSalesforce(
             url += `&objectId=${encodeURIComponent(quoteId)}`;
         }
 
-        console.log(`Fetching Quotes from Salesforce with URL:`, url);
+        console.log(`Fetching Quote Data from Salesforce with URL:`, url);
 
         const response = await fetch(url, {
             method: "GET",
@@ -43,17 +37,23 @@ export async function getQuotesFromSalesforce(
         }
 
         const result = await response.json();
-        //console.log(`Quotes result:`, result);
 
-        // The API returns data in format: { data: [{ <ObjectName>__c: [...] }] }
-        // Extract the data from the nested structure
+        // Standard return for header/list
         if (result.data && result.data.length > 0) {
             const dataObject = result.data[0];
 
-            // Look for the array of quotes in the response
-            // It might be under 'Quote__c', 'Quotes__c', or standard 'Quote'
-            const possibleKeys = ['Quote__c', 'Quotes__c', 'Quote', 'Quotes'];
+            // For complex tabs like fulfillment, returns, purchases, return the whole object
+            if (['Fulfillment', 'Purchases', 'Returns'].includes(tabName)) {
+                return dataObject;
+            }
 
+            // Otherwise return the array for the specific object
+            // Use provided objectName or find the first array
+            if (dataObject[objectName] && Array.isArray(dataObject[objectName])) {
+                return dataObject[objectName];
+            }
+
+            const possibleKeys = [tabName, `${tabName}__c`, objectName, `${objectName}__c`];
             for (const key of possibleKeys) {
                 if (Array.isArray(dataObject[key])) {
                     return dataObject[key];
@@ -67,10 +67,47 @@ export async function getQuotesFromSalesforce(
             }
         }
 
-        return [];
+        return tabName === "Customer_Quote" ? [] : {};
 
     } catch (error) {
-        console.error(`Error fetching Quotes:`, error);
+        console.error(`Error fetching Quote Data (${tabName}):`, error);
+        return tabName === "Customer_Quote" ? [] : {};
+    }
+}
+
+export async function getQuoteFilesFromSalesforce(
+    accountId: string,
+    contactId: string,
+    quoteId: string
+): Promise<any[]> {
+    try {
+        const session = await getSalesforceSession();
+        if (!session.accessToken) {
+            console.error('No Salesforce access token available');
+            return [];
+        }
+
+        const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
+        const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(quoteId)}&objectName=Customer_Quote__c`;
+
+        console.log('Fetching quote files from Salesforce with URL:', url);
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${session.accessToken}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        return result.data || [];
+    } catch (error) {
+        console.error('Error fetching quote files:', error);
         return [];
     }
 }

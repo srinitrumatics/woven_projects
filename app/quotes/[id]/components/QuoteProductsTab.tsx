@@ -44,10 +44,10 @@ export default function QuoteProductsTab({
                         <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                         <SortableHeader label="SKU" field="productSku" sortConfig={sortConfig} requestSort={requestSort} width={widths.productSku} onResize={onResize} align="left" />
                         <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={onResize} align="left" />
-                        <SortableHeader label="Quantity" field="quantity" sortConfig={sortConfig} requestSort={requestSort} width={widths.quantity} onResize={onResize} align="right" />
-                        <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} align="right" />
-                        <SortableHeader label="Discount" field="discount" sortConfig={sortConfig} requestSort={requestSort} width={widths.discount} onResize={onResize} align="right" />
-                        <SortableHeader label="Subtotal" field="subtotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} align="right" />
+                        <SortableHeader label="Quantity" field="quantity" sortConfig={sortConfig} requestSort={requestSort} width={widths.quantity} onResize={onResize} align="left" />
+                        <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} align="left" />
+                        <SortableHeader label="Discount" field="discount" sortConfig={sortConfig} requestSort={requestSort} width={widths.discount} onResize={onResize} align="left" />
+                        <SortableHeader label="Subtotal" field="subtotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} align="left" />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -63,16 +63,16 @@ export default function QuoteProductsTab({
                                 </td>
                                 <td className="px-3 py-2 text-sm font-mono text-gray-600 dark:text-gray-400" style={{ width: widths.productSku }}>{line.productSku}</td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.description }}>
-                                    <div className="max-w-xs line-clamp-2" title={line.description}>{line.description}</div>
+                                    <div className="max-w-xs line-clamp-1" title={line.description}>{line.description}</div>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.quantity }}>{line.quantity}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.unitPrice }}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.quantity }}>{line.quantity}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.unitPrice }}>
                                     ${line.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-600 dark:text-gray-400" style={{ width: widths.discount }}>
+                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.discount }}>
                                     {line.discount > 0 ? `${line.discount}%` : '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white font-semibold" style={{ width: widths.subtotal }}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold" style={{ width: widths.subtotal }}>
                                     ${line.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                             </tr>
