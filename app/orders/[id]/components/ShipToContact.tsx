@@ -71,7 +71,7 @@ export default function ShipToContact({
                             placeholder="Full name"
                             value={formData.locationContact}
                             onChange={(e) => setFormData({ ...formData, locationContact: e.target.value })}
-                            readOnly={!isEditing}
+                            readOnly={true}
                             className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
@@ -85,7 +85,7 @@ export default function ShipToContact({
                             placeholder="(555) 123-4567"
                             value={formData.contactPhone}
                             onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
-                            readOnly={!isEditing}
+                            readOnly={true}
                             className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
@@ -99,7 +99,7 @@ export default function ShipToContact({
                             placeholder="contact@example.com"
                             value={formData.contactEmail}
                             onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
-                            readOnly={!isEditing}
+                            readOnly={true}
                             className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>

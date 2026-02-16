@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Sidebar from "@/components/layouts/Sidebar";
+import Pagination from "@/components/ui/Pagination";
 
 import { formatCurrency, formatNumber, formatDate } from "@/lib/utils/formatting";
 import { OrderStatus } from "./types";
@@ -33,7 +35,7 @@ export default function OrdersPage() {
     name: 150,
     status: 120,
     proposal_name: 180,
-    cpo: 150,
+    customerPO: 150,
     billTo: 180,
     shipTo: 180,
     items: 120,
@@ -100,7 +102,7 @@ export default function OrdersPage() {
       name: o.Name,
       status: o.Status__c ?? o.Status__c ?? "N/A",
       proposal_name: o.Proposal_Name ?? o.Proposal_Name ?? "",
-      cpo: o.Customer_PO__c ?? o.Customer_PO__c ?? "",
+      customerPO: o.Customer_PO__c ?? o.Customer_PO__c ?? "",
       shipTo: o.Authorized_Ship_To_Location_Name ?? o.Authorized_Ship_To_Location_Name ?? "",
       billTo: o.Authorized_Bill_To_Location_Name ?? o.Authorized_Bill_To_Location_Name ?? "",
       items: o.Total_Lines__c ?? o.Total_Lines__c?.Total_Lines__c ?? 0,
@@ -145,7 +147,7 @@ export default function OrdersPage() {
         String(order.name || "").toLowerCase().includes(q) ||
         String(order.status || "").toLowerCase().includes(q) ||
         String(order.proposal_name || "").toLowerCase().includes(q) ||
-        String(order.cpo || "").toLowerCase().includes(q) ||
+        String(order.customerPO || "").toLowerCase().includes(q) ||
         String(order.shipTo || "").toLowerCase().includes(q) ||
         String(order.billTo || "").toLowerCase().includes(q)
       );
@@ -372,62 +374,59 @@ export default function OrdersPage() {
     }
   };
 
+  const handleCardClick = (tab: TabFilter) => {
+    setActiveTab(tab);
+  };
+
   return (
     <>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Orders</h1>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Orders</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and Track Sales Orders</p>
+        </div>
         <div className="flex items-center gap-3">
-
           <button
             onClick={handleCreateOrder}
             disabled={loading}
-            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
             {loading ? 'Creating...' : 'Create Order'}
           </button>
         </div>
-      </div>
-
-      {/* Date Range Selector */}
-      <div className="mb-6">
-        <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          {dateRange}
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard
           title="Total Orders"
-          value={`${formatNumber(stats.totalOrders, 0)} -`}
+          value={formatNumber(stats.totalOrders, 0)}
           change={stats.totalOrdersChange}
           trend="up"
         />
         <StatCard
           title="Order items over time"
-          value={`${formatNumber(stats.orderItems, 0)} -`}
+          value={formatNumber(stats.orderItems, 0)}
           change={stats.orderItemsChange}
           trend="up"
         />
         <StatCard
           title="Returns Orders"
-          value={`${formatNumber(stats.returnsOrders, 0)} -`}
+          value={formatNumber(stats.returnsOrders, 0)}
           change={stats.returnsOrdersChange}
           trend="down"
         />
         <StatCard
           title="Fulfilled orders over time"
-          value={`${formatNumber(stats.fulfilledOrders, 0)} -`}
+          value={formatNumber(stats.fulfilledOrders, 0)}
           change={stats.fulfilledOrdersChange}
           trend="up"
         />
       </div>
+
 
       {error && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center gap-3">
@@ -440,77 +439,68 @@ export default function OrdersPage() {
 
       {/* Orders Table */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-        {/* Tabs and Search */}
+        {/* Header with Search and Filter */}
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between px-3 py-2">
-            <div className="flex items-center gap-6">
-              {(["All", "Pending", "Success", "Draft", "Cancelled"] as TabFilter[]).map(tab => (
-                <button
-                  key={`orders-tab-${tab}`}
-                  onClick={() => setActiveTab(tab)}
-                  className={`pb-2 text-sm font-medium transition-colors font-semibold text-gray-900 dark:text-white relative ${activeTab === tab
-                    ? "text-gray-900 dark:text-white"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                    }`}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-6 py-4 gap-4">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Order List</h2>
+            <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+              {/* Status Dropdown Filter */}
+              <div className="relative min-w-[160px]">
+                <select
+                  value={activeTab}
+                  onChange={(e) => setActiveTab(e.target.value as TabFilter)}
+                  className="w-full pl-3 pr-10 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
                 >
-                  {tab}
-                  {activeTab === tab && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900 dark:bg-white"></div>
-                  )}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
+                  <option value="All">All Statuses</option>
+                  <option value="Draft">Draft</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Success">Success</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+
               {/* Search Input */}
-              <div className="relative">
+              <div className="relative flex-1 sm:flex-initial min-w-[200px]">
                 <input
                   type="text"
                   placeholder="Search orders..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-                </svg>
-              </button>
-              <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                </svg>
-              </button>
+
+              <div className="flex items-center gap-1">
+                <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors" title="Sort">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                  </svg>
+                </button>
+                <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors" title="Filter Settings">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
+
         {/* Table */}
         <div className="overflow-x-auto">
           {loading ? (
-            // Spinner Loader
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-              <svg
-                className="animate-spin h-10 w-10 text-primary mb-4"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                ></path>
+              <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
               </svg>
               <p className="text-sm">Loading orders...</p>
             </div>
@@ -518,28 +508,28 @@ export default function OrdersPage() {
             <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Order Number" field="name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                  <SortableHeader label="Order Number" field="name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 dark:bg-gray-900 z-10" />
                   <SortableHeader label="Status" field="status" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                   <SortableHeader label="Proposal Name" field="proposal_name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal_name} onResize={handleResize} />
-                  <SortableHeader label="Customer Order" field="cpo" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.cpo} onResize={handleResize} />
+                  <SortableHeader label="Customer PO" field="customerPO" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
                   <SortableHeader label="Bill to Account" field="billTo" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
                   <SortableHeader label="Ship to Account" field="shipTo" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} />
-                  <SortableHeader label="Total Lines" field="items" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
-                  <SortableHeader label="Total Price" field="total" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
+                  <SortableHeader label="Total Lines" field="items" align="right" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
+                  <SortableHeader label="Total Price" field="total" align="right" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
                   <SortableHeader label="Request Date" field="requestedDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestedDate} onResize={handleResize} />
-
                   <th
-                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
                     Actions
                   </th>
                 </tr>
               </thead>
+
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {paginatedOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="px-6 py-12 text-left">
+                    <td colSpan={10} className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center justify-center">
                         <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -556,29 +546,30 @@ export default function OrdersPage() {
                 ) : (
                   paginatedOrders.map((order) => (
                     <tr key={`order-row-${order.Id ?? order.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0  text-left">
-                        <Link href={`/orders/${order.id}`} className="text-sm  text-primary hover:underline">{order.name}</Link>
+                      <td className="px-3 py-3 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left">
+                        <Link href={`/orders/${order.id}`} className="text-sm font-semibold text-primary hover:underline">
+                          <div title={order.name}>{order.name}</div>
+                        </Link>
                       </td>
-                      <td className="px-3 py-2 text-left">
+                      <td className="px-3 py-3">
                         <StatusBadge status={order.status as OrderStatus} />
                       </td>
-                      <td className="px-3 py-2 text-left">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.proposal_name}>{order.proposal_name}</div>
+                      <td className="px-3 py-3">
+                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={order.proposal_name}>{order.proposal_name}</div>
                       </td>
-                      <td className="px-3 py-2 text-left">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.cpo}>{order.cpo}</div>
+                      <td className="px-3 py-3">
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.customerPO}>{order.customerPO}</div>
                       </td>
-                      <td className="px-3 py-2 text-left">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.billTo}>{order.billTo}</div>
+                      <td className="px-3 py-3">
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billTo}>{order.billTo}</div>
                       </td>
-                      <td className="px-3 py-2 text-left">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" title={order.shipTo}>{order.shipTo}</div>
+                      <td className="px-3 py-3">
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipTo}>{order.shipTo}</div>
                       </td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">{formatNumber(order.items, 0)}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total, 'USD', 2)}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">{formatDate(order.requestedDate, 'numeric-dash')}</td>
-
-                      <td className="px-3 py-2 text-left">
+                      <td className="px-3 py-3 text-sm text-right text-gray-900 dark:text-white">{formatNumber(order.items, 0)}</td>
+                      <td className="px-3 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total)}</td>
+                      <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400">{formatDate(order.requestedDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-3">
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleEditOrder(order.Id)}
@@ -598,7 +589,6 @@ export default function OrdersPage() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                             </svg>
                           </button>
-                          {/* Only show delete for orders that are NOT Approved or Delivered */}
                           {!["Approved", "Delivered"].includes(order.status) && (
                             <button
                               className="p-1.5 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
@@ -619,103 +609,17 @@ export default function OrdersPage() {
           )}
         </div>
 
-        {/* Pagination (use safe numeric handling) */}
-        <div className="px-4 py-3">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            {(() => {
-              const totalItems = filteredAndSearchedOrders.length;
-              const safeCurrent = Number(currentPage) || 1;
-              const start = totalItems === 0 ? 0 : (safeCurrent - 1) * ITEMS_PER_PAGE + 1;
-              const end = Math.min(totalItems, safeCurrent * ITEMS_PER_PAGE);
-              return (
-                <div className="text-sm text-gray-500">
-                  Showing {start} to {end} of {totalItems} orders
-                </div>
-              );
-            })()}
-
-            <nav className="flex items-center gap-2" aria-label="Pagination">
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => {
-                    const p = Number(prev) || 1;
-                    return Math.max(1, p - 1);
-                  })
-                }
-                disabled={(Number(currentPage) || 1) <= 1}
-                className="px-3 py-1 rounded border bg-white text-sm disabled:opacity-50"
-                aria-label="Previous page"
-              >
-                Previous
-              </button>
-
-              <div className="hidden sm:flex items-center gap-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                  <button
-                    key={`orders-page-${p}`}
-                    onClick={() => setCurrentPage(Number(p))}
-                    aria-current={p === Number(currentPage) ? "page" : undefined}
-                    className={`px-3 py-1 rounded border text-sm ${p === Number(currentPage) ? "bg-[var(--primary)] text-white" : "bg-white"
-                      }`}
-                  >
-                    {p}
-                  </button>
-                ))}
-              </div>
-
-              <div className="sm:hidden text-sm text-gray-600 px-2">
-                {Number(currentPage) || 1} / {totalPages}
-              </div>
-
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => {
-                    const p = Number(prev) || 1;
-                    return Math.min(totalPages, p + 1);
-                  })
-                }
-                disabled={(Number(currentPage) || 1) >= totalPages}
-                className="px-3 py-1 rounded border bg-white text-sm disabled:opacity-50"
-                aria-label="Next page"
-              >
-                Next
-              </button>
-            </nav>
-          </div>
-        </div>
+        {/* Pagination component */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredAndSearchedOrders.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+          itemName="orders"
+        />
       </div>
     </>
-  );
-}
-
-function StatCard({ title, value, change, trend }: {
-  title: string;
-  value: string;
-  change: number;
-  trend: "up" | "down";
-}) {
-  const isPositive = trend === "up";
-
-  return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 flex flex-col items-center text-center">
-      <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-2">{title}</h3>
-      <div className="flex items-baseline justify-center gap-2">
-        <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
-        <span className={`text-sm flex items-center ${isPositive ? "text-green-600" : "text-red-600"}`}>
-          {isPositive ? "▲" : "▼"} {Math.abs(change)}% last week
-        </span>
-      </div>
-      <div className="mt-4 h-12 w-full flex items-end justify-center gap-1">
-        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[30%]"></div>
-        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[45%]"></div>
-        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[60%]"></div>
-        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[80%]"></div>
-        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[70%]"></div>
-        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[55%]"></div>
-        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[85%]"></div>
-        <div className="flex-1 max-w-[12px] bg-gray-200 dark:bg-gray-700 rounded-sm h-[95%]"></div>
-      </div>
-    </div>
   );
 }
 
@@ -723,16 +627,17 @@ function StatusBadge({ status }: { status: OrderStatus }) {
   const getStyles = () => {
     switch ((status || "").toString()) {
       case "Delivered":
-        return "bg-green-300 text-green-900 dark:bg-green-1000/30 dark:text-green-500";
+        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500";
       case "Approved":
         return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
       case "Submitted":
-        return "bg-yellow-200 text-blue-900 dark:bg-blue-1000/30 dark:text-yellow-500";
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
       case "In Progress":
         return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
       case "Draft":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
       case "Canceled":
+      case "Cancelled":
         return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
@@ -745,3 +650,41 @@ function StatusBadge({ status }: { status: OrderStatus }) {
     </span>
   );
 }
+
+function StatCard({ title, value, change, trend }: {
+  title: string;
+  value: string;
+  change: number;
+  trend: "up" | "down";
+}) {
+  const isPositive = trend === "up";
+  const barColor = isPositive ? "bg-green-500/20" : "bg-red-500/20";
+  const activeBarColor = isPositive ? "bg-green-500" : "bg-red-500";
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex flex-col transition-all hover:shadow-md">
+      <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">{title}</h3>
+      <div className="flex items-baseline gap-3 mb-4">
+        <p className="text-3xl font-bold text-gray-900 dark:text-white leading-none">{value}</p>
+        <div className={`flex items-center text-xs font-semibold px-1.5 py-0.5 rounded-full ${isPositive ? "text-green-700 bg-green-50 dark:text-green-400 dark:bg-green-900/30" : "text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-900/30"
+          }`}>
+          <span className="mr-1">{isPositive ? "▲" : "▼"}</span>
+          {Math.abs(change)}%
+        </div>
+        <span className="text-[10px] text-gray-400 dark:text-gray-500 font-medium">last week</span>
+      </div>
+      <div className="mt-auto h-10 w-full flex items-end justify-between gap-1 px-1">
+        <div className={`flex-1 rounded-t-sm h-[35%] ${barColor}`}></div>
+        <div className={`flex-1 rounded-t-sm h-[55%] ${barColor}`}></div>
+        <div className={`flex-1 rounded-t-sm h-[45%] ${barColor}`}></div>
+        <div className={`flex-1 rounded-t-sm h-[75%] ${barColor}`}></div>
+        <div className={`flex-1 rounded-t-sm h-[65%] ${barColor}`}></div>
+        <div className={`flex-1 rounded-t-sm h-[85%] ${activeBarColor}`}></div>
+        <div className={`flex-1 rounded-t-sm h-[50%] ${barColor}`}></div>
+        <div className={`flex-1 rounded-t-sm h-[40%] ${barColor}`}></div>
+        <div className={`flex-1 rounded-t-sm h-[60%] ${barColor}`}></div>
+      </div>
+    </div>
+  );
+}
+

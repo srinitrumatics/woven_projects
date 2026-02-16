@@ -97,7 +97,6 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
             <Bars3Icon className="h-6 w-6 text-gray-600" />
           </button>
 
-          <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">{getCurrentPageName()}</h1>
         </div>
 
         <div className="flex items-center space-x-4">

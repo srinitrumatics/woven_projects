@@ -18,6 +18,7 @@ export interface Quote {
   status: QuoteStatus;
   totalAmount: number;
   proposalName?: string;
+  customerPO?: string;
   customerOrder?: string;
   shipToAccountName?: string;
   billToAccountName?: string;

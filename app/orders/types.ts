@@ -22,7 +22,7 @@ export interface Order {
   id: string;
   status: string;
   proposal: string;
-  cpo: string;
+  customePO: string;
   billTo: string;
   shipTo: string;
   items: number;

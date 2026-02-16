@@ -301,9 +301,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     shippingMethod: "",
     incoterms: "",
 
-    // Account Names
+    // Account Info
     billToAccountName: "",
+    billToAccountId: "",
     shipToAccountName: "",
+    shipToAccountId: "",
 
     // Order Name
     orderName: "",
@@ -406,18 +408,28 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           }
 
           // Fetch Account Name
-          /*try {
-            // We can fetch account details separately or assume accountName matches the contexts
+          try {
             const accRes = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&action=account`);
             if (accRes.ok) {
               const accData = await accRes.json();
-              if (accData && accData.Name) {
+              if (Array.isArray(accData) && accData.length > 0 && accData[0].Name) {
+                setAccountName(accData[0].Name);
+              } else if (accData && accData.Name) {
                 setAccountName(accData.Name);
               }
             }
-          } catch (e) { console.error("Error fetching account name:", e); }*/
+          } catch (e) { console.error("Error fetching account name:", e); }
 
           if (locations.length > 0) {
+            // Fallback: If accountName is still empty, try to get it from the locations
+            const currentAccountName = accountName; // This might be stale if setAccountName was just called
+            // We use a local check or just rely on the state update if it works
+            // But since setAccountName is async, we can check if it found anything in locations
+            const matchedLoc = locations.find(loc => loc.Account_Name__c === SF_ACCOUNT_ID);
+            const foundName = matchedLoc?.Account_Name__r?.Name;
+            if (foundName && !currentAccountName) {
+              setAccountName(foundName);
+            }
 
             // Deduplicate locations by ID and filter out any with missing IDs
             const validLocations = locations.filter(loc => {
@@ -609,12 +621,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     // Use fetched account name if available and location account ID matches (or just use it as it's the context account)
     // Fallback to location.Account_Name__r?.Name if backend supports it, otherwise ID
     const accName = location.Account_Name__r?.Name ||
-      (location.Account_Name__c === SF_ACCOUNT_ID ? accountName : location.Account_Name__c) ||
-      "";
+      (location.Account_Name__c === SF_ACCOUNT_ID && accountName ? accountName : location.Account_Name__c) ||
+      location.Account_Name__c || "";
 
     setFormData(prev => ({
       ...prev,
       shipTo: location.Id,
+      shipToAccountId: location.Account_Name__c || "",
+      shipToAccountName: accName,
       shippingAddress: formattedAddress,
       liftGateRequired: location.Lift_Gate__c,
       insideDelivery: location.Inside_Delivery__c,
@@ -635,22 +649,23 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
 
 
-  // Sync Billing Address with Shipping Address if "Same as Shipping" is selected
   useEffect(() => {
     if (formData.billTo === "same") {
       setFormData(prev => ({
         ...prev,
-        billingAddress: prev.shippingAddress
+        billingAddress: prev.shippingAddress,
+        billToAccountName: prev.shipToAccountName
       }));
     }
-  }, [formData.billTo, formData.shippingAddress]);
+  }, [formData.billTo, formData.shippingAddress, formData.shipToAccountName]);
 
   const handleBillToSelect = (locationId: string) => {
     if (locationId === "same") {
       setFormData(prev => ({
         ...prev,
         billTo: "same",
-        billingAddress: prev.shippingAddress
+        billingAddress: prev.shippingAddress,
+        billToAccountName: prev.shipToAccountName
       }));
     } else {
       const selectedLoc = shipLocations.find(l => l.Id === locationId);
@@ -659,12 +674,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         const formattedAddress = address ? `${address.street}, ${address.city}, ${address.state} ${address.postalCode}` : "";
 
         const accName = selectedLoc.Account_Name__r?.Name ||
-          (selectedLoc.Account_Name__c === SF_ACCOUNT_ID ? accountName : selectedLoc.Account_Name__c) ||
-          "";
+          (selectedLoc.Account_Name__c === SF_ACCOUNT_ID && accountName ? accountName : selectedLoc.Account_Name__c) ||
+          selectedLoc.Account_Name__c || "";
 
         setFormData(prev => ({
           ...prev,
-
+          billToAccountName: accName,
+          billToAccountId: selectedLoc.Account_Name__c || "",
           billTo: locationId,
           billingAddress: formattedAddress
         }));
@@ -710,6 +726,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         if (data && data.length > 0) {
           const order: Order = data[0];
           setOrderData(order);
+
+          // Proactively set accountName state from order names if context matches
+          if (order.Ship_to_Account_Name && !order.Ship_to_Account_Name.startsWith('001')) {
+            setAccountName(order.Ship_to_Account_Name);
+          } else if (order.Bill_to_Account_Name && !order.Bill_to_Account_Name.startsWith('001')) {
+            setAccountName(order.Bill_to_Account_Name);
+          }
 
           // Update Order Status
           if (order.Status__c) setOrderStatus(order.Status__c);
@@ -782,10 +805,20 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             contactEmail: order.Ship_to_Contact_Email || prev.contactEmail || "",
 
             billingContact: order.Bill_to_Contact_Name || prev.billingContact || "",
-            billingPhone: order.Ship_to_Contact_Phone || prev.billingPhone || "", // Fallback to ship contact phone if bill contact phone missing in API
-            billingEmail: order.Ship_to_Contact_Email || prev.billingEmail || "", // Fallback to ship contact email
-            billToAccountName: order.Bill_to_Account_Name || "",
-            shipToAccountName: order.Ship_to_Account_Name || "",
+            billingPhone: order.Ship_to_Contact_Phone || prev.billingPhone || "",
+            billingEmail: order.Ship_to_Contact_Email || prev.billingEmail || "",
+            billToAccountName: (() => {
+              if (order.Bill_to_Account_Name && !order.Bill_to_Account_Name.startsWith('001')) return order.Bill_to_Account_Name;
+              if (order.Bill_to_Account__c === SF_ACCOUNT_ID && accountName) return accountName;
+              return order.Bill_to_Account_Name || "";
+            })(),
+            billToAccountId: order.Authorized_Bill_To_Location__r?.Account_Name__c || order.Bill_to_Account__c || "",
+            shipToAccountName: (() => {
+              if (order.Ship_to_Account_Name && !order.Ship_to_Account_Name.startsWith('001')) return order.Ship_to_Account_Name;
+              if (order.Ship_to_Account__c === SF_ACCOUNT_ID && accountName) return accountName;
+              return order.Ship_to_Account_Name || "";
+            })(),
+            shipToAccountId: order.Authorized_Ship_To_Location__r?.Account_Name__c || order.Ship_to_Account__c || "",
             orderName: order.Name || "",
             deliveryNotes: order.Authorized_Ship_To_Location_Delivery_Notes || "",
             liftGateRequired: order.Authorized_Ship_To_Location_Lift_Gate || false,
@@ -1098,13 +1131,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           Id: id,
           Authorized_Bill_To_Location__c: formData.billTo === "same" ? formData.shipTo : formData.billTo,
           Authorized_Ship_To_Location__c: formData.shipTo,
-          Bill_to_Account__c: SF_ACCOUNT_ID,
+          Bill_to_Account__c: (formData.billTo === "same" ? formData.shipToAccountId : formData.billToAccountId) || SF_ACCOUNT_ID,
           Bill_to_Contact__c: shipToContactId, // Must be Contact ID (003xxx)
           Request_Date__c: formData.requestedDeliveryDate,
           Customer_PO__c: formData.purchaseOrder,
           Drop_Ship__c: formData.dropShip,
           Customer_Order_Notes__c: formData.orderNotes,
-          Ship_to_Account__c: SF_ACCOUNT_ID,
+          Ship_to_Account__c: formData.shipToAccountId || SF_ACCOUNT_ID,
           Ship_to_Contact__c: shipToContactId, // Must be Contact ID (003xxx)
           Payment_Term__c: formData.paymentTerms,
           Inventory_Account__c: SF_ACCOUNT_ID,
@@ -1199,13 +1232,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           // Id removed for clone
           Authorized_Bill_To_Location__c: formData.billTo === "same" ? formData.shipTo : formData.billTo,
           Authorized_Ship_To_Location__c: formData.shipTo,
-          Bill_to_Account__c: SF_ACCOUNT_ID,
+          Bill_to_Account__c: (formData.billTo === "same" ? formData.shipToAccountId : formData.billToAccountId) || SF_ACCOUNT_ID,
           Bill_to_Contact__c: shipToContactId,
           Request_Date__c: formData.requestedDeliveryDate,
           Customer_PO__c: formData.purchaseOrder,
           Drop_Ship__c: formData.dropShip,
           Customer_Order_Notes__c: formData.orderNotes,
-          Ship_to_Account__c: SF_ACCOUNT_ID,
+          Ship_to_Account__c: formData.shipToAccountId || SF_ACCOUNT_ID,
           Ship_to_Contact__c: shipToContactId,
           Payment_Term__c: formData.paymentTerms,
           Inventory_Account__c: SF_ACCOUNT_ID,
@@ -1327,6 +1360,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               shipLocations={shipLocations}
               handleBillToChange={handleBillToChange}
               isEditing={isEditing}
+              accountName={accountName}
+              SF_ACCOUNT_ID={SF_ACCOUNT_ID}
             />
             <ShippingInfo
               formData={formData}
@@ -1335,6 +1370,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               locationsLoading={locationsLoading}
               handleLocationSelect={handleLocationSelect}
               isEditing={isEditing}
+              accountName={accountName}
+              SF_ACCOUNT_ID={SF_ACCOUNT_ID}
             />
           </div>
           <ShipToContact

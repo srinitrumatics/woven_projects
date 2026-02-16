@@ -9,9 +9,11 @@ interface ShippingInfoProps {
     locationsLoading: boolean;
     handleLocationSelect: (location: AuthorizedLocation) => void;
     isEditing?: boolean;
+    accountName?: string;
+    SF_ACCOUNT_ID?: string;
 }
 
-export default function ShippingInfo({ formData, setFormData, shipLocations, locationsLoading, handleLocationSelect, isEditing = false }: ShippingInfoProps) {
+export default function ShippingInfo({ formData, setFormData, shipLocations, locationsLoading, handleLocationSelect, isEditing = false, accountName = '', SF_ACCOUNT_ID = '' }: ShippingInfoProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-fit">
             <div className="w-full flex items-center gap-2 justify-start p-4">
@@ -36,9 +38,25 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                         <input
                             type="text"
                             value={(() => {
-                                if (formData.shipToAccountName) return formData.shipToAccountName;
+                                // 1. Try to find name in shipLocations for the current location
                                 const location = shipLocations.find(l => l.Id === formData.shipTo);
-                                return location?.Account_Name__r?.Name || location?.Account_Name__c || '';
+
+                                if (location?.Account_Name__r?.Name) return location.Account_Name__r.Name;
+                                if (location?.Account_Name__c === SF_ACCOUNT_ID && accountName) return accountName;
+
+                                // 2. If formData already has a non-ID name, use it
+                                if (formData.shipToAccountName && !formData.shipToAccountName.startsWith('001')) {
+                                    return formData.shipToAccountName;
+                                }
+
+                                // 3. Try to find the name in any other location that shares the same Account ID
+                                if (location?.Account_Name__c) {
+                                    const otherLoc = shipLocations.find(l => l.Account_Name__c === location.Account_Name__c && l.Account_Name__r?.Name);
+                                    if (otherLoc?.Account_Name__r?.Name) return otherLoc.Account_Name__r.Name;
+                                }
+
+                                // 4. Fallback to ID if we absolutely cannot resolve a name
+                                return formData.shipToAccountName || location?.Account_Name__c || '';
                             })() || ''}
                             readOnly
                             disabled

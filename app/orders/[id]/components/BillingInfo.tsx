@@ -8,10 +8,10 @@ interface BillingInfoProps {
     shipLocations: AuthorizedLocation[];
     handleBillToChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     isEditing?: boolean;
+    accountName?: string;
+    SF_ACCOUNT_ID?: string;
 }
-export default function BillingInfo({ formData, setFormData, shipLocations, handleBillToChange, isEditing = false }: BillingInfoProps) {
-    //console.log('billinginfo page', formData);
-
+export default function BillingInfo({ formData, setFormData, shipLocations, handleBillToChange, isEditing = false, accountName = '', SF_ACCOUNT_ID = '' }: BillingInfoProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-fit">
             <div className="w-full flex items-center gap-2 justify-start p-4">
@@ -34,7 +34,29 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         </label>
                         <input
                             type="text"
-                            value={formData.billToAccountName || ''}
+                            value={(() => {
+                                // 1. Try to find name in shipLocations for the current location
+                                const location = formData.billTo === 'same'
+                                    ? shipLocations.find(l => l.Id === formData.shipTo)
+                                    : shipLocations.find(l => l.Id === formData.billTo);
+
+                                if (location?.Account_Name__r?.Name) return location.Account_Name__r.Name;
+                                if (location?.Account_Name__c === SF_ACCOUNT_ID && accountName) return accountName;
+
+                                // 2. If formData already has a non-ID name, use it
+                                if (formData.billToAccountName && !formData.billToAccountName.startsWith('001')) {
+                                    return formData.billToAccountName;
+                                }
+
+                                // 3. Try to find the name in any other location that shares the same Account ID
+                                if (location?.Account_Name__c) {
+                                    const otherLoc = shipLocations.find(l => l.Account_Name__c === location.Account_Name__c && l.Account_Name__r?.Name);
+                                    if (otherLoc?.Account_Name__r?.Name) return otherLoc.Account_Name__r.Name;
+                                }
+
+                                // 4. Fallback to ID if we absolutely cannot resolve a name
+                                return formData.billToAccountName || location?.Account_Name__c || '';
+                            })() || ''}
                             readOnly
                             disabled
                             className="w-full h-11 px-2 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed"

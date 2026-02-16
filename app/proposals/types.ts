@@ -25,6 +25,7 @@ export interface Proposal {
   orderNumber?: string;
   billingAddress?: string;
   paymentTerms?: string;
+  customerOrder?: string;
   customerPO?: string;
   shippingAddress?: string;
   requestedDeliveryDate?: string;

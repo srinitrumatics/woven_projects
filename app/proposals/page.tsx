@@ -25,9 +25,11 @@ export default function ProposalsPage() {
 
   // Initialize resizable columns
   const { widths, handleResize } = useResizableColumns({
-    proposalNumber: 150,
+    proposalNumber: 160,
     status: 120,
     proposalName: 200,
+    customerOrder: 180,
+    customerPO: 180,
     billTo: 180,
     shipTo: 180,
     productCount: 100,
@@ -52,9 +54,11 @@ export default function ProposalsPage() {
         const mappedProposals: Proposal[] = data.map((item: any) => ({
           id: item.Id,
           proposalNumber: item.Proposal_Number__c || item.Name || 'N/A',
-          proposalName: item.Name || item.Proposal_Name__c || 'Untitled Proposal',
-          accountName: item.Bill_to_Account_Name || item.Ship_to_Account_Name || 'Unknown Account',
-          contactName: item.Bill_to_Contact_Name || item.Ship_to_Contact_Name || 'Unknown Contact',
+          proposalName: item.Name || item.Proposal_Name__c || 'N/A',
+          customerOrder: item.Customer_Order_Name || 'N/A',
+          customerPO: item.Customer_PO__c || 'N/A',
+          accountName: item.Bill_to_Account_Name || item.Ship_to_Account_Name || 'N/A',
+          contactName: item.Bill_to_Contact_Name || item.Ship_to_Contact_Name || 'N/A',
           status: (item.Status__c as ProposalStatus) || 'Draft',
           totalAmount: item.Total_Price__c || item.Total_Amount__c || 0,
           totalShippingCharges: item.Total_Shipping_Charges__c || 0,
@@ -506,6 +510,8 @@ export default function ProposalsPage() {
                   <SortableHeader label="Proposal Number" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                   <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                   <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                  <SortableHeader label="Customer  Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                  <SortableHeader label="customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
                   <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
                   <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} />
                   <SortableHeader label="Total Lines" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCount} onResize={handleResize} />
@@ -541,7 +547,7 @@ export default function ProposalsPage() {
                 ) : (
                   paginatedProposals.map((proposal) => (
                     <tr key={proposal.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0  text-left">
+                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left">
                         <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
                           <div title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
                         </Link>
@@ -553,6 +559,12 @@ export default function ProposalsPage() {
                         <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.proposalName}>{proposal.proposalName}</div>
                       </td>
                       <td className="px-3 py-2">
+                        <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerOrder}>{proposal.customerOrder}</div>
+                      </td>
+                      <td className="px-3 py-2">
+                        <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerPO}>{proposal.customerPO}</div>
+                      </td>
+                      <td className="px-3 py-2">
                         <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billTo}>{proposal.billTo}</div>
                       </td>
                       <td className="px-3 py-2">
@@ -561,7 +573,7 @@ export default function ProposalsPage() {
                       <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[130px]">{proposal.productCount}</td>
                       <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(proposal.proposalDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[150px]">{formatDate(proposal.proposalDate, 'numeric-dash')}</td>
                       <td className="px-3 py-2">
                         <div className="flex gap-2">
                           <button

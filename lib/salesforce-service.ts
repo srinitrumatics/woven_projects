@@ -103,7 +103,7 @@ export async function getOrderFromSalesforce(accountId?: string, contactId?: str
     console.log('Fetching orders from Salesforce with session:', session);
 
     const separator = orderUrl?.includes('?') ? '&' : '?';
-    let Url = orderUrl + `${separator}accountId=${encodeURIComponent(accountId ?? '001WL00000bapRiYAI')}&orderId=${encodeURIComponent(orderId ?? '')}&contactId=${encodeURIComponent(contactId ?? 'NEXT_PUBLIC_SALESFORCE_CONTACT_ID=003QL00001EzLjZYAV')}`;
+    let Url = orderUrl + `${separator}accountId=${encodeURIComponent(accountId ?? '001WL00000bapRiYAI')}&orderId=${encodeURIComponent(orderId ?? '')}&contactId=${encodeURIComponent(contactId ?? '')}`;
 
     console.log('Fetching orders from Salesforce with URL:', Url);
     // Make API call to Salesforce
@@ -252,7 +252,8 @@ export async function getAccountFromSalesforce(accountId?: string): Promise<any[
       return [];
     }
 
-    const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/accounts`;
+    // Try singular 'account' as plural 'accounts' resulted in 404
+    const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/account`;
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId ?? '')}`;
 
     console.log('Fetching account from Salesforce with URL:', url);
@@ -266,7 +267,8 @@ export async function getAccountFromSalesforce(accountId?: string): Promise<any[
     });
 
     if (!response.ok) {
-      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+      console.warn(`Salesforce Account API error: ${response.status} ${response.statusText}. URL: ${url}`);
+      return [];
     }
 
     const resultdata = await response.json();
