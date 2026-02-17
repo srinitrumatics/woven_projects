@@ -28,7 +28,7 @@ export default function QuoteSummary({
                 </div>
             </div>
 
-            <div className="space-y-3 mb-4">
+            <div className="flex-1 flex flex-col justify-between gap-3 mb-4">
                 <div className="flex justify-between text-sm pb-1">
                     <span className="text-gray-700 dark:text-gray-300">({lines.length}) Products - Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
@@ -71,22 +71,7 @@ export default function QuoteSummary({
                 </button>
             </div>
 
-            {/* Upload Attachments */}
-            <div className="border-t border-gray-300 dark:border-gray-600 pt-3 mt-3">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Upload Files (Max 10MB)</label>
-                <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 cursor-pointer hover:border-primary dark:hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all">
-                    <svg className="w-5 h-5 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                    <span className="text-xs text-gray-500 dark:text-gray-400 text-center pt-3">Accepted: PDF · JPEG · PNG · CSV · XLS · XLSX · DOC · TXT </span>
-                    <input
-                        type="file"
-                        accept=".pdf,.jpg,.jpeg,.png,.csv,.xls,.xlsx,.doc,.txt"
-                        multiple
-                        className="hidden"
-                    />
-                </label>
-            </div>
+
         </div>
     )
 }
