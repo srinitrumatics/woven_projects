@@ -111,22 +111,28 @@ export default function OrdersPage() {
       raw: o,
     }));
   }, [sfOrders]);
-  // Derived stats (simple)
+  // Derived stats
   const stats = useMemo(() => {
     const totalOrders = uiOrders.length;
-    const orderItems = uiOrders.reduce((s, it) => s + (Number(it.items) || 0), 0);
-    const returnsOrders = 0; // no field in sample, keep 0
-    const fulfilledOrders = uiOrders.filter(o => (o.status || "").toLowerCase().includes("success")).length;
+    const totalValue = uiOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+
+    const draftOrders = uiOrders.filter(o => o.status === "Draft");
+    const draftCount = draftOrders.length;
+    const draftValue = draftOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+
+    const pendingOrders = uiOrders.filter(o => o.status === "Pending" || o.status === "Submitted");
+    const pendingCount = pendingOrders.length;
+    const pendingValue = pendingOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+
+    const fulfilledOrders = uiOrders.filter(o => o.status === "Success" || o.status === "Approved" || o.status === "Delivered");
+    const fulfilledCount = fulfilledOrders.length;
+    const fulfilledValue = fulfilledOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+
     return {
-      totalOrders,
-      orderItems,
-      returnsOrders,
-      fulfilledOrders,
-      // small change values are placeholders to keep card UI same
-      totalOrdersChange: 5,
-      orderItemsChange: 3,
-      returnsOrdersChange: -1,
-      fulfilledOrdersChange: 2,
+      totalOrders, totalValue,
+      draftCount, draftValue,
+      pendingCount, pendingValue,
+      fulfilledCount, fulfilledValue
     };
   }, [uiOrders]);
 
@@ -136,7 +142,13 @@ export default function OrdersPage() {
 
     // Apply tab filter
     if (activeTab !== "All") {
-      filtered = filtered.filter(order => order.status === activeTab);
+      if (activeTab === "Pending") {
+        filtered = filtered.filter(order => order.status === "Pending" || order.status === "Submitted");
+      } else if (activeTab === "Success") {
+        filtered = filtered.filter(order => order.status === "Success" || order.status === "Approved" || order.status === "Delivered");
+      } else {
+        filtered = filtered.filter(order => order.status === activeTab);
+      }
     }
 
     // Search
@@ -374,6 +386,43 @@ export default function OrdersPage() {
     }
   };
 
+  const handleDeleteOrder = async (orderId: string, status: string) => {
+    if (status !== "Draft") {
+      alert("Only draft orders can be deleted.");
+      return;
+    }
+
+    if (!confirm("Are you sure you want to delete this order? This action cannot be undone.")) return;
+
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/salesforce/orders?accountId=${accountId}&orderId=${orderId}&contactId=${contactId}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: "Failed to delete order" }));
+        throw new Error(errorData.error || "Failed to delete order");
+      }
+
+      const result = await res.json();
+      console.log("Delete result:", result);
+
+      if (result.success) {
+        alert("Order deleted successfully.");
+        // Refresh the list
+        setSfOrders(prev => prev.filter(o => o.Id !== orderId));
+      } else {
+        throw new Error(result.message || "Failed to delete order");
+      }
+    } catch (err: any) {
+      console.error("Delete failed:", err);
+      alert(`Failed to delete order: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCardClick = (tab: TabFilter) => {
     setActiveTab(tab);
   };
@@ -399,32 +448,223 @@ export default function OrdersPage() {
         </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats Cards - New Design */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard
-          title="Total Orders"
-          value={formatNumber(stats.totalOrders, 0)}
-          change={stats.totalOrdersChange}
-          trend="up"
-        />
-        <StatCard
-          title="Order items over time"
-          value={formatNumber(stats.orderItems, 0)}
-          change={stats.orderItemsChange}
-          trend="up"
-        />
-        <StatCard
-          title="Returns Orders"
-          value={formatNumber(stats.returnsOrders, 0)}
-          change={stats.returnsOrdersChange}
-          trend="down"
-        />
-        <StatCard
-          title="Fulfilled orders over time"
-          value={formatNumber(stats.fulfilledOrders, 0)}
-          change={stats.fulfilledOrdersChange}
-          trend="up"
-        />
+        {/* Total Orders Card */}
+        <button
+          onClick={() => handleCardClick("All")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "All"
+            ? "border-primary ring-2 ring-primary/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
+            }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-dark"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("All")}
+                  className="hover:underline block"
+                >
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Total Orders</p>
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("All")}
+                  className="hover:underline block"
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalOrders}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Orders</span>
+                  </div>
+                </Link>
+                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
+                } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline">
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("All")}
+                  className="hover:underline block">
+                  View all orders</Link>
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </button>
+
+        {/* Draft Orders Card */}
+        <button
+          onClick={() => handleCardClick("Draft")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Draft"
+            ? "border-gray-500 ring-2 ring-gray-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
+            }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-400 to-gray-500"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Draft")}
+                  className="hover:underline block">
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Drafts</p>
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Draft")}
+                  className="hover:underline block">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Orders</span>
+                  </div>
+                </Link>
+                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.draftValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-gray-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-600 group-hover:text-white"
+                } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white group-hover:underline">
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Draft")}
+                  className="hover:underline block">
+                  View drafts</Link>
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </button>
+
+        {/* Pending Orders Card */}
+        <button
+          onClick={() => handleCardClick("Pending")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Pending"
+            ? "border-yellow-500 ring-2 ring-yellow-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-yellow-400"
+            }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-orange-400"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <Link
+                    href="#"
+                    onClick={() => handleCardClick("Pending")}
+                    className="hover:underline block">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Pending/Submitted</p>
+                  </Link>
+                  {stats.pendingCount > 0 && (
+                    <span className="flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-yellow-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                    </span>
+                  )}
+                </div>
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Pending")}
+                  className="hover:underline block">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.pendingCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Orders</span>
+                  </div>
+                </Link>
+
+                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.pendingValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Pending" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
+                } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline">
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Pending")}
+                  className="hover:underline block">
+                  View pending</Link>
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </button>
+
+        {/* Success/Fulfilled Orders Card */}
+        <button
+          onClick={() => handleCardClick("Success")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Success"
+            ? "border-green-500 ring-2 ring-green-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-green-400"
+            }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-emerald-500"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Success")}
+                  className="hover:underline block">
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Fulfilled/Success</p>
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Success")}
+                  className="hover:underline block">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.fulfilledCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Orders</span>
+                  </div>
+                </Link>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.fulfilledValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Success" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
+                } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline">
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Success")}
+                  className="hover:underline block">
+                  View fulfilled
+                </Link>
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </button>
       </div>
 
 
@@ -571,26 +811,31 @@ export default function OrdersPage() {
                       <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400">{formatDate(order.requestedDate, 'numeric-dash')}</td>
                       <td className="px-3 py-3">
                         <div className="flex gap-2">
-                          <button
-                            onClick={() => handleEditOrder(order.Id)}
-                            className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
-                            title="Edit order"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={() => handleCloneOrder(order.Id)}
-                            className="p-1.5 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-                            title="Clone order"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                            </svg>
-                          </button>
-                          {!["Approved", "Delivered"].includes(order.status) && (
+                          {order.status !== "Canceled" && order.status !== "Cancelled" && (
+                            <>
+                              <button
+                                onClick={() => handleEditOrder(order.Id)}
+                                className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                                title="Edit order"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={() => handleCloneOrder(order.Id)}
+                                className="p-1.5 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+                                title="Clone order"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                                </svg>
+                              </button>
+                            </>
+                          )}
+                          {order.status === "Draft" && (
                             <button
+                              onClick={() => handleDeleteOrder(order.Id, order.status)}
                               className="p-1.5 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
                               title="Delete order"
                             >
@@ -631,11 +876,11 @@ function StatusBadge({ status }: { status: OrderStatus }) {
       case "Approved":
         return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
       case "Submitted":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
       case "In Progress":
         return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
       case "Draft":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
       case "Canceled":
       case "Cancelled":
         return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
@@ -651,40 +896,5 @@ function StatusBadge({ status }: { status: OrderStatus }) {
   );
 }
 
-function StatCard({ title, value, change, trend }: {
-  title: string;
-  value: string;
-  change: number;
-  trend: "up" | "down";
-}) {
-  const isPositive = trend === "up";
-  const barColor = isPositive ? "bg-green-500/20" : "bg-red-500/20";
-  const activeBarColor = isPositive ? "bg-green-500" : "bg-red-500";
 
-  return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex flex-col transition-all hover:shadow-md">
-      <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">{title}</h3>
-      <div className="flex items-baseline gap-3 mb-4">
-        <p className="text-3xl font-bold text-gray-900 dark:text-white leading-none">{value}</p>
-        <div className={`flex items-center text-xs font-semibold px-1.5 py-0.5 rounded-full ${isPositive ? "text-green-700 bg-green-50 dark:text-green-400 dark:bg-green-900/30" : "text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-900/30"
-          }`}>
-          <span className="mr-1">{isPositive ? "▲" : "▼"}</span>
-          {Math.abs(change)}%
-        </div>
-        <span className="text-[10px] text-gray-400 dark:text-gray-500 font-medium">last week</span>
-      </div>
-      <div className="mt-auto h-10 w-full flex items-end justify-between gap-1 px-1">
-        <div className={`flex-1 rounded-t-sm h-[35%] ${barColor}`}></div>
-        <div className={`flex-1 rounded-t-sm h-[55%] ${barColor}`}></div>
-        <div className={`flex-1 rounded-t-sm h-[45%] ${barColor}`}></div>
-        <div className={`flex-1 rounded-t-sm h-[75%] ${barColor}`}></div>
-        <div className={`flex-1 rounded-t-sm h-[65%] ${barColor}`}></div>
-        <div className={`flex-1 rounded-t-sm h-[85%] ${activeBarColor}`}></div>
-        <div className={`flex-1 rounded-t-sm h-[50%] ${barColor}`}></div>
-        <div className={`flex-1 rounded-t-sm h-[40%] ${barColor}`}></div>
-        <div className={`flex-1 rounded-t-sm h-[60%] ${barColor}`}></div>
-      </div>
-    </div>
-  );
-}
 

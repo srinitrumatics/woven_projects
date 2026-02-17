@@ -11,7 +11,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 
-type TabFilter = QuoteStatus | "All";
+type TabFilter = QuoteStatus | "All" | "Draft" | "Partial Shipment" | "Shipped";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -79,26 +79,29 @@ export default function QuotesPage() {
 
   // Calculate stats from all quotes
   const stats = useMemo(() => {
-    const total = quotes.length;
-    const totalValue = quotes.reduce((sum, q) => sum + (q.totalAmount || 0), 0);
+    // Helper to calculate stats for a specific status
+    const getStats = (status: string) => {
+      const filtered = quotes.filter(q => q.status === status);
+      return {
+        count: filtered.length,
+        value: filtered.reduce((sum, q) => sum + (q.totalAmount || 0), 0)
+      };
+    };
 
-    const pending = quotes.filter(q => q.status === "Pending");
-    const pendingCount = pending.length;
-    const pendingValue = pending.reduce((sum, q) => sum + (q.totalAmount || 0), 0);
-
-    const approved = quotes.filter(q => q.status === "Approved");
-    const approvedCount = approved.length;
-    const approvedValue = approved.reduce((sum, q) => sum + (q.totalAmount || 0), 0);
-
-    const converted = quotes.filter(q => q.status === "Converted");
-    const convertedCount = converted.length;
-    const convertedValue = converted.reduce((sum, q) => sum + (q.totalAmount || 0), 0);
+    const draft = getStats("Draft");
+    const approved = getStats("Approved");
+    const partialShipment = getStats("Partial Shipment");
+    const shipped = getStats("Shipped");
 
     return {
-      total, totalValue,
-      pendingCount, pendingValue,
-      approvedCount, approvedValue,
-      convertedCount, convertedValue
+      draftCount: draft.count,
+      draftValue: draft.value,
+      approvedCount: approved.count,
+      approvedValue: approved.value,
+      partialShipmentCount: partialShipment.count,
+      partialShipmentValue: partialShipment.value,
+      shippedCount: shipped.count,
+      shippedValue: shipped.value
     };
   }, [quotes]);
 
@@ -108,7 +111,7 @@ export default function QuotesPage() {
 
     // Apply status filter
     if (activeTab !== "All") {
-      filtered = filtered.filter(quote => quote.status === activeTab);
+      filtered = filtered.filter(quote => (quote.status as string) === activeTab);
     }
 
     // Apply search filter
@@ -154,78 +157,179 @@ export default function QuotesPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        {/* Total Quotes Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
-              <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+      {/* Stats Cards - New Design */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* Draft Quotes Card */}
+        <button
+          onClick={() => handleCardClick("Draft")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Draft"
+            ? "border-gray-500 ring-2 ring-gray-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
+            }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-400 to-gray-600"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Draft")}
+                  className="hover:underline block"
+                >
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Draft</p>
+                </Link>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+                </div>
+                <p className="text-lg font-semibold text-gray-600 dark:text-gray-400 mt-1">{formatCurrency(stats.draftValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-gray-500 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 group-hover:bg-gray-500 group-hover:text-white"
+                } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:underline">
+                View draft quotes
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            {stats.total}
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Total Quotes</p>
-        </div>
-
-        {/* Pending Quotes Card with CTA */}
-        <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-lg p-6 shadow-md border-2 border-yellow-300 dark:border-yellow-700">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-full bg-yellow-500/20 dark:bg-yellow-500/30 flex items-center justify-center">
-              <svg className="w-6 h-6 text-yellow-700 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            {stats.pendingCount}
-          </h3>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">Pending Approval</p>
-          <button
-            onClick={() => setActiveTab("Pending")}
-            className="w-full px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-colors text-sm font-medium"
-          >
-            Review Now
-          </button>
-        </div>
+        </button>
 
         {/* Approved Quotes Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-              <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+        <button
+          onClick={() => handleCardClick("Approved")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Approved"
+            ? "border-green-500 ring-2 ring-green-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-green-400"
+            }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-emerald-500"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Approved")}
+                  className="hover:underline block"
+                >
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Approved</p>
+                </Link>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.approvedCount}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+                </div>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.approvedValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Approved" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
+                } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline">
+                View approved quotes
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            {stats.approvedCount}
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Approved Quotes</p>
-        </div>
+        </button>
 
-        {/* Total Value Card with CTA */}
-        <div className="bg-gradient-to-br from-primary/10 to-primary/20 dark:from-primary/20 dark:to-primary/30 rounded-lg p-6 shadow-md border-2 border-primary dark:border-primary">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-full bg-primary/30 dark:bg-primary/40 flex items-center justify-center">
-              <svg className="w-6 h-6 text-primary-dark dark:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+        {/* Partial Shipment Card */}
+        <button
+          onClick={() => handleCardClick("Partial Shipment" as any)}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Partial Shipment"
+            ? "border-yellow-500 ring-2 ring-yellow-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-yellow-400"
+            }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-orange-400"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Partial Shipment" as any)}
+                  className="hover:underline block"
+                >
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Partial Shipment</p>
+                </Link>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.partialShipmentCount}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+                </div>
+                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.partialShipmentValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Partial Shipment" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
+                } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline">
+                View partial shipments
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            {formatCurrency(stats.totalValue)}
-          </h3>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">Total Quote Value</p>
-          <button
-            onClick={() => router.push("/quotes/new")}
-            className="w-full px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors text-sm font-medium"
-          >
-            Create New Quote
-          </button>
-        </div>
+        </button>
+
+        {/* Shipped Quotes Card */}
+        <button
+          onClick={() => handleCardClick("Shipped" as any)}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Shipped"
+            ? "border-indigo-500 ring-2 ring-indigo-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-indigo-400"
+            }`}
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-400 to-purple-500"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Shipped" as any)}
+                  className="hover:underline block"
+                >
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Shipped</p>
+                </Link>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.shippedCount}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+                </div>
+                <p className="text-lg font-semibold text-indigo-600 dark:text-indigo-400 mt-1">{formatCurrency(stats.shippedValue)}</p>
+              </div>
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Shipped" ? "bg-indigo-500 text-white" : "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white"
+                } transition-colors`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-indigo-600 dark:text-indigo-400 group-hover:underline">
+                View shipped quotes
+                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </button>
       </div>
 
 

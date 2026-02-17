@@ -550,7 +550,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             )}
             {activeTab === 'files' && (
               <div className="p-8 text-center text-gray-500">
-                <p>Files tab content coming soon...</p>
+                <p>No Files Found.</p>
                 <div className="mt-4 flex flex-col gap-2 max-w-lg mx-auto">
                   {quoteFiles.map(file => (
                     <div key={file.id} className="flex justify-between items-center p-3 bg-gray-50 rounded border">
@@ -566,7 +566,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
       </div>
 
       {/* Floating Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] gap-4 sm:gap-0" style={{ zIndex: 40, marginLeft: 'var(--sidebar-width, 256px)' }}>
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between shadow-lg gap-4 sm:gap-0" style={{ zIndex: 40 }}>
         <button
           onClick={() => router.push("/quotes")}
           className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"

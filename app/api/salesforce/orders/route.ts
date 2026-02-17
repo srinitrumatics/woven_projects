@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { exit } from "process";
-import { getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, getProductsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce, cloneOrderFromSalesforce, deleteOrderFromSalesforce, getFilesFromSalesforce, deleteFileFromSalesforce, uploadFilesToSalesforce, downloadFileFromSalesforce, getFileUrl, getOrderLinesFromSalesforce, getAccountFromSalesforce } from '@/lib/salesforce-service';
+import { getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, getProductsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce, cloneOrderFromSalesforce, deleteOrderFromSalesforce, deleteFullOrderFromSalesforce, getFilesFromSalesforce, deleteFileFromSalesforce, uploadFilesToSalesforce, downloadFileFromSalesforce, getFileUrl, getOrderLinesFromSalesforce, getAccountFromSalesforce } from '@/lib/salesforce-service';
 
 
 export async function GET(req: Request) {
@@ -178,7 +178,7 @@ export async function PATCH(req: Request) {
   }
 }
 
-// DELETE handler for deleting order line items or files
+// DELETE handler for deleting order, order line items or files
 export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -204,27 +204,31 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ success: true, message: "File deleted successfully" });
     }
 
-    if (!orderLineId) {
-      return NextResponse.json(
-        { error: "Missing orderLineId for order line deletion" },
-        { status: 400 }
-      );
+    if (orderLineId) {
+      console.log('DELETE order line - accountId:', accountId, 'orderLineId:', orderLineId, 'contactId:', contactId);
+      const result = await deleteOrderFromSalesforce(accountId, contactId, orderLineId);
+      if (!result) {
+        return NextResponse.json({ error: "Failed to delete order line" }, { status: 500 });
+      }
+      return NextResponse.json({ success: true, message: "Order line is deleted successfully" });
     }
 
-    console.log('DELETE order line - accountId:', accountId, 'orderLineId:', orderLineId, 'contactId:', contactId);
-
-    // Call the delete service function
-    const result = await deleteOrderFromSalesforce(accountId, contactId, orderLineId);
-
-    if (!result) {
-      return NextResponse.json({ error: "Failed to delete order line" }, { status: 500 });
+    if (orderId) {
+      console.log('DELETE full order - accountId:', accountId, 'orderId:', orderId, 'contactId:', contactId);
+      const result = await deleteFullOrderFromSalesforce(accountId, contactId, orderId);
+      if (!result) {
+        return NextResponse.json({ error: "Failed to delete order" }, { status: 500 });
+      }
+      return NextResponse.json({ success: true, message: "Order and related lines are deleted successfully" });
     }
 
-    return NextResponse.json({ success: true, message: "Order line is deleted successfully" });
-
+    return NextResponse.json(
+      { error: "Missing required parameters: orderLineId or orderId" },
+      { status: 400 }
+    );
 
   } catch (err) {
-    console.error("Delete order line error:", err);
+    console.error("Delete error:", err);
     return NextResponse.json({
       error: "Server error",
       details: err instanceof Error ? err.message : String(err)

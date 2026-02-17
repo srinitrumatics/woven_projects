@@ -509,6 +509,45 @@ export async function deleteOrderFromSalesforce(accountId: string, contactId: st
   }
 }
 
+// Delete an entire order and its related lines from Salesforce
+export async function deleteFullOrderFromSalesforce(accountId: string, contactId: string, orderId: string): Promise<boolean> {
+  try {
+    const session = await getSalesforceSession();
+
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return false;
+    }
+
+    // Construct URL with query parameters
+    const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/orders`;
+    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&orderId=${encodeURIComponent(orderId)}`;
+
+    console.log('Deleting full order from Salesforce with URL:', url);
+
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Salesforce DELETE full order failed:', response.status, errorText);
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    console.log('Order and related lines are deleted successfully:', result);
+    return true;
+  } catch (error) {
+    console.error('Error deleting full order from Salesforce:', error);
+    return false;
+  }
+}
+
 // Fetch files from Salesforce
 export async function getFilesFromSalesforce(accountId: string, contactId: string, orderId: string): Promise<any[]> {
   try {

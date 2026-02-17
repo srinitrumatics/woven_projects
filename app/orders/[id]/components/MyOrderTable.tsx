@@ -142,23 +142,29 @@ export default function MyOrderTable({
                                                     onChange={(e) => {
                                                         const val = e.target.value;
                                                         if (val === '' || /^[0-9]+$/.test(val)) {
-                                                            handleQuantityChange(product.lineItemKey!, val === '' ? 0 : parseInt(val));
+                                                            let numVal = val === '' ? 0 : parseInt(val);
+                                                            if (numVal > product.availableQty) {
+                                                                numVal = product.availableQty;
+                                                            }
+                                                            handleQuantityChange(product.lineItemKey!, numVal);
                                                         }
                                                     }}
                                                     className="w-20 px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
                                                     min={product.moq || 1}
+                                                    max={product.availableQty}
                                                 />
                                                 <button
                                                     onClick={() => {
                                                         const moq = product.moq || 1;
-                                                        handleQuantityChange(product.lineItemKey!, product.orderQty + moq);
+                                                        const newQty = Math.min(product.orderQty + moq, product.availableQty);
+                                                        handleQuantityChange(product.lineItemKey!, newQty);
                                                     }}
                                                     className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                                                 >
                                                     +
                                                 </button>
                                             </div>
-                                            <div className="text-sm text-gray-500 dark:text-gray-400 text-center mt-1">MOQ: {product.moq || 1}</div>
+                                            <div className="text-sm text-gray-500 dark:text-gray-400 text-center mt-1">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
                                         </div>
                                     ) : (
                                         <div className="text-left text-sm text-gray-900 dark:text-white font-medium">

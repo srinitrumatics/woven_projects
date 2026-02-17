@@ -7,6 +7,14 @@ import { useRouter } from "next/navigation";
 import LineTaxesTab from "../../components/LineTaxesTab";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 
+// Import sub-components
+import LineHeader from "./components/LineHeader";
+import ProductCarousel from "./components/ProductCarousel";
+import OrderLineNotes from "./components/OrderLineNotes";
+import ProductInfo from "./components/ProductInfo";
+import OrderDetailsTable from "./components/OrderDetailsTable";
+import LineNavigation from "./components/LineNavigation";
+
 // Interface for order line item from Salesforce
 interface OrderLineItem {
   Id: string;
@@ -105,7 +113,14 @@ export default function OrderLineDetailPage({
   const [loading, setLoading] = useState(true);
   const [orderLines, setOrderLines] = useState<ProductData[]>([]);
   const [orderName, setOrderName] = useState<string>("");
+  const [orderStatus, setOrderStatus] = useState<string>("Draft");
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
+
+  // Edit mode state
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedOrderQty, setEditedOrderQty] = useState<number>(0);
+  const [editedLineNotes, setEditedLineNotes] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Salesforce credentials
   const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
@@ -136,6 +151,7 @@ export default function OrderLineDetailPage({
 
         if (orderData && orderData.length > 0) {
           setOrderName(orderData[0].Name || orderData[0].OrderNumber || id);
+          setOrderStatus(orderData[0].Status__c || "Draft");
         }
 
         if (linesData && linesData.length > 0) {
@@ -213,6 +229,70 @@ export default function OrderLineDetailPage({
     }
   }, [id, lineId, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
+  // Sync edited values when product changes
+  useEffect(() => {
+    if (orderLines[currentLineIndex]) {
+      const p = orderLines[currentLineIndex];
+      setEditedOrderQty(p.orderQty);
+      setEditedLineNotes(p.orderLineNotes);
+    }
+  }, [currentLineIndex, orderLines]);
+
+  const handleSave = async () => {
+    if (!product) return;
+
+    try {
+      setIsSubmitting(true);
+
+      const orderPayload = {
+        order: {
+          Id: id,
+          Status__c: orderStatus
+        },
+        orderLines: [{
+          Id: product.orderLineId,
+          Order_Qty__c: editedOrderQty,
+          Customer_Order_Line_Notes__c: editedLineNotes,
+          Product_Name__c: product.id,
+          Unit_Price__c: product.unitPrice,
+          Inventory_Account__c: SF_ACCOUNT_ID
+        }],
+        accountId: SF_ACCOUNT_ID,
+        contactId: SF_CONTACT_ID
+      };
+
+      const response = await fetch(`/api/salesforce/orders?orderId=${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(orderPayload)
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update order line");
+      }
+
+      const result = await response.json();
+      console.log("Update result:", result);
+
+      // Update local state
+      setOrderLines(prev => prev.map((line, idx) =>
+        idx === currentLineIndex
+          ? { ...line, orderQty: editedOrderQty, orderLineNotes: editedLineNotes, subtotal: editedOrderQty * line.unitPrice }
+          : line
+      ));
+
+      setIsEditing(false);
+      alert("Order line updated successfully");
+    } catch (error) {
+      console.error("Error updating order line:", error);
+      alert("Failed to update order line");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // Get current product from order lines
   const product = orderLines[currentLineIndex];
   const totalLines = orderLines.length;
@@ -231,30 +311,15 @@ export default function OrderLineDetailPage({
     { id: 3, label: "Image 3" },
   ];
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
   // Calculate order line totals
-  const orderQty = product?.orderQty || 0;
+  const displayQty = isEditing ? editedOrderQty : (product?.orderQty || 0);
   const unitPrice = product?.unitPrice || 0;
-  const subtotal = product?.subtotal || (orderQty * unitPrice);
+  const subtotal = displayQty * unitPrice;
   const shippingCharges = subtotal > 0 ? 15.0 : 0;
   const taxRate = 0.15;
   const taxes = subtotal * taxRate;
   const grandTotal = subtotal + shippingCharges + taxes;
 
-
-
-  const handlePrevImage = () => {
-    setCurrentImageIndex((prev) =>
-      prev === 0 ? productImages.length - 1 : prev - 1
-    );
-  };
-
-  const handleNextImage = () => {
-    setCurrentImageIndex((prev) =>
-      prev === productImages.length - 1 ? 0 : prev + 1
-    );
-  };
 
   // Loading state
   if (loading) {
@@ -273,455 +338,88 @@ export default function OrderLineDetailPage({
   // No data state
   if (!product) {
     return (
-      <>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p className="text-gray-500 dark:text-gray-400 mb-4">Order line not found</p>
-            <Link
-              href={`/orders/${id}`}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-            >
-              Back to Order
-            </Link>
-          </div>
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p className="text-gray-500 dark:text-gray-400 mb-4">Order line not found</p>
+          <Link
+            href={`/orders/${id}`}
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+          >
+            Back to Order
+          </Link>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
     <>
-      {/* Breadcrumb - Compact */}
-      <div className="mb-4">
-        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
-          <button
-            onClick={() => router.push("/orders")}
-            className="hover:text-gray-700 dark:hover:text-gray-300"
-          >
-            Orders
-          </button>
-          <span>&gt;</span>
-          <button
-            onClick={() => router.push(`/orders/${id}`)}
-            className="hover:text-gray-700 dark:hover:text-gray-300"
-          >
-            {orderName || `Order #${id}`}
-          </button>
-          <span>&gt;</span>
-          <span className="text-gray-900 dark:text-white">{product?.sku || `Line #${lineId}`}</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {product?.sku || `Order Line #${lineId}`}
-            </h1>
-            <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-              Line {lineNumber} of {totalLines}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            {/* Back to Order Button */}
-            <Link
-              href={`/orders/${id}`}
-              className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors inline-flex items-center gap-2"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
-              Back to Order
-            </Link>
-          </div>
-        </div>
-      </div>
+      <LineHeader
+        id={id}
+        lineId={lineId}
+        orderName={orderName}
+        productSku={product.sku}
+        lineNumber={lineNumber}
+        totalLines={totalLines}
+        orderStatus={orderStatus}
+        isEditing={isEditing}
+        isSubmitting={isSubmitting}
+        onEditToggle={() => {
+          if (isEditing) {
+            setEditedOrderQty(product.orderQty);
+            setEditedLineNotes(product.orderLineNotes);
+          }
+          setIsEditing(!isEditing);
+        }}
+        onSave={handleSave}
+      />
 
       {/* Row 1: Main Image + Order Notes + Product Information */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-2 items-stretch">
-        {/* Main Image with Carousel - 25% width (3 of 12 cols) */}
-        <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
-          <div className="relative flex-1 flex flex-col">
-            {/* Main Image Display - Reduced height */}
-            <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
-              <div className="text-center">
-                <svg
-                  className="w-16 h-16 text-gray-400 mx-auto"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                  />
-                </svg>
-                <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block">
-                  {productImages[currentImageIndex].label}
-                </span>
-              </div>
-            </div>
+        <ProductCarousel images={productImages} />
 
-            {/* Carousel Navigation Arrows */}
-            <button
-              onClick={handlePrevImage}
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-            <button
-              onClick={handleNextImage}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
+        <OrderLineNotes
+          isEditing={isEditing}
+          notes={editedLineNotes}
+          onNotesChange={setEditedLineNotes}
+          originalNotes={product.orderLineNotes}
+        />
 
-            {/* Carousel Dots */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-              {productImages.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`w-2 h-2 rounded-full transition-colors ${index === currentImageIndex
-                    ? "bg-primary"
-                    : "bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500"
-                    }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Order Notes - 25% width (3 of 12 cols) */}
-        <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
-              <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-            </div>
-            <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-              Order Notes
-            </h3>
-          </div>
-          <div className="flex-1 flex flex-col">
-            <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-              Notes
-            </label>
-            <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-900 dark:text-white min-h-[200px]">
-              <p className="text-gray-400">{product.orderLineNotes}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Product Information Card - 50% width (6 of 12 cols) */}
-        <div className="lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
-              <svg
-                className="w-4 h-4 text-primary"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                />
-              </svg>
-            </div>
-            <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-              Product Information
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 ">
-            {/* Column 1 */}
-            <div className="space-y-3 py-6">
-              {/* Product Name */}
-              <div className="pb-6">
-                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                  Product Name
-                </label>
-                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                  {product.name}
-                </p>
-              </div>
-              {/* Description */}
-              <div className="pb-6">
-                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                  Description
-                </label>
-                <p className="text-sm text-gray-900 dark:text-white line-clamp-1 font-medium">
-                  {product.description || "No description available"}
-                </p>
-              </div>
-              {/* Manufacturer Name */}
-              <div className="pb-6">
-                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                  Manufacturer Name
-                </label>
-                <p className="text-sm text-gray-900 dark:text-white font-medium">
-                  {product.manufacturer}
-                </p>
-              </div>
-            </div>
-
-            {/* Column 2 */}
-            <div className="space-y-3 py-6">
-              {/* Manufacturer DBA */}
-              <div className="pb-6">
-                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                  Manufacturer DBA
-                </label>
-                <p className="text-sm text-gray-900 font-medium dark:text-white">
-                  {product.brand}
-                </p>
-              </div>
-              {/* Product Family */}
-              <div className="pb-6">
-                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                  Product Family
-                </label>
-                <span className="inline-block px-2 py-0.5 text-sm font-medium rounded-full bg-primary/10 text-primary">
-                  {product.productFamily}
-                </span>
-              </div>
-              {/* IsTaxable */}
-              <div className="pb-6">
-                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                  IsTaxable
-                </label>
-                <p className="text-sm text-gray-900 dark:text-white font-medium">
-                  {product.isTaxable}
-                </p>
-              </div>
-            </div>
-
-            {/* Column 3 */}
-            <div className="space-y-3 py-6">
-              {/* Site */}
-              <div className="pb-6">
-                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                  Site
-                </label>
-                <p className="text-sm text-gray-900 dark:text-white font-medium">
-                  {product.site}
-                </p>
-              </div>
-              {/* Inventory Account */}
-              <div className="pb-6">
-                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                  Inventory Account
-                </label>
-                <p className="text-sm text-gray-900 dark:text-white font-medium">
-                  {product.inventoryAccount}
-                </p>
-              </div>
-              {/* Available to Sell */}
-              <div className="pb-6">
-                <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                  Available to Sell
-                </label>
-                <p className="text-sm text-gray-900 dark:text-white font-medium">
-                  {formatNumber(product.availableToSell, 0)}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ProductInfo product={product} />
       </div>
 
       {/* Row 2: Thumbnail Images + Order Details */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        <OrderDetailsTable
+          isEditing={isEditing}
+          product={product}
+          editedQty={editedOrderQty}
+          onQtyChange={setEditedOrderQty}
+          unitPrice={unitPrice}
+          subtotal={subtotal}
+          taxes={taxes}
+          shippingCharges={shippingCharges}
+          grandTotal={grandTotal}
+          displayQty={displayQty}
+        />
 
-
-        {/* Order Details Card - Full width */}
-        <div className="lg:col-span-5 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <h3 className="text-base font-semibold text-gray-900 dark:text-white">Order Details</h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-primary-light dark:bg-gray-900">
-                <tr>
-                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
-                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Order Qty</th>
-                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">MOQ</th>
-                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Qty</th>
-                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Price</th>
-                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Taxes</th>
-                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipping</th>
-                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
-                  <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Qty Shipped</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatCurrency(unitPrice)}
-                  </td>
-                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatNumber(orderQty)}
-                  </td>
-                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatNumber(product.moq)}
-                  </td>
-                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatNumber(product.orderQty, 0)}
-                  </td>
-                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatCurrency(subtotal)}
-                  </td>
-                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatCurrency(taxes)}
-                  </td>
-                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatCurrency(shippingCharges)}
-                  </td>
-                  <td className="px-2 py-3 text-sm text-left font-bold text-primary">
-                    {formatCurrency(grandTotal)}
-                  </td>
-                  <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                    {formatNumber(product.qtyShipped, 0)}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Taxes Card - Separate Card */}
         <div className="lg:col-span-5">
           <LineTaxesTab product={product} />
         </div>
       </div>
 
-      {/* Navigation Buttons - Below Order Details, Right aligned */}
-      <div className="flex items-center justify-end gap-2 mt-4">
-        {/* Previous Line Button */}
-        {hasPrevLine ? (
-          <Link
-            href={`/orders/${id}/lines/${prevLineId}`}
-            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            Prev
-          </Link>
-        ) : (
-          <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            Prev
-          </span>
-        )}
-
-        {/* Line indicator */}
-        <span className="text-sm text-gray-500 dark:text-gray-400 px-2">
-          {lineNumber}/{totalLines}
-        </span>
-
-        {/* Next Line Button */}
-        {hasNextLine ? (
-          <Link
-            href={`/orders/${id}/lines/${nextLineId}`}
-            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
-          >
-            Next
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </Link>
-        ) : (
-          <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
-            Next
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </span>
-        )}
-      </div>
+      <LineNavigation
+        id={id}
+        hasPrevLine={hasPrevLine}
+        hasNextLine={hasNextLine}
+        prevLineId={prevLineId}
+        nextLineId={nextLineId}
+        lineNumber={lineNumber}
+        totalLines={totalLines}
+      />
     </>
   );
 }

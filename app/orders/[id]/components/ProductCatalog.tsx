@@ -175,11 +175,16 @@ export default function ProductCatalog({
                                                     <input
                                                         type="text"
                                                         min={product.moq || 1}
+                                                        max={product.availableQty}
                                                         value={catalogQuantities[product.id] || product.moq || 1}
                                                         onChange={(e) => {
                                                             const val = e.target.value;
                                                             if (val === '' || /^[0-9]+$/.test(val)) {
-                                                                handleCatalogQuantityChange(product.id, val === '' ? 0 : Number(val), product.moq || 1);
+                                                                let numVal = val === '' ? 0 : Number(val);
+                                                                if (numVal > product.availableQty) {
+                                                                    numVal = product.availableQty;
+                                                                }
+                                                                handleCatalogQuantityChange(product.id, numVal, product.moq || 1);
                                                             }
                                                         }}
                                                         className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-center"
@@ -188,7 +193,7 @@ export default function ProductCatalog({
                                                         onClick={() => {
                                                             const currentQty = catalogQuantities[product.id] || product.moq || 1;
                                                             const moq = product.moq || 1;
-                                                            const newQty = currentQty + moq;
+                                                            const newQty = Math.min(currentQty + moq, product.availableQty);
                                                             handleCatalogQuantityChange(product.id, newQty, moq);
                                                         }}
                                                         className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"

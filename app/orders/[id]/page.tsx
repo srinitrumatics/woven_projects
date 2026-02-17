@@ -230,7 +230,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const handleAddSelectedProducts = () => {
     const selectedProducts = catalogProducts.filter(p => selectedProductIds.has(p.id));
     const newLineItems = selectedProducts.map(product => {
-      const qty = catalogQuantities[product.id] || product.moq || 1;
+      let qty = catalogQuantities[product.id] || product.moq || 1;
+      qty = Math.min(qty, product.availableQty);
       return {
         ...product,
         orderQty: qty,
@@ -881,7 +882,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const handleAddProduct = (product: Product, quantity?: number) => {
     // Always add as a new line item, even if the same product exists
     // Generate a unique key by combining product id with timestamp
-    const qty = quantity || catalogQuantities[product.id] || product.moq || 1;
+    let qty = quantity || catalogQuantities[product.id] || product.moq || 1;
+    qty = Math.min(qty, product.availableQty);
     const uniqueLineItem = {
       ...product,
       orderQty: qty,
@@ -937,9 +939,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   const handleQuantityChange = (lineItemKey: string, newQuantity: number) => {
     if (newQuantity < 0) return;
-    setOrderProducts(orderProducts.map(p =>
-      p.lineItemKey === lineItemKey ? { ...p, orderQty: newQuantity, subtotal: newQuantity * p.unitPrice } : p
-    ));
+    setOrderProducts(orderProducts.map(p => {
+      if (p.lineItemKey === lineItemKey) {
+        const qty = Math.min(newQuantity, p.availableQty);
+        return { ...p, orderQty: qty, subtotal: qty * p.unitPrice };
+      }
+      return p;
+    }));
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1126,32 +1132,30 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       }
 
       // Prepare order data in the required format
+      // Prepare order data in the required format
       const orderPayload = {
         order: {
           Id: id,
-          Authorized_Bill_To_Location__c: formData.billTo === "same" ? formData.shipTo : formData.billTo,
-          Authorized_Ship_To_Location__c: formData.shipTo,
+          Status__c: isDraft ? "Draft" : "Submitted",
           Bill_to_Account__c: (formData.billTo === "same" ? formData.shipToAccountId : formData.billToAccountId) || SF_ACCOUNT_ID,
-          Bill_to_Contact__c: shipToContactId, // Must be Contact ID (003xxx)
-          Request_Date__c: formData.requestedDeliveryDate,
+          Authorized_Bill_To_Location__c: formData.billTo === "same" ? formData.shipTo : formData.billTo,
+          Payment_Term__c: formData.paymentTerms,
           Customer_PO__c: formData.purchaseOrder,
+          Ship_to_Account__c: formData.shipToAccountId || SF_ACCOUNT_ID,
+          Authorized_Ship_To_Location__c: formData.shipTo,
+          Request_Date__c: formData.requestedDeliveryDate,
           Drop_Ship__c: formData.dropShip,
           Customer_Order_Notes__c: formData.orderNotes,
-          Ship_to_Account__c: formData.shipToAccountId || SF_ACCOUNT_ID,
+          Bill_to_Contact__c: shipToContactId, // Must be Contact ID (003xxx)
           Ship_to_Contact__c: shipToContactId, // Must be Contact ID (003xxx)
-          Payment_Term__c: formData.paymentTerms,
           Inventory_Account__c: SF_ACCOUNT_ID,
-          Status__c: isDraft ? "Draft" : "Submitted"
-        },
-        shipToContact: {
-          Id: shipToContactId, // Must include Contact ID
-          Phone: formData.contactPhone,
-          Email: formData.contactEmail
+          Shipping_Method__c: formData.shippingMethod,
+          Incoterms__c: formData.incoterms
         },
         orderLines: orderProducts.map(product => ({
           ...(product.orderLineId ? { Id: product.orderLineId } : {}),
           Status__c: isDraft ? "Draft" : "Submitted",
-          Customer_Order_Line_Notes__c: "",
+          // Customer_Order_Line_Notes__c: "", // Optional, removed to match example if needed, but keeping empty string is fine
           Product_Name__c: product.id,
           Order_Qty__c: product.orderQty,
           MOQ__c: product.moq,
@@ -1203,7 +1207,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         }
       }
       // Refresh the page to reflect latest data
-      router.refresh();
+      window.location.reload();
 
     } catch (error) {
       console.error("Error submitting order:", error);
@@ -1570,7 +1574,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           )}
 
           {/* Action Buttons Logic */}
-          {!["Approved", "Delivered", "Canceled"].includes(orderStatus) && isEditing && (
+          {!["Approved", "Delivered", "Canceled", "Cancelled"].includes(orderStatus) && isEditing && (
             <>
               {/* Save Draft - Only visible in Draft mode */}
               {orderStatus === "Draft" && (

@@ -43,33 +43,37 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
 
                     <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
 
-                        <button
-                            onClick={onClone}
-                            className="bg-gray-100 dark:bg-gray-700 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 px-3 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            title="Clone Order"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                            </svg>
-                            <span className="font-medium">Clone</span>
-                        </button>
-                        <button
-                            onClick={onEditToggle}
-                            className={`px-3 py-2 rounded-lg transition-colors ms-auto flex items-center gap-2 ${isEditing
-                                ? "bg-primary/10 text-primary hover:bg-primary/20"
-                                : "bg-gray-100 dark:bg-gray-700 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600"
-                                }`}
-                            title={isEditing ? "Stop Editing" : "Edit Order"}
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                {isEditing ? (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                ) : (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                )}
-                            </svg>
-                            <span className="font-medium">{isEditing ? "Cancel" : "Edit"}</span>
-                        </button>
+                        {orderStatus !== "Canceled" && orderStatus !== "Cancelled" && (
+                            <>
+                                <button
+                                    onClick={onClone}
+                                    className="bg-gray-100 dark:bg-gray-700 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 px-3 py-2 rounded-lg transition-colors flex items-center gap-2"
+                                    title="Clone Order"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                                    </svg>
+                                    <span className="font-medium">Clone</span>
+                                </button>
+                                <button
+                                    onClick={onEditToggle}
+                                    className={`px-3 py-2 rounded-lg transition-colors ms-auto flex items-center gap-2 ${isEditing
+                                        ? "bg-primary/10 text-primary hover:bg-primary/20"
+                                        : "bg-gray-100 dark:bg-gray-700 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600"
+                                        }`}
+                                    title={isEditing ? "Stop Editing" : "Edit Order"}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        {isEditing ? (
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        ) : (
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        )}
+                                    </svg>
+                                    <span className="font-medium">{isEditing ? "Cancel" : "Edit"}</span>
+                                </button>
+                            </>
+                        )}
 
                         <span
                             className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${orderStatus === "Delivered"
