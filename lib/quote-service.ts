@@ -11,7 +11,7 @@ export async function getQuotesFromSalesforce(
         const session = await getSalesforceSession();
         if (!session.accessToken) {
             console.error('No Salesforce access token available');
-            return tabName === "Customer_Quote" ? [] : {};
+            return tabName === "Fulfillment" ? [] : {};
         }
 
         const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/generic/tab`;
@@ -67,11 +67,11 @@ export async function getQuotesFromSalesforce(
             }
         }
 
-        return tabName === "Customer_Quote" ? [] : {};
+        return tabName === "Fulfillment" ? [] : {};
 
     } catch (error) {
         console.error(`Error fetching Quote Data (${tabName}):`, error);
-        return tabName === "Customer_Quote" ? [] : {};
+        return tabName === "Fulfillment" ? [] : {};
     }
 }
 

@@ -31,21 +31,55 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
     const { widths: purchaseWidths, handleResize: handlePurchaseResize } = useResizableColumns({
         purchaseOrderNumber: 150,
         status: 100,
-        vendor: 200,
-        date: 120,
-        totalAmount: 120,
-        expectedDeliveryDate: 150
+        customerQuote: 150,
+        customerOrder: 150,
+        customerPO: 120,
+        supplierName: 200,
+        supplierDBA: 150,
+        supplierContact: 150,
+        shipToAccount: 200,
+        shipToLocation: 200,
+        shipToContact: 150,
+        dropShip: 100,
+        totalLines: 100,
+        productCost: 120,
+        shipping: 120,
+        totalCost: 120,
+        issuedDate: 120,
+        acknowledgedDate: 120,
+        requestDate: 120,
+        promiseDate: 120,
+        shippingMethod: 150,
+        logisticsPartner: 150,
+        logisticsContact: 150,
+        trackingNumber: 180,
+        estimatedDeliveryDate: 150,
+        trackingStatus: 120,
+        actualDeliveryDate: 120,
+        goodsReceiptDate: 120
     });
 
     // Setup resizable columns for Supplier Bills
     const { widths: billWidths, handleResize: handleBillResize } = useResizableColumns({
         billNumber: 150,
         status: 100,
-        vendor: 200,
         purchaseOrder: 150,
-        billDate: 120,
+        customerQuote: 150,
+        customerOrder: 150,
+        supplierName: 200,
+        supplierDBA: 150,
+        supplierContact: 150,
+        totalLines: 100,
+        totalCost: 120,
+        shipping: 120,
+        totalAmount: 120,
+        billedDate: 120,
+        paymentTerms: 150,
         dueDate: 120,
-        totalAmount: 120
+        remittanceStatus: 120,
+        openBalance: 120,
+        daysOutstanding: 120,
+        settledDate: 120
     });
 
     const handlePurchaseSort = (field: keyof QuotePurchase) => {

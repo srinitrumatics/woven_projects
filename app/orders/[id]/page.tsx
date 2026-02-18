@@ -172,6 +172,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     name: 250,
     manufacturer: 150,
     productFamily: 150,
+    productGrouping: 150,
     listPrice: 100,
     unitPrice: 100,
     availableQty: 120,
@@ -566,6 +567,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           name: item.Name || item.name || "Unnamed Product",
           description: item.Description || item.description || "",
           productFamily: item.Family || item.productFamily || "General",
+          productGrouping: item.Grouping__c || item.Product_Grouping__c || item.productGrouping || "",
           sku: item.StockKeepingUnit || item.SKU || item.sku || item.Name || "",
           manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
           brand: item.Brand__c || item.brand || item.Brand || item['Manufacturer_Name__r.Name'] || "",
@@ -756,6 +758,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                     brand: "", // Not in API response
                     manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__r?.Name || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
                     productFamily: item.Product_Family__c || "", // Not in API response
+                    productGrouping: item.Product_Grouping__c || item.Grouping__c || "",
                     availableQty: 999,
                     moq: item.MOQ__c || 1,
                     orderQty: item.Order_Qty__c,

@@ -13,7 +13,7 @@ import QuoteFulfillmentTab from "./components/QuoteFulfillmentTab";
 import QuotePurchasesTab from "./components/QuotePurchasesTab";
 import QuoteReturnsTab from "./components/QuoteReturnsTab";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatNumber, formatDate } from "@/lib/utils/formatting";
 
 const formatAddress = (addressConfig: any): string => {
   if (!addressConfig) return '';
@@ -122,6 +122,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           taxTotal: item.Total_Taxes_Amount__c || 0,
           discountTotal: 0,
           shippingCost: item.Total_Shipping_Charges__c || 0,
+          serviceTotal: item.Total_Services_Amount__c || 0,
           grandTotal: item.Grand_Total__c || 0,
           notes: item.Quote_Notes__c || '',
           description: item.Quote_Notes__c || '',
@@ -203,13 +204,13 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             shipping: inv.Total_Shipping_Charges__c || 0,
             taxes: inv.Total_Taxes_Amount__c || 0,
             grandTotal: inv.Grand_Total__c || 0,
-            issuedDate: inv.Issued_Date__c || '',
+            issuedDate: formatDate(inv.Issued_Date__c, 'numeric-dash') || '',
             paymentTerms: inv.Payment_Terms__c || '',
-            dueDate: inv.Due_Date__c || '',
+            dueDate: formatDate(inv.Due_Date__c, 'numeric-dash') || '',
             collectionStatus: inv.Collection_Status__c || '',
             openBalance: inv.Open_Balance__c || 0,
             daysOutstanding: inv.Days_Outstanding__c || 0,
-            settledDate: inv.Settled_Date__c || ''
+            settledDate: formatDate(inv.Settled_Date__c, 'numeric-dash') || ''
           })),
           shippingManifests: (json.Shipping_Manifest__c || []).map((sm: any) => ({
             id: sm.Id,
@@ -228,15 +229,15 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             boxGrossWeight: sm.Case__Gross_Weight__c || 0,
             totalLines: sm.Total_Lines__c || 0,
             totalPrice: sm.Total_Price__c || 0,
-            plannedShipDate: sm.Ship_Date__c || '',
-            shipConfirmedDate: sm.Delivered_Date__c || '',
+            plannedShipDate: formatDate(sm.Ship_Date__c, 'numeric-dash') || '',
+            shipConfirmedDate: formatDate(sm.Delivered_Date__c, 'numeric-dash') || '',
             shippingMethod: sm.Shipping_Method__c || '',
             logisticsPartner: sm.Logistics_Partner_Name || '',
             logisticsContact: sm.Logistics_Contact_Name || '',
             trackingNumber: sm.Tracking_Number__c || '',
-            estimatedDeliveryDate: sm.Estimated_Delivery_Date__c || '',
+            estimatedDeliveryDate: formatDate(sm.Estimated_Delivery_Date__c, 'numeric-dash') || '',
             trackingStatus: sm.Tracking_Status__c || '',
-            actualDeliveryDate: sm.Actual_Delivery_Date__c || ''
+            actualDeliveryDate: formatDate(sm.Actual_Delivery_Date__c, 'numeric-dash') || ''
           })),
           salesOrders: (json.Sales_Order__c || []).map((so: any) => ({
             id: so.Id,
@@ -257,11 +258,11 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             shipping: so.Total_Shipping_Charges__c || 0,
             taxes: so.Total_Taxes_Amount__c || 0,
             grandTotal: so.Grand_Total__c || 0,
-            requestDate: so.Request_Date__c || '',
-            pickDate: so.Pick_Date__c || '',
-            pickCompleteDate: so.Pick_Complete_Date__c || '',
-            plannedShipDate: so.Ship_Date__c || '',
-            shipConfirmedDate: so.Delivered_Date__c || ''
+            requestDate: formatDate(so.Request_Date__c, 'numeric-dash') || '',
+            pickDate: formatDate(so.Pick_Date__c, 'numeric-dash') || '',
+            pickCompleteDate: formatDate(so.Pick_Complete_Date__c, 'numeric-dash') || '',
+            plannedShipDate: formatDate(so.Ship_Date__c, 'numeric-dash') || '',
+            shipConfirmedDate: formatDate(so.Delivered_Date__c, 'numeric-dash') || ''
           }))
         });
       } else if (tab === 'purchases') {
@@ -270,20 +271,54 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             id: p.Id,
             purchaseOrderNumber: p.Name || '',
             status: p.Status__c || '',
-            vendor: p.Supplier_Name || '',
-            date: p.Issued_Date__c || '',
-            totalAmount: p.Total_Cost__c || 0,
-            expectedDeliveryDate: p.Estimated_Delivery_Date__c || ''
+            customerQuote: p.Customer_Quote_Name || '',
+            customerOrder: p.Customer_Order_Name || '',
+            customerPO: p.Customer_PO__c || '',
+            supplierName: p.Supplier_Name || '',
+            supplierDBA: p.Supplier_DBA__c || '',
+            supplierContact: p.Supplier_Contact_Name || '',
+            shipToAccount: p.Ship_to_Account_Name || '',
+            shipToLocation: p.Authorized_Ship_To_Location_Name || '',
+            shipToContact: p.Ship_to_Contact_Name || '',
+            dropShip: p.Drop_Ship__c || false,
+            totalLines: p.Total_Lines__c || 0,
+            productCost: p.Total_Product_Cost__c || 0,
+            shipping: p.Total_Shipping_Charges__c || 0,
+            totalCost: p.Total_Cost__c || 0,
+            issuedDate: formatDate(p.Issued_Date__c, 'numeric-dash') || '',
+            acknowledgedDate: formatDate(p.Acknowledged_Date__c, 'numeric-dash') || '',
+            requestDate: formatDate(p.Request_Date__c, 'numeric-dash') || '',
+            promiseDate: formatDate(p.Promise_Date__c, 'numeric-dash') || '',
+            shippingMethod: p.Shipping_Method__c || '',
+            logisticsPartner: p.Logistics_Partner_Name || '',
+            logisticsContact: p.Logistics_Contact_Name || '',
+            trackingNumber: p.Tracking_Number__c || '',
+            estimatedDeliveryDate: formatDate(p.Estimated_Delivery_Date__c, 'numeric-dash') || '',
+            trackingStatus: p.Tracking_Status__c || '',
+            actualDeliveryDate: formatDate(p.Actual_Delivery_Date__c, 'numeric-dash') || '',
+            goodsReceiptDate: formatDate(p.Goods_Receipt_Date__c, 'numeric-dash') || ''
           })),
           supplierBills: (json.Supplier_Bill__c || []).map((sb: any) => ({
             id: sb.Id,
             billNumber: sb.Name || '',
             status: sb.Status__c || '',
-            vendor: sb.Supplier_Name || '',
             purchaseOrder: sb.Purchase_Order_Name || '',
-            billDate: sb.Billed_Date__c || '',
-            dueDate: sb.Due_Date__c || '',
-            totalAmount: sb.Total_Amount__c || 0
+            customerQuote: sb.Customer_Quote_Name || '',
+            customerOrder: sb.Customer_Order_Name || '',
+            supplierName: sb.Supplier_Name || '',
+            supplierDBA: sb.Supplier_DBA__c || '',
+            supplierContact: sb.Supplier_Contact_Name || '',
+            totalLines: sb.Total_Lines__c || 0,
+            totalCost: sb.Total_Product_Amount__c || 0,
+            shipping: sb.Total_Shipping_Charges__c || 0,
+            totalAmount: sb.TotalAmount__c || 0,
+            billedDate: formatDate(sb.Billed_Date__c, 'numeric-dash') || '',
+            paymentTerms: sb.Payment_Terms__c || '',
+            dueDate: formatDate(sb.Due_Date__c, 'numeric-dash') || '',
+            remittanceStatus: sb.Remittance_Status__c || '',
+            openBalance: sb.Open_Balance__c || 0,
+            daysOutstanding: sb.Days_Outstanding__c || 0,
+            settledDate: formatDate(sb.Settled_Date__c, 'numeric-dash') || ''
           }))
         });
       } else if (tab === 'returns') {
@@ -303,34 +338,54 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             dropShip: r.Drop_Ship__c || false,
             totalLines: r.Total_Lines__c || 0,
             totalPrice: r.Total_Price__c || 0,
-            issuedDate: r.Issued_Date__c || '',
-            returnByDate: r.Return_by_Date__c || '',
+            issuedDate: formatDate(r.Issued_Date__c, 'numeric-dash') || '',
+            returnByDate: formatDate(r.Return_by_Date__c, 'numeric-dash') || '',
             shippingMethod: r.Shipping_Method__c || '',
             logisticsPartner: r.Logistics_Partner_Name || '',
             logisticsContact: r.Logistics_Contact_Name || '',
             trackingNumber: r.Tracking_Number__c || '',
-            estimatedDeliveryDate: r.Estimated_Delivery_Date__c || '',
+            estimatedDeliveryDate: formatDate(r.Estimated_Delivery_Date__c, 'numeric-dash') || '',
             trackingStatus: r.Tracking_Status__c || '',
-            actualDeliveryDate: r.Actual_Delivery_Date__c || '',
-            goodsReceiptsDate: r.Goods_Receipt_Date__c || ''
+            actualDeliveryDate: formatDate(r.Actual_Delivery_Date__c, 'numeric-dash') || '',
+            goodsReceiptsDate: formatDate(r.Goods_Receipt_Date__c, 'numeric-dash') || ''
           })),
           rtv: (json.RTV__c || []).map((r: any) => ({
             id: r.Id,
             rtvNumber: r.Name || '',
             status: r.Status__c || '',
-            vendor: r.Supplier_Name || '',
-            date: r.Issued_Date__c || '',
-            totalAmount: r.Total_Cost__c || 0,
-            reason: r.RTV_Type__c || ''
+            purchaseOrder: r.Purchase_Order_Name || '',
+            customerQuote: r.Customer_Quote_Name || '',
+            customerOrder: r.Customer_Order_Name || '',
+            rtvType: r.RTV_Type__c || '',
+            rmaNumber: r.Supplier_RMA_Number__c || '',
+            shipFromAccount: r.Ship_from_Account_Name || '',
+            shipFromContact: r.Ship_from_Contact_Name || '',
+            supplierName: r.Supplier_Name || '',
+            supplierContact: r.Supplier_Contact_Name || '',
+            totalLines: r.Total_Price__c || 0,
+            totalCost: r.Total_Cost__c || 0,
+            issuedDate: formatDate(r.Issued_Date__c, 'numeric-dash') || '',
+            approvalDate: formatDate(r.Approval_Date__c, 'numeric-dash') || '',
+            returnByDate: formatDate(r.Return_by_Date__c, 'numeric-dash') || ''
           })),
           creditMemos: (json.Credit_Memo__c || []).map((c: any) => ({
             id: c.Id,
             memoNumber: c.Name || '',
             status: c.Status__c || '',
-            customer: c.Credit_to_Account_Name || '',
-            date: c.Issued_Date__c || '',
-            totalAmount: c.Total_Credit_Amount__c || 0,
-            relatedInvoice: c.Invoice_Name || ''
+            invoice: c.Invoice_Name || '',
+            customerQuote: c.Customer_Quote_Name || '',
+            customerOrder: c.Customer_Order_Name || '',
+            creditToAccount: c.Credit_to_Account_Name || '',
+            creditToContact: c.Credit_to_Contact_Name || '',
+            totalLines: c.Total_Lines__c || 0,
+            totalPrice: c.Total_Price__c || 0,
+            shipping: c.Total_Shipping_Charges__c || 0,
+            taxes: c.Total_Taxes_Amount__c || 0,
+            totalCreditAmount: c.Total_Credit_Amount__c || 0,
+            issuedDate: formatDate(c.Issued_Date__c, 'numeric-dash') || '',
+            expirationDate: formatDate(c.Expiration_Date__c, 'numeric-dash') || '',
+            availableCreditBalance: c.Available_Credit_Balance__c || 0,
+            settledDate: formatDate(c.Settled_Date__c, 'numeric-dash') || ''
           })),
           debitMemos: (json.Debit_Memo__c || []).map((d: any) => ({
             id: d.Id,
@@ -347,10 +402,10 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             totalCost: d.Total_Cost__c || 0,
             shipping: d.Total_Shipping_Charges__c || 0,
             totalDebitAmount: d.Total_Debit_Amount__c || 0,
-            issuedDate: d.Issued_Date__c || '',
-            approvalDate: d.Approval_Date__c || '',
+            issuedDate: formatDate(d.Issued_Date__c, 'numeric-dash') || '',
+            approvalDate: formatDate(d.Approval_Date__c, 'numeric-dash') || '',
             availableBalance: d.Available_Debit_Balance__c || 0,
-            settledDate: d.Settled_Date__c || ''
+            settledDate: formatDate(d.Settled_Date__c, 'numeric-dash') || ''
           }))
         });
       } else if (tab === 'files') {

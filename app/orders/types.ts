@@ -6,6 +6,7 @@ export interface Product {
   description: string;
   manufacturer: string;
   productFamily: string;
+  productGrouping?: string;
   brand: string;
   sku: string;
   availableQty: number;

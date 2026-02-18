@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatCurrency } from "@/lib/utils/formatting";
 import { QuoteLine } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 
@@ -85,22 +86,22 @@ export default function QuoteLinesTab({
                                     {line.manufacturerDBA}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.unitPrice }}>
-                                    ${line.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    {formatCurrency(line.unitPrice)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.quantity }}>
                                     {line.quantity}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>
-                                    ${line.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    {formatCurrency(line.totalPrice)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipping }}>
-                                    ${line.shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    {formatCurrency(line.shipping)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.taxes }}>
-                                    ${line.taxes.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    {formatCurrency(line.taxes)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold" style={{ width: widths.lineGrandTotal }}>
-                                    ${line.lineGrandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    {formatCurrency(line.lineGrandTotal)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.qtyShipped }}>
                                     {line.qtyShipped}

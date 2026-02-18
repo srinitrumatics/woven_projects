@@ -13,6 +13,7 @@ interface ProductInfoProps {
         site: string;
         inventoryAccount: string;
         availableToSell: number;
+        productGrouping: string;
     };
 }
 
@@ -61,10 +62,10 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                     </div>
                     <div className="pb-6">
                         <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                            Manufacturer Name
+                            Product Grouping
                         </label>
                         <p className="text-sm text-gray-900 dark:text-white font-medium">
-                            {product.manufacturer}
+                            {product.productGrouping}
                         </p>
                     </div>
                 </div>

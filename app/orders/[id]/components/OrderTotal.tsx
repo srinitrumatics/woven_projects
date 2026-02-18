@@ -38,7 +38,7 @@ export default function OrderTotal({
     isEditing = false
 }: OrderTotalProps) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700 flex-1 w-full flex flex-col" role="region" aria-label="Order total">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col" role="region" aria-label="Order total">
             {/* Header */}
             <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">

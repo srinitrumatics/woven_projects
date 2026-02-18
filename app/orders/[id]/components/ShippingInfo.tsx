@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDate } from "@/lib/utils/formatting";
 import { AuthorizedLocation } from "@/app/orders/types";
 
 interface ShippingInfoProps {
@@ -115,8 +116,8 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                             Request Date <span className="text-red-500">*</span>
                         </label>
                         <input
-                            type="date"
-                            value={formData.requestedDeliveryDate || ''}
+                            type={isEditing ? "date" : "text"}
+                            value={isEditing ? (formData.requestedDeliveryDate || '') : formatDate(formData.requestedDeliveryDate, 'numeric-dash')}
                             onChange={(e) => setFormData({ ...formData, requestedDeliveryDate: e.target.value })}
                             readOnly={!isEditing}
                             className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}

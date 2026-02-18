@@ -1,5 +1,6 @@
 import { QuoteInvoice } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
+import { formatCurrency, formatDate } from "@/lib/utils/formatting";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -87,17 +88,17 @@ export default function QuoteInvoicesSubTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.billToLocation }}>{invoice.billToLocation}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.billToContact }}>{invoice.billToContact}</td>
                                 <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{invoice.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>${invoice.totalPrice.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.shipping }}>${invoice.shipping.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.taxes }}>${invoice.taxes.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white font-medium" style={{ width: widths.grandTotal }}>${invoice.grandTotal.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.issuedDate }}>{invoice.issuedDate}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>{formatCurrency(invoice.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.shipping }}>{formatCurrency(invoice.shipping)}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.taxes }}>{formatCurrency(invoice.taxes)}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white font-medium" style={{ width: widths.grandTotal }}>{formatCurrency(invoice.grandTotal)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.issuedDate }}>{formatDate(invoice.issuedDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.paymentTerms }}>{invoice.paymentTerms}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.dueDate }}>{invoice.dueDate}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.dueDate }}>{formatDate(invoice.dueDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.collectionStatus }}>{invoice.collectionStatus}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.openBalance }}>${invoice.openBalance.toFixed(2)}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.openBalance }}>{formatCurrency(invoice.openBalance)}</td>
                                 <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.daysOutstanding }}>{invoice.daysOutstanding}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.settledDate }}>{invoice.settledDate}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.settledDate }}>{formatDate(invoice.settledDate, 'numeric-dash')}</td>
                             </tr>
                         ))
                     )}

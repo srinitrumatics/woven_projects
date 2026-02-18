@@ -3,7 +3,6 @@ import QuoteSummary from "./QuoteSummary";
 import QuoteKeyDates from "./QuoteKeyDates";
 import QuoteBillingInfo from "./QuoteBillingInfo";
 import QuoteShippingInfo from "./QuoteShippingInfo";
-import QuoteScopeSummary from "./QuoteScopeSummary";
 import QuoteNotes from "./QuoteNotes";
 
 interface QuoteDetailsProps {
@@ -14,19 +13,16 @@ interface QuoteDetailsProps {
 export default function QuoteDetailsSection({ quote, lines }: QuoteDetailsProps) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
-            <div className="lg:col-span-7 flex flex-col gap-6 h-full">
+            <div className="lg:col-span-7 flex flex-col gap-6 ">
 
                 {/* Key Dates */}
                 <QuoteKeyDates quote={quote} />
 
                 {/* Billing & Shipping */}
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 flex-1">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 ">
                     <QuoteBillingInfo quote={quote} />
                     <QuoteShippingInfo quote={quote} />
                 </div>
-
-                {/* Scope Summary */}
-                <QuoteScopeSummary description={quote.description || ""} />
 
             </div>
 

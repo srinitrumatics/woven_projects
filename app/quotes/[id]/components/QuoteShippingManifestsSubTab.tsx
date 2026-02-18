@@ -1,5 +1,6 @@
 import { QuoteShippingManifest } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
+import { formatCurrency, formatDate } from "@/lib/utils/formatting";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -47,12 +48,12 @@ export default function QuoteShippingManifestsSubTab({
                         <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={onResize} align="left" />
                         <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={onResize} align="left" />
                         <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={onResize} align="left" />
-                        <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={onResize} align="center" />
-                        <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxCount} onResize={onResize} align="right" />
-                        <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxNetWeight} onResize={onResize} align="right" />
-                        <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxGrossWeight} onResize={onResize} align="right" />
-                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="right" />
-                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="right" />
+                        <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={onResize} align="left" />
+                        <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxCount} onResize={onResize} align="left" />
+                        <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxNetWeight} onResize={onResize} align="left" />
+                        <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxGrossWeight} onResize={onResize} align="left" />
+                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" />
+                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left" />
                         <SortableHeader label="Planned Ship Date" field="plannedShipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.plannedShipDate} onResize={onResize} align="left" />
                         <SortableHeader label="Ship Confirmed Date" field="shipConfirmedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipConfirmedDate} onResize={onResize} align="left" />
                         <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingMethod} onResize={onResize} align="left" />
@@ -89,26 +90,26 @@ export default function QuoteShippingManifestsSubTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipToAccount }}>{manifest.shipToAccount}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipToLocation }}>{manifest.shipToLocation}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipToContact }}>{manifest.shipToContact}</td>
-                                <td className="px-3 py-2 text-sm text-center text-gray-900 dark:text-white" style={{ width: widths.dropShip }}>{manifest.dropShip ? 'Yes' : 'No'}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.boxCount }}>{manifest.boxCount}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.boxNetWeight }}>{manifest.boxNetWeight} kg</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.boxGrossWeight }}>{manifest.boxGrossWeight} kg</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{manifest.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>${manifest.totalPrice.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.plannedShipDate }}>{manifest.plannedShipDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipConfirmedDate }}>{manifest.shipConfirmedDate}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.dropShip }}>{manifest.dropShip ? 'Yes' : 'No'}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.boxCount }}>{manifest.boxCount}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.boxNetWeight }}>{manifest.boxNetWeight} kg</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.boxGrossWeight }}>{manifest.boxGrossWeight} kg</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{manifest.totalLines}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>{formatCurrency(manifest.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.plannedShipDate }}>{formatDate(manifest.plannedShipDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipConfirmedDate }}>{formatDate(manifest.shipConfirmedDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shippingMethod }}>{manifest.shippingMethod}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.logisticsPartner }}>{manifest.logisticsPartner}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.logisticsContact }}>{manifest.logisticsContact}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.trackingNumber }}>{manifest.trackingNumber}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.estimatedDeliveryDate }}>{manifest.estimatedDeliveryDate}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(manifest.estimatedDeliveryDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.trackingStatus }}>
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${manifest.trackingStatus === 'Delivered' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                                         }`}>
                                         {manifest.trackingStatus}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.actualDeliveryDate }}>{manifest.actualDeliveryDate}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.actualDeliveryDate }}>{formatDate(manifest.actualDeliveryDate, 'numeric-dash')}</td>
                             </tr>
                         ))
                     )}

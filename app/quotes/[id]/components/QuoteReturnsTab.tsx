@@ -67,10 +67,40 @@ export default function QuoteReturnsTab({ quoteId, data, loading }: QuoteReturns
     });
 
     const { widths: cmWidths, handleResize: handleCmResize } = useResizableColumns({
-        memoNumber: 150, status: 100, customer: 150, date: 120, totalAmount: 120, relatedInvoice: 150
+        memoNumber: 150,
+        status: 120,
+        invoice: 150,
+        customerQuote: 150,
+        customerOrder: 150,
+        creditToAccount: 150,
+        creditToContact: 150,
+        totalLines: 100,
+        totalPrice: 120,
+        shipping: 100,
+        taxes: 100,
+        totalCreditAmount: 140,
+        issuedDate: 120,
+        expirationDate: 120,
+        availableCreditBalance: 150,
+        settledDate: 120
     });
     const { widths: rtvWidths, handleResize: handleRtvResize } = useResizableColumns({
-        rtvNumber: 150, status: 100, vendor: 150, date: 120, totalAmount: 120, reason: 200
+        rtvNumber: 150,
+        status: 120,
+        purchaseOrder: 150,
+        customerQuote: 150,
+        customerOrder: 150,
+        rtvType: 120,
+        rmaNumber: 150,
+        shipFromAccount: 150,
+        shipFromContact: 150,
+        supplierName: 150,
+        supplierContact: 150,
+        totalLines: 100,
+        totalCost: 120,
+        issuedDate: 120,
+        approvalDate: 120,
+        returnByDate: 120
     });
     const { widths: dmWidths, handleResize: handleDmResize } = useResizableColumns({
         memoNumber: 150,
@@ -141,10 +171,10 @@ export default function QuoteReturnsTab({ quoteId, data, loading }: QuoteReturns
     });
 
     const tabs: { id: ReturnsSubTab; label: string }[] = [
-        { id: "rmas", label: "RMA'S" },
-        { id: "creditMemo", label: "Credit Memo" },
-        { id: "rtvs", label: "RTV'S" },
-        { id: "debitMemo", label: "Debit Memo" },
+        { id: "rmas", label: "RMA" },
+        { id: "creditMemo", label: "Credit Memos" },
+        { id: "rtvs", label: "RTV" },
+        { id: "debitMemo", label: "Debit Memos" },
     ];
 
     return (

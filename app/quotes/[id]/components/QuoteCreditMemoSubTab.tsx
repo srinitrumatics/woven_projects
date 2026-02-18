@@ -1,5 +1,6 @@
 import { QuoteCreditMemo } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
+import { formatCurrency, formatDate } from "@/lib/utils/formatting";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -38,18 +39,28 @@ export default function QuoteCreditMemoSubTab({
             <table className="w-full whitespace-nowrap">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
-                        <SortableHeader label="Memo Number" field="memoNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.memoNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                        <SortableHeader label="Credit Memo" field="memoNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.memoNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                         <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
-                        <SortableHeader label="Customer" field="customer" sortConfig={sortConfig} requestSort={requestSort} width={widths.customer} onResize={onResize} align="left" />
-                        <SortableHeader label="Date" field="date" sortConfig={sortConfig} requestSort={requestSort} width={widths.date} onResize={onResize} align="left" />
-                        <SortableHeader label="Total Amount" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={onResize} align="right" />
-                        <SortableHeader label="Related Invoice" field="relatedInvoice" sortConfig={sortConfig} requestSort={requestSort} width={widths.relatedInvoice} onResize={onResize} align="left" />
+                        <SortableHeader label="Invoice" field="invoice" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoice} onResize={onResize} align="left" />
+                        <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" />
+                        <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" />
+                        <SortableHeader label="Credit to Account" field="creditToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditToAccount} onResize={onResize} align="left" />
+                        <SortableHeader label="Credit to Contact" field="creditToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditToContact} onResize={onResize} align="left" />
+                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" />
+                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left" />
+                        <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={onResize} align="left" />
+                        <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={onResize} align="left" />
+                        <SortableHeader label="Total Credit Amount" field="totalCreditAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCreditAmount} onResize={onResize} align="left" />
+                        <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={onResize} align="left" />
+                        <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={onResize} align="left" />
+                        <SortableHeader label="Available Credit Balance" field="availableCreditBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.availableCreditBalance} onResize={onResize} align="left" />
+                        <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={onResize} align="left" />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {memos.length === 0 ? (
                         <tr>
-                            <td colSpan={6} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No Credit Memos found</td>
+                            <td colSpan={16} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No Credit Memos found</td>
                         </tr>
                     ) : (
                         memos.map((memo) => (
@@ -63,10 +74,20 @@ export default function QuoteCreditMemoSubTab({
                                         {memo.status}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.customer }}>{memo.customer}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.date }}>{memo.date}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalAmount }}>${memo.totalAmount.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.relatedInvoice }}>{memo.relatedInvoice}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.invoice }}>{memo.invoice}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.customerQuote }}>{memo.customerQuote}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.customerOrder }}>{memo.customerOrder}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.creditToAccount }}>{memo.creditToAccount}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.creditToContact }}>{memo.creditToContact}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{memo.totalLines}</td>
+                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>{formatCurrency(memo.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.shipping }}>{formatCurrency(memo.shipping)}</td>
+                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.taxes }}>{formatCurrency(memo.taxes)}</td>
+                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.totalCreditAmount }}>{formatCurrency(memo.totalCreditAmount)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.issuedDate }}>{formatDate(memo.issuedDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.expirationDate }}>{formatDate(memo.expirationDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.availableCreditBalance }}>{formatCurrency(memo.availableCreditBalance)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.settledDate }}>{formatDate(memo.settledDate, 'numeric-dash')}</td>
                             </tr>
                         ))
                     )}

@@ -779,7 +779,7 @@ export default function ProposalProductDetailPage({
                             </svg>
                         </div>
                         <h2 className="text-base font-semibold text-gray-900 dark:text-white">
-                            Proposal Note
+                            Proposal Line Note
                         </h2>
                     </div>
                     <div className="flex-1 flex flex-col">

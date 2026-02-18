@@ -1,5 +1,6 @@
 import { QuoteDebitMemo } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
+import { formatCurrency, formatDate } from "@/lib/utils/formatting";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -68,8 +69,8 @@ export default function QuoteDebitMemoSubTab({
                                 <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800" style={{ width: widths.memoNumber }}>{memo.memoNumber}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.status }}>
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${memo.status === 'Applied' ? 'bg-green-100 text-green-800' :
-                                            memo.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                'bg-gray-100 text-gray-800'
+                                        memo.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                                            'bg-gray-100 text-gray-800'
                                         }`}>
                                         {memo.status}
                                     </span>
@@ -82,13 +83,13 @@ export default function QuoteDebitMemoSubTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.debitToAccount }}>{memo.debitToAccount}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.debitToContact }}>{memo.debitToContact}</td>
                                 <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{memo.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalCost }}>${memo.totalCost.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.shipping }}>${memo.shipping.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalDebitAmount }}>${memo.totalDebitAmount.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.issuedDate }}>{memo.issuedDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.approvalDate }}>{memo.approvalDate}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.availableBalance }}>${memo.availableBalance.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.settledDate }}>{memo.settledDate}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalCost }}>{formatCurrency(memo.totalCost)}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.shipping }}>{formatCurrency(memo.shipping)}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalDebitAmount }}>{formatCurrency(memo.totalDebitAmount)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.issuedDate }}>{formatDate(memo.issuedDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.approvalDate }}>{formatDate(memo.approvalDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.availableBalance }}>{formatCurrency(memo.availableBalance)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.settledDate }}>{formatDate(memo.settledDate, 'numeric-dash')}</td>
                             </tr>
                         ))
                     )}

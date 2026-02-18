@@ -1,5 +1,6 @@
 import { QuoteRMA } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
+import { formatCurrency, formatDate } from "@/lib/utils/formatting";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -49,8 +50,8 @@ export default function QuoteRMASubTab({
                         <SortableHeader label="Return to Account" field="returnToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.returnToAccount} onResize={onResize} align="left" />
                         <SortableHeader label="Return to Contact" field="returnToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.returnToContact} onResize={onResize} align="left" />
                         <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={onResize} align="left" />
-                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="right" />
-                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="right" />
+                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" />
+                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left" />
                         <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={onResize} align="left" />
                         <SortableHeader label="Return by Date" field="returnByDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.returnByDate} onResize={onResize} align="left" />
                         <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingMethod} onResize={onResize} align="left" />
@@ -89,18 +90,18 @@ export default function QuoteRMASubTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.returnToAccount }}>{rma.returnToAccount}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.returnToContact }}>{rma.returnToContact}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.dropShip }}>{rma.dropShip ? 'Yes' : 'No'}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{rma.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>${rma.totalPrice.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.issuedDate }}>{rma.issuedDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.returnByDate }}>{rma.returnByDate}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{rma.totalLines}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>{formatCurrency(rma.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.issuedDate }}>{formatDate(rma.issuedDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.returnByDate }}>{formatDate(rma.returnByDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shippingMethod }}>{rma.shippingMethod}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.logisticsPartner }}>{rma.logisticsPartner}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.logisticsContact }}>{rma.logisticsContact}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.trackingNumber }}>{rma.trackingNumber}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.estimatedDeliveryDate }}>{rma.estimatedDeliveryDate}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(rma.estimatedDeliveryDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.trackingStatus }}>{rma.trackingStatus}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.actualDeliveryDate }}>{rma.actualDeliveryDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.goodsReceiptsDate }}>{rma.goodsReceiptsDate}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.actualDeliveryDate }}>{formatDate(rma.actualDeliveryDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.goodsReceiptsDate }}>{formatDate(rma.goodsReceiptsDate, 'numeric-dash')}</td>
                             </tr>
                         ))
                     )}

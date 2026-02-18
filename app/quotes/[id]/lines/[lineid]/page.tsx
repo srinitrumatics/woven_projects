@@ -4,9 +4,12 @@ import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
-import { formatDate } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency } from "@/lib/utils/formatting";
 import { QuoteLine } from "../../../types";
 import QuoteLineFulfillmentsTab from "./components/QuoteLineFulfillmentsTab";
+import QuoteLineTaxesTab from "./components/QuoteLineTaxesTab";
+import QuoteLinePurchasesTab from "./components/QuoteLinePurchasesTab";
+import QuoteLineReturnsTab from "./components/QuoteLineReturnsTab";
 
 // Interface for quote line item from Salesforce
 interface QuoteLineItem {
@@ -37,6 +40,20 @@ interface QuoteLineItem {
     Shipping_Charges__c?: number;
     Total_Taxes_Amount__c?: number;
     Line_Grand_Total__c?: number;
+    Sales_Tax_Rate__c?: number;
+    Total_Sales_Tax_Amount__c?: number;
+    Use_Tax_Rate__c?: number;
+    Total_Use_Tax_Amount__c?: number;
+    Local_Tax_Rate__c?: number;
+    Total_Local_Tax_Amount__c?: number;
+    Excise_Tax_Rate__c?: number;
+    Total_Excise_Tax_Amount__c?: number;
+    Gross_Receipts_Tax_Rate__c?: number;
+    Total_Gross_Receipts_Tax_Amount__c?: number;
+    GST_Rate__c?: number;
+    Total_GST_Amount__c?: number;
+    VAT_Rate__c?: number;
+    Total_VAT_Amount__c?: number;
 }
 
 // Interface for mapped product data
@@ -66,6 +83,20 @@ interface ProductData {
     taxes: number;
     grandTotal: number;
     manufacturerDBA: string;
+    salesTaxRate: number;
+    salesTaxAmount: number;
+    useTaxRate: number;
+    useTaxAmount: number;
+    localTaxRate: number;
+    localTaxAmount: number;
+    exciseTaxRate: number;
+    exciseTaxAmount: number;
+    grtRate: number;
+    grtAmount: number;
+    gstRate: number;
+    gstAmount: number;
+    vatRate: number;
+    vatAmount: number;
 }
 
 export default function QuoteLineDetailPage({
@@ -121,7 +152,21 @@ export default function QuoteLineDetailPage({
                         shipping: item.Shipping_Charges__c || 0,
                         taxes: item.Total_Taxes_Amount__c || 0,
                         grandTotal: item.Line_Grand_Total__c || 0,
-                        manufacturerDBA: item.Manufacturer_DBA__c || "-"
+                        manufacturerDBA: item.Manufacturer_DBA__c || "-",
+                        salesTaxRate: item.Sales_Tax_Rate__c || 0,
+                        salesTaxAmount: item.Total_Sales_Tax_Amount__c || 0,
+                        useTaxRate: item.Use_Tax_Rate__c || 0,
+                        useTaxAmount: item.Total_Use_Tax_Amount__c || 0,
+                        localTaxRate: item.Local_Tax_Rate__c || 0,
+                        localTaxAmount: item.Total_Local_Tax_Amount__c || 0,
+                        exciseTaxRate: item.Excise_Tax_Rate__c || 0,
+                        exciseTaxAmount: item.Total_Excise_Tax_Amount__c || 0,
+                        grtRate: item.Gross_Receipts_Tax_Rate__c || 0,
+                        grtAmount: item.Total_Gross_Receipts_Tax_Amount__c || 0,
+                        gstRate: item.GST_Rate__c || 0,
+                        gstAmount: item.Total_GST_Amount__c || 0,
+                        vatRate: item.VAT_Rate__c || 0,
+                        vatAmount: item.Total_VAT_Amount__c || 0
                     }));
 
                     setQuoteLines(mappedLines);
@@ -224,7 +269,10 @@ export default function QuoteLineDetailPage({
 
                         <div className="absolute bottom-4 flex gap-1.5">
                             {productImages.map((_, i) => (
-                                <div key={i} className={`w-2 h-2 rounded-full ${i === currentImageIndex ? 'bg-primary' : 'bg-gray-300'}`} />
+                                <div key={i} className={`w-2 h-2 rounded-full transition-colors ${i === currentImageIndex
+                                    ? "bg-primary"
+                                    : "bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500"
+                                    }`} />
                             ))}
                         </div>
                     </div>
@@ -296,7 +344,7 @@ export default function QuoteLineDetailPage({
                         </div>
                         <div className="md:col-span-1">
                             <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Unit Cost</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">${product.unitCost.toFixed(2)}</div>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{formatCurrency(product.unitCost)}</div>
                         </div>
 
                         <div className="md:col-span-1">
@@ -309,134 +357,121 @@ export default function QuoteLineDetailPage({
                         </div>
                         <div className="md:col-span-1">
                             <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Total Cost</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">${product.totalCost.toFixed(2)}</div>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{formatCurrency(product.totalCost)}</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Financial Metrics Row */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-9 gap-8">
-                    {/* Unit Price */}
-                    <div>
-                        <label className="text-sm text-gray-900 font-bold block mb-3 whitespace-nowrap">Unit Price</label>
-                        <div className="text-sm text-gray-600 leading-none">
-                            ${product.unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                        </div>
+            {/* Order Details Table */}
+            <div className="mb-6">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="flex items-center gap-2 mb-3 p-2">
+                        <h3 className="text-base font-semibold text-gray-900 dark:text-white ">
+                            Customer Quote Line Details
+                        </h3>
                     </div>
-                    {/* Order Qty */}
-                    <div>
-                        <label className="text-sm text-gray-900 font-bold block mb-3 whitespace-nowrap">Order Qty</label>
-                        <div className="text-sm text-gray-600 leading-none">
-                            {product.orderQty}
-                        </div>
-                    </div>
-                    {/* MCQ (MOQ) */}
-                    <div>
-                        <label className="text-sm text-gray-900 font-bold block mb-3 whitespace-nowrap">MCQ</label>
-                        <div className="text-sm text-gray-600 leading-none">
-                            {product.moq}
-                        </div>
-                    </div>
-                    {/* Total Qty */}
-                    <div>
-                        <label className="text-sm text-gray-900 font-bold block mb-3 whitespace-nowrap">Total Qty</label>
-                        <div className="text-sm text-gray-600 leading-none">
-                            {product.totalOrderQty}
-                        </div>
-                    </div>
-                    {/* Total Price */}
-                    <div>
-                        <label className="text-sm text-gray-900 font-bold block mb-3 whitespace-nowrap">Total Price</label>
-                        <div className="text-sm text-gray-600 leading-none">
-                            ${product.totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                        </div>
-                    </div>
-                    {/* Shipping */}
-                    <div>
-                        <label className="text-sm text-gray-900 font-bold block mb-3 whitespace-nowrap">Shipping</label>
-                        <div className="text-sm text-gray-600 leading-none">
-                            ${product.shipping.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                        </div>
-                    </div>
-                    {/* Taxes */}
-                    <div>
-                        <label className="text-sm text-gray-900 font-bold block mb-3 whitespace-nowrap">Taxes</label>
-                        <div className="text-sm text-gray-600 leading-none">
-                            ${product.taxes.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                        </div>
-                    </div>
-                    {/* Grand Total */}
-                    <div>
-                        <label className="text-sm text-gray-900 font-bold block mb-3 whitespace-nowrap">Grand Total</label>
-                        <div className="text-sm text-blue-400 font-bold leading-none">
-                            ${product.grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                        </div>
-                    </div>
-                    {/* Shipped */}
-                    <div>
-                        <label className="text-sm text-gray-900 font-bold block mb-3 whitespace-nowrap">Shipped</label>
-                        <div className="text-sm text-gray-600 leading-none">
-                            {product.qtyShipped}
-                        </div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm text-left">
+                            <thead className="bg-primary-light dark:bg-gray-900">
+                                <tr>
+                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Unit Price</th>
+                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Order Qty</th>
+                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">MCQ</th>
+                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Total Qty</th>
+                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Total Price</th>
+                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Taxes</th>
+                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Shipping</th>
+                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Grand Total</th>
+                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-right">Qty Shipped</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-100">
+                                <tr>
+                                    <td className="px-6 py-6 text-gray-600 font-medium">{formatCurrency(product.unitPrice)}</td>
+                                    <td className="px-6 py-6 text-gray-600">{product.orderQty}</td>
+                                    <td className="px-6 py-6 text-gray-600">{product.moq}</td>
+                                    <td className="px-6 py-6 text-gray-600">{product.totalOrderQty}</td>
+                                    <td className="px-6 py-6 text-gray-600">{formatCurrency(product.totalPrice)}</td>
+                                    <td className="px-6 py-6 text-gray-600 font-bold">{formatCurrency(product.taxes)}</td>
+                                    <td className="px-6 py-6 text-gray-600">{formatCurrency(product.shipping)}</td>
+                                    <td className="px-6 py-6 text-blue-400 font-bold">{formatCurrency(product.grandTotal)}</td>
+                                    <td className="px-6 py-6 text-gray-600 text-right">{product.qtyShipped}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
             {/* Bottom Tabs */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-                <div className="flex border-b border-gray-100 overflow-x-auto no-scrollbar">
-                    {["taxes", "fulfillment", "purchases", "returns"].map((tab) => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab as any)}
-                            className={`px-6 py-4 text-sm font-bold border-b-2 transition-all whitespace-nowrap uppercase tracking-wider ${activeTab === tab
-                                ? "border-primary text-primary"
-                                : "border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50"
-                                }`}
-                        >
-                            {tab}
-                        </button>
-                    ))}
+            <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+                {/* Tabs Header */}
+                <div className="flex gap-6 border-b border-gray-200 dark:border-gray-700 mb-6">
+                    <button
+                        onClick={() => setActiveTab("taxes")}
+                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "taxes"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            }`}>
+                        Taxes
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("fulfillment")}
+                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "fulfillment"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            }`}>
+                        Fulfillment
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("purchases")}
+                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "purchases"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            }`}>
+                        Purchases
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("returns")}
+                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "returns"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            }`}>
+                        Returns
+                    </button>
                 </div>
                 <div>
                     {activeTab === 'taxes' && (
-                        <div className="bg-white p-6 rounded-lg border border-gray-100">
-                            <div className="flex justify-between items-center mb-6">
-                                <h4 className="text-sm font-bold text-gray-700 uppercase tracking-tight">Tax Breakdown</h4>
-                                <span className="text-[10px] text-gray-400">Is Taxable: {product.isTaxable}</span>
-                            </div>
-                            <table className="w-full text-sm text-left">
-                                <thead className="bg-[#f8fafc] text-gray-500 border-b border-gray-100">
-                                    <tr>
-                                        <th className="px-4 py-3 font-semibold uppercase tracking-wider">Tax Name</th>
-                                        <th className="px-4 py-3 font-semibold text-right uppercase tracking-wider">Rate</th>
-                                        <th className="px-4 py-3 font-semibold text-right uppercase tracking-wider">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-100">
-                                    <tr>
-                                        <td className="px-4 py-3 text-gray-600 font-medium">Sales Tax</td>
-                                        <td className="px-4 py-3 text-right text-gray-600">8.25%</td>
-                                        <td className="px-4 py-3 text-right text-gray-900 font-bold">${product.taxes.toFixed(2)}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <QuoteLineTaxesTab product={product} />
                     )}
 
                     {activeTab === 'fulfillment' && (
-                        <QuoteLineFulfillmentsTab lineId={lineid} loading={false} />
+                        <QuoteLineFulfillmentsTab
+                            lineId={lineid}
+                            loading={false}
+                            accountId={SF_ACCOUNT_ID}
+                            contactId={SF_CONTACT_ID}
+                            currentProduct={product}
+                        />
                     )}
 
-                    {(activeTab === 'purchases' || activeTab === 'returns') && (
-                        <div className="flex flex-col items-center justify-center py-24 bg-gray-50/30 rounded-lg border border-dashed border-gray-200">
-                            <svg className="w-12 h-12 text-gray-200 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            <p className="text-gray-400 text-sm italic">No related records found for this {activeTab.slice(0, -1)}.</p>
-                        </div>
+                    {activeTab === 'purchases' && (
+                        <QuoteLinePurchasesTab
+                            lineId={lineid}
+                            loading={false}
+                            accountId={SF_ACCOUNT_ID}
+                            contactId={SF_CONTACT_ID}
+                        />
+                    )}
+
+                    {activeTab === 'returns' && (
+                        <QuoteLineReturnsTab
+                            lineId={lineid}
+                            loading={false}
+                            accountId={SF_ACCOUNT_ID}
+                            contactId={SF_CONTACT_ID}
+                        />
                     )}
                 </div>
             </div>

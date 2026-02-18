@@ -1,5 +1,6 @@
 import { QuoteSalesOrder } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
+import { formatCurrency, formatDate } from "@/lib/utils/formatting";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -90,15 +91,15 @@ export default function QuoteSalesOrdersSubTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipToContact }}>{order.shipToContact}</td>
                                 <td className="px-3 py-2 text-sm text-center text-gray-900 dark:text-white" style={{ width: widths.dropShip }}>{order.dropShip ? 'Yes' : 'No'}</td>
                                 <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{order.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>${order.totalPrice.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.shipping }}>${order.shipping.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.taxes }}>${order.taxes.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white font-medium" style={{ width: widths.grandTotal }}>${order.grandTotal.toFixed(2)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.requestDate }}>{order.requestDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.pickDate }}>{order.pickDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.pickCompleteDate }}>{order.pickCompleteDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.plannedShipDate }}>{order.plannedShipDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipConfirmedDate }}>{order.shipConfirmedDate}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>{formatCurrency(order.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.shipping }}>{formatCurrency(order.shipping)}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white" style={{ width: widths.taxes }}>{formatCurrency(order.taxes)}</td>
+                                <td className="px-3 py-2 text-sm text-right text-gray-900 dark:text-white font-medium" style={{ width: widths.grandTotal }}>{formatCurrency(order.grandTotal)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.requestDate }}>{formatDate(order.requestDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.pickDate }}>{formatDate(order.pickDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.pickCompleteDate }}>{formatDate(order.pickCompleteDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.plannedShipDate }}>{formatDate(order.plannedShipDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipConfirmedDate }}>{formatDate(order.shipConfirmedDate, 'numeric-dash')}</td>
                             </tr>
                         ))
                     )}
