@@ -78,7 +78,7 @@ export default function ProposalDetails({
                     <textarea
                         readOnly
                         className="w-full p-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white leading-relaxed resize-none focus:ring-0 focus:border-gray-300"
-                        value={proposal.description || "No scope summary provided for this proposal."}
+                        value={proposal.specialTerms || "No scope summary provided for this proposal."}
                     />
                 </div>
             </div>
@@ -102,7 +102,7 @@ export default function ProposalDetails({
                     <textarea
                         readOnly
                         className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white resize-none h-full focus:ring-0 focus:border-gray-300"
-                        value={proposal.specialTerms || "No special notes for this proposal."}
+                        value={proposal.Proposal_Notes || "No special notes for this proposal."}
                     />
                 </div>
 

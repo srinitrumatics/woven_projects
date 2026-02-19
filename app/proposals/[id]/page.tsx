@@ -307,7 +307,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             totalTaxesAmount: item.Total_Taxes_Amount__c || item.Total_Taxes__c || 0,
             proposalDate: formatDate(item.Issued_Date__c || item.CreatedDate, 'numeric-dash'),
             expirationDate: formatDate(item.Expiration_Date__c, 'numeric-dash'),
-            description: item.Scope__c?.replace(/<[^>]*>?/gm, '') || item.Name || '',
+            description: item.Name || '',
             productCount: item.Total_Lines__c || 0,
             billTo: item.Authorized_Bill_To_Location_Name || 'N/A',
             shipTo: item.Authorized_Ship_To_Location_Name || 'N/A',
@@ -342,7 +342,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             companySignedBy: item.Company_Signed_By_Name,
             companySignedTitle: item.Company_Signed_Title__c,
             proposalType: item.Proposal_Type__c || '',
-            priceBook: item.Price_Book_Name || item.Pricebook2Id || ''
+            priceBook: item.Price_Book_Name || item.Pricebook2Id || '',
+            Proposal_Notes: item.Proposal_Notes__c || item.Proposal_Notes || ''
           };
 
           setProposal(detailedProposal as any);

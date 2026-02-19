@@ -989,12 +989,12 @@ export default function ProposalProductDetailPage({
                                     <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
                                     <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Order Qty</th>
                                     <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">MOQ</th>
-                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Qty</th>
+                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Order Qty</th>
                                     <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Total Price</th>
                                     <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipping</th>
                                     <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Taxes</th>
                                     <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Grand Total</th>
-                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Shipped</th>
+                                    <th className=" py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Qty Shipped</th>
                                 </tr>
                             </thead>
                             <tbody>

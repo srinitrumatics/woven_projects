@@ -877,7 +877,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   // Calculate dynamic order totals based on actual products in the order
   // Always calculate from orderProducts to ensure real-time updates when products are added/removed
   const productsSubtotal = orderProducts.reduce((sum, product) => sum + product.subtotal, 0);
-  const totalExciseTax = productsSubtotal > 0 ? productsSubtotal * 0.15 : 0;
+  const totalExciseTax = orderData ? (orderData.Total_Taxes_Amount__c ?? 0) : (productsSubtotal > 0 ? productsSubtotal * 0.15 : 0);
   const orderProcessing = 0; // Not in API response example, assuming 0
   const shipping = productsSubtotal > 0 ? (orderData?.Total_Shipping_Charges__c ?? 0) : 0;
   const grandTotal = productsSubtotal + totalExciseTax + orderProcessing + shipping;

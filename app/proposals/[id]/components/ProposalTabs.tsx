@@ -21,13 +21,14 @@ export default function ProposalTabs({ activeTab, onTabChange, counts = {} }: Pr
         { id: "products", label: "Products", count: counts.products },
         { id: "elements", label: "Elements", count: counts.elements },
         { id: "taxes", label: "Taxes", count: counts.taxes },
-        { id: "files", label: "Files", count: counts.files },
         { id: "signatures", label: "Signatures" },
         { id: "projects", label: "Projects", count: counts.projects },
         { id: "orders", label: "Orders", count: counts.orders },
         { id: "fulfillment", label: "Fulfillment", count: counts.fulfillment },
         { id: "purchases", label: "Purchases", count: counts.purchases },
         { id: "returns", label: "Returns", count: counts.returns },
+        { id: "files", label: "Files", count: counts.files },
+
     ];
 
     return (
