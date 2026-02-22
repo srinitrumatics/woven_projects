@@ -244,7 +244,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
     };
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg ">
             <div className="flex justify-between items-center mb-4">
                 <div></div>
                 <div className="flex gap-2">
@@ -283,9 +283,11 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                                     />
                                 </th>
                             )}
-                            <SortableHeader label="Name" field="Title" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} />
+                            <SortableHeader label="File Name" field="Title" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Type" field="FileExtension" sortConfig={sortConfig} requestSort={requestSort} />
+                            <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} />
+                            <SortableHeader label="Uploaded By" field="CreatedBy" sortConfig={sortConfig} requestSort={requestSort} />
+
                             <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} />
                             <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
                         </tr>
@@ -313,8 +315,9 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                                         </td>
                                     )}
                                     <td className="px-2 py-3 text-sm font-medium text-gray-900 dark:text-white" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">{file.Title}</div></td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{(file.FileSize / 1024).toFixed(2)} KB</td>
                                     <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.FileExtension}</td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{(file.FileSize / 1024).toFixed(2)} KB</td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedBy}</td>
                                     <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedDate}</td>
                                     <td className="px-2 py-3">
                                         <div>

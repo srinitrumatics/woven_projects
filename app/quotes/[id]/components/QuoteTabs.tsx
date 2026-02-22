@@ -20,7 +20,7 @@ export default function QuoteTabs({ activeTab, onTabChange, counts = {} }: Quote
         { id: "quotelines", label: "Quote Lines", count: counts.quotelines },
         { id: "taxes", label: "Taxes", count: counts.taxes },
         { id: "fulfillment", label: "Fulfillment", count: counts.fulfillment },
-        { id: "purchases", label: "Purchase Orders", count: counts.purchases },
+        { id: "purchases", label: "Purchases", count: counts.purchases },
         { id: "returns", label: "Returns", count: counts.returns },
         { id: "files", label: "Files", count: counts.files },
     ];

@@ -47,8 +47,8 @@ export default function OrderTotal({
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Order Total</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Review Order Summary</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Order Summary</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Review Your Order Summary</p>
                 </div>
             </div>
             {/* Price Breakdown */}

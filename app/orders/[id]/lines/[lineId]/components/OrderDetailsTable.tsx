@@ -54,11 +54,7 @@ export default function OrderDetailsTable({
 
     return (
         <div className="lg:col-span-5 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 ">
-            <div className="flex items-center gap-2 mb-3 p-2">
-                <h3 className="text-base font-semibold text-gray-900 dark:text-white ">
-                    Order Details
-                </h3>
-            </div>
+
             <div className="overflow-x-auto">
                 <table className="w-full">
                     <thead className="bg-primary-light dark:bg-gray-900">
@@ -73,7 +69,7 @@ export default function OrderDetailsTable({
                                 MOQ
                             </th>
                             <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                                Total Qty
+                                Total Order Qty
                             </th>
                             <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
                                 Total Price
@@ -86,9 +82,6 @@ export default function OrderDetailsTable({
                             </th>
                             <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
                                 Grand Total
-                            </th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                                Qty Shipped
                             </th>
                         </tr>
                     </thead>
@@ -140,9 +133,6 @@ export default function OrderDetailsTable({
                             </td>
                             <td className="px-2 py-3 text-sm text-left font-bold text-primary">
                                 {formatCurrency(grandTotal)}
-                            </td>
-                            <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">
-                                {formatNumber(product.qtyShipped, 0)}
                             </td>
                         </tr>
                     </tbody>

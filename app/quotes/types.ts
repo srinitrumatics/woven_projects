@@ -299,6 +299,7 @@ export interface QuoteDetails extends Quote {
   discountTotal: number;
   shippingCost: number;
   serviceTotal: number;
+  serviceLinesCount: number;
   grandTotal: number;
   // Added for layout compatibility
   accountExecutive?: string;
@@ -311,4 +312,13 @@ export interface QuoteDetails extends Quote {
   shipToLocation?: string; // mapped from shipTo in Proposal
   dropShip?: boolean;
   site?: string;
+}
+export interface QuoteFile {
+  id: string;
+  fileName: string;
+  fileType: string;
+  fileSize: string;
+  uploadedDate: string;
+  uploadedBy: string;
+  contentDocumentId: string;
 }

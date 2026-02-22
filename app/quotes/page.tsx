@@ -153,7 +153,7 @@ export default function QuotesPage() {
     <Sidebar>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Quotes</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and Track Sales Quotes</p>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and Track Customer Quotes</p>
       </div>
 
       {/* Stats Cards */}
@@ -162,12 +162,12 @@ export default function QuotesPage() {
         {/* Draft Quotes Card */}
         <button
           onClick={() => handleCardClick("Draft")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Draft"
-            ? "border-gray-500 ring-2 ring-gray-500/20"
-            : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "All"
+            ? "border-primary ring-2 ring-primary/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
             }`}
         >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-400 to-gray-600"></div>
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-dark"></div>
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
@@ -182,17 +182,17 @@ export default function QuotesPage() {
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
                   <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
                 </div>
-                <p className="text-lg font-semibold text-gray-600 dark:text-gray-400 mt-1">{formatCurrency(stats.draftValue)}</p>
+                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.draftValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-gray-500 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 group-hover:bg-gray-500 group-hover:text-white"
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
             </div>
-            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:underline">
+            <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+              <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline">
                 View draft quotes
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -205,12 +205,12 @@ export default function QuotesPage() {
         {/* Approved Quotes Card */}
         <button
           onClick={() => handleCardClick("Approved")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Approved"
-            ? "border-green-500 ring-2 ring-green-500/20"
-            : "border-gray-200 dark:border-gray-700 hover:border-green-400"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Draft"
+            ? "border-gray-500 ring-2 ring-gray-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
             }`}
         >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-emerald-500"></div>
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-400 to-gray-500"></div>
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
@@ -225,17 +225,17 @@ export default function QuotesPage() {
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.approvedCount}</span>
                   <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
                 </div>
-                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.approvedValue)}</p>
+                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.approvedValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Approved" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Approved" ? "bg-gray-500 text-white" : "bg-gray-50 dark:bg-gray-900/20 text-gray-600 dark:text-gray-400 group-hover:bg-gray-500 group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:underline">
                 View approved quotes
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -273,7 +273,7 @@ export default function QuotesPage() {
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Partial Shipment" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
@@ -292,11 +292,11 @@ export default function QuotesPage() {
         <button
           onClick={() => handleCardClick("Shipped" as any)}
           className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Shipped"
-            ? "border-indigo-500 ring-2 ring-indigo-500/20"
-            : "border-gray-200 dark:border-gray-700 hover:border-indigo-400"
+            ? "border-green-500 ring-2 ring-green-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-green-400"
             }`}
         >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-400 to-purple-500"></div>
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-500"></div>
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
@@ -311,17 +311,17 @@ export default function QuotesPage() {
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.shippedCount}</span>
                   <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
                 </div>
-                <p className="text-lg font-semibold text-indigo-600 dark:text-indigo-400 mt-1">{formatCurrency(stats.shippedValue)}</p>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.shippedValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Shipped" ? "bg-indigo-500 text-white" : "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white"
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Shipped" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-indigo-600 dark:text-indigo-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline">
                 View shipped quotes
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -421,7 +421,7 @@ export default function QuotesPage() {
                     className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
-                    Actions
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -516,7 +516,7 @@ function StatusBadge({ status }: { status: QuoteStatus }) {
       case "Pending":
         return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
       case "Draft":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+        return "bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
       case "Rejected":
         return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
       case "Expired":

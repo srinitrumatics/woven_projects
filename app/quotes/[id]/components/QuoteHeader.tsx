@@ -21,10 +21,9 @@ export default function QuoteHeader({ quoteNumber, status, description, onBack }
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                             {quoteNumber}
                         </h1>
-                        <p className="text-gray-600 dark:text-gray-400 mt-1">{description}</p>
                     </div>
                 </div>
-                <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full mt-2 ${status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
+                <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full mt-2 ${status === 'Draft' ? 'bg-blue-200 text-blue-900 dark:bg-blue-900 dark:text-blue-400' :
                     status === 'Pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
                         status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                             status === 'Rejected' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :

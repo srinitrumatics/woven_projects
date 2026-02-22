@@ -693,9 +693,9 @@ export default function OrdersPage() {
                 >
                   <option value="All">All Statuses</option>
                   <option value="Draft">Draft</option>
-                  <option value="Pending">Pending</option>
+                  <option value="Pending">Pending/Submitted</option>
                   <option value="Success">Success</option>
-                  <option value="Cancelled">Cancelled</option>
+                  <option value="Canceled">Canceled</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

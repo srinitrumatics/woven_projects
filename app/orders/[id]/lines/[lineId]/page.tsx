@@ -378,7 +378,7 @@ export default function OrderLineDetailPage({
       />
 
       {/* Row 1: Main Image + Order Notes + Product Information */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-2 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4 items-stretch">
         <ProductCarousel images={productImages} />
 
         <OrderLineNotes
@@ -391,7 +391,7 @@ export default function OrderLineDetailPage({
         <ProductInfo product={product} />
       </div>
 
-      {/* Row 2: Thumbnail Images + Order Details */}
+      {/* Row 2: Order Details */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         <OrderDetailsTable
           isEditing={isEditing}

@@ -3,7 +3,7 @@
 import { use, useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
-import { QuoteDetails, QuoteLine, QuoteStatus, QuoteTax } from "../types";
+import { QuoteDetails, QuoteLine, QuoteStatus, QuoteTax, QuoteFile } from "../types";
 import QuoteHeader from "./components/QuoteHeader";
 import QuoteDetailsSection from "./components/QuoteDetails";
 import QuoteTabs, { QuoteTabType } from "./components/QuoteTabs";
@@ -12,6 +12,7 @@ import QuoteTaxesTab from "./components/QuoteTaxesTab";
 import QuoteFulfillmentTab from "./components/QuoteFulfillmentTab";
 import QuotePurchasesTab from "./components/QuotePurchasesTab";
 import QuoteReturnsTab from "./components/QuoteReturnsTab";
+import QuoteFilesTab from "./components/QuoteFilesTab";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatCurrency, formatNumber, formatDate } from "@/lib/utils/formatting";
 
@@ -41,7 +42,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   const [quote, setQuote] = useState<QuoteDetails | null>(null);
   const [quoteLines, setQuoteLines] = useState<QuoteLine[]>([]);
   const [taxes, setTaxes] = useState<QuoteTax[]>([]);
-  const [quoteFiles, setQuoteFiles] = useState<any[]>([]);
+  const [quoteFiles, setQuoteFiles] = useState<QuoteFile[]>([]);
   const [fulfillmentData, setFulfillmentData] = useState<any>({
     salesOrders: [],
     shippingManifests: [],
@@ -123,6 +124,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           discountTotal: 0,
           shippingCost: item.Total_Shipping_Charges__c || 0,
           serviceTotal: item.Total_Services_Amount__c || 0,
+          serviceLinesCount: item.Total_Services_Lines__c || item.Total_Service_Lines__c || 0,
           grandTotal: item.Grand_Total__c || 0,
           notes: item.Quote_Notes__c || '',
           description: item.Quote_Notes__c || '',
@@ -362,7 +364,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             shipFromContact: r.Ship_from_Contact_Name || '',
             supplierName: r.Supplier_Name || '',
             supplierContact: r.Supplier_Contact_Name || '',
-            totalLines: r.Total_Price__c || 0,
+            totalLines: r.Total_Lines__c || 0,
             totalCost: r.Total_Cost__c || 0,
             issuedDate: formatDate(r.Issued_Date__c, 'numeric-dash') || '',
             approvalDate: formatDate(r.Approval_Date__c, 'numeric-dash') || '',
@@ -604,17 +606,13 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
               />
             )}
             {activeTab === 'files' && (
-              <div className="p-8 text-center text-gray-500">
-                <p>No Files Found.</p>
-                <div className="mt-4 flex flex-col gap-2 max-w-lg mx-auto">
-                  {quoteFiles.map(file => (
-                    <div key={file.id} className="flex justify-between items-center p-3 bg-gray-50 rounded border">
-                      <span>{file.fileName}</span>
-                      <span className="text-xs text-gray-400">{file.fileSize}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <QuoteFilesTab
+                quoteId={id}
+                accountId={SF_ACCOUNT_ID}
+                contactId={SF_CONTACT_ID}
+                files={quoteFiles}
+                loading={tabLoading}
+              />
             )}
           </div>
         </div>

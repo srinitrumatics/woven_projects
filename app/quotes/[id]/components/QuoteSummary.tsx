@@ -29,38 +29,27 @@ export default function QuoteSummary({
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col justify-between gap-2 ">
+            <div className="flex-1 flex flex-col justify-between gap-2 p-1">
                 <div className="flex justify-between text-sm ">
                     <span className="text-gray-700 dark:text-gray-300">({lines.length}) Products - Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(productsSubtotal)}</span>
                 </div>
 
-                <div className="flex justify-between text-sm ">
-                    <span className="text-gray-700 dark:text-gray-300">Service</span>
+                <div className="flex justify-between text-sm p-1">
+                    <span className="text-gray-700 dark:text-gray-300">({quote.serviceLinesCount}) Service - Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(quote.serviceTotal)}</span>
                 </div>
-
-                <div className="flex justify-between text-sm ">
-                    <span className="text-gray-700 dark:text-gray-300">Discount</span>
-                    <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(quote.discountTotal)}</span>
-                </div>
-
-                <div className="flex justify-between text-sm pt-1 font-medium border-t border-gray-100 dark:border-gray-700">
-                    <span className="text-gray-700 dark:text-gray-300">Subtotal</span>
-                    <span className="text-gray-900 dark:text-white">{formatCurrency(quote.subtotal)}</span>
-                </div>
-
-                <div className="flex justify-between text-sm ">
+                <div className="flex justify-between text-sm p-1">
                     <span className="text-gray-700 dark:text-gray-300">Taxes</span>
                     <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(quote.taxTotal)}</span>
                 </div>
 
-                <div className="flex justify-between text-sm ">
+                <div className="flex justify-between text-sm p-1">
                     <span className="text-gray-700 dark:text-gray-300">Shipping</span>
                     <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(quote.shippingCost)}</span>
                 </div>
 
-                <div className="border-t-2 border-primary/20 dark:border-primary/40 pt-2">
+                <div className="border-t-2 border-primary/20 dark:border-primary/40 pt-2 p-3">
                     <div className="flex justify-between text-lg font-bold">
                         <span className="text-gray-900 dark:text-white">Grand Total</span>
                         <span className="text-primary dark:text-primary">{formatCurrency(grandTotal)}</span>
@@ -68,9 +57,9 @@ export default function QuoteSummary({
                 </div>
             </div>
 
-            <div className="border-t border-gray-300 dark:border-gray-600 pt-2 ">
-                <button className="w-full flex items-center justify-center gap-2 px-2 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:text-white dark:hover:border-primary transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="border-t border-gray-300 dark:border-gray-600 pt-3 ">
+                <button className="w-full flex items-center justify-center gap-2 px-3 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:text-white dark:hover:border-primary transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Download PDF

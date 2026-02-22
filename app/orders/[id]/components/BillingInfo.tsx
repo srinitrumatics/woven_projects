@@ -91,7 +91,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             type="text"
                             value={formData.billingAddress || ''}
                             onChange={(e) => setFormData({ ...formData, billingAddress: e.target.value })}
-                            readOnly={isEditing === false}
+                            readOnly={true}
                             className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>

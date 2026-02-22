@@ -127,8 +127,8 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
     });
 
     const tabs: { id: PurchasesSubTab; label: string }[] = [
-        { id: "purchases", label: "Purchase" },
-        { id: "supplierBills", label: "Supplier Bill" },
+        { id: "purchases", label: "Purchases Order" },
+        { id: "supplierBills", label: "Supplier Bills" },
     ];
 
     return (

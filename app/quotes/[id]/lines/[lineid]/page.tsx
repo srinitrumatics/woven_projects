@@ -248,26 +248,73 @@ export default function QuoteLineDetailPage({
                     Back to Quote
                 </button>
             </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-6">
-                {/* Images Card */}
-                <div className="lg:col-span-4 bg-white rounded-lg shadow-sm border border-gray-100 p-6 flex flex-col min-h-[380px]">
-                    <div className="flex-1 bg-gray-50 rounded-lg flex flex-col items-center justify-center relative overflow-hidden group">
-                        <div className="flex flex-col items-center gap-4">
-                            <svg className="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                            </svg>
-                            <span className="text-gray-400 text-sm">Image {currentImageIndex + 1}</span>
+            {/* Row 1: Main Image + Proposal Note + Product Information */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4 items-stretch">
+                {/* Main Image with Carousel - 25% width (3 of 12 cols) */}
+                <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                    <div className="relative flex-1 flex flex-col">
+                        {/* Main Image Display - Reduced height */}
+                        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
+                            <div className="text-center">
+                                <svg
+                                    className="w-16 h-16 text-gray-400 mx-auto"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={1.5}
+                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                                    />
+                                </svg>
+                                <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block">
+                                    {productImages[currentImageIndex].label}
+                                </span>
+                            </div>
                         </div>
 
-                        <button onClick={() => setCurrentImageIndex(i => (i - 1 + productImages.length) % productImages.length)} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full shadow-sm flex items-center justify-center text-gray-400 hover:text-gray-600">
-                            &lt;
+                        {/* Carousel Navigation Arrows */}
+                        <button
+                            onClick={() => setCurrentImageIndex(i => (i - 1 + productImages.length) % productImages.length)}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15 19l-7-7 7-7"
+                                />
+                            </svg>
                         </button>
-                        <button onClick={() => setCurrentImageIndex(i => (i + 1) % productImages.length)} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full shadow-sm flex items-center justify-center text-gray-400 hover:text-gray-600">
-                            &gt;
+                        <button
+                            onClick={() => setCurrentImageIndex(i => (i + 1) % productImages.length)}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
                         </button>
 
-                        <div className="absolute bottom-4 flex gap-1.5">
+                        {/* Carousel Dots */}
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
                             {productImages.map((_, i) => (
                                 <div key={i} className={`w-2 h-2 rounded-full transition-colors ${i === currentImageIndex
                                     ? "bg-primary"
@@ -278,7 +325,7 @@ export default function QuoteLineDetailPage({
                     </div>
                 </div>
 
-                {/* Proposal Notes Card */}
+                {/* Quotes Note - 25% width (3 of 12 cols) */}
                 <div className="lg:col-span-3 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="w-8 h-8 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
@@ -286,18 +333,18 @@ export default function QuoteLineDetailPage({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
-                        <h2 className="text-sm font-bold text-gray-800 uppercase tracking-tight">Proposal Note</h2>
+                        <h2 className="text-sm font-bold text-gray-800 uppercase tracking-tight">Quote Lines Note</h2>
                     </div>
                     <div>
-                        <label className="text-sm text-gray-400 block mb-2">Notes</label>
+                        <label className="text-sm font-semibold text-gray-400 block mb-2">Notes</label>
                         <div className="w-full h-[240px] p-4 bg-gray-50/50 border border-gray-100 rounded-lg text-sm text-gray-500 overflow-y-auto italic">
                             {product.notes || "No notes available."}
                         </div>
                     </div>
                 </div>
 
-                {/* Product Information Card */}
-                <div className="lg:col-span-5 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
+                {/* Product Information Card - 50% width (6 of 12 cols) */}
+                <div className="lg:col-span-6 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="w-8 h-8 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
                             <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -363,40 +410,36 @@ export default function QuoteLineDetailPage({
                 </div>
             </div>
 
-            {/* Order Details Table */}
+            {/* quotes Details Table */}
             <div className="mb-6">
                 <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="flex items-center gap-2 mb-3 p-2">
-                        <h3 className="text-base font-semibold text-gray-900 dark:text-white ">
-                            Customer Quote Line Details
-                        </h3>
-                    </div>
+
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Unit Price</th>
-                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Order Qty</th>
-                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">MCQ</th>
-                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Total Qty</th>
-                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Total Price</th>
-                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Taxes</th>
-                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Shipping</th>
-                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">Grand Total</th>
-                                    <th className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-right">Qty Shipped</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Unit Price</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Order Qty</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">MCQ</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Total Qty</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Total Price</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Taxes</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Shipping</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Grand Total</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Qty Shipped</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
                                 <tr>
-                                    <td className="px-6 py-6 text-gray-600 font-medium">{formatCurrency(product.unitPrice)}</td>
-                                    <td className="px-6 py-6 text-gray-600">{product.orderQty}</td>
-                                    <td className="px-6 py-6 text-gray-600">{product.moq}</td>
-                                    <td className="px-6 py-6 text-gray-600">{product.totalOrderQty}</td>
-                                    <td className="px-6 py-6 text-gray-600">{formatCurrency(product.totalPrice)}</td>
-                                    <td className="px-6 py-6 text-gray-600 font-bold">{formatCurrency(product.taxes)}</td>
-                                    <td className="px-6 py-6 text-gray-600">{formatCurrency(product.shipping)}</td>
-                                    <td className="px-6 py-6 text-blue-400 font-bold">{formatCurrency(product.grandTotal)}</td>
-                                    <td className="px-6 py-6 text-gray-600 text-right">{product.qtyShipped}</td>
+                                    <td className="px-3 py-2 text-gray-600 font-medium">{formatCurrency(product.unitPrice)}</td>
+                                    <td className="px-3 py-2 text-gray-600">{product.orderQty}</td>
+                                    <td className="px-3 py-2 text-gray-600">{product.moq}</td>
+                                    <td className="px-3 py-2 text-gray-600">{product.totalOrderQty}</td>
+                                    <td className="px-3 py-2 text-gray-600">{formatCurrency(product.totalPrice)}</td>
+                                    <td className="px-3 py-2 text-gray-600 ">{formatCurrency(product.taxes)}</td>
+                                    <td className="px-3 py-2 text-gray-600">{formatCurrency(product.shipping)}</td>
+                                    <td className="px-3 py-2 text-blue-400">{formatCurrency(product.grandTotal)}</td>
+                                    <td className="px-3 py-2 text-gray-600">{product.qtyShipped}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -474,6 +517,54 @@ export default function QuoteLineDetailPage({
                         />
                     )}
                 </div>
+            </div>
+
+            {/* Navigation Buttons - Below Tabs, Right aligned */}
+            <div className="flex items-center justify-end gap-2 mt-4">
+                {/* Previous Line Button */}
+                {currentLineIndex > 0 ? (
+                    <Link
+                        href={`/quotes/${id}/lines/${quoteLines[currentLineIndex - 1]?.id}`}
+                        className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Prev
+                    </Link>
+                ) : (
+                    <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Prev
+                    </span>
+                )}
+
+                {/* Line indicator */}
+                <span className="text-xs text-gray-500 dark:text-gray-400 px-2 font-medium">
+                    {lineNumber}/{totalLines}
+                </span>
+
+                {/* Next Line Button */}
+                {currentLineIndex < totalLines - 1 ? (
+                    <Link
+                        href={`/quotes/${id}/lines/${quoteLines[currentLineIndex + 1]?.id}`}
+                        className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
+                    >
+                        Next
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                    </Link>
+                ) : (
+                    <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
+                        Next
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                    </span>
+                )}
             </div>
         </Sidebar>
     );

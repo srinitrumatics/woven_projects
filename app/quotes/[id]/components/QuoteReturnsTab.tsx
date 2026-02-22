@@ -171,9 +171,9 @@ export default function QuoteReturnsTab({ quoteId, data, loading }: QuoteReturns
     });
 
     const tabs: { id: ReturnsSubTab; label: string }[] = [
-        { id: "rmas", label: "RMA" },
+        { id: "rmas", label: "RMAs" },
         { id: "creditMemo", label: "Credit Memos" },
-        { id: "rtvs", label: "RTV" },
+        { id: "rtvs", label: "RTVs" },
         { id: "debitMemo", label: "Debit Memos" },
     ];
 

@@ -21,7 +21,7 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
                 <span>&gt;</span>
                 <span className="hover:text-gray-700 dark:text-gray-300">Edit Order</span>
                 <span>&gt;</span>
-                <span className="text-gray-900 dark:text-white">Order {name || id}</span>
+                <span className="text-gray-900 dark:text-white">{name || id}</span>
             </div>
 
             {/* Order header card (full width) */}
@@ -36,7 +36,7 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
                             </svg>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Order {name}</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{name}</h2>
                             <div className="text-sm text-gray-500 dark:text-gray-400">Order Details and Summary</div>
                         </div>
                     </div>

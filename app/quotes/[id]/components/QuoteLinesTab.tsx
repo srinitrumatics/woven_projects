@@ -42,7 +42,7 @@ export default function QuoteLinesTab({
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
-                        <SortableHeader label="Quote Line Number" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.Name} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                        <SortableHeader label="Cutomer Quote Line " field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.Name} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                         <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
                         <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={onResize} align="left" />
                         <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={onResize} align="left" />
@@ -67,7 +67,7 @@ export default function QuoteLinesTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" style={{ width: widths.Name }}>
                                     <Link
                                         href={`/quotes/${quoteId}/lines/${line.id}`}
-                                        className="text-primary hover:underline line-clamp-2"
+                                        className="text-primary font-bold hover:underline line-clamp-2"
                                         title={line.Name}
                                     >
                                         {line.Name}
@@ -100,7 +100,7 @@ export default function QuoteLinesTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.taxes }}>
                                     {formatCurrency(line.taxes)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold" style={{ width: widths.lineGrandTotal }}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white " style={{ width: widths.lineGrandTotal }}>
                                     {formatCurrency(line.lineGrandTotal)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.qtyShipped }}>

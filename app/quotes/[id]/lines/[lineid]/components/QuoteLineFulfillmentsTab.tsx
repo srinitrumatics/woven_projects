@@ -272,8 +272,8 @@ export default function QuoteLineFulfillmentsTab({
                                         <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
                                         <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalOrderQty} onResize={handleResize} />
                                         <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                                        <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
                                         <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
+                                        <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
                                         <SortableHeader label="Line Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
                                         <SortableHeader label="Qty Picked" field="qtyPicked" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyPicked} onResize={handleResize} />
                                         <SortableHeader label="Back Order Qty" field="backOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.backOrderQty} onResize={handleResize} />
@@ -340,16 +340,16 @@ export default function QuoteLineFulfillmentsTab({
                                                 </td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.customerQuoteLine}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.productName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-[200px] truncate" title={item.description}>{item.description}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.manufacturerDBA}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white min-w-[180px] line-clamp-1" title={item.description}>{item.description}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[160px]">{item.manufacturerDBA}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap font-medium">{formatCurrency(item.unitPrice)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.totalOrderQty}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[145px]">{item.totalOrderQty}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.totalPrice)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.shipping)}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.taxes)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold whitespace-nowrap">{formatCurrency(item.grandTotal)}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.shipping)}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[155px]">{formatCurrency(item.grandTotal)}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.qtyPicked}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.backOrderQty}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[155px]">{item.backOrderQty}</td>
                                             </>
                                         )}
                                         {activeSubTab === "Invoices" && (
@@ -364,19 +364,19 @@ export default function QuoteLineFulfillmentsTab({
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.customerQuoteLine}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.purchaseOrderLine}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.productName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-[200px] truncate" title={item.description}>{item.description}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.manufacturerDBA}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white min-w-[180px] line-clamp-1" title={item.description}>{item.description}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[160px]">{item.manufacturerDBA}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap font-medium">{formatCurrency(item.unitPrice)}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.invoiceQty}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.totalPrice)}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.taxes)}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.shipping)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold whitespace-nowrap">{formatCurrency(item.grandTotal)}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[155px]">{formatCurrency(item.grandTotal)}</td>
                                             </>
                                         )}
                                         {activeSubTab === "Manifests" && (
                                             <>
-                                                <td className="px-4 py-3 text-sm text-blue-500 hover:underline cursor-pointer whitespace-nowrap">{item.manifestName}</td>
+                                                <td className="px-4 py-3 text-sm text-blue-500 hover:underline cursor-pointer whitespace-nowrap min-w-[165px]">{item.manifestName}</td>
                                                 <td className="px-4 py-3 text-sm">
                                                     <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                         {item.status}
@@ -386,17 +386,17 @@ export default function QuoteLineFulfillmentsTab({
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.customerQuoteLine}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.productName}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-[200px] truncate" title={item.description}>{item.description}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.manufacturerDBA}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.boxCount}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.boxNetWeight}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.boxGrossWeight}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[165px]">{item.manufacturerDBA}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[165px]">{item.boxCount}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[165px]">{item.boxNetWeight}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[165px]">{item.boxGrossWeight}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap font-medium">{formatCurrency(item.unitPrice)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.totalOrderQty}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[145px]">{item.totalOrderQty}</td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.totalPrice)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.trackingNumber}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatDate(item.estimatedDeliveryDate, 'numeric-dash')}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.trackingStatus}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatDate(item.actualDeliveryDate, 'numeric-dash')}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[165px]">{item.trackingNumber}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[205px]">{formatDate(item.estimatedDeliveryDate, 'numeric-dash')}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[165px]">{item.trackingStatus}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap min-w-[175px]">{formatDate(item.actualDeliveryDate, 'numeric-dash')}</td>
                                             </>
                                         )}
                                     </tr>

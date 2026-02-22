@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getQuotesFromSalesforce, getQuoteFilesFromSalesforce } from "@/lib/quote-service";
+import { getFileUrl } from "@/lib/salesforce-service";
 
 export async function GET(req: NextRequest) {
     try {
@@ -8,6 +9,7 @@ export async function GET(req: NextRequest) {
         const contactId = searchParams.get("contactId");
         const quoteId = searchParams.get("quoteId") || undefined;
         const action = searchParams.get("action") || "";
+        const contentVersionId = searchParams.get("contentVersionId");
 
         if (!accountId || !contactId) {
             return NextResponse.json(
@@ -19,6 +21,17 @@ export async function GET(req: NextRequest) {
         if (action === "files") {
             const files = await getQuoteFilesFromSalesforce(accountId, contactId, quoteId!);
             return NextResponse.json(files);
+        }
+
+        if (action === "download" || action === "preview") {
+            if (!contentVersionId) {
+                return NextResponse.json({ error: "Missing contentVersionId" }, { status: 400 });
+            }
+            const result = await getFileUrl(contentVersionId);
+            if (!result) {
+                return NextResponse.json({ error: "Failed to get file URL" }, { status: 500 });
+            }
+            return NextResponse.json(result);
         }
 
         let tabName = "Customer_Quote";
