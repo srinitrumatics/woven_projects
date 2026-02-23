@@ -64,6 +64,7 @@ interface ProductData {
     productFamily: string;
     ProductNotes?: string;
     manufacturer: string;
+    manufacturerDBA: string;
     quantity: number;
     unitPrice: number;
     subtotal: number;
@@ -125,7 +126,7 @@ export default function ProposalProductDetailPage({
                         sku: item.Name || "", // Assuming Name is SKU based on list page logic
                         description: item.Product_Description__c || "",
                         productFamily: item.Product_Family__c || "General",
-                        manufacturer: item.Manufacturer_Name__c || "Unknown",
+                        manufacturer: item.Manufacturer_DBA__c || "Unknown",
                         quantity: item.Total_Order_Qty__c || 0,
                         unitPrice: item.Unit_Price__c || 0,
                         subtotal: item.Line_Grand_Total__c || 0,

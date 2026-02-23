@@ -53,7 +53,7 @@ export default function OrderDetailsTable({
     };
 
     return (
-        <div className="lg:col-span-5 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 ">
+        <div className="lg:col-span-5 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
 
             <div className="overflow-x-auto">
                 <table className="w-full">

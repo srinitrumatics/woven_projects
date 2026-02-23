@@ -432,7 +432,7 @@ export default function OrdersPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Orders</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and Track Sales Orders</p>
+          <p className="text-gray-600 dark:text-gray-400 text-[16px]mt-1">Manage and Track Sales Orders</p>
         </div>
         <div className="flex items-center gap-3">
           <button
@@ -678,7 +678,7 @@ export default function OrdersPage() {
       )}
 
       {/* Orders Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
         {/* Header with Search and Filter */}
         <div className="border-b border-gray-200 dark:border-gray-700">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-6 py-4 gap-4">
@@ -691,7 +691,7 @@ export default function OrdersPage() {
                   onChange={(e) => setActiveTab(e.target.value as TabFilter)}
                   className="w-full pl-3 pr-10 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
                 >
-                  <option value="All">All Statuses</option>
+                  <option value="All">All</option>
                   <option value="Draft">Draft</option>
                   <option value="Pending">Pending/Submitted</option>
                   <option value="Success">Success</option>
@@ -713,23 +713,10 @@ export default function OrdersPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 />
-                <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+
               </div>
 
-              <div className="flex items-center gap-1">
-                <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors" title="Sort">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-                  </svg>
-                </button>
-                <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors" title="Filter Settings">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                  </svg>
-                </button>
-              </div>
+
             </div>
           </div>
         </div>
@@ -748,14 +735,14 @@ export default function OrdersPage() {
             <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Order Number" field="name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 dark:bg-gray-900 z-10" />
+                  <SortableHeader label="Order Number" field="name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-20" />
                   <SortableHeader label="Status" field="status" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                   <SortableHeader label="Proposal Name" field="proposal_name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal_name} onResize={handleResize} />
                   <SortableHeader label="Customer PO" field="customerPO" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
                   <SortableHeader label="Bill to Account" field="billTo" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
                   <SortableHeader label="Ship to Account" field="shipTo" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} />
-                  <SortableHeader label="Total Lines" field="items" align="right" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
-                  <SortableHeader label="Total Price" field="total" align="right" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
+                  <SortableHeader label="Total Lines" field="items" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
+                  <SortableHeader label="Total Price" field="total" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
                   <SortableHeader label="Request Date" field="requestedDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestedDate} onResize={handleResize} />
                   <th
                     className="px-3 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700"
@@ -786,7 +773,7 @@ export default function OrdersPage() {
                 ) : (
                   paginatedOrders.map((order) => (
                     <tr key={`order-row-${order.Id ?? order.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-3 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left">
+                      <td className="px-3 py-3 text-sm text-primary font-semibold sticky left-0 z-10 bg-white dark:bg-gray-800 text-left">
                         <Link href={`/orders/${order.id}`} className="text-sm font-semibold text-primary hover:underline">
                           <div title={order.name}>{order.name}</div>
                         </Link>
@@ -806,8 +793,8 @@ export default function OrdersPage() {
                       <td className="px-3 py-3">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipTo}>{order.shipTo}</div>
                       </td>
-                      <td className="px-3 py-3 text-sm text-right text-gray-900 dark:text-white">{formatNumber(order.items, 0)}</td>
-                      <td className="px-3 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total)}</td>
+                      <td className="px-3 py-3 text-sm text-gray-900 dark:text-white">{formatNumber(order.items, 0)}</td>
+                      <td className="px-3 py-3 text-sm text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total)}</td>
                       <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400">{formatDate(order.requestedDate, 'numeric-dash')}</td>
                       <td className="px-3 py-3">
                         <div className="flex gap-2">

@@ -105,6 +105,7 @@ export interface AuthorizedLocation {
   Id: string;
   Name: string;
   Account_Name__c: string;
+  Account_Name: string;
   Account_Name__r?: { Name: string };
   Active__c: boolean;
   Lift_Gate__c: boolean;
@@ -113,6 +114,7 @@ export interface AuthorizedLocation {
   Authorized_Ship_To_Location_Delivery_Notes?: string;
   Authorized_Ship_To_Location_Delivery_Notes__c?: string;
   Delivery_Notes__c?: string;
+  [key: string]: any;
 }
 
 export interface ShippingMethodOption {

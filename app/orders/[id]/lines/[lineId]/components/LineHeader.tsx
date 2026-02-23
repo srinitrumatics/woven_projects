@@ -60,9 +60,7 @@ export default function LineHeader({
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                         {productSku || `Order Line #${lineId}`}
                     </h1>
-                    <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                        Line {lineNumber} of {totalLines}
-                    </span>
+
                 </div>
                 <div className="flex items-center gap-2">
                     {!["Approved", "Delivered", "Canceled"].includes(orderStatus) && (
@@ -70,8 +68,8 @@ export default function LineHeader({
                             onClick={onEditToggle}
                             disabled={isSubmitting}
                             className={`px-3 py-1.5 text-sm rounded-lg transition-colors flex items-center gap-2 ${isEditing
-                                    ? "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
-                                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600"
+                                ? "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
+                                : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600"
                                 }`}
                         >
                             <svg
@@ -144,6 +142,11 @@ export default function LineHeader({
                         Back to Order
                     </Link>
                 </div>
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                    Line {lineNumber} of {totalLines}
+                </span>
             </div>
         </div>
     );

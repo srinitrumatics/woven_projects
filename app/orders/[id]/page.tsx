@@ -39,6 +39,7 @@ interface AuthorizedLocation {
   Id: string;
   Name: string;
   Account_Name__c: string;
+  Account_Name: string;
   Account_Name__r?: { Name: string };
   Active__c: boolean;
   Lift_Gate__c: boolean;
@@ -423,13 +424,18 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           } catch (e) { console.error("Error fetching account name:", e); }
 
           if (locations.length > 0) {
-            // Fallback: If accountName is still empty, try to get it from the locations
-            const currentAccountName = accountName; // This might be stale if setAccountName was just called
-            // We use a local check or just rely on the state update if it works
-            // But since setAccountName is async, we can check if it found anything in locations
-            const matchedLoc = locations.find(loc => loc.Account_Name__c === SF_ACCOUNT_ID);
-            const foundName = matchedLoc?.Account_Name__r?.Name;
-            if (foundName && !currentAccountName) {
+            // Try to find the account name from locations if not already set
+            const currentAccountName = accountName;
+            const foundLocWithName = locations.find(loc =>
+              loc.Account_Name__r?.Name ||
+              (loc as any)['Account_Name__r.Name'] ||
+              (loc as any).Account_Name_Name ||
+              (loc as any).Account_Name__c_Name
+            );
+            const foundName = foundLocWithName?.Account_Name__r?.Name || (foundLocWithName as any)?.['Account_Name__r.Name'] || (foundLocWithName as any)?.Account_Name_Name || (foundLocWithName as any)?.Account_Name__c_Name;
+
+            if (foundName && (!currentAccountName || currentAccountName.startsWith('001'))) {
+              console.log('Found account name in locations:', foundName);
               setAccountName(foundName);
             }
 
@@ -448,9 +454,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               new Map(validLocations.map(item => [item.Id, item])).values()
             );
 
-            //console.log('Unique locations count:', uniqueLocations.length);
-            //console.log('Location names:', uniqueLocations.map(loc => `${loc.Id}: ${loc.Name}`));
-
             setShipLocations(uniqueLocations);
           } else {
             console.warn('No locations found in response');
@@ -462,12 +465,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             console.log('Setting payment terms:', paymentTerms);
             setFormData(prev => ({ ...prev, paymentTerms }));
           }
-          // Set price book if available (using Payment_Terms__c as placeholder or new field if available)
+          // Set price book if available
           if (priceBook) {
             setFormData(prev => ({ ...prev, priceBook }));
           }
         }
-
       } catch (e) {
         console.error("Error loading ship locations:", e);
       } finally {
@@ -623,9 +625,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
     // Use fetched account name if available and location account ID matches (or just use it as it's the context account)
     // Fallback to location.Account_Name__r?.Name if backend supports it, otherwise ID
-    const accName = location.Account_Name__r?.Name ||
-      (location.Account_Name__c === SF_ACCOUNT_ID && accountName ? accountName : location.Account_Name__c) ||
-      location.Account_Name__c || "";
+    // Added 15-character match for more robustness and support for dot-notation
+    const relationshipName = location.Account_Name__r?.Name || (location as any)['Account_Name__r.Name'];
+    const isContextAccount = location.Account_Name__c && SF_ACCOUNT_ID && location.Account_Name__c.substring(0, 15) === SF_ACCOUNT_ID.substring(0, 15);
+
+    const accName = relationshipName ||
+      (isContextAccount && accountName && !accountName.startsWith('001') ? accountName : null) ||
+      location.Account_Name || "";
 
     setFormData(prev => ({
       ...prev,
@@ -676,9 +682,12 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         const address = selectedLoc.Address__c;
         const formattedAddress = address ? `${address.street}, ${address.city}, ${address.state} ${address.postalCode}` : "";
 
-        const accName = selectedLoc.Account_Name__r?.Name ||
-          (selectedLoc.Account_Name__c === SF_ACCOUNT_ID && accountName ? accountName : selectedLoc.Account_Name__c) ||
-          selectedLoc.Account_Name__c || "";
+        const relationshipName = selectedLoc.Account_Name__r?.Name || (selectedLoc as any)['Account_Name__r.Name'];
+        const isContextAccount = selectedLoc.Account_Name__c && SF_ACCOUNT_ID && selectedLoc.Account_Name__c.substring(0, 15) === SF_ACCOUNT_ID.substring(0, 15);
+
+        const accName = relationshipName ||
+          (isContextAccount && accountName && !accountName.startsWith('001') ? accountName : null) ||
+          selectedLoc.Account_Name || "";
 
         setFormData(prev => ({
           ...prev,
@@ -732,8 +741,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
           // Proactively set accountName state from order names if context matches
           if (order.Ship_to_Account_Name && !order.Ship_to_Account_Name.startsWith('001')) {
+            console.log('Setting accountName from Order Ship_to_Account_Name:', order.Ship_to_Account_Name);
             setAccountName(order.Ship_to_Account_Name);
           } else if (order.Bill_to_Account_Name && !order.Bill_to_Account_Name.startsWith('001')) {
+            console.log('Setting accountName from Order Bill_to_Account_Name:', order.Bill_to_Account_Name);
             setAccountName(order.Bill_to_Account_Name);
           }
 
@@ -813,13 +824,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             billingEmail: order.Ship_to_Contact_Email || prev.billingEmail || "",
             billToAccountName: (() => {
               if (order.Bill_to_Account_Name && !order.Bill_to_Account_Name.startsWith('001')) return order.Bill_to_Account_Name;
-              if (order.Bill_to_Account__c === SF_ACCOUNT_ID && accountName) return accountName;
+              if (order.Bill_to_Account__c && SF_ACCOUNT_ID && order.Bill_to_Account__c.substring(0, 15) === SF_ACCOUNT_ID.substring(0, 15) && accountName && !accountName.startsWith('001')) return accountName;
               return order.Bill_to_Account_Name || "";
             })(),
             billToAccountId: order.Authorized_Bill_To_Location__r?.Account_Name__c || order.Bill_to_Account__c || "",
             shipToAccountName: (() => {
               if (order.Ship_to_Account_Name && !order.Ship_to_Account_Name.startsWith('001')) return order.Ship_to_Account_Name;
-              if (order.Ship_to_Account__c === SF_ACCOUNT_ID && accountName) return accountName;
+              if (order.Ship_to_Account__c && SF_ACCOUNT_ID && order.Ship_to_Account__c.substring(0, 15) === SF_ACCOUNT_ID.substring(0, 15) && accountName && !accountName.startsWith('001')) return accountName;
               return order.Ship_to_Account_Name || "";
             })(),
             shipToAccountId: order.Authorized_Ship_To_Location__r?.Account_Name__c || order.Ship_to_Account__c || "",
@@ -1357,10 +1368,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         onClone={handleClone}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
+      <div className="grid grid-cols-1 w1500:grid-cols-10 gap-6">
         {/* Left Column - Client Information (70%) */}
-        <div className="lg:col-span-7 flex flex-col gap-4">
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <div className="w1500:col-span-7 flex flex-col gap-4">
+          <div className="grid grid-cols-1 w1500:grid-cols-2 gap-4">
             <BillingInfo
               formData={formData}
               setFormData={setFormData}
@@ -1400,7 +1411,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
 
         {/* Right Column - Order Notes and Order Total (30%) */}
-        <div className="lg:col-span-3 flex flex-col gap-4 h-full">
+        <div className="w1500:col-span-3 flex flex-col gap-4 h-full">
           <OrderNotes
             formData={formData}
             setFormData={setFormData}
@@ -1428,7 +1439,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       </div>
       {/* Products Search - Full Width */}
       <div className="mt-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
           <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4 sm:gap-0">
             <div className="flex-1 relative w-full sm:w-auto">
               <input

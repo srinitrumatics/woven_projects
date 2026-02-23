@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import Link from "next/link";
 import { Product } from "@/app/orders/types";
 import { formatCurrency, truncateText } from "@/lib/utils/formatting";
@@ -40,6 +40,13 @@ export default function MyOrderTable({
 
     const { items: sortedProducts, requestSort, sortConfig } = useSortableData<Product>(filteredOrderProducts);
 
+    // Track per-product qty warnings
+    const [qtyWarnings, setQtyWarnings] = useState<Record<string, boolean>>({});
+
+    const setWarning = (key: string, warn: boolean) => {
+        setQtyWarnings(prev => ({ ...prev, [key]: warn }));
+    };
+
     const handleTooltipEnter = (e: React.MouseEvent<HTMLElement>, product: Product) => {
         const rect = e.currentTarget.getBoundingClientRect();
         setHoveredTooltip({
@@ -55,8 +62,8 @@ export default function MyOrderTable({
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full">
-                <thead className="bg-primary-light dark:bg-gray-900">
+            <table className="w-full text-sm ">
+                <thead className="bg-primary-light dark:bg-gray-900 ">
                     <tr>
                         <SortableHeader label="Order Line " field="sku" sortConfig={sortConfig} requestSort={requestSort} width={widths.sku} onResize={onResize} />
                         <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
@@ -75,10 +82,10 @@ export default function MyOrderTable({
                         )}
                     </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 text-sm">
                     {loadingOrder ? (
                         <tr>
-                            <td colSpan={isEditing ? 9 : 8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+                            <td colSpan={isEditing ? 9 : 8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                                 Loading order details...
                             </td>
                         </tr>
@@ -124,13 +131,14 @@ export default function MyOrderTable({
                                 <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white w-[100px]">{formatCurrency(product.unitPrice)}</td>
                                 <td className="px-2 py-3 text-left w-[150px]">
                                     {isEditing ? (
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col gap-1">
                                             <div className="flex gap-2">
                                                 <button
                                                     onClick={() => {
                                                         const moq = product.moq || 1;
                                                         const newQty = Math.max(product.orderQty - moq, moq);
                                                         handleQuantityChange(product.lineItemKey!, newQty);
+                                                        setWarning(product.lineItemKey!, false);
                                                     }}
                                                     className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                                                 >
@@ -142,29 +150,41 @@ export default function MyOrderTable({
                                                     onChange={(e) => {
                                                         const val = e.target.value;
                                                         if (val === '' || /^[0-9]+$/.test(val)) {
-                                                            let numVal = val === '' ? 0 : parseInt(val);
-                                                            if (numVal > product.availableQty) {
-                                                                numVal = product.availableQty;
-                                                            }
+                                                            const numVal = val === '' ? 0 : parseInt(val);
+                                                            const exceeded = numVal > product.availableQty;
+                                                            setWarning(product.lineItemKey!, exceeded);
+                                                            // Let the value be set but show warning (no silent clamping)
                                                             handleQuantityChange(product.lineItemKey!, numVal);
                                                         }
                                                     }}
-                                                    className="w-20 px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
+                                                    className={`w-20 px-2 py-1.5 border rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent ${qtyWarnings[product.lineItemKey!]
+                                                            ? 'border-amber-500 focus:ring-amber-400'
+                                                            : 'border-gray-300 dark:border-gray-600'
+                                                        }`}
                                                     min={product.moq || 1}
-                                                    max={product.availableQty}
                                                 />
                                                 <button
                                                     onClick={() => {
                                                         const moq = product.moq || 1;
                                                         const newQty = Math.min(product.orderQty + moq, product.availableQty);
                                                         handleQuantityChange(product.lineItemKey!, newQty);
+                                                        setWarning(product.lineItemKey!, false);
                                                     }}
                                                     className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                                                 >
                                                     +
                                                 </button>
                                             </div>
-                                            <div className="text-sm text-gray-500 dark:text-gray-400 text-center mt-1">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
+                                            {qtyWarnings[product.lineItemKey!] ? (
+                                                <div className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 font-medium">
+                                                    <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                                                    </svg>
+                                                    Exceeds available ({product.availableQty})
+                                                </div>
+                                            ) : (
+                                                <div className="text-xs text-gray-500 dark:text-gray-400 text-center">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
+                                            )}
                                         </div>
                                     ) : (
                                         <div className="text-left text-sm text-gray-900 dark:text-white font-medium">

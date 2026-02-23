@@ -10,6 +10,9 @@ const config: Config = {
   darkMode: 'class',
   theme: {
     extend: {
+      screens: {
+        'w1500': '1500px',
+      },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
@@ -22,7 +25,6 @@ const config: Config = {
           blue: "#96C2DB",
           lightBlue: "#E5EDF1",
         },
-
       },
     },
   },

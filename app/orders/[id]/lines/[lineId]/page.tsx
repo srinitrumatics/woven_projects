@@ -69,6 +69,7 @@ interface ProductData {
   productFamily: string;
   brand: string;
   manufacturer: string;
+  manufacturerDBA: string;
   moq: number;
   unitPrice: number;
   orderQty: number;
@@ -166,7 +167,7 @@ export default function OrderLineDetailPage({
               sku: item.Name || "",
               description: item.Product_Description__c || "",
               productFamily: item.ProductFamily || "General",
-              brand: item.Manufacturer_DBA__c || item.Manufacturer_Name__c || "Unknown",
+              manufacturerDBA: item.Manufacturer_DBA__c || item.Manufacturer_Name__c || "Unknown",
               manufacturer: item.Manufacturer_Name__c || "Unknown",
               moq: item.MOQ__c || 1,
               unitPrice: item.Unit_Price__c || 0,

@@ -34,11 +34,11 @@ export default function ShipToContact({
                     <p className="text-sm text-gray-500 dark:text-gray-400">Who Should We Contact About This Delivery?</p>
                 </div>
             </div>
-            <div className="px-6 pb-6">
+            <div className="px-6 pb-6 text-sm">
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                     {/* Contact Selection Dropdown */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Select Contact
                         </label>
                         <select
@@ -63,7 +63,7 @@ export default function ShipToContact({
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Contact Name <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -77,7 +77,7 @@ export default function ShipToContact({
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Phone Number <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -91,7 +91,7 @@ export default function ShipToContact({
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Email Address <span className="text-red-500">*</span>
                         </label>
                         <input

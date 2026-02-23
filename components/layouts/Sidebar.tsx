@@ -145,7 +145,7 @@ export default function Sidebar({ children }: SidebarProps) {
 
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
       {/* Mobile overlay (when drawer open) */}
       {mobileOpen && (
         <div
@@ -293,11 +293,11 @@ export default function Sidebar({ children }: SidebarProps) {
       </aside>
 
       {/* Main Content Area */}
-      <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${isCollapsed ? "ml-20" : "ml-64"}`}>
+      <div className={`flex-1 min-w-0 flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${isCollapsed ? "ml-20" : "ml-64"}`}>
         <Header mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} isCollapsed={isCollapsed} />
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-8">{children}</main>
+        <main className="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4 md:p-6">{children}</main>
       </div>
     </div>
   );

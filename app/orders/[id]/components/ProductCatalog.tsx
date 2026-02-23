@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Product } from "@/app/orders/types";
 import Pagination from "@/components/ui/Pagination";
 import { formatCurrency, formatNumber, truncateText } from "@/lib/utils/formatting";
@@ -51,6 +52,13 @@ export default function ProductCatalog({
     widths,
     onResize
 }: ProductCatalogProps) {
+    // Track which product IDs have qty-exceeded warnings
+    const [qtyWarnings, setQtyWarnings] = useState<Record<string, boolean>>({});
+
+    const setWarning = (productId: string, warn: boolean) => {
+        setQtyWarnings(prev => ({ ...prev, [productId]: warn }));
+    };
+
     return (
         <>
             <div className="flex justify-end mb-2">
@@ -142,7 +150,7 @@ export default function ProductCatalog({
                                     </td>
                                     <td className="px-3 py-2 text-left">
                                         <div className="line-clamp-2" title={product.productFamily}>
-                                            <span className="inline-block px-2 py-0.5 text-[10px] font-medium rounded bg-primary/10 text-primary uppercase tracking-wider whitespace-normal">
+                                            <span className="inline-block px-2 py-0.5 text-sm font-medium rounded bg-primary/10 text-primary  tracking-wider whitespace-normal">
                                                 {product.productFamily}
                                             </span>
                                         </div>
@@ -160,53 +168,77 @@ export default function ProductCatalog({
                                     {isEditing && (
                                         <>
                                             <td className="px-3 py-2 text-left">
-                                                <div className="flex  gap-1">
-                                                    <button
-                                                        onClick={() => {
-                                                            const currentQty = catalogQuantities[product.id] || product.moq || 1;
-                                                            const moq = product.moq || 1;
-                                                            const newQty = Math.max(currentQty - moq, moq);
-                                                            handleCatalogQuantityChange(product.id, newQty, moq);
-                                                        }}
-                                                        className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                                                    >
-                                                        -
-                                                    </button>
-                                                    <input
-                                                        type="text"
-                                                        min={product.moq || 1}
-                                                        max={product.availableQty}
-                                                        value={catalogQuantities[product.id] || product.moq || 1}
-                                                        onChange={(e) => {
-                                                            const val = e.target.value;
-                                                            if (val === '' || /^[0-9]+$/.test(val)) {
-                                                                let numVal = val === '' ? 0 : Number(val);
-                                                                if (numVal > product.availableQty) {
-                                                                    numVal = product.availableQty;
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="flex gap-1">
+                                                        <button
+                                                            onClick={() => {
+                                                                const currentQty = catalogQuantities[product.id] || product.moq || 1;
+                                                                const moq = product.moq || 1;
+                                                                const newQty = Math.max(currentQty - moq, moq);
+                                                                handleCatalogQuantityChange(product.id, newQty, moq);
+                                                                setWarning(product.id, false);
+                                                            }}
+                                                            className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                                        >
+                                                            -
+                                                        </button>
+                                                        <input
+                                                            type="text"
+                                                            min={product.moq || 1}
+                                                            value={catalogQuantities[product.id] ?? product.moq ?? 1}
+                                                            onChange={(e) => {
+                                                                const val = e.target.value;
+                                                                if (val === '' || /^[0-9]+$/.test(val)) {
+                                                                    const numVal = val === '' ? 0 : Number(val);
+                                                                    const exceeded = numVal > product.availableQty;
+                                                                    setWarning(product.id, exceeded);
+                                                                    // Allow typing but store value as-is (clamping done on add)
+                                                                    handleCatalogQuantityChange(product.id, numVal, product.moq || 1);
                                                                 }
-                                                                handleCatalogQuantityChange(product.id, numVal, product.moq || 1);
-                                                            }
-                                                        }}
-                                                        className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-center"
-                                                    />
-                                                    <button
-                                                        onClick={() => {
-                                                            const currentQty = catalogQuantities[product.id] || product.moq || 1;
-                                                            const moq = product.moq || 1;
-                                                            const newQty = Math.min(currentQty + moq, product.availableQty);
-                                                            handleCatalogQuantityChange(product.id, newQty, moq);
-                                                        }}
-                                                        className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                                                    >
-                                                        +
-                                                    </button>
+                                                            }}
+                                                            className={`w-16 px-2 py-1 text-sm border rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-center ${qtyWarnings[product.id]
+                                                                    ? 'border-amber-500 focus:ring-amber-400'
+                                                                    : 'border-gray-300 dark:border-gray-600'
+                                                                }`}
+                                                        />
+                                                        <button
+                                                            onClick={() => {
+                                                                const currentQty = catalogQuantities[product.id] || product.moq || 1;
+                                                                const moq = product.moq || 1;
+                                                                // Cap at available qty when using + button
+                                                                const newQty = Math.min(currentQty + moq, product.availableQty);
+                                                                handleCatalogQuantityChange(product.id, newQty, moq);
+                                                                setWarning(product.id, false);
+                                                            }}
+                                                            className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                                        >
+                                                            +
+                                                        </button>
+                                                    </div>
+                                                    {qtyWarnings[product.id] && (
+                                                        <div className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 font-medium">
+                                                            <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                                                            </svg>
+                                                            Exceeds available ({product.availableQty})
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </td>
                                             <td className="px-3 py-2 text-left">
                                                 <button
-                                                    onClick={() => handleAddProduct(product)}
-                                                    className="p-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors"
-                                                    title="Add to Order"
+                                                    onClick={() => {
+                                                        if (qtyWarnings[product.id]) {
+                                                            alert(`Cannot add "${product.name}": requested quantity exceeds available stock (${product.availableQty} units).`);
+                                                            return;
+                                                        }
+                                                        handleAddProduct(product);
+                                                    }}
+                                                    className={`p-1.5 rounded transition-colors ${qtyWarnings[product.id]
+                                                            ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                                                            : 'bg-primary text-white hover:bg-primary-dark'
+                                                        }`}
+                                                    title={qtyWarnings[product.id] ? `Exceeds available stock (${product.availableQty})` : 'Add to Order'}
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                                                         <path d="M11 9h2V6h3V4h-3V1h-2v3H8v2h3v3zm-4 9c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm-8.9-5h7.45c.75 0 1.41-.41 1.75-1.03l3.86-7.01L19.42 4l-3.87 7H8.53L4.27 2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7l1.1-2z" />

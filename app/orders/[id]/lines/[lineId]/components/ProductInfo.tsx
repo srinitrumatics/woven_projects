@@ -7,6 +7,7 @@ interface ProductInfoProps {
         name: string;
         description: string;
         manufacturer: string;
+        manufacturerDBA: string;
         brand: string;
         productFamily: string;
         isTaxable: string;
@@ -48,25 +49,34 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                             Product Name
                         </label>
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                            {product.name}
-                        </p>
+                        <input
+                            type="text"
+                            readOnly
+                            value={product.name || ''}
+                            className="w-full h-9 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        />
                     </div>
                     <div className="pb-6">
                         <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                             Description
                         </label>
-                        <p className="text-sm text-gray-900 dark:text-white line-clamp-1 font-medium">
-                            {product.description || "No description available"}
-                        </p>
+                        <input
+                            type="text"
+                            readOnly
+                            value={product.description || 'No description available'}
+                            className="w-full h-9 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        />
                     </div>
                     <div className="pb-6">
                         <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                            Product Grouping
+                            Manufacturer
                         </label>
-                        <p className="text-sm text-gray-900 dark:text-white font-medium">
-                            {product.productGrouping}
-                        </p>
+                        <input
+                            type="text"
+                            readOnly
+                            value={product.manufacturer || ''}
+                            className="w-full h-9 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        />
                     </div>
                 </div>
 
@@ -76,25 +86,34 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                             Manufacturer DBA
                         </label>
-                        <p className="text-sm text-gray-900 font-medium dark:text-white">
-                            {product.brand}
-                        </p>
+                        <input
+                            type="text"
+                            readOnly
+                            value={product.manufacturerDBA || ''}
+                            className="w-full h-9 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        />
                     </div>
                     <div className="pb-6">
                         <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                             Product Family
                         </label>
-                        <span className="inline-block px-2 py-0.5 text-sm font-medium rounded-full bg-primary/10 text-primary">
-                            {product.productFamily}
-                        </span>
+                        <input
+                            type="text"
+                            readOnly
+                            value={product.productFamily || ''}
+                            className="w-full h-9 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        />
                     </div>
                     <div className="pb-6">
                         <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
-                            IsTaxable
+                            Is Taxable
                         </label>
-                        <p className="text-sm text-gray-900 dark:text-white font-medium">
-                            {product.isTaxable}
-                        </p>
+                        <input
+                            type="text"
+                            readOnly
+                            value={product.isTaxable || ''}
+                            className="w-full h-9 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        />
                     </div>
                 </div>
 
@@ -104,25 +123,34 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                             Site
                         </label>
-                        <p className="text-sm text-gray-900 dark:text-white font-medium">
-                            {product.site}
-                        </p>
+                        <input
+                            type="text"
+                            readOnly
+                            value={product.site || ''}
+                            className="w-full h-9 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        />
                     </div>
                     <div className="pb-6">
                         <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                             Inventory Account
                         </label>
-                        <p className="text-sm text-gray-900 dark:text-white font-medium">
-                            {product.inventoryAccount}
-                        </p>
+                        <input
+                            type="text"
+                            readOnly
+                            value={product.inventoryAccount || ''}
+                            className="w-full h-9 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        />
                     </div>
                     <div className="pb-6">
                         <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
                             Available to Sell
                         </label>
-                        <p className="text-sm text-gray-900 dark:text-white font-medium">
-                            {formatNumber(product.availableToSell, 0)}
-                        </p>
+                        <input
+                            type="text"
+                            readOnly
+                            value={formatNumber(product.availableToSell, 0)}
+                            className="w-full h-9 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        />
                     </div>
                 </div>
             </div>

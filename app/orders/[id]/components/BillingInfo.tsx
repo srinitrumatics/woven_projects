@@ -26,10 +26,10 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                 </div>
             </div>
 
-            <div className="px-6 pb-6">
+            <div className="px-6 pb-6 text-sm">
                 <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                     <div className="md:col-span-3">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Bill to Account
                         </label>
                         <input
@@ -40,8 +40,11 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                                     ? shipLocations.find(l => l.Id === formData.shipTo)
                                     : shipLocations.find(l => l.Id === formData.billTo);
 
-                                if (location?.Account_Name__r?.Name) return location.Account_Name__r.Name;
-                                if (location?.Account_Name__c === SF_ACCOUNT_ID && accountName) return accountName;
+                                const relationshipName = location?.Account_Name__r?.Name || (location as any)?.['Account_Name__r.Name'] || (location as any)?.Account_Name_Name;
+                                if (relationshipName) return relationshipName;
+
+                                const isContextAccount = location?.Account_Name__c && SF_ACCOUNT_ID && location.Account_Name__c.substring(0, 15) === SF_ACCOUNT_ID.substring(0, 15);
+                                if (isContextAccount && accountName && !accountName.startsWith('001')) return accountName;
 
                                 // 2. If formData already has a non-ID name, use it
                                 if (formData.billToAccountName && !formData.billToAccountName.startsWith('001')) {
@@ -50,12 +53,18 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
 
                                 // 3. Try to find the name in any other location that shares the same Account ID
                                 if (location?.Account_Name__c) {
-                                    const otherLoc = shipLocations.find(l => l.Account_Name__c === location.Account_Name__c && l.Account_Name__r?.Name);
-                                    if (otherLoc?.Account_Name__r?.Name) return otherLoc.Account_Name__r.Name;
+                                    const otherLoc = shipLocations.find(l =>
+                                        l.Account_Name__c &&
+                                        l.Account_Name__c.substring(0, 15) === location.Account_Name__c.substring(0, 15) &&
+                                        (l.Account_Name__r?.Name || (l as any)['Account_Name__r.Name'] || (l as any).Account_Name_Name)
+                                    );
+                                    const otherName = otherLoc?.Account_Name__r?.Name || (otherLoc as any)?.['Account_Name__r.Name'] || (otherLoc as any)?.Account_Name_Name;
+                                    if (otherName) return otherName;
                                 }
 
                                 // 4. Fallback to ID if we absolutely cannot resolve a name
-                                return formData.billToAccountName || location?.Account_Name__c || '';
+                                const finalDisplay = formData.billToAccountName || location?.Account_Name__c || '';
+                                return finalDisplay;
                             })() || ''}
                             readOnly
                             disabled
@@ -64,7 +73,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                     </div>
 
                     <div className="md:col-span-3">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Bill to Location <span className="text-red-500">*</span>
                         </label>
                         <select name="billTo"
@@ -84,7 +93,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                     </div>
 
                     <div className="md:col-span-6">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Billing Address <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -97,7 +106,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                     </div>
 
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Customer PO <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -111,7 +120,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                     </div>
 
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Terms</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Payment Terms</label>
                         <select
                             value={formData.paymentTerms || ''}
                             onChange={(e) => setFormData({ ...formData, paymentTerms: e.target.value })}
@@ -130,7 +139,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                     </div>
 
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Price Book</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Price Book</label>
                         <input
                             type="text"
                             name="priceBook"
