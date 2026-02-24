@@ -158,8 +158,8 @@ export default function MyOrderTable({
                                                         }
                                                     }}
                                                     className={`w-20 px-2 py-1.5 border rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent ${qtyWarnings[product.lineItemKey!]
-                                                            ? 'border-amber-500 focus:ring-amber-400'
-                                                            : 'border-gray-300 dark:border-gray-600'
+                                                        ? 'border-amber-500 focus:ring-amber-400'
+                                                        : 'border-gray-300 dark:border-gray-600'
                                                         }`}
                                                     min={product.moq || 1}
                                                 />
@@ -176,14 +176,14 @@ export default function MyOrderTable({
                                                 </button>
                                             </div>
                                             {qtyWarnings[product.lineItemKey!] ? (
-                                                <div className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 font-medium">
+                                                <div className="flex gap-1 text-xs text-amber-600 dark:text-amber-400 font-medium">
                                                     <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                                                     </svg>
                                                     Exceeds available ({product.availableQty})
                                                 </div>
                                             ) : (
-                                                <div className="text-xs text-gray-500 dark:text-gray-400 text-center">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
+                                                <div className="text-xs text-gray-500 dark:text-gray-400 ">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
                                             )}
                                         </div>
                                     ) : (

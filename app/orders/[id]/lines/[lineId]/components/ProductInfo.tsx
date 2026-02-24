@@ -37,7 +37,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         />
                     </svg>
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">
                     Product Information
                 </h3>
             </div>
@@ -46,7 +46,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                 {/* Column 1 */}
                 <div className="space-y-3 py-6">
                     <div className="pb-6">
-                        <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-0.5">
                             Product Name
                         </label>
                         <input
@@ -57,7 +57,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         />
                     </div>
                     <div className="pb-6">
-                        <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-0.5">
                             Description
                         </label>
                         <input
@@ -68,7 +68,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         />
                     </div>
                     <div className="pb-6">
-                        <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-0.5">
                             Manufacturer
                         </label>
                         <input
@@ -83,7 +83,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                 {/* Column 2 */}
                 <div className="space-y-3 py-6">
                     <div className="pb-6">
-                        <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-0.5">
                             Manufacturer DBA
                         </label>
                         <input
@@ -94,7 +94,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         />
                     </div>
                     <div className="pb-6">
-                        <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-0.5">
                             Product Family
                         </label>
                         <input
@@ -105,7 +105,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         />
                     </div>
                     <div className="pb-6">
-                        <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-0.5">
                             Is Taxable
                         </label>
                         <input
@@ -120,7 +120,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                 {/* Column 3 */}
                 <div className="space-y-3 py-6">
                     <div className="pb-6">
-                        <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-0.5">
                             Site
                         </label>
                         <input
@@ -131,7 +131,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         />
                     </div>
                     <div className="pb-6">
-                        <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-0.5">
                             Inventory Account
                         </label>
                         <input
@@ -142,7 +142,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         />
                     </div>
                     <div className="pb-6">
-                        <label className="block text-sm font-semibold text-gray-500 dark:text-gray-400 mb-0.5">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-0.5">
                             Available to Sell
                         </label>
                         <input
