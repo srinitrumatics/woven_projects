@@ -68,17 +68,22 @@ export default function ProductCatalog({
         bannerTimerRef.current = setTimeout(() => setBannerMessage(""), 3000);
     };
 
-    // Wrap bulk-add to also reset qtys and show banner
+    // Reset ALL products' quantities back to their MOQ
+    const resetAllQuantities = () => {
+        paginatedCatalogProducts.forEach(product => {
+            const moq = product.moq || 1;
+            handleCatalogQuantityChange(product.id, moq, moq);
+            setWarning(product.id, false);
+        });
+        setQtyWarnings({});
+    };
+
+    // Wrap bulk-add to also reset all qtys and show banner
     const handleBulkAdd = () => {
         const count = selectedProductIds.size;
         handleAddSelectedProducts();
-        // Reset qty of every selected product back to MOQ
-        selectedProductIds.forEach(productId => {
-            const product = paginatedCatalogProducts.find(p => p.id === productId);
-            const moq = product?.moq || 1;
-            handleCatalogQuantityChange(productId, moq, moq);
-            setWarning(productId, false);
-        });
+        // Reset ALL products' quantities back to MOQ
+        resetAllQuantities();
         showBanner(`${count} product${count !== 1 ? 's' : ''} added to order!`);
     };
 
@@ -263,9 +268,8 @@ export default function ProductCatalog({
                                                         onClick={() => {
                                                             if (qtyWarnings[product.id]) return;
                                                             handleAddProduct(product);
-                                                            // Reset qty back to MOQ
-                                                            handleCatalogQuantityChange(product.id, product.moq || 1, product.moq || 1);
-                                                            setWarning(product.id, false);
+                                                            // Reset ALL products' quantities back to MOQ
+                                                            resetAllQuantities();
                                                             showBanner("Product added to order!");
                                                         }}
                                                         disabled={!!qtyWarnings[product.id]}
