@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Product } from "@/app/orders/types";
 import Pagination from "@/components/ui/Pagination";
 import { formatCurrency, formatNumber, truncateText } from "@/lib/utils/formatting";
@@ -54,17 +54,49 @@ export default function ProductCatalog({
 }: ProductCatalogProps) {
     // Track which product IDs have qty-exceeded warnings
     const [qtyWarnings, setQtyWarnings] = useState<Record<string, boolean>>({});
+    // Single consistent success banner for both single and bulk adds
+    const [bannerMessage, setBannerMessage] = useState<string>("");
+    const bannerTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const setWarning = (productId: string, warn: boolean) => {
         setQtyWarnings(prev => ({ ...prev, [productId]: warn }));
     };
 
+    const showBanner = (message: string) => {
+        if (bannerTimerRef.current) clearTimeout(bannerTimerRef.current);
+        setBannerMessage(message);
+        bannerTimerRef.current = setTimeout(() => setBannerMessage(""), 3000);
+    };
+
+    // Wrap bulk-add to also reset qtys and show banner
+    const handleBulkAdd = () => {
+        const count = selectedProductIds.size;
+        handleAddSelectedProducts();
+        // Reset qty of every selected product back to MOQ
+        selectedProductIds.forEach(productId => {
+            const product = paginatedCatalogProducts.find(p => p.id === productId);
+            const moq = product?.moq || 1;
+            handleCatalogQuantityChange(productId, moq, moq);
+            setWarning(productId, false);
+        });
+        showBanner(`${count} product${count !== 1 ? 's' : ''} added to order!`);
+    };
+
     return (
         <>
+            {/* Consistent success banner — shown for both single and bulk adds */}
+            {bannerMessage && (
+                <div className="flex items-center gap-2 mb-3 px-4 py-2.5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg text-sm text-green-700 dark:text-green-300 font-medium">
+                    <svg className="w-4 h-4 shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    {bannerMessage}
+                </div>
+            )}
             <div className="flex justify-end mb-2">
                 {isEditing && selectedProductIds.size > 0 && (
                     <button
-                        onClick={handleAddSelectedProducts}
+                        onClick={handleBulkAdd}
                         className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors shadow-sm"
                     >
                         Add Selected ({selectedProductIds.size})
@@ -226,24 +258,29 @@ export default function ProductCatalog({
                                                 </div>
                                             </td>
                                             <td className="px-3 py-2 text-left">
-                                                <button
-                                                    onClick={() => {
-                                                        if (qtyWarnings[product.id]) {
-                                                            alert(`Cannot add "${product.name}": requested quantity exceeds available stock (${product.availableQty} units).`);
-                                                            return;
-                                                        }
-                                                        handleAddProduct(product);
-                                                    }}
-                                                    className={`p-1.5 rounded transition-colors ${qtyWarnings[product.id]
-                                                        ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                                                        : 'bg-primary text-white hover:bg-primary-dark'
-                                                        }`}
-                                                    title={qtyWarnings[product.id] ? `Exceeds available stock (${product.availableQty})` : 'Add to Order'}
-                                                >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                                                        <path d="M11 9h2V6h3V4h-3V1h-2v3H8v2h3v3zm-4 9c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm-8.9-5h7.45c.75 0 1.41-.41 1.75-1.03l3.86-7.01L19.42 4l-3.87 7H8.53L4.27 2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7l1.1-2z" />
-                                                    </svg>
-                                                </button>
+                                                <div className="flex flex-col gap-1">
+                                                    <button
+                                                        onClick={() => {
+                                                            if (qtyWarnings[product.id]) return;
+                                                            handleAddProduct(product);
+                                                            // Reset qty back to MOQ
+                                                            handleCatalogQuantityChange(product.id, product.moq || 1, product.moq || 1);
+                                                            setWarning(product.id, false);
+                                                            showBanner("Product added to order!");
+                                                        }}
+                                                        disabled={!!qtyWarnings[product.id]}
+                                                        className={`flex items-center justify-center gap-1.5 px-3 py-1.5 w-full rounded text-sm font-medium transition-colors ${qtyWarnings[product.id]
+                                                            ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                                                            : 'bg-primary text-white hover:bg-primary-dark'
+                                                            }`}
+                                                        title={qtyWarnings[product.id] ? `Exceeds available stock (${product.availableQty})` : 'Add to Order'}
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                                                            <path d="M11 9h2V6h3V4h-3V1h-2v3H8v2h3v3zm-4 9c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm-8.9-5h7.45c.75 0 1.41-.41 1.75-1.03l3.86-7.01L19.42 4l-3.87 7H8.53L4.27 2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7l1.1-2z" />
+                                                        </svg>
+                                                        Add
+                                                    </button>
+                                                </div>
                                             </td>
                                         </>
                                     )}
