@@ -35,14 +35,14 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center p-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
     }
 
     return (
-        <div>
+        <div className="p-4">
             {/* Sub-tabs */}
             <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
                 {tabs.map((tab) => (

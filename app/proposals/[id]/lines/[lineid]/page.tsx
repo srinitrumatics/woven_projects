@@ -784,9 +784,6 @@ export default function ProposalProductDetailPage({
                         </h2>
                     </div>
                     <div className="flex-1 flex flex-col">
-                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-0.5">
-                            Notes
-                        </label>
                         <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-900 dark:text-white min-h-[200px]">
                             <p className="text-gray-400 italic">{product.ProductNotes}</p>
                         </div>
@@ -821,7 +818,7 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Product Name */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     Product Name
                                 </label>
                                 <input
@@ -833,7 +830,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Description */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     Description
                                 </label>
                                 <input
@@ -846,7 +843,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Manufacturer DBA */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     Manufacturer DBA
                                 </label>
                                 <input
@@ -858,7 +855,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Product Family */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     Product Family
                                 </label>
                                 <input
@@ -874,7 +871,7 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Product Grouping */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     Product Grouping
                                 </label>
                                 <input
@@ -886,7 +883,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Grouping */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     Grouping
                                 </label>
                                 <input
@@ -898,7 +895,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* IsTaxable */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     IsTaxable
                                 </label>
                                 <input
@@ -910,7 +907,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Available to Sell */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     Available to Sell
                                 </label>
                                 <input
@@ -926,7 +923,7 @@ export default function ProposalProductDetailPage({
                         <div className="space-y-3">
                             {/* Site */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     Site
                                 </label>
                                 <input
@@ -938,7 +935,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Inventory Account */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     Inventory Account
                                 </label>
                                 <input
@@ -950,7 +947,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Unit Cost */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     Unit Cost
                                 </label>
                                 <input
@@ -962,7 +959,7 @@ export default function ProposalProductDetailPage({
                             </div>
                             {/* Total Cost */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 dark:text-gray-500 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
                                     Total Cost
                                 </label>
                                 <input
@@ -982,7 +979,7 @@ export default function ProposalProductDetailPage({
 
 
                 {/* Details Card - Full width */}
-                <div className="lg:col-span-5 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                <div className="lg:col-span-5 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm ">
                             <thead className="bg-primary-light dark:bg-gray-900">
@@ -1029,41 +1026,32 @@ export default function ProposalProductDetailPage({
             {/* Row 3: Related Items Tabs (Fulfillments, Purchases, Returns) */}
             <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                 {/* Tabs Header */}
-                <div className="flex gap-6 border-b border-gray-200 dark:border-gray-700 mb-6">
-                    <button
-                        onClick={() => setActiveTab("taxes")}
-                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "taxes"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`}>
-                        Taxes
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("fulfillment")}
-                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "fulfillment"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`} >
-                        Fulfillment
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("purchases")}
-                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "purchases"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`} >
-                        Purchases
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("returns")}
-                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "returns"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`}
-                    >
-                        Returns
-                    </button>
-
+                <div className="flex flex-nowrap gap-4 overflow-x-auto no-scrollbar mb-6 items-center">
+                    {[
+                        { id: "taxes", label: "Taxes", count: product.taxDetail ? 1 : 0 },
+                        { id: "fulfillment", label: "Fulfillment", count: (fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length) },
+                        { id: "purchases", label: "Purchases", count: (purchasesData.purchaseOrders.length + purchasesData.supplierBills.length) },
+                        { id: "returns", label: "Returns", count: (returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length) }
+                    ].map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id as any)}
+                            className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap flex items-center gap-2 ${activeTab === tab.id
+                                ? "bg-primary text-white shadow-sm"
+                                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                                }`}
+                        >
+                            {tab.label}
+                            {tab.count !== undefined && tab.count > 0 && (
+                                <span className={`flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-bold rounded-full ${activeTab === tab.id
+                                    ? "bg-white/30 text-white"
+                                    : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+                                    }`}>
+                                    {tab.count}
+                                </span>
+                            )}
+                        </button>
+                    ))}
                 </div>
 
                 {/* Tab Content */}

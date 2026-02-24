@@ -39,7 +39,7 @@ export default function PurchasesTab({
     }
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 p-4">
             {/* Sub-tabs */}
             <div className="border-b border-gray-200 dark:border-gray-700">
                 <nav className="-mb-px flex space-x-8" aria-label="Tabs">
@@ -77,7 +77,7 @@ export default function PurchasesTab({
             </div>
 
             {/* Content using existing layout styles */}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto p-4">
                 {activeTab === "orders" ? (
                     <table className="w-full">
                         <thead className="bg-primary-light dark:bg-gray-900">

@@ -73,37 +73,22 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
     return (
         <div>
             {/* Sub-tabs */}
-            <div className="flex gap-6 border-b border-gray-200 dark:border-gray-700 mb-6 px-6 pt-6">
-                <button
-                    onClick={() => setActiveTab("purchases")}
-                    className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "purchases"
-                        ? "border-primary text-primary"
-                        : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                        }`}
-                >
-                    Purchases
-                    <span className={`ml-2 px-1.5 py-0.5 text-xs rounded-full ${activeTab === "purchases"
-                        ? "bg-primary/10 text-primary"
-                        : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-                        }`}>
-                        {purchaseOrders.length}
-                    </span>
-                </button>
-                <button
-                    onClick={() => setActiveTab("supplier_bills")}
-                    className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "supplier_bills"
-                        ? "border-primary text-primary"
-                        : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                        }`}
-                >
-                    Supplier Bills
-                    <span className={`ml-2 px-1.5 py-0.5 text-xs rounded-full ${activeTab === "supplier_bills"
-                        ? "bg-primary/10 text-primary"
-                        : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-                        }`}>
-                        {supplierBills.length}
-                    </span>
-                </button>
+            <div className="flex gap-8 mb-6 border-b border-gray-200 dark:border-gray-700 px-6 pt-6">
+                {[
+                    { id: "purchases", label: "Purchases", count: purchaseOrders.length },
+                    { id: "supplier_bills", label: "Supplier Bills", count: supplierBills.length }
+                ].map((tab) => (
+                    <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id as any)}
+                        className={`pb-3 text-sm font-medium transition-all whitespace-nowrap border-b-2 -mb-[2px] ${activeTab === tab.id
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                            }`}
+                    >
+                        {tab.label} ({tab.count})
+                    </button>
+                ))}
             </div>
 
             {/* Content */}

@@ -278,14 +278,12 @@ export default function QuoteLineDetailPage({
                         {/* Carousel Navigation Arrows */}
                         <button
                             onClick={() => setCurrentImageIndex(i => (i - 1 + productImages.length) % productImages.length)}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                        >
+                            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                             <svg
                                 className="w-4 h-4"
                                 fill="none"
                                 stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
+                                viewBox="0 0 24 24">
                                 <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -296,14 +294,12 @@ export default function QuoteLineDetailPage({
                         </button>
                         <button
                             onClick={() => setCurrentImageIndex(i => (i + 1) % productImages.length)}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                        >
+                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                             <svg
                                 className="w-4 h-4"
                                 fill="none"
                                 stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
+                                viewBox="0 0 24 24">
                                 <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -333,10 +329,9 @@ export default function QuoteLineDetailPage({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
-                        <h2 className="text-sm font-bold text-gray-800 uppercase tracking-tight">Quote Lines Note</h2>
+                        <h2 className="text-sm font-bold text-gray-800 tracking-tight">Quote Lines Note</h2>
                     </div>
                     <div>
-                        <label className="text-sm font-semibold text-gray-400 block mb-2">Notes</label>
                         <div className="w-full h-[240px] p-4 bg-gray-50/50 border border-gray-100 rounded-lg text-sm text-gray-500 overflow-y-auto italic">
                             {product.notes || "No notes available."}
                         </div>
@@ -351,59 +346,59 @@ export default function QuoteLineDetailPage({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <h2 className="text-sm font-bold text-gray-800 uppercase tracking-tight">Product Information</h2>
+                        <h2 className="text-sm font-bold text-gray-800 tracking-tight">Product Information</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-4">
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Product Name</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Product Name</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.name}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Product Grouping</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Product Grouping</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.productGrouping}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Site</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Site</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.site}</div>
                         </div>
 
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Description</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Description</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.description}>{product.description}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Grouping</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Grouping</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.grouping}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Inventory Account</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Inventory Account</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.inventoryAccount}</div>
                         </div>
 
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Manufacturer DBA</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Manufacturer DBA</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.manufacturerDBA}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">IsTaxable</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">IsTaxable</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.isTaxable}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Unit Cost</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Unit Cost</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{formatCurrency(product.unitCost)}</div>
                         </div>
 
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Product Family</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Product Family</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.productFamily}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Available to Sell</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Available to Sell</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate font-semibold text-green-600">{product.availableToSell}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-[10px] text-gray-400 uppercase font-medium block mb-1">Total Cost</label>
+                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Total Cost</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{formatCurrency(product.totalCost)}</div>
                         </div>
                     </div>
@@ -455,7 +450,7 @@ export default function QuoteLineDetailPage({
                         onClick={() => setActiveTab("taxes")}
                         className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "taxes"
                             ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-700 dark:hover:text-gray-300"
                             }`}>
                         Taxes
                     </button>
@@ -463,7 +458,7 @@ export default function QuoteLineDetailPage({
                         onClick={() => setActiveTab("fulfillment")}
                         className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "fulfillment"
                             ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-700 dark:hover:text-gray-300"
                             }`}>
                         Fulfillment
                     </button>
@@ -471,7 +466,7 @@ export default function QuoteLineDetailPage({
                         onClick={() => setActiveTab("purchases")}
                         className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "purchases"
                             ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-700 dark:hover:text-gray-300"
                             }`}>
                         Purchases
                     </button>
@@ -479,7 +474,7 @@ export default function QuoteLineDetailPage({
                         onClick={() => setActiveTab("returns")}
                         className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "returns"
                             ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-700 dark:hover:text-gray-300"
                             }`}>
                         Returns
                     </button>
@@ -533,7 +528,7 @@ export default function QuoteLineDetailPage({
                         Prev
                     </Link>
                 ) : (
-                    <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
+                    <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>

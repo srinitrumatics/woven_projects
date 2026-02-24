@@ -35,7 +35,7 @@ export default function FulfillmentsTab({
 
     if (loading) {
         return (
-            <div className="p-6">
+            <div className="p-4">
                 <div className="flex justify-center items-center py-12">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                 </div>
@@ -44,7 +44,7 @@ export default function FulfillmentsTab({
     }
 
     return (
-        <div className="py-6">
+        <div className="p-4">
             <div>
                 {/* Sub-tabs */}
                 <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-700">

@@ -26,7 +26,7 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
     }
 
     return (
-        <div className="overflow-x-auto py-4">
+        <div className="overflow-x-auto p-4">
             <table className="w-full ">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>

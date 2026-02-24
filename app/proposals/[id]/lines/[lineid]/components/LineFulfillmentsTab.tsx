@@ -116,46 +116,27 @@ export default function LineFulfillmentsTab({
     }
 
     return (
-        <div className="py-4">
+        <div>
             <div>
                 {/* Sub-tabs */}
-                <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-700">
-                    <button
-                        onClick={() => onTabChange("quotes")}
-                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "quotes"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                            }`}
-                    >
-                        Customer Quotes ({fulfillmentData.customerQuotes.length})
-                    </button>
-                    <button
-                        onClick={() => onTabChange("sales")}
-                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "sales"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                            }`}
-                    >
-                        Sales Orders ({fulfillmentData.salesOrders.length})
-                    </button>
-                    <button
-                        onClick={() => onTabChange("invoices")}
-                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "invoices"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                            }`}
-                    >
-                        Invoices ({fulfillmentData.invoices.length})
-                    </button>
-                    <button
-                        onClick={() => onTabChange("shipping")}
-                        className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === "shipping"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                            }`}
-                    >
-                        Shipping Manifests ({fulfillmentData.shippingManifests.length})
-                    </button>
+                <div className="flex gap-8 mb-6 border-b border-gray-200 dark:border-gray-700">
+                    {[
+                        { id: "quotes", label: "Customer Quotes", count: fulfillmentData.customerQuotes.length },
+                        { id: "sales", label: "Sales Orders", count: fulfillmentData.salesOrders.length },
+                        { id: "invoices", label: "Invoices", count: fulfillmentData.invoices.length },
+                        { id: "shipping", label: "Shipping Manifests", count: fulfillmentData.shippingManifests.length }
+                    ].map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => onTabChange(tab.id as any)}
+                            className={`pb-3 text-sm font-medium transition-all whitespace-nowrap border-b-2 -mb-[2px] ${activeTab === tab.id
+                                ? "border-primary text-primary"
+                                : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                                }`}
+                        >
+                            {tab.label} ({tab.count})
+                        </button>
+                    ))}
                 </div>
 
                 {/* Customer Quotes Table */}

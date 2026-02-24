@@ -45,7 +45,7 @@ export default function LineTaxesTab({ taxData, loading }: LineTaxesTabProps) {
     }
 
     return (
-        <div className="py-4 overflow-x-auto">
+        <div className="overflow-x-auto">
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
