@@ -649,8 +649,7 @@ export default function ProposalProductDetailPage({
                     <span>&gt;</span>
                     <button
                         onClick={() => router.push(`/proposals/${id}`)}
-                        className="hover:text-gray-700 dark:hover:text-gray-300"
-                    >
+                        className="hover:text-gray-700 dark:hover:text-gray-300">
                         Proposal Details
                     </button>
                     <span>&gt;</span>
@@ -661,9 +660,6 @@ export default function ProposalProductDetailPage({
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                             {product.name}
                         </h1>
-                        <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                            Line {lineNumber} of {totalLines}
-                        </span>
                     </div>
                     <div className="flex items-center gap-2">
                         {/* Back to Proposal Button */}
@@ -687,6 +683,11 @@ export default function ProposalProductDetailPage({
                             Back to Proposal
                         </Link>
                     </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                        Line {lineNumber} of {totalLines}
+                    </span>
                 </div>
             </div>
 
