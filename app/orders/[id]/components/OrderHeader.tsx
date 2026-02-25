@@ -9,9 +9,10 @@ interface OrderHeaderProps {
     isEditing?: boolean;
     onEditToggle?: () => void;
     onClone?: () => void;
+    isNew?: boolean;
 }
 
-export default function OrderHeader({ id, orderStatus, name, isEditing, onEditToggle, onClone }: OrderHeaderProps) {
+export default function OrderHeader({ id, orderStatus, name, isEditing, onEditToggle, onClone, isNew }: OrderHeaderProps) {
     const router = useRouter();
 
     return (
@@ -43,7 +44,7 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
 
                     <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
 
-                        {orderStatus !== "Canceled" && orderStatus !== "Cancelled" && (
+                        {!isNew && orderStatus !== "Canceled" && orderStatus !== "Cancelled" && (
                             <>
                                 <button
                                     onClick={onClone}

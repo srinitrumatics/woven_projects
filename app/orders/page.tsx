@@ -239,7 +239,7 @@ export default function OrdersPage() {
       }
 
       if (newOrderId) {
-        router.push(`/orders/${newOrderId}`);
+        router.push(`/orders/${newOrderId}?new=true`);
       } else {
         throw new Error('No order ID returned from API');
       }

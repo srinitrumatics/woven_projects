@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useState, useMemo, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import Pagination from "@/components/ui/Pagination";
@@ -137,9 +137,15 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   // This page is always in edit mode (order must be created first via the orders list page)
 
+  const searchParams = useSearchParams();
+  const isNew = searchParams.get("new") === "true";
+
+  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
+  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "" //TODO: Get this from session / auth context
+
   // header order status
   const [orderStatus, setOrderStatus] = useState<string>("Draft");
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(isNew);
 
   // State management for product tables
   const [searchQuery, setSearchQuery] = useState("");
@@ -176,7 +182,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     productGrouping: 150,
     listPrice: 100,
     unitPrice: 100,
-    availableQty: 120,
     orderQty: 120,
     actions: 80
   });
@@ -306,9 +311,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
     // Account Info
     billToAccountName: "",
-    billToAccountId: "",
+    billToAccountId: SF_ACCOUNT_ID,
     shipToAccountName: "",
-    shipToAccountId: "",
+    shipToAccountId: SF_ACCOUNT_ID,
 
     // Order Name
     orderName: "",
@@ -337,9 +342,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   // Product catalog loaded from Salesforce
   const [catalogProducts, setCatalogProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
-
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "" //TODO: Get this from session / auth context
 
   useEffect(() => {
     let mounted = true;
@@ -740,7 +742,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           setOrderData(order);
 
           // Proactively set accountName state from order names if context matches
-          if (order.Ship_to_Account_Name && !order.Ship_to_Account_Name.startsWith('001')) {
+          if (order.Inventory_Account_Name) {
+            console.log('Setting accountName from Order Inventory_Account_Name:', order.Inventory_Account_Name);
+            setAccountName(order.Inventory_Account_Name);
+          } else if (order.Ship_to_Account_Name && !order.Ship_to_Account_Name.startsWith('001')) {
             console.log('Setting accountName from Order Ship_to_Account_Name:', order.Ship_to_Account_Name);
             setAccountName(order.Ship_to_Account_Name);
           } else if (order.Bill_to_Account_Name && !order.Bill_to_Account_Name.startsWith('001')) {
@@ -823,12 +828,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             billingPhone: order.Ship_to_Contact_Phone || prev.billingPhone || "",
             billingEmail: order.Ship_to_Contact_Email || prev.billingEmail || "",
             billToAccountName: (() => {
+              if (order.Inventory_Account_Name) return order.Inventory_Account_Name;
               if (order.Bill_to_Account_Name && !order.Bill_to_Account_Name.startsWith('001')) return order.Bill_to_Account_Name;
               if (order.Bill_to_Account__c && SF_ACCOUNT_ID && order.Bill_to_Account__c.substring(0, 15) === SF_ACCOUNT_ID.substring(0, 15) && accountName && !accountName.startsWith('001')) return accountName;
               return order.Bill_to_Account_Name || "";
             })(),
             billToAccountId: order.Authorized_Bill_To_Location__r?.Account_Name__c || order.Bill_to_Account__c || "",
             shipToAccountName: (() => {
+              if (order.Inventory_Account_Name) return order.Inventory_Account_Name;
               if (order.Ship_to_Account_Name && !order.Ship_to_Account_Name.startsWith('001')) return order.Ship_to_Account_Name;
               if (order.Ship_to_Account__c && SF_ACCOUNT_ID && order.Ship_to_Account__c.substring(0, 15) === SF_ACCOUNT_ID.substring(0, 15) && accountName && !accountName.startsWith('001')) return accountName;
               return order.Ship_to_Account_Name || "";
@@ -1366,6 +1373,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         isEditing={isEditing}
         onEditToggle={() => setIsEditing(!isEditing)}
         onClone={handleClone}
+        isNew={isNew}
       />
 
       <div className="grid grid-cols-1 w1500:grid-cols-10 gap-6">

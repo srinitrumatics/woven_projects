@@ -140,7 +140,7 @@ export default function MyOrderTable({
                                                         handleQuantityChange(product.lineItemKey!, newQty);
                                                         setWarning(product.lineItemKey!, false);
                                                     }}
-                                                    className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                                    className="w-6 h-6 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                                                 >
                                                     -
                                                 </button>
@@ -157,7 +157,7 @@ export default function MyOrderTable({
                                                             handleQuantityChange(product.lineItemKey!, numVal);
                                                         }
                                                     }}
-                                                    className={`w-20 px-2 py-1.5 border rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent ${qtyWarnings[product.lineItemKey!]
+                                                    className={`w-16 px-1 py-0.5 border rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent ${qtyWarnings[product.lineItemKey!]
                                                         ? 'border-amber-500 focus:ring-amber-400'
                                                         : 'border-gray-300 dark:border-gray-600'
                                                         }`}
@@ -170,7 +170,7 @@ export default function MyOrderTable({
                                                         handleQuantityChange(product.lineItemKey!, newQty);
                                                         setWarning(product.lineItemKey!, false);
                                                     }}
-                                                    className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                                    className="w-6 h-6 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                                                 >
                                                     +
                                                 </button>
@@ -183,7 +183,7 @@ export default function MyOrderTable({
                                                     Exceeds available ({product.availableQty})
                                                 </div>
                                             ) : (
-                                                <div className="text-xs text-gray-500 dark:text-gray-400 ">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
+                                                <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
                                             )}
                                         </div>
                                     ) : (

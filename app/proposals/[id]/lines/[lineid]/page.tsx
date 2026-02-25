@@ -793,7 +793,7 @@ export default function ProposalProductDetailPage({
                 {/* Product Information Card - 50% width (6 of 12 cols) */}
                 <div className="lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
                     <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
+                        <div className="w-6 h-6 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
                             <svg
                                 className="w-4 h-4 text-primary"
                                 fill="none"
