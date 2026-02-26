@@ -31,7 +31,9 @@ export interface ProposedProduct {
     productSku: string;
     description: string;
     manufacturer: string;
+    manufacturerDBA: string;
     productFamily: string;
+    grouping: string;
     category?: string; // Syncing with main types
     quantity: number;
     unitPrice: number;

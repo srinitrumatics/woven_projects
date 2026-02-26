@@ -86,18 +86,18 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   // Resizable Columns hooks
   const { widths: productWidths, handleResize: handleProductResize } = useResizableColumns({
-    productName: 250,
     Name: 200,
-    manufacturer: 150,
-    productFamily: 150,
-    quantity: 140,
-    unitPrice: 120,
-    margin: 100,
-    subtotal: 120,
-    shipping: 120,
+    productName: 200,
+    description: 200,
+    manufacturerDBA: 170,
+    grouping: 150,
+    unitPrice: 130,
+    quantity: 150,
+    subtotal: 130,
+    shipping: 130,
     taxes: 120,
-    grandTotal: 150,
-    actions: 100
+    grandTotal: 160,
+    actions: 80
   });
 
   const { widths: elementWidths, handleResize: handleElementResize } = useResizableColumns({
@@ -435,15 +435,17 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               productSku: item.Name || 'N/A',
               description: item.Product_Description__c || '',
               manufacturer: item.Manufacturer_Name__c || '',
+              manufacturerDBA: item.Manufacturer_DBA__c || item.Manufacturer_Name__c || '',
               productFamily: item.Product_Family__c || 'General',
+              grouping: item.Groupings__c || '',
               category: item.Category__c || item.Product_Family__c || 'General',
               quantity: item.Total_Order_Qty__c || 0,
               unitPrice: item.Unit_Price__c || 0,
               margin: item.Margin__c || 0,
-              subtotal: item.Line_Grand_Total__c || 0,
+              subtotal: item.Total_Price__c || 0,
               shipping: item.Shipping_Charges__c || 0,
-              taxes: item.Tax_Amount__c || 0,
-              grandTotal: (item.Line_Grand_Total__c || 0) + (item.Shipping_Charges__c || 0) + (item.Tax_Amount__c || 0),
+              taxes: item.Total_Taxes_Amount__c || item.Tax_Amount__c || 0,
+              grandTotal: item.Line_Grand_Total__c || 0,
               product_record_type: item.Product_Record_Type__c || item.product_record_type || item.RecordType?.Name || ''
             })));
           }
