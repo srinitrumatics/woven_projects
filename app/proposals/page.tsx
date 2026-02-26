@@ -139,6 +139,8 @@ export default function ProposalsPage() {
       filtered = filtered.filter(proposal =>
         (proposal.proposalNumber?.toLowerCase() || '').includes(query) ||
         (proposal.proposalName?.toLowerCase() || '').includes(query) ||
+        (proposal.customerOrder?.toLowerCase() || '').includes(query) ||
+        (proposal.customerPO?.toLowerCase() || '').includes(query) ||
         (proposal.accountName?.toLowerCase() || '').includes(query) ||
         (proposal.billTo?.toLowerCase() || '').includes(query) ||
         (proposal.shipTo?.toLowerCase() || '').includes(query) ||

@@ -1368,6 +1368,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   return (
     <>
+      {/*Order Header having breadcrumb status and name*/}
       <OrderHeader
         id={id}
         orderStatus={orderStatus}
@@ -1377,11 +1378,12 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         onClone={handleClone}
         isNew={isNew}
       />
-
-      <div className="grid grid-cols-1 w1500:grid-cols-10 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
         {/* Left Column - Client Information (70%) */}
-        <div className="w1500:col-span-7 flex flex-col gap-4">
-          <div className="grid grid-cols-1 w1500:grid-cols-2 gap-4">
+        <div className="lg:col-span-7 flex flex-col gap-4">
+          {/* Billing and Shipping Information Cards - Side by Side */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Billing Information Card */}
             <BillingInfo
               formData={formData}
               setFormData={setFormData}
@@ -1391,6 +1393,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               accountName={accountName}
               SF_ACCOUNT_ID={SF_ACCOUNT_ID}
             />
+
+            {/* Shipping Information Card */}
             <ShippingInfo
               formData={formData}
               setFormData={setFormData}
@@ -1401,7 +1405,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               accountName={accountName}
               SF_ACCOUNT_ID={SF_ACCOUNT_ID}
             />
+
           </div>
+
+          {/* Ship to Contact Card */}
           <ShipToContact
             shipContacts={shipContacts}
             contactsLoading={contactsLoading}
@@ -1411,6 +1418,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             setFormData={setFormData}
             isEditing={isEditing}
           />
+          {/* Delivery Options Card */}
           <DeliveryOptions
             formData={formData}
             setFormData={setFormData}
@@ -1447,6 +1455,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           />
         </div>
       </div>
+
       {/* Products Search - Full Width */}
       <div className="mt-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
@@ -1568,21 +1577,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      {/* Hidden PDF Template */}
-      <PDFTemplate
-        id={id}
-        orderStatus={orderStatus}
-        formData={formData}
-        shipLocations={shipLocations}
-        orderProducts={orderProducts}
-        productsSubtotal={productsSubtotal}
-        totalExciseTax={totalExciseTax}
-        shipping={shipping}
-        grandTotal={grandTotal}
-      />
-
       {/* Action Buttons */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between shadow-lg gap-4 sm:gap-0" style={{ zIndex: 40 }}>
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex items-center justify-between shadow-lg" style={{ zIndex: 40 }}>
         <button
           onClick={() => router.push("/orders")}
           className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
@@ -1639,52 +1635,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             </>
           )}
         </div>
+
       </div>
 
-
-      {/* Fixed Tooltip */}
-      {tooltipState && (
-        <div
-          role="tooltip"
-          className="fixed z-50 w-150 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg text-xs text-gray-900 dark:text-gray-100 pointer-events-none"
-          style={{
-            left: tooltipState.x,
-            top: tooltipState.y - 8, // 8px gap
-            transform: "translateY(-100%)"
-          }}
-        >
-          <div className="flex items-start gap-3">
-            <div className="w-22 h-12 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
-              <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-            </div>
-            <div className="flex-1">
-              <div className="font-semibold leading-tight">{tooltipState.product.name}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{tooltipState.product.sku ?? "—"}</div>
-
-              <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-                <div className="text-gray-500">Manufacturer</div>
-                <div className="font-medium text-gray-900 dark:text-gray-100">{tooltipState.product.manufacturer ?? "—"}</div>
-                <div className="text-gray-500">Family</div>
-                <div className="font-medium text-gray-900 dark:text-gray-100">{tooltipState.product.productFamily ?? "—"}</div>
-                <div className="text-gray-500">Unit Price</div>
-                <div className="font-medium text-gray-900 dark:text-gray-100">{formatCurrency(tooltipState.product.unitPrice)}</div>
-                <div className="text-gray-500">Available</div>
-                <div className="font-medium text-gray-900 dark:text-gray-100">{formatNumber(tooltipState.product.availableQty)}</div>
-                <div className="text-gray-500">MOQ</div>
-                <div className="font-medium text-gray-900 dark:text-gray-100">{formatNumber(tooltipState.product.moq)}</div>
-              </div>
-              {tooltipState.product.description && (
-                <div className="mt-2 text-xs text-gray-700 dark:text-gray-300">
-                  {tooltipState.product.description}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
+      {/* Add padding to prevent content from being hidden behind fixed footer */}
+      <div className="h-20"></div>
     </>
   );
 }

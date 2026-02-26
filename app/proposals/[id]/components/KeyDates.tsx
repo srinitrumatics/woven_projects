@@ -36,7 +36,7 @@ export default function KeyDates({ proposal }: KeyDatesProps) {
                     </div>
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 whitespace-nowrap">Expiration Date</label>
-                        <input type="text" readOnly value={formatDate(proposal.expirationDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm font-semibold focus:ring-0 focus:border-gray-300" title={proposal.expirationDate} />
+                        <input type="text" readOnly value={formatDate(proposal.expirationDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm  focus:ring-0 focus:border-gray-300" title={proposal.expirationDate} />
                     </div>
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 whitespace-nowrap">Customer Order</label>

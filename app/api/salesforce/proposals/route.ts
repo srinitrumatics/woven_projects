@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getFilesFromSalesforce, getGenericTabDataFromSalesforce } from "@/lib/proposal-service";
-import { uploadFilesToSalesforce } from "@/lib/salesforce-service";
+import { uploadFilesToSalesforce, getFileUrl } from "@/lib/salesforce-service";
 
 
 export async function GET(req: NextRequest) {
@@ -25,9 +25,19 @@ export async function GET(req: NextRequest) {
             data = await getFilesFromSalesforce(accountId, contactId, proposalId);
         }
 
+        else if (action === "download" || action === "preview") {
+            const contentVersionId = searchParams.get("contentVersionId");
+            if (!contentVersionId) {
+                return NextResponse.json({ error: "Missing contentVersionId for file action" }, { status: 400 });
+            }
+            data = await getFileUrl(contentVersionId);
+            if (!data) {
+                return NextResponse.json({ error: "Failed to get file URL" }, { status: 500 });
+            }
+        }
+
         else {
             // Map action to correct tabName
-            console.log("action", action);
             let tabName;
             if (action == "products") tabName = "Products";
             else if (action == "elements") tabName = "Elements";

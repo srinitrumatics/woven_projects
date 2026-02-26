@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ProposalFile, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 
@@ -10,6 +11,9 @@ interface FilesTabProps {
     sortField: keyof ProposalFile;
     sortDirection: SortDirection;
     onSort: (field: keyof ProposalFile) => void;
+    proposalId: string;
+    accountId: string;
+    contactId: string;
 }
 
 export default function FilesTab({
@@ -20,14 +24,142 @@ export default function FilesTab({
     onSelectAll,
     sortField,
     sortDirection,
-    onSort
+    onSort,
+    proposalId,
+    accountId,
+    contactId
 }: FilesTabProps) {
+    const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
 
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof ProposalFile);
 
+    // helpers
+    function decodeHtmlEntities(s: string) {
+        return s ? s.replace(/&amp;/g, '&') : s;
+    }
+
+    function addDownloadParam(previewUrl: string) {
+        const decoded = decodeHtmlEntities(previewUrl);
+        const downloadParam = 'download=1';
+
+        // If there's a hash fragment (#...), insert param BEFORE it
+        const hashIndex = decoded.indexOf('#');
+        if (hashIndex !== -1) {
+            const beforeHash = decoded.slice(0, hashIndex);
+            const afterHash = decoded.slice(hashIndex); // includes '#...'
+            const sep = beforeHash.includes('?') ? '&' : '?';
+            return `${beforeHash}${sep}${downloadParam}${afterHash}`;
+        }
+
+        // No fragment — append normally using ? or &
+        const sep = decoded.includes('?') ? '&' : '?';
+        return `${decoded}${sep}${downloadParam}`;
+    }
+
+    const handleDownload = async (file: ProposalFile) => {
+        const contentVersionId = file.id;
+
+        if (!contentVersionId) {
+            alert("File content not available - missing content document ID");
+            return;
+        }
+
+        // Open a blank window immediately to avoid popup blocker
+        const win = window.open('', '_blank');
+        if (win) {
+            win.document.write('Loading download...');
+        }
+
+        // Set loading state for this file
+        setDownloadingIds(prev => new Set(prev).add(file.id));
+
+        try {
+            // Call the download API to get the download URL
+            const res = await fetch(
+                `/api/salesforce/proposals?action=download&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&proposalId=${encodeURIComponent(proposalId)}&contentVersionId=${encodeURIComponent(contentVersionId)}`
+            );
+
+            if (!res.ok) {
+                throw new Error("Failed to get download URL");
+            }
+
+            const data = await res.json();
+            const previewURL = data?.previewUrl;
+
+            if (!previewURL) {
+                throw new Error("Preview URL missing from API response");
+            }
+
+            const downloadUrl = addDownloadParam(previewURL);
+
+            if (win) {
+                win.location.href = downloadUrl;
+            } else {
+                // Fallback for popup blocker
+                window.open(downloadUrl, '_blank', 'noopener');
+            }
+
+        } catch (error) {
+            console.error("Error downloading file:", error);
+            if (win) win.close();
+            alert("Failed to download file");
+        } finally {
+            // Clear loading state for this file
+            setDownloadingIds(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(file.id);
+                return newSet;
+            });
+        }
+    };
+
+    const handlePreview = async (file: ProposalFile) => {
+        const contentVersionId = file.id;
+
+        if (!contentVersionId) {
+            alert("Missing Content Version ID");
+            return;
+        }
+
+        // Open blank window immediately
+        const win = window.open('', '_blank');
+        if (win) {
+            win.document.write('Loading preview...');
+        }
+
+        try {
+            const response = await fetch(
+                `/api/salesforce/proposals?action=preview&contentVersionId=${encodeURIComponent(contentVersionId)}&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`
+            );
+            if (!response.ok) {
+                if (win) win.close();
+                alert("Unable to open preview.");
+                return;
+            }
+            const result = await response.json();
+            const previewUrl = result?.previewUrl;
+
+            if (!previewUrl) {
+                if (win) win.close();
+                alert("Preview URL missing");
+                return;
+            }
+
+            if (win) {
+                win.location.href = previewUrl;
+            } else {
+                window.open(previewUrl, "_blank", "noopener");
+            }
+        } catch (err) {
+            console.error("Preview error:", err);
+            if (win) win.close();
+            alert("Failed to open preview");
+        }
+    };
+
     const getFileIcon = (fileType: string) => {
-        switch (fileType.toUpperCase()) {
+        switch (fileType?.toUpperCase()) {
             case "PDF":
                 return (
                     <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
@@ -69,7 +201,6 @@ export default function FilesTab({
             </div>
         );
     }
-
 
     return (
         <div className="overflow-x-auto p-4">
@@ -139,14 +270,40 @@ export default function FilesTab({
                                 <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white " title={file.uploadedBy}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{file.uploadedBy}</div></td>
                                 <td className="px-3 py-2 text-left text-sm text-gray-600 dark:text-gray-400 ">{file.uploadedDate}</td>
                                 <td className="px-3 py-2 text-left" onClick={(e) => e.stopPropagation()}>
-                                    <button
-                                        className="bg-primary/10 text-primary rounded hover:bg-primary hover:text-white transition-all duration-200 text-sm font-medium"
-                                        onClick={() => file.downloadUrl && window.open(file.downloadUrl, '_blank')}
-                                        title="Download File">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                        </svg>
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        {/* View / Preview button */}
+                                        <button
+                                            onClick={() => handlePreview(file)}
+                                            className="p-1 text-blue-600 hover:text-blue-800"
+                                            title="Preview File"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                        </button>
+                                        {/* Download button */}
+                                        <button
+                                            onClick={() => handleDownload(file)}
+                                            disabled={downloadingIds.has(file.id)}
+                                            className={`p-1 ${downloadingIds.has(file.id) ? 'text-gray-400 cursor-wait' : 'text-primary hover:text-primary-dark'}`}
+                                            title={downloadingIds.has(file.id) ? 'Downloading...' : 'Download'}
+                                        >
+                                            {downloadingIds.has(file.id) ? (
+                                                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                            ) : (
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                </svg>
+                                            )}
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))

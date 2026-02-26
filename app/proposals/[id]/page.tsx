@@ -455,7 +455,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               contentDocumentId: f.ContentDocumentId,
               fileName: f.Title,
               fileType: f.FileExtension,
-              fileSize: f.ContentSize ? (f.ContentSize / 1024 / 1024).toFixed(2) + ' MB' : '0 MB', // Approximate formatting
+              fileSize: f.FileSize ? f.FileSize : '0 MB', // Approximate formatting
               sizeInBytes: f.ContentSize || 0,
               uploadedBy: f.CreatedBy,
               uploadedDate: formatDate(f.CreatedDate, 'numeric-dash'),
@@ -1370,6 +1370,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                   sortField={fileSortField}
                   sortDirection={fileSortDirection}
                   onSort={handleFileSort}
+                  proposalId={proposal.id}
+                  accountId={SF_ACCOUNT_ID}
+                  contactId={SF_CONTACT_ID}
                 />
               )}
 
