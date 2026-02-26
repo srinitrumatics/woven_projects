@@ -75,3 +75,18 @@ export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength) + '...';
 }
+
+/**
+ * Format file size from bytes to human readable string (KB/MB)
+ * @param bytes Size in bytes
+ * @returns Formatted size string
+ */
+export function formatFileSize(bytes: number | string | undefined | null): string {
+  const b = typeof bytes === 'string' ? parseInt(bytes) : bytes;
+  if (!b || isNaN(b)) return '0 KB';
+
+  if (b < 1024 * 1024) {
+    return (b / 1024).toFixed(2) + ' KB';
+  }
+  return (b / (1024 * 1024)).toFixed(2) + ' MB';
+}

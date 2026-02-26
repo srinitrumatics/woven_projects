@@ -114,11 +114,11 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     customerContactName: 200,
     billingType: 150,
     projectManagerName: 200,
-    estimatedBudget: 150,
-    totalMilestones: 120,
+    estimatedBudget: 200,
+    totalMilestones: 170,
     totalTasks: 120,
-    percentCompleted: 120,
-    estimatedStartDate: 150,
+    percentCompleted: 140,
+    estimatedStartDate: 190,
     estimatedEndDate: 150
   });
 
@@ -458,7 +458,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               fileName: f.Title,
               fileType: f.FileExtension,
               fileSize: f.FileSize ? f.FileSize : '0 MB', // Approximate formatting
-              sizeInBytes: f.ContentSize || 0,
+              sizeInBytes: f.FileSize || 0,
               uploadedBy: f.CreatedBy,
               uploadedDate: formatDate(f.CreatedDate, 'numeric-dash'),
               category: 'General',

@@ -49,9 +49,7 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                         <tr>
                             <td colSpan={13} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                                 <div className="flex flex-col items-center justify-center">
-                                    <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                    </svg>
+
                                     <p className="text-lg font-medium">No projects found</p>
                                     <p className="text-sm">There are no projects associated with this proposal.</p>
                                 </div>
@@ -83,7 +81,7 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={project.projectManagerName}>
                                     <div className="text-sm text-gray-900 dark:text-white line-clamp-1">{project.projectManagerName}</div></td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold min-w-[172px]">
+                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold min-w-[186px]">
                                     ${project.estimatedBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                                 <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white min-w-[147px]">

@@ -1378,11 +1378,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         onClone={handleClone}
         isNew={isNew}
       />
-      <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
+      <div className="grid grid-cols-1 w1500:grid-cols-10 gap-6">
         {/* Left Column - Client Information (70%) */}
-        <div className="lg:col-span-7 flex flex-col gap-4">
+        <div className="w1500:col-span-7 flex flex-col gap-4">
           {/* Billing and Shipping Information Cards - Side by Side */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 w1500:grid-cols-2 gap-4">
             {/* Billing Information Card */}
             <BillingInfo
               formData={formData}
@@ -1458,9 +1458,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
       {/* Products Search - Full Width */}
       <div className="mt-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-3">
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-2 gap-4 sm:gap-0">
-            <div className="flex-1 relative w-full sm:w-auto">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700">
+            {/* Search — top on mobile/tablet (<1024px), left on desktop (>=1024px) */}
+            <div className="flex-1 relative w-full">
               <input
                 type="text"
                 placeholder="Search by name, sku or price"
@@ -1472,11 +1473,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <div className="flex flex-wrap gap-2 w-full sm:w-auto justify-end sm:ml-4">
-
+            {/* Tab buttons — below search on mobile/tablet (<1024px), right on desktop (>=1024px) */}
+            <div className="flex flex-nowrap gap-2 overflow-x-auto no-scrollbar pb-0.5 flex-shrink-0">
               <button
                 onClick={() => setViewMode("catalog")}
-                className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${viewMode === "catalog"
+                className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${viewMode === "catalog"
                   ? "bg-primary text-white"
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
@@ -1485,17 +1486,16 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </button>
               <button
                 onClick={() => setViewMode("myOrder")}
-                className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${viewMode === "myOrder"
+                className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${viewMode === "myOrder"
                   ? "bg-primary text-white"
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
               >
                 My Order ({orderProducts.length})
               </button>
-
               <button
                 onClick={() => setViewMode("taxes")}
-                className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${viewMode === "taxes"
+                className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${viewMode === "taxes"
                   ? "bg-primary text-white"
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
@@ -1504,7 +1504,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </button>
               <button
                 onClick={() => setViewMode("files")}
-                className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${viewMode === "files"
+                className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${viewMode === "files"
                   ? "bg-primary text-white"
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
@@ -1514,66 +1514,69 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
-          {/* Files Tab */}
-          {viewMode === "files" && (
-            <FilesTab
-              orderId={id}
-              accountId={SF_ACCOUNT_ID}
-              contactId={SF_CONTACT_ID}
-              isEditing={isEditing}
-              onFilesCountChange={setFilesCount}
-            />
-          )}
+          {/* Tab Content area */}
+          <div className="p-3">
+            {/* Files Tab */}
+            {viewMode === "files" && (
+              <FilesTab
+                orderId={id}
+                accountId={SF_ACCOUNT_ID}
+                contactId={SF_CONTACT_ID}
+                isEditing={isEditing}
+                onFilesCountChange={setFilesCount}
+              />
+            )}
 
-          {/* Products Catalog Table */}
-          {viewMode === "catalog" && (
-            <ProductCatalog
-              selectedProductIds={selectedProductIds}
-              handleAddSelectedProducts={handleAddSelectedProducts}
-              paginatedCatalogProducts={paginatedCatalogProducts}
-              handleSelectAll={handleSelectAll}
-              handleSelectProduct={handleSelectProduct}
-              handleImageClick={handleImageClick}
-              catalogQuantities={catalogQuantities}
-              handleCatalogQuantityChange={handleCatalogQuantityChange}
-              handleAddProduct={handleAddProduct}
-              popupProduct={popupProduct}
-              handleClosePopup={handleClosePopup}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-              itemsPerPage={itemsPerPage}
-              searchQuery={searchQuery}
-              sortConfig={catalogSortConfig}
-              requestSort={requestCatalogSort}
-              isEditing={isEditing}
-              widths={catalogColumns.widths}
-              onResize={catalogColumns.handleResize}
-            />
-          )}
+            {/* Products Catalog Table */}
+            {viewMode === "catalog" && (
+              <ProductCatalog
+                selectedProductIds={selectedProductIds}
+                handleAddSelectedProducts={handleAddSelectedProducts}
+                paginatedCatalogProducts={paginatedCatalogProducts}
+                handleSelectAll={handleSelectAll}
+                handleSelectProduct={handleSelectProduct}
+                handleImageClick={handleImageClick}
+                catalogQuantities={catalogQuantities}
+                handleCatalogQuantityChange={handleCatalogQuantityChange}
+                handleAddProduct={handleAddProduct}
+                popupProduct={popupProduct}
+                handleClosePopup={handleClosePopup}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+                itemsPerPage={itemsPerPage}
+                searchQuery={searchQuery}
+                sortConfig={catalogSortConfig}
+                requestSort={requestCatalogSort}
+                isEditing={isEditing}
+                widths={catalogColumns.widths}
+                onResize={catalogColumns.handleResize}
+              />
+            )}
 
-          {/* My Order Table */}
-          {viewMode === "myOrder" && (
-            <MyOrderTable
-              loadingOrder={loadingOrder}
-              filteredOrderProducts={filteredOrderProducts}
-              orderId={id}
-              handleQuantityChange={handleQuantityChange}
-              handleRemoveProduct={handleRemoveProduct}
-              searchQuery={searchQuery}
-              setHoveredTooltip={setTooltipState}
-              accountId={SF_ACCOUNT_ID}
-              contactId={SF_CONTACT_ID}
-              setOrderProducts={setOrderProducts}
-              isEditing={isEditing}
-              widths={myOrderColumns.widths}
-              onResize={myOrderColumns.handleResize}
-            />
-          )}
+            {/* My Order Table */}
+            {viewMode === "myOrder" && (
+              <MyOrderTable
+                loadingOrder={loadingOrder}
+                filteredOrderProducts={filteredOrderProducts}
+                orderId={id}
+                handleQuantityChange={handleQuantityChange}
+                handleRemoveProduct={handleRemoveProduct}
+                searchQuery={searchQuery}
+                setHoveredTooltip={setTooltipState}
+                accountId={SF_ACCOUNT_ID}
+                contactId={SF_CONTACT_ID}
+                setOrderProducts={setOrderProducts}
+                isEditing={isEditing}
+                widths={myOrderColumns.widths}
+                onResize={myOrderColumns.handleResize}
+              />
+            )}
 
-          {viewMode === "taxes" && (
-            <TaxesTab order={orderData} loading={loadingOrder} />
-          )}
+            {viewMode === "taxes" && (
+              <TaxesTab order={orderData} loading={loadingOrder} />
+            )}
+          </div>
         </div>
       </div>
 

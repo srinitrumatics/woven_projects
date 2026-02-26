@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { QuoteFile } from "@/app/quotes/types";
-import { formatDate } from "@/lib/utils/formatting";
+import { formatDate, formatFileSize } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 
@@ -227,7 +227,7 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
                                     {file.fileType?.toUpperCase() || 'N/A'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.fileSize }}>
-                                    {file.fileSize}
+                                    {formatFileSize(file.sizeInBytes)}
                                 </td>
                                 <td className="px-3 py-2" style={{ width: widths.uploadedBy }}>
                                     <div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={file.uploadedBy}>

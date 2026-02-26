@@ -27,8 +27,8 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
             </div>
 
             <div className="px-6 pb-6 text-sm">
-                <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-                    <div className="md:col-span-3">
+                <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
+                    <div className="lg:col-span-3">
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Bill to Account
                         </label>
@@ -72,7 +72,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         />
                     </div>
 
-                    <div className="md:col-span-3">
+                    <div className="lg:col-span-3">
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Bill to Location <span className="text-red-500">*</span>
                         </label>
@@ -92,7 +92,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         </select>
                     </div>
 
-                    <div className="md:col-span-6">
+                    <div className="lg:col-span-6">
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Billing Address <span className="text-red-500">*</span>
                         </label>
@@ -105,7 +105,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         />
                     </div>
 
-                    <div className="md:col-span-2">
+                    <div className="lg:col-span-2">
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Customer PO <span className="text-red-500">*</span>
                         </label>
@@ -119,7 +119,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         />
                     </div>
 
-                    <div className="md:col-span-2">
+                    <div className="lg:col-span-2">
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Payment Terms</label>
                         <select
                             value={formData.paymentTerms || ''}
@@ -138,7 +138,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         </select>
                     </div>
 
-                    <div className="md:col-span-2">
+                    <div className="lg:col-span-2">
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Price Book</label>
                         <input
                             type="text"

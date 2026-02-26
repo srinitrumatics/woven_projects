@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ProposalFile, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
+import { formatFileSize } from "@/lib/utils/formatting";
 
 interface FilesTabProps {
     files: ProposalFile[];
@@ -266,7 +267,7 @@ export default function FilesTab({
                                 <td className="px-3 py-2 text-left">
                                     <span className="text-sm  text-gray-600 dark:text-gray-400">{file.fileType}</span>
                                 </td>
-                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white">{file.fileSize}</td>
+                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white">{formatFileSize(file.sizeInBytes)}</td>
                                 <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white " title={file.uploadedBy}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{file.uploadedBy}</div></td>
                                 <td className="px-3 py-2 text-left text-sm text-gray-600 dark:text-gray-400 ">{file.uploadedDate}</td>
                                 <td className="px-3 py-2 text-left" onClick={(e) => e.stopPropagation()}>

@@ -38,10 +38,10 @@ export default function TaxesTab({ order, loading }: TaxesTabProps) {
 
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
-            <div className="overflow-x-auto">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+            <div className="overflow-auto">
                 <table className="w-full">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
                         <tr>
                             <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">Sales Tax Rate</th>
                             <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">Sales Tax Amount</th>

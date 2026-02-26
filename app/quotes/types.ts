@@ -318,6 +318,7 @@ export interface QuoteFile {
   fileName: string;
   fileType: string;
   fileSize: string;
+  sizeInBytes: number;
   uploadedDate: string;
   uploadedBy: string;
   contentDocumentId: string;

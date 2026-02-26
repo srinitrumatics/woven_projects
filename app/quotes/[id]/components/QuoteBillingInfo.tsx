@@ -21,29 +21,29 @@ export default function QuoteBillingInfo({ quote }: QuoteBillingInfoProps) {
             <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Bill to Account</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Bill to Account</label>
                         <input type="text" disabled value={quote.billToAccount} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Bill to Location</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Bill to Location</label>
                         <input type="text" disabled value={quote.billToLocation} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />
                     </div>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Billing Address</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Billing Address</label>
                     <input type="text" disabled value={quote.billingAddress} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={quote.billingAddress} />
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Payment Terms</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Payment Terms</label>
                         <input type="text" disabled value={quote.paymentTerms} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Customer PO</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Customer PO</label>
                         <input type="text" disabled value={quote.customerPO} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Price Book</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Price Book</label>
                         <input type="text" disabled value={quote.priceBook} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FileData } from "@/app/orders/types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
+import { formatFileSize } from "@/lib/utils/formatting";
 
 interface FilesTabProps {
     orderId: string;
@@ -280,9 +281,9 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                 </div>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-auto">
                 <table className="w-full">
-                    <thead className="bg-primary-light dark:bg-gray-900">
+                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
                         <tr>
                             {isEditing && (
                                 <th className="px-2 py-3 text-left w-10">
@@ -327,7 +328,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                                     )}
                                     <td className="px-2 py-3 text-sm font-medium text-gray-900 dark:text-white" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">{file.Title}</div></td>
                                     <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.FileExtension}</td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{(file.FileSize / 1024).toFixed(2)} KB</td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{formatFileSize(file.FileSize)}</td>
                                     <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedBy}</td>
                                     <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedDate}</td>
                                     <td className="px-2 py-3">

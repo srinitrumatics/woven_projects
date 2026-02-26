@@ -415,7 +415,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           id: f.Id,
           fileName: f.Title,
           fileType: f.FileExtension,
-          fileSize: f.ContentSize ? (f.ContentSize / 1024 / 1024).toFixed(2) + ' MB' : '0 MB',
+          fileSize: f.FileSize ? (f.ContentSize / 1024 / 1024).toFixed(2) + ' MB' : '0 MB',
+          sizeInBytes: f.ContentSize || 0,
           uploadedDate: f.CreatedDate,
           uploadedBy: f.CreatedBy?.Name || 'Unknown',
           contentDocumentId: f.ContentDocumentId
@@ -539,9 +540,9 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
 
       <QuoteDetailsSection quote={quote} lines={quoteLines} />
 
-      <div className="mt-8 mb-20">
+      <div className="mt-8">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="border-b border-gray-200 dark:border-gray-700 px-6 pt-4">
+          <div className="p-4">
             <QuoteTabs
               activeTab={activeTab}
               onTabChange={(tab) => {
@@ -560,7 +561,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
               }}
             />
           </div>
-          <div className="p-0">
+          <div className="p-4">
             {activeTab === 'quotelines' && (
               <QuoteLinesTab
                 products={sortedLines}

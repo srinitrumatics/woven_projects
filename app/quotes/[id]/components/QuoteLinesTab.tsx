@@ -82,7 +82,7 @@ export default function QuoteLinesTab({
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.description }}>
                                     <div className="max-w-xs line-clamp-1" title={line.description}>{line.description}</div>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.manufacturerDBA }}>
+                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px]" style={{ width: widths.manufacturerDBA }}>
                                     {line.manufacturerDBA}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.unitPrice }}>

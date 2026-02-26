@@ -78,9 +78,9 @@ export default function MyOrderTable({
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="overflow-x-auto">
+            <div className="overflow-auto">
                 <table className="w-full text-sm ">
-                    <thead className="bg-primary-light dark:bg-gray-900 ">
+                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
                         <tr>
                             <SortableHeader label="Order Line " field="sku" sortConfig={sortConfig} requestSort={requestSort} width={widths.sku} onResize={onResize} />
                             <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />

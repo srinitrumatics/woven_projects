@@ -108,9 +108,9 @@ export default function ProductCatalog({
                     </button>
                 )}
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-auto">
                 <table className="w-full">
-                    <thead className="bg-primary-light dark:bg-gray-900">
+                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
                         <tr>
                             {isEditing && (
                                 <th

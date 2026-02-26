@@ -21,27 +21,27 @@ export default function QuoteKeyDates({ quote }: QuoteKeyDatesProps) {
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Account Rep</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Account Rep</label>
                     <input type="text" disabled value={quote.accountExecutive || ''} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Proposal Name</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Proposal Name</label>
                     <input type="text" disabled value={quote.proposalName || ''} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Customer Order</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Customer Order</label>
                     <input type="text" disabled value={quote.customerOrder || ''} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Issued Date</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Issued Date</label>
                     <input type="text" disabled value={formatDate(quote.issuedDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Expiration Date</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Expiration Date</label>
                     <input type="text" disabled value={formatDate(quote.expirationDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Planned Ship Date</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Planned Ship Date</label>
                     <input type="text" disabled value={formatDate(quote.plannedShipDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />
                 </div>
             </div>

@@ -94,6 +94,7 @@ export interface Invoice {
     customerQuoteName: string;
     salesOrderLineName: string;
     customerQuoteLineName: string;
+    customerOrderName?: string;
     purchaseOrderLineName: string;
     productName: string;
     productDescription: string;

@@ -31,15 +31,14 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
             </div>
 
             <div className="px-6 pb-6 text-sm">
-                <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-                    <div className="md:col-span-3">
+                <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
+                    <div className="lg:col-span-3">
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Ship to Account
                         </label>
                         <input
                             type="text"
                             value={(() => {
-                                // 1. Try to find name in shipLocations for the current location
                                 const location = shipLocations.find(l => l.Id === formData.shipTo);
 
                                 const relationshipName = location?.Account_Name__r?.Name || (location as any)?.['Account_Name__r.Name'] || (location as any)?.Account_Name_Name;
@@ -48,12 +47,10 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                                 const isContextAccount = location?.Account_Name__c && SF_ACCOUNT_ID && location.Account_Name__c.substring(0, 15) === SF_ACCOUNT_ID.substring(0, 15);
                                 if (isContextAccount && accountName && !accountName.startsWith('001')) return accountName;
 
-                                // 2. If formData already has a non-ID name, use it
                                 if (formData.shipToAccountName && !formData.shipToAccountName.startsWith('001')) {
                                     return formData.shipToAccountName;
                                 }
 
-                                // 3. Try to find the name in any other location that shares the same Account ID
                                 if (location?.Account_Name__c) {
                                     const otherLoc = shipLocations.find(l =>
                                         l.Account_Name__c &&
@@ -64,7 +61,6 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                                     if (otherName) return otherName;
                                 }
 
-                                // 4. Fallback to ID if we absolutely cannot resolve a name
                                 const finalDisplay = formData.shipToAccountName || location?.Account_Name__c || '';
                                 return finalDisplay;
                             })() || ''}
@@ -74,8 +70,8 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                         />
                     </div>
 
-                    <div className="md:col-span-3">
-                        <label className="block text-sm font-bold  text-gray-700 dark:text-gray-300 mb-2">
+                    <div className="lg:col-span-3">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Ship to Location <span className="text-red-500">*</span>
                         </label>
                         <select name="shipTo"
@@ -106,8 +102,7 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                         </select>
                     </div>
 
-
-                    <div className="md:col-span-6">
+                    <div className="lg:col-span-6">
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Shipping Address <span className="text-red-500">*</span>
                         </label>
@@ -120,8 +115,8 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                         />
                     </div>
 
-                    <div className="md:col-span-2">
-                        <label className="block text-sm font-bold  text-gray-700 dark:text-gray-300 mb-2">
+                    <div className="lg:col-span-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Request Date <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -133,8 +128,8 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                         />
                     </div>
 
-                    <div className="md:col-span-2">
-                        <label className="block text-sm font-bold  text-gray-700 dark:text-gray-300 mb-2">Drop-Ship</label>
+                    <div className="lg:col-span-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Drop-Ship</label>
                         <div className={`flex items-center h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}>
                             <input
                                 type="checkbox"
@@ -147,8 +142,8 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                         </div>
                     </div>
 
-                    <div className="md:col-span-2">
-                        <label className="block text-sm font-bold  text-gray-700 dark:text-gray-300 mb-2">Site</label>
+                    <div className="lg:col-span-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Site</label>
                         <input
                             placeholder="Site"
                             type="text"
