@@ -137,7 +137,7 @@ export default function QuoteLineDetailPage({
                     const mappedLines: ProductData[] = data.map((item: any) => ({
                         id: item.Id,
                         name: item.Product_Name || "Unknown Product",
-                        sku: item.Name || "",
+                        sku: item.sku || "",
                         status: item.Status__c || "Draft",
                         description: item.Product_Description__c || "",
                         productFamily: item.Product_Family__c || "-",
@@ -239,6 +239,7 @@ export default function QuoteLineDetailPage({
     }, [lineid, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
     const product = quoteLines[currentLineIndex];
+    console.log(product);
     const totalLines = quoteLines.length;
     const lineNumber = currentLineIndex + 1;
 
@@ -282,10 +283,10 @@ export default function QuoteLineDetailPage({
                             <span>&gt;</span>
                             <Link href={`/quotes/${id}`} className="hover:underline">Quote Details</Link>
                             <span>&gt;</span>
-                            <span className="text-gray-900 font-medium">Product Details</span>
+                            <span className="text-gray-900 font-medium">{product.sku}</span>
                         </div>
-                        <div className="flex items-center gap-3">
-                            <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{product.sku}</h1>
                         </div>
                     </div>
                     <button
@@ -381,8 +382,8 @@ export default function QuoteLineDetailPage({
                 {/* Quotes Note - 25% width (3 of 12 cols) */}
                 <div className="lg:col-span-3 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-8 h-8 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
-                            <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
+                            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
@@ -398,8 +399,8 @@ export default function QuoteLineDetailPage({
                 {/* Product Information Card - 50% width (6 of 12 cols) */}
                 <div className="lg:col-span-6 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-8 h-8 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
-                            <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
+                            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>

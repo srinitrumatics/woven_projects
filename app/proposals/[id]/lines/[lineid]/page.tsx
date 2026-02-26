@@ -553,12 +553,12 @@ export default function ProposalProductDetailPage({
                         Proposal Details
                     </button>
                     <span>&gt;</span>
-                    <span className="text-gray-900 dark:text-white">Product Details</span>
+                    <span className="text-gray-900 dark:text-white">{product.sku}</span>
                 </div>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                            {product.name}
+                            {product.sku}
                         </h1>
                     </div>
                     <div className="flex items-center gap-2">
