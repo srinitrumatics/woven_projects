@@ -166,9 +166,6 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                             <tr>
                                 <td colSpan={activeTab === 'rma' ? 23 : activeTab === 'rtv' || activeTab === 'credit' || activeTab === 'debit' ? 16 : 8} className="px-4 py-12  text-gray-500 dark:text-gray-400">
                                     <div className="flex flex-col items-center justify-center">
-                                        <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                                        </svg>
                                         <p className="text-lg font-medium">No {tabs.find(t => t.id === activeTab)?.label} found</p>
                                     </div>
                                 </td>

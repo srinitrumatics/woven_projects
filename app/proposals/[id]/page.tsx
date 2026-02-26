@@ -78,6 +78,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   // Tab and sorting state
   const [activeTab, setActiveTab] = useState<ProposalTabType>("products");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
 
@@ -1283,59 +1284,52 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           />
 
           <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div className="flex flex-col px-6 py-5 border-b border-gray-200 dark:border-gray-700 gap-4">
-              <div className="flex flex-col gap-1 shrink-0">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                  {activeTab === 'products' ? 'Proposed Products' :
-                    activeTab === 'elements' ? 'Proposal Elements' :
-                      activeTab === 'files' ? 'Attachments' :
-                        activeTab === 'signatures' ? 'Signatures' :
-                          activeTab === 'projects' ? 'Active Projects' :
-                            activeTab === 'orders' ? 'Customer Orders' :
-                              activeTab === 'fulfillment' ? 'Fulfillment' :
-                                activeTab === 'purchases' ? 'Purchase Orders' :
-                                  activeTab === 'taxes' ? 'Proposal Taxes' :
-                                    activeTab === 'returns' ? 'Returns' : 'Details'}
-                </h3>
-
-                <p className="text-sm text-gray-500 hidden sm:block">
-                  {activeTab === "products" ? "Products included in this proposal"
-                    : activeTab === "elements" ? "Work breakdown structure and deliverables"
-                      : activeTab === "files" ? "Documents and files attached to this proposal"
-                        : activeTab === "signatures" ? "Client and company signature tracking"
-                          : activeTab === "projects" ? "Active projects"
-                            : activeTab === "orders" ? "Customer orders"
-                              : activeTab === "fulfillment" ? "Fulfillment"
-                                : activeTab === "purchases" ? "Purchase orders"
-                                  : activeTab === "returns" ? "Returns"
-                                    : activeTab === "taxes" ? "Taxes included in this proposal"
-                                      : "Details"
-                  }
-                </p>
+            <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700">
+              {/* Search — top on mobile/tablet (<1024px), left on desktop (>=1024px) */}
+              <div className="flex-1 relative w-full">
+                <input
+                  type="text"
+                  placeholder={`Search in ${activeTab}...`}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+                <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </div>
-              <div className="p-4">
-                <div className="w-full overflow-x-auto">
-                  <ProposalTabs
-                    activeTab={activeTab}
-                    onTabChange={setActiveTab}
-                    counts={{
-                      products: proposedProducts.length,
-                      elements: proposalElements.length,
-                      files: proposalFiles.length,
-                      projects: projects.length,
-                      orders: orders.length,
-                      fulfillment: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
-                      purchases: purchases.length,
-                      returns: returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length,
-                      taxes: taxesData.length
-                    }}
-                  />
 
-                </div>
+              {/* Tab buttons — below search on mobile/tablet (<1024px), right on desktop (>=1024px) */}
+              <div className="flex-shrink-0">
+                <ProposalTabs
+                  activeTab={activeTab}
+                  onTabChange={(tab) => {
+                    setActiveTab(tab);
+                    setSearchQuery(""); // Reset search when changing tabs
+                  }}
+                  counts={{
+                    products: proposedProducts.length,
+                    elements: proposalElements.length,
+                    files: proposalFiles.length,
+                    projects: projects.length,
+                    orders: orders.length,
+                    fulfillment: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
+                    purchases: purchases.length,
+                    returns: returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length,
+                    taxes: taxesData.length
+                  }}
+                />
               </div>
+            </div>
+
+            <div className="p-4">
               {activeTab === 'products' && (
                 <ProductsTab
-                  products={sortData(proposedProducts, productSortField, productSortDirection)}
+                  products={sortData(proposedProducts.filter(p =>
+                    (p.productName?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                    (p.Name?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                    (p.description?.toLowerCase() || "").includes(searchQuery.toLowerCase())
+                  ), productSortField, productSortDirection)}
                   loading={tabLoading}
                   proposalId={proposal.id}
                   sortField={productSortField}
@@ -1352,7 +1346,11 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
               {activeTab === 'elements' && (
                 <ElementsTab
-                  elements={sortData(proposalElements, elementSortField, elementSortDirection)}
+                  elements={sortData(proposalElements.filter(e =>
+                    (e.proposalElement?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                    (e.description?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                    (e.wbs?.toLowerCase() || "").includes(searchQuery.toLowerCase())
+                  ), elementSortField, elementSortDirection)}
                   loading={tabLoading}
                   sortField={elementSortField}
                   sortDirection={elementSortDirection}
@@ -1364,7 +1362,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
               {activeTab === 'files' && (
                 <FilesTab
-                  files={sortData(proposalFiles, fileSortField, fileSortDirection)}
+                  files={sortData(proposalFiles.filter(f =>
+                    (f.fileName?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                    (f.uploadedBy?.toLowerCase() || "").includes(searchQuery.toLowerCase())
+                  ), fileSortField, fileSortDirection)}
                   loading={tabLoading}
                   selectedFiles={selectedFiles}
                   onFileSelect={handleFileSelect}
@@ -1384,7 +1385,11 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
               {activeTab === 'projects' && (
                 <ProjectsTab
-                  projects={sortData(projects, projectSortField, projectSortDirection)}
+                  projects={sortData(projects.filter(p =>
+                    (p.name?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                    (p.projectNumber?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                    (p.customerAccountName?.toLowerCase() || "").includes(searchQuery.toLowerCase())
+                  ), projectSortField, projectSortDirection)}
                   loading={tabLoading}
                   sortField={projectSortField}
                   sortDirection={projectSortDirection}
@@ -1396,7 +1401,11 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
               {activeTab === 'orders' && (
                 <OrdersTab
-                  orders={sortData(orders, orderSortField, orderSortDirection)}
+                  orders={sortData(orders.filter(o =>
+                    (o.name?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                    (o.customerPO?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                    (o.status?.toLowerCase() || "").includes(searchQuery.toLowerCase())
+                  ), orderSortField, orderSortDirection)}
                   loading={tabLoading}
                   sortField={orderSortField}
                   sortDirection={orderSortDirection}

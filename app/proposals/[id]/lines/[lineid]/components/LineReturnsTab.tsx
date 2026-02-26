@@ -159,9 +159,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     <tr>
                                         <td colSpan={18} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                                             <div className="flex flex-col items-center justify-center">
-                                                <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                                                </svg>
                                                 <p className="text-lg font-medium">No RMAs found</p>
                                             </div>
                                         </td>
@@ -253,9 +250,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     <tr>
                                         <td colSpan={12} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                                             <div className="flex flex-col items-center justify-center">
-                                                <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                                                </svg>
                                                 <p className="text-lg font-medium">No RTVs found</p>
                                             </div>
                                         </td>
@@ -332,9 +326,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     <tr>
                                         <td colSpan={14} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                                             <div className="flex flex-col items-center justify-center">
-                                                <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                                                </svg>
                                                 <p className="text-lg font-medium">No Credit Memos found</p>
                                             </div>
                                         </td>
@@ -414,9 +405,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     <tr>
                                         <td colSpan={13} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                                             <div className="flex flex-col items-center justify-center">
-                                                <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                                                </svg>
                                                 <p className="text-lg font-medium">No Debit Memos found</p>
                                             </div>
                                         </td>
