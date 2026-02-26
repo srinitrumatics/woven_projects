@@ -137,14 +137,14 @@ export default function ProposalsPage() {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(proposal =>
-        (proposal.proposalNumber?.toLowerCase() || '').includes(query) ||
-        (proposal.proposalName?.toLowerCase() || '').includes(query) ||
-        (proposal.customerOrder?.toLowerCase() || '').includes(query) ||
-        (proposal.customerPO?.toLowerCase() || '').includes(query) ||
-        (proposal.accountName?.toLowerCase() || '').includes(query) ||
-        (proposal.billTo?.toLowerCase() || '').includes(query) ||
-        (proposal.shipTo?.toLowerCase() || '').includes(query) ||
-        (proposal.status?.toLowerCase() || '').includes(query)
+        String(proposal.proposalNumber || '').toLowerCase().includes(query) ||
+        String(proposal.proposalName || '').toLowerCase().includes(query) ||
+        String(proposal.customerOrder || '').toLowerCase().includes(query) ||
+        String(proposal.customerPO || '').toLowerCase().includes(query) ||
+        String(proposal.accountName || '').toLowerCase().includes(query) ||
+        String(proposal.billTo || '').toLowerCase().includes(query) ||
+        String(proposal.shipTo || '').toLowerCase().includes(query) ||
+        String(proposal.status || '').toLowerCase().includes(query)
       );
     }
 
@@ -501,8 +501,8 @@ export default function ProposalsPage() {
                   <SortableHeader label="Proposal Number" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                   <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                   <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
-                  <SortableHeader label="Customer  Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
-                  <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                  <SortableHeader label="Customer  Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
+                  <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
                   <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
                   <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} />
                   <SortableHeader label="Total Lines" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCount} onResize={handleResize} />

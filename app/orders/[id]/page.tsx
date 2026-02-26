@@ -1458,8 +1458,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
       {/* Products Search - Full Width */}
       <div className="mt-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4 sm:gap-0">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-3">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-2 gap-4 sm:gap-0">
             <div className="flex-1 relative w-full sm:w-auto">
               <input
                 type="text"
@@ -1635,7 +1635,48 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             </>
           )}
         </div>
+        {/* Fixed Tooltip */}
+        {tooltipState && (
+          <div
+            role="tooltip"
+            className="fixed z-50 w-150 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg text-xs text-gray-900 dark:text-gray-100 pointer-events-none"
+            style={{
+              left: tooltipState.x,
+              top: tooltipState.y - 8, // 8px gap
+              transform: "translateY(-100%)"
+            }}
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-22 h-12 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <div className="font-semibold leading-tight">{tooltipState.product.name}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{tooltipState.product.sku ?? "—"}</div>
 
+                <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+                  <div className="text-gray-500">Manufacturer</div>
+                  <div className="font-medium text-gray-900 dark:text-gray-100">{tooltipState.product.manufacturer ?? "—"}</div>
+                  <div className="text-gray-500">Family</div>
+                  <div className="font-medium text-gray-900 dark:text-gray-100">{tooltipState.product.productFamily ?? "—"}</div>
+                  <div className="text-gray-500">Unit Price</div>
+                  <div className="font-medium text-gray-900 dark:text-gray-100">{formatCurrency(tooltipState.product.unitPrice)}</div>
+                  <div className="text-gray-500">Available</div>
+                  <div className="font-medium text-gray-900 dark:text-gray-100">{formatNumber(tooltipState.product.availableQty)}</div>
+                  <div className="text-gray-500">MOQ</div>
+                  <div className="font-medium text-gray-900 dark:text-gray-100">{formatNumber(tooltipState.product.moq)}</div>
+                </div>
+                {tooltipState.product.description && (
+                  <div className="mt-2 text-xs text-gray-700 dark:text-gray-300">
+                    {tooltipState.product.description}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Add padding to prevent content from being hidden behind fixed footer */}

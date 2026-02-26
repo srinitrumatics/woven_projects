@@ -78,6 +78,12 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
         // Set loading state for this file
         setDownloadingIds(prev => new Set(prev).add(file.Id));
 
+        // Open a blank window immediately to avoid popup blocker
+        const win = window.open('', '_blank');
+        if (win) {
+            win.document.write('Loading download...');
+        }
+
         try {
             // Call the download API to get the download URL
             const res = await fetch(
@@ -89,30 +95,22 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
             }
 
             const data = await res.json();
-            console.log("Download API response:", data);
-            // The API returns an array, get the first item's DownloadUrl
             const previewURL = data?.previewUrl;
 
-            //console.log("Download URL:", downloadUrl);
             if (!previewURL) {
                 throw new Error("Preview URL missing from API response");
             }
 
             const downloadUrl = addDownloadParam(previewURL);
-            console.log("Resolved download URL:", downloadUrl);
 
-            // Try opening in a new tab
-            const win = window.open(previewURL, '_blank', 'noopener');
-            console.log("Resolved download URL:", downloadUrl);
-
-            // Try opening in a new tab
             if (win) {
-                // success (browser opened a new tab/window)
-                return;
+                win.location.href = downloadUrl;
+            } else {
+                window.open(downloadUrl, '_blank', 'noopener');
             }
-
         } catch (error) {
             console.error("Error downloading file:", error);
+            if (win) win.close();
             alert("Failed to download file");
         } finally {
             // Clear loading state for this file
@@ -215,12 +213,19 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
             return;
         }
 
+        // Open blank window immediately
+        const win = window.open('', '_blank');
+        if (win) {
+            win.document.write('Loading preview...');
+        }
+
         try {
             const response = await fetch(
                 `/api/salesforce/orders?action=preview&contentVersionId=${encodeURIComponent(contentVersionId)}&accountId=${encodeURIComponent(accountId)}`
             );
             // alert('check here result');
             if (!response.ok) {
+                if (win) win.close();
                 alert("Unable to open preview.");
                 return;
             }
@@ -231,14 +236,20 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
             const previewUrl = result?.previewUrl;
 
             if (!previewUrl) {
+                if (win) win.close();
                 alert("Preview URL missing");
                 return;
             }
 
             // Now open preview in new tab
-            window.open(previewUrl, "_blank");
+            if (win) {
+                win.location.href = previewUrl;
+            } else {
+                window.open(previewUrl, "_blank", "noopener");
+            }
         } catch (err) {
             console.error("Preview error:", err);
+            if (win) win.close();
             alert("Failed to open preview");
         }
     };
