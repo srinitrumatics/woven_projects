@@ -194,6 +194,10 @@ export default function QuoteReturnsTab({ quoteId, data, loading }: QuoteReturns
                             `}
                         >
                             {tab.label}
+                            {tab.id === "rmas" && rma.length > 0 && ` (${rma.length})`}
+                            {tab.id === "creditMemo" && creditMemos.length > 0 && ` (${creditMemos.length})`}
+                            {tab.id === "rtvs" && rtv.length > 0 && ` (${rtv.length})`}
+                            {tab.id === "debitMemo" && debitMemos.length > 0 && ` (${debitMemos.length})`}
                         </button>
                     ))}
                 </nav>

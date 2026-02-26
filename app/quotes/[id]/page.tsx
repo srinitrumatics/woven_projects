@@ -36,6 +36,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<QuoteTabType>("quotelines");
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState<keyof QuoteLine>("productName");
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
@@ -542,29 +543,51 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
 
       <div className="mt-8">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="p-4">
-            <QuoteTabs
-              activeTab={activeTab}
-              onTabChange={(tab) => {
-                setActiveTab(tab);
-                if (['fulfillment', 'purchases', 'returns', 'files'].includes(tab)) {
-                  fetchTabData(tab);
-                }
-              }}
-              counts={{
-                quotelines: quoteLines.length,
-                taxes: taxes.length,
-                fulfillment: (fulfillmentData.salesOrders?.length || 0) + (fulfillmentData.shippingManifests?.length || 0) + (fulfillmentData.invoices?.length || 0),
-                purchases: (purchasesData.purchases?.length || 0) + (purchasesData.supplierBills?.length || 0),
-                returns: (returnsData.rma?.length || 0) + (returnsData.rtv?.length || 0) + (returnsData.creditMemos?.length || 0) + (returnsData.debitMemos?.length || 0),
-                files: quoteFiles.length
-              }}
-            />
+          <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700">
+            {/* Search — top on mobile/tablet (<1024px), left on desktop (>=1024px) */}
+            <div className="flex-1 relative w-full">
+              <input
+                type="text"
+                placeholder={`Search in ${activeTab === 'quotelines' ? 'Quote Lines' : activeTab}...`}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+              <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+
+            {/* Tab buttons — below search on mobile/tablet (<1024px), right on desktop (>=1024px) */}
+            <div className="flex-shrink-0">
+              <QuoteTabs
+                activeTab={activeTab}
+                onTabChange={(tab) => {
+                  setActiveTab(tab);
+                  setSearchQuery(""); // Reset search when switching tabs
+                  if (['fulfillment', 'purchases', 'returns', 'files'].includes(tab)) {
+                    fetchTabData(tab);
+                  }
+                }}
+                counts={{
+                  quotelines: quoteLines.length,
+                  taxes: taxes.length,
+                  fulfillment: (fulfillmentData.salesOrders?.length || 0) + (fulfillmentData.shippingManifests?.length || 0) + (fulfillmentData.invoices?.length || 0),
+                  purchases: (purchasesData.purchases?.length || 0) + (purchasesData.supplierBills?.length || 0),
+                  returns: (returnsData.rma?.length || 0) + (returnsData.rtv?.length || 0) + (returnsData.creditMemos?.length || 0) + (returnsData.debitMemos?.length || 0),
+                  files: quoteFiles.length
+                }}
+              />
+            </div>
           </div>
           <div className="p-4">
             {activeTab === 'quotelines' && (
               <QuoteLinesTab
-                products={sortedLines}
+                products={sortedLines.filter(line =>
+                  (line.productName?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                  (line.description?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                  (line.manufacturerDBA?.toLowerCase() || "").includes(searchQuery.toLowerCase())
+                )}
                 quoteId={id}
                 loading={tabLoading}
                 sortField={sortField}
@@ -611,7 +634,10 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
                 quoteId={id}
                 accountId={SF_ACCOUNT_ID}
                 contactId={SF_CONTACT_ID}
-                files={quoteFiles}
+                files={quoteFiles.filter(f =>
+                  (f.fileName?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+                  (f.uploadedBy?.toLowerCase() || "").includes(searchQuery.toLowerCase())
+                )}
                 loading={tabLoading}
               />
             )}
@@ -631,7 +657,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      <div className="h-16" />
+      <div className="h-20"></div>
     </Sidebar>
   );
 }

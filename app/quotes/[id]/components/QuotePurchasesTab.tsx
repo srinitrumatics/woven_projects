@@ -149,6 +149,8 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
                             `}
                         >
                             {tab.label}
+                            {tab.id === "purchases" && purchases.length > 0 && ` (${purchases.length})`}
+                            {tab.id === "supplierBills" && supplierBills.length > 0 && ` (${supplierBills.length})`}
                         </button>
                     ))}
                 </nav>

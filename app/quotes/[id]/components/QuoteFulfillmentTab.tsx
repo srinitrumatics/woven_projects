@@ -202,6 +202,9 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
                             `}
                         >
                             {tab.label}
+                            {tab.id === "salesOrders" && salesOrders.length > 0 && ` (${salesOrders.length})`}
+                            {tab.id === "shippingManifests" && shippingManifests.length > 0 && ` (${shippingManifests.length})`}
+                            {tab.id === "invoices" && invoices.length > 0 && ` (${invoices.length})`}
                         </button>
                     ))}
                 </nav>

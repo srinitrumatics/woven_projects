@@ -18,7 +18,7 @@ export default function ProductCarousel({ images }: ProductCarouselProps) {
     };
 
     return (
-        <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+        <div className="w1500:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
             <div className="relative flex-1 flex flex-col">
                 {/* Main Image Display */}
                 <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
@@ -87,8 +87,8 @@ export default function ProductCarousel({ images }: ProductCarouselProps) {
                             key={index}
                             onClick={() => setCurrentImageIndex(index)}
                             className={`w-2 h-2 rounded-full transition-colors ${index === currentImageIndex
-                                    ? "bg-primary"
-                                    : "bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500"
+                                ? "bg-primary"
+                                : "bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500"
                                 }`}
                         />
                     ))}

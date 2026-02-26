@@ -111,6 +111,13 @@ export default function QuoteLineDetailPage({
     const [quoteLines, setQuoteLines] = useState<ProductData[]>([]);
     const [currentLineIndex, setCurrentLineIndex] = useState(0);
 
+    // Dynamic counts state
+    const [counts, setCounts] = useState({
+        fulfillment: 0,
+        purchases: 0,
+        returns: 0
+    });
+
     const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
     const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
 
@@ -188,6 +195,49 @@ export default function QuoteLineDetailPage({
         }
     }, [id, lineid, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
+    // Fetch counts for tabs
+    useEffect(() => {
+        async function fetchCounts() {
+            if (!SF_ACCOUNT_ID || !SF_CONTACT_ID || !lineid) return;
+
+            try {
+                // Fetch fulfillment count
+                const fulfillRes = await fetch(`/api/salesforce/quotes?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&quoteId=${encodeURIComponent(lineid)}&action=fulfillment&objectName=Customer_Quote_Line__c`);
+                const fulfillData = fulfillRes.ok ? await fulfillRes.json() : null;
+                const fulfillCount = fulfillData ?
+                    (fulfillData.Sales_Order_Line__c?.length || 0) +
+                    (fulfillData.Invoice_Line__c?.length || 0) +
+                    (fulfillData.Shipping_Manifest_Line__c?.length || 0) : 0;
+
+                // Fetch purchases count
+                const purchaseRes = await fetch(`/api/salesforce/quotes?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&quoteId=${encodeURIComponent(lineid)}&action=purchases&objectName=Customer_Quote_Line__c`);
+                const purchaseData = purchaseRes.ok ? await purchaseRes.json() : null;
+                const purchaseCount = purchaseData ?
+                    (purchaseData.Purchase_Order_Line__c?.length || 0) +
+                    (purchaseData.Supplier_Bill_Line__c?.length || 0) : 0;
+
+                // Fetch returns count
+                const returnRes = await fetch(`/api/salesforce/quotes?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&quoteId=${encodeURIComponent(lineid)}&action=returns&objectName=Customer_Quote_Line__c`);
+                const returnData = returnRes.ok ? await returnRes.json() : null;
+                const returnCount = returnData ?
+                    (returnData.Debit_Memo_Line__c?.length || 0) +
+                    (returnData.RMA_Line__c?.length || 0) +
+                    (returnData.Credit_Memo_Line__c?.length || 0) +
+                    (returnData.RTV_Line__c?.length || 0) : 0;
+
+                setCounts({
+                    fulfillment: fulfillCount,
+                    purchases: purchaseCount,
+                    returns: returnCount
+                });
+            } catch (error) {
+                console.error("Error fetching tab counts:", error);
+            }
+        }
+
+        fetchCounts();
+    }, [lineid, SF_ACCOUNT_ID, SF_CONTACT_ID]);
+
     const product = quoteLines[currentLineIndex];
     const totalLines = quoteLines.length;
     const lineNumber = currentLineIndex + 1;
@@ -224,29 +274,36 @@ export default function QuoteLineDetailPage({
     return (
         <Sidebar>
             {/* Header / Breadcrumbs */}
-            <div className="mb-6 flex items-center justify-between">
-                <div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                        <span>Quotes</span>
-                        <span>&gt;</span>
-                        <Link href={`/quotes/${id}`} className="hover:underline">Quote Details</Link>
-                        <span>&gt;</span>
-                        <span className="text-gray-900 font-medium">Product Details</span>
+            <div className="mb-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
+                            <span>Quotes</span>
+                            <span>&gt;</span>
+                            <Link href={`/quotes/${id}`} className="hover:underline">Quote Details</Link>
+                            <span>&gt;</span>
+                            <span className="text-gray-900 font-medium">Product Details</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
-                        <span className="text-sm text-gray-500 mt-1">Line {lineNumber} of {totalLines}</span>
-                    </div>
+                    <button
+                        onClick={() => router.push(`/quotes/${id}`)}
+                        className="flex items-center gap-2 px-4 py-1.5 bg-[#A7C7E7] text-white rounded shadow-sm hover:bg-[#8FB8DE] transition-colors text-sm"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Back to Quote
+                    </button>
+
                 </div>
-                <button
-                    onClick={() => router.push(`/quotes/${id}`)}
-                    className="flex items-center gap-2 px-4 py-1.5 bg-[#A7C7E7] text-white rounded shadow-sm hover:bg-[#8FB8DE] transition-colors text-sm"
-                >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    Back to Quote
-                </button>
+                <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                        Line {lineNumber} of {totalLines}
+                    </span>
+                </div>
             </div>
             {/* Row 1: Main Image + Proposal Note + Product Information */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4 items-stretch">
@@ -406,9 +463,8 @@ export default function QuoteLineDetailPage({
             </div>
 
             {/* quotes Details Table */}
-            <div className="mb-6">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-
+            <div>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
                             <thead className="bg-primary-light dark:bg-gray-900">
@@ -445,39 +501,37 @@ export default function QuoteLineDetailPage({
             {/* Bottom Tabs */}
             <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                 {/* Tabs Header */}
-                <div className="flex gap-6 border-b border-gray-200 dark:border-gray-700 mb-6">
-                    <button
-                        onClick={() => setActiveTab("taxes")}
-                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "taxes"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-700 dark:hover:text-gray-300"
-                            }`}>
-                        Taxes
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("fulfillment")}
-                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "fulfillment"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-700 dark:hover:text-gray-300"
-                            }`}>
-                        Fulfillment
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("purchases")}
-                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "purchases"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-700 dark:hover:text-gray-300"
-                            }`}>
-                        Purchases
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("returns")}
-                        className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === "returns"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-700 dark:hover:text-gray-300"
-                            }`}>
-                        Returns
-                    </button>
+                <div className="flex flex-nowrap gap-4 overflow-x-auto no-scrollbar mb-6 items-center">
+                    {[
+                        {
+                            id: "taxes",
+                            label: "Taxes",
+                            count: (product?.salesTaxAmount > 0 ||
+                                product?.useTaxAmount > 0 ||
+                                product?.localTaxAmount > 0 ||
+                                product?.exciseTaxAmount > 0 ||
+                                product?.grtAmount > 0 ||
+                                product?.gstAmount > 0 ||
+                                product?.vatAmount > 0) ? 1 : 0
+                        },
+                        { id: "fulfillment", label: "Fulfillment", count: counts.fulfillment },
+                        { id: "purchases", label: "Purchases", count: counts.purchases },
+                        { id: "returns", label: "Returns", count: counts.returns }
+                    ].map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id as any)}
+                            className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${activeTab === tab.id
+                                ? "bg-primary text-white"
+                                : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                                }`}
+                        >
+                            {tab.label}
+                            {tab.count !== undefined && tab.count > 0 && (
+                                " (" + tab.count + ")"
+                            )}
+                        </button>
+                    ))}
                 </div>
                 <div>
                     {activeTab === 'taxes' && (

@@ -14,7 +14,7 @@ export default function OrderLineNotes({
     originalNotes,
 }: OrderLineNotesProps) {
     return (
-        <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+        <div className="w1500:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
             <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
                     <svg
