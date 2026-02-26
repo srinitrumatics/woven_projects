@@ -33,7 +33,7 @@ export default function ProposalHeader({ proposalNumber, status, description, on
                             </svg>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Proposal {proposalNumber}</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{proposalNumber}</h2>
                             <div className="text-sm text-gray-500 dark:text-gray-400">Proposal Details and Summary</div>
                         </div>
                     </div>

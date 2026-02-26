@@ -1283,8 +1283,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="flex flex-col px-6 py-5 border-b border-gray-200 dark:border-gray-700 gap-4">
               <div className="flex flex-col gap-1 shrink-0">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                  {activeTab === 'products' ? 'Products in Proposal' :
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                  {activeTab === 'products' ? 'Proposed Products' :
                     activeTab === 'elements' ? 'Proposal Elements' :
                       activeTab === 'files' ? 'Attachments' :
                         activeTab === 'signatures' ? 'Signatures' :
@@ -1294,7 +1294,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                                 activeTab === 'purchases' ? 'Purchase Orders' :
                                   activeTab === 'taxes' ? 'Proposal Taxes' :
                                     activeTab === 'returns' ? 'Returns' : 'Details'}
-                </h2>
+                </h3>
 
                 <p className="text-sm text-gray-500 hidden sm:block">
                   {activeTab === "products" ? "Products included in this proposal"
@@ -1311,132 +1311,132 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                   }
                 </p>
               </div>
+              <div className="p-4">
+                <div className="w-full overflow-x-auto">
+                  <ProposalTabs
+                    activeTab={activeTab}
+                    onTabChange={setActiveTab}
+                    counts={{
+                      products: proposedProducts.length,
+                      elements: proposalElements.length,
+                      files: proposalFiles.length,
+                      projects: projects.length,
+                      orders: orders.length,
+                      fulfillment: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
+                      purchases: purchases.length,
+                      returns: returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length,
+                      taxes: taxesData.length
+                    }}
+                  />
 
-              <div className="w-full overflow-x-auto pb-1 sm:pb-0">
-                <ProposalTabs
-                  activeTab={activeTab}
-                  onTabChange={setActiveTab}
-                  counts={{
-                    products: proposedProducts.length,
-                    elements: proposalElements.length,
-                    files: proposalFiles.length,
-                    projects: projects.length,
-                    orders: orders.length,
-                    fulfillment: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
-                    purchases: purchases.length,
-                    returns: returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length,
-                    taxes: taxesData.length
-                  }}
-                />
-
+                </div>
               </div>
+              {activeTab === 'products' && (
+                <ProductsTab
+                  products={sortData(proposedProducts, productSortField, productSortDirection)}
+                  loading={tabLoading}
+                  proposalId={proposal.id}
+                  sortField={productSortField}
+                  sortDirection={productSortDirection}
+                  onSort={handleProductSort}
+                  widths={productWidths}
+                  onResize={handleProductResize}
+                />
+              )}
+
+              {activeTab === 'taxes' && (
+                <TaxesTab taxes={taxesData} loading={tabLoading} widths={taxWidths} onResize={handleTaxResize} />
+              )}
+
+              {activeTab === 'elements' && (
+                <ElementsTab
+                  elements={sortData(proposalElements, elementSortField, elementSortDirection)}
+                  loading={tabLoading}
+                  sortField={elementSortField}
+                  sortDirection={elementSortDirection}
+                  onSort={handleElementSort}
+                  widths={elementWidths}
+                  onResize={handleElementResize}
+                />
+              )}
+
+              {activeTab === 'files' && (
+                <FilesTab
+                  files={sortData(proposalFiles, fileSortField, fileSortDirection)}
+                  loading={tabLoading}
+                  selectedFiles={selectedFiles}
+                  onFileSelect={handleFileSelect}
+                  onSelectAll={handleSelectAllFiles}
+                  sortField={fileSortField}
+                  sortDirection={fileSortDirection}
+                  onSort={handleFileSort}
+                />
+              )}
+
+              {activeTab === 'signatures' && (
+                <SignaturesTab proposal={proposal} />
+              )}
+
+              {activeTab === 'projects' && (
+                <ProjectsTab
+                  projects={sortData(projects, projectSortField, projectSortDirection)}
+                  loading={tabLoading}
+                  sortField={projectSortField}
+                  sortDirection={projectSortDirection}
+                  onSort={handleProjectSort}
+                  widths={projectWidths}
+                  onResize={handleProjectResize}
+                />
+              )}
+
+              {activeTab === 'orders' && (
+                <OrdersTab
+                  orders={sortData(orders, orderSortField, orderSortDirection)}
+                  loading={tabLoading}
+                  sortField={orderSortField}
+                  sortDirection={orderSortDirection}
+                  onSort={handleOrderSort}
+                  widths={orderWidths}
+                  onResize={handleOrderResize}
+                />
+              )}
+
+              {activeTab === 'fulfillment' && (
+                <FulfillmentsTab
+                  fulfillmentData={fulfillmentData}
+                  loading={tabLoading}
+                  activeTab={activeFulfillmentTab}
+                  onTabChange={setActiveFulfillmentTab}
+                  widths={fulfillmentWidths}
+                  onResize={handleFulfillmentResize}
+                />
+              )}
+
+              {activeTab === 'purchases' && (
+                <PurchasesTab
+                  purchases={purchases}
+                  supplierBills={supplierBills}
+                  loading={tabLoading}
+                  purchaseWidths={purchaseWidths}
+                  onPurchaseResize={handlePurchaseResize}
+                  billWidths={billWidths}
+                  onBillResize={handleBillResize}
+                />
+              )}
+
+              {activeTab === 'returns' && (
+                <ReturnsTab
+                  returnsData={returnsData}
+                  loading={tabLoading}
+                  widths={returnsWidths}
+                  onResize={handleReturnsResize}
+                />
+              )}
             </div>
-            {activeTab === 'products' && (
-              <ProductsTab
-                products={sortData(proposedProducts, productSortField, productSortDirection)}
-                loading={tabLoading}
-                proposalId={proposal.id}
-                sortField={productSortField}
-                sortDirection={productSortDirection}
-                onSort={handleProductSort}
-                widths={productWidths}
-                onResize={handleProductResize}
-              />
-            )}
-
-            {activeTab === 'taxes' && (
-              <TaxesTab taxes={taxesData} loading={tabLoading} widths={taxWidths} onResize={handleTaxResize} />
-            )}
-
-            {activeTab === 'elements' && (
-              <ElementsTab
-                elements={sortData(proposalElements, elementSortField, elementSortDirection)}
-                loading={tabLoading}
-                sortField={elementSortField}
-                sortDirection={elementSortDirection}
-                onSort={handleElementSort}
-                widths={elementWidths}
-                onResize={handleElementResize}
-              />
-            )}
-
-            {activeTab === 'files' && (
-              <FilesTab
-                files={sortData(proposalFiles, fileSortField, fileSortDirection)}
-                loading={tabLoading}
-                selectedFiles={selectedFiles}
-                onFileSelect={handleFileSelect}
-                onSelectAll={handleSelectAllFiles}
-                sortField={fileSortField}
-                sortDirection={fileSortDirection}
-                onSort={handleFileSort}
-              />
-            )}
-
-            {activeTab === 'signatures' && (
-              <SignaturesTab proposal={proposal} />
-            )}
-
-            {activeTab === 'projects' && (
-              <ProjectsTab
-                projects={sortData(projects, projectSortField, projectSortDirection)}
-                loading={tabLoading}
-                sortField={projectSortField}
-                sortDirection={projectSortDirection}
-                onSort={handleProjectSort}
-                widths={projectWidths}
-                onResize={handleProjectResize}
-              />
-            )}
-
-            {activeTab === 'orders' && (
-              <OrdersTab
-                orders={sortData(orders, orderSortField, orderSortDirection)}
-                loading={tabLoading}
-                sortField={orderSortField}
-                sortDirection={orderSortDirection}
-                onSort={handleOrderSort}
-                widths={orderWidths}
-                onResize={handleOrderResize}
-              />
-            )}
-
-            {activeTab === 'fulfillment' && (
-              <FulfillmentsTab
-                fulfillmentData={fulfillmentData}
-                loading={tabLoading}
-                activeTab={activeFulfillmentTab}
-                onTabChange={setActiveFulfillmentTab}
-                widths={fulfillmentWidths}
-                onResize={handleFulfillmentResize}
-              />
-            )}
-
-            {activeTab === 'purchases' && (
-              <PurchasesTab
-                purchases={purchases}
-                supplierBills={supplierBills}
-                loading={tabLoading}
-                purchaseWidths={purchaseWidths}
-                onPurchaseResize={handlePurchaseResize}
-                billWidths={billWidths}
-                onBillResize={handleBillResize}
-              />
-            )}
-
-            {activeTab === 'returns' && (
-              <ReturnsTab
-                returnsData={returnsData}
-                loading={tabLoading}
-                widths={returnsWidths}
-                onResize={handleReturnsResize}
-              />
-            )}
           </div>
 
-
           {/* Footer */}
-          <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between shadow-lg gap-4 sm:gap-0" style={{ zIndex: 40 }}>
+          <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.5)] gap-4 sm:gap-0 z-40">
             <button
               onClick={() => router.push("/proposals")}
               className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
@@ -1445,7 +1445,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             </button>
           </div>
 
-          <div className="h-20"></div>
+          <div className="h-20" />
         </>
       )}
     </Sidebar >

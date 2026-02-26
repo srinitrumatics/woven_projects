@@ -417,7 +417,7 @@ export default function ProposalsPage() {
       </div>
 
       {/* Proposals Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
         {/* Header with Search and Filter */}
         <div className="border-b border-gray-200 dark:border-gray-700 ">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-6 py-4 gap-4">

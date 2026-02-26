@@ -22,7 +22,7 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
     }
 
     return (
-        <div className="overflow-x-auto p-4">
+        <div className="overflow-x-auto">
             <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>

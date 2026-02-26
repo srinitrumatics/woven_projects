@@ -57,8 +57,8 @@ export default function ProposalDetails({
             <div className="w1500:col-span-3 h-full">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden w-full flex flex-col h-full">
                     <div className="w-full flex items-center gap-2 justify-start p-4 border-b border-gray-50 dark:border-gray-700/50">
-                        <div className="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-                            <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
@@ -96,7 +96,7 @@ export default function ProposalDetails({
                         </div>
                         <div className="text-left">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Scope Summary</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Project Scope and Deliverables Overview</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Proposal Scope and Deliverables Overview</p>
                         </div>
                     </div>
 

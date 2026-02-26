@@ -42,7 +42,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
     }
 
     return (
-        <div className="p-4">
+        <div>
             {/* Sub-tabs */}
             <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
                 {tabs.map((tab) => (

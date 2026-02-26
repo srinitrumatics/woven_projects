@@ -152,6 +152,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [viewMode, setViewMode] = useState<"myOrder" | "catalog" | "files" | "taxes">("myOrder"); // Default to My Order table
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  const [loading, setLoading] = useState(true);
   const [orderProducts, setOrderProducts] = useState<Product[]>([]);
   const [orderData, setOrderData] = useState<Order | null>(null);
   const [loadingOrder, setLoadingOrder] = useState(true);
@@ -1639,8 +1641,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      {/* Add padding to prevent content from being hidden behind fixed footer */}
-      <div className="h-20"></div>
 
       {/* Fixed Tooltip */}
       {tooltipState && (

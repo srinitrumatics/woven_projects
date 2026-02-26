@@ -37,19 +37,15 @@ export default function ProposalTabs({ activeTab, onTabChange, counts = {} }: Pr
                 <button
                     key={tab.id}
                     onClick={() => onTabChange(tab.id)}
-                    className={`px-3 py-1 sm:px-4 sm:py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${activeTab === tab.id
-                        ? "bg-primary text-white shadow-sm"
-                        : "bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200"
+                    className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${activeTab === tab.id
+                        ? "bg-primary text-white"
+                        : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                         }`}
+
                 >
                     {tab.label}
                     {tab.count !== undefined && tab.count > 0 && (
-                        <span className={`ml-2 px-1.5 py-0.5 text-xs rounded-full ${activeTab === tab.id
-                            ? "bg-white/20 text-white"
-                            : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-                            }`}>
-                            {tab.count}
-                        </span>
+                        " (" + tab.count + ")"
                     )}
                 </button>
             ))}

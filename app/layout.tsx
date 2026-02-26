@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased bg-background text-foreground">
+      <body className="antialiased bg-background text-foreground" cz-shortcut-listen="true">
         <ThemeProvider>
           <AppAuthProvider>
             {children}

@@ -179,13 +179,13 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
                               </p>
                             </div>
                             <p className="text-sm text-gray-500 dark:text-gray-500 ml-4 whitespace-nowrap">
-                              {formatDate(event.timestamp, 'numeric-dash')} {new Date(event.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              {formatDate(event.timestamp, 'numeric-dash')} {new Date(event.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                             </p>
                           </div>
                           {event.location && (
                             <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
                               {event.location}
-                              {event.city && event.state && ` " ${event.city}, ${event.state} ${event.zip || ''}`}
+                              {event.city && event.state && ` • ${event.city}, ${event.state} ${event.zip || ''}`}
                             </p>
                           )}
                         </div>
@@ -319,10 +319,9 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
         </div>
 
         {/* Fixed Footer Actions */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between shadow-lg gap-4 sm:gap-0" style={{ zIndex: 40 }}>
+        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.5)] gap-4 sm:gap-0 z-40">
           <Link href='/shipments' className="w-full sm:w-auto">
             <button
-
               className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               Back to Shipments
@@ -337,7 +336,6 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
           </div>
         </div>
 
-        {/* Spacer for fixed footer */}
         <div className="h-20" />
       </div>
     </Sidebar>

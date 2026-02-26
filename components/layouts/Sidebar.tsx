@@ -127,7 +127,6 @@ export default function Sidebar({ children }: SidebarProps) {
   const { permissions: userPermissions, isSuperAdmin } = usePermissions();
   const [isCollapsed, setIsCollapsed] = useState(false); // desktop collapse
   const [mobileOpen, setMobileOpen] = useState(false); // mobile drawer
-  console.log('Sidebar user permissions:', user);
   // close mobile drawer on route change
   useEffect(() => {
     setMobileOpen(false);
@@ -293,7 +292,7 @@ export default function Sidebar({ children }: SidebarProps) {
       </aside>
 
       {/* Main Content Area */}
-      <div className={`flex-1 min-w-0 flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${isCollapsed ? "ml-20" : "ml-64"}`}>
+      <div className={`flex-1 min-w-0 flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${isCollapsed ? "md:ml-20" : "md:ml-64"}`}>
         <Header mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} isCollapsed={isCollapsed} />
 
         {/* Page content */}

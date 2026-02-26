@@ -24,7 +24,7 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
     }
 
     return (
-        <div className="overflow-x-auto flex justify-center p-4">
+        <div className="overflow-x-auto flex justify-center">
             <table className="w-full ">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
