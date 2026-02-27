@@ -26,7 +26,7 @@ export default function QuoteTabs({ activeTab, onTabChange, counts = {} }: Quote
     ];
 
     return (
-        <div className="flex flex-nowrap gap-2 overflow-x-auto no-scrollbar w-full">
+        <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 w-full">
             {tabs.map((tab) => (
                 <button
                     key={tab.id}

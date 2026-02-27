@@ -736,11 +736,27 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           throw new Error(`Failed to fetch order: ${res.status} ${res.statusText}`);
         }
 
-        const data = await res.json();
-        console.log("Fetched order data:", data);
+        const responseData = await res.json();
+        console.log("Fetched order data:", responseData);
 
-        if (data && data.length > 0) {
-          const order: Order = data[0];
+        let order: Order | null = null;
+
+        // Robustly extract order from potential response structures
+        if (Array.isArray(responseData) && responseData.length > 0) {
+          if (responseData[0].Customer_Order__c && Array.isArray(responseData[0].Customer_Order__c) && responseData[0].Customer_Order__c.length > 0) {
+            order = responseData[0].Customer_Order__c[0] as Order;
+          } else {
+            order = responseData[0] as Order;
+          }
+        } else if (responseData && responseData.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
+          if (responseData.data[0].Customer_Order__c && Array.isArray(responseData.data[0].Customer_Order__c) && responseData.data[0].Customer_Order__c.length > 0) {
+            order = responseData.data[0].Customer_Order__c[0] as Order;
+          } else {
+            order = responseData.data[0] as Order;
+          }
+        }
+
+        if (order) {
           setOrderData(order);
 
           // Proactively set accountName state from order names if context matches
@@ -765,8 +781,30 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               const linesRes = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(accountId)}&orderId=${encodeURIComponent(order.Id)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&action=orderlines`);
               if (linesRes.ok) {
                 const linesData = await linesRes.json();
-                if (linesData && Array.isArray(linesData)) {
-                  const mappedProducts: Product[] = linesData.map((item: any, index: number) => ({
+                console.log("Fetched order lines data:", linesData);
+
+                let lines: any[] = [];
+                if (Array.isArray(linesData) && linesData.length > 0) {
+                  // Check if it's nested: [{ some_key__c: [...] }]
+                  const firstItem = linesData[0];
+                  const nestedKey = Object.keys(firstItem).find(key => key.endsWith('__c') && Array.isArray(firstItem[key]));
+                  if (nestedKey) {
+                    lines = firstItem[nestedKey];
+                  } else {
+                    lines = linesData;
+                  }
+                } else if (linesData && linesData.data && Array.isArray(linesData.data)) {
+                  const firstItem = linesData.data[0];
+                  const nestedKey = Object.keys(firstItem).find(key => key.endsWith('__c') && Array.isArray(firstItem[key]));
+                  if (nestedKey) {
+                    lines = firstItem[nestedKey];
+                  } else {
+                    lines = linesData.data;
+                  }
+                }
+
+                if (lines && Array.isArray(lines)) {
+                  const mappedProducts: Product[] = lines.map((item: any, index: number) => ({
                     id: item.Product_Name__c || item.Id, // Use Product_Name__c as product ID if available
                     name: item.Product_Name || "",
                     sku: item.Name || "", // Using Name as SKU/Line ID for now

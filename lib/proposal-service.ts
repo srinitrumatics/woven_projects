@@ -89,8 +89,8 @@ export async function getGenericTabDataFromSalesforce(
     if (result.data && result.data.length > 0) {
       const dataObject = result.data[0];
 
-      // For Fulfillment, Purchases, and Returns tab, return the entire object with all types
-      if (tabName === 'Fulfillment' || tabName === 'Purchases' || tabName === 'Returns') {
+      // For certain tabs, return the entire object with all types
+      if (tabName === 'Fulfillment' || tabName === 'Purchases' || tabName === 'Returns' || tabName === 'Proposal') {
         return dataObject;
       }
 

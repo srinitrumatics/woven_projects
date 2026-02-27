@@ -292,13 +292,22 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         const res = await fetch(`/api/salesforce/proposals?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&proposalId=${id}&action=view`);
         if (!res.ok) throw new Error('Failed to fetch proposal');
         const data = await res.json();
+        console.log("Fetched proposal data raw:", data);
 
-        if (data && data.length > 0) {
-          const item = data[0];
+        let item: any = null;
+        if (Array.isArray(data) && data.length > 0) {
+          item = data[0];
+        } else if (data && data.Proposal__c && Array.isArray(data.Proposal__c) && data.Proposal__c.length > 0) {
+          item = data.Proposal__c[0];
+        } else if (data && data.Id) {
+          item = data;
+        }
+
+        if (item) {
           const mappedProposal: Proposal = {
             id: item.Id,
-            proposalNumber: item.Proposal_Number__c || 'N/A',
-            proposalName: item.Name || 'Untitled Proposal',
+            proposalNumber: item.Proposal_Number__c || item.Name || 'N/A',
+            proposalName: item.Name || item.Proposal_Name__c || 'N/A',
             accountName: item.Inventory_Account_Name || 'Unknown Account',
             contactName: item.Client_Signed_By__c || 'Unknown Contact',
             status: (item.Status__c as ProposalStatus) || 'Draft',
@@ -319,12 +328,14 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             orderId: item.Customer_Order__c || item.Id || '',
             site: item.Site_Name || '',
             billToAccount: item.Authorized_Bill_To_Account_Name || item.Bill_To_Account_Name || item.Inventory_Account_Name || '',
-            shipToAccount: item.Authorized_Ship_To_Account_Name || item.Ship_To_Account_Name || item.Inventory_Account_Name || ''
+            shipToAccount: item.Authorized_Ship_To_Account_Name || item.Ship_To_Account_Name || item.Inventory_Account_Name || '',
+            accountExecutive: item.Owner_Name || item.Owner?.Name || item.Company_Signed_By_Name || 'N/A'
           };
 
+          console.log("Proposal API Item:", item);
           const detailedProposal = {
             ...mappedProposal,
-            accountExecutive: item.Company_Signed_By_Name || '',
+            accountExecutive: item.Owner_Name || item.Owner?.Name || item.Company_Signed_By_Name || 'N/A',
             issuedDate: formatDate(item.Issued_Date__c, 'numeric-dash'),
             orderNumber: item.Customer_Order_Name || '',
             billingAddress: formatAddress(item.Authorized_Bill_To_Location_Address),
@@ -346,6 +357,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             Proposal_Notes: item.Proposal_Notes__c || item.Proposal_Notes || ''
           };
 
+          console.log("Mapped Detailed Proposal:", detailedProposal);
           setProposal(detailedProposal as any);
 
           if (item.Proposal_Elements__r && item.Proposal_Elements__r.records) {

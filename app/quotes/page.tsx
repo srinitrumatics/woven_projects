@@ -162,7 +162,7 @@ export default function QuotesPage() {
         {/* Draft Quotes Card */}
         <button
           onClick={() => handleCardClick("Draft")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "All"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Draft"
             ? "border-primary ring-2 ring-primary/20"
             : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
             }`}
@@ -173,7 +173,10 @@ export default function QuotesPage() {
               <div className="flex-1 min-w-0">
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("Draft")}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCardClick("Draft");
+                  }}
                   className="hover:underline block"
                 >
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Draft</p>
@@ -184,7 +187,7 @@ export default function QuotesPage() {
                 </div>
                 <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.draftValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
+              <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

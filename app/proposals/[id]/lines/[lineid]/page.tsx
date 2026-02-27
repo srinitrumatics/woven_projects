@@ -926,7 +926,7 @@ export default function ProposalProductDetailPage({
             {/* Row 3: Related Items Tabs (Fulfillments, Purchases, Returns) */}
             < div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4" >
                 {/* Tabs Header */}
-                <div className="flex flex-nowrap gap-2 overflow-x-auto no-scrollbar mb-6 items-center">
+                <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 mb-6 items-center">
                     {
                         [
                             { id: "taxes", label: "Taxes", count: product.taxDetail ? 1 : 0 },

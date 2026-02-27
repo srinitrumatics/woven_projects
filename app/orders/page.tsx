@@ -69,20 +69,18 @@ export default function OrdersPage() {
         const data = await res.json();
         console.log("Fetched orders data:", data);
 
-        // Normalize the data from Salesforce
-        let arrayData: any[] = [];
-        if (Array.isArray(data)) {
-          arrayData = data;
-        } else if (data && data.success && Array.isArray(data.data)) {
-          arrayData = data.data;
-        } else if (data && Array.isArray(data.records)) {
-          arrayData = data.records;
-        } else {
-          console.warn("Unexpected data format from orders API:", data);
-          arrayData = [];
-        }
+        // Based on API: [ { Customer_Order__c: [...], Status__c: [...] } ]
+        const responseData = Array.isArray(data) ? data[0] : data;
+        const rawItems = responseData?.Customer_Order__c || [];
+        const apiStatuses = responseData?.Status__c || [];
 
-        setSfOrders(arrayData);
+        setSfOrders(rawItems);
+
+        // Store statuses if available
+        if (apiStatuses.length > 0) {
+          const statusStrings = apiStatuses.map((s: any) => typeof s === 'object' ? s.value || s.label : String(s));
+          setAvailableStatuses(statusStrings);
+        }
       } catch (err: any) {
         console.error("Failed to fetch orders:", err);
         setError(err.message || "Failed to fetch orders");
@@ -93,6 +91,8 @@ export default function OrdersPage() {
 
     fetchOrders();
   }, []);
+
+  const [availableStatuses, setAvailableStatuses] = useState<string[]>([]);
 
   // Map Salesforce records to UI-friendly order shape used in your table
   const uiOrders = useMemo(() => {
@@ -695,7 +695,14 @@ export default function OrdersPage() {
                   <option value="Draft">Draft</option>
                   <option value="Pending">Pending/Submitted</option>
                   <option value="Success">Success</option>
-                  <option value="Canceled">Canceled</option>
+                  <option disabled>──────────</option>
+                  {Array.from(new Set(
+                    (availableStatuses.length > 0 ? availableStatuses : sfOrders.map(o => o.Status__c))
+                      .filter(Boolean)
+                      .map(s => typeof s === 'object' ? (s as any).value || (s as any).label : String(s))
+                  )).sort().map(status => (
+                    <option key={`status-${status}`} value={status}>{status}</option>
+                  ))}
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

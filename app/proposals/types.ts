@@ -1,4 +1,4 @@
-export type ProposalStatus = "Draft" | "Pending Review" | "Under Review" | "Approved" | "Rejected" | "Expired" | "Accepted" | "Lead" | "Quote Requested" | "Quote Ready" | "Proposal Sent" | "Negotiation" | "Awarded";
+export type ProposalStatus = "Draft" | "Pending Review" | "Under Review" | "Approved" | "Rejected" | "Expired" | "Accepted" | "Lead" | "Quote Requested" | "Quote Ready" | "Proposal Sent" | "Negotiation" | "Negotiations" | "Awarded" | "Proposal Requested" | "Proposal Development" | "Proposal Won";
 
 export interface Proposal {
   id: string;

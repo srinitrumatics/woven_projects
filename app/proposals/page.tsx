@@ -11,13 +11,13 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 
-type TabFilter = "All" | "Lead" | "Draft" | "Pending Review" | "Under Review" | "Approved" | "Accepted" | "Rejected" | "Expired";
+type TabFilter = "Pipeline" | "Draft" | "Client Review" | "Won" | string;
 
 const ITEMS_PER_PAGE = 10;
 
 export default function ProposalsPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<TabFilter>("All");
+  const [activeTab, setActiveTab] = useState<TabFilter>("Pipeline");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [proposals, setProposals] = useState<Proposal[]>([]);
@@ -51,7 +51,12 @@ export default function ProposalsPage() {
         const data = await res.json();
         console.log("Fetched proposals data:", data);
 
-        const mappedProposals: Proposal[] = data.map((item: any) => ({
+        // Based on API: { data: [{ Status__c: [...], Proposal__c: [...] }] }
+        const responseData = data;
+        const rawItems = responseData?.Proposal__c || [];
+        const apiStatuses = responseData?.Status__c || [];
+        console.log("Fetched proposals data:", rawItems);
+        const mappedProposals: Proposal[] = rawItems.map((item: any) => ({
           id: item.Id,
           proposalNumber: item.Proposal_Number__c || item.Name || 'N/A',
           proposalName: item.Name || item.Proposal_Name__c || 'N/A',
@@ -59,7 +64,7 @@ export default function ProposalsPage() {
           customerPO: item.Customer_PO__c || 'N/A',
           accountName: item.Bill_to_Account_Name || item.Ship_to_Account_Name || 'N/A',
           contactName: item.Bill_to_Contact_Name || item.Ship_to_Contact_Name || 'N/A',
-          status: (item.Status__c as ProposalStatus) || 'Draft',
+          status: (item.Status__c || item.status_c || item.Status || 'Draft') as ProposalStatus,
           totalAmount: item.Total_Price__c || item.Total_Amount__c || 0,
           totalShippingCharges: item.Total_Shipping_Charges__c || 0,
           totalTaxesAmount: item.Total_Taxes_Amount__c || 0,
@@ -74,6 +79,11 @@ export default function ProposalsPage() {
         }));
 
         setProposals(mappedProposals);
+
+        // If the API provides statuses, we could store them
+        if (apiStatuses.length > 0) {
+          setAvailableStatuses(apiStatuses);
+        }
       } catch (error) {
         console.error("Error fetching proposals:", error);
       } finally {
@@ -84,31 +94,38 @@ export default function ProposalsPage() {
     fetchProposals();
   }, []);
 
+  const [availableStatuses, setAvailableStatuses] = useState<string[]>([]);
+
   // Calculate stats from all proposals
   const stats = useMemo(() => {
     const total = proposals.length;
     const totalValue = proposals.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const inProgressStatuses: ProposalStatus[] = ["Draft", "Quote Requested", "Quote Ready"];
+    const inProgressStatuses: ProposalStatus[] = ["Draft", "Proposal Requested", "Quote Ready", "Proposal Development"];
     const inProgress = proposals.filter(p => inProgressStatuses.includes(p.status));
     const inProgressCount = inProgress.length;
     const inProgressValue = inProgress.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const awaitingReviewStatuses: ProposalStatus[] = ["Proposal Sent", "Negotiation", "Pending Review", "Under Review"];
-    const awaitingReview = proposals.filter(p => awaitingReviewStatuses.includes(p.status));
-    const awaitingReviewCount = awaitingReview.length;
-    const awaitingReviewValue = awaitingReview.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
+    const clientReviewStatuses: ProposalStatus[] = ["Proposal Sent", "Negotiation", "Negotiations", "Pending Review", "Under Review"];
+    const clientReview = proposals.filter(p => clientReviewStatuses.includes(p.status));
+    const clientReviewCount = clientReview.length;
+    const clientReviewValue = clientReview.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const awardedStatuses: ProposalStatus[] = ["Awarded", "Accepted", "Approved"];
-    const awarded = proposals.filter(p => awardedStatuses.includes(p.status));
-    const awardedCount = awarded.length;
-    const awardedValue = awarded.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
+    const wonStatuses: ProposalStatus[] = ["Proposal Won"];
+    const won = proposals.filter(p => wonStatuses.includes(p.status));
+    const wonCount = won.length;
+    const wonValue = won.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
+
+    const pipelineProposals = proposals.filter(p => !["Canceled", "Rejected", "Closed Lost", "Proposal Won"].includes(p.status));
+    const pipelineCount = pipelineProposals.length;
+    const pipelineValue = pipelineProposals.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
     return {
       total, totalValue,
+      pipelineCount, pipelineValue,
       inProgressCount, inProgressValue,
-      awaitingReviewCount, awaitingReviewValue,
-      awardedCount, awardedValue
+      clientReviewCount, clientReviewValue,
+      wonCount, wonValue
     };
   }, [proposals]);
 
@@ -117,17 +134,19 @@ export default function ProposalsPage() {
     let filtered = proposals;
 
     // Apply status/group filter
-    if (activeTab !== "All") {
-      const inProgressGroups = ["Draft", "Quote Requested", "Quote Ready"];
-      const awaitingReviewGroups = ["Proposal Sent", "Negotiation", "Pending Review", "Under Review"];
-      const awardedGroups = ["Awarded", "Accepted", "Approved"];
+    if (activeTab === "Pipeline") {
+      filtered = filtered.filter(p => !["Canceled", "Rejected", "Closed Lost", "Proposal Won"].includes(p.status));
+    } else if (activeTab !== "All") {
+      const inProgressGroups = ["Draft", "Proposal Requested", "Quote Ready", "Proposal Development"];
+      const clientReviewGroups = ["Proposal Sent", "Negotiation", "Negotiations", "Pending Review", "Under Review"];
+      const wonGroups = ["Proposal Won"];
 
       if (activeTab === "Draft") {
         filtered = filtered.filter(proposal => inProgressGroups.includes(proposal.status));
-      } else if (activeTab === "Pending Review") {
-        filtered = filtered.filter(proposal => awaitingReviewGroups.includes(proposal.status));
-      } else if (activeTab === "Approved") {
-        filtered = filtered.filter(proposal => awardedGroups.includes(proposal.status));
+      } else if (activeTab === "Client Review") {
+        filtered = filtered.filter(proposal => clientReviewGroups.includes(proposal.status));
+      } else if (activeTab === "Won") {
+        filtered = filtered.filter(proposal => wonGroups.includes(proposal.status));
       } else {
         filtered = filtered.filter(proposal => proposal.status === activeTab);
       }
@@ -200,8 +219,8 @@ export default function ProposalsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {/* Total Proposals Card */}
         <button
-          onClick={() => handleCardClick("All")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "All"
+          onClick={() => handleCardClick("Pipeline")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Pipeline"
             ? "border-primary ring-2 ring-primary/20"
             : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
             }`}
@@ -212,24 +231,24 @@ export default function ProposalsPage() {
               <div className="flex-1 min-w-0">
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("All")}
+                  onClick={(e) => { e.preventDefault(); handleCardClick("Pipeline"); }}
                   className="hover:underline block"
                 >
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Total Pipeline</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Pipeline</p>
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("All")}
+                  onClick={(e) => { e.preventDefault(); handleCardClick("Pipeline"); }}
                   className="hover:underline block"
                 >
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.total}</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.pipelineCount}</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">Proposals</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
+                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.pipelineValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
+              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Pipeline" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -240,9 +259,9 @@ export default function ProposalsPage() {
               <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline">
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("All")}
+                  onClick={(e) => { e.preventDefault(); handleCardClick("Pipeline"); }}
                   className="hover:underline block">
-                  View all proposals</Link>
+                  View pipeline</Link>
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -305,10 +324,10 @@ export default function ProposalsPage() {
           </div>
         </button>
 
-        {/* Pending/Awaiting Review Card */}
+        {/* Client Review Card */}
         <button
-          onClick={() => handleCardClick("Pending Review")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Pending Review"
+          onClick={() => handleCardClick("Client Review")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Client Review"
             ? "border-yellow-500 ring-2 ring-yellow-500/20"
             : "border-gray-200 dark:border-gray-700 hover:border-yellow-400"
             }`}
@@ -320,11 +339,11 @@ export default function ProposalsPage() {
                 <div className="flex items-center gap-2 mb-1">
                   <Link
                     href="#"
-                    onClick={() => handleCardClick("Pending Review")}
+                    onClick={() => handleCardClick("Client Review")}
                     className="hover:underline block">
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Awaiting Review</p>
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Client Review</p>
                   </Link>
-                  {stats.awaitingReviewCount > 0 && (
+                  {stats.clientReviewCount > 0 && (
                     <span className="flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-yellow-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
@@ -333,17 +352,17 @@ export default function ProposalsPage() {
                 </div>
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("Pending Review")}
+                  onClick={() => handleCardClick("Client Review")}
                   className="hover:underline block">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.awaitingReviewCount}</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.clientReviewCount}</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">Proposals</span>
                   </div>
                 </Link>
 
-                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.awaitingReviewValue)}</p>
+                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.clientReviewValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Pending Review" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
+              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Client Review" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -354,7 +373,7 @@ export default function ProposalsPage() {
               <span className="inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline">
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("Pending Review")}
+                  onClick={() => handleCardClick("Client Review")}
                   className="hover:underline block">
                   Review now</Link>
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -365,10 +384,10 @@ export default function ProposalsPage() {
           </div>
         </button>
 
-        {/* Approved/Awarded Card */}
+        {/* Won Card */}
         <button
-          onClick={() => handleCardClick("Approved")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Approved"
+          onClick={() => handleCardClick("Won")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Won"
             ? "border-green-500 ring-2 ring-green-500/20"
             : "border-gray-200 dark:border-gray-700 hover:border-green-400"
             }`}
@@ -379,22 +398,22 @@ export default function ProposalsPage() {
               <div className="flex-1 min-w-0">
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("Approved")}
+                  onClick={() => handleCardClick("Won")}
                   className="hover:underline block">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Awarded</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Won</p>
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("Approved")}
+                  onClick={() => handleCardClick("Won")}
                   className="hover:underline block">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.awardedCount}</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.wonCount}</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">Awarded</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.awardedValue)}</p>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.wonValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Approved" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
+              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Won" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -405,9 +424,9 @@ export default function ProposalsPage() {
               <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline">
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("Approved")}
+                  onClick={() => handleCardClick("Won")}
                   className="hover:underline block">
-                  View awarded
+                  View won
                 </Link>
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -433,13 +452,17 @@ export default function ProposalsPage() {
                   className="w-full pl-3 pr-10 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
                 >
                   <option value="All">All</option>
-                  <option value="Lead">Lead</option>
-                  <option value="Draft">In Progress (Draft/Requested)</option>
-                  <option value="Pending Review">Awaiting Review</option>
-                  <option value="Approved">Awarded/Approved</option>
-                  <option disabled>──────────</option>
-                  {(["Quote Requested", "Quote Ready", "Proposal Sent", "Negotiation", "Under Review", "Accepted", "Awarded", "Rejected", "Expired"] as TabFilter[]).map(tab => (
-                    <option key={tab} value={tab}>{tab}</option>
+                  <option value="Pipeline">Pipeline</option>
+                  <option value="Draft">In Progress</option>
+                  <option value="Client Review">Client Review</option>
+                  <option value="Won">Won</option>
+
+                  {Array.from(new Set(
+                    (availableStatuses.length > 0 ? availableStatuses : proposals.map(p => p.status))
+                      .filter(Boolean)
+                      .map(s => typeof s === 'object' ? (s as any).value || (s as any).label : String(s))
+                  )).sort().map(status => (
+                    <option key={`status-${status}`} value={status}>{status}</option>
                   ))}
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
@@ -514,7 +537,7 @@ export default function ProposalsPage() {
                     className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
-                    Actions
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -536,8 +559,8 @@ export default function ProposalsPage() {
                     </td>
                   </tr>
                 ) : (
-                  paginatedProposals.map((proposal) => (
-                    <tr key={proposal.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  paginatedProposals.map((proposal, index) => (
+                    <tr key={proposal.id || index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                       <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left">
                         <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
                           <div title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
@@ -577,15 +600,7 @@ export default function ProposalsPage() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                           </button>
-                          <button
-                            onClick={(e) => handleDownloadProposal(e, proposal.id)}
-                            className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
-                            title="Download proposal"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            </svg>
-                          </button>
+
                         </div>
                       </td>
                     </tr>

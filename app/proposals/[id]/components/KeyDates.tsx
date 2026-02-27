@@ -23,7 +23,7 @@ export default function KeyDates({ proposal }: KeyDatesProps) {
             <div className="px-6 pb-6 text-sm">
                 <div className="grid grid-cols-2 md:grid-cols-3 w1500:grid-cols-5 gap-4">
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 whitespace-nowrap">Account Rep</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 whitespace-nowrap">Account Rep (Verified)</label>
                         <input type="text" readOnly value={proposal.accountExecutive} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={proposal.accountExecutive} />
                     </div>
                     <div>

@@ -217,7 +217,6 @@ export default function FilesTab({
                             />
                         </th>
                         <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} />
-                        <SortableHeader label="Category" field="category" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} />
                         <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} />
@@ -256,11 +255,6 @@ export default function FilesTab({
                                         {getFileIcon(file.fileType)}
                                         <span className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2" title={file.fileName}>{file.fileName}</span>
                                     </div>
-                                </td>
-                                <td className="px-3 py-2 text-left">
-                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                        {file.category}
-                                    </span>
                                 </td>
                                 <td className="px-3 py-2 text-left">
                                     <span className="text-sm  text-gray-600 dark:text-gray-400">{file.fileType}</span>
