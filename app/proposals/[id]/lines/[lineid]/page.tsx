@@ -713,174 +713,173 @@ export default function ProposalProductDetailPage({
                             Product Information
                         </h3>
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-3">
-                        {/* Column 1 */}
-                        <div className="space-y-3">
-                            {/* Product Name */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    Product Name
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.name}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
-                                />
-                            </div>
-                            {/* Description */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    Description
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.description || "No description available"}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
-                                    title={product.description}
-                                />
-                            </div>
-                            {/* Manufacturer DBA */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    Manufacturer DBA
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.manufacturer}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
-                                />
-                            </div>
-                            {/* Product Family */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    Product Family
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.productFamily}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-primary font-medium focus:outline-none cursor-default"
-                                />
-                            </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-x-4 gap-y-3">
+                        {/* Product Name */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                Product Name
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.name}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                            />
                         </div>
 
-                        {/* Column 2 */}
-                        <div className="space-y-3">
-                            {/* Product Grouping */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    Product Grouping
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.productGrouping}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
-                                />
-                            </div>
-                            {/* Grouping */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    Grouping
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.grouping}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
-                                />
-                            </div>
-                            {/* IsTaxable */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    IsTaxable
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.isTaxable}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
-                                />
-                            </div>
-                            {/* Available to Sell */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    Available to Sell
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.availableToSell?.toLocaleString() || "0"}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white font-mono focus:outline-none cursor-default"
-                                />
-                            </div>
+                        {/* Manufacturer DBA */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                Manufacturer DBA
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.manufacturer}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                            />
                         </div>
 
-                        {/* Column 3 */}
-                        <div className="space-y-3">
-                            {/* Site */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    Site
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.site}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
-                                />
-                            </div>
-                            {/* Inventory Account */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    Inventory Account
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.inventoryAccount}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
-                                />
-                            </div>
-                            {/* Unit Cost */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    Unit Cost
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.unitCost}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
-                                />
-                            </div>
-                            {/* Total Cost */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
-                                    Total Cost
-                                </label>
-                                <input
-                                    type="text"
-                                    readOnly
-                                    value={product.totalCost}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
-                                />
-                            </div>
+                        {/* Description */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                Description
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.description || "No description available"}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                title={product.description}
+                            />
+                        </div>
+
+                        {/* Product Family */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                Product Family
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.productFamily}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-primary font-medium focus:outline-none cursor-default"
+                            />
+                        </div>
+
+                        {/* Product Grouping */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                Product Grouping
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.productGrouping}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                            />
+                        </div>
+
+                        {/* Grouping */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                Grouping
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.grouping}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                            />
+                        </div>
+
+                        {/* IsTaxable */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                IsTaxable
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.isTaxable}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                            />
+                        </div>
+
+                        {/* Available to Sell */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                Available to Sell
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.availableToSell?.toLocaleString() || "0"}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white font-mono focus:outline-none cursor-default"
+                            />
+                        </div>
+
+                        {/* Site */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                Site
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.site}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                            />
+                        </div>
+
+                        {/* Inventory Account */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                Inventory Account
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.inventoryAccount}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                            />
+                        </div>
+
+                        {/* Unit Cost */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                Unit Cost
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.unitCost}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                            />
+                        </div>
+
+                        {/* Total Cost */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                                Total Cost
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.totalCost}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                            />
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Row 2: Order Details */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            < div className="grid grid-cols-1 lg:grid-cols-5 gap-4" >
 
 
                 {/* Details Card - Full width */}
-                <div className="lg:col-span-5 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4">
+                < div className="lg:col-span-5 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4" >
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm ">
                             <thead className="bg-primary-light dark:bg-gray-900">
@@ -921,107 +920,119 @@ export default function ProposalProductDetailPage({
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
 
             {/* Row 3: Related Items Tabs (Fulfillments, Purchases, Returns) */}
-            <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+            < div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4" >
                 {/* Tabs Header */}
-                <div className="flex flex-nowrap gap-4 overflow-x-auto no-scrollbar mb-6 items-center">
-                    {[
-                        { id: "taxes", label: "Taxes", count: product.taxDetail ? 1 : 0 },
-                        { id: "fulfillment", label: "Fulfillment", count: (fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length) },
-                        { id: "purchases", label: "Purchases", count: (purchasesData.purchaseOrders.length + purchasesData.supplierBills.length) },
-                        { id: "returns", label: "Returns", count: (returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length) }
-                    ].map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id as any)}
-                            className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${activeTab === tab.id
-                                ? "bg-primary text-white"
-                                : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                                }`}
-                        >
-                            {tab.label}
-                            {tab.count !== undefined && tab.count > 0 && (
-                                " (" + tab.count + ")"
-                            )}
-                        </button>
-                    ))}
-                </div>
+                < div className="flex flex-nowrap gap-4 overflow-x-auto no-scrollbar mb-6 items-center" >
+                    {
+                        [
+                            { id: "taxes", label: "Taxes", count: product.taxDetail ? 1 : 0 },
+                            { id: "fulfillment", label: "Fulfillment", count: (fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length) },
+                            { id: "purchases", label: "Purchases", count: (purchasesData.purchaseOrders.length + purchasesData.supplierBills.length) },
+                            { id: "returns", label: "Returns", count: (returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length) }
+                        ].map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id as any)}
+                                className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${activeTab === tab.id
+                                    ? "bg-primary text-white"
+                                    : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                                    }`}
+                            >
+                                {tab.label}
+                                {tab.count !== undefined && tab.count > 0 && (
+                                    " (" + tab.count + ")"
+                                )}
+                            </button>
+                        ))
+                    }
+                </div >
 
                 {/* Tab Content */}
                 <div>
-                    {activeTab === "fulfillment" && (
-                        <LineFulfillmentsTab
-                            fulfillmentData={fulfillmentData}
-                            loading={fulfillmentLoading}
-                            activeTab={fulfillmentActiveTab}
-                            onTabChange={setFulfillmentActiveTab}
-                        />
-                    )}
-                    {activeTab === "purchases" && (
-                        <LinePurchasesTab
-                            purchasesData={purchasesData}
-                            loading={purchasesLoading}
-                        />
-                    )}
-                    {activeTab === "returns" && (
-                        <LineReturnsTab
-                            returnsData={returnsData}
-                            loading={returnsLoading}
-                        />
-                    )}
-                    {activeTab === "taxes" && (
-                        <LineTaxesTab
-                            taxData={product.taxDetail}
-                            loading={loading}
-                        />
-                    )}
-                </div>
-            </div>
+                    {
+                        activeTab === "fulfillment" && (
+                            <LineFulfillmentsTab
+                                fulfillmentData={fulfillmentData}
+                                loading={fulfillmentLoading}
+                                activeTab={fulfillmentActiveTab}
+                                onTabChange={setFulfillmentActiveTab}
+                            />
+                        )
+                    }
+                    {
+                        activeTab === "purchases" && (
+                            <LinePurchasesTab
+                                purchasesData={purchasesData}
+                                loading={purchasesLoading}
+                            />
+                        )
+                    }
+                    {
+                        activeTab === "returns" && (
+                            <LineReturnsTab
+                                returnsData={returnsData}
+                                loading={returnsLoading}
+                            />
+                        )
+                    }
+                    {
+                        activeTab === "taxes" && (
+                            <LineTaxesTab
+                                taxData={product.taxDetail}
+                                loading={loading}
+                            />
+                        )
+                    }
+                </div >
+            </div >
 
             {/* Navigation Buttons - Below Order Details, Right aligned */}
-            <div className="flex items-center justify-end gap-2 mt-4">
+            < div className="flex items-center justify-end gap-2 mt-4" >
                 {/* Previous Line Button */}
-                {hasPrevLine ? (
-                    <Link
-                        href={`/proposals/${id}/lines/${prevLineId}`}
-                        className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
-                    >
-                        <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                {
+                    hasPrevLine ? (
+                        <Link
+                            href={`/proposals/${id}/lines/${prevLineId}`}
+                            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
                         >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15 19l-7-7 7-7"
-                            />
-                        </svg>
-                        Prev
-                    </Link>
-                ) : (
-                    <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
-                        <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15 19l-7-7 7-7"
-                            />
-                        </svg>
-                        Prev
-                    </span>
-                )}
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15 19l-7-7 7-7"
+                                />
+                            </svg>
+                            Prev
+                        </Link>
+                    ) : (
+                        <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15 19l-7-7 7-7"
+                                />
+                            </svg>
+                            Prev
+                        </span>
+                    )
+                }
 
                 {/* Line indicator */}
                 <span className="text-xs text-gray-500 dark:text-gray-400 px-2">
@@ -1029,45 +1040,47 @@ export default function ProposalProductDetailPage({
                 </span>
 
                 {/* Next Line Button */}
-                {hasNextLine ? (
-                    <Link
-                        href={`/proposals/${id}/lines/${nextLineId}`}
-                        className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
-                    >
-                        Next
-                        <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                {
+                    hasNextLine ? (
+                        <Link
+                            href={`/proposals/${id}/lines/${nextLineId}`}
+                            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
                         >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 5l7 7-7 7"
-                            />
-                        </svg>
-                    </Link>
-                ) : (
-                    <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
-                        Next
-                        <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 5l7 7-7 7"
-                            />
-                        </svg>
-                    </span>
-                )}
-            </div>
-        </Sidebar>
+                            Next
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                        </Link>
+                    ) : (
+                        <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
+                            Next
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                        </span>
+                    )
+                }
+            </div >
+        </Sidebar >
     );
 }

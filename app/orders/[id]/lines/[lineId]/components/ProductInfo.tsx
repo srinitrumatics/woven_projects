@@ -42,125 +42,131 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                 </h3>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Column 1 */}
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
-                            Product Name
-                        </label>
-                        <input
-                            type="text"
-                            readOnly
-                            value={product.name || ''}
-                            className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
-                            title={product.name}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
-                            Description
-                        </label>
-                        <input
-                            type="text"
-                            readOnly
-                            value={product.description || 'No description available'}
-                            className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
-                            title={product.description}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
-                            Manufacturer
-                        </label>
-                        <input
-                            type="text"
-                            readOnly
-                            value={product.manufacturer || ''}
-                            className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
-                            title={product.manufacturer}
-                        />
-                    </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-4">
+                {/* Product Name */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        Product Name
+                    </label>
+                    <input
+                        type="text"
+                        readOnly
+                        value={product.name || ''}
+                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        title={product.name}
+                    />
                 </div>
 
-                {/* Column 2 */}
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
-                            Manufacturer DBA
-                        </label>
-                        <input
-                            type="text"
-                            readOnly
-                            value={product.manufacturerDBA || ''}
-                            className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
-                            title={product.manufacturerDBA}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
-                            Product Family
-                        </label>
-                        <input
-                            type="text"
-                            readOnly
-                            value={product.productFamily || ''}
-                            className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
-                            title={product.productFamily}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
-                            Is Taxable
-                        </label>
-                        <input
-                            type="text"
-                            readOnly
-                            value={product.isTaxable || ''}
-                            className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
-                            title={product.isTaxable}
-                        />
-                    </div>
+                {/* Manufacturer DBA */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        Manufacturer DBA
+                    </label>
+                    <input
+                        type="text"
+                        readOnly
+                        value={product.manufacturerDBA || ''}
+                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        title={product.manufacturerDBA}
+                    />
                 </div>
 
-                {/* Column 3 */}
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
-                            Site
-                        </label>
-                        <input
-                            type="text"
-                            readOnly
-                            value={product.site || ''}
-                            className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
-                            title={product.site}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
-                            Inventory Account
-                        </label>
-                        <input
-                            type="text"
-                            readOnly
-                            value={product.inventoryAccount || ''}
-                            className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
-                            title={product.inventoryAccount}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
-                            Available to Sell
-                        </label>
-                        <input
-                            type="text"
-                            readOnly
-                            value={formatNumber(product.availableToSell, 0)}
-                            className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
-                            title={formatNumber(product.availableToSell, 0)}
-                        />
-                    </div>
+                {/* Description */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        Description
+                    </label>
+                    <input
+                        type="text"
+                        readOnly
+                        value={product.description || 'No description available'}
+                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        title={product.description}
+                    />
+                </div>
+
+                {/* Product Family */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        Product Family
+                    </label>
+                    <input
+                        type="text"
+                        readOnly
+                        value={product.productFamily || ''}
+                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        title={product.productFamily}
+                    />
+                </div>
+
+                {/* Manufacturer */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        Manufacturer
+                    </label>
+                    <input
+                        type="text"
+                        readOnly
+                        value={product.manufacturer || ''}
+                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        title={product.manufacturer}
+                    />
+                </div>
+
+                {/* Is Taxable */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        Is Taxable
+                    </label>
+                    <input
+                        type="text"
+                        readOnly
+                        value={product.isTaxable || ''}
+                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        title={product.isTaxable}
+                    />
+                </div>
+
+                {/* Site */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        Site
+                    </label>
+                    <input
+                        type="text"
+                        readOnly
+                        value={product.site || ''}
+                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        title={product.site}
+                    />
+                </div>
+
+                {/* Inventory Account */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        Inventory Account
+                    </label>
+                    <input
+                        type="text"
+                        readOnly
+                        value={product.inventoryAccount || ''}
+                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        title={product.inventoryAccount}
+                    />
+                </div>
+
+                {/* Available to Sell */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+                        Available to Sell
+                    </label>
+                    <input
+                        type="text"
+                        readOnly
+                        value={formatNumber(product.availableToSell, 0)}
+                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none"
+                        title={formatNumber(product.availableToSell, 0)}
+                    />
                 </div>
             </div>
         </div>
