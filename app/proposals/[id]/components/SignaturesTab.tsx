@@ -7,8 +7,8 @@ interface SignaturesTabProps {
 export default function SignaturesTab({ proposal }: SignaturesTabProps) {
     return (
         <div>
-            <div className="overflow-x-auto flex justify-center">
-                <table className="w-full w-[70%]">
+            <div className="overflow-x-auto">
+                <table className="w-full">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
                             <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">&nbsp;</th>

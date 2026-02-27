@@ -78,7 +78,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   // Tab and sorting state
   const [activeTab, setActiveTab] = useState<ProposalTabType>("products");
-  const [searchQuery, setSearchQuery] = useState("");
 
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
 
@@ -1285,27 +1284,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
           <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700">
-              {/* Search — top on mobile/tablet (<1024px), left on desktop (>=1024px) */}
-              <div className="flex-1 relative w-full">
-                <input
-                  type="text"
-                  placeholder={`Search in ${activeTab}...`}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
-                <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-
-              {/* Tab buttons — below search on mobile/tablet (<1024px), right on desktop (>=1024px) */}
-              <div className="flex-shrink-0">
+              {/* Tab buttons — left on desktop (>=1024px) */}
+              <div className="flex-1">
                 <ProposalTabs
                   activeTab={activeTab}
                   onTabChange={(tab) => {
                     setActiveTab(tab);
-                    setSearchQuery(""); // Reset search when changing tabs
                   }}
                   counts={{
                     products: proposedProducts.length,
@@ -1325,11 +1309,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             <div className="p-4">
               {activeTab === 'products' && (
                 <ProductsTab
-                  products={sortData(proposedProducts.filter(p =>
-                    (p.productName?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-                    (p.Name?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-                    (p.description?.toLowerCase() || "").includes(searchQuery.toLowerCase())
-                  ), productSortField, productSortDirection)}
+                  products={sortData(proposedProducts, productSortField, productSortDirection)}
                   loading={tabLoading}
                   proposalId={proposal.id}
                   sortField={productSortField}
@@ -1346,11 +1326,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
               {activeTab === 'elements' && (
                 <ElementsTab
-                  elements={sortData(proposalElements.filter(e =>
-                    (e.proposalElement?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-                    (e.description?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-                    (e.wbs?.toLowerCase() || "").includes(searchQuery.toLowerCase())
-                  ), elementSortField, elementSortDirection)}
+                  elements={sortData(proposalElements, elementSortField, elementSortDirection)}
                   loading={tabLoading}
                   sortField={elementSortField}
                   sortDirection={elementSortDirection}
@@ -1362,10 +1338,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
               {activeTab === 'files' && (
                 <FilesTab
-                  files={sortData(proposalFiles.filter(f =>
-                    (f.fileName?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-                    (f.uploadedBy?.toLowerCase() || "").includes(searchQuery.toLowerCase())
-                  ), fileSortField, fileSortDirection)}
+                  files={sortData(proposalFiles, fileSortField, fileSortDirection)}
                   loading={tabLoading}
                   selectedFiles={selectedFiles}
                   onFileSelect={handleFileSelect}
@@ -1385,11 +1358,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
               {activeTab === 'projects' && (
                 <ProjectsTab
-                  projects={sortData(projects.filter(p =>
-                    (p.name?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-                    (p.projectNumber?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-                    (p.customerAccountName?.toLowerCase() || "").includes(searchQuery.toLowerCase())
-                  ), projectSortField, projectSortDirection)}
+                  projects={sortData(projects, projectSortField, projectSortDirection)}
                   loading={tabLoading}
                   sortField={projectSortField}
                   sortDirection={projectSortDirection}
@@ -1401,11 +1370,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
               {activeTab === 'orders' && (
                 <OrdersTab
-                  orders={sortData(orders.filter(o =>
-                    (o.name?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-                    (o.customerPO?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-                    (o.status?.toLowerCase() || "").includes(searchQuery.toLowerCase())
-                  ), orderSortField, orderSortDirection)}
+                  orders={sortData(orders, orderSortField, orderSortDirection)}
                   loading={tabLoading}
                   sortField={orderSortField}
                   sortDirection={orderSortDirection}
@@ -1461,7 +1426,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
           <div className="h-20" />
         </>
-      )}
+      )
+      }
     </Sidebar >
   );
 }
