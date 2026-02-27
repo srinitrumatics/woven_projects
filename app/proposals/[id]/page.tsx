@@ -1285,7 +1285,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700">
               {/* Tab buttons — left on desktop (>=1024px) */}
-              <div className="flex-1">
+              <div className="w-full lg:flex-1 min-w-0">
                 <ProposalTabs
                   activeTab={activeTab}
                   onTabChange={(tab) => {

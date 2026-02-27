@@ -32,7 +32,7 @@ export default function ProposalTabs({ activeTab, onTabChange, counts = {} }: Pr
     ];
 
     return (
-        <div className="flex flex-nowrap gap-2 overflow-x-auto no-scrollbar">
+        <div className="flex flex-nowrap gap-2 overflow-x-auto no-scrollbar w-full">
             {tabs.map((tab) => (
                 <button
                     key={tab.id}
