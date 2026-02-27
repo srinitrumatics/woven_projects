@@ -62,6 +62,7 @@ interface ProductData {
     name: string;
     sku: string;
     status: string;
+    lineName: string;
     description: string;
     productFamily: string;
     productGrouping: string;
@@ -132,12 +133,13 @@ export default function QuoteLineDetailPage({
                 }
 
                 const data = await res.json();
-
+                console.log("Fetched quote lines data:", data);
                 if (data && data.length > 0) {
                     const mappedLines: ProductData[] = data.map((item: any) => ({
                         id: item.Id,
                         name: item.Product_Name || "Unknown Product",
                         sku: item.sku || "",
+                        lineName: item.Name || "",
                         status: item.Status__c || "Draft",
                         description: item.Product_Description__c || "",
                         productFamily: item.Product_Family__c || "-",
@@ -283,10 +285,10 @@ export default function QuoteLineDetailPage({
                             <span>&gt;</span>
                             <Link href={`/quotes/${id}`} className="hover:underline">Quote Details</Link>
                             <span>&gt;</span>
-                            <span className="text-gray-900 font-medium">{product.sku}</span>
+                            <span className="text-gray-900 font-medium">{product.lineName}</span>
                         </div>
                         <div className="flex flex-col">
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{product.sku}</h1>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{product.lineName}</h1>
                         </div>
                     </div>
                     <button
