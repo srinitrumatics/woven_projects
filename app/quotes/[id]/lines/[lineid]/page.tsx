@@ -502,7 +502,7 @@ export default function QuoteLineDetailPage({
             {/* Bottom Tabs */}
             <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                 {/* Tabs Header */}
-                <div className="flex flex-nowrap gap-4 overflow-x-auto no-scrollbar mb-6 items-center">
+                <div className="flex flex-nowrap gap-2 overflow-x-auto no-scrollbar mb-6 items-center">
                     {[
                         {
                             id: "taxes",
@@ -522,7 +522,7 @@ export default function QuoteLineDetailPage({
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
-                            className={`px-4 py-2 rounded-lg transition-colors flex-1 sm:flex-none ${activeTab === tab.id
+                            className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === tab.id
                                 ? "bg-primary text-white"
                                 : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                                 }`}
