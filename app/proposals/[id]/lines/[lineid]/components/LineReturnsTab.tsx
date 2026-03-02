@@ -114,7 +114,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                             : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                             }`}
                     >
-                        {tab.label} ({tab.count})
+                        {tab.label} {tab.count > 0 && `(${tab.count})`}
                     </button>
                 ))}
             </div>

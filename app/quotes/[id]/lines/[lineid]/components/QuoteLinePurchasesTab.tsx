@@ -179,7 +179,7 @@ export default function QuoteLinePurchasesTab({
             {/* Sub Tabs */}
             <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-6">
                 {[
-                    { key: "Orders", label: "Purchase Order Lines ", count: poliData.length },
+                    { key: "Orders", label: "Purchase Order Lines", count: poliData.length },
                     { key: "Bills", label: "Supplier Bill Lines", count: sbliData.length }
                 ].map((tab) => (
                     <button
@@ -190,7 +190,7 @@ export default function QuoteLinePurchasesTab({
                             : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                             }`}
                     >
-                        {tab.label} ({tab.count})
+                        {tab.label} {tab.count > 0 && `(${tab.count})`}
                     </button>
                 ))}
             </div>

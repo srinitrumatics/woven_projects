@@ -1,4 +1,4 @@
-import { Invoice, InvoiceStats, Payment, PaymentMethod, PaymentStatus } from "./types";
+import { Invoice, InvoiceStatus, InvoiceStats, Payment, PaymentMethod, PaymentStatus, InvoiceDetails, InvoiceLine } from "./types";
 
 export const mockInvoices: Invoice[] = [
   {
@@ -15,7 +15,13 @@ export const mockInvoices: Invoice[] = [
     description: "Q4 2024 Product Order - Premium Selection",
     lineItemCount: 8,
     relatedOrderNumber: "ORD-2024-0845",
-    salesOrderNumber: "SO-2024-0412"
+    salesOrderNumber: "SO-2024-0412",
+    purchaseOrderNumber: "PO-2024-9981",
+    proposalName: "Oakland Distribution Q4",
+    customerOrder: "CUST-ORD-8872",
+    customerPO: "BILL-PO-7721",
+    paymentTerms: "NET 30",
+    collectionStatus: "On Track"
   },
   {
     id: "2",
@@ -31,7 +37,13 @@ export const mockInvoices: Invoice[] = [
     description: "Holiday Season Stock - Edibles Focus",
     lineItemCount: 5,
     relatedOrderNumber: "ORD-2024-0823",
-    salesOrderNumber: "SO-2024-0398"
+    salesOrderNumber: "SO-2024-0398",
+    purchaseOrderNumber: "PO-2024-9975",
+    proposalName: "Green Valley Holiday",
+    customerOrder: "CUST-ORD-8865",
+    customerPO: "GV-PO-1122",
+    paymentTerms: "NET 15",
+    collectionStatus: "Follow Up Required"
   },
   {
     id: "3",
@@ -47,7 +59,13 @@ export const mockInvoices: Invoice[] = [
     description: "New Store Opening - Initial Stock",
     lineItemCount: 12,
     relatedOrderNumber: "ORD-2024-0891",
-    salesOrderNumber: "SO-2024-0445"
+    salesOrderNumber: "SO-2024-0445",
+    purchaseOrderNumber: "PO-2024-9992",
+    proposalName: "Urban Wellness Expansion",
+    customerOrder: "CUST-ORD-8889",
+    customerPO: "UW-PO-4455",
+    paymentTerms: "NET 30",
+    collectionStatus: "Awaiting Receipt"
   },
   {
     id: "4",
@@ -63,7 +81,13 @@ export const mockInvoices: Invoice[] = [
     description: "Monthly Restock - Standard Mix",
     lineItemCount: 6,
     relatedOrderNumber: "ORD-2024-0867",
-    salesOrderNumber: "SO-2024-0429"
+    salesOrderNumber: "SO-2024-0429",
+    purchaseOrderNumber: "PO-2024-9985",
+    proposalName: "Monthly Standard SF",
+    customerOrder: "CUST-ORD-8878",
+    customerPO: "NR-PO-3321",
+    paymentTerms: "NET 30",
+    collectionStatus: "Partial Payment"
   },
   {
     id: "5",
@@ -79,7 +103,13 @@ export const mockInvoices: Invoice[] = [
     description: "Trial Order - Sample Products",
     lineItemCount: 4,
     relatedOrderNumber: "ORD-2024-0756",
-    salesOrderNumber: "SO-2024-0367"
+    salesOrderNumber: "SO-2024-0367",
+    purchaseOrderNumber: "PO-2024-9856",
+    proposalName: "Trial Wellness Products",
+    customerOrder: "CUST-ORD-8752",
+    customerPO: "WW-PO-0092",
+    paymentTerms: "COD",
+    collectionStatus: "Disputed"
   },
   {
     id: "6",
@@ -95,7 +125,13 @@ export const mockInvoices: Invoice[] = [
     description: "Fall Collection - Premium Flower",
     lineItemCount: 7,
     relatedOrderNumber: "ORD-2024-0901",
-    salesOrderNumber: "SO-2024-0451"
+    salesOrderNumber: "SO-2024-0451",
+    purchaseOrderNumber: "PO-2024-9998",
+    proposalName: "Fall Collection Restock",
+    customerOrder: "CUST-ORD-8895",
+    customerPO: "TG-PO-6677",
+    paymentTerms: "NET 30",
+    collectionStatus: "Active"
   },
   {
     id: "7",
@@ -111,7 +147,13 @@ export const mockInvoices: Invoice[] = [
     description: "Year-End Inventory Buildup",
     lineItemCount: 15,
     relatedOrderNumber: "ORD-2024-0856",
-    salesOrderNumber: "SO-2024-0418"
+    salesOrderNumber: "SO-2024-0418",
+    purchaseOrderNumber: "PO-2024-9983",
+    proposalName: "SF Year-End Inventory",
+    customerOrder: "CUST-ORD-8875",
+    customerPO: "BL-PO-1134",
+    paymentTerms: "NET 30",
+    collectionStatus: "Settled"
   },
   {
     id: "8",
@@ -127,7 +169,13 @@ export const mockInvoices: Invoice[] = [
     description: "Weekly Restock - High Demand Items",
     lineItemCount: 5,
     relatedOrderNumber: "ORD-2024-0912",
-    salesOrderNumber: "SO-2024-0459"
+    salesOrderNumber: "SO-2024-0459",
+    purchaseOrderNumber: "PO-2024-9999",
+    proposalName: "Weekly Restock Phase 2",
+    customerOrder: "CUST-ORD-8902",
+    customerPO: "HH-PO-9988",
+    paymentTerms: "NET 15",
+    collectionStatus: "Pending Action"
   },
   {
     id: "9",
@@ -143,7 +191,13 @@ export const mockInvoices: Invoice[] = [
     description: "Concentrates & Vapes Expansion",
     lineItemCount: 9,
     relatedOrderNumber: "ORD-2024-0789",
-    salesOrderNumber: "SO-2024-0382"
+    salesOrderNumber: "SO-2024-0382",
+    purchaseOrderNumber: "PO-2024-9872",
+    proposalName: "Pure Wellness Expansion",
+    customerOrder: "CUST-ORD-8775",
+    customerPO: "PWM-PO-5544",
+    paymentTerms: "NET 30",
+    collectionStatus: "Escalated"
   },
   {
     id: "10",
@@ -159,7 +213,13 @@ export const mockInvoices: Invoice[] = [
     description: "Multi-Location Stock - 3 Stores",
     lineItemCount: 18,
     relatedOrderNumber: "ORD-2024-0834",
-    salesOrderNumber: "SO-2024-0407"
+    salesOrderNumber: "SO-2024-0407",
+    purchaseOrderNumber: "PO-2024-9978",
+    proposalName: "Multi-Location Restock",
+    customerOrder: "CUST-ORD-8868",
+    customerPO: "GL-PO-2233",
+    paymentTerms: "NET 45",
+    collectionStatus: "Completed"
   },
   {
     id: "11",
@@ -175,7 +235,13 @@ export const mockInvoices: Invoice[] = [
     description: "Premium Pre-Roll Collection",
     lineItemCount: 6,
     relatedOrderNumber: "ORD-2024-0905",
-    salesOrderNumber: "SO-2024-0453"
+    salesOrderNumber: "SO-2024-0453",
+    purchaseOrderNumber: "PO-2024-9995",
+    proposalName: "Phase 1 Pre-Roll Launch",
+    customerOrder: "CUST-ORD-8898",
+    customerPO: "ED-PO-4455",
+    paymentTerms: "NET 30",
+    collectionStatus: "Awaiting Confirmation"
   },
   {
     id: "12",
@@ -191,7 +257,13 @@ export const mockInvoices: Invoice[] = [
     description: "Bulk Order - Edibles & Concentrates",
     lineItemCount: 10,
     relatedOrderNumber: "ORD-2024-0848",
-    salesOrderNumber: "SO-2024-0414"
+    salesOrderNumber: "SO-2024-0414",
+    purchaseOrderNumber: "PO-2024-9982",
+    proposalName: "Coastal Bulk Purchase",
+    customerOrder: "CUST-ORD-8873",
+    customerPO: "CC-PO-3344",
+    paymentTerms: "NET 30",
+    collectionStatus: "Active Recovery"
   },
   {
     id: "13",
@@ -207,7 +279,13 @@ export const mockInvoices: Invoice[] = [
     description: "New Product Trial - Topicals",
     lineItemCount: 4,
     relatedOrderNumber: "ORD-2024-0918",
-    salesOrderNumber: "SO-2024-0462"
+    salesOrderNumber: "SO-2024-0462",
+    purchaseOrderNumber: "PO-2024-9990",
+    proposalName: "Topicals Trial Launch",
+    customerOrder: "CUST-ORD-8905",
+    customerPO: "MV-PO-2211",
+    paymentTerms: "NET 30",
+    collectionStatus: "Drafting"
   },
   {
     id: "14",
@@ -223,7 +301,13 @@ export const mockInvoices: Invoice[] = [
     description: "Holiday Special - Premium Selection",
     lineItemCount: 14,
     relatedOrderNumber: "ORD-2024-0839",
-    salesOrderNumber: "SO-2024-0409"
+    salesOrderNumber: "SO-2024-0409",
+    purchaseOrderNumber: "PO-2024-9979",
+    proposalName: "Sunset Holiday Premium",
+    customerOrder: "CUST-ORD-8869",
+    customerPO: "SR-PO-8877",
+    paymentTerms: "NET 60",
+    collectionStatus: "Completed"
   },
   {
     id: "15",
@@ -239,7 +323,13 @@ export const mockInvoices: Invoice[] = [
     description: "Organic Flower Collection",
     lineItemCount: 7,
     relatedOrderNumber: "ORD-2024-0897",
-    salesOrderNumber: "SO-2024-0448"
+    salesOrderNumber: "SO-2024-0448",
+    purchaseOrderNumber: "PO-2024-9994",
+    proposalName: "Organic Bloom Expansion",
+    customerOrder: "CUST-ORD-8897",
+    customerPO: "OO-PO-4455",
+    paymentTerms: "NET 30",
+    collectionStatus: "Pending Review"
   },
   {
     id: "16",
@@ -255,7 +345,13 @@ export const mockInvoices: Invoice[] = [
     description: "October Special Order",
     lineItemCount: 6,
     relatedOrderNumber: "ORD-2024-0745",
-    salesOrderNumber: "SO-2024-0361"
+    salesOrderNumber: "SO-2024-0361",
+    purchaseOrderNumber: "PO-2024-9842",
+    proposalName: "October Harvest Special",
+    customerOrder: "CUST-ORD-8742",
+    customerPO: "VG-PO-1166",
+    paymentTerms: "NET 15",
+    collectionStatus: "Warning Issued"
   },
   {
     id: "17",
@@ -271,7 +367,13 @@ export const mockInvoices: Invoice[] = [
     description: "Group Order - 4 Locations",
     lineItemCount: 16,
     relatedOrderNumber: "ORD-2024-0915",
-    salesOrderNumber: "SO-2024-0460"
+    salesOrderNumber: "SO-2024-0460",
+    purchaseOrderNumber: "PO-2024-9997",
+    proposalName: "Pacific Group Expansion",
+    customerOrder: "CUST-ORD-8903",
+    customerPO: "PW-PO-3322",
+    paymentTerms: "NET 45",
+    collectionStatus: "Active"
   },
   {
     id: "18",
@@ -287,7 +389,13 @@ export const mockInvoices: Invoice[] = [
     description: "Concentrates Expansion Pack",
     lineItemCount: 8,
     relatedOrderNumber: "ORD-2024-0831",
-    salesOrderNumber: "SO-2024-0405"
+    salesOrderNumber: "SO-2024-0405",
+    purchaseOrderNumber: "PO-2024-9977",
+    proposalName: "Healing Concentrates Mix",
+    customerOrder: "CUST-ORD-8867",
+    customerPO: "HG-PO-1133",
+    paymentTerms: "NET 30",
+    collectionStatus: "Settled"
   },
   {
     id: "19",
@@ -303,7 +411,13 @@ export const mockInvoices: Invoice[] = [
     description: "Monthly Subscription - December",
     lineItemCount: 5,
     relatedOrderNumber: "ORD-2024-0909",
-    salesOrderNumber: "SO-2024-0456"
+    salesOrderNumber: "SO-2024-0456",
+    purchaseOrderNumber: "PO-2024-9993",
+    proposalName: "Verde Monthly Subs",
+    customerOrder: "CUST-ORD-8901",
+    customerPO: "VS-PO-9911",
+    paymentTerms: "NET 30",
+    collectionStatus: "Active"
   },
   {
     id: "20",
@@ -319,7 +433,13 @@ export const mockInvoices: Invoice[] = [
     description: "Full Product Line Restock",
     lineItemCount: 13,
     relatedOrderNumber: "ORD-2024-0859",
-    salesOrderNumber: "SO-2024-0421"
+    salesOrderNumber: "SO-2024-0421",
+    purchaseOrderNumber: "PO-2024-9987",
+    proposalName: "Emerald Full Restock",
+    customerOrder: "CUST-ORD-8882",
+    customerPO: "EC-PO-7755",
+    paymentTerms: "NET 30",
+    collectionStatus: "Partial Fulfillment"
   }
 ];
 
@@ -437,4 +557,78 @@ export const mockPayments: Record<string, Payment[]> = {
       processedBy: "Mark Thompson"
     }
   ]
+};
+// Helper to get full invoice details
+export const getMockInvoiceDetails = (id: string): InvoiceDetails | null => {
+  const baseInvoice = mockInvoices.find(inv => inv.id === id);
+  if (!baseInvoice) return null;
+
+  // Generate some mock line items if they don't exist for this specific ID
+  // For simplicity, we'll use the same items for all but calculate from base totals
+  const lines: InvoiceLine[] = [
+    {
+      id: "1",
+      invoiceLineName: "INLI-0001",
+      status: "Draft",
+      productName: "Reflect Plus Cloud monitoring",
+      productSku: "Reflect-Plus",
+      description: "Reflect Plus Cloud monitoring and management, up to 5 systems (monthly price)",
+      manufacturerDBA: "Reflect Systems",
+      quantity: 12,
+      unitPrice: 125.00,
+      discount: 0,
+      subtotal: 1500.00,
+      taxAmount: 225.00,
+      totalTaxesAmount: 225.00,
+      shippingCharges: 0,
+      total: 1725.00,
+      lineGrandTotal: 1725.00
+    },
+    {
+      id: "2",
+      invoiceLineName: "INLI-0002",
+      status: "Draft",
+      productName: "Apple iPad mini 8.3 inch",
+      productSku: "MN6B1LL/A",
+      description: "Apple 8.3'' iPad mini (7th Gen, 128GB, Wi-Fi Only, Starlight)",
+      manufacturerDBA: "Apple Inc",
+      quantity: 1,
+      unitPrice: 449.00,
+      discount: 5,
+      subtotal: 426.55,
+      taxAmount: 63.98,
+      totalTaxesAmount: 63.98,
+      shippingCharges: 10,
+      total: 490.53,
+      lineGrandTotal: 500.53
+    },
+  ];
+
+  const payments = mockPayments[id] || [];
+
+  // Calculate totals to match base invoice
+  const subtotal = lines.reduce((sum, l) => sum + l.subtotal, 0);
+  const taxTotal = subtotal * 0.15;
+  const discountTotal = lines.reduce((sum, l) => sum + (l.unitPrice * l.quantity * (l.discount / 100)), 0);
+  const shippingCost = 65.00;
+  const grandTotal = subtotal + taxTotal + shippingCost - discountTotal;
+
+  return {
+    ...baseInvoice,
+    billingAddress: "578 West Grand Ave, Oakland, CA 94612",
+    shippingAddress: "578 West Grand Ave, Oakland, CA 94612",
+    paymentTerms: "NET 30",
+    notes: "Customer requested expedited delivery. Premium products only.",
+    lines,
+    payments,
+    receivePayments: [],
+    creditMemos: [],
+    credits: [],
+    files: [],
+    subtotal,
+    taxTotal,
+    discountTotal,
+    shippingCost,
+    grandTotal
+  };
 };

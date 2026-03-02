@@ -8,9 +8,11 @@ import QuoteNotes from "./QuoteNotes";
 interface QuoteDetailsProps {
     quote: QuoteDetails;
     lines: QuoteLine[];
+    isUploading?: boolean;
+    handleFileUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function QuoteDetailsSection({ quote, lines }: QuoteDetailsProps) {
+export default function QuoteDetailsSection({ quote, lines, isUploading, handleFileUpload }: QuoteDetailsProps) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
             <div className="lg:col-span-7 flex flex-col gap-6 ">
@@ -30,7 +32,13 @@ export default function QuoteDetailsSection({ quote, lines }: QuoteDetailsProps)
                 {/* Notes Card */}
                 <QuoteNotes notes={quote.notes || ""} />
 
-                <QuoteSummary quote={quote} lines={lines} grandTotal={quote.grandTotal} />
+                <QuoteSummary
+                    quote={quote}
+                    lines={lines}
+                    grandTotal={quote.grandTotal}
+                    isUploading={isUploading}
+                    handleFileUpload={handleFileUpload}
+                />
             </div>
         </div>
     );

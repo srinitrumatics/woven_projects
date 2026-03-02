@@ -1006,6 +1006,29 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     const files = event.target.files;
     if (!files || files.length === 0 || !proposal) return;
 
+    const allowedExtensions = ['pdf', 'jpeg', 'jpg', 'png', 'csv', 'xls', 'xlsx', 'doc', 'docx', 'txt'];
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit
+
+    const invalidExtensionFiles = Array.from(files).filter(file => {
+      const ext = file.name.split('.').pop()?.toLowerCase() || '';
+      return !allowedExtensions.includes(ext);
+    });
+
+    const oversizedFiles = Array.from(files).filter(file => file.size > MAX_FILE_SIZE);
+
+    if (invalidExtensionFiles.length > 0 || oversizedFiles.length > 0) {
+      let errorMessage = '';
+      if (invalidExtensionFiles.length > 0) {
+        errorMessage += `The following files have invalid extensions and cannot be uploaded:\n${invalidExtensionFiles.map(f => `- ${f.name}`).join('\n')}\n\nAllowed: PDF, JPEG, PNG, CSV, XLS, XLSX, DOC, TXT\n\n`;
+      }
+      if (oversizedFiles.length > 0) {
+        errorMessage += `The following files exceed the 10MB limit:\n${oversizedFiles.map(f => `- ${f.name} (${(f.size / 1024 / 1024).toFixed(2)} MB)`).join('\n')}`;
+      }
+      alert(errorMessage);
+      event.target.value = '';
+      return;
+    }
+
     setIsUploading(true);
     try {
       const filePromises = Array.from(files).map(file => {

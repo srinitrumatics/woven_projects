@@ -61,10 +61,83 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
 
   const [loading, setLoading] = useState(true);
   const [tabLoading, setTabLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
   const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const allowedExtensions = ['pdf', 'jpeg', 'jpg', 'png', 'csv', 'xls', 'xlsx', 'doc', 'docx', 'txt'];
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit
+
+    const invalidExtensionFiles = Array.from(files).filter(file => {
+      const ext = file.name.split('.').pop()?.toLowerCase() || '';
+      return !allowedExtensions.includes(ext);
+    });
+
+    const oversizedFiles = Array.from(files).filter(file => file.size > MAX_FILE_SIZE);
+
+    if (invalidExtensionFiles.length > 0 || oversizedFiles.length > 0) {
+      let errorMessage = '';
+      if (invalidExtensionFiles.length > 0) {
+        errorMessage += `The following files have invalid extensions and cannot be uploaded:\n${invalidExtensionFiles.map(f => `- ${f.name}`).join('\n')}\n\nAllowed: PDF, JPEG, PNG, CSV, XLS, XLSX, DOC, TXT\n\n`;
+      }
+      if (oversizedFiles.length > 0) {
+        errorMessage += `The following files exceed the 10MB limit:\n${oversizedFiles.map(f => `- ${f.name} (${(f.size / 1024 / 1024).toFixed(2)} MB)`).join('\n')}`;
+      }
+      alert(errorMessage);
+      event.target.value = '';
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const filePromises = Array.from(files).map(file => {
+        return new Promise<{ fileName: string; fileType: string; base64Data: string; }>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result as string;
+            const base64Data = result.split(',')[1];
+            resolve({
+              fileName: file.name,
+              fileType: file.name.split('.').pop() || '',
+              base64Data: base64Data
+            });
+          };
+          reader.onerror = error => reject(error);
+          reader.readAsDataURL(file);
+        });
+      });
+
+      const filesData = await Promise.all(filePromises);
+
+      const response = await fetch(`/api/salesforce/quotes?action=uploadFiles`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          accountId: SF_ACCOUNT_ID,
+          contactId: SF_CONTACT_ID,
+          objectId: id,
+          files: filesData
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to upload files');
+
+      alert('Files uploaded successfully!');
+      window.location.reload();
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      alert('Failed to upload files. Please try again.');
+    } finally {
+      setIsUploading(false);
+      if (event.target) event.target.value = '';
+    }
+  };
 
   // Interactive column resizing
   const { widths, handleResize } = useResizableColumns({
@@ -538,7 +611,12 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
         onBack={() => router.push("/quotes")}
       />
 
-      <QuoteDetailsSection quote={quote} lines={quoteLines} />
+      <QuoteDetailsSection
+        quote={quote}
+        lines={quoteLines}
+        isUploading={isUploading}
+        handleFileUpload={handleFileUpload}
+      />
 
       <div className="mt-8">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">

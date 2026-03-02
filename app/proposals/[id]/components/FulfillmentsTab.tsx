@@ -55,7 +55,7 @@ export default function FulfillmentsTab({
                             : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                             }`}
                     >
-                        Customer Quotes ({fulfillmentData.customerQuotes.length})
+                        Customer Quotes {fulfillmentData.customerQuotes.length > 0 && `(${fulfillmentData.customerQuotes.length})`}
                     </button>
                     <button
                         onClick={() => onTabChange("sales")}
@@ -64,7 +64,7 @@ export default function FulfillmentsTab({
                             : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                             }`}
                     >
-                        Sales Orders ({fulfillmentData.salesOrders.length})
+                        Sales Orders {fulfillmentData.salesOrders.length > 0 && `(${fulfillmentData.salesOrders.length})`}
                     </button>
                     <button
                         onClick={() => onTabChange("invoices")}
@@ -73,7 +73,7 @@ export default function FulfillmentsTab({
                             : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                             }`}
                     >
-                        Invoices ({fulfillmentData.invoices.length})
+                        Invoices {fulfillmentData.invoices.length > 0 && `(${fulfillmentData.invoices.length})`}
                     </button>
                     <button
                         onClick={() => onTabChange("shipping")}
@@ -82,7 +82,7 @@ export default function FulfillmentsTab({
                             : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                             }`}
                     >
-                        Shipping Manifests ({fulfillmentData.shippingManifests.length})
+                        Shipping Manifests {fulfillmentData.shippingManifests.length > 0 && `(${fulfillmentData.shippingManifests.length})`}
                     </button>
                 </div>
 

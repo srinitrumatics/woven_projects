@@ -6,17 +6,21 @@ interface QuoteSummaryProps {
     quote: QuoteDetails;
     lines: QuoteLine[];
     grandTotal: number;
+    isUploading?: boolean;
+    handleFileUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function QuoteSummary({
     quote,
     lines,
-    grandTotal
+    grandTotal,
+    isUploading,
+    handleFileUpload
 }: QuoteSummaryProps) {
     const productsSubtotal = lines.reduce((sum, line) => sum + line.totalPrice, 0);
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col gap-6">
             <div className="flex items-center gap-3 mb-1">
                 <div className="w-9 h-9 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
                     <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,41 +33,32 @@ export default function QuoteSummary({
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col justify-between gap-2 p-1">
-                <div className="flex justify-between text-sm ">
+            <div className="flex-1 flex flex-col justify-between gap-2 p-2">
+                <div className="flex justify-between text-sm p-1">
                     <span className="text-gray-700 dark:text-gray-300">({lines.length}) Products - Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(productsSubtotal)}</span>
                 </div>
 
-                <div className="flex justify-between text-sm p-1">
+                <div className="flex justify-between text-sm p-2">
                     <span className="text-gray-700 dark:text-gray-300">({quote.serviceLinesCount}) Service - Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(quote.serviceTotal)}</span>
                 </div>
-                <div className="flex justify-between text-sm p-1">
+                <div className="flex justify-between text-sm p-2">
                     <span className="text-gray-700 dark:text-gray-300">Taxes</span>
                     <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(quote.taxTotal)}</span>
                 </div>
 
-                <div className="flex justify-between text-sm p-1">
+                <div className="flex justify-between text-sm p-2">
                     <span className="text-gray-700 dark:text-gray-300">Shipping</span>
                     <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(quote.shippingCost)}</span>
                 </div>
 
-                <div className="border-t-2 border-primary/20 dark:border-primary/40 pt-2 p-3">
+                <div className="border-t-2 border-primary/20 dark:border-primary/40 pt-2 border-b-2 pb-2">
                     <div className="flex justify-between text-lg font-bold">
                         <span className="text-gray-900 dark:text-white">Grand Total</span>
                         <span className="text-primary dark:text-primary">{formatCurrency(grandTotal)}</span>
                     </div>
                 </div>
-            </div>
-
-            <div className="border-t border-gray-300 dark:border-gray-600 pt-3 ">
-                <button className="w-full flex items-center justify-center gap-2 px-3 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:text-white dark:hover:border-primary transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    Download PDF
-                </button>
             </div>
 
 

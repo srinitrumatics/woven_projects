@@ -248,7 +248,7 @@ export default function QuoteLineFulfillmentsTab({
                             : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                             }`}
                     >
-                        {tab.label} ({tab.count})
+                        {tab.label} {tab.count > 0 && `(${tab.count})`}
                     </button>
                 ))}
             </div>

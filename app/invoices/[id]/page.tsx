@@ -1,479 +1,367 @@
 "use client";
 
-import { use } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
-import { InvoiceStatus, PaymentStatus } from "../types";
-import { mockPayments } from "../mockData";
-
-interface InvoiceLine {
-  id: string;
-  productName: string;
-  productSku: string;
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  discount: number;
-  subtotal: number;
-}
-
-interface Payment {
-  id: string;
-  paymentNumber: string;
-  paymentDate: string;
-  amount: number;
-  paymentMethod: string;
-  status: PaymentStatus;
-  transactionId: string;
-  notes?: string;
-  processedBy?: string;
-}
-
-// Mock invoice line items
-const mockInvoiceLines: InvoiceLine[] = [
-  {
-    id: "1",
-    productName: "Reflect Plus Cloud monitoring",
-    productSku: "Reflect-Plus",
-    description: "Reflect Plus Cloud monitoring and management, up to 5 systems (monthly price)",
-    quantity: 12,
-    unitPrice: 125.00,
-    discount: 0,
-    subtotal: 1500.00
-  },
-  {
-    id: "2",
-    productName: "Apple iPad mini 8.3 inch",
-    productSku: "MN6B1LL/A",
-    description: "Apple 8.3'' iPad mini (7th Gen, 128GB, Wi-Fi Only, Starlight)",
-    quantity: 20,
-    unitPrice: 449.00,
-    discount: 5,
-    subtotal: 8531.00
-  },
-  {
-    id: "3",
-    productName: "2TX 4K NDI PTZ Camera",
-    productSku: "PTB221NV2",
-    description: "2TX 4K NDI PTZ live streaming camera",
-    quantity: 6,
-    unitPrice: 1250.00,
-    discount: 0,
-    subtotal: 7500.00
-  }
-];
+import InvoiceHeader from "@/app/invoices/[id]/components/InvoiceHeader";
+import InvoiceTabs, { InvoiceTabType } from "@/app/invoices/[id]/components/InvoiceTabs";
+import InvoiceDetails from "@/app/invoices/[id]/components/InvoiceDetails";
+import InvoiceLineItems from "@/app/invoices/[id]/components/InvoiceLineItems";
+import InvoicePayments from "@/app/invoices/[id]/components/InvoicePayments";
+import InvoiceCredits from "@/app/invoices/[id]/components/InvoiceCredits";
+import InvoiceFiles from "@/app/invoices/[id]/components/InvoiceFilesTab";
+import InvoiceTaxes from "@/app/invoices/[id]/components/InvoiceTaxes";
+import { getMockInvoiceDetails } from "@/app/invoices/mockData";
+import { InvoiceDetails as InvoiceDetailsType } from "@/app/invoices/types";
 
 export default function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
   const router = useRouter();
+  const { id } = use(params);
 
-  // Mock invoice data
-  const invoice = {
-    invoiceNumber: "INV-2024-1001",
-    accountName: "Blum Oakland",
-    contactName: "Sarah Johnson",
-    status: "Paid" as InvoiceStatus,
-    invoiceDate: "2024-10-15",
-    dueDate: "2024-11-14",
-    description: "Q4 2024 Product Order - Premium Selection",
-    relatedOrderNumber: "ORD-2024-0845",
-    salesOrderNumber: "SO-2024-0412",
-    billingAddress: "578 West Grand Ave, Oakland, CA 94612",
-    shippingAddress: "578 West Grand Ave, Oakland, CA 94612",
-    paymentTerms: "NET 30",
-    notes: "Customer requested expedited delivery. Premium products only."
-  };
+  const [activeTab, setActiveTab] = useState<InvoiceTabType>("products");
+  const [invoice, setInvoice] = useState<InvoiceDetailsType | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Get payments for this invoice
-  const payments: Payment[] = mockPayments[id] || [];
+  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
+  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
 
-  // Calculate totals
-  const productsSubtotal = mockInvoiceLines.reduce((sum, line) => sum + line.subtotal, 0);
-  const discountTotal = mockInvoiceLines.reduce((sum, line) => sum + ((line.unitPrice * line.quantity * line.discount) / 100), 0);
-  const taxRate = 0.15;
-  const taxTotal = (productsSubtotal - discountTotal) * taxRate;
-  const shippingCost = 65.00;
-  const grandTotal = productsSubtotal - discountTotal + taxTotal + shippingCost;
-  const amountPaid = payments.reduce((sum, payment) => payment.status === "Completed" ? sum + payment.amount : sum, 0);
-  const amountDue = grandTotal - amountPaid;
+  useEffect(() => {
+    async function fetchInvoiceDetails() {
+      try {
+        setLoading(true);
+        // Fetch Primary Invoice Data
+        const res = await fetch(`/api/salesforce/invoices?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&invoiceId=${id}`);
+        if (!res.ok) throw new Error('Failed to fetch invoice details');
+        const data = await res.json();
 
-  const getStatusColor = (status: InvoiceStatus) => {
-    switch (status) {
-      case "Paid":
-        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-      case "Partial":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-      case "Sent":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
-      case "Viewed":
-        return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400";
-      case "Overdue":
-        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-      case "Draft":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
-      case "Cancelled":
-        return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+        // Fetch Invoice Lines separately as requested
+        const linesRes = await fetch(`/api/salesforce/invoices?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&invoiceId=${id}&action=lines`);
+        const linesData = linesRes.ok ? await linesRes.json() : {};
+
+        const lines = (linesData?.Invoice_Line__c || []).map((line: any) => ({
+          id: line.Id,
+          invoiceLineName: line.Name || 'N/A',
+          status: line.Status__c || 'Draft',
+          productName: line.Product_Name || 'N/A',
+          productSku: line.Product_Name || 'N/A',
+          description: line.Product_Description__c || '',
+          manufacturerDBA: line.Manufacturer_DBA__c || 'N/A',
+          quantity: line.Total_Order_Qty__c || 0,
+          unitPrice: line.Unit_Price__c || 0,
+          discount: 0,
+          taxAmount: line.Total_Taxes_Amount__c || 0,
+          totalTaxesAmount: line.Total_Taxes_Amount__c || 0,
+          shippingCharges: line.Shipping_Charges__c || 0,
+          subtotal: line.Total_Price__c || 0,
+          total: line.Line_Grand_Total__c || 0,
+          lineGrandTotal: line.Line_Grand_Total__c || 0,
+        }));
+
+        // Fetch Payments separately
+        const paymentsRes = await fetch(`/api/salesforce/invoices?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&invoiceId=${id}&action=payments`);
+        const paymentsData = paymentsRes.ok ? await paymentsRes.json() : {};
+
+        const receivePayments = (paymentsData?.Receive_Payment__c || []).map((pay: any) => ({
+          id: pay.Id,
+          name: pay.Name || 'N/A',
+          status: pay.Status__c || 'N/A',
+          amount: pay.Amount__c || 0,
+          paymentMethod: pay.Payment_Method__c || 'N/A',
+          referenceNo: pay.Reference_No__c || 'N/A',
+          transactionDate: pay.Transaction_Date__c || '',
+          scheduledDate: pay.Scheduled_Date__c || '',
+          failedDate: pay.Failed_Date__c || '',
+          postedDate: pay.Posted_Date__c || '',
+        }));
+
+        const creditMemos = (paymentsData?.Applied_Credit_Memo__c || []).map((cm: any) => ({
+          id: cm.Id,
+          name: cm.Name || 'N/A',
+          status: cm.Status__c || 'N/A',
+          appliedAmount: cm.Applied_Amount__c || 0,
+          appliedDate: cm.Applied_Date__c || '',
+          postedDate: cm.Posted_Date__c || '',
+          creditMemoName: cm.Credit_Memo_Name || 'N/A',
+          invoiceName: cm.Invoice_Name || 'N/A',
+          availableCreditBalance: cm.Available_Credit_Balance__c || 0,
+          notes: cm.Applied_Credit_Memo_Notes__c || '',
+        }));
+
+        // Fetch Credits separately (Full Credit Memo records)
+        const creditsRes = await fetch(`/api/salesforce/invoices?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&invoiceId=${id}&action=credits`);
+        const creditsData = creditsRes.ok ? await creditsRes.json() : {};
+
+        const credits = (creditsData?.Credit_Memo__c || []).map((cm: any) => ({
+          id: cm.Id,
+          name: cm.Name || 'N/A',
+          status: cm.Status__c || 'N/A',
+          invoiceName: cm.Invoice_Name || 'N/A',
+          customerQuoteName: cm.Customer_Quote_Name || 'N/A',
+          customerOrderName: cm.Customer_Order_Name || 'N/A',
+          creditToAccountName: cm.Credit_to_Account_Name || 'N/A',
+          creditToContactName: cm.Credit_to_Contact_Name || 'N/A',
+          totalLines: cm.Total_Lines__c || 0,
+          totalPrice: cm.Total_Price__c || 0,
+          shipping: cm.Total_Shipping_Charges__c || 0,
+          taxes: cm.Total_Taxes_Amount__c || 0,
+          totalCreditAmount: cm.Total_Credit_Amount__c || 0,
+          issuedDate: cm.Issued_Date__c || '',
+          expirationDate: cm.Expiration_Date__c || '',
+          availableCreditBalance: cm.Available_Credit_Balance__c || 0,
+          settledDate: cm.Settled_Date__c || '',
+        }));
+
+        // Fetch Files separately
+        const filesRes = await fetch(`/api/salesforce/invoices?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&invoiceId=${id}&action=files`);
+        const filesData = filesRes.ok ? await filesRes.json() : [];
+
+        const files = (filesData || []).map((file: any) => ({
+          id: file.Id,
+          fileName: file.Title || 'N/A',
+          fileType: file.FileExtension || 'N/A',
+          sizeInBytes: file.ContentSize || 0,
+          uploadedBy: file.CreatedBy?.Name || 'N/A',
+          uploadedDate: file.CreatedDate ? new Date(file.CreatedDate).toLocaleDateString() : 'N/A',
+        }));
+
+        // The API returns { Invoice__c: [...], Invoice_Lines__c: [...], Payment_History__c: [...] }
+        const rawInvoice = data?.Invoice__c?.[0];
+        if (!rawInvoice) {
+          setInvoice(null);
+          return;
+        }
+
+        const formatAddress = (addr: any) => {
+          if (!addr) return "N/A";
+          const parts = [addr.street, addr.city, addr.state, addr.postalCode, addr.country].filter(Boolean);
+          return parts.join(", ");
+        };
+
+        const mappedInvoice: InvoiceDetailsType = {
+          id: rawInvoice.Id,
+          invoiceNumber: rawInvoice.Name || 'N/A',
+          accountName: rawInvoice.Bill_to_Account_Name || 'N/A',
+          contactName: rawInvoice.Bill_to_Contact_Name || 'N/A',
+          status: (rawInvoice.Status__c || 'Draft') as any,
+          totalAmount: rawInvoice.Grand_Total__c || 0,
+          amountPaid: rawInvoice.Total_Amount_Collected__c || 0,
+          amountDue: rawInvoice.Open_Balance__c || 0,
+          invoiceDate: rawInvoice.Issued_Date__c || '',
+          dueDate: rawInvoice.Due_Date__c || '',
+          description: rawInvoice.Invoice_Notes__c || '',
+          lineItemCount: rawInvoice.Total_Lines__c || 0,
+          relatedOrderNumber: rawInvoice.Sales_Order_Name || '',
+          salesOrderNumber: rawInvoice.Sales_Order_Name || '',
+          purchaseOrderNumber: rawInvoice.Purchase_Order_Name || '',
+          proposalName: rawInvoice.Proposal_Name || '',
+          customerOrder: rawInvoice.Customer_Order_Name || '',
+          customerPO: rawInvoice.Customer_PO__c || '',
+          paymentTerms: rawInvoice.Payment_Terms__c || '',
+          collectionStatus: rawInvoice.Collection_Status__c || '',
+          billingAddress: formatAddress(rawInvoice.Authorized_Bill_To_Location_Address),
+          shippingAddress: formatAddress(rawInvoice.Authorized_Ship_To_Location_Address),
+          notes: rawInvoice.Invoice_Notes__c || '',
+          subtotal: rawInvoice.Total_Price__c || 0,
+          taxTotal: rawInvoice.Total_Taxes_Amount__c || 0,
+          discountTotal: rawInvoice.Applied_Credit_Amount__c || 0,
+          shippingCost: rawInvoice.Total_Shipping_Charges__c || 0,
+          grandTotal: rawInvoice.Grand_Total__c || 0,
+          arRep: rawInvoice.Owner_Name || 'N/A',
+          billToLocation: rawInvoice.Authorized_Bill_To_Location_Name || 'N/A',
+          shipToLocation: rawInvoice.Authorized_Ship_To_Location_Name || 'N/A',
+          shipConfirmedDate: rawInvoice.Delivered_Date__c || 'N/A',
+          siteName: rawInvoice.Site_Name || 'N/A',
+          productsSubtotal: lines.reduce((sum: number, l: any) => sum + (l.total || 0), 0),
+          servicesSubtotal: 0,
+          appliedCredits: rawInvoice.Applied_Credit_Amount__c || 0,
+          salesTaxRate: rawInvoice.Sales_Tax_Rate__c || 0,
+          salesTaxAmount: rawInvoice.Total_Sales_Tax_Amount__c || 0,
+          useTaxRate: rawInvoice.Use_Tax_Rate__c || 0,
+          useTaxAmount: rawInvoice.Total_Use_Tax_Amount__c || 0,
+          localTaxRate: rawInvoice.Local_Tax_Rate__c || 0,
+          localTaxAmount: rawInvoice.Total_Local_Tax_Amount__c || 0,
+          exciseTaxRate: rawInvoice.Excise_Tax_Rate__c || 0,
+          exciseTaxAmount: rawInvoice.Total_Excise_Tax_Amount__c || 0,
+          grtRate: rawInvoice.Gross_Receipts_Tax_Rate__c || 0,
+          grtAmount: rawInvoice.Total_Gross_Receipts_Tax_Amount__c || 0,
+          gstRate: rawInvoice.GST_Rate__c || 0,
+          gstAmount: rawInvoice.Total_GST_Amount__c || 0,
+          vatRate: rawInvoice.VAT_Rate__c || 0,
+          vatAmount: rawInvoice.Total_VAT_Amount__c || 0,
+          lines,
+          payments: (data?.Payment_History__c || []).map((pay: any) => ({
+            id: pay.Id,
+            paymentNumber: pay.Name || 'N/A',
+            paymentDate: pay.Payment_Date__c || '',
+            amount: pay.Amount__c || 0,
+            paymentMethod: (pay.Payment_Method__c || 'Credit Card') as any,
+            status: (pay.Status__c || 'Completed') as any,
+            transactionId: pay.Transaction_Id__c || 'N/A',
+            notes: pay.Notes__c || '',
+            processedBy: pay.Processed_By_Name || '',
+          })),
+          receivePayments,
+          creditMemos,
+          credits,
+          files
+        };
+
+        setInvoice(mappedInvoice);
+      } catch (error) {
+        console.error("Error fetching invoice details:", error);
+      } finally {
+        setLoading(false);
+      }
     }
+
+    fetchInvoiceDetails();
+  }, [id, SF_ACCOUNT_ID, SF_CONTACT_ID]);
+
+  const handleBack = () => {
+    router.push("/invoices");
   };
 
-  const getPaymentStatusColor = (status: PaymentStatus) => {
-    switch (status) {
-      case "Completed":
-        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-      case "Processing":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-      case "Pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-      case "Failed":
-        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-      case "Refunded":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
+  if (loading) {
+    return (
+      <Sidebar>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </Sidebar>
+    );
+  }
+
+  if (!invoice) {
+    return (
+      <Sidebar>
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Invoice not found</h2>
+          <button
+            onClick={handleBack}
+            className="mt-4 text-primary hover:underline"
+          >
+            Back to Invoices
+          </button>
+        </div>
+      </Sidebar>
+    );
+  }
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "products":
+        return <InvoiceLineItems lines={invoice.lines} />;
+      case "taxes":
+        return (
+          <InvoiceTaxes
+            salesTaxRate={invoice.salesTaxRate}
+            salesTaxAmount={invoice.salesTaxAmount}
+            useTaxRate={invoice.useTaxRate}
+            useTaxAmount={invoice.useTaxAmount}
+            localTaxRate={invoice.localTaxRate}
+            localTaxAmount={invoice.localTaxAmount}
+            exciseTaxRate={invoice.exciseTaxRate}
+            exciseTaxAmount={invoice.exciseTaxAmount}
+            grtRate={invoice.grtRate}
+            grtAmount={invoice.grtAmount}
+            gstRate={invoice.gstRate}
+            gstAmount={invoice.gstAmount}
+            vatRate={invoice.vatRate}
+            vatAmount={invoice.vatAmount}
+          />
+        );
+      case "payments":
+        return <InvoicePayments receivePayments={invoice.receivePayments} creditMemos={invoice.creditMemos} />;
+      case "credits":
+        return <InvoiceCredits credits={invoice.credits} />;
+      case "files":
+        return <InvoiceFiles files={invoice.files} invoiceId={invoice.id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} />;
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+        return null;
     }
   };
 
   return (
     <Sidebar>
-      {/* Breadcrumb */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
-          <button onClick={() => router.push("/invoices")} className="hover:text-gray-700 dark:hover:text-gray-300">Invoices</button>
-          <span>&gt;</span>
-          <span className="text-gray-900 dark:text-white">{invoice.invoiceNumber}</span>
+      <InvoiceHeader
+        invoiceNumber={invoice.invoiceNumber}
+        status={invoice.status}
+        accountName={invoice.accountName}
+        onBack={handleBack}
+      />
+
+      <InvoiceDetails
+        accountName={invoice.accountName}
+        contactName={invoice.contactName}
+        invoiceNumber={invoice.invoiceNumber}
+        invoiceDate={invoice.invoiceDate}
+        dueDate={invoice.dueDate}
+        billingAddress={invoice.billingAddress}
+        shippingAddress={invoice.shippingAddress}
+        paymentTerms={invoice.paymentTerms}
+        relatedOrderNumber={invoice.relatedOrderNumber}
+        salesOrderNumber={invoice.salesOrderNumber}
+        purchaseOrderNumber={invoice.purchaseOrderNumber}
+        proposalName={invoice.proposalName}
+        customerOrder={invoice.customerOrder}
+        customerPO={invoice.customerPO}
+        collectionStatus={invoice.collectionStatus}
+        notes={invoice.notes}
+        subtotal={invoice.subtotal}
+        taxTotal={invoice.taxTotal}
+        shippingCost={invoice.shippingCost}
+        discountTotal={invoice.discountTotal}
+        grandTotal={invoice.grandTotal}
+        amountPaid={invoice.amountPaid}
+        amountDue={invoice.amountDue}
+        arRep={invoice.arRep}
+        billToLocation={invoice.billToLocation}
+        shipToLocation={invoice.shipToLocation}
+        shipConfirmedDate={invoice.shipConfirmedDate}
+        siteName={invoice.siteName}
+        productsSubtotal={invoice.productsSubtotal}
+        servicesSubtotal={invoice.servicesSubtotal}
+        appliedCredits={invoice.appliedCredits}
+        productCount={invoice.lines.length}
+        serviceCount={0}
+      />
+
+      {/* Tabs Section Section Below Details */}
+      <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+          <InvoiceTabs
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            counts={{
+              products: invoice.lines.length,
+              taxes: invoice.taxTotal > 0 ? 1 : 0,
+              payments: invoice.receivePayments.length + invoice.creditMemos.length,
+              credits: invoice.credits.length,
+              files: invoice.files.length
+            }}
+          />
         </div>
-        {/* Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-                {invoice.invoiceNumber}
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400">
-                Order #{invoice.relatedOrderNumber} • {invoice.accountName}
-              </p>
-            </div>
-            <span className={`inline-flex px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(invoice.status)}`}>
-              {invoice.status}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
-        {/* Left Column - Invoice Information (70%) */}
-        <div className="lg:col-span-7 flex flex-col gap-4">
-          {/* Account & Invoice Information */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Invoice Information</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Customer and order details</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Account Name</label>
-                <p className="text-gray-900 dark:text-white font-semibold">{invoice.accountName}</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contact Name</label>
-                <p className="text-gray-900 dark:text-white font-semibold">{invoice.contactName}</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Related Order</label>
-                <p className="text-primary hover:text-primary-dark cursor-pointer">{invoice.relatedOrderNumber}</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sales Order</label>
-                <p className="text-primary hover:text-primary-dark cursor-pointer">{invoice.salesOrderNumber}</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Payment Terms</label>
-                <p className="text-gray-900 dark:text-white">{invoice.paymentTerms}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Dates & Addresses */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
-                <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Dates & Addresses</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Timeline and location information</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Invoice Date</label>
-                <p className="text-gray-900 dark:text-white">{invoice.invoiceDate}</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Due Date</label>
-                <p className="text-gray-900 dark:text-white font-semibold">{invoice.dueDate}</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Billing Address</label>
-                <p className="text-gray-900 dark:text-white">{invoice.billingAddress}</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Shipping Address</label>
-                <p className="text-gray-900 dark:text-white">{invoice.shippingAddress}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Payment History */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-                <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Payment History</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Received payments and transactions</p>
-              </div>
-            </div>
-
-            {payments.length === 0 ? (
-              <div className="text-center py-8">
-                <svg className="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">No payments received yet</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {payments.map((payment) => (
-                  <div key={payment.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-gray-900 dark:text-white">{payment.paymentNumber}</span>
-                          <span className={`inline-flex px-2 py-0.5 text-sm font-medium rounded-full ${getPaymentStatusColor(payment.status)}`}>
-                            {payment.status}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Transaction: {payment.transactionId}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-lg font-bold text-green-600 dark:text-green-400">
-                          ${payment.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{payment.paymentDate}</p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3 text-sm">
-                      <div>
-                        <span className="text-gray-500 dark:text-gray-400">Method:</span>
-                        <span className="ml-2 text-gray-900 dark:text-white font-medium">{payment.paymentMethod}</span>
-                      </div>
-                      {payment.processedBy && (
-                        <div>
-                          <span className="text-gray-500 dark:text-gray-400">Processed by:</span>
-                          <span className="ml-2 text-gray-900 dark:text-white font-medium">{payment.processedBy}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {payment.notes && (
-                      <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          <span className="font-medium">Notes:</span> {payment.notes}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Invoice Notes */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
-                <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Notes</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Additional information</p>
-              </div>
-            </div>
-            <p className="text-gray-900 dark:text-white">{invoice.notes}</p>
-          </div>
-        </div>
-
-        {/* Right Column - Invoice Summary (30%) */}
-        <div className="lg:col-span-3 flex flex-col">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700 sticky top-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
-                <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Invoice Summary</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Financial overview</p>
-              </div>
-            </div>
-
-            <div className="space-y-4 mb-6">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 dark:text-gray-300">{mockInvoiceLines.length} Product{mockInvoiceLines.length !== 1 ? 's' : ''} - Subtotal</span>
-                <span className="text-gray-900 dark:text-white font-semibold">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-
-              {discountTotal > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-700 dark:text-gray-300">Discounts</span>
-                  <span className="text-green-600 dark:text-green-400 font-semibold">-${discountTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-              )}
-
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 dark:text-gray-300">Tax ({(taxRate * 100).toFixed(0)}%)</span>
-                <span className="text-gray-900 dark:text-white font-semibold">${taxTotal.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</span>
-              </div>
-
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 dark:text-gray-300">Shipping</span>
-                <span className="text-gray-900 dark:text-white font-semibold">${shippingCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-
-              <div className="border-t border-gray-300 dark:border-gray-600 pt-4">
-                <div className="flex justify-between text-xl font-bold mb-2">
-                  <span className="text-gray-900 dark:text-white">Grand Total</span>
-                  <span className="text-primary dark:text-primary">${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-
-                {amountPaid > 0 && (
-                  <>
-                    <div className="flex justify-between text-sm mt-2">
-                      <span className="text-gray-700 dark:text-gray-300">Amount Paid</span>
-                      <span className="text-green-600 dark:text-green-400 font-semibold">-${amountPaid.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
-                    <div className="flex justify-between text-lg font-bold mt-2 pt-2 border-t border-gray-300 dark:border-gray-600">
-                      <span className="text-gray-900 dark:text-white">Amount Due</span>
-                      <span className={amountDue > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}>
-                        ${amountDue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                      </span>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="space-y-3 border-t border-gray-300 dark:border-gray-600 pt-4">
-              {amountDue > 0 && (
-                <button className="w-full px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium">
-                  Make Payment (${amountDue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
-                </button>
-              )}
-              <button className="w-full px-4 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium">
-                Download PDF
-              </button>
-              <button className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium">
-                Send to Customer
-              </button>
-              <button className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium">
-                Print Invoice
-              </button>
-            </div>
-          </div>
+        <div className="p-4">
+          {renderTabContent()}
         </div>
       </div>
 
-      {/* Invoice Line Items Table */}
-      <div className="mt-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Line Items</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Products included in this invoice</p>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-primary-light dark:bg-gray-900">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Product</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">SKU</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Quantity</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Unit Price</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Discount</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">Subtotal</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {mockInvoiceLines.map((line) => (
-                  <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">
-                      <div className="line-clamp-2" title={line.productName}>{line.productName}</div>
-                    </td>
-                    <td className="px-6 py-4 text-sm font-mono text-gray-600 dark:text-gray-400">{line.productSku}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                      <div className="max-w-xs line-clamp-2" title={line.description}>{line.description}</div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">{line.quantity}</td>
-                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white">
-                      ${line.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-right text-gray-600 dark:text-gray-400">
-                      {line.discount > 0 ? `${line.discount}%` : '-'}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-right text-gray-900 dark:text-white font-semibold">
-                      ${line.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <div className="h-24" />
 
-      {/* Action Buttons */}
+      {/* Fixed Footer */}
       <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.5)] gap-4 sm:gap-0 z-40">
-        <button
-          onClick={() => router.push("/invoices")}
-          className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-        >
-          Back to Invoices
-        </button>
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          {amountDue > 0 && (
-            <button className="w-full sm:w-auto px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-              Make Payment
-            </button>
-          )}
-          <button className="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
-            Download PDF
+        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+          <button
+            onClick={handleBack}
+            className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
+          >
+            Back to Invoices
           </button>
         </div>
       </div>
-
-      <div className="h-20" />
     </Sidebar>
   );
 }
+
+
+

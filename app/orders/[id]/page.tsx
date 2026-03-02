@@ -1013,20 +1013,30 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB limit per file
-    const newFiles = Array.from(files);
+    const allowedExtensions = ['pdf', 'jpeg', 'jpg', 'png', 'csv', 'xls', 'xlsx', 'doc', 'docx', 'txt'];
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit
 
-    // Check file sizes
-    const oversizedFiles = newFiles.filter(file => file.size > MAX_FILE_SIZE);
-    if (oversizedFiles.length > 0) {
-      alert(`The following files exceed the 4MB limit and cannot be uploaded:\n${oversizedFiles.map(f => `- ${f.name} (${(f.size / 1024 / 1024).toFixed(2)}MB)`).join('\n')}`);
-      // Filter out oversized files
-      const validFiles = newFiles.filter(file => file.size <= MAX_FILE_SIZE);
-      if (validFiles.length === 0) return;
-      // Continue with valid files only
-      newFiles.length = 0;
-      newFiles.push(...validFiles);
+    const invalidExtensionFiles = Array.from(files).filter(file => {
+      const ext = file.name.split('.').pop()?.toLowerCase() || '';
+      return !allowedExtensions.includes(ext);
+    });
+
+    const oversizedFiles = Array.from(files).filter(file => file.size > MAX_FILE_SIZE);
+
+    if (invalidExtensionFiles.length > 0 || oversizedFiles.length > 0) {
+      let errorMessage = '';
+      if (invalidExtensionFiles.length > 0) {
+        errorMessage += `The following files have invalid extensions and cannot be uploaded:\n${invalidExtensionFiles.map(f => `- ${f.name}`).join('\n')}\n\nAllowed: PDF, JPEG, PNG, CSV, XLS, XLSX, DOC, TXT\n\n`;
+      }
+      if (oversizedFiles.length > 0) {
+        errorMessage += `The following files exceed the 10MB limit:\n${oversizedFiles.map(f => `- ${f.name} (${(f.size / 1024 / 1024).toFixed(2)} MB)`).join('\n')}`;
+      }
+      alert(errorMessage);
+      e.target.value = '';
+      return;
     }
+
+    const newFiles = Array.from(files);
 
     // Add to local state immediately for UI feedback
     setUploadedFiles(prev => [...prev, ...newFiles]);
@@ -1529,7 +1539,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
               >
-                My Order ({orderProducts.length})
+                My Order {orderProducts.length > 0 && `(${orderProducts.length})`}
               </button>
               <button
                 onClick={() => setViewMode("taxes")}
@@ -1547,7 +1557,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
               >
-                Files ({filesCount})
+                Files {filesCount > 0 && `(${filesCount})`}
               </button>
             </div>
           </div>

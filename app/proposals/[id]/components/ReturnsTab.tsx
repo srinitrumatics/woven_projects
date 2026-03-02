@@ -55,12 +55,11 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                             }`}
                     >
                         {tab.label}
-                        <span className={`ml-2 px-1.5 py-0.5 text-sm rounded-full ${activeTab === tab.id
-                            ? "bg-primary/10 text-primary"
-                            : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-                            }`}>
-                            {tab.count}
-                        </span>
+                        {tab.count > 0 && (
+                            <span className="ml-1">
+                                ({tab.count})
+                            </span>
+                        )}
                     </button>
                 ))}
             </div>

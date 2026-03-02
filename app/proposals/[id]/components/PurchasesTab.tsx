@@ -53,10 +53,7 @@ export default function PurchasesTab({
                             }
                         `}
                     >
-                        Purchase Orders
-                        <span className={`ml-2 py-0.5 px-2.5 rounded-full text-sm font-medium ${activeTab === "orders" ? "bg-primary-light text-primary-dark" : "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100"}`}>
-                            {purchases.length}
-                        </span>
+                        Purchase Orders {purchases.length > 0 && `(${purchases.length})`}
                     </button>
                     <button
                         onClick={() => setActiveTab("bills")}
@@ -68,10 +65,7 @@ export default function PurchasesTab({
                             }
                         `}
                     >
-                        Supplier Bills
-                        <span className={`ml-2 py-0.5 px-2.5 rounded-full text-sm font-medium ${activeTab === "bills" ? "bg-primary-light text-primary-dark" : "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100"}`}>
-                            {supplierBills.length}
-                        </span>
+                        Supplier Bills {supplierBills.length > 0 && `(${supplierBills.length})`}
                     </button>
                 </nav>
             </div>

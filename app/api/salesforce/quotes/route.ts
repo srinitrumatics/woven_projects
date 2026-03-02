@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getQuotesFromSalesforce, getQuoteFilesFromSalesforce } from "@/lib/quote-service";
-import { getFileUrl } from "@/lib/salesforce-service";
+import { getFileUrl, uploadFilesToSalesforce } from "@/lib/salesforce-service";
 
 export async function GET(req: NextRequest) {
     try {
@@ -56,5 +56,30 @@ export async function GET(req: NextRequest) {
     } catch (error) {
         console.error("Error in quotes API:", error);
         return NextResponse.json({ error: "Failed to fetch quotes" }, { status: 500 });
+    }
+}
+
+export async function POST(req: NextRequest) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const action = searchParams.get("action");
+
+        if (action === "uploadFiles") {
+            const uploadData = await req.json();
+            const result = await uploadFilesToSalesforce({
+                ...uploadData,
+                objectName: "Customer_Quote__c"
+            });
+
+            if (!result) {
+                return NextResponse.json({ error: "Failed to upload files" }, { status: 500 });
+            }
+            return NextResponse.json(result, { status: 201 });
+        }
+
+        return NextResponse.json({ error: "Unsupported action" }, { status: 400 });
+    } catch (error) {
+        console.error("Error in quotes API POST:", error);
+        return NextResponse.json({ error: "Failed to upload files" }, { status: 500 });
     }
 }

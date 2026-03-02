@@ -106,7 +106,7 @@ export default function OrderTotal({
                     <span className="text-xs text-gray-500 dark:text-gray-400 text-center"> PDF · JPEG · PNG · CSV · XLS · XLSX · DOC · TXT</span>
                     <input
                         type="file"
-                        accept=".pdf,.jpg,.jpeg,.png,.csv,.xls,.xlsx,.doc,.text"
+                        accept=".pdf,.jpg,.jpeg,.png,.csv,.xls,.xlsx,.doc,.docx,.txt"
                         multiple
                         onChange={handleFileUpload}
                         disabled={!isEditing}
