@@ -181,10 +181,21 @@ export default function QuotesPage() {
                 >
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Draft</p>
                 </Link>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
-                </div>
+                <Link
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCardClick("Draft");
+                  }}
+                  className="hover:underline block"
+                >
+                  <div className="flex items-baseline gap-2">
+
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+
+                  </div>
+                </Link>
                 <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.draftValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
@@ -224,12 +235,19 @@ export default function QuotesPage() {
                 >
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Approved</p>
                 </Link>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.approvedCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
-                </div>
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Approved")}
+                  className="hover:underline block"
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.approvedCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+                  </div>
+                </Link>
                 <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.approvedValue)}</p>
               </div>
+
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Approved" ? "bg-gray-500 text-white" : "bg-gray-50 dark:bg-gray-900/20 text-gray-600 dark:text-gray-400 group-hover:bg-gray-500 group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -267,10 +285,16 @@ export default function QuotesPage() {
                 >
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Partial Shipment</p>
                 </Link>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.partialShipmentCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
-                </div>
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Partial Shipment" as any)}
+                  className="hover:underline block"
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.partialShipmentCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+                  </div>
+                </Link>
                 <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.partialShipmentValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Partial Shipment" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
@@ -310,10 +334,16 @@ export default function QuotesPage() {
                 >
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Shipped</p>
                 </Link>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.shippedCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
-                </div>
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Shipped" as any)}
+                  className="hover:underline block"
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.shippedCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+                  </div>
+                </Link>
                 <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.shippedValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Shipped" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
