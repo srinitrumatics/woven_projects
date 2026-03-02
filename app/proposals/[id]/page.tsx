@@ -1065,6 +1065,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       }
 
       alert('Files uploaded successfully!');
+      window.location.reload();
     } catch (error) {
       console.error('Error uploading files:', error);
       alert('Failed to upload files. Please try again.');
