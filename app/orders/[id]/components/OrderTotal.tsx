@@ -53,7 +53,7 @@ export default function OrderTotal({
             </div>
             {/* Price Breakdown */}
             <div className="space-y-2 mb-2">
-                <div className="flex justify-between text-sm">
+                <div className="flex justify-between text-sm pt-2">
                     <span className="text-gray-700 dark:text-gray-300">{productsCount} Product{productsCount !== 1 ? 's' : ''} - Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
@@ -61,7 +61,7 @@ export default function OrderTotal({
                     <span className="text-gray-700 dark:text-gray-300">Taxes</span>
                     <span className="text-gray-900 dark:text-white font-semibold">${totalExciseTax.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
-                <div className="flex justify-between text-sm">
+                <div className="flex justify-between text-sm ">
                     <span className="text-gray-700 dark:text-gray-300">Shipping</span>
                     <span className="text-gray-900 dark:text-white">${shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
@@ -76,7 +76,7 @@ export default function OrderTotal({
             </div>
 
             {/* Download PDF Button */}
-            <div className="border-t border-gray-300 dark:border-gray-600 pt-2">
+            <div className="border-t border-gray-300 dark:border-gray-600 pt-1">
                 <button
                     onClick={handleDownloadPDF}
                     disabled={isGeneratingPDF}
