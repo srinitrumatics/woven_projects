@@ -198,32 +198,34 @@ export default function InvoiceLineDetailPage({
                             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{product.lineName}</h1>
                         </div>
                     </div>
-                    <button
-                        onClick={() => router.push(`/invoices/${id}`)}
-                        className="flex items-center gap-2 px-4 py-1.5 bg-[#A7C7E7] text-white rounded shadow-sm hover:bg-[#8FB8DE] transition-colors text-sm"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                        Back to Invoice
-                    </button>
+                    <div className="flex flex-col items-end gap-2">
+                        <button
+                            onClick={() => router.push(`/invoices/${id}`)}
+                            className="flex items-center gap-2 px-4 py-1.5 bg-[#A7C7E7] text-white rounded shadow-sm hover:bg-[#8FB8DE] transition-colors text-sm"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Back to Invoice
+                        </button>
+                        {product.status && (
+                            <span className="text-xs font-medium px-2 py-1 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                                {product.status}
+                            </span>
+                        )}
+                    </div>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
                     <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
                         Line {lineNumber} of {totalLines}
                     </span>
-                    {product.status && (
-                        <span className="text-xs font-medium px-2 py-1 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                            {product.status}
-                        </span>
-                    )}
                 </div>
             </div>
 
             {/* Row 1: Product Images + Invoice Line Notes + Product Information */}
-            <div className="grid grid-cols-1 w1400:grid-cols-12 gap-4 mb-4 items-stretch">
+            <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
                 {/* Product Images Carousel - 3/12 cols */}
-                <div className="w1400:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                     <div className="relative flex-1 flex flex-col">
                         <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wide">Product Images</p>
                         <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
@@ -268,77 +270,77 @@ export default function InvoiceLineDetailPage({
                 </div>
 
                 {/* Invoice Line Notes - 3/12 cols */}
-                <div className="w1400:col-span-3 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
+                <div className="w1025:col-span-3 bg-white rounded-lg shadow-sm border border-gray-200 p-6 min-h-[380px]">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
+                        <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-200">
                             <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
-                        <h2 className="text-sm font-bold text-gray-800 tracking-tight">Invoice Line Notes</h2>
+                        <h2 className="text-lg font-bold text-gray-800 tracking-tight">Invoice Line Notes</h2>
                     </div>
-                    <div className="w-full h-[240px] p-4 bg-gray-50/50 border border-gray-100 rounded-lg text-sm text-gray-500 overflow-y-auto italic">
+                    <div className="w-full h-[240px] p-4 bg-gray-50/50 border border-gray-200 rounded-lg text-sm text-gray-500 overflow-y-auto italic">
                         {product.description || "No notes available."}
                     </div>
                 </div>
 
                 {/* Product Information - 6/12 cols */}
-                <div className="w1400:col-span-6 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
+                <div className="w1025:col-span-6 bg-white rounded-lg shadow-sm border border-gray-200 p-6 min-h-[380px]">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
+                        <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-200">
                             <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <h2 className="text-sm font-bold text-gray-800 tracking-tight">Product Information</h2>
+                        <h2 className="text-lg font-bold text-gray-800 tracking-tight">Product Information</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-4">
                         <div>
-                            <label className="text-sm font-bold text-gray-700 block mb-1">Product Name</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.productName}>{product.productName}</div>
+                            <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Product Name">Product Name</label>
+                            <div className="bg-gray-50/50 border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.productName}>{product.productName}</div>
                         </div>
                         <div>
-                            <label className="text-sm font-bold text-gray-700 block mb-1">Proposed Product</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.proposedProduct}</div>
+                            <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Proposed Product">Proposed Product</label>
+                            <div className="bg-gray-50/50 border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.proposedProduct}>{product.proposedProduct}</div>
                         </div>
                         <div>
-                            <label className="text-sm font-bold text-gray-700 block mb-1">Site</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.site}</div>
-                        </div>
-
-                        <div>
-                            <label className="text-sm font-bold text-gray-700 block mb-1">Description</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.description}>{product.description}</div>
-                        </div>
-                        <div>
-                            <label className="text-sm font-bold text-gray-700 block mb-1">Customer Quote Line</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.customerQuoteLine}</div>
-                        </div>
-                        <div>
-                            <label className="text-sm font-bold text-gray-700 block mb-1">Inventory Account</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.inventoryAccount}</div>
+                            <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Site">Site</label>
+                            <div className="bg-gray-50/50 border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.site}>{product.site}</div>
                         </div>
 
                         <div>
-                            <label className="text-sm font-bold text-gray-700 block mb-1">Manufacturer DBA</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.manufacturerDBA}</div>
+                            <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Description">Description</label>
+                            <div className="bg-gray-50/50 border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.description}>{product.description}</div>
                         </div>
                         <div>
-                            <label className="text-sm font-bold text-gray-700 block mb-1">Sales Order Line</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.salesOrderLine}</div>
+                            <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Customer Quote Line">Customer Quote Line</label>
+                            <div className="bg-gray-50/50 border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.customerQuoteLine}>{product.customerQuoteLine}</div>
                         </div>
                         <div>
-                            <label className="text-sm font-bold text-gray-700 block mb-1">Purchase Order Line</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.purchaseOrderLine}</div>
+                            <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Inventory Account">Inventory Account</label>
+                            <div className="bg-gray-50/50 border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.inventoryAccount}>{product.inventoryAccount}</div>
+                        </div>
+
+                        <div>
+                            <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Manufacturer DBA">Manufacturer DBA</label>
+                            <div className="bg-gray-50/50 border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.manufacturerDBA}>{product.manufacturerDBA}</div>
                         </div>
                         <div>
-                            <label className="text-sm font-bold text-gray-700 block mb-1">Product Family</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.productFamily}</div>
+                            <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Sales Order Line">Sales Order Line</label>
+                            <div className="bg-gray-50/50 border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.salesOrderLine}>{product.salesOrderLine}</div>
                         </div>
                         <div>
-                            <label className="text-sm font-bold text-gray-700 block mb-1">Is Taxable</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.isTaxable}</div>
+                            <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Purchase Order Line">Purchase Order Line</label>
+                            <div className="bg-gray-50/50 border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.purchaseOrderLine}>{product.purchaseOrderLine}</div>
+                        </div>
+                        <div>
+                            <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Product Family">Product Family</label>
+                            <div className="bg-gray-50/50 border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.productFamily}>{product.productFamily}</div>
+                        </div>
+                        <div>
+                            <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Is Taxable">Is Taxable</label>
+                            <div className="bg-gray-50/50 border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.isTaxable}>{product.isTaxable}</div>
                         </div>
                     </div>
                 </div>
@@ -346,19 +348,19 @@ export default function InvoiceLineDetailPage({
 
             {/* Invoice Line Details Table */}
             <div>
-                <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden p-4">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Unit Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Order Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">MOQ</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Total Order Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Total Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Shipping</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Taxes</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Grand Total</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Unit Price</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Order Qty</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">MOQ</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Total Order Qty</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Total Price</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Shipping</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Taxes</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Grand Total</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
@@ -399,7 +401,7 @@ export default function InvoiceLineDetailPage({
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
-                            className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === tab.id
+                            className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${activeTab === tab.id
                                 ? "bg-primary text-white"
                                 : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                                 }`}

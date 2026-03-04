@@ -11,7 +11,7 @@ const config: Config = {
   theme: {
     extend: {
       screens: {
-        'w1400': '1400px',
+        'w1025': '1025px',
       },
       colors: {
         background: 'var(--background)',

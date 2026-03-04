@@ -12,7 +12,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 
-type TabFilter = "All" | "Pending" | "Success" | "Draft" | "Cancelled";
+type TabFilter = "Total" | "All" | "Pending" | "Success" | "Draft" | "Cancelled";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -25,7 +25,7 @@ export default function OrdersPage() {
   const [error, setError] = useState<string | null>(null);
 
   // UI state
-  const [activeTab, setActiveTab] = useState<TabFilter>("All");
+  const [activeTab, setActiveTab] = useState<TabFilter>("Total");
   const [dateRange, setDateRange] = useState("Jan 1 - Jan 30, 2024");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -113,8 +113,12 @@ export default function OrdersPage() {
   }, [sfOrders]);
   // Derived stats
   const stats = useMemo(() => {
-    const totalOrders = uiOrders.length;
-    const totalValue = uiOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+    const allCount = uiOrders.length;
+    const allValue = uiOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+
+    const activeOrders = uiOrders.filter(o => ["Submitted", "Approved", "Closed"].includes(o.status));
+    const totalOrders = activeOrders.length;
+    const totalValue = activeOrders.reduce((sum, o) => sum + (o.total || 0), 0);
 
     const draftOrders = uiOrders.filter(o => o.status === "Draft");
     const draftCount = draftOrders.length;
@@ -129,6 +133,7 @@ export default function OrdersPage() {
     const fulfilledValue = fulfilledOrders.reduce((sum, o) => sum + (o.total || 0), 0);
 
     return {
+      allCount, allValue,
       totalOrders, totalValue,
       draftCount, draftValue,
       pendingCount, pendingValue,
@@ -141,7 +146,9 @@ export default function OrdersPage() {
     let filtered = uiOrders;
 
     // Apply tab filter
-    if (activeTab !== "All") {
+    if (activeTab === "Total") {
+      filtered = filtered.filter(order => ["Submitted", "Approved", "Closed"].includes(order.status));
+    } else if (activeTab !== "All") {
       if (activeTab === "Pending") {
         filtered = filtered.filter(order => order.status === "Pending" || order.status === "Submitted");
       } else if (activeTab === "Success") {
@@ -449,11 +456,11 @@ export default function OrdersPage() {
       </div>
 
       {/* Stats Cards - New Design */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 w1025:grid-cols-4 gap-4 mb-6">
         {/* Total Orders Card */}
         <button
-          onClick={() => handleCardClick("All")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "All"
+          onClick={() => handleCardClick("Total")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Total"
             ? "border-primary ring-2 ring-primary/20"
             : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
             }`}
@@ -464,14 +471,14 @@ export default function OrdersPage() {
               <div className="flex-1 min-w-0">
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("All")}
+                  onClick={() => handleCardClick("Total")}
                   className="hover:underline block"
                 >
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Total Orders</p>
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("All")}
+                  onClick={() => handleCardClick("Total")}
                   className="hover:underline block"
                 >
                   <div className="flex items-baseline gap-2">
@@ -481,7 +488,7 @@ export default function OrdersPage() {
                 </Link>
                 <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
+              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Total" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -492,9 +499,9 @@ export default function OrdersPage() {
               <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline">
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("All")}
+                  onClick={() => handleCardClick("Total")}
                   className="hover:underline block">
-                  View all orders</Link>
+                  View total orders</Link>
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -691,6 +698,7 @@ export default function OrdersPage() {
                   onChange={(e) => setActiveTab(e.target.value as TabFilter)}
                   className="w-full pl-3 pr-10 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
                 >
+                  <option value="Total">Total Orders</option>
                   <option value="All">All</option>
                   <option value="Draft">Draft</option>
                   <option value="Pending">Pending/Submitted</option>

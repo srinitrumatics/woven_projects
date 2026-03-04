@@ -40,46 +40,41 @@ export default function ProposalSummary({
 
     return (
         <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden w-full flex flex-col h-full ${className}`}>
-            <div className="w-full flex items-center gap-2 justify-start p-4 border-b border-gray-50 dark:border-gray-700/50">
-                <div className="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <div className="text-left">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Proposal Summary</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Review Your Proposal Summary</p>
+            <div className="p-6">
+                <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Proposal Summary">Proposal Summary</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Review Your Proposal Summary</p>
                 </div>
             </div>
 
-            <div className="p-5 flex flex-col flex-1">
+            <div className="px-6 pb-6 flex flex-col flex-1">
                 {/* Financial Details Section - This will take up remaining space */}
                 <div className="flex-1">
                     <div className="space-y-3 mb-4">
                         {/* Individual Subtotals */}
-                        <div className="flex justify-between text-sm pb-2">
-                            <span className="text-gray-700 dark:text-gray-300">({productItems.length}) Products - Subtotal</span>
-                            <span className="text-gray-900 dark:text-white font-medium">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <div className="flex justify-between text-sm pb-2 gap-4">
+                            <span className="text-gray-700 dark:text-gray-300 truncate flex-1" title={`(${productItems.length}) Products - Subtotal`}>({productItems.length}) Products - Subtotal</span>
+                            <span className="text-gray-900 dark:text-white font-medium shrink-0">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
 
-                        <div className="flex justify-between text-sm pb-2">
-                            <span className="text-gray-700 dark:text-gray-300">({serviceItems.length}) Services - Subtotal</span>
-                            <span className="text-gray-900 dark:text-white font-medium">${servicesSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <div className="flex justify-between text-sm pb-2 gap-4">
+                            <span className="text-gray-700 dark:text-gray-300 truncate flex-1" title={`(${serviceItems.length}) Services - Subtotal`}>({serviceItems.length}) Services - Subtotal</span>
+                            <span className="text-gray-900 dark:text-white font-medium shrink-0">${servicesSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
 
-                        <div className="flex justify-between text-sm pt-1 font-medium border-t border-gray-100 dark:border-gray-700 pb-2">
-                            <span className="text-gray-700 dark:text-gray-300">Subtotal</span>
-                            <span className="text-gray-900 dark:text-white">${proposal.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <div className="flex justify-between text-sm pt-1 font-medium border-t border-gray-100 dark:border-gray-700 pb-2 gap-4">
+                            <span className="text-gray-700 dark:text-gray-300 truncate flex-1" title="Subtotal">Subtotal</span>
+                            <span className="text-gray-900 dark:text-white shrink-0">${proposal.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
 
-                        <div className="flex justify-between text-sm pb-1">
-                            <span className="text-gray-700 dark:text-gray-300">Taxes</span>
-                            <span className="text-gray-900 dark:text-white font-medium">${proposal.totalTaxesAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <div className="flex justify-between text-sm pb-1 gap-4">
+                            <span className="text-gray-700 dark:text-gray-300 truncate flex-1" title="Taxes">Taxes</span>
+                            <span className="text-gray-900 dark:text-white font-medium shrink-0">${proposal.totalTaxesAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
 
-                        <div className="flex justify-between text-sm pb-2">
-                            <span className="text-gray-700 dark:text-gray-300">Shipping</span>
-                            <span className="text-gray-900 dark:text-white font-medium">${proposal.totalShippingCharges.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <div className="flex justify-between text-sm pb-2 gap-4">
+                            <span className="text-gray-700 dark:text-gray-300 truncate flex-1" title="Shipping">Shipping</span>
+                            <span className="text-gray-900 dark:text-white font-medium shrink-0">${proposal.totalShippingCharges.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
                     </div>
                 </div>

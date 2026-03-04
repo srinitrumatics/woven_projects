@@ -35,6 +35,15 @@ export default function ProductsTab({
         );
     }
 
+    if (products.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                <p className="text-lg font-medium">No records found</p>
+                <p className="text-sm">There are no products associated with this proposal.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="overflow-x-auto">
             <table className="w-full">
@@ -55,66 +64,55 @@ export default function ProductsTab({
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {products.length === 0 ? (
-                        <tr>
-                            <td colSpan={12} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                                <div className="flex flex-col items-center justify-center">
-                                    <p className="text-lg font-medium">No products found</p>
-                                    <p className="text-sm">There are no products listed in this proposal.</p>
+                    {products.map((product) => (
+                        <tr key={product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" style={{ width: widths.Name }}>
+                                <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.Name || ''}>
+                                    <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary rounded font-medium truncate block" title={product.Name}>
+                                        {product.Name}
+                                    </Link>
                                 </div>
                             </td>
+
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left" style={{ width: widths.productName }}>
+                                <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.productName || ''}>{product.productName}</div>
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left min-w-[186px]" style={{ width: widths.description }}>
+                                <div className="truncate" title={product.description || ''}>{product.description || '-'}</div>
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left min-w-[190px]" style={{ width: widths.manufacturerDBA }}>
+                                <div className="truncate" title={product.manufacturerDBA || ''}>{product.manufacturerDBA || '-'}</div>
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" style={{ width: widths.grouping }}>
+                                <div className="truncate" title={product.grouping || ''}>{product.grouping || '-'}</div>
+                            </td>
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.unitPrice }} title={`$${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
+                                ${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.quantity }} title={product.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}>{product.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate" style={{ width: widths.subtotal }} title={`$${product.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
+                                ${product.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }} title={`$${product.shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
+                                ${product.shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }} title={`$${product.taxes.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
+                                ${product.taxes.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate" style={{ width: widths.grandTotal }} title={`$${product.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
+                                ${product.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </td>
+                            <td className="px-3 py-2 text-left" style={{ width: widths.actions }}>
+                                <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary rounded font-medium inline-block">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </Link>
+                            </td>
                         </tr>
-                    ) : (
-                        products.map((product) => (
-                            <tr key={product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" style={{ width: widths.Name }}>
-                                    <div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-1" title={product.Name || ''}>
-                                        <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary rounded font-medium inline-block">
-                                            {product.Name}
-                                        </Link>
-                                    </div>
-                                </td>
-
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left" style={{ width: widths.productName }}>
-                                    <div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-1" title={product.productName || ''}>{product.productName}</div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left min-w-[186px]" style={{ width: widths.description }}>
-                                    <div className="line-clamp-1" title={product.description || ''}>{product.description || '-'}</div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left min-w-[190px]" style={{ width: widths.manufacturerDBA }}>
-                                    <div className="line-clamp-1" title={product.manufacturerDBA || ''}>{product.manufacturerDBA || '-'}</div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" style={{ width: widths.grouping }}>
-                                    <div className="line-clamp-1" title={product.grouping || ''}>{product.grouping || '-'}</div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.unitPrice }}>
-                                    ${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.quantity }}>{product.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold" style={{ width: widths.subtotal }}>
-                                    ${product.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.shipping }}>
-                                    ${product.shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.taxes }}>
-                                    ${product.taxes.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold" style={{ width: widths.grandTotal }}>
-                                    ${product.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-left" style={{ width: widths.actions }}>
-                                    <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary rounded font-medium inline-block">
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    </Link>
-                                </td>
-                            </tr>
-                        ))
-                    )}
+                    ))}
                 </tbody>
             </table>
         </div >

@@ -42,6 +42,19 @@ export default function InvoiceTaxes(props: InvoiceTaxesProps) {
     ];
 
     const { items: sortedData, requestSort, sortConfig } = useSortableData(taxData);
+    const hasNoTaxes =
+        !props.salesTaxAmount && !props.useTaxAmount && !props.localTaxAmount &&
+        !props.exciseTaxAmount && !props.grtAmount && !props.gstAmount && !props.vatAmount;
+
+    if (hasNoTaxes) {
+        return (
+            <div className="text-center py-12">
+                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No record found</p>
+                <p className="text-sm">There are no taxes associated with this invoice.</p>
+            </div>
+        );
+    }
+
     const { widths, handleResize } = useResizableColumns({
         salesRate: 140,
         salesAmount: 150,

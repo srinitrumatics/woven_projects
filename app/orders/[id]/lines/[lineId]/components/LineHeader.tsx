@@ -45,19 +45,20 @@ export default function LineHeader({
                 <span>&gt;</span>
                 <button
                     onClick={() => router.push(`/orders/${id}`)}
-                    className="hover:text-gray-700 dark:hover:text-gray-300"
+                    className="hover:text-gray-700 dark:hover:text-gray-300 truncate max-w-[200px]"
+                    title={orderName || `Order #${id}`}
                 >
                     {orderName || `Order #${id}`}
                 </button>
                 <span>&gt;</span>
-                <span className="text-gray-900 dark:text-white">
+                <span className="text-gray-900 dark:text-white truncate max-w-[200px]" title={productSku || `Line #${lineId}`}>
                     {productSku || `Line #${lineId}`}
                 </span>
             </div>
 
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={productSku || `Order Line #${lineId}`}>
                         {productSku || `Order Line #${lineId}`}
                     </h1>
 

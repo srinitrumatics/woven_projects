@@ -18,7 +18,7 @@ export default function ProductCarousel({ images }: ProductCarouselProps) {
     };
 
     return (
-        <div className="w1400:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+        <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
             <div className="relative flex-1 flex flex-col">
                 {/* Main Image Display */}
                 <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
@@ -36,7 +36,7 @@ export default function ProductCarousel({ images }: ProductCarouselProps) {
                                 d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                             />
                         </svg>
-                        <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block">
+                        <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block truncate px-2" title={images[currentImageIndex]?.label || "Product Image"}>
                             {images[currentImageIndex]?.label || "Product Image"}
                         </span>
                     </div>

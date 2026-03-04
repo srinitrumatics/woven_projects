@@ -309,9 +309,9 @@ export default function QuoteLineDetailPage({
                 </div>
             </div>
             {/* Row 1: Main Image + Proposal Note + Product Information */}
-            <div className="grid grid-cols-1 w1400:grid-cols-12 gap-4 mb-4 items-stretch">
+            <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
                 {/* Main Image with Carousel - 25% width (3 of 12 cols) */}
-                <div className="w1400:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                     <div className="relative flex-1 flex flex-col">
                         {/* Main Image Display - Reduced height */}
                         <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
@@ -382,14 +382,17 @@ export default function QuoteLineDetailPage({
                 </div>
 
                 {/* Quotes Note - 25% width (3 of 12 cols) */}
-                <div className="w1400:col-span-3 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
+                <div className="w1025:col-span-3 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
                             <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
-                        <h2 className="text-sm font-bold text-gray-800 tracking-tight">Quote Lines Note</h2>
+                        <div className="min-w-0">
+                            <h2 className="text-base font-bold text-gray-800 tracking-tight truncate" title="Quote Lines Note">Quote Lines Note</h2>
+                            <p className="text-sm text-gray-500 truncate" title="Special Instructions & Comments">Special Instructions & Comments</p>
+                        </div>
                     </div>
                     <div>
                         <div className="w-full h-[240px] p-4 bg-gray-50/50 border border-gray-100 rounded-lg text-sm text-gray-500 overflow-y-auto italic">
@@ -399,67 +402,70 @@ export default function QuoteLineDetailPage({
                 </div>
 
                 {/* Product Information Card - 50% width (6 of 12 cols) */}
-                <div className="w1400:col-span-6 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
+                <div className="w1025:col-span-6 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
                             <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <h2 className="text-sm font-bold text-gray-800 tracking-tight">Product Information</h2>
+                        <div className="min-w-0">
+                            <h2 className="text-base font-bold text-gray-800 tracking-tight truncate" title="Product Information">Product Information</h2>
+                            <p className="text-sm text-gray-500 truncate" title="Detailed Specifications">Detailed Specifications</p>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-4">
                         <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Product Name</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.name}</div>
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Product Name">Product Name</label>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.name}>{product.name}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Product Grouping</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.productGrouping}</div>
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Product Grouping">Product Grouping</label>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.productGrouping}>{product.productGrouping}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Site</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.site}</div>
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Site">Site</label>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.site}>{product.site}</div>
                         </div>
 
                         <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Description</label>
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Description">Description</label>
                             <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.description}>{product.description}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Grouping</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.grouping}</div>
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Grouping">Grouping</label>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.grouping}>{product.grouping}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Inventory Account</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.inventoryAccount}</div>
-                        </div>
-
-                        <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Manufacturer DBA</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.manufacturerDBA}</div>
-                        </div>
-                        <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">IsTaxable</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.isTaxable}</div>
-                        </div>
-                        <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Unit Cost</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{formatCurrency(product.unitCost)}</div>
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Inventory Account">Inventory Account</label>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.inventoryAccount}>{product.inventoryAccount}</div>
                         </div>
 
                         <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Product Family</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{product.productFamily}</div>
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Manufacturer DBA">Manufacturer DBA</label>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.manufacturerDBA}>{product.manufacturerDBA}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Available to Sell</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate font-semibold text-green-600">{product.availableToSell}</div>
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="IsTaxable">IsTaxable</label>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.isTaxable}>{product.isTaxable}</div>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-sm text-gray-700 text-sm font-bold block mb-1">Total Cost</label>
-                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate">{formatCurrency(product.totalCost)}</div>
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Unit Cost">Unit Cost</label>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={formatCurrency(product.unitCost)}>{formatCurrency(product.unitCost)}</div>
+                        </div>
+
+                        <div className="md:col-span-1">
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Product Family">Product Family</label>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={product.productFamily}>{product.productFamily}</div>
+                        </div>
+                        <div className="md:col-span-1">
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Available to Sell">Available to Sell</label>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate font-semibold text-green-600" title={product.availableToSell.toString()}>{product.availableToSell}</div>
+                        </div>
+                        <div className="md:col-span-1">
+                            <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Total Cost">Total Cost</label>
+                            <div className="bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 truncate" title={formatCurrency(product.totalCost)}>{formatCurrency(product.totalCost)}</div>
                         </div>
                     </div>
                 </div>
@@ -472,15 +478,15 @@ export default function QuoteLineDetailPage({
                         <table className="w-full text-sm text-left">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Unit Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Order Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">MCQ</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Total Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Total Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Taxes</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Shipping</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Grand Total</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Qty Shipped</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Unit Price</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Order Qty</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">MOQ</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Total Order Qty</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Total Price</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Shipping</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Taxes</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Grand Total</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Qty Shipped</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
@@ -490,9 +496,9 @@ export default function QuoteLineDetailPage({
                                     <td className="px-3 py-2 text-gray-600">{product.moq}</td>
                                     <td className="px-3 py-2 text-gray-600">{product.totalOrderQty}</td>
                                     <td className="px-3 py-2 text-gray-600">{formatCurrency(product.totalPrice)}</td>
-                                    <td className="px-3 py-2 text-gray-600 ">{formatCurrency(product.taxes)}</td>
                                     <td className="px-3 py-2 text-gray-600">{formatCurrency(product.shipping)}</td>
-                                    <td className="px-3 py-2 text-blue-400">{formatCurrency(product.grandTotal)}</td>
+                                    <td className="px-3 py-2 text-gray-600 ">{formatCurrency(product.taxes)}</td>
+                                    <td className="px-3 py-2 font-bold text-blue-400">{formatCurrency(product.grandTotal)}</td>
                                     <td className="px-3 py-2 text-gray-600">{product.qtyShipped}</td>
                                 </tr>
                             </tbody>
@@ -524,7 +530,7 @@ export default function QuoteLineDetailPage({
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
-                            className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === tab.id
+                            className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${activeTab === tab.id
                                 ? "bg-primary text-white"
                                 : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                                 }`}

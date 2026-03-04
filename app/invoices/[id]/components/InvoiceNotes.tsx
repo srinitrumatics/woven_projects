@@ -1,14 +1,14 @@
-interface QuoteNotesProps {
+interface InvoiceNotesProps {
     notes: string;
     className?: string;
 }
 
-export default function QuoteNotes({ notes, className = "" }: QuoteNotesProps) {
+export default function InvoiceNotes({ notes, className = "" }: InvoiceNotesProps) {
     return (
         <div className={`bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col min-h-[182px] ${className}`}>
             <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Quote Notes">Quote Notes</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Review Quote Notes</p>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Invoice Notes">Invoice Notes</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Review Invoice Notes</p>
             </div>
             <textarea
                 disabled

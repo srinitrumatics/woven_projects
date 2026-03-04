@@ -188,34 +188,33 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full">
-                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                    <tr>
-                        <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={widths.fileName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                        <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={widths.fileType} onResize={handleResize} />
-                        <SortableHeader label="Size" field="fileSize" sortConfig={sortConfig} requestSort={requestSort} width={widths.fileSize} onResize={handleResize} />
-                        <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedBy} onResize={handleResize} />
-                        <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedDate} onResize={handleResize} />
-                        <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.action, minWidth: widths.action, maxWidth: widths.action }}>
-                            Action
-                        </th>
-                    </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {sortedFiles.length === 0 ? (
+            {sortedFiles.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                    <p className="text-lg font-medium">No records found</p>
+                    <p className="text-sm">There are no files associated with this quote.</p>
+                </div>
+            ) : (
+                <table className="w-full">
+                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
-                            <td colSpan={6} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                                No files found.
-                            </td>
+                            <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={widths.fileName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                            <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={widths.fileType} onResize={handleResize} />
+                            <SortableHeader label="Size" field="fileSize" sortConfig={sortConfig} requestSort={requestSort} width={widths.fileSize} onResize={handleResize} />
+                            <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedBy} onResize={handleResize} />
+                            <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedDate} onResize={handleResize} />
+                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.action, minWidth: widths.action, maxWidth: widths.action }}>
+                                Action
+                            </th>
                         </tr>
-                    ) : (
-                        sortedFiles.map((file) => (
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {sortedFiles.map((file) => (
                             <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                 <td className="px-3 py-2 text-sm sticky left-0 bg-white dark:bg-gray-800 z-10" style={{ width: widths.fileName }}>
                                     <div className="flex items-center gap-3">
                                         {getFileIcon(file.fileType)}
                                         <span
-                                            className="font-medium text-gray-900 dark:text-white line-clamp-2 cursor-pointer hover:text-primary hover:underline"
+                                            className="font-medium text-gray-900 dark:text-white truncate cursor-pointer hover:text-primary hover:underline"
                                             title={file.fileName}
                                             onClick={() => handlePreview(file)}
                                         >
@@ -230,7 +229,7 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
                                     {formatFileSize(file.sizeInBytes)}
                                 </td>
                                 <td className="px-3 py-2" style={{ width: widths.uploadedBy }}>
-                                    <div className="text-sm text-gray-900 dark:text-white line-clamp-2" title={file.uploadedBy}>
+                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>
                                         {file.uploadedBy}
                                     </div>
                                 </td>
@@ -239,7 +238,6 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
                                 </td>
                                 <td className="px-3 py-2 text-sm" style={{ width: widths.action }}>
                                     <div className="flex gap-2">
-                                        {/* Preview button */}
                                         <button
                                             onClick={() => handlePreview(file)}
                                             className="p-1 text-blue-600 hover:text-blue-800"
@@ -253,7 +251,6 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
                                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
                                         </button>
-                                        {/* Download button */}
                                         <button
                                             onClick={() => handleDownload(file)}
                                             disabled={downloadingIds.has(file.id)}
@@ -274,11 +271,10 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
                                     </div>
                                 </td>
                             </tr>
-                        ))
-                    )}
-
-                </tbody>
-            </table>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 }

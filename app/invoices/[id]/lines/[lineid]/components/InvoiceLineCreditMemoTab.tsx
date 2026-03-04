@@ -91,6 +91,16 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
         );
     }
 
+    if (creditMemoLines.length === 0) {
+        return (
+            <div className="text-center py-12">
+                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No records found</p>
+                <p className="text-sm">There is no credit memo associated with this invoice line.</p>
+
+            </div>
+        );
+    }
+
     return (
         <div className="bg-white dark:bg-gray-800">
             <div className="overflow-auto max-h-[500px]">
@@ -112,32 +122,26 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800">
-                        {sortedData.length === 0 ? (
-                            <tr>
-                                <td colSpan={11} className="py-12 text-center text-gray-500 dark:text-gray-400 italic">No credit memo lines found.</td>
+                        {sortedData.map((item) => (
+                            <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700">
+                                {/* Sticky column — z-10, inherits row bg */}
+                                <td className="px-3 py-2 text-sm font-medium text-left truncate sticky left-0 z-10 bg-white dark:bg-gray-800 text-primary">{item.creditMemoName}</td>
+                                <td className="px-3 py-2 text-sm">
+                                    <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                        {item.status}
+                                    </span>
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-[200px] truncate" title={item.description}>{item.description}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.manufacturerDBA}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">{formatCurrency(item.unitPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.quantity}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.grandTotal)}</td>
                             </tr>
-                        ) : (
-                            sortedData.map((item) => (
-                                <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700">
-                                    {/* Sticky column — z-10, inherits row bg */}
-                                    <td className="px-3 py-2 text-sm font-medium text-left whitespace-nowrap sticky left-0 z-10 bg-white dark:bg-gray-800 text-primary">{item.creditMemoName}</td>
-                                    <td className="px-3 py-2 text-sm">
-                                        <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                                            {item.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.productName}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-[200px] truncate" title={item.description}>{item.description}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.manufacturerDBA}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white whitespace-nowrap font-medium">{formatCurrency(item.unitPrice)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.quantity}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.totalPrice)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.taxes)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.shipping)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white whitespace-nowrap">{formatCurrency(item.grandTotal)}</td>
-                                </tr>
-                            ))
-                        )}
+                        ))}
                     </tbody>
                 </table>
             </div>

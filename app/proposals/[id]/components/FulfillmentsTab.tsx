@@ -90,8 +90,9 @@ export default function FulfillmentsTab({
                 {activeTab === "quotes" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className=" py-12 text-gray-500 dark:text-gray-400 text-center">
-                                <p className="text-lg font-medium">No customer quotes found</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                                <p className="text-lg font-medium">No records found</p>
+                                <p className="text-sm">There are no Customer Quotes associated with this proposal.</p>
                             </div>
                         ) : (
                             <table className="w-full">
@@ -123,7 +124,7 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as CustomerQuote[]).map((quote) => (
                                         <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={quote.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{quote.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={quote.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">{quote.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {quote.status}
@@ -179,8 +180,9 @@ export default function FulfillmentsTab({
                 {activeTab === "sales" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className=" py-12 text-gray-500 dark:text-gray-400 text-center">
-                                <p className="text-lg font-medium">No sales orders found</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                                <p className="text-lg font-medium">No records found</p>
+                                <p className="text-sm">There are no Sales Orders associated with this proposal.</p>
                             </div>
                         ) : (
                             <table className="w-full">
@@ -213,21 +215,21 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as SalesOrder[]).map((order) => (
                                         <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={order.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{order.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={order.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">{order.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {order.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.customerQuoteName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerOrderName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.customerOrderName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerPO}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.customerPO}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.billToAccountName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.billToLocationName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.billToContactName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToAccountName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToLocationName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{order.shipToContactName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white truncate ">{order.customerQuoteName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerOrderName}><div className="text-sm text-gray-900 dark:text-white truncate ">{order.customerOrderName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerPO}><div className="text-sm text-gray-900 dark:text-white truncate ">{order.customerPO}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{order.billToAccountName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToLocationName}><div className="text-sm text-gray-900 dark:text-white truncate ">{order.billToLocationName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{order.billToContactName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{order.shipToAccountName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToLocationName}><div className="text-sm text-gray-900 dark:text-white truncate ">{order.shipToLocationName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{order.shipToContactName}</div></td>
                                             <td className="px-3 py-2 min-w-[103px]">
                                                 <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${order.dropShip
                                                     ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
@@ -270,8 +272,9 @@ export default function FulfillmentsTab({
                 {activeTab === "invoices" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className=" py-12 text-gray-500 dark:text-gray-400 text-center">
-                                <p className="text-lg font-medium">No invoices found</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                                <p className="text-lg font-medium">No records found</p>
+                                <p className="text-sm">There are no Invoices associated with this proposal.</p>
                             </div>
                         ) : (
                             <table className="w-full ">
@@ -303,19 +306,19 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as Invoice[]).map((invoice) => (
                                         <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={invoice.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{invoice.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={invoice.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">{invoice.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {invoice.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.salesOrderName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.salesOrderName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.customerQuoteName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[155px]" title={invoice.customerOrderName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.customerOrderName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.customerPO}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.customerPO}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.billToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.billToAccountName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.billToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.billToLocationName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.billToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{invoice.billToContactName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.salesOrderName}><div className="text-sm text-gray-900 dark:text-white truncate ">{invoice.salesOrderName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white truncate ">{invoice.customerQuoteName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[155px]" title={invoice.customerOrderName}><div className="text-sm text-gray-900 dark:text-white truncate ">{invoice.customerOrderName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.customerPO}><div className="text-sm text-gray-900 dark:text-white truncate ">{invoice.customerPO}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.billToAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{invoice.billToAccountName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.billToLocationName}><div className="text-sm text-gray-900 dark:text-white truncate ">{invoice.billToLocationName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={invoice.billToContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{invoice.billToContactName}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[128px]">
                                                 <span className="py-1 inline-flex min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
                                                     {(invoice.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -354,8 +357,10 @@ export default function FulfillmentsTab({
                 {activeTab === "shipping" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className=" py-12 text-gray-500 dark:text-gray-400 text-center">
-                                <p className="text-lg font-medium">No shipping manifests found</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                                <p className="text-lg font-medium">No records found</p>
+                                <p className="text-sm">There are no Shipping Manifests associated with this proposal.</p>
+
                             </div>
                         ) : (
                             <table className="w-full">
@@ -390,19 +395,19 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as ShippingManifest[]).map((manifest) => (
                                         <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={manifest.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{manifest.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={manifest.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">{manifest.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {manifest.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.salesOrderName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{manifest.salesOrderName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{manifest.customerQuoteName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.customerOrderName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{manifest.customerOrderName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.customerPO}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{manifest.customerPO}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.shipToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{manifest.shipToAccountName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.shipToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{manifest.shipToLocationName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.shipToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 ">{manifest.shipToContactName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.salesOrderName}><div className="text-sm text-gray-900 dark:text-white truncate ">{manifest.salesOrderName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white truncate ">{manifest.customerQuoteName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.customerOrderName}><div className="text-sm text-gray-900 dark:text-white truncate ">{manifest.customerOrderName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.customerPO}><div className="text-sm text-gray-900 dark:text-white truncate ">{manifest.customerPO}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.shipToAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{manifest.shipToAccountName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.shipToLocationName}><div className="text-sm text-gray-900 dark:text-white truncate ">{manifest.shipToLocationName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.shipToContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{manifest.shipToContactName}</div></td>
                                             <td className="px-3 py-2 min-w-[105px]">
                                                 <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${manifest.dropShip
                                                     ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'

@@ -281,40 +281,41 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                 </div>
             </div>
 
-            <div className="overflow-auto">
-                <table className="w-full">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
-                        <tr>
-                            {isEditing && (
-                                <th className="px-2 py-3 text-left w-10">
-                                    <input
-                                        type="checkbox"
-                                        onChange={handleSelectAll}
-                                        checked={files.length > 0 && files.every(f => selectedFileIds.has(f.Id))}
-                                        className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
-                                    />
-                                </th>
-                            )}
-                            <SortableHeader label="File Name" field="Title" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Type" field="FileExtension" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Uploaded By" field="CreatedBy" sortConfig={sortConfig} requestSort={requestSort} />
+            {loading ? (
+                <div className="flex justify-center items-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+            ) : sortedFiles.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                    <p className="text-lg font-medium">No records found</p>
+                    <p className="text-sm">There are no files associated with this order.</p>
+                </div>
+            ) : (
+                <div className="overflow-auto">
+                    <table className="w-full">
+                        <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
+                            <tr>
+                                {isEditing && (
+                                    <th className="px-2 py-3 text-left w-10">
+                                        <input
+                                            type="checkbox"
+                                            onChange={handleSelectAll}
+                                            checked={files.length > 0 && files.every(f => selectedFileIds.has(f.Id))}
+                                            className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                                        />
+                                    </th>
+                                )}
+                                <SortableHeader label="File Name" field="Title" sortConfig={sortConfig} requestSort={requestSort} />
+                                <SortableHeader label="Type" field="FileExtension" sortConfig={sortConfig} requestSort={requestSort} />
+                                <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} />
+                                <SortableHeader label="Uploaded By" field="CreatedBy" sortConfig={sortConfig} requestSort={requestSort} />
 
-                            <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} />
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {loading ? (
-                            <tr>
-                                <td colSpan={isEditing ? 6 : 5} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">Loading files...</td>
+                                <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} />
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
                             </tr>
-                        ) : sortedFiles.length === 0 ? (
-                            <tr>
-                                <td colSpan={isEditing ? 6 : 5} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No files found.</td>
-                            </tr>
-                        ) : (
-                            sortedFiles.map(file => (
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            {sortedFiles.map(file => (
                                 <tr key={file.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                     {isEditing && (
                                         <td className="px-2 py-3">
@@ -326,7 +327,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                                             />
                                         </td>
                                     )}
-                                    <td className="px-2 py-3 text-sm font-medium text-gray-900 dark:text-white" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">{file.Title}</div></td>
+                                    <td className="px-2 py-3 text-sm font-medium text-gray-900 dark:text-white" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white truncate">{file.Title}</div></td>
                                     <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.FileExtension}</td>
                                     <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{formatFileSize(file.FileSize)}</td>
                                     <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedBy}</td>
@@ -380,11 +381,11 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                                         </div>
                                     </td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 }

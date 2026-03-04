@@ -78,44 +78,41 @@ export default function MyOrderTable({
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="overflow-auto">
-                <table className="w-full text-sm ">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
-                        <tr>
-                            <SortableHeader label="Order Line " field="sku" sortConfig={sortConfig} requestSort={requestSort} width={widths.sku} onResize={onResize} />
-                            <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
-                            <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
-                            <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
-                            <SortableHeader label="Unit Price" field="unitPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
-                            <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
-                            <SortableHeader label="Sub Total" field="subtotal" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} />
-                            {isEditing && (
-                                <th
-                                    className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"
-                                    style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
-                                >
-                                    Action
-                                </th>
-                            )}
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 text-sm">
-                        {loadingOrder ? (
+            {loadingOrder ? (
+                <div className="flex justify-center items-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+            ) : paginatedProducts.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                    <p className="text-lg font-medium">No records found</p>
+                    <p className="text-sm mt-1">{searchQuery ? "No products found matching your search." : "There are no products associated with this order."}</p>
+                    {!searchQuery && isEditing && <p className="text-sm mt-1 text-center">Your order is empty. Click 'Add Products' to start adding items.</p>}
+                </div>
+            ) : (
+                <div className="overflow-auto">
+                    <table className="w-full text-sm ">
+                        <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
                             <tr>
-                                <td colSpan={isEditing ? 9 : 8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                                    Loading order details...
-                                </td>
+                                <SortableHeader label="Order Line " field="sku" sortConfig={sortConfig} requestSort={requestSort} width={widths.sku} onResize={onResize} />
+                                <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
+                                <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
+                                <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
+                                <SortableHeader label="Unit Price" field="unitPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
+                                <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
+                                <SortableHeader label="Sub Total" field="subtotal" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} />
+                                {isEditing && (
+                                    <th
+                                        className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                                        style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                                    >
+                                        Action
+                                    </th>
+                                )}
                             </tr>
-                        ) : paginatedProducts.length === 0 ? (
-                            <tr>
-                                <td colSpan={isEditing ? 9 : 8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400 text-sm">
-                                    {searchQuery ? "No products found matching your search." : "Your order is empty. Click 'Add Products' to start adding items."}
-                                </td>
-                            </tr>
-                        ) : (
-                            paginatedProducts.map((product) => (
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                            {paginatedProducts.map((product) => (
                                 <tr key={product.lineItemKey || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-
                                     <td className="px-2 py-3 text-left min-w-[100px]">
                                         <Link
                                             href={`/orders/${orderId}/lines/${product.orderLineId || product.id}`}
@@ -224,11 +221,11 @@ export default function MyOrderTable({
                                         </td>
                                     )}
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
 
             {
                 sortedProducts.length > 0 && (

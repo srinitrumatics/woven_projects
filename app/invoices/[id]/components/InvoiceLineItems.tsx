@@ -26,6 +26,15 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
         grandTotal: 140
     });
 
+    if (lines.length === 0) {
+        return (
+            <div className="text-center py-12">
+                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No invoice lines found</p>
+                <p className="text-sm">There are no items associated with this invoice.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="overflow-x-auto">
             <table className="w-full">
@@ -49,13 +58,13 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {sortedLines.map((line) => (
                         <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td className="px-3 py-2 text-sm font-medium text-left whitespace-nowrap sticky left-0 bg-white dark:bg-gray-800">
+                            <td className="px-3 py-2 text-sm font-medium text-left sticky left-0 bg-white dark:bg-gray-800">
                                 {invoiceId ? (
-                                    <Link href={`/invoices/${invoiceId}/lines/${line.id}`} className="text-primary hover:underline">
+                                    <Link href={`/invoices/${invoiceId}/lines/${line.id}`} className="text-primary hover:underline truncate block" title={line.invoiceLineName}>
                                         {line.invoiceLineName}
                                     </Link>
                                 ) : (
-                                    <span className="text-primary">{line.invoiceLineName}</span>
+                                    <span className="text-primary truncate block" title={line.invoiceLineName}>{line.invoiceLineName}</span>
                                 )}
                             </td>
                             <td className="px-3 py-2 text-left">
@@ -67,12 +76,12 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                                 </span>
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left">
-                                <div className="line-clamp-1" title={line.productName}>{line.productName}</div>
+                                <div className="truncate" title={line.productName}>{line.productName}</div>
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left">
-                                <div className="line-clamp-1" title={line.description}>{line.description}</div>
+                                <div className="truncate" title={line.description}>{line.description}</div>
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left whitespace-nowrap">
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">
                                 {line.manufacturerDBA}
                             </td>
                             <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">

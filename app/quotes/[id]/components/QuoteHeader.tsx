@@ -15,7 +15,7 @@ export default function QuoteHeader({ quoteNumber, status, description, onBack }
                 <span>&gt;</span>
                 <span className="hover:text-gray-700 dark:text-gray-300">View Quote</span>
                 <span>&gt;</span>
-                <span className="text-gray-900 dark:text-white">{quoteNumber}</span>
+                <span className="text-gray-900 dark:text-white truncate" title={quoteNumber}>{quoteNumber}</span>
             </div>
             <div className="w-full dark:bg-gray-800 rounded-lg p-4">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
@@ -28,8 +28,8 @@ export default function QuoteHeader({ quoteNumber, status, description, onBack }
                             </svg>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{quoteNumber}</h2>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">Quote Details and Summary</div>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={quoteNumber}>{quoteNumber}</h2>
+                            <div className="text-sm text-gray-500 dark:text-gray-400 truncate">Quote Details and Summary</div>
                         </div>
                     </div>
                     <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">

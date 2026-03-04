@@ -120,8 +120,9 @@ export default function InvoiceFiles({ files, invoiceId, accountId, contactId }:
     if (files.length === 0) {
         return (
             <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg mb-2">No files attached to this invoice</p>
-                <p className="text-gray-400 dark:text-gray-500 text-sm">Upload files in the financial tab in Salesforce</p>
+                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No record found</p>
+                <p className="text-sm">There are no files associated with this invoice.</p>
+
             </div>
         );
     }

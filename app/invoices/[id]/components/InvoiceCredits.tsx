@@ -32,7 +32,8 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
     if (credits.length === 0) {
         return (
             <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg mb-2">No credits found</p>
+                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No record found</p>
+                <p className="text-sm">There are no credit memos associated with this invoice.</p>
             </div>
         );
     }
@@ -65,7 +66,7 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {sortedCredits.map((cm) => (
                         <tr key={cm.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td className="px-3 py-2 text-sm text-primary font-medium sticky left-0 bg-white dark:bg-gray-800 whitespace-nowrap">
+                            <td className="px-3 py-2 text-sm text-primary font-medium sticky left-0 bg-white dark:bg-gray-800 truncate">
                                 {cm.name}
                             </td>
                             <td className="px-3 py-2">

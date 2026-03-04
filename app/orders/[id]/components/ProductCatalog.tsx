@@ -108,53 +108,52 @@ export default function ProductCatalog({
                     </button>
                 )}
             </div>
-            <div className="overflow-auto">
-                <table className="w-full">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
-                        <tr>
-                            {isEditing && (
-                                <th
-                                    className="px-2 py-3 text-left"
-                                    style={{ width: widths.selection, minWidth: widths.selection, maxWidth: widths.selection }}
-                                >
-                                    <input
-                                        type="checkbox"
-                                        onChange={handleSelectAll}
-                                        checked={paginatedCatalogProducts.length > 0 && paginatedCatalogProducts.every(p => selectedProductIds.has(p.id))}
-                                        className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
-                                    />
-                                </th>
-                            )}
-                            {/*<th
+            {paginatedCatalogProducts.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                    <p className="text-lg font-medium">No records found</p>
+                    <p className="text-sm mt-1">{searchQuery ? "No products found matching your search." : "All products have been added to your order."}</p>
+                </div>
+            ) : (
+                <div className="overflow-auto">
+                    <table className="w-full">
+                        <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
+                            <tr>
+                                {isEditing && (
+                                    <th
+                                        className="px-2 py-3 text-left"
+                                        style={{ width: widths.selection, minWidth: widths.selection, maxWidth: widths.selection }}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            onChange={handleSelectAll}
+                                            checked={paginatedCatalogProducts.length > 0 && paginatedCatalogProducts.every(p => selectedProductIds.has(p.id))}
+                                            className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                                        />
+                                    </th>
+                                )}
+                                {/*<th
                                 className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white"
                             style={{ width: widths.image, minWidth: widths.image, maxWidth: widths.image }}
                             >Image</th>*/}
-                            <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
-                            <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
-                            <SortableHeader label="Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
-                            <SortableHeader label="List Price" field="listPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={onResize} />
-                            <SortableHeader label="Unit Price" field="unitPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
-                            {/* Removed Available Qty Header */}
-                            {isEditing && (
-                                <>
-                                    <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
-                                    <th
-                                        className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"
-                                        style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
-                                    >Action</th>
-                                </>
-                            )}
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {paginatedCatalogProducts.length === 0 ? (
-                            <tr>
-                                <td colSpan={isEditing ? 8 : 5} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                                    {searchQuery ? "No products found matching your search." : "All products have been added to your order."}
-                                </td>
+                                <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
+                                <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
+                                <SortableHeader label="Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
+                                <SortableHeader label="List Price" field="listPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={onResize} />
+                                <SortableHeader label="Unit Price" field="unitPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
+                                {/* Removed Available Qty Header */}
+                                {isEditing && (
+                                    <>
+                                        <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
+                                        <th
+                                            className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                                            style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                                        >Action</th>
+                                    </>
+                                )}
                             </tr>
-                        ) : (
-                            paginatedCatalogProducts.map((product) => (
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            {paginatedCatalogProducts.map((product) => (
                                 <tr key={product.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${selectedProductIds.has(product.id) ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
                                     {isEditing && (
                                         <td className="px-2 py-2 text-left">
@@ -183,10 +182,10 @@ export default function ProductCatalog({
                                         </div>
                                     </td>
                                     <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
-                                        <div className="line-clamp-2" title={product.manufacturer}>{product.manufacturer}</div>
+                                        <div className="truncate" title={product.manufacturer}>{product.manufacturer}</div>
                                     </td>
                                     <td className="px-3 py-2 text-left">
-                                        <div className="line-clamp-2" title={product.productFamily}>
+                                        <div className="truncate" title={product.productFamily}>
                                             <span className="inline-block px-2 py-0.5 text-sm font-medium rounded bg-primary/10 text-primary  tracking-wider whitespace-normal">
                                                 {product.productFamily}
                                             </span>
@@ -288,11 +287,11 @@ export default function ProductCatalog({
                                         </>
                                     )}
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div >
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
 
             {/* Image Popup Modal */}
             {

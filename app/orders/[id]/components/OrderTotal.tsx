@@ -42,30 +42,23 @@ export default function OrderTotal({
     return (
         <div className={`bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col h-full ${className}`} role="region" aria-label="Order total">
             {/* Header */}
-            <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Order Summary</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Review Your Order Summary</p>
-                </div>
+            <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Order Summary">Order Summary</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Review Your Order Summary</p>
             </div>
             {/* Price Breakdown */}
             <div className="flex-1 space-y-2 mb-2 pt-2">
-                <div className="flex justify-between text-sm">
-                    <span className="text-gray-700 dark:text-gray-300">{productsCount} Product{productsCount !== 1 ? 's' : ''} - Subtotal</span>
-                    <span className="text-gray-900 dark:text-white font-medium">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <div className="flex justify-between text-sm gap-4">
+                    <span className="text-gray-700 dark:text-gray-300 truncate flex-1" title={`${productsCount} Product${productsCount !== 1 ? 's' : ''} - Subtotal`}>{productsCount} Product{productsCount !== 1 ? 's' : ''} - Subtotal</span>
+                    <span className="text-gray-900 dark:text-white font-medium shrink-0">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                    <span className="text-gray-700 dark:text-gray-300">Taxes</span>
-                    <span className="text-gray-900 dark:text-white font-semibold">${totalExciseTax.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <div className="flex justify-between text-sm gap-4">
+                    <span className="text-gray-700 dark:text-gray-300 truncate flex-1" title="Taxes">Taxes</span>
+                    <span className="text-gray-900 dark:text-white font-semibold shrink-0">${totalExciseTax.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                    <span className="text-gray-700 dark:text-gray-300">Shipping</span>
-                    <span className="text-gray-900 dark:text-white">${shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <div className="flex justify-between text-sm gap-4">
+                    <span className="text-gray-700 dark:text-gray-300 truncate flex-1" title="Shipping">Shipping</span>
+                    <span className="text-gray-900 dark:text-white shrink-0">${shipping.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
             </div>
 
@@ -73,9 +66,9 @@ export default function OrderTotal({
             <div className="mt-auto">
                 {/* Grand Total */}
                 <div className="border-t-2 border-primary/20 dark:border-primary/40 py-2">
-                    <div className="flex justify-between items-center text-lg font-bold">
-                        <span className="text-gray-900 dark:text-white">Grand Total</span>
-                        <span className="text-primary dark:text-primary font-extrabold">${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <div className="flex justify-between items-center text-lg font-bold gap-4">
+                        <span className="text-gray-900 dark:text-white truncate flex-1" title="Grand Total">Grand Total</span>
+                        <span className="text-primary dark:text-primary font-extrabold shrink-0">${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
                 </div>
 
@@ -141,7 +134,7 @@ export default function OrderTotal({
                                         <svg className="w-3 h-3 text-gray-500 dark:text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
-                                        <span className="text-xs text-gray-700 dark:text-gray-300 line-clamp-2">{file.name}</span>
+                                        <span className="text-xs text-gray-700 dark:text-gray-300 truncate" title={file.name}>{file.name}</span>
                                     </div>
                                     <div className="flex items-center gap-1">
                                         <button

@@ -37,6 +37,15 @@ export default function QuoteLinesTab({
         );
     }
 
+    if (products.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                <p className="text-lg font-medium">No records found</p>
+                <p className="text-sm">There are no quote lines listed in this quote.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="overflow-x-auto py-2">
             <table className="w-full">
@@ -57,58 +66,52 @@ export default function QuoteLinesTab({
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {products.length === 0 ? (
-                        <tr>
-                            <td colSpan={12} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No quote lines found</td>
+                    {products.map((line) => (
+                        <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" style={{ width: widths.Name }}>
+                                <Link
+                                    href={`/quotes/${quoteId}/lines/${line.id}`}
+                                    className="text-primary font-bold hover:underline truncate"
+                                    title={line.Name}
+                                >
+                                    {line.Name}
+                                </Link>
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.status }} title={line.status}>
+                                {line.status}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.productName }}>
+                                <div className="truncate" title={line.productName}>{line.productName}</div>
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.description }}>
+                                <div className="max-w-xs truncate" title={line.description}>{line.description}</div>
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.manufacturerDBA }} title={line.manufacturerDBA}>
+                                {line.manufacturerDBA}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.unitPrice }} title={formatCurrency(line.unitPrice)}>
+                                {formatCurrency(line.unitPrice)}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.quantity }} title={String(line.quantity)}>
+                                {line.quantity}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalPrice }} title={formatCurrency(line.totalPrice)}>
+                                {formatCurrency(line.totalPrice)}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }} title={formatCurrency(line.shipping)}>
+                                {formatCurrency(line.shipping)}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }} title={formatCurrency(line.taxes)}>
+                                {formatCurrency(line.taxes)}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.lineGrandTotal }} title={formatCurrency(line.lineGrandTotal)}>
+                                {formatCurrency(line.lineGrandTotal)}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.qtyShipped }} title={String(line.qtyShipped)}>
+                                {line.qtyShipped}
+                            </td>
                         </tr>
-                    ) : (
-                        products.map((line) => (
-                            <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" style={{ width: widths.Name }}>
-                                    <Link
-                                        href={`/quotes/${quoteId}/lines/${line.id}`}
-                                        className="text-primary font-bold hover:underline line-clamp-2"
-                                        title={line.Name}
-                                    >
-                                        {line.Name}
-                                    </Link>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.status }}>
-                                    {line.status}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.productName }}>
-                                    <div className="line-clamp-2" title={line.productName}>{line.productName}</div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.description }}>
-                                    <div className="max-w-xs line-clamp-1" title={line.description}>{line.description}</div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px]" style={{ width: widths.manufacturerDBA }}>
-                                    {line.manufacturerDBA}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.unitPrice }}>
-                                    {formatCurrency(line.unitPrice)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.quantity }}>
-                                    {line.quantity}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>
-                                    {formatCurrency(line.totalPrice)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipping }}>
-                                    {formatCurrency(line.shipping)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.taxes }}>
-                                    {formatCurrency(line.taxes)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white " style={{ width: widths.lineGrandTotal }}>
-                                    {formatCurrency(line.lineGrandTotal)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.qtyShipped }}>
-                                    {line.qtyShipped}
-                                </td>
-                            </tr>
-                        ))
-                    )}
+                    ))}
                 </tbody>
             </table>
         </div>

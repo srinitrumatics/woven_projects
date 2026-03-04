@@ -14,27 +14,27 @@ interface QuoteDetailsProps {
 
 export default function QuoteDetailsSection({ quote, lines, isUploading, handleFileUpload }: QuoteDetailsProps) {
     return (
-        <div className="grid grid-cols-1 w1400:grid-cols-10 gap-6 items-stretch">
+        <div className="grid grid-cols-1 w1025:grid-cols-10 gap-6 items-stretch">
             {/* Row 1 Left - Key Dates (70%) */}
-            <div className="w1400:col-span-7">
+            <div className="w1025:col-span-7">
                 <QuoteKeyDates quote={quote} className="h-full" />
             </div>
 
             {/* Row 1 Right - Quote Notes (30%) */}
-            <div className="w1400:col-span-3">
+            <div className="w1025:col-span-3">
                 <QuoteNotes notes={quote.notes || ""} className="h-full" />
             </div>
 
             {/* Row 2 Left - Billing & Shipping (70%) */}
-            <div className="w1400:col-span-7">
-                <div className="grid grid-cols-1 w1400:grid-cols-2 gap-4 h-full">
+            <div className="w1025:col-span-7">
+                <div className="grid grid-cols-1 w1025:grid-cols-2 gap-4 h-full">
                     <QuoteBillingInfo quote={quote} />
                     <QuoteShippingInfo quote={quote} />
                 </div>
             </div>
 
             {/* Row 2 Right - Quote Summary (30%) */}
-            <div className="w1400:col-span-3 flex flex-col">
+            <div className="w1025:col-span-3 flex flex-col">
                 <QuoteSummary
                     className="h-full"
                     quote={quote}

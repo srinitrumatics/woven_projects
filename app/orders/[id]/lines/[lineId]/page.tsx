@@ -161,7 +161,7 @@ export default function OrderLineDetailPage({
 
         if (order) {
           // Display Proposal_Name if available as the "Order Name", falling back to the Salesforce Name (Order Number)
-          setOrderName(order.Proposal_Name || order.Proposal_Name__c || order.Name || order.Name__c || id);
+          setOrderName(order.Name || order.Name__c || order.Proposal_Name || order.Proposal_Name__c || id);
           setOrderStatus(order.Status__c || "Draft");
         }
 
@@ -389,7 +389,7 @@ export default function OrderLineDetailPage({
       />
 
       {/* Row 1: Main Image + Order Notes + Product Information */}
-      <div className="grid grid-cols-1 w1400:grid-cols-12 gap-4 mb-4 items-stretch">
+      <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
         <ProductCarousel images={productImages} />
 
         <OrderLineNotes
@@ -403,7 +403,7 @@ export default function OrderLineDetailPage({
       </div>
 
       {/* Row 2: Order Details */}
-      <div className="grid grid-cols-1 w1400:grid-cols-12 gap-4">
+      <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4">
         <OrderDetailsTable
           isEditing={isEditing}
           product={product}
@@ -417,7 +417,7 @@ export default function OrderLineDetailPage({
           displayQty={displayQty}
         />
 
-        <div className="w1400:col-span-12">
+        <div className="w1025:col-span-12">
           <LineTaxesTab product={product} />
         </div>
       </div>

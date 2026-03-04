@@ -881,7 +881,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               return order.Ship_to_Account_Name || "";
             })(),
             shipToAccountId: order.Authorized_Ship_To_Location__r?.Account_Name__c || order.Ship_to_Account__c || "",
-            orderName: order.Proposal_Name || order.Proposal_Name__c || order.Name || "",
+            orderName: order.Name || order.Proposal_Name || order.Proposal_Name__c || "",
             deliveryNotes: order.Authorized_Ship_To_Location_Delivery_Notes || "",
             liftGateRequired: order.Authorized_Ship_To_Location_Lift_Gate || false,
             insideDelivery: order.Authorized_Ship_To_Location_Inside_Delivery || false
@@ -1426,10 +1426,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         onClone={handleClone}
         isNew={isNew}
       />
-      <div className="grid grid-cols-1 w1400:grid-cols-10 gap-6 items-stretch">
+      <div className="grid grid-cols-1 w1025:grid-cols-10 gap-6 items-stretch">
         {/* Row 1 Left - Billing & Shipping (70%) */}
-        <div className="w1400:col-span-7">
-          <div className="grid grid-cols-1 w1400:grid-cols-2 gap-4 h-full">
+        <div className="w1025:col-span-7">
+          <div className="grid grid-cols-1 w1025:grid-cols-2 gap-4 h-full">
             <BillingInfo
               formData={formData}
               setFormData={setFormData}
@@ -1453,7 +1453,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
 
         {/* Row 1 Right - Order Notes (30%) */}
-        <div className="w1400:col-span-3">
+        <div className="w1025:col-span-3">
           <OrderNotes
             formData={formData}
             setFormData={setFormData}
@@ -1463,7 +1463,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
 
         {/* Row 2 Left - Contact & Delivery (70%) */}
-        <div className="w1400:col-span-7 flex flex-col gap-4 h-full">
+        <div className="w1025:col-span-7 flex flex-col gap-4 h-full">
           <ShipToContact
             className="flex-1"
             shipContacts={shipContacts}
@@ -1485,7 +1485,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
 
         {/* Row 2 Right - Order Total (30%) */}
-        <div className="w1400:col-span-3 flex flex-col h-full">
+        <div className="w1025:col-span-3 flex flex-col h-full">
           <OrderTotal
             className="flex-1"
             productsSubtotal={productsSubtotal}
@@ -1529,7 +1529,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             <div className="flex flex-nowrap gap-2 overflow-x-auto no-scrollbar pb-0.5 flex-shrink-0">
               <button
                 onClick={() => setViewMode("catalog")}
-                className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${viewMode === "catalog"
+                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "catalog"
                   ? "bg-primary text-white"
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
@@ -1538,7 +1538,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </button>
               <button
                 onClick={() => setViewMode("myOrder")}
-                className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${viewMode === "myOrder"
+                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "myOrder"
                   ? "bg-primary text-white"
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
@@ -1547,7 +1547,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </button>
               <button
                 onClick={() => setViewMode("taxes")}
-                className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${viewMode === "taxes"
+                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "taxes"
                   ? "bg-primary text-white"
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
@@ -1556,7 +1556,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </button>
               <button
                 onClick={() => setViewMode("files")}
-                className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${viewMode === "files"
+                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "files"
                   ? "bg-primary text-white"
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}

@@ -592,9 +592,9 @@ export default function ProposalProductDetailPage({
             </div>
 
             {/* Row 1: Main Image + Proposal Note + Product Information */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4 items-stretch">
+            <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
                 {/* Main Image with Carousel - 25% width (3 of 12 cols) */}
-                <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                     <div className="relative flex-1 flex flex-col">
                         {/* Main Image Display - Reduced height */}
                         <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
@@ -673,7 +673,7 @@ export default function ProposalProductDetailPage({
                 </div>
 
                 {/* Proposal Note - 25% width (3 of 12 cols) */}
-                <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                     <div className="flex items-center gap-2 mb-3">
                         <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
                             <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -692,7 +692,7 @@ export default function ProposalProductDetailPage({
                 </div>
 
                 {/* Product Information Card - 50% width (6 of 12 cols) */}
-                <div className="lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
+                <div className="w1025:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
                     <div className="flex items-center gap-2 mb-3">
                         <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
                             <svg
@@ -709,165 +709,179 @@ export default function ProposalProductDetailPage({
                                 />
                             </svg>
                         </div>
-                        <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-                            Product Information
-                        </h3>
+                        <div>
+                            <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate" title="Product Information">
+                                Product Information
+                            </h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
+                        </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-x-4 gap-y-3">
                         {/* Product Name */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Name">
                                 Product Name
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.name}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.name}
                             />
                         </div>
 
                         {/* Manufacturer DBA */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Manufacturer DBA">
                                 Manufacturer DBA
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.manufacturer}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.manufacturer}
                             />
                         </div>
 
                         {/* Description */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Description">
                                 Description
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.description || "No description available"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
-                                title={product.description}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.description || "No description available"}
                             />
                         </div>
 
                         {/* Product Family */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Family">
                                 Product Family
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.productFamily}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-primary font-medium focus:outline-none cursor-default"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-primary font-medium focus:outline-none cursor-default truncate"
+                                title={product.productFamily}
                             />
                         </div>
 
                         {/* Product Grouping */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Grouping">
                                 Product Grouping
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.productGrouping}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.productGrouping}
                             />
                         </div>
 
                         {/* Grouping */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Grouping">
                                 Grouping
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.grouping}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.grouping}
                             />
                         </div>
 
                         {/* IsTaxable */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="IsTaxable">
                                 IsTaxable
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.isTaxable}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.isTaxable}
                             />
                         </div>
 
                         {/* Available to Sell */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Available to Sell">
                                 Available to Sell
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.availableToSell?.toLocaleString() || "0"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white font-mono focus:outline-none cursor-default"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white font-mono focus:outline-none cursor-default truncate"
+                                title={product.availableToSell?.toLocaleString() || "0"}
                             />
                         </div>
 
                         {/* Site */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Site">
                                 Site
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.site}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.site}
                             />
                         </div>
 
                         {/* Inventory Account */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Inventory Account">
                                 Inventory Account
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.inventoryAccount}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.inventoryAccount}
                             />
                         </div>
 
                         {/* Unit Cost */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Unit Cost">
                                 Unit Cost
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.unitCost}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.unitCost}
                             />
                         </div>
 
                         {/* Total Cost */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Total Cost">
                                 Total Cost
                             </label>
                             <input
                                 type="text"
                                 readOnly
                                 value={product.totalCost}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.totalCost}
                             />
                         </div>
                     </div>
@@ -875,24 +889,24 @@ export default function ProposalProductDetailPage({
             </div>
 
             {/* Row 2: Order Details */}
-            < div className="grid grid-cols-1 lg:grid-cols-5 gap-4" >
+            < div className="grid grid-cols-1 w1025:grid-cols-5 gap-4" >
 
 
                 {/* Details Card - Full width */}
-                < div className="lg:col-span-5 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4" >
+                < div className="w1025:col-span-5 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4" >
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm ">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Unit Price</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Order Qty</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 whitespace-nowrap">MOQ</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Total Order Qty</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Total Price</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Shipping</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Taxes</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Grand Total</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 whitespace-nowrap">Qty Shipped</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Unit Price</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Order Qty</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">MOQ</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Total Order Qty</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Total Price</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Shipping</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Taxes</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Grand Total</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Qty Shipped</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -937,7 +951,7 @@ export default function ProposalProductDetailPage({
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as any)}
-                                className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === tab.id
+                                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${activeTab === tab.id
                                     ? "bg-primary text-white"
                                     : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                                     }`}

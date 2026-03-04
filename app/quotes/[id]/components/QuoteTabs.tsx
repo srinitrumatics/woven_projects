@@ -31,7 +31,7 @@ export default function QuoteTabs({ activeTab, onTabChange, counts = {} }: Quote
                 <button
                     key={tab.id}
                     onClick={() => onTabChange(tab.id)}
-                    className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === tab.id
+                    className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${activeTab === tab.id
                         ? "bg-primary text-white"
                         : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                         }`}

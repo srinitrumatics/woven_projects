@@ -1,7 +1,8 @@
 import InvoiceBillingInfo from "./InvoiceBillingInfo";
 import InvoiceShippingInfo from "./InvoiceShippingInfo";
 import InvoiceSummary from "./InvoiceSummary";
-import { formatDate } from "@/lib/utils/formatting";
+import InvoiceKeyDates from "./InvoiceCardDetail";
+import InvoiceNotes from "./InvoiceNotes";
 
 interface InvoiceDetailsProps {
     accountName: string;
@@ -82,59 +83,49 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
     };
 
     return (
-        <div className="flex flex-col gap-6">
-            {/* Top Section: Basic Info & Notes */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Invoice Information */}
-                <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6">
-                    <div className="mb-6">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Invoice Detail</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Invoice Information</p>
-                    </div>
+        <div className="grid grid-cols-1 w1025:grid-cols-10 gap-6 items-stretch">
+            {/* Row 1 Left - Key Dates (70%) */}
+            <div className="w1025:col-span-7">
+                <InvoiceKeyDates
+                    arRep={arRep}
+                    proposalName={proposalName}
+                    customerOrder={customerOrder}
+                    salesOrderNumber={props.salesOrderNumber}
+                    purchaseOrderNumber={purchaseOrderNumber}
+                    invoiceDate={invoiceDate}
+                    className="h-full"
+                />
+            </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                        <InfoField label="Account Rep" value={arRep} />
-                        <InfoField label="Proposal Name" value={proposalName} />
-                        <InfoField label="Customer Order" value={customerOrder} />
-                        <InfoField label="Sales Order" value={props.salesOrderNumber} />
-                        <InfoField label="Purchase Order" value={purchaseOrderNumber} />
-                        <InfoField label="Issued Date" value={formatDate(invoiceDate, 'numeric-dash')} />
-                    </div>
-                </div>
+            {/* Row 1 Right - Invoice Notes (30%) */}
+            <div className="w1025:col-span-3">
+                <InvoiceNotes notes={notes || ""} className="h-full" />
+            </div>
 
-                {/* Invoice Notes */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 flex flex-col h-full">
-                    <div className="mb-4">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Invoice Notes</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Terms and additional notes</p>
-                    </div>
-                    <textarea
-                        readOnly
-                        className="flex-1 min-h-[100px] bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-3 text-sm text-gray-900 dark:text-white resize-none focus:ring-0 focus:border-gray-300"
-                        value={notes || "No additional notes for this invoice."}
+            {/* Row 2 Left - Billing & Shipping (70%) */}
+            <div className="w1025:col-span-7">
+                <div className="grid grid-cols-1 w1025:grid-cols-2 gap-4 h-full">
+                    <InvoiceBillingInfo
+                        accountName={accountName}
+                        billingAddress={billingAddress}
+                        billToLocation={billToLocation}
+                        paymentTerms={paymentTerms}
+                        customerPO={customerPO}
+                        dueDate={dueDate}
+                    />
+
+                    <InvoiceShippingInfo
+                        accountName={accountName}
+                        shippingAddress={shippingAddress}
+                        shipToLocation={shipToLocation}
+                        shipConfirmedDate={shipConfirmedDate}
+                        siteName={siteName}
                     />
                 </div>
             </div>
 
-            {/* Middle Section: Billing, Shipping, Summary via Components */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <InvoiceBillingInfo
-                    accountName={accountName}
-                    billingAddress={billingAddress}
-                    billToLocation={billToLocation}
-                    paymentTerms={paymentTerms}
-                    customerPO={customerPO}
-                    dueDate={dueDate}
-                />
-
-                <InvoiceShippingInfo
-                    accountName={accountName}
-                    shippingAddress={shippingAddress}
-                    shipToLocation={shipToLocation}
-                    shipConfirmedDate={shipConfirmedDate}
-                    siteName={siteName}
-                />
-
+            {/* Row 2 Right - Invoice Summary (30%) */}
+            <div className="w1025:col-span-3 flex flex-col h-full">
                 <InvoiceSummary
                     subtotal={props.subtotal}
                     taxTotal={taxTotal}
@@ -156,28 +147,3 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
         </div>
     );
 }
-
-function SectionTitle({ title, subtitle }: { title: string; subtitle: string }) {
-    return (
-        <div className="mb-2">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400 tracking-wide">{subtitle}</p>
-        </div>
-    );
-}
-
-function InfoField({ label, value }: { label: string; value?: string | number }) {
-    return (
-        <div className="min-w-0">
-            <p className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate">{label}</p>
-            <input
-                type="text"
-                readOnly
-                value={String(value || '—')}
-                className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"
-                title={String(value || 'N/A')}
-            />
-        </div>
-    );
-}
-

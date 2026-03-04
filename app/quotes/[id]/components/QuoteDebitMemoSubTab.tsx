@@ -36,35 +36,36 @@ export default function QuoteDebitMemoSubTab({
 
     return (
         <div className="overflow-x-auto py-2">
-            <table className="w-full whitespace-nowrap">
-                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                    <tr>
-                        <SortableHeader label="Debit Memo" field="memoNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.memoNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
-                        <SortableHeader label="Supplier Bill" field="supplierBill" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierBill} onResize={onResize} align="left" />
-                        <SortableHeader label="Purchase Order" field="purchaseOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={onResize} align="left" />
-                        <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" />
-                        <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" />
-                        <SortableHeader label="Supplier Credit Memo" field="supplierCredit" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierCredit} onResize={onResize} align="left" />
-                        <SortableHeader label="Debit to Account" field="debitToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.debitToAccount} onResize={onResize} align="left" />
-                        <SortableHeader label="Debit to Contact" field="debitToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.debitToContact} onResize={onResize} align="left" />
-                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" />
-                        <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCost} onResize={onResize} align="left" />
-                        <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={onResize} align="left" />
-                        <SortableHeader label="Total Debit Amount" field="totalDebitAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalDebitAmount} onResize={onResize} align="left" />
-                        <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={onResize} align="left" />
-                        <SortableHeader label="Approval Date" field="approvalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.approvalDate} onResize={onResize} align="left" />
-                        <SortableHeader label="Available Debit Balance" field="availableBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.availableBalance} onResize={onResize} align="left" />
-                        <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={onResize} align="left" />
-                    </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {memos.length === 0 ? (
+            {memos.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                    <p className="text-lg font-medium">No records found</p>
+                    <p className="text-sm">There are no debit memos associated with this quote.</p>
+                </div>
+            ) : (
+                <table className="w-full truncate">
+                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
-                            <td colSpan={17} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No Debit Memos found</td>
+                            <SortableHeader label="Debit Memo" field="memoNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.memoNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
+                            <SortableHeader label="Supplier Bill" field="supplierBill" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierBill} onResize={onResize} align="left" />
+                            <SortableHeader label="Purchase Order" field="purchaseOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={onResize} align="left" />
+                            <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" />
+                            <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" />
+                            <SortableHeader label="Supplier Credit Memo" field="supplierCredit" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierCredit} onResize={onResize} align="left" />
+                            <SortableHeader label="Debit to Account" field="debitToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.debitToAccount} onResize={onResize} align="left" />
+                            <SortableHeader label="Debit to Contact" field="debitToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.debitToContact} onResize={onResize} align="left" />
+                            <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" />
+                            <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCost} onResize={onResize} align="left" />
+                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={onResize} align="left" />
+                            <SortableHeader label="Total Debit Amount" field="totalDebitAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalDebitAmount} onResize={onResize} align="left" />
+                            <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={onResize} align="left" />
+                            <SortableHeader label="Approval Date" field="approvalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.approvalDate} onResize={onResize} align="left" />
+                            <SortableHeader label="Available Debit Balance" field="availableBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.availableBalance} onResize={onResize} align="left" />
+                            <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={onResize} align="left" />
                         </tr>
-                    ) : (
-                        memos.map((memo) => (
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {memos.map((memo) => (
                             <tr key={memo.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                 <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800" style={{ width: widths.memoNumber }}>{memo.memoNumber}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.status }}>
@@ -91,10 +92,10 @@ export default function QuoteDebitMemoSubTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.availableBalance }}>{formatCurrency(memo.availableBalance)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.settledDate }}>{formatDate(memo.settledDate, 'numeric-dash')}</td>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 }

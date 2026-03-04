@@ -25,6 +25,15 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
         );
     }
 
+    if (orders.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                <p className="text-lg font-medium">No records found</p>
+                <p className="text-sm">There are no customer orders associated with this proposal.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="overflow-x-auto">
             <table className="w-full ">
@@ -52,77 +61,65 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {orders.length === 0 ? (
-                        <tr>
-                            <td colSpan={19} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                                <div className="flex flex-col items-center justify-center">
-
-                                    <p className="text-lg font-medium">No orders found</p>
-                                    <p className="text-sm">There are no customer orders associated with this proposal.</p>
-                                </div>
-                            </td>
-                        </tr>
-                    ) : (
-                        orders.map((order) => (
-                            <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={order.name}>
-                                    <div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">
-                                        {/*<Link href={`/orders/${order.id}`} className="text-primary hover:underline font-semibold">
+                    {orders.map((order) => (
+                        <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={order.name}>
+                                <div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">
+                                    {/*<Link href={`/orders/${order.id}`} className="text-primary hover:underline font-semibold">
                                             {order.name}
                                         </Link>*/}
-                                        {order.name}
-                                    </div>
-                                </td>
-                                <td className="px-3 py-2">
-                                    <span className={`inline-block  text-sm font-medium rounded ${order.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
-                                        order.status === 'Submitted' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
-                                            order.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                                                order.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                                    order.status === 'Cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
-                                                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                        }`}>
-                                        {order.status}
-                                    </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerPO}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 text-left">{order.customerPO}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{order.customerPODate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 text-left">{order.billToAccountName}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 text-left">{order.billToLocationName}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 text-left">{order.billToContactName}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 text-left">{order.shipToAccountName}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToLocationName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 text-left">{order.shipToLocationName}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2 text-left">{order.shipToContactName}</div></td>
-                                <td className="px-3 py-2 min-w-[114px]">
-                                    <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${order.dropShip
-                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                        : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                        }`}>
-                                        {order.dropShip ? 'Yes' : 'No'}
-                                    </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[112px]">
-                                    <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
-                                        {order.totalLines.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                    </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    ${order.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
-                                    ${order.totalShippingCharges.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
-                                    ${order.totalTaxesAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold">
-                                    ${order.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{order.requestDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[163px]">{order.shipDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[190px]">{order.deliveredDate}</td>
-                            </tr>
-                        ))
-                    )}
+                                    {order.name}
+                                </div>
+                            </td>
+                            <td className="px-3 py-2">
+                                <span className={`inline-block  text-sm font-medium rounded ${order.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
+                                    order.status === 'Submitted' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
+                                        order.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                            order.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
+                                                order.status === 'Cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
+                                                    'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                    }`}>
+                                    {order.status}
+                                </span>
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.customerPO}><div className="text-sm text-gray-900 dark:text-white truncate text-left">{order.customerPO}</div></td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{order.customerPODate}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToAccountName}><div className="text-sm text-gray-900 dark:text-white truncate text-left">{order.billToAccountName}</div></td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToLocationName}><div className="text-sm text-gray-900 dark:text-white truncate text-left">{order.billToLocationName}</div></td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.billToContactName}><div className="text-sm text-gray-900 dark:text-white truncate text-left">{order.billToContactName}</div></td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToAccountName}><div className="text-sm text-gray-900 dark:text-white truncate text-left">{order.shipToAccountName}</div></td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToLocationName}><div className="text-sm text-gray-900 dark:text-white truncate text-left">{order.shipToLocationName}</div></td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={order.shipToContactName}><div className="text-sm text-gray-900 dark:text-white truncate text-left">{order.shipToContactName}</div></td>
+                            <td className="px-3 py-2 min-w-[114px]">
+                                <span className={`inline-flex px-2 py-1 text-sm font-medium rounded ${order.dropShip
+                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                    }`}>
+                                    {order.dropShip ? 'Yes' : 'No'}
+                                </span>
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[112px]">
+                                <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                    {order.totalLines.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </span>
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                ${order.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </td>
+                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                ${order.totalShippingCharges.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </td>
+                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                ${order.totalTaxesAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </td>
+                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold">
+                                ${order.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{order.requestDate}</td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[163px]">{order.shipDate}</td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[190px]">{order.deliveredDate}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

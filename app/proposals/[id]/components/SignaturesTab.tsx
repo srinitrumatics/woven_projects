@@ -5,6 +5,19 @@ interface SignaturesTabProps {
 }
 
 export default function SignaturesTab({ proposal }: SignaturesTabProps) {
+    const hasAnySignature = proposal.clientSignedBy || proposal.companySignedBy ||
+        proposal.clientSignedTitle || proposal.companySignedTitle ||
+        proposal.clientSignedDate || proposal.companySignedDate;
+
+    if (!hasAnySignature) {
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                <p className="text-lg font-medium">No records found</p>
+                <p className="text-sm">There are no signatures associated with this proposal.</p>
+            </div>
+        );
+    }
+
     return (
         <div>
             <div className="overflow-x-auto">
@@ -26,8 +39,8 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
                                     <span className="text-sm font-medium text-gray-900 dark:text-white">Signed By</span>
                                 </div>
                             </td>
-                            <td className="px-3 py-2 text-left" title={proposal.clientSignedBy || "-"}><div className="line-clamp-2"><span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.clientSignedBy || "-"}</span></div></td>
-                            <td className="px-3 py-2 text-left" title={proposal.companySignedBy || "-"}><div className="line-clamp-2"><span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.companySignedBy || "-"}</span></div></td>
+                            <td className="px-3 py-2 text-left" title={proposal.clientSignedBy || "-"}><div className="truncate"><span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.clientSignedBy || "-"}</span></div></td>
+                            <td className="px-3 py-2 text-left" title={proposal.companySignedBy || "-"}><div className="truncate"><span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.companySignedBy || "-"}</span></div></td>
                         </tr>
                         <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td className="px-3 py-2">
@@ -38,8 +51,8 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
                                     <span className="text-sm font-medium text-gray-900 dark:text-white">Signed Title</span>
                                 </div>
                             </td>
-                            <td className="px-3 py-2 text-left" title={proposal.clientSignedTitle || "-"}><div className="line-clamp-2"><span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.clientSignedTitle || "-"}</span></div></td>
-                            <td className="px-3 py-2 text-left" title={proposal.companySignedTitle || "-"}><div className="line-clamp-2"><span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.companySignedTitle || "-"}</span></div></td>
+                            <td className="px-3 py-2 text-left" title={proposal.clientSignedTitle || "-"}><div className="truncate"><span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.clientSignedTitle || "-"}</span></div></td>
+                            <td className="px-3 py-2 text-left" title={proposal.companySignedTitle || "-"}><div className="truncate"><span className="text-sm text-gray-900 dark:text-white font-medium">{proposal.companySignedTitle || "-"}</span></div></td>
                         </tr>
                         <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td className="px-3 py-2">

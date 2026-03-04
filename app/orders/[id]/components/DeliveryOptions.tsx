@@ -13,22 +13,15 @@ interface DeliveryOptionsProps {
 
 export default function DeliveryOptions({ formData, setFormData, shippingMethods = [], incotermsOptions = [], isEditing = false, className = "" }: DeliveryOptionsProps) {
     return (
-        <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-full ${className}`}>
-            <div className="w-full flex items-center gap-2 justify-start p-4">
-                <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <div className="text-left">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Delivery Options</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Previously Stored Location Delivery Details</p>
-                </div>
+        <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 h-full ${className}`}>
+            <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Delivery Options</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Previously Stored Location Delivery Details</p>
             </div>
-            <div className="px-6 pb-6 text-sm">
+            <div className="text-sm">
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                     <div>
-                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 whitespace-nowrap">Shipping Method</label>
+                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 truncate" title="Shipping Method">Shipping Method</label>
                         <select
                             value={formData.shippingMethod || ''}
                             onChange={(e) => setFormData({ ...formData, shippingMethod: e.target.value })}
@@ -62,7 +55,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 whitespace-nowrap">Incoterms</label>
+                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 truncate" title="Incoterms">Incoterms</label>
                         <select
                             value={formData.incoterms || ''}
                             onChange={(e) => setFormData({ ...formData, incoterms: e.target.value })}
@@ -82,7 +75,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 whitespace-nowrap">Delivery Notes</label>
+                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 truncate" title="Delivery Notes">Delivery Notes</label>
                         <input
                             type="text"
                             placeholder="Instructions..."
@@ -95,7 +88,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 whitespace-nowrap">Lift Gate</label>
+                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 truncate" title="Lift Gate">Lift Gate</label>
                         <div className="flex items-center h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-not-allowed">
                             <input
                                 type="checkbox"
@@ -103,12 +96,12 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                                 disabled={true}
                                 className="w-4 h-4 text-primary rounded focus:ring-2 focus:ring-primary mr-2 cursor-not-allowed opacity-60"
                             />
-                            <span className="text-[12px] text-gray-700 dark:text-gray-300 whitespace-nowrap">{formData.liftGateRequired ? "Required" : "Not Required"}</span>
+                            <span className="text-[12px] text-gray-700 dark:text-gray-300 truncate">{formData.liftGateRequired ? "Required" : "Not Required"}</span>
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 whitespace-nowrap">Inside Delivery</label>
+                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 truncate" title="Inside Delivery">Inside Delivery</label>
                         <div className="flex items-center h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-not-allowed">
                             <input
                                 type="checkbox"
@@ -116,7 +109,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                                 disabled={true}
                                 className="w-4 h-4 text-primary rounded focus:ring-2 focus:ring-primary mr-2 cursor-not-allowed opacity-60"
                             />
-                            <span className="text-[12px] text-gray-700 dark:text-gray-300 whitespace-nowrap">{formData.insideDelivery ? "Required" : "Not Required"}</span>
+                            <span className="text-[12px] text-gray-700 dark:text-gray-300 truncate">{formData.insideDelivery ? "Required" : "Not Required"}</span>
                         </div>
                     </div>
                 </div>

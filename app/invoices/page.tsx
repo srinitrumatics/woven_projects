@@ -170,7 +170,7 @@ export default function InvoicesPage() {
       </div>
 
       {/* Stats Cards - Following Proposal Design */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 w1025:grid-cols-4 gap-4 mb-6">
         {/* Total Invoices Card */}
         <button
           onClick={() => handleCardClick("All")}

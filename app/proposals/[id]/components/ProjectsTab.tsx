@@ -26,40 +26,35 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full ">
-                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                    <tr>
-                        <SortableHeader label="Project Number" field="projectNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectNumber} onResize={onResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} />
-                        <SortableHeader label="Project Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
-                        <SortableHeader label="Customer Account" field="customerAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerAccountName} onResize={onResize} />
-                        <SortableHeader label="Customer Contact" field="customerContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerContactName} onResize={onResize} />
-                        <SortableHeader label="Billing Type" field="billingType" sortConfig={sortConfig} requestSort={requestSort} width={widths.billingType} onResize={onResize} />
-                        <SortableHeader label="Project Manager" field="projectManagerName" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectManagerName} onResize={onResize} />
-                        <SortableHeader label="Estimated Budget" field="estimatedBudget" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedBudget} onResize={onResize} />
-                        <SortableHeader label="Total Milestones" field="totalMilestones" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalMilestones} onResize={onResize} />
-                        <SortableHeader label="Total Task" field="totalTasks" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalTasks} onResize={onResize} />
-                        <SortableHeader label="% Completed" field="percentCompleted" sortConfig={sortConfig} requestSort={requestSort} width={widths.percentCompleted} onResize={onResize} />
-                        <SortableHeader label="Estimated Start Date" field="estimatedStartDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedStartDate} onResize={onResize} />
-                        <SortableHeader label="Estimated End Date" field="estimatedEndDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedEndDate} onResize={onResize} />
-                    </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {projects.length === 0 ? (
+            {projects.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                    <p className="text-lg font-medium">No records found</p>
+                    <p className="text-sm">There are no projects associated with this proposal.</p>
+                </div>
+            ) : (
+                <table className="w-full ">
+                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
-                            <td colSpan={13} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                                <div className="flex flex-col items-center justify-center">
-
-                                    <p className="text-lg font-medium">No projects found</p>
-                                    <p className="text-sm">There are no projects associated with this proposal.</p>
-                                </div>
-                            </td>
+                            <SortableHeader label="Project Number" field="projectNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectNumber} onResize={onResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} />
+                            <SortableHeader label="Project Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
+                            <SortableHeader label="Customer Account" field="customerAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerAccountName} onResize={onResize} />
+                            <SortableHeader label="Customer Contact" field="customerContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerContactName} onResize={onResize} />
+                            <SortableHeader label="Billing Type" field="billingType" sortConfig={sortConfig} requestSort={requestSort} width={widths.billingType} onResize={onResize} />
+                            <SortableHeader label="Project Manager" field="projectManagerName" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectManagerName} onResize={onResize} />
+                            <SortableHeader label="Estimated Budget" field="estimatedBudget" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedBudget} onResize={onResize} />
+                            <SortableHeader label="Total Milestones" field="totalMilestones" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalMilestones} onResize={onResize} />
+                            <SortableHeader label="Total Task" field="totalTasks" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalTasks} onResize={onResize} />
+                            <SortableHeader label="% Completed" field="percentCompleted" sortConfig={sortConfig} requestSort={requestSort} width={widths.percentCompleted} onResize={onResize} />
+                            <SortableHeader label="Estimated Start Date" field="estimatedStartDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedStartDate} onResize={onResize} />
+                            <SortableHeader label="Estimated End Date" field="estimatedEndDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedEndDate} onResize={onResize} />
                         </tr>
-                    ) : (
-                        projects.map((project) => (
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {projects.map((project) => (
                             <tr key={project.id} className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left">
-                                    <div className="line-clamp-2" title={project.projectNumber}> {project.projectNumber} </div>
+                                    <div className="truncate" title={project.projectNumber}> {project.projectNumber} </div>
                                 </td>
                                 <td className="px-3 py-2">
                                     <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${project.status === 'New' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
@@ -71,16 +66,16 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                                         {project.status}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" title={project.name}><div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">{project.name}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={project.customerAccountName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{project.customerAccountName}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={project.customerContactName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{project.customerContactName}</div></td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" title={project.name}><div className="text-sm font-medium text-gray-900 dark:text-white truncate">{project.name}</div></td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={project.customerAccountName}><div className="text-sm text-gray-900 dark:text-white truncate">{project.customerAccountName}</div></td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={project.customerContactName}><div className="text-sm text-gray-900 dark:text-white truncate">{project.customerContactName}</div></td>
                                 <td className="px-3 py-2">
                                     <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
                                         {project.billingType}
                                     </span>
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={project.projectManagerName}>
-                                    <div className="text-sm text-gray-900 dark:text-white line-clamp-1">{project.projectManagerName}</div></td>
+                                    <div className="text-sm text-gray-900 dark:text-white truncate">{project.projectManagerName}</div></td>
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold min-w-[186px]">
                                     ${project.estimatedBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
@@ -112,10 +107,10 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[175px]">{project.estimatedStartDate}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[175px]">{project.estimatedEndDate}</td>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 }

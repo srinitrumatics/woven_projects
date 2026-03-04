@@ -129,7 +129,7 @@ export default function LineFulfillmentsTab({
                         <button
                             key={tab.id}
                             onClick={() => onTabChange(tab.id as any)}
-                            className={`pb-3 text-sm font-medium transition-all whitespace-nowrap border-b-2 -mb-[2px] ${activeTab === tab.id
+                            className={`pb-3 text-sm font-medium transition-all truncate border-b-2 -mb-[2px] ${activeTab === tab.id
                                 ? "border-primary text-primary"
                                 : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                                 }`}
@@ -143,8 +143,9 @@ export default function LineFulfillmentsTab({
                 {activeTab === "quotes" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                                <p className="text-lg font-medium">No customer quotes found</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                                <p className="text-lg font-medium">No records found</p>
+                                <p className="text-sm">There are no customer quotes associated with this proposal.</p>
                             </div>
                         ) : (
                             <table className="w-full">
@@ -184,7 +185,7 @@ export default function LineFulfillmentsTab({
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{quote.customerQuoteName}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{quote.productName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={quote.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{quote.productDescription}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={quote.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{quote.productDescription}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[163px]">{quote.manufacturerDBA}</td>
                                             <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
                                                 ${quote.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
@@ -215,8 +216,9 @@ export default function LineFulfillmentsTab({
                 {activeTab === "sales" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                                <p className="text-lg font-medium">No sales orders found</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                                <p className="text-lg font-medium">No records found</p>
+                                <p className="text-sm">There are no sales orders associated with this proposal.</p>
                             </div>
                         ) : (
                             <table className="w-full ">
@@ -261,7 +263,7 @@ export default function LineFulfillmentsTab({
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{order.customerQuoteLineName}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{order.productName}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={order.productDescription}>
-                                                <div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{order.productDescription}
+                                                <div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{order.productDescription}
                                                 </div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[163px]">{order.manufacturerDBA}</td>
@@ -296,8 +298,9 @@ export default function LineFulfillmentsTab({
                 {activeTab === "invoices" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                                <p className="text-lg font-medium">No invoices found</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                                <p className="text-lg font-medium">No records found</p>
+                                <p className="text-sm">There are no invoices associated with this proposal.</p>
                             </div>
                         ) : (
                             <table className="w-full">
@@ -332,7 +335,7 @@ export default function LineFulfillmentsTab({
                                     {(sortedData as Invoice[]).map((invoice) => (
                                         <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                             <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left">
-                                                <div className="line-clamp-2" title={invoice.name}>{invoice.name}</div>
+                                                <div className="truncate" title={invoice.name}>{invoice.name}</div>
                                             </td>
                                             <td className="px-3 py-2 text-left">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
@@ -340,25 +343,25 @@ export default function LineFulfillmentsTab({
                                                 </span>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                                <div className="line-clamp-2" title={invoice.invoiceName}>{invoice.invoiceName}</div>
+                                                <div className="truncate" title={invoice.invoiceName}>{invoice.invoiceName}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                                <div className="line-clamp-2" title={invoice.salesOrderLineName}>{invoice.salesOrderLineName}</div>
+                                                <div className="truncate" title={invoice.salesOrderLineName}>{invoice.salesOrderLineName}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                                <div className="line-clamp-2" title={invoice.customerQuoteLineName}>{invoice.customerQuoteLineName}</div>
+                                                <div className="truncate" title={invoice.customerQuoteLineName}>{invoice.customerQuoteLineName}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                                <div className="line-clamp-2" title={invoice.purchaseOrderLineName}>{invoice.purchaseOrderLineName}</div>
+                                                <div className="truncate" title={invoice.purchaseOrderLineName}>{invoice.purchaseOrderLineName}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                                <div className="line-clamp-2" title={invoice.productName}>{invoice.productName}</div>
+                                                <div className="truncate" title={invoice.productName}>{invoice.productName}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                                <div className="max-w-xs line-clamp-2" title={invoice.productDescription}>{invoice.productDescription}</div>
+                                                <div className="max-w-xs truncate" title={invoice.productDescription}>{invoice.productDescription}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left min-w-[159px]">
-                                                <div className="line-clamp-2" title={invoice.manufacturerDBA}>{invoice.manufacturerDBA}</div>
+                                                <div className="truncate" title={invoice.manufacturerDBA}>{invoice.manufacturerDBA}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
                                                 ${invoice.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
@@ -388,8 +391,9 @@ export default function LineFulfillmentsTab({
                 {activeTab === "shipping" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                                <p className="text-lg font-medium">No shipping manifests found</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                                <p className="text-lg font-medium">No records found</p>
+                                <p className="text-sm">There are no shipping manifests associated with this proposal.</p>
                             </div>
                         ) : (
                             <table className="w-full ">
@@ -428,28 +432,28 @@ export default function LineFulfillmentsTab({
                                     {(sortedData as ShippingManifest[]).map((manifest) => (
                                         <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                             <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left min-w-[198px]" title={manifest.name}>
-                                                <div className="text-sm font-medium font-mono text-gray-900 dark:text-white line-clamp-2">{manifest.name}</div></td>
+                                                <div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">{manifest.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {manifest.status}
                                                 </span>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.shippingManifestName}>
-                                                <div className="text-sm text-gray-900 dark:text-white line-clamp-2">
+                                                <div className="text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.shippingManifestName}
                                                 </div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.salesOrderLineName}>
-                                                <div className="text-sm text-gray-900 dark:text-white line-clamp-2">
+                                                <div className="text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.salesOrderLineName}
                                                 </div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{manifest.customerQuoteLineName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.productName}><div className="text-sm text-gray-900 dark:text-white line-clamp-2">{manifest.productName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={manifest.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs line-clamp-2">{manifest.productDescription}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{manifest.customerQuoteLineName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.productName}><div className="text-sm text-gray-900 dark:text-white truncate">{manifest.productName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={manifest.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{manifest.productDescription}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px]" title={manifest.manufacturerDBA}>
                                                 <div
-                                                    className="text-sm text-gray-900 dark:text-white line-clamp-2">{manifest.manufacturerDBA}
+                                                    className="text-sm text-gray-900 dark:text-white truncate">{manifest.manufacturerDBA}
                                                 </div>
                                             </td>
                                             <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[118px]">{manifest.boxCount}</td>

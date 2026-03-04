@@ -23,6 +23,17 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
         );
     }
 
+    if (elements.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                <p className="text-lg font-medium">No records found</p>
+                <p className="text-sm">
+                    There are no Elements associated with this proposal.
+                </p>
+            </div>
+        );
+    }
+
     return (
         <div className="overflow-x-auto">
             <table className="w-full ">
@@ -34,36 +45,25 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {elements.length === 0 ? (
-                        <tr>
-                            <td colSpan={3} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400 text-center">
-                                <div className="flex flex-col items-center justify-center">
-                                    <p className="text-lg font-medium">No elements found</p>
-                                    <p className="text-sm">There are no breakdown elements for this proposal.</p>
+                    {elements.map(element => (
+                        <tr key={element.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 ">
+                            <td className="px-3 py-2 text-left">
+                                <span className="inline-block px-1  text-sm  font-semibold  rounded bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+                                    {element.wbs}
+                                </span>
+                            </td>
+                            <td className="px-3 py-2" title={element.proposalElement}>
+                                <div className="truncate text-left">
+                                    <div className="text-sm font-medium text-gray-900 dark:text-white">{element.proposalElement}</div>
+                                </div>
+                            </td>
+                            <td className="px-3 py-2" title={element.description}>
+                                <div className="truncate text-left">
+                                    <div className="text-sm text-gray-600 dark:text-gray-400">{element.description}</div>
                                 </div>
                             </td>
                         </tr>
-                    ) : (
-                        elements.map(element => (
-                            <tr key={element.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 ">
-                                <td className="px-3 py-2 text-left">
-                                    <span className="inline-block px-1  text-sm  font-semibold  rounded bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
-                                        {element.wbs}
-                                    </span>
-                                </td>
-                                <td className="px-3 py-2" title={element.proposalElement}>
-                                    <div className="line-clamp-1 text-left">
-                                        <div className="text-sm font-medium text-gray-900 dark:text-white">{element.proposalElement}</div>
-                                    </div>
-                                </td>
-                                <td className="px-3 py-2" title={element.description}>
-                                    <div className="line-clamp-1 text-left">
-                                        <div className="text-sm text-gray-600 dark:text-gray-400">{element.description}</div>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))
-                    )}
+                    ))}
                 </tbody>
             </table>
         </div>
