@@ -60,10 +60,23 @@ export function SortableHeader({
             style={displayWidth ? { width: displayWidth, minWidth: displayWidth, maxWidth: displayWidth } : {}}
         >
             <div
-                className={`px-2 py-3 flex items-start gap-1`}
+                className={`px-2 py-3 flex items-center gap-1 h-full min-h-[44px]`}
                 style={{ width: '100%' }}
             >
-                <span className={`line-clamp-2 text-${align} flex-1`} title={label}>{label}</span>
+                <div className="flex-1 min-w-0">
+                    <span
+                        className={`line-clamp-2 text-${align} block w-full`}
+                        title={label}
+                        style={{
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden'
+                        }}
+                    >
+                        {label}
+                    </span>
+                </div>
                 <span className="text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300 w-4 flex-shrink-0 mt-0.5">
                     {isSorted ? (
                         sortConfig?.direction === 'asc' ? '↑' : '↓'

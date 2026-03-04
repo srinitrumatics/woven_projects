@@ -1,10 +1,11 @@
 interface QuoteNotesProps {
     notes: string;
+    className?: string;
 }
 
-export default function QuoteNotes({ notes }: QuoteNotesProps) {
+export default function QuoteNotes({ notes, className = "" }: QuoteNotesProps) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col h-[182px]">
+        <div className={`bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col min-h-[182px] ${className}`}>
             <div className="flex items-center gap-3 mb-3">
                 <div className="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                     <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

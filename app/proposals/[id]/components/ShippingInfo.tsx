@@ -6,7 +6,7 @@ interface ShippingInfoProps {
 
 export default function ShippingInfo({ proposal }: ShippingInfoProps) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-fit">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-full">
             <div className="w-full flex items-center gap-2 justify-start p-4">
                 <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,7 +38,7 @@ export default function ShippingInfo({ proposal }: ShippingInfoProps) {
                         <input type="text" readOnly value={proposal.shippingAddress} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={proposal.shippingAddress} />
                     </div>
 
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 whitespace-nowrap">Request Date</label>
                             <input type="text" readOnly value={proposal.requestedDeliveryDate} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={proposal.requestedDeliveryDate} />

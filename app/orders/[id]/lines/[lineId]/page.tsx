@@ -150,9 +150,19 @@ export default function OrderLineDetailPage({
         console.log("Fetched order data:", orderData);
         console.log("Fetched order lines data:", linesData);
 
-        if (orderData && orderData.length > 0) {
-          setOrderName(orderData[0].Name || orderData[0].OrderNumber || id);
-          setOrderStatus(orderData[0].Status__c || "Draft");
+        let order = null;
+        if (Array.isArray(orderData) && orderData.length > 0) {
+          if (orderData[0].Customer_Order__c && Array.isArray(orderData[0].Customer_Order__c) && orderData[0].Customer_Order__c.length > 0) {
+            order = orderData[0].Customer_Order__c[0];
+          } else {
+            order = orderData[0];
+          }
+        }
+
+        if (order) {
+          // Display Proposal_Name if available as the "Order Name", falling back to the Salesforce Name (Order Number)
+          setOrderName(order.Proposal_Name || order.Proposal_Name__c || order.Name || order.Name__c || id);
+          setOrderStatus(order.Status__c || "Draft");
         }
 
         if (linesData && linesData.length > 0) {
@@ -379,7 +389,7 @@ export default function OrderLineDetailPage({
       />
 
       {/* Row 1: Main Image + Order Notes + Product Information */}
-      <div className="grid grid-cols-1 w1500:grid-cols-12 gap-4 mb-4 items-stretch">
+      <div className="grid grid-cols-1 w1400:grid-cols-12 gap-4 mb-4 items-stretch">
         <ProductCarousel images={productImages} />
 
         <OrderLineNotes
@@ -393,7 +403,7 @@ export default function OrderLineDetailPage({
       </div>
 
       {/* Row 2: Order Details */}
-      <div className="grid grid-cols-1 w1500:grid-cols-12 gap-4">
+      <div className="grid grid-cols-1 w1400:grid-cols-12 gap-4">
         <OrderDetailsTable
           isEditing={isEditing}
           product={product}
@@ -407,7 +417,7 @@ export default function OrderLineDetailPage({
           displayQty={displayQty}
         />
 
-        <div className="w1500:col-span-12">
+        <div className="w1400:col-span-12">
           <LineTaxesTab product={product} />
         </div>
       </div>

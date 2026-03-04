@@ -34,6 +34,9 @@ export async function GET(req: NextRequest) {
             let tabName = "Invoice";
             let objectName = "Invoice__c";
 
+            // Allow overriding objectName via query param (e.g. for Invoice_Line__c related records)
+            const overrideObjectName = searchParams.get("objectName");
+
             // Map actions to tab names as specified
             if (action === "payments") {
                 tabName = "Payments";
@@ -44,6 +47,23 @@ export async function GET(req: NextRequest) {
             } else if (action === "credits") {
                 tabName = "Credits";
                 objectName = "Invoice__c";
+            } else if (action === "creditmemolines") {
+                tabName = "Credits";
+                objectName = "Invoice_Line__c";
+            } else if (action === "fulfillment") {
+                tabName = "Fulfillment";
+                objectName = overrideObjectName || "Invoice_Line__c";
+            } else if (action === "purchases") {
+                tabName = "Purchases";
+                objectName = overrideObjectName || "Invoice_Line__c";
+            } else if (action === "returns") {
+                tabName = "Returns";
+                objectName = overrideObjectName || "Invoice_Line__c";
+            }
+
+            // Allow explicit objectName override from query param
+            if (overrideObjectName) {
+                objectName = overrideObjectName;
             }
 
             data = await getInvoicesFromSalesforce(accountId, contactId, invoiceId, tabName, objectName);

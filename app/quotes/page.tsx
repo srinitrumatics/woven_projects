@@ -158,7 +158,7 @@ export default function QuotesPage() {
 
       {/* Stats Cards */}
       {/* Stats Cards - New Design */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 w1400:grid-cols-4 gap-4 mb-6">
         {/* Draft Quotes Card */}
         <button
           onClick={() => handleCardClick("Draft")}
@@ -219,7 +219,7 @@ export default function QuotesPage() {
         {/* Approved Quotes Card */}
         <button
           onClick={() => handleCardClick("Approved")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Draft"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Approved" // Changed from "Draft" to "Approved"
             ? "border-gray-500 ring-2 ring-gray-500/20"
             : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
             }`}

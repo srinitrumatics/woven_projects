@@ -8,12 +8,14 @@
   --primary: #96C2DB;
   --primary-light: #E5EDF1;
   --primary-dark: #6B9DB8;
+  --transition-speed: 0.3s;
 }
 
 /* Apply dark mode variables when .dark class is present */
 :root[class~="dark"] {
   --background: #1a2332;
-  --foreground: #E5EDF1;
+  --foreground: #f1f5f9;
+  /* Softer white for better dark mode legibility */
   --primary: #96C2DB;
   --primary-light: #E5EDF1;
   --primary-dark: #6B9DB8;
@@ -23,7 +25,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([class~="light"]) {
     --background: #1a2332;
-    --foreground: #E5EDF1;
+    --foreground: #f1f5f9;
     --primary: #96C2DB;
     --primary-light: #E5EDF1;
     --primary-dark: #6B9DB8;
@@ -34,7 +36,40 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Slightly reduce font-weight in dark mode for better legibility and to prevent "glow" */
+.dark body {
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark .font-bold,
+.dark .font-semibold,
+.dark .font-extrabold,
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark font-bold {
+  font-weight: 600;
+}
+
+/* Force consistency for components using hardcoded Tailwind grays in dark mode */
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-gray-700 {
+  color: var(--foreground) !important;
+}
+
+.dark .text-gray-600,
+.dark .text-gray-500 {
+  color: #9ca3af !important;
+  /* Muted gray for dark mode */
+}
+
 
 @layer utilities {
   .text-balance {
@@ -45,10 +80,11 @@ body {
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    /* Standard property for future compatibility */
+    line-clamp: 2;
   }
 
   /* Single line ellipsis for table cells */
@@ -71,4 +107,90 @@ body {
     scrollbar-width: none;
     /* Firefox */
   }
+
+  /* Safari-specific backdrop filter fallback */
+  .backdrop-blur-safari {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Safari and Mac UI Compatibility Fixes */
+@supports (-webkit-hyphens:none) {
+
+  /* Fix for sticky table elements in Safari */
+  table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+
+  .sticky {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    z-index: 20 !important;
+  }
+
+  /* Specific fix for horizontal sticky columns (like in Proposals) */
+  th.left-0,
+  td.left-0 {
+    left: 0 !important;
+    z-index: 25 !important;
+  }
+
+  /* Prevent Safari from adding extra padding/gradients to buttons and inputs */
+  button,
+  input,
+  select,
+  textarea {
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    -webkit-appearance: checkbox;
+    appearance: checkbox;
+  }
+
+  /* Fix for smooth scrolling on Safari */
+  .overflow-y-auto,
+  .overflow-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Force grid stretching for buttons in Safari */
+  .grid>button,
+  .grid>div {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Better font rendering on Mac */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* Fix for Safari backdrop-filter not working without a background opacity */
+.backdrop-blur-md,
+.backdrop-blur-sm,
+.backdrop-blur-lg {
+  -webkit-backdrop-filter: var(--tw-backdrop-blur) !important;
+  backdrop-filter: var(--tw-backdrop-blur) !important;
+}
+
+/* Safari-specific alignment for table headers */
+th .line-clamp-2 {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  box-orient: vertical;
+}
+
+/* Global Safari fixes */
+img {
+  -webkit-user-drag: none;
 }

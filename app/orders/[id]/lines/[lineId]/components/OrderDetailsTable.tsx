@@ -62,7 +62,7 @@ export default function OrderDetailsTable({
     };
 
     return (
-        <div className="w1500:col-span-12 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+        <div className="w1400:col-span-12 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
 
             {/* Mobile View (Card-like) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:hidden">

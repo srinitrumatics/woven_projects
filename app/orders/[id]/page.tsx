@@ -881,7 +881,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               return order.Ship_to_Account_Name || "";
             })(),
             shipToAccountId: order.Authorized_Ship_To_Location__r?.Account_Name__c || order.Ship_to_Account__c || "",
-            orderName: order.Name || "",
+            orderName: order.Proposal_Name || order.Proposal_Name__c || order.Name || "",
             deliveryNotes: order.Authorized_Ship_To_Location_Delivery_Notes || "",
             liftGateRequired: order.Authorized_Ship_To_Location_Lift_Gate || false,
             insideDelivery: order.Authorized_Ship_To_Location_Inside_Delivery || false
@@ -1426,12 +1426,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         onClone={handleClone}
         isNew={isNew}
       />
-      <div className="grid grid-cols-1 w1500:grid-cols-10 gap-6">
-        {/* Left Column - Client Information (70%) */}
-        <div className="w1500:col-span-7 flex flex-col gap-4">
-          {/* Billing and Shipping Information Cards - Side by Side */}
-          <div className="grid grid-cols-1 w1500:grid-cols-2 gap-4">
-            {/* Billing Information Card */}
+      <div className="grid grid-cols-1 w1400:grid-cols-10 gap-6 items-stretch">
+        {/* Row 1 Left - Billing & Shipping (70%) */}
+        <div className="w1400:col-span-7">
+          <div className="grid grid-cols-1 w1400:grid-cols-2 gap-4 h-full">
             <BillingInfo
               formData={formData}
               setFormData={setFormData}
@@ -1441,8 +1439,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               accountName={accountName}
               SF_ACCOUNT_ID={SF_ACCOUNT_ID}
             />
-
-            {/* Shipping Information Card */}
             <ShippingInfo
               formData={formData}
               setFormData={setFormData}
@@ -1453,11 +1449,23 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               accountName={accountName}
               SF_ACCOUNT_ID={SF_ACCOUNT_ID}
             />
-
           </div>
+        </div>
 
-          {/* Ship to Contact Card */}
+        {/* Row 1 Right - Order Notes (30%) */}
+        <div className="w1400:col-span-3">
+          <OrderNotes
+            formData={formData}
+            setFormData={setFormData}
+            isEditing={isEditing}
+            className="h-full"
+          />
+        </div>
+
+        {/* Row 2 Left - Contact & Delivery (70%) */}
+        <div className="w1400:col-span-7 flex flex-col gap-4 h-full">
           <ShipToContact
+            className="flex-1"
             shipContacts={shipContacts}
             contactsLoading={contactsLoading}
             selectedContactId={selectedContactId}
@@ -1466,8 +1474,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             setFormData={setFormData}
             isEditing={isEditing}
           />
-          {/* Delivery Options Card */}
           <DeliveryOptions
+            className="flex-1"
             formData={formData}
             setFormData={setFormData}
             shippingMethods={shippingMethods}
@@ -1476,14 +1484,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           />
         </div>
 
-        {/* Right Column - Order Notes and Order Total (30%) */}
-        <div className="w1500:col-span-3 flex flex-col gap-4 h-full">
-          <OrderNotes
-            formData={formData}
-            setFormData={setFormData}
-            isEditing={isEditing}
-          />
+        {/* Row 2 Right - Order Total (30%) */}
+        <div className="w1400:col-span-3 flex flex-col h-full">
           <OrderTotal
+            className="flex-1"
             productsSubtotal={productsSubtotal}
             totalExciseTax={totalExciseTax}
             grandTotal={grandTotal}

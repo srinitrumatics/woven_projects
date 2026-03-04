@@ -10,6 +10,7 @@ interface ShipToContactProps {
     formData: any;
     setFormData: (data: any) => void;
     isEditing?: boolean;
+    className?: string;
 }
 
 export default function ShipToContact({
@@ -19,10 +20,11 @@ export default function ShipToContact({
     handleContactSelect,
     formData,
     setFormData,
-    isEditing = false
+    isEditing = false,
+    className = ""
 }: ShipToContactProps) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-auto">
+        <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-full ${className}`}>
             <div className="w-full flex items-center gap-2 justify-start p-4">
                 <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                     <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,17 +37,17 @@ export default function ShipToContact({
                 </div>
             </div>
             <div className="px-6 pb-6 text-sm">
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     {/* Contact Selection Dropdown */}
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 whitespace-nowrap">
                             Select Contact
                         </label>
                         <select
                             value={selectedContactId}
                             onChange={(e) => handleContactSelect(e.target.value)}
                             disabled={!isEditing}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         >
                             <option value="">Select a contact...</option>
                             {contactsLoading ? (
@@ -63,7 +65,7 @@ export default function ShipToContact({
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 whitespace-nowrap">
                             Contact Name <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -72,12 +74,13 @@ export default function ShipToContact({
                             value={formData.locationContact}
                             onChange={(e) => setFormData({ ...formData, locationContact: e.target.value })}
                             readOnly={true}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            title={formData.locationContact || ''}
+                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 whitespace-nowrap">
                             Phone Number <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -86,12 +89,13 @@ export default function ShipToContact({
                             value={formData.contactPhone}
                             onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
                             readOnly={true}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            title={formData.contactPhone || ''}
+                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 whitespace-nowrap">
                             Email Address <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -100,7 +104,8 @@ export default function ShipToContact({
                             value={formData.contactEmail}
                             onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
                             readOnly={true}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            title={formData.contactEmail || ''}
+                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
                 </div>

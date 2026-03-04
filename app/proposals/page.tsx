@@ -220,7 +220,7 @@ export default function ProposalsPage() {
         {/* Total Proposals Card */}
         <button
           onClick={() => handleCardClick("Pipeline")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Pipeline"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Pipeline"
             ? "border-primary ring-2 ring-primary/20"
             : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
             }`}
@@ -273,7 +273,7 @@ export default function ProposalsPage() {
         {/* Draft/In Progress Proposals Card */}
         <button
           onClick={() => handleCardClick("Draft")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Draft"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Draft"
             ? "border-gray-500 ring-2 ring-gray-500/20"
             : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
             }`}
@@ -327,7 +327,7 @@ export default function ProposalsPage() {
         {/* Client Review Card */}
         <button
           onClick={() => handleCardClick("Client Review")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Client Review"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Client Review"
             ? "border-yellow-500 ring-2 ring-yellow-500/20"
             : "border-gray-200 dark:border-gray-700 hover:border-yellow-400"
             }`}
@@ -387,7 +387,7 @@ export default function ProposalsPage() {
         {/* Won Card */}
         <button
           onClick={() => handleCardClick("Won")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Won"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Won"
             ? "border-green-500 ring-2 ring-green-500/20"
             : "border-gray-200 dark:border-gray-700 hover:border-green-400"
             }`}

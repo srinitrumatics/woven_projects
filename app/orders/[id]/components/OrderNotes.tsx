@@ -4,15 +4,17 @@ interface OrderNotesProps {
     formData: any;
     setFormData: (data: any) => void;
     isEditing?: boolean;
+    className?: string;
 }
 
 export default function OrderNotes({
     formData,
     setFormData,
-    isEditing = false
+    isEditing = false,
+    className = ""
 }: OrderNotesProps) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col h-[353px] pb-6 px-6" role="region" aria-label="Order notes">
+        <div className={`bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col min-h-[300px] h-full ${className}`} role="region" aria-label="Order notes">
             {/* Header */}
             <div className="flex items-center gap-3 mb-3 ">
                 <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
@@ -33,7 +35,7 @@ export default function OrderNotes({
                     value={formData.orderNotes}
                     onChange={(e) => setFormData({ ...formData, orderNotes: e.target.value })}
                     readOnly={!isEditing}
-                    className={`w-full flex-1  p-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 resize-none ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                    className={`w-full flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 resize-none ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
                 />
             </div>
         </div>

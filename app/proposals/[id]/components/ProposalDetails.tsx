@@ -47,41 +47,14 @@ export default function ProposalDetails({
     };
 
     return (
-        <div className="grid grid-cols-1 w1500:grid-cols-10 gap-6">
-            {/* Key Dates (70%) */}
-            <div className="w1500:col-span-7 h-full">
+        <div className="grid grid-cols-1 w1400:grid-cols-10 gap-6">
+            {/* Left Column (70%) */}
+            <div className="w1400:col-span-7 flex flex-col gap-6">
+                {/* Key Dates */}
                 <KeyDates proposal={proposal} />
-            </div>
 
-            {/* Proposal Notes Card (30%) */}
-            <div className="w1500:col-span-3 h-full">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden w-full flex flex-col h-full">
-                    <div className="w-full flex items-center gap-2 justify-start p-4 border-b border-gray-50 dark:border-gray-700/50">
-                        <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-                            <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                        </div>
-                        <div className="text-left">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Proposal Notes</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Review Your Proposal Notes</p>
-                        </div>
-                    </div>
-
-                    <div className="p-4 flex-1">
-                        <textarea
-                            readOnly
-                            className="w-full h-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white resize-none focus:ring-0 focus:border-gray-300"
-                            value={proposal.Proposal_Notes || "No special notes for this proposal."}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* Left Column Remainder (70%) */}
-            <div className="w1500:col-span-7 flex flex-col gap-4 h-full">
                 {/* Billing and Shipping Information Cards - Side by Side */}
-                <div className="grid grid-cols-1 w1500:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 w1400:grid-cols-2 gap-4">
                     <BillingInfo proposal={proposal} />
                     <ShippingInfo proposal={proposal} />
                 </div>
@@ -110,10 +83,34 @@ export default function ProposalDetails({
                 </div>
             </div>
 
-            {/* Right Column Remainder (30%) */}
-            <div className="w1500:col-span-3 flex flex-col gap-4 self-start">
+            {/* Right Column (Sidebar) (30%) */}
+            <div className="w1400:col-span-3 flex flex-col gap-6 h-full">
+                {/* Proposal Notes Card */}
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden w-full flex flex-col min-h-[180px]">
+                    <div className="w-full flex items-center gap-2 justify-start p-4 border-b border-gray-50 dark:border-gray-700/50">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </div>
+                        <div className="text-left">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Proposal Notes</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Review Your Proposal Notes</p>
+                        </div>
+                    </div>
+
+                    <div className="p-4 flex-1">
+                        <textarea
+                            readOnly
+                            className="w-full h-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white resize-none focus:ring-0 focus:border-gray-300"
+                            value={proposal.Proposal_Notes || "No special notes for this proposal."}
+                        />
+                    </div>
+                </div>
+
                 {/* Proposal Summary Card */}
                 <ProposalSummary
+                    className="flex-1"
                     proposal={proposal}
                     proposedProducts={proposedProducts}
                     grandTotal={grandTotal}

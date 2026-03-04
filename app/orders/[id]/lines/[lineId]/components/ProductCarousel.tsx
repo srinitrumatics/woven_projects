@@ -18,7 +18,7 @@ export default function ProductCarousel({ images }: ProductCarouselProps) {
     };
 
     return (
-        <div className="w1500:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+        <div className="w1400:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
             <div className="relative flex-1 flex flex-col">
                 {/* Main Image Display */}
                 <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">

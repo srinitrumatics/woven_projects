@@ -7,7 +7,7 @@ interface QuoteShippingInfoProps {
 
 export default function QuoteShippingInfo({ quote }: QuoteShippingInfoProps) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700 ">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700 h-full">
             <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,7 +35,7 @@ export default function QuoteShippingInfo({ quote }: QuoteShippingInfoProps) {
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Shipping Address</label>
                     <input type="text" disabled value={quote.shippingAddress} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" title={quote.shippingAddress} />
                 </div>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 whitespace-nowrap">Request Date</label>
                         <input type="text" disabled value={formatDate(quote.requestDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300" />

@@ -174,7 +174,7 @@ export default function InvoicesPage() {
         {/* Total Invoices Card */}
         <button
           onClick={() => handleCardClick("All")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "All"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "All"
             ? "border-primary ring-2 ring-primary/20"
             : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
             }`}
@@ -211,7 +211,7 @@ export default function InvoicesPage() {
         {/* Outstanding Card */}
         <button
           onClick={() => handleCardClick("Outstanding")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Outstanding"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Outstanding"
             ? "border-amber-500 ring-2 ring-amber-500/20"
             : "border-gray-200 dark:border-gray-700 hover:border-amber-400"
             }`}
@@ -248,7 +248,7 @@ export default function InvoicesPage() {
         {/* Overdue Card */}
         <button
           onClick={() => handleCardClick("Overdue")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Overdue"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Overdue"
             ? "border-red-500 ring-2 ring-red-500/20"
             : "border-gray-200 dark:border-gray-700 hover:border-red-400"
             }`}
@@ -293,7 +293,7 @@ export default function InvoicesPage() {
         {/* Paid Card */}
         <button
           onClick={() => handleCardClick("Paid")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Paid"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Paid"
             ? "border-green-500 ring-2 ring-green-500/20"
             : "border-gray-200 dark:border-gray-700 hover:border-green-400"
             }`}

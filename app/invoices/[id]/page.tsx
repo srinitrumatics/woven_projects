@@ -250,7 +250,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
   const renderTabContent = () => {
     switch (activeTab) {
       case "products":
-        return <InvoiceLineItems lines={invoice.lines} />;
+        return <InvoiceLineItems lines={invoice.lines} invoiceId={invoice.id} />;
       case "taxes":
         return (
           <InvoiceTaxes

@@ -14,25 +14,29 @@ interface QuoteDetailsProps {
 
 export default function QuoteDetailsSection({ quote, lines, isUploading, handleFileUpload }: QuoteDetailsProps) {
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
-            <div className="lg:col-span-7 flex flex-col gap-6 ">
+        <div className="grid grid-cols-1 w1400:grid-cols-10 gap-6 items-stretch">
+            {/* Row 1 Left - Key Dates (70%) */}
+            <div className="w1400:col-span-7">
+                <QuoteKeyDates quote={quote} className="h-full" />
+            </div>
 
-                {/* Key Dates */}
-                <QuoteKeyDates quote={quote} />
+            {/* Row 1 Right - Quote Notes (30%) */}
+            <div className="w1400:col-span-3">
+                <QuoteNotes notes={quote.notes || ""} className="h-full" />
+            </div>
 
-                {/* Billing & Shipping */}
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 ">
+            {/* Row 2 Left - Billing & Shipping (70%) */}
+            <div className="w1400:col-span-7">
+                <div className="grid grid-cols-1 w1400:grid-cols-2 gap-4 h-full">
                     <QuoteBillingInfo quote={quote} />
                     <QuoteShippingInfo quote={quote} />
                 </div>
-
             </div>
 
-            <div className="lg:col-span-3 flex flex-col gap-6 h-full">
-                {/* Notes Card */}
-                <QuoteNotes notes={quote.notes || ""} />
-
+            {/* Row 2 Right - Quote Summary (30%) */}
+            <div className="w1400:col-span-3 flex flex-col">
                 <QuoteSummary
+                    className="h-full"
                     quote={quote}
                     lines={lines}
                     grandTotal={quote.grandTotal}

@@ -3,12 +3,14 @@ import { formatCurrency } from "@/lib/utils/formatting";
 import { InvoiceLine } from "../../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
+import Link from "next/link";
 
 interface InvoiceLineItemsProps {
     lines: InvoiceLine[];
+    invoiceId?: string;
 }
 
-export default function InvoiceLineItems({ lines }: InvoiceLineItemsProps) {
+export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsProps) {
     const { items: sortedLines, requestSort, sortConfig } = useSortableData<InvoiceLine>(lines);
     const { widths, handleResize } = useResizableColumns({
         lineName: 160,
@@ -47,8 +49,14 @@ export default function InvoiceLineItems({ lines }: InvoiceLineItemsProps) {
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {sortedLines.map((line) => (
                         <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td className="px-3 py-2 text-sm text-primary font-medium text-left whitespace-nowrap sticky left-0 bg-white dark:bg-gray-800">
-                                {line.invoiceLineName}
+                            <td className="px-3 py-2 text-sm font-medium text-left whitespace-nowrap sticky left-0 bg-white dark:bg-gray-800">
+                                {invoiceId ? (
+                                    <Link href={`/invoices/${invoiceId}/lines/${line.id}`} className="text-primary hover:underline">
+                                        {line.invoiceLineName}
+                                    </Link>
+                                ) : (
+                                    <span className="text-primary">{line.invoiceLineName}</span>
+                                )}
                             </td>
                             <td className="px-3 py-2 text-left">
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${line.status === 'Paid' || line.status === 'Settled'
