@@ -7,6 +7,7 @@ import Sidebar from "@/components/layouts/Sidebar";
 import { formatCurrency } from "@/lib/utils/formatting";
 import InvoiceLineTaxesTab from "./components/InvoiceLineTaxesTab";
 import InvoiceLineCreditMemoTab from "./components/InvoiceLineCreditMemoTab";
+import InvoiceLineFilesTab from "./components/InvoiceLineFilesTab";
 
 interface InvoiceLineData {
     id: string;
@@ -60,6 +61,7 @@ export default function InvoiceLineDetailPage({
     const [invoiceLines, setInvoiceLines] = useState<InvoiceLineData[]>([]);
     const [currentLineIndex, setCurrentLineIndex] = useState(0);
     const [creditMemoCount, setCreditMemoCount] = useState(0);
+    const [filesCount, setFilesCount] = useState(0);
 
     const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
     const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
@@ -88,7 +90,7 @@ export default function InvoiceLineDetailPage({
                         site: item.Site_Name || item.Site__c || "-",
                         inventoryAccount: item.Inventory_Account_Name || item.Inventory_Account__c || "-",
                         isTaxable: item.Is_Taxable__c ? "Yes" : "No",
-                        proposedProduct: item.Proposed_Product__c || "-",
+                        proposedProduct: item.Proposed_Product_Name || "-",
                         customerQuoteLine: item.Customer_Quote_Line_Name || item.Customer_Quote_Line__c || "-",
                         salesOrderLine: item.Sales_Order_Line_Name || item.Sales_Order_Line__c || "-",
                         purchaseOrderLine: item.Purchase_Order_Line_Name || item.Purchase_Order_Line__c || "-",
@@ -131,16 +133,20 @@ export default function InvoiceLineDetailPage({
         if (id) fetchInvoiceLineData();
     }, [id, lineid, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
-    // Fetch credit memo line count
+    // Fetch credit memo line count and files count
     useEffect(() => {
         async function fetchCounts() {
             if (!SF_ACCOUNT_ID || !SF_CONTACT_ID || !lineid) return;
             try {
-                const res = await fetch(
-                    `/api/salesforce/invoices?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&invoiceId=${encodeURIComponent(lineid)}&action=creditmemolines&objectName=Invoice_Line__c`
-                );
-                const data = res.ok ? await res.json() : null;
-                setCreditMemoCount(data?.Credit_Memo_Line__c?.length || 0);
+                const [creditRes, filesRes] = await Promise.all([
+                    fetch(`/api/salesforce/invoices?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&invoiceId=${encodeURIComponent(lineid)}&action=creditmemolines&objectName=Invoice_Line__c`),
+                    fetch(`/api/salesforce/invoices?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&invoiceId=${encodeURIComponent(lineid)}&action=files&objectName=Invoice_Line__c`),
+                ]);
+                const creditData = creditRes.ok ? await creditRes.json() : null;
+                setCreditMemoCount(creditData?.Credit_Memo_Line__c?.length || 0);
+                const filesData = filesRes.ok ? await filesRes.json() : null;
+                const rawFiles = Array.isArray(filesData) ? filesData : filesData?.files || filesData?.ContentVersion || [];
+                setFilesCount(rawFiles.length);
             } catch (err) {
                 console.error("Error fetching counts:", err);
             }
@@ -154,7 +160,7 @@ export default function InvoiceLineDetailPage({
 
     const productImages = [{ id: 1, label: "Image 1" }, { id: 2, label: "Image 2" }];
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [activeTab, setActiveTab] = useState<"taxes" | "creditmemolines">("taxes");
+    const [activeTab, setActiveTab] = useState<"taxes" | "creditmemolines" | "files">("taxes");
 
     if (loading) {
         return (
@@ -397,6 +403,7 @@ export default function InvoiceLineDetailPage({
                                 product.vatAmount > 0) ? 1 : 0,
                         },
                         { id: "creditmemolines", label: "Credit Memo Lines", count: creditMemoCount },
+                        { id: "files", label: "Files", count: filesCount },
                     ].map((tab) => (
                         <button
                             key={tab.id}
@@ -416,6 +423,13 @@ export default function InvoiceLineDetailPage({
                     {activeTab === "taxes" && <InvoiceLineTaxesTab product={product} />}
                     {activeTab === "creditmemolines" && (
                         <InvoiceLineCreditMemoTab
+                            lineId={lineid}
+                            accountId={SF_ACCOUNT_ID}
+                            contactId={SF_CONTACT_ID}
+                        />
+                    )}
+                    {activeTab === "files" && (
+                        <InvoiceLineFilesTab
                             lineId={lineid}
                             accountId={SF_ACCOUNT_ID}
                             contactId={SF_CONTACT_ID}

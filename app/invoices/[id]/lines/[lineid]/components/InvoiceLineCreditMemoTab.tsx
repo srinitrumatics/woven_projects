@@ -4,22 +4,25 @@ import { useEffect, useState } from "react";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { formatCurrency } from "@/lib/utils/formatting";
 
 interface CreditMemoLine {
     id: string;
-    lineName: string;
-    status: string;
-    creditMemoName: string;
-    productName: string;
-    description: string;
-    manufacturerDBA: string;
-    unitPrice: number;
-    quantity: number;
-    totalPrice: number;
-    taxes: number;
-    shipping: number;
-    grandTotal: number;
+    lineName: string;          // Credit Memo Line (Name)
+    status: string;            // Status
+    creditMemoName: string;    // Credit Memo
+    invoiceLine: string;       // Invoice Line
+    salesOrderLine: string;    // Sales Order Line
+    customerQuoteLine: string; // Customer Quote Line
+    productName: string;       // Product Name
+    description: string;       // Product Description
+    manufacturerDBA: string;   // Manufacturer DBA
+    unitPrice: number;         // Unit Price
+    creditQty: number;         // Credit Qty
+    totalPrice: number;        // Total Price
+    shipping: number;          // Shipping
+    taxes: number;             // Taxes
+    grandTotal: number;        // Line Grand Total
 }
 
 interface InvoiceLineCreditMemoTabProps {
@@ -44,18 +47,21 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                 if (data && data.Credit_Memo_Line__c) {
                     setCreditMemoLines(data.Credit_Memo_Line__c.map((item: any) => ({
                         id: item.Id,
-                        lineName: item.Name,
+                        lineName: item.Name || "",
                         status: item.Status__c || "",
-                        creditMemoName: item.Credit_Memo_Name || "",
-                        productName: item.Product_Name || "",
-                        description: item.Product_Description__c || "",
-                        manufacturerDBA: item.Manufacturer_DBA__c || "",
+                        creditMemoName: item.Credit_Memo_Name || item.Credit_Memo__c || "",
+                        invoiceLine: item.Invoice_Line__c || "",
+                        salesOrderLine: item.Sales_Order_Line__c || item.Sales_Order_Line_Name || "",
+                        customerQuoteLine: item.Customer_Order_Line__c || item.Customer_Order_Line_Name || "",
+                        productName: item.Product_Name || item.duct_Name__c || "",
+                        description: item.Product_Description__c || item.duct_Descrip__c || "",
+                        manufacturerDBA: item.Manufacturer_DBA__c || item.ufacturer_DB_A__c || "",
                         unitPrice: item.Unit_Price__c || 0,
-                        quantity: item.Total_Order_Qty__c || 0,
-                        totalPrice: item.Total_Price__c || 0,
-                        taxes: item.Total_Taxes_Amount__c || 0,
-                        shipping: item.Shipping_Charges__c || 0,
-                        grandTotal: item.Line_Grand_Total__c || 0,
+                        creditQty: item.Credit_Qty__c || item.Total_Order_Qty__c || 0,
+                        totalPrice: item.Total_Price__c || item.l_Price__c || 0,
+                        shipping: item.Shipping_Charges__c || item.Ship_ping_Charge_s__c || 0,
+                        taxes: item.Total_Taxes_Amount__c || item.l_Taxes_Am_ount__c || 0,
+                        grandTotal: item.Line_Grand_Total__c || item.e_Grand_Tota_l__c || 0,
                     })));
                 }
             } catch (err) {
@@ -69,18 +75,21 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
 
     const { items: sortedData, requestSort, sortConfig } = useSortableData<CreditMemoLine>(creditMemoLines);
     const { widths, handleResize } = useResizableColumns({
-        lineName: 180,
-        status: 120,
-        creditMemoName: 180,
-        productName: 160,
-        description: 200,
-        manufacturerDBA: 160,
-        unitPrice: 120,
-        quantity: 100,
-        totalPrice: 120,
+        lineName: 160,
+        status: 110,
+        creditMemoName: 160,
+        invoiceLine: 140,
+        salesOrderLine: 150,
+        customerQuoteLine: 200,
+        productName: 150,
+        description: 180,
+        manufacturerDBA: 180,
+        unitPrice: 110,
+        creditQty: 120,
+        totalPrice: 110,
+        shipping: 110,
         taxes: 100,
-        shipping: 100,
-        grandTotal: 130,
+        grandTotal: 180,
     });
 
     if (loading) {
@@ -96,7 +105,6 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
             <div className="text-center py-12">
                 <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No records found</p>
                 <p className="text-sm">There is no credit memo associated with this invoice line.</p>
-
             </div>
         );
     }
@@ -107,39 +115,46 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                 <table className="w-full text-sm">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
-                            {/* Sticky column + sticky row header — needs z-20 so it sits above both */}
-                            <SortableHeader label="Credit Memo" field="creditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditMemoName} onResize={handleResize} className="sticky left-0 top-0 z-20 bg-primary-light dark:bg-gray-900" />
+                            <SortableHeader label="Credit Memo Line" field="lineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 top-0 z-20 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                            <SortableHeader label="Credit Memo" field="creditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditMemoName} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                            <SortableHeader label="Invoice Line" field="invoiceLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceLine} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                            <SortableHeader label="Sales Order Line" field="salesOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                            <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                            <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Quantity" field="quantity" sortConfig={sortConfig} requestSort={requestSort} width={widths.quantity} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                            <SortableHeader label="Credit Qty" field="creditQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditQty} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                            <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                            <SortableHeader label="Line Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800">
                         {sortedData.map((item) => (
                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700">
                                 {/* Sticky column — z-10, inherits row bg */}
-                                <td className="px-3 py-2 text-sm font-medium text-left truncate sticky left-0 z-10 bg-white dark:bg-gray-800 text-primary">{item.creditMemoName}</td>
+                                <td className="px-3 py-2 text-sm font-medium text-left truncate sticky left-0 z-10 bg-white dark:bg-gray-800 text-primary">{item.lineName}</td>
                                 <td className="px-3 py-2 text-sm">
                                     <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                         {item.status}
                                     </span>
                                 </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.creditMemoName}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.invoiceLine}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.salesOrderLine}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-[200px] truncate" title={item.description}>{item.description}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-[180px] truncate" title={item.description}>{item.description}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.manufacturerDBA}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">{formatCurrency(item.unitPrice)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.quantity}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.creditQty}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.totalPrice)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.grandTotal)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-semibold">{formatCurrency(item.grandTotal)}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -148,4 +163,3 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
         </div>
     );
 }
-
