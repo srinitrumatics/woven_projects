@@ -71,7 +71,7 @@ export default function InvoiceSummary({
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 flex flex-col h-full">
             <SectionTitle title="Invoice Summary" subtitle="Review Invoice Summary" />
 
-            <div className="flex-1 flex flex-col justify-between pt-2">
+            <div className="flex-1 flex flex-col justify-between">
                 <div className="flex-1 space-y-4">
                     <SummaryRow label={`(${productCount}) Products - Subtotal`} value={productsSubtotal} />
                     <SummaryRow label={`(${serviceCount}) Services - Subtotal`} value={servicesSubtotal} />
@@ -92,7 +92,18 @@ export default function InvoiceSummary({
                         <SummaryStatusRow label="Open Balance" value={formatCurrency(amountDue)} variant="danger" />
                     </div>
 
-
+                    {/* Download PDF Button */}
+                    <div className="border-t border-gray-300 dark:border-gray-600 pt-3 mt-1">
+                        <button
+                            onClick={handleDownloadPDF}
+                            className="w-full flex items-center justify-center gap-2 px-2 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:text-white dark:hover:border-primary transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Download PDF
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

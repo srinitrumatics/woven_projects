@@ -57,6 +57,13 @@
       "when": 1765788455776,
       "tag": "0007_quick_captain_stacy",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1741182364000,
+      "tag": "0008_user_salesforce_profiles",
+      "breakpoints": true
     }
   ]
 }

@@ -10,9 +10,14 @@ interface QuoteDetailsProps {
     lines: QuoteLine[];
     isUploading?: boolean;
     handleFileUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleDownloadPDF?: () => void;
 }
 
-export default function QuoteDetailsSection({ quote, lines, isUploading, handleFileUpload }: QuoteDetailsProps) {
+export default function QuoteDetailsSection({ quote, lines, isUploading, handleFileUpload, handleDownloadPDF }: QuoteDetailsProps) {
+    const defaultHandleDownloadPDF = () => {
+        console.log("Downloading Quote PDF...");
+    };
+
     return (
         <div className="grid grid-cols-1 w1025:grid-cols-10 gap-6 items-stretch">
             {/* Row 1 Left - Key Dates (70%) */}
@@ -42,6 +47,7 @@ export default function QuoteDetailsSection({ quote, lines, isUploading, handleF
                     grandTotal={quote.grandTotal}
                     isUploading={isUploading}
                     handleFileUpload={handleFileUpload}
+                    handleDownloadPDF={handleDownloadPDF || defaultHandleDownloadPDF}
                 />
             </div>
         </div>

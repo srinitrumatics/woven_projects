@@ -28,11 +28,9 @@ export async function getSalesforceSession() {
   // obtain or reuse token
   const tokenUrl = process.env.SF_AUTH_URL || "https://test.salesforce.com/services/oauth2/token";
   const body = new URLSearchParams({
-    grant_type: "password",
+    grant_type: "client_credentials",
     client_id: process.env.SF_CLIENT_ID || "",
     client_secret: process.env.SF_CLIENT_SECRET || "",
-    username: process.env.SF_USERNAME || "",
-    password: process.env.SF_PASSWORD || "",
   });
 
   const res = await fetch(tokenUrl, {
@@ -40,7 +38,24 @@ export async function getSalesforceSession() {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString(),
   });
-  const tokenData = await res.json();
+
+  const rawText = await res.text();
+  const contentType = res.headers.get("content-type") || "";
+
+  if (!contentType.includes("application/json")) {
+    console.error(
+      `getSalesforceSession - Auth endpoint returned non-JSON response (HTTP ${res.status}).\n` +
+      `URL: ${tokenUrl}\n` +
+      `Content-Type: ${contentType}\n` +
+      `Body preview: ${rawText.slice(0, 200)}`
+    );
+    throw new Error(
+      `Salesforce auth endpoint returned HTML instead of JSON (HTTP ${res.status}). ` +
+      `Check SF_AUTH_URL in your .env file.`
+    );
+  }
+
+  const tokenData = JSON.parse(rawText);
   console.log("getSalesforceSession - tokenData received:", !!tokenData.access_token);
   if (!tokenData.access_token) {
     console.error("getSalesforceSession - FAILED to get access token:", tokenData);
@@ -52,22 +67,20 @@ export async function getSalesforceSession() {
 }
 
 // Fetch orders from Salesforce
-export async function getOrderslistFromSalesforce(accountId?: string, contactId?: string, orderUrl?: string): Promise<SalesforceOrder[]> {
+export async function getOrderslistFromSalesforce(accountId?: string, contactId?: string, orderUrl?: string): Promise<any> {
   try {
     console.log("getOrderslistFromSalesforce called with accountId:", accountId, "contactId:", contactId);
     const session = await getSalesforceSession();
 
     if (!session.accessToken) {
       console.error('No Salesforce access token available');
-      return []; // Return empty array if not authenticated to Salesforce
+      return [];
     }
 
-
     const separator = orderUrl?.includes('?') ? '&' : '?';
-    let Url = orderUrl + `${separator}accountId=${encodeURIComponent(accountId ?? '001WL00000bapRiYAI')}&contactId=${encodeURIComponent(contactId ?? 'abc')}`;
+    const Url = orderUrl + `${separator}accountId=${encodeURIComponent(accountId ?? '')}&contactId=${encodeURIComponent(contactId ?? '')}`;
 
     console.log('Fetching orders from Salesforce with URL:', Url);
-    // Make API call to Salesforce
 
     const response = await fetch(Url, {
       method: "GET",
@@ -82,14 +95,23 @@ export async function getOrderslistFromSalesforce(accountId?: string, contactId?
     }
 
     const resultdata = await response.json();
-    //console.log('resultdata');
-    //console.log(resultdata);
+    console.log('getOrderslistFromSalesforce raw response:', JSON.stringify(resultdata)?.slice(0, 300));
 
-    // Return the records from the response
-    return resultdata.data || [];
+    // New API shape: [{ Customer_Order__c: [...], Status__c: [...] }]
+    // Return the full response so the caller can extract Customer_Order__c / Status__c
+    if (Array.isArray(resultdata) && resultdata.length > 0 && resultdata[0]?.Customer_Order__c) {
+      return resultdata;
+    }
+
+    // Legacy shape: { data: [...] }
+    if (resultdata?.data) {
+      return resultdata.data;
+    }
+
+    return resultdata ?? [];
   } catch (error) {
     console.error('Error fetching orders from Salesforce:', error);
-    return []; // Return empty array on error
+    return [];
   }
 }
 export async function getOrderFromSalesforce(accountId?: string, contactId?: string, orderId?: string, orderUrl?: string): Promise<SalesforceOrder[]> {

@@ -251,4 +251,36 @@ export const apiKeys = pgTable('api_keys', {
 export type ApiKey = typeof apiKeys.$inferSelect;
 export type NewApiKey = typeof apiKeys.$inferInsert;
 
+// User Salesforce Profiles table — maps local users to their Salesforce Contact & Account IDs
+// A user can belong to multiple accounts; composite PK prevents exact duplicates
+export const userSalesforceProfiles = pgTable(
+  'user_salesforce_profiles',
+  {
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    contactId: text('contact_id').notNull(),
+    accountId: text('account_id').notNull(),
+    createdAt: text('created_at')
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: text('updated_at')
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.accountId] }),
+  })
+);
+
+export const userSalesforceProfileRelations = relations(userSalesforceProfiles, ({ one }) => ({
+  user: one(users, {
+    fields: [userSalesforceProfiles.userId],
+    references: [users.id],
+  }),
+}));
+
+export type UserSalesforceProfile = typeof userSalesforceProfiles.$inferSelect;
+export type NewUserSalesforceProfile = typeof userSalesforceProfiles.$inferInsert;
+
 export * from './salesforce-schema';

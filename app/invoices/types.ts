@@ -1,4 +1,4 @@
-export type InvoiceStatus = "Draft" | "Sent" | "Viewed" | "Partial" | "Paid" | "Overdue" | "Cancelled";
+export type InvoiceStatus = "Draft" | "Sent" | "Viewed" | "Partial" | "Paid" | "Overdue" | "Cancelled" | "Shipped";
 export type PaymentStatus = "Pending" | "Processing" | "Completed" | "Failed" | "Refunded";
 export type PaymentMethod = "Credit Card" | "ACH" | "Wire Transfer" | "Check" | "Cash";
 
