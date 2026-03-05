@@ -67,7 +67,7 @@ export default function OrdersPage() {
         }
 
         const data = await res.json();
-        console.log("Fetched orders data:", data[0].Customer_Order__c);
+        // console.log("Fetched orders data:", data[0]?.Customer_Order__c);
 
         // Based on API: [ { Customer_Order__c: [...], Status__c: [...] } ]
         const responseData = Array.isArray(data) ? data[0] : data;
