@@ -29,7 +29,7 @@ interface ProposalProductItem {
     Proposed_Product_Notes__c?: string;
     Site__c?: string;
     Inventory_Account__c?: string;
-    Is_Taxable__c?: boolean;
+    IsTaxable__c?: boolean;
     Available_To_Sell__c?: number;
     Qty_Shipped__c?: number;
     Unit_Cost__c?: number;
@@ -122,7 +122,7 @@ export default function ProposalProductDetailPage({
                         manufacturerDBA: inv.Manufacturer_DBA__c || "",
                         unitPrice: inv.Unit_Price__c || 0,
                         invoiceQty: inv.Invoiced_Qty__c || 0,
-                        totalPrice: inv.Invoiced_Amount__c || 0,
+                        totalPrice: inv.Total_Price__c || 0,
                         shipping: inv.Shipping_Charges__c || 0,
                         taxes: inv.Total_Taxes_Amount__c || 0,
                         lineGrandTotal: inv.Line_Grand_Total__c || 0,
@@ -347,7 +347,7 @@ export default function ProposalProductDetailPage({
                         ProductNotes: item.Proposed_Product_Notes__c,
                         site: item.Site_Name || "-",
                         inventoryAccount: item.Inventory_Account_Name || "-",
-                        isTaxable: item.Is_Taxable__c === true ? "Yes" : "No",
+                        isTaxable: item.IsTaxable__c === true ? "Yes" : "No",
                         availableToSell: item.Available_To_Sell__c || 0,
                         qtyShipped: item.Qty_Shipped__c || 0,
                         unitCost: item.Unit_Cost__c != null ? `$${item.Unit_Cost__c.toFixed(2)}` : "Hide",
@@ -675,8 +675,8 @@ export default function ProposalProductDetailPage({
                 {/* Proposal Note - 25% width (3 of 12 cols) */}
                 <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                     <div className="flex items-center gap-2 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
-                            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
@@ -685,8 +685,8 @@ export default function ProposalProductDetailPage({
                         </h2>
                     </div>
                     <div className="flex-1 flex flex-col">
-                        <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-900 dark:text-white min-h-[200px]">
-                            <p className="text-gray-400 italic">{product.ProductNotes}</p>
+                        <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-800 dark:text-white min-h-[200px]">
+                            <p className="text-gray-400">{product.ProductNotes}</p>
                         </div>
                     </div>
                 </div>
@@ -694,19 +694,9 @@ export default function ProposalProductDetailPage({
                 {/* Product Information Card - 50% width (6 of 12 cols) */}
                 <div className="w1025:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
                     <div className="flex items-center gap-2 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
-                            <svg
-                                className="w-5 h-5 text-primary"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                                />
+                        <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                             </svg>
                         </div>
                         <div>
@@ -926,7 +916,7 @@ export default function ProposalProductDetailPage({
                                     <td className="px-3 py-2 text-gray-600 ">
                                         ${taxes.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-3 py-2 text-gray-600 ">
+                                    <td className="px-3 py-2 text-sm font-bold text-primary dark:text-primary-light truncate">
                                         ${grandTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
                                     <td className="px-3 py-2 text-gray-600 ">{product.qtyShipped}</td>

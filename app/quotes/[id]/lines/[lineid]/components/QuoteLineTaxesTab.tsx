@@ -51,38 +51,38 @@ export default function QuoteLineTaxesTab({ product }: QuoteLineTaxesTabProps) {
                 <table className="w-full text-sm ">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr >
-                            <th className="px-4 py-3 font-semibold truncate">Sales Tax Rate</th>
-                            <th className="px-4 py-3 font-semibold truncate">Sales Tax Amount</th>
-                            <th className="px-4 py-3 font-semibold truncate">Use Tax Rate</th>
-                            <th className="px-4 py-3 font-semibold truncate">Use Tax Amount</th>
-                            <th className="px-4 py-3 font-semibold truncate">Local Tax Rate</th>
-                            <th className="px-4 py-3 font-semibold truncate">Local Tax Amount</th>
-                            <th className="px-4 py-3 font-semibold truncate">Excise Tax Rate</th>
-                            <th className="px-4 py-3 font-semibold truncate">Excise Tax Amount</th>
-                            <th className="px-4 py-3 font-semibold truncate">GRT Rate</th>
-                            <th className="px-4 py-3 font-semibold truncate">GRT Amount</th>
-                            <th className="px-4 py-3 font-semibold truncate">GST Rate</th>
-                            <th className="px-4 py-3 font-semibold truncate">GST Amount</th>
-                            <th className="px-4 py-3 font-semibold truncate">VAT Rate</th>
-                            <th className="px-4 py-3 font-semibold truncate">VAT Amount</th>
+                            <th className="px-3  py-2 font-semibold truncate">Sales Tax Rate</th>
+                            <th className="px-3  py-2 font-semibold truncate">Sales Tax Amount</th>
+                            <th className="px-3  py-2 font-semibold truncate">Use Tax Rate</th>
+                            <th className="px-3  py-2 font-semibold truncate">Use Tax Amount</th>
+                            <th className="px-3  py-2 font-semibold truncate">Local Tax Rate</th>
+                            <th className="px-3  py-2 font-semibold truncate">Local Tax Amount</th>
+                            <th className="px-3  py-2 font-semibold truncate">Excise Tax Rate</th>
+                            <th className="px-3  py-2 font-semibold truncate">Excise Tax Amount</th>
+                            <th className="px-3  py-2 font-semibold truncate">GRT Rate</th>
+                            <th className="px-3  py-2 font-semibold truncate">GRT Amount</th>
+                            <th className="px-3  py-2 font-semibold truncate">GST Rate</th>
+                            <th className="px-3  py-2 font-semibold truncate">GST Amount</th>
+                            <th className="px-3  py-2 font-semibold truncate">VAT Rate</th>
+                            <th className="px-3  py-2 font-semibold truncate">VAT Amount</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800">
                         <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{product.salesTaxRate?.toFixed(3)}%</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.salesTaxAmount)}</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{product.useTaxRate?.toFixed(3)}%</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.useTaxAmount)}</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{product.localTaxRate?.toFixed(2)}%</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.localTaxAmount)}</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{product.exciseTaxRate?.toFixed(3)}%</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.exciseTaxAmount)}</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{product.grtRate?.toFixed(3)}%</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.grtAmount)}</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{product.gstRate?.toFixed(3)}%</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.gstAmount)}</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{product.vatRate?.toFixed(3)}%</td>
-                            <td className="px-4 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.vatAmount)}</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{product.salesTaxRate?.toFixed(3)}%</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.salesTaxAmount)}</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{product.useTaxRate?.toFixed(3)}%</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.useTaxAmount)}</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{product.localTaxRate?.toFixed(2)}%</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.localTaxAmount)}</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{product.exciseTaxRate?.toFixed(3)}%</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.exciseTaxAmount)}</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{product.grtRate?.toFixed(3)}%</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.grtAmount)}</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{product.gstRate?.toFixed(3)}%</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.gstAmount)}</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{product.vatRate?.toFixed(3)}%</td>
+                            <td className="px-3  py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(product.vatAmount)}</td>
                         </tr>
                     </tbody>
                 </table>

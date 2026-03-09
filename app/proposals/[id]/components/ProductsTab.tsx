@@ -69,7 +69,7 @@ export default function ProductsTab({
 
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" style={{ width: widths.Name }}>
                                 <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.Name || ''}>
-                                    <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary rounded font-medium truncate block" title={product.Name}>
+                                    <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary rounded font-semibold  hover:underline truncate block" title={product.Name}>
                                         {product.Name}
                                     </Link>
                                 </div>

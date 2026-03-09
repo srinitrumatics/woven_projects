@@ -21,11 +21,18 @@ interface ProductInfoProps {
 export default function ProductInfo({ product }: ProductInfoProps) {
     return (
         <div className="w1025:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
-            <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    Product Information
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Essential Details about the Item</p>
+            <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        Product Information
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Essential Details about the Item</p>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-4">
@@ -102,7 +109,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                 {/* Is Taxable */}
                 <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Is Taxable">
-                        Is Taxable
+                        IsTaxable
                     </label>
                     <input
                         type="text"

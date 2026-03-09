@@ -47,6 +47,7 @@ interface InvoiceLineData {
     gstAmount: number;
     vatRate: number;
     vatAmount: number;
+    inventoryLineNotes: string;
 }
 
 export default function InvoiceLineDetailPage({
@@ -89,7 +90,7 @@ export default function InvoiceLineDetailPage({
                         productFamily: item.Product_Family__c || "-",
                         site: item.Site_Name || item.Site__c || "-",
                         inventoryAccount: item.Inventory_Account_Name || item.Inventory_Account__c || "-",
-                        isTaxable: item.Is_Taxable__c ? "Yes" : "No",
+                        isTaxable: item.IsTaxable__c ? "Yes" : "No",
                         proposedProduct: item.Proposed_Product_Name || "-",
                         customerQuoteLine: item.Customer_Quote_Line_Name || item.Customer_Quote_Line__c || "-",
                         salesOrderLine: item.Sales_Order_Line_Name || item.Sales_Order_Line__c || "-",
@@ -116,6 +117,7 @@ export default function InvoiceLineDetailPage({
                         gstAmount: item.Total_GST_Amount__c || 0,
                         vatRate: item.VAT_Rate__c || 0,
                         vatAmount: item.Total_VAT_Amount__c || 0,
+                        inventoryLineNotes: item.Invoice_Line_Notes__c || "",
                     }));
 
                     setInvoiceLines(mappedLines);
@@ -285,8 +287,8 @@ export default function InvoiceLineDetailPage({
                         </div>
                         <h2 className="text-lg font-bold text-gray-800 tracking-tight">Invoice Line Notes</h2>
                     </div>
-                    <div className="w-full h-[240px] p-4 bg-gray-50/50 border border-gray-200 rounded-lg text-sm text-gray-500 overflow-y-auto italic">
-                        {product.description || "No notes available."}
+                    <div className="w-full h-[240px] p-4 bg-gray-50/50 border border-gray-200 rounded-lg text-sm text-gray-500 overflow-y-auto">
+                        {product.inventoryLineNotes || ""}
                     </div>
                 </div>
 
@@ -375,10 +377,10 @@ export default function InvoiceLineDetailPage({
                                     <td className="px-3 py-2 text-gray-600">{product.orderQty}</td>
                                     <td className="px-3 py-2 text-gray-600">{product.moq}</td>
                                     <td className="px-3 py-2 text-gray-600">{product.totalOrderQty}</td>
-                                    <td className="px-3 py-2 text-gray-600">{formatCurrency(product.totalPrice)}</td>
+                                    <td className="px-3 py-2 text-gray-600 font-bold">{formatCurrency(product.totalPrice)}</td>
                                     <td className="px-3 py-2 text-gray-600">{formatCurrency(product.shipping)}</td>
                                     <td className="px-3 py-2 text-gray-600">{formatCurrency(product.taxes)}</td>
-                                    <td className="px-3 py-2 text-blue-400">{formatCurrency(product.grandTotal)}</td>
+                                    <td className="px-3 py-2 text-primary font-bold">{formatCurrency(product.grandTotal)}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -394,13 +396,7 @@ export default function InvoiceLineDetailPage({
                         {
                             id: "taxes",
                             label: "Taxes",
-                            count: (product.salesTaxAmount > 0 ||
-                                product.useTaxAmount > 0 ||
-                                product.localTaxAmount > 0 ||
-                                product.exciseTaxAmount > 0 ||
-                                product.grtAmount > 0 ||
-                                product.gstAmount > 0 ||
-                                product.vatAmount > 0) ? 1 : 0,
+                            count: (product.isTaxable === "Yes") ? 1 : 0,
                         },
                         { id: "creditmemolines", label: "Credit Memo Lines", count: creditMemoCount },
                         { id: "files", label: "Files", count: filesCount },

@@ -164,8 +164,8 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     const rma = item as RMA;
                                     return (
                                         <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                            <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 text-center" title={rma.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate" title={rma.name}>{rma.name}</div></td>
-                                            <td className="px-3 py-2 text-center">
+                                            <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 text-left" title={rma.name}><div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate" title={rma.name}>{rma.name}</div></td>
+                                            <td className="px-3 py-2 text-left">
                                                 <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${rma.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                     rma.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                         'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -173,7 +173,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                     {rma.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-center">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
                                                 <div className="text-sm truncate" title={rma.rmaName}>{rma.rmaName}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
@@ -251,7 +251,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     return (
                                         <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                             <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 " title={rtv.name}>
-                                                <div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">{rtv.name}</div></td>
+                                                <div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate">{rtv.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${rtv.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                     'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -342,13 +342,13 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                 ${credit.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
                                                 ${credit.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
                                                 ${credit.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-bold text-primary">
                                                 ${credit.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
                                         </tr>
@@ -409,17 +409,17 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{debit.productName}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={debit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{debit.productDescription}</div></td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px]">{debit.manufacturerDBA}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-mono">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
                                                 ${debit.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
                                             <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">{debit.debitQty}</td>
                                             <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
                                                 ${debit.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
                                                 ${debit.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-bold text-primary">
                                                 ${debit.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
                                         </tr>
@@ -433,13 +433,13 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                         <table className="w-full">
                             <thead className="bg-gray-50 dark:bg-gray-800/50">
                                 <tr>
-                                    <th className="px-3 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white">Amount</th>
+                                    <th className="px-3 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Amount</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                                 {activeData.length === 0 ? (
                                     <tr>
-                                        <td colSpan={4} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">
+                                        <td colSpan={4} className="px-4 py-12 text-left text-gray-500 dark:text-gray-400">
                                             <div className="flex flex-col items-center justify-center">
                                                 <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
@@ -452,8 +452,8 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     activeData.map((item) => {
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white font-medium">{item.name}</td>
-                                                <td className="px-3 py-2 text-center">
+                                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white font-medium">{item.name}</td>
+                                                <td className="px-3 py-2 text-left">
                                                     <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         item.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                             'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'

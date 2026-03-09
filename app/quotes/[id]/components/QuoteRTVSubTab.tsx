@@ -85,7 +85,7 @@ export default function QuoteRTVSubTab({
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.supplierName }}>{rtv.supplierName}</td>
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.supplierContact }}>{rtv.supplierContact}</td>
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{rtv.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.totalCost }}>{formatCurrency(rtv.totalCost)}</td>
+                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold" style={{ width: widths.totalCost }}>{formatCurrency(rtv.totalCost)}</td>
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.issuedDate }}>{formatDate(rtv.issuedDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.approvalDate }}>{formatDate(rtv.approvalDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.returnByDate }}>{formatDate(rtv.returnByDate, 'numeric-dash')}</td>

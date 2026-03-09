@@ -58,7 +58,7 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {sortedLines.map((line) => (
                         <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td className="px-3 py-2 text-sm font-medium text-left sticky left-0 bg-white dark:bg-gray-800">
+                            <td className="px-3 py-2 text-sm font-bold text-left sticky left-0 bg-white dark:bg-gray-800">
                                 {invoiceId ? (
                                     <Link href={`/invoices/${invoiceId}/lines/${line.id}`} className="text-primary hover:underline truncate block" title={line.invoiceLineName}>
                                         {line.invoiceLineName}
@@ -90,7 +90,7 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                             <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
                                 {line.quantity.toFixed(2)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold">
                                 {formatCurrency(line.subtotal)}
                             </td>
                             <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
@@ -99,7 +99,7 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                             <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
                                 {formatCurrency(line.totalTaxesAmount)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[170px]">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[170px] font-bold text-primary">
                                 {formatCurrency(line.lineGrandTotal)}
                             </td>
                         </tr>

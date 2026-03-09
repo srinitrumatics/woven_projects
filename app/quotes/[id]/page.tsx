@@ -489,7 +489,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           fileName: f.Title,
           fileType: f.FileExtension,
           fileSize: f.FileSize ? (f.ContentSize / 1024 / 1024).toFixed(2) + ' MB' : '0 MB',
-          sizeInBytes: f.ContentSize || 0,
+          sizeInBytes: f.FileSize || 0,
           uploadedDate: f.CreatedDate,
           uploadedBy: f.CreatedBy?.Name || 'Unknown',
           contentDocumentId: f.ContentDocumentId

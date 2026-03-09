@@ -93,10 +93,10 @@ export default function QuoteSalesOrdersSubTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipToContact }}>{order.shipToContact}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.dropShip }}>{order.dropShip ? 'Yes' : 'No'}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{order.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>{formatCurrency(order.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold" style={{ width: widths.totalPrice }}>{formatCurrency(order.totalPrice)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipping }}>{formatCurrency(order.shipping)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.taxes }}>{formatCurrency(order.taxes)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" style={{ width: widths.grandTotal }}>{formatCurrency(order.grandTotal)}</td>
+                                <td className="px-3 py-2 text-sm text-primary font-bold" style={{ width: widths.grandTotal }}>{formatCurrency(order.grandTotal)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.requestDate }}>{formatDate(order.requestDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.pickDate }}>{formatDate(order.pickDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.pickCompleteDate }}>{formatDate(order.pickCompleteDate, 'numeric-dash')}</td>

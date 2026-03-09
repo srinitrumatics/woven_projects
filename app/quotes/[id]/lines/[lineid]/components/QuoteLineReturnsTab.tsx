@@ -397,7 +397,7 @@ export default function QuoteLineReturnsTab({
 
                                         {activeSubTab === "DebitMemos" && (
                                             <>
-                                                <td className="px-3 py-2 text-sm text-blue-500 hover:underline cursor-pointer truncate">{item.debitMemoName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.debitMemoName}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.purchaseOrderLine}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.supplierBillLine}</td>
@@ -406,15 +406,15 @@ export default function QuoteLineReturnsTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.manufacturerDBA}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.unitCost)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.debitQty}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.totalCost)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalCost)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate min-w-[185px]">{formatCurrency(item.grandTotal)}</td>
+                                                <td className="px-3 py-2 text-sm text-primary font-bold truncate min-w-[185px]">{formatCurrency(item.grandTotal)}</td>
                                             </>
                                         )}
 
                                         {activeSubTab === "RTVs" && (
                                             <>
-                                                <td className="px-3 py-2 text-sm text-blue-500 hover:underline cursor-pointer truncate">{item.rtvName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.rtvName}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.purchaseOrderLine}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
@@ -429,7 +429,7 @@ export default function QuoteLineReturnsTab({
 
                                         {activeSubTab === "CreditMemos" && (
                                             <>
-                                                <td className="px-3 py-2 text-sm text-blue-500 hover:underline cursor-pointer truncate">{item.creditMemoName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.creditMemoName}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.salesOrderLine}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.invoiceLine}</td>
@@ -438,16 +438,16 @@ export default function QuoteLineReturnsTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.manufacturerDBA}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.unitPrice)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.creditQty}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.totalPrice)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(item.totalPrice)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate min-w-[165px]">{formatCurrency(item.grandTotal)}</td>
+                                                <td className="px-3 py-2 text-sm text-primary font-bold truncate min-w-[165px]">{formatCurrency(item.grandTotal)}</td>
                                             </>
                                         )}
 
                                         {activeSubTab === "RMAs" && (
                                             <>
-                                                <td className="px-3 py-2 text-sm text-blue-500 hover:underline cursor-pointer truncate">{item.rmaName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.rmaName}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.salesOrderLine}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
@@ -455,14 +455,14 @@ export default function QuoteLineReturnsTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[170px]">{item.manufacturerDBA}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.reasonCode}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.unitPrice)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.returnQty}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.totalPrice)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[115px]">{item.returnQty}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalPrice)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[190px]">{item.openBalanceQty}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[170px]">{item.trackingNumber}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[195px]">{formatDate(item.estimatedDeliveryDate, 'numeric-dash')}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.trackingStatus}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[195px]">{formatDate(item.actualDeliveryDate, 'numeric-dash')}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[195px]">{formatDate(item.receiptDate, 'numeric-dash')}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[211px]">{formatDate(item.estimatedDeliveryDate, 'numeric-dash')}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[145px]">{item.trackingStatus}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[211px]">{formatDate(item.actualDeliveryDate, 'numeric-dash')}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[211px]">{formatDate(item.receiptDate, 'numeric-dash')}</td>
                                             </>
                                         )}
                                     </tr>

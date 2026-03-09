@@ -135,7 +135,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 {sortedPurchases.map((purchase) => (
                                     <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 " title={purchase.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate" title={purchase.name}>{purchase.name}</div></td>
+                                        <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 " title={purchase.name}><div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate" title={purchase.name}>{purchase.name}</div></td>
                                         <td className="px-3 py-2">
                                             <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                 {purchase.status}
@@ -156,7 +156,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                         <td className="px-3 py-2 min-w-[174px]">
                                             <div className="text-sm truncate" title={purchase.manufacturerDBA}>{purchase.manufacturerDBA}</div>
                                         </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-mono">
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium">
                                             ${purchase.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                         </td>
                                         <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[144px]">{purchase.totalOrderQty}</td>
@@ -219,7 +219,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 {sortedBills.map((bill) => (
                                     <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 ">
+                                        <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 ">
                                             <div className="text-sm truncate" title={bill.name}>{bill.name}</div>
                                         </td>
                                         <td className="px-3 py-2">
@@ -252,7 +252,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                         <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
                                             ${bill.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                         </td>
-                                        <td className="px-3 py-2 text-sm  text-red-600 font-bold w-min-[158px]">
+                                        <td className="px-3 py-2 text-sm text-primary font-bold w-min-[158px]">
                                             ${bill.totalBillAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 ">{bill.goodsReceiptDate}</td>

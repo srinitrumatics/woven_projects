@@ -99,9 +99,9 @@ export default function QuotePurchasesSubTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white " style={{ width: widths.shipToContact }}>{po.shipToContact}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white " style={{ width: widths.dropShip }}>{po.dropShip ? 'Yes' : 'No'}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white " style={{ width: widths.totalLines }}>{po.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.productCost }}>{formatCurrency(po.productCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold" style={{ width: widths.productCost }}>{formatCurrency(po.productCost)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipping }}>{formatCurrency(po.shipping)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalCost }}>{formatCurrency(po.totalCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary" style={{ width: widths.totalCost }}>{formatCurrency(po.totalCost)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.issuedDate }}>{formatDate(po.issuedDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.acknowledgedDate }}>{formatDate(po.acknowledgedDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.requestDate }}>{formatDate(po.requestDate, 'numeric-dash')}</td>

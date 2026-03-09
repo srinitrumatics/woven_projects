@@ -96,7 +96,7 @@ export default function QuoteShippingManifestsSubTab({
                                 <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.boxNetWeight }}>{manifest.boxNetWeight} kg</td>
                                 <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.boxGrossWeight }}>{manifest.boxGrossWeight} kg</td>
                                 <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{manifest.totalLines}</td>
-                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>{formatCurrency(manifest.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-bold" style={{ width: widths.totalPrice }}>{formatCurrency(manifest.totalPrice)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.plannedShipDate }}>{formatDate(manifest.plannedShipDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipConfirmedDate }}>{formatDate(manifest.shipConfirmedDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shippingMethod }}>{manifest.shippingMethod}</td>

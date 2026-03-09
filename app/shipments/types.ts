@@ -1,22 +1,32 @@
-export type ShipmentStatus = "Pending" | "Picked" | "Packed" | "Shipped" | "In Transit" | "Out for Delivery" | "Delivered" | "Exception" | "Cancelled" | "Will Call";
+export type ShipmentStatus = "Draft" | "Pending" | "Inprogress" | "Approved" | "Partial Shipment" | "Picked" | "Packed" | "Shipped" | "In Transit" | "Out for Delivery" | "Delivered" | "Exception" | "Cancelled" | "Will Call";
 export type CarrierType = "FedEx" | "UPS" | "USPS" | "DHL" | "OnTrac" | "Local Courier" | "Will Call";
 
 export interface ShippingManifest {
-  id: string;
-  manifestNumber: string;
-  orderNumber: string;
-  accountName: string;
-  status: ShipmentStatus;
-  carrier: CarrierType;
-  trackingNumber: string;
-  shipDate: string;
-  estimatedDelivery: string;
-  actualDelivery?: string;
-  shippingAddress: string;
-  totalWeight: number;
-  totalValue: number;
-  packageCount: number;
-  lineItemCount: number;
+  Id: string;
+  Name: string;
+  Status__c: ShipmentStatus;
+  Sales_Order_Name?: string;
+  Sales_Order__c?: string;
+  Customer_Quote_Name?: string;
+  Customer_Quote__c?: string;
+  Proposal_Name?: string;
+  Proposal__c?: string;
+  Customer_Order_Name?: string;
+  Customer_Order__c?: string;
+  Customer_PO__c?: string;
+  Ship_to_Account_Name?: string;
+  Ship_to_Account__c?: string;
+  Authorized_Ship_To_Location_Name?: string;
+  Authorized_Ship_To_Location__c?: string;
+  Total_Lines__c: number;
+  Total_Price__c: number;
+  Logistics_Partner_Name?: string;
+  Logistics_Partner__c?: string;
+  Ship_Date__c?: string;
+  Tracking_Number__c?: string;
+  Tracking_Status__c?: string;
+  Delivered_Date__c?: string;
+  Actual_Delivery_Date__c?: string;
 }
 
 export interface ShipmentStats {

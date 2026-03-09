@@ -69,7 +69,8 @@ export async function getInvoicesFromSalesforce(
 export async function getInvoiceFilesFromSalesforce(
     accountId: string,
     contactId: string,
-    invoiceId: string
+    invoiceId: string,
+    objectName: string
 ): Promise<any[]> {
     try {
         const session = await getSalesforceSession();
@@ -79,7 +80,7 @@ export async function getInvoiceFilesFromSalesforce(
         }
 
         const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
-        const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(invoiceId)}&objectName=Invoice__c`;
+        const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(invoiceId)}&objectName=${encodeURIComponent(objectName)}`;
 
         console.log('Fetching invoice files from Salesforce with URL:', url);
 

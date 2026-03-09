@@ -148,7 +148,7 @@ export default function QuoteLineDetailPage({
                         notes: item.Customer_Quote_Line_Notes__c || "",
                         site: item.Site_Name || item.Site__c || "-",
                         inventoryAccount: item.Inventory_Account_Name || item.Inventory_Account__c || "-",
-                        isTaxable: item.Is_Taxable__c ? "Yes" : "No",
+                        isTaxable: item.IsTaxable__c ? "Yes" : "No",
                         availableToSell: item.Available_To_Sell__c || 0,
                         qtyShipped: item.Qty_Shipped__c || 0,
                         unitCost: item.Unit_Cost__c || 0,
@@ -391,11 +391,10 @@ export default function QuoteLineDetailPage({
                         </div>
                         <div className="min-w-0">
                             <h2 className="text-base font-bold text-gray-800 tracking-tight truncate" title="Quote Lines Note">Quote Lines Note</h2>
-                            <p className="text-sm text-gray-500 truncate" title="Special Instructions & Comments">Special Instructions & Comments</p>
                         </div>
                     </div>
                     <div>
-                        <div className="w-full h-[240px] p-4 bg-gray-50/50 border border-gray-100 rounded-lg text-sm text-gray-500 overflow-y-auto italic">
+                        <div className="w-full h-[240px] p-4 bg-gray-50/50 border border-gray-100 rounded-lg text-sm text-gray-800 overflow-y-auto">
                             {product.notes || "No notes available."}
                         </div>
                     </div>
@@ -498,7 +497,7 @@ export default function QuoteLineDetailPage({
                                     <td className="px-3 py-2 text-gray-600">{formatCurrency(product.totalPrice)}</td>
                                     <td className="px-3 py-2 text-gray-600">{formatCurrency(product.shipping)}</td>
                                     <td className="px-3 py-2 text-gray-600 ">{formatCurrency(product.taxes)}</td>
-                                    <td className="px-3 py-2 font-bold text-blue-400">{formatCurrency(product.grandTotal)}</td>
+                                    <td className="px-3 py-2 font-bold text-primary">{formatCurrency(product.grandTotal)}</td>
                                     <td className="px-3 py-2 text-gray-600">{product.qtyShipped}</td>
                                 </tr>
                             </tbody>

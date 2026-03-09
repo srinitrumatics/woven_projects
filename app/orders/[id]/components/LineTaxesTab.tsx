@@ -44,78 +44,85 @@ export default function LineTaxesTab({ product, loading }: LineTaxesTabProps) {
                 </h2>
             </div>
             <div className="overflow-x-auto">
-                <table className="w-full">
-                    <thead className="bg-primary-light dark:bg-gray-900">
-                        <tr>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Sales Tax Rate</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Sales Tax Amount</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Use Tax Rate</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Use Tax Amount</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Local Tax Rate</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Local Tax Amount</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Excise Tax Rate</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Excise Tax Amount</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GRT Rate</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GRT Amount</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GST Rate</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GST Amount</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">VAT Rate</th>
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">VAT Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        <tr className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatPercent(product.Sales_Tax_Rate__c)}>
-                                {formatPercent(product.Sales_Tax_Rate__c)}
-                            </td>
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[140px] truncate" title={formatTax(product.Sales_Tax_Amount__c)}>
-                                {formatTax(product.Sales_Tax_Amount__c)}
-                            </td>
+                {product.isTaxable === "No" ? (
+                    <div className="py-4 text-sm text-gray-500 dark:text-gray-400 text-center">
+                        <p className="text-lg font-medium">No records found</p>
+                        <p className="text-sm">There are no taxes associated with this Order.</p>
+                    </div>
+                ) : (
+                    <table className="w-full">
+                        <thead className="bg-primary-light dark:bg-gray-900">
+                            <tr>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Sales Tax Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Sales Tax Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Use Tax Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Use Tax Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Local Tax Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Local Tax Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Excise Tax Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Excise Tax Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GRT Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GRT Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GST Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GST Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">VAT Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">VAT Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tr className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatPercent(product.Sales_Tax_Rate__c)}>
+                                    {formatPercent(product.Sales_Tax_Rate__c)}
+                                </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[140px] truncate" title={formatTax(product.Sales_Tax_Amount__c)}>
+                                    {formatTax(product.Sales_Tax_Amount__c)}
+                                </td>
 
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatPercent(product.Use_Tax_Rate__c)}>
-                                {formatPercent(product.Use_Tax_Rate__c)}
-                            </td>
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[140px] truncate" title={formatTax(product.Use_Tax_Amount__c)}>
-                                {formatTax(product.Use_Tax_Amount__c)}
-                            </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatPercent(product.Use_Tax_Rate__c)}>
+                                    {formatPercent(product.Use_Tax_Rate__c)}
+                                </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[140px] truncate" title={formatTax(product.Use_Tax_Amount__c)}>
+                                    {formatTax(product.Use_Tax_Amount__c)}
+                                </td>
 
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatPercent(product.Local_Tax_Rate__c)}>
-                                {formatPercent(product.Local_Tax_Rate__c)}
-                            </td>
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[140px] truncate" title={formatTax(product.Local_Tax_Amount__c)}>
-                                {formatTax(product.Local_Tax_Amount__c)}
-                            </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatPercent(product.Local_Tax_Rate__c)}>
+                                    {formatPercent(product.Local_Tax_Rate__c)}
+                                </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[140px] truncate" title={formatTax(product.Local_Tax_Amount__c)}>
+                                    {formatTax(product.Local_Tax_Amount__c)}
+                                </td>
 
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[140px] truncate" title={formatPercent(product.Excise_Tax_Rate__c)}>
-                                {formatPercent(product.Excise_Tax_Rate__c)}
-                            </td>
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[160px] truncate" title={formatTax(product.Excise_Tax_Amount__c)}>
-                                {formatTax(product.Excise_Tax_Amount__c)}
-                            </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[140px] truncate" title={formatPercent(product.Excise_Tax_Rate__c)}>
+                                    {formatPercent(product.Excise_Tax_Rate__c)}
+                                </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[160px] truncate" title={formatTax(product.Excise_Tax_Amount__c)}>
+                                    {formatTax(product.Excise_Tax_Amount__c)}
+                                </td>
 
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[140px] truncate" title={formatPercent(product.Gross_Receipts_Tax_Rate__c)}>
-                                {formatPercent(product.Gross_Receipts_Tax_Rate__c)}
-                            </td>
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatTax(product.Gross_Receipts_Tax_Amount__c)}>
-                                {formatTax(product.Gross_Receipts_Tax_Amount__c)}
-                            </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[140px] truncate" title={formatPercent(product.Gross_Receipts_Tax_Rate__c)}>
+                                    {formatPercent(product.Gross_Receipts_Tax_Rate__c)}
+                                </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatTax(product.Gross_Receipts_Tax_Amount__c)}>
+                                    {formatTax(product.Gross_Receipts_Tax_Amount__c)}
+                                </td>
 
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatPercent(product.GST_Rate__c)}>
-                                {formatPercent(product.GST_Rate__c)}
-                            </td>
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatTax(product.GST_Amount__c)}>
-                                {formatTax(product.GST_Amount__c)}
-                            </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatPercent(product.GST_Rate__c)}>
+                                    {formatPercent(product.GST_Rate__c)}
+                                </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatTax(product.GST_Amount__c)}>
+                                    {formatTax(product.GST_Amount__c)}
+                                </td>
 
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatPercent(product.VAT_Rate__c)}>
-                                {formatPercent(product.VAT_Rate__c)}
-                            </td>
-                            <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatTax(product.Total_VAT_Amount__c)}>
-                                {formatTax(product.Total_VAT_Amount__c)}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatPercent(product.VAT_Rate__c)}>
+                                    {formatPercent(product.VAT_Rate__c)}
+                                </td>
+                                <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left min-w-[120px] truncate" title={formatTax(product.Total_VAT_Amount__c)}>
+                                    {formatTax(product.Total_VAT_Amount__c)}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                )}
             </div>
         </div>
     );

@@ -86,9 +86,9 @@ export default function QuoteSupplierBillsSubTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.supplierDBA }}>{bill.supplierDBA}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.supplierContact }}>{bill.supplierContact}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white " style={{ width: widths.totalLines }}>{bill.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalCost }}>{formatCurrency(bill.totalCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold" style={{ width: widths.totalCost }}>{formatCurrency(bill.totalCost)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipping }}>{formatCurrency(bill.shipping)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalAmount }}>{formatCurrency(bill.totalAmount)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary" style={{ width: widths.totalAmount }}>{formatCurrency(bill.totalAmount)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.billedDate }}>{formatDate(bill.billedDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.paymentTerms }}>{bill.paymentTerms}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.dueDate }}>{formatDate(bill.dueDate, 'numeric-dash')}</td>

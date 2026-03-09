@@ -14,9 +14,16 @@ interface DeliveryOptionsProps {
 export default function DeliveryOptions({ formData, setFormData, shippingMethods = [], incotermsOptions = [], isEditing = false, className = "" }: DeliveryOptionsProps) {
     return (
         <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 h-full ${className}`}>
-            <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Delivery Options</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Previously Stored Location Delivery Details</p>
+            <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Delivery Options</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Previously Stored Location Delivery Details</p>
+                </div>
             </div>
             <div className="text-sm">
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">

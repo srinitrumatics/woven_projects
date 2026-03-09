@@ -81,7 +81,7 @@ export default function QuoteCreditMemoSubTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.creditToAccount }}>{memo.creditToAccount}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.creditToContact }}>{memo.creditToContact}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{memo.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>{formatCurrency(memo.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold" style={{ width: widths.totalPrice }}>{formatCurrency(memo.totalPrice)}</td>
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.shipping }}>{formatCurrency(memo.shipping)}</td>
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.taxes }}>{formatCurrency(memo.taxes)}</td>
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white" style={{ width: widths.totalCreditAmount }}>{formatCurrency(memo.totalCreditAmount)}</td>

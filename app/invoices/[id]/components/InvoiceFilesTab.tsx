@@ -145,7 +145,7 @@ export default function InvoiceFiles({ files, invoiceId, accountId, contactId }:
                         <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium">
                                 <div className="flex items-center gap-2">
-                                    {getFileIcon(file.fileType)}
+
                                     <span className="truncate" title={file.fileName}>{file.fileName}</span>
                                 </div>
                             </td>

@@ -90,10 +90,10 @@ export default function QuoteInvoicesSubTab({
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.billToLocation }}>{invoice.billToLocation}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.billToContact }}>{invoice.billToContact}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{invoice.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.totalPrice }}>{formatCurrency(invoice.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold" style={{ width: widths.totalPrice }}>{formatCurrency(invoice.totalPrice)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipping }}>{formatCurrency(invoice.shipping)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.taxes }}>{formatCurrency(invoice.taxes)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" style={{ width: widths.grandTotal }}>{formatCurrency(invoice.grandTotal)}</td>
+                                <td className="px-3 py-2 text-sm text-primary font-bold" style={{ width: widths.grandTotal }}>{formatCurrency(invoice.grandTotal)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.issuedDate }}>{formatDate(invoice.issuedDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.paymentTerms }}>{invoice.paymentTerms}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.dueDate }}>{formatDate(invoice.dueDate, 'numeric-dash')}</td>

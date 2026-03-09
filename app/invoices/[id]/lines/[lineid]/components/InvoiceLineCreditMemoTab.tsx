@@ -49,19 +49,19 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                         id: item.Id,
                         lineName: item.Name || "",
                         status: item.Status__c || "",
-                        creditMemoName: item.Credit_Memo_Name || item.Credit_Memo__c || "",
-                        invoiceLine: item.Invoice_Line__c || "",
-                        salesOrderLine: item.Sales_Order_Line__c || item.Sales_Order_Line_Name || "",
-                        customerQuoteLine: item.Customer_Order_Line__c || item.Customer_Order_Line_Name || "",
-                        productName: item.Product_Name || item.duct_Name__c || "",
-                        description: item.Product_Description__c || item.duct_Descrip__c || "",
-                        manufacturerDBA: item.Manufacturer_DBA__c || item.ufacturer_DB_A__c || "",
+                        creditMemoName: item.Credit_Memo_Name || "",
+                        invoiceLine: item.Invoice_Line_Name || "",
+                        salesOrderLine: item.Sales_Order_Line_Name || "",
+                        customerQuoteLine: item.Customer_Quote_Line_Name || "",
+                        productName: item.Product_Name || "",
+                        description: item.Product_Description__c || "",
+                        manufacturerDBA: item.Manufacturer_DBA__c || "",
                         unitPrice: item.Unit_Price__c || 0,
-                        creditQty: item.Credit_Qty__c || item.Total_Order_Qty__c || 0,
-                        totalPrice: item.Total_Price__c || item.l_Price__c || 0,
-                        shipping: item.Shipping_Charges__c || item.Ship_ping_Charge_s__c || 0,
-                        taxes: item.Total_Taxes_Amount__c || item.l_Taxes_Am_ount__c || 0,
-                        grandTotal: item.Line_Grand_Total__c || item.e_Grand_Tota_l__c || 0,
+                        creditQty: item.Credit_Qty__c || 0,
+                        totalPrice: item.Total_Price__c || 0,
+                        shipping: item.Shipping_Charges__c || 0,
+                        taxes: item.Total_Taxes_Amount__c || 0,
+                        grandTotal: item.Line_Grand_Total__c || 0,
                     })));
                 }
             } catch (err) {
@@ -136,7 +136,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                         {sortedData.map((item) => (
                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700">
                                 {/* Sticky column — z-10, inherits row bg */}
-                                <td className="px-3 py-2 text-sm font-medium text-left truncate sticky left-0 z-10 bg-white dark:bg-gray-800 text-primary">{item.lineName}</td>
+                                <td className="px-3 py-2 text-sm text-left sticky left-0 bg-white dark:bg-gray-800 ">{item.lineName}</td>
                                 <td className="px-3 py-2 text-sm">
                                     <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                         {item.status}
@@ -147,14 +147,14 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.salesOrderLine}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-[180px] truncate" title={item.description}>{item.description}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{item.description}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.manufacturerDBA}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">{formatCurrency(item.unitPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate ">{formatCurrency(item.unitPrice)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.creditQty}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalPrice)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-semibold">{formatCurrency(item.grandTotal)}</td>
+                                <td className="px-3 py-2 text-sm truncate font-bold text-primary">{formatCurrency(item.grandTotal)}</td>
                             </tr>
                         ))}
                     </tbody>

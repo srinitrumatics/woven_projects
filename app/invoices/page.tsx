@@ -183,7 +183,7 @@ export default function InvoicesPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Total Invoices</p>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">All Invoices</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalCount}</span>
                   <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
@@ -220,10 +220,10 @@ export default function InvoicesPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Outstanding</p>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Pending</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.outstandingCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Unpaid</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
                 </div>
                 <p className="text-lg font-semibold text-amber-600 dark:text-amber-400 mt-1">{formatCurrency(stats.outstandingValue)}</p>
               </div>
@@ -236,7 +236,7 @@ export default function InvoicesPage() {
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
               <span className="inline-flex items-center text-xs font-medium text-amber-600 dark:text-amber-400 group-hover:underline">
-                View outstanding
+                View Pending
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -258,7 +258,7 @@ export default function InvoicesPage() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Overdue</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Past due</p>
                   {stats.overdueCount > 0 && (
                     <span className="flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75"></span>
@@ -268,7 +268,7 @@ export default function InvoicesPage() {
                 </div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.overdueCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Critical</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
                 </div>
                 <p className="text-lg font-semibold text-red-600 dark:text-red-400 mt-1">{formatCurrency(stats.overdueValue)}</p>
               </div>
@@ -281,7 +281,7 @@ export default function InvoicesPage() {
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
               <span className="inline-flex items-center text-xs font-medium text-red-600 dark:text-red-400 group-hover:underline">
-                Review overdue
+                Past Due
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -305,7 +305,7 @@ export default function InvoicesPage() {
                 <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Paid</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.paidCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Completed</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
                 </div>
                 <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.paidValue)}</p>
               </div>

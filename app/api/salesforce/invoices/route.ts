@@ -20,7 +20,9 @@ export async function GET(req: NextRequest) {
         let data;
 
         if (action === "files") {
-            data = await getInvoiceFilesFromSalesforce(accountId, contactId, invoiceId);
+            const objectNameParam = searchParams.get("objectName");
+            const objectName = objectNameParam || "Invoice__c";
+            data = await getInvoiceFilesFromSalesforce(accountId, contactId, invoiceId, objectName);
         } else if (action === "download" || action === "preview") {
             const contentVersionId = searchParams.get("contentVersionId");
             if (!contentVersionId) {
@@ -36,7 +38,7 @@ export async function GET(req: NextRequest) {
 
             // Allow overriding objectName via query param (e.g. for Invoice_Line__c related records)
             const overrideObjectName = searchParams.get("objectName");
-
+            console.log("overrideObjectName: ", overrideObjectName);
             // Map actions to tab names as specified
             if (action === "payments") {
                 tabName = "Payments";
@@ -62,9 +64,7 @@ export async function GET(req: NextRequest) {
             }
 
             // Allow explicit objectName override from query param
-            if (overrideObjectName) {
-                objectName = overrideObjectName;
-            }
+            objectName = overrideObjectName || objectName;
 
             data = await getInvoicesFromSalesforce(accountId, contactId, invoiceId, tabName, objectName);
         }

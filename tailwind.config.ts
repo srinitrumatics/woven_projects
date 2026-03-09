@@ -25,6 +25,10 @@ const config: Config = {
           blue: "#96C2DB",
           lightBlue: "#E5EDF1",
         },
+        fontFamily: {
+          sans: 'Arial, Helvetica, sans-serif',
+          mono: 'Arial, Helvetica, sans-serif',
+        },
       },
     },
   },

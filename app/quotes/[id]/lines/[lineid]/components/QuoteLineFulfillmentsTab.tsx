@@ -110,7 +110,7 @@ export default function QuoteLineFulfillmentsTab({
                             lineName: item.Name,
                             status: item.Status__c,
                             salesOrderName: item.Sales_Order_Name,
-                            customerQuoteLine: item.Customer_Order_Line_Name,
+                            customerQuoteLine: item.Customer_Quote_Line_Name,
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
@@ -134,7 +134,7 @@ export default function QuoteLineFulfillmentsTab({
                             status: item.Status__c,
                             invoiceName: item.Invoice_Name,
                             salesOrderLine: item.Sales_Order_Line_Name,
-                            customerQuoteLine: item.Customer_Order_Line_Name,
+                            customerQuoteLine: item.Customer_Quote_Line_Name,
                             purchaseOrderLine: item.Purchase_Order_Line_Name,
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
@@ -156,7 +156,7 @@ export default function QuoteLineFulfillmentsTab({
                             status: item.Status__c,
                             manifestName: item.Shipping_Manifest_Name,
                             salesOrderLine: item.Sales_Order_Line_Name,
-                            customerQuoteLine: item.Customer_Order_Line_Name,
+                            customerQuoteLine: item.Customer_Quote_Line_Name,
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
@@ -267,7 +267,7 @@ export default function QuoteLineFulfillmentsTab({
                                 <tr>
                                     {activeSubTab === "Orders" && (
                                         <>
-                                            <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderName} onResize={handleResize} />
+                                            <SortableHeader label="Sales Order Line" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderName} onResize={handleResize} />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                                             <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
                                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
@@ -286,7 +286,7 @@ export default function QuoteLineFulfillmentsTab({
 
                                     {activeSubTab === "Invoices" && (
                                         <>
-                                            <SortableHeader label="Invoice" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceName} onResize={handleResize} />
+                                            <SortableHeader label="Invoice Line" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceName} onResize={handleResize} />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                                             <SortableHeader label="Sales Order Line" field="salesOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} />
                                             <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
@@ -305,7 +305,7 @@ export default function QuoteLineFulfillmentsTab({
 
                                     {activeSubTab === "Manifests" && (
                                         <>
-                                            <SortableHeader label="Shipping Manifest" field="manifestName" sortConfig={sortConfig} requestSort={requestSort} width={widths.manifestName} onResize={handleResize} />
+                                            <SortableHeader label="Shipping Manifest Line" field="manifestName" sortConfig={sortConfig} requestSort={requestSort} width={widths.manifestName} onResize={handleResize} />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                                             <SortableHeader label="Sales Order Line" field="salesOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} />
                                             <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
@@ -331,71 +331,71 @@ export default function QuoteLineFulfillmentsTab({
                                     <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
                                         {activeSubTab === "Orders" && (
                                             <>
-                                                <td className="px-4 py-3 text-sm text-blue-500 hover:underline cursor-pointer truncate">{item.salesOrderName}</td>
-                                                <td className="px-4 py-3 text-sm">
+                                                <td className="px-3  py-2 text-sm text-gray-900 truncate">{item.salesOrderName}</td>
+                                                <td className="px-3  py-2 text-sm">
                                                     <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                         {item.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{item.description}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[160px]">{item.manufacturerDBA}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate font-medium">{formatCurrency(item.unitPrice)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[145px]">{item.totalOrderQty}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.totalPrice)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[155px]">{formatCurrency(item.grandTotal)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{item.qtyPicked}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[155px]">{item.backOrderQty}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{item.description}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[160px]">{item.manufacturerDBA}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate font-medium">{formatCurrency(item.unitPrice)}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[145px]">{item.totalOrderQty}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalPrice)}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
+                                                <td className="px-3  py-2 text-sm truncate min-w-[155px] font-bold text-primary">{formatCurrency(item.grandTotal)}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.qtyPicked}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[155px]">{item.backOrderQty}</td>
                                             </>
                                         )}
                                         {activeSubTab === "Invoices" && (
                                             <>
-                                                <td className="px-4 py-3 text-sm text-blue-500 hover:underline cursor-pointer truncate">{item.invoiceName}</td>
-                                                <td className="px-4 py-3 text-sm">
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.invoiceName}</td>
+                                                <td className="px-3  py-2 text-sm">
                                                     <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                         {item.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{item.salesOrderLine}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{item.purchaseOrderLine}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{item.description}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[160px]">{item.manufacturerDBA}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate font-medium">{formatCurrency(item.unitPrice)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{item.invoiceQty}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.totalPrice)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[155px]">{formatCurrency(item.grandTotal)}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.salesOrderLine}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.purchaseOrderLine}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{item.description}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[160px]">{item.manufacturerDBA}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate ">{formatCurrency(item.unitPrice)}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.invoiceQty}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalPrice)}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
+                                                <td className="px-3  py-2 text-sm text-primary truncate min-w-[155px] font-bold">{formatCurrency(item.grandTotal)}</td>
                                             </>
                                         )}
                                         {activeSubTab === "Manifests" && (
                                             <>
-                                                <td className="px-4 py-3 text-sm text-blue-500 hover:underline cursor-pointer truncate min-w-[165px]">{item.manifestName}</td>
-                                                <td className="px-4 py-3 text-sm">
+                                                <td className="px-3  py-2 text-sm text-blue-500 hover:underline cursor-pointer truncate min-w-[165px]">{item.manifestName}</td>
+                                                <td className="px-3  py-2 text-sm">
                                                     <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                         {item.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{item.salesOrderLine}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-[200px] truncate" title={item.description}>{item.description}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.manufacturerDBA}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.boxCount}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.boxNetWeight}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.boxGrossWeight}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate font-medium">{formatCurrency(item.unitPrice)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[145px]">{item.totalOrderQty}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.totalPrice)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.trackingNumber}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[205px]">{formatDate(item.estimatedDeliveryDate, 'numeric-dash')}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.trackingStatus}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate min-w-[175px]">{formatDate(item.actualDeliveryDate, 'numeric-dash')}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.salesOrderLine}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white max-w-[200px] truncate" title={item.description}>{item.description}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.manufacturerDBA}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.boxCount}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.boxNetWeight}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.boxGrossWeight}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate font-medium">{formatCurrency(item.unitPrice)}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[145px]">{item.totalOrderQty}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalPrice)}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.trackingNumber}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[205px]">{formatDate(item.estimatedDeliveryDate, 'numeric-dash')}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.trackingStatus}</td>
+                                                <td className="px-3  py-2 text-sm text-gray-900 dark:text-white truncate min-w-[175px]">{formatDate(item.actualDeliveryDate, 'numeric-dash')}</td>
                                             </>
                                         )}
                                     </tr>

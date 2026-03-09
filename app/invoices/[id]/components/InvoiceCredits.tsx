@@ -53,8 +53,8 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                         <SortableHeader label="Credit to Contact" field="creditToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditContact} onResize={handleResize} />
                         <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
                         <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                        <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
                         <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
+                        <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
                         <SortableHeader label="Total Credit Amount" field="totalCreditAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCredit} onResize={handleResize} />
                         <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={handleResize} />
                         <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} />
@@ -66,7 +66,7 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {sortedCredits.map((cm) => (
                         <tr key={cm.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td className="px-3 py-2 text-sm text-primary font-medium sticky left-0 bg-white dark:bg-gray-800 truncate">
+                            <td className="px-3 py-2 text-sm font-medium sticky left-0 text-gray-900 dark:text-white truncate">
                                 {cm.name}
                             </td>
                             <td className="px-3 py-2">
@@ -96,10 +96,10 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                 {formatCurrency(cm.totalPrice)}
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                {formatCurrency(cm.taxes)}
+                                {formatCurrency(cm.shipping)}
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                {formatCurrency(cm.shipping)}
+                                {formatCurrency(cm.taxes)}
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary min-w-[160px]">
                                 {formatCurrency(cm.totalCreditAmount)}

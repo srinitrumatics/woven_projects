@@ -57,13 +57,13 @@ export default function InvoiceTaxes(props: InvoiceTaxesProps) {
 
     const { widths, handleResize } = useResizableColumns({
         salesRate: 140,
-        salesAmount: 150,
+        salesAmount: 170,
         useRate: 140,
         useAmount: 150,
         localRate: 140,
-        localAmount: 150,
-        exciseRate: 140,
-        exciseAmount: 150,
+        localAmount: 180,
+        exciseRate: 170,
+        exciseAmount: 180,
         grtRate: 140,
         grtAmount: 150,
         gstRate: 140,

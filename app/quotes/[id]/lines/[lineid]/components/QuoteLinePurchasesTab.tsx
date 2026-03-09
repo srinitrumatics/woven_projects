@@ -111,7 +111,7 @@ export default function QuoteLinePurchasesTab({
                             status: item.Status__c,
                             supplierBill: item.Supplier_Bill_Name,
                             purchaseOrderLine: item.Purchase_Order_Line_Name,
-                            customerQuoteLine: item.Customer_Order_Line_Name,
+                            customerQuoteLine: item.Customer_Quote_Line_Name,
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,

@@ -327,7 +327,7 @@ export default function OrderLineDetailPage({
   const unitPrice = product?.unitPrice || 0;
   const subtotal = displayQty * unitPrice;
   const shippingCharges = subtotal > 0 ? 15.0 : 0;
-  const taxRate = 0.15;
+  const taxRate = product?.isTaxable === "Yes" ? 0.15 : 0;
   const taxes = subtotal * taxRate;
   const grandTotal = subtotal + shippingCharges + taxes;
 

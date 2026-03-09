@@ -802,8 +802,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               logisticsPartnerName: sm.Logistics_Partner_Name || '',
               logisticsContactName: sm.Logistics_Contact_Name || '',
               boxCount: sm.Box__c || 0,
-              boxNetWeight: sm.Case__Net_Weight__c || 0,
-              boxGrossWeight: sm.Case__Gross_Weight__c || 0,
+              boxNetWeight: sm.Case_Net_Weight__c || 0,
+              boxGrossWeight: sm.Case_Gross_Weight__c || 0,
               requestDate: formatDate(sm.Request_Date__c, 'numeric-dash')
             })),
             salesOrders: (json.Sales_Order__c || []).map((so: any) => ({
@@ -1334,7 +1334,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                     projects: projects.length,
                     orders: orders.length,
                     fulfillment: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
-                    purchases: purchases.length,
+                    purchases: purchases.length + supplierBills.length,
                     returns: returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length,
                     taxes: taxesData.length
                   }}

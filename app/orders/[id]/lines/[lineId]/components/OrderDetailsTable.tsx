@@ -130,8 +130,8 @@ export default function OrderDetailsTable({
                             <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="MOQ">MOQ</th>
                             <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Total Order Qty">Total Order Qty</th>
                             <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Total Price">Total Price</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Taxes">Taxes</th>
                             <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Shipping">Shipping</th>
+                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Taxes">Taxes</th>
                             <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Grand Total">Grand Total</th>
                         </tr>
                     </thead>
@@ -162,9 +162,9 @@ export default function OrderDetailsTable({
                             <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatNumber(product.moq)}>{formatNumber(product.moq)}</td>
                             <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatNumber(displayQty, 0)}>{formatNumber(displayQty, 0)}</td>
                             <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(subtotal)}>{formatCurrency(subtotal)}</td>
-                            <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(taxes)}>{formatCurrency(taxes)}</td>
                             <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(shippingCharges)}>{formatCurrency(shippingCharges)}</td>
-                            <td className="px-4 py-4 text-sm font-bold text-primary dark:text-primary-light italic truncate" title={formatCurrency(grandTotal)}>{formatCurrency(grandTotal)}</td>
+                            <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(taxes)}>{formatCurrency(taxes)}</td>
+                            <td className="px-4 py-4 text-sm font-bold text-primary dark:text-primary-light truncate" title={formatCurrency(grandTotal)}>{formatCurrency(grandTotal)}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -22,6 +22,6 @@ export default function RootLayout({
           </AppAuthProvider>
         </ThemeProvider>
       </body>
-    </html>
+    </html >
   );
 }

@@ -119,7 +119,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           id: file.Id,
           fileName: file.Title || 'N/A',
           fileType: file.FileExtension || 'N/A',
-          sizeInBytes: file.ContentSize || 0,
+          sizeInBytes: file.FileSize || 0,
           uploadedBy: file.CreatedBy?.Name || 'N/A',
           uploadedDate: file.CreatedDate ? new Date(file.CreatedDate).toLocaleDateString() : 'N/A',
         }));
@@ -171,7 +171,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           shipToLocation: rawInvoice.Authorized_Ship_To_Location_Name || 'N/A',
           shipConfirmedDate: rawInvoice.Delivered_Date__c || 'N/A',
           siteName: rawInvoice.Site_Name || 'N/A',
-          productsSubtotal: lines.reduce((sum: number, l: any) => sum + (l.total || 0), 0),
+          productsSubtotal: lines.reduce((sum: number, l: any) => sum + (l.subtotal || 0), 0),
           servicesSubtotal: 0,
           appliedCredits: rawInvoice.Applied_Credit_Amount__c || 0,
           salesTaxRate: rawInvoice.Sales_Tax_Rate__c || 0,
