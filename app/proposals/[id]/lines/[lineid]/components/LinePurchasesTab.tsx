@@ -75,8 +75,8 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
             {/* Sub-tabs */}
             <div className="flex gap-8 mb-6 border-b border-gray-200 dark:border-gray-700 px-6 pt-6">
                 {[
-                    { id: "purchases", label: "Purchases", count: purchaseOrders.length },
-                    { id: "supplier_bills", label: "Supplier Bills", count: supplierBills.length }
+                    { id: "purchases", label: "Purchases Lines", count: purchaseOrders.length },
+                    { id: "supplier_bills", label: "Supplier Bills Lines", count: supplierBills.length }
                 ].map((tab) => (
                     <button
                         key={tab.id}

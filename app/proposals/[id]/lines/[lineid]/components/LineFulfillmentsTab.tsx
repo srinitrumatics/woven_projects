@@ -121,10 +121,10 @@ export default function LineFulfillmentsTab({
                 {/* Sub-tabs */}
                 <div className="flex gap-8 mb-6 border-b border-gray-200 dark:border-gray-700">
                     {[
-                        { id: "quotes", label: "Customer Quotes", count: fulfillmentData.customerQuotes.length },
-                        { id: "sales", label: "Sales Orders", count: fulfillmentData.salesOrders.length },
-                        { id: "invoices", label: "Invoices", count: fulfillmentData.invoices.length },
-                        { id: "shipping", label: "Shipping Manifests", count: fulfillmentData.shippingManifests.length }
+                        { id: "quotes", label: "Customer Quotes Lines", count: fulfillmentData.customerQuotes.length },
+                        { id: "sales", label: "Sales Orders Lines", count: fulfillmentData.salesOrders.length },
+                        { id: "invoices", label: "Invoices Lines", count: fulfillmentData.invoices.length },
+                        { id: "shipping", label: "Shipping Manifests Lines", count: fulfillmentData.shippingManifests.length }
                     ].map((tab) => (
                         <button
                             key={tab.id}

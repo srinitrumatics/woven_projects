@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getShipmentsFromSalesforce } from "@/lib/shipment-service";
+import { getShipmentsFromSalesforce, getShipmentFilesFromSalesforce } from "@/lib/shipment-service";
+import { getFileUrl } from "@/lib/salesforce-service";
 
 export async function GET(req: Request) {
     try {
@@ -8,12 +9,33 @@ export async function GET(req: Request) {
         const contactId = searchParams.get("contactId");
         const objectId = searchParams.get("objectId") || undefined;
         const tabName = searchParams.get("tabName") || "Shipping_Manifest";
+        const action = searchParams.get("action");
 
         if (!accountId) {
             return NextResponse.json({ error: "Missing accountId" }, { status: 400 });
         }
         if (!contactId) {
             return NextResponse.json({ error: "Missing contactId" }, { status: 400 });
+        }
+
+        if (action === "files") {
+            if (!objectId) {
+                return NextResponse.json({ error: "Missing objectId for files action" }, { status: 400 });
+            }
+            const files = await getShipmentFilesFromSalesforce(accountId, contactId, objectId);
+            return NextResponse.json(files);
+        }
+
+        if (action === "download" || action === "preview") {
+            const contentVersionId = searchParams.get("contentVersionId");
+            if (!contentVersionId) {
+                return NextResponse.json({ error: `Missing contentVersionId for ${action} action` }, { status: 400 });
+            }
+            const result = await getFileUrl(contentVersionId);
+            if (!result) {
+                return NextResponse.json({ error: `Failed to ${action} file` }, { status: 500 });
+            }
+            return NextResponse.json(result);
         }
 
         const objectName = "Shipping_Manifest__c";

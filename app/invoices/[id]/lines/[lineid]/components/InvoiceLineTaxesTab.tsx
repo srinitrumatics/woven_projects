@@ -83,7 +83,7 @@ export default function InvoiceLineTaxesTab({ product }: InvoiceLineTaxesTabProp
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg dark:border-gray-700">
-            <div className="overflow-auto p-4 pt-0">
+            <div className="overflow-auto pt-0">
                 {product.isTaxable === "No" ? (
                     <div className="py-4 text-sm text-gray-500 dark:text-gray-400 text-center">
                         <p className="text-lg font-medium tracking-tight">No records found</p>

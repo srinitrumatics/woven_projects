@@ -14,10 +14,8 @@ import ManifestSummary from "./components/ManifestSummary";
 import ShipmentTabs, { ShipmentTabId } from "./components/ShipmentTabs";
 import ShipmentLinesTab from "./components/ShipmentLinesTab";
 import InventoryTab from "./components/InventoryTab";
-import {
-  ShipmentFilesTab,
-  TrackingTimelineTab,
-} from "./components/PlaceholderTabs";
+import ShipmentFilesTab from "./components/ShipmentFilesTab";
+import { TrackingTimelineTab } from "./components/PlaceholderTabs";
 import SerialNumbersTab from "./components/SerialNumbersTab";
 
 interface ShipmentDetailPageProps {
@@ -41,6 +39,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
   const [activeTab, setActiveTab] = useState<ShipmentTabId>("lines");
   const [inventoryCount, setInventoryCount] = useState<number | undefined>(undefined);
   const [serialCount, setSerialCount] = useState<number | undefined>(undefined);
+  const [filesCount, setFilesCount] = useState<number | undefined>(undefined);
 
   const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
   const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
@@ -151,7 +150,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
             <ShipmentTabs
               activeTab={activeTab}
               onTabChange={setActiveTab}
-              counts={{ lines: shipment.Total_Lines__c, inventory: inventoryCount, serial: serialCount }}
+              counts={{ lines: shipment.Total_Lines__c, inventory: inventoryCount, serial: serialCount, files: filesCount }}
             />
           </div>
 
@@ -160,7 +159,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
             {activeTab === "lines" && <ShipmentLinesTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} />}
             {activeTab === "inventory" && <InventoryTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountLoaded={setInventoryCount} />}
             {activeTab === "serial" && <SerialNumbersTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountLoaded={setSerialCount} />}
-            {activeTab === "files" && <ShipmentFilesTab />}
+            {activeTab === "files" && <ShipmentFilesTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onFilesCountChange={setFilesCount} />}
             {activeTab === "tracking" && <TrackingTimelineTab />}
           </div>
         </div>

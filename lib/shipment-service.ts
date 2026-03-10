@@ -48,3 +48,37 @@ export async function getShipmentsFromSalesforce(
         return { success: false, message: error instanceof Error ? error.message : "Unknown error" };
     }
 }
+
+export async function getShipmentFilesFromSalesforce(accountId: string, contactId: string, shipmentId: string): Promise<any[]> {
+    try {
+        const session = await getSalesforceSession();
+
+        if (!session.accessToken) {
+            console.error('No Salesforce access token available');
+            return [];
+        }
+
+        const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
+        const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(shipmentId)}&objectName=Shipping_Manifest__c`;
+
+        console.log('Fetching shipment files from Salesforce with URL:', url);
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${session.accessToken}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+        }
+
+        const resultdata = await response.json();
+        return resultdata.data || [];
+    } catch (error) {
+        console.error('Error fetching shipment files from Salesforce:', error);
+        return [];
+    }
+}

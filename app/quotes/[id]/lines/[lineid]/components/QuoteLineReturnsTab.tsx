@@ -265,10 +265,10 @@ export default function QuoteLineReturnsTab({
             {/* Sub Tabs */}
             <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-6">
                 {[
-                    { key: "RMAs", label: "RMAs", count: rmalData.length },
-                    { key: "CreditMemos", label: "Credit Memos", count: cmliData.length },
-                    { key: "RTVs", label: "RTVs", count: rtvlData.length },
-                    { key: "DebitMemos", label: "Debit Memos", count: dmliData.length },
+                    { key: "RMAs", label: "RMAs Lines", count: rmalData.length },
+                    { key: "CreditMemos", label: "Credit Memos Lines", count: cmliData.length },
+                    { key: "RTVs", label: "RTVs Lines", count: rtvlData.length },
+                    { key: "DebitMemos", label: "Debit Memos Lines", count: dmliData.length },
                 ].map((tab) => (
                     <button
                         key={tab.key}

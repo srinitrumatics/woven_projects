@@ -231,7 +231,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                             {/* Line name – sticky */}
                             <td className="px-3 py-2 font-bold text-primary dark:text-primary-light sticky left-0 bg-white dark:bg-gray-800 z-10" style={{ width: widths.name }}>
                                 <Link
-                                    href={`/quotes/${line.id}/lines/${line.id}`}
+                                    href={`/shipments/${shipmentId}/lines/${line.id}`}
                                     className="text-primary font-bold hover:underline truncate"
                                     title={line.name}>{line.name}</Link>
                             </td>

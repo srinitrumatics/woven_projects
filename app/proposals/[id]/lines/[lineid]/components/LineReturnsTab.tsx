@@ -13,10 +13,10 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
     const [activeTab, setActiveTab] = useState<ReturnsTabType>("rma");
 
     const tabs: { id: ReturnsTabType; label: string; count: number }[] = [
-        { id: "rma", label: "RMAs", count: returnsData.rma.length },
-        { id: "credit", label: "Credit Memos", count: returnsData.creditMemos.length },
-        { id: "rtv", label: "RTVs", count: returnsData.rtv.length },
-        { id: "debit", label: "Debit Memos", count: returnsData.debitMemos.length },
+        { id: "rma", label: "RMAs Lines", count: returnsData.rma.length },
+        { id: "credit", label: "Credit Memos Lines", count: returnsData.creditMemos.length },
+        { id: "rtv", label: "RTVs Lines", count: returnsData.rtv.length },
+        { id: "debit", label: "Debit Memos Lines", count: returnsData.debitMemos.length },
     ];
 
     const getActiveData = () => {

@@ -8,10 +8,6 @@ function EmptyTab({ label }: { label: string }) {
 
 
 
-export function ShipmentFilesTab() {
-    return <EmptyTab label="Files" />;
-}
-
 export function TrackingTimelineTab() {
     return <EmptyTab label="Tracking Timeline" />;
 }
