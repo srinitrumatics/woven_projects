@@ -118,7 +118,7 @@ export default function PurchasesTab({
                                 {sortedPurchases.map((purchase) => (
                                     <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={purchase.name}>
-                                            <div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate " title={purchase.name}>{purchase.name}</div>
+                                            <div className="text-sm font-medium  text-gray-900 dark:text-white truncate " title={purchase.name}>{purchase.name}</div>
                                         </td>
                                         <td className="px-3 py-2 ">
                                             <span className={`inline-block  text-sm font-medium rounded ${purchase.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
@@ -211,7 +211,7 @@ export default function PurchasesTab({
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 {sortedBills.map((bill) => (
                                     <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={bill.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate " title={bill.name}>{bill.name}</div></td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={bill.name}><div className="text-sm font-medium  text-gray-900 dark:text-white truncate " title={bill.name}>{bill.name}</div></td>
                                         <td className="px-3 py-2 ">
                                             <span className={`inline-block text-sm font-medium rounded ${bill.status === 'Posted' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'

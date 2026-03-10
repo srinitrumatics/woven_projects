@@ -86,7 +86,7 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {sortedPayments.map((payment) => (
                             <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm font-medium sticky left-0 text-gray-900 dark:text-white truncate" title={payment.name}>{payment.name}</td>
+                                <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white text-gray-900 dark:text-white truncate" title={payment.name}>{payment.name}</td>
                                 <td className="px-3 py-2">
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(payment.status)}`} title={payment.status}>{payment.status}</span>
                                 </td>
@@ -134,7 +134,7 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {sortedMemos.map((memo) => (
                             <tr key={memo.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm font-medium sticky left-0 text-gray-900 dark:text-white truncate" title={memo.name}>{memo.name}</td>
+                                <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white text-gray-900 dark:text-white truncate" title={memo.name}>{memo.name}</td>
                                 <td className="px-3 py-2">
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(memo.status)}`}>{memo.status}</span>
                                 </td>

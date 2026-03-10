@@ -124,7 +124,7 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as CustomerQuote[]).map((quote) => (
                                         <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={quote.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">{quote.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={quote.name}><div className="text-sm font-medium  text-gray-900 dark:text-white truncate">{quote.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {quote.status}
@@ -215,7 +215,7 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as SalesOrder[]).map((order) => (
                                         <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={order.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">{order.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={order.name}><div className="text-sm font-medium  text-gray-900 dark:text-white truncate">{order.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {order.status}
@@ -306,7 +306,7 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as Invoice[]).map((invoice) => (
                                         <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={invoice.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">{invoice.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={invoice.name}><div className="text-sm font-medium  text-gray-900 dark:text-white truncate">{invoice.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {invoice.status}
@@ -395,7 +395,7 @@ export default function FulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as ShippingManifest[]).map((manifest) => (
                                         <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={manifest.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">{manifest.name}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={manifest.name}><div className="text-sm font-medium  text-gray-900 dark:text-white truncate">{manifest.name}</div></td>
                                             <td className="px-3 py-2">
                                                 <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                                     {manifest.status}
@@ -432,7 +432,7 @@ export default function FulfillmentsTab({
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{manifest.shippingMethod}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{manifest.logisticsPartnerName}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{manifest.logisticsContactName}</td>
-                                            <td className="px-3 py-2 text-sm font-mono text-gray-900 dark:text-white ">{manifest.trackingNumber || '-'}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white ">{manifest.trackingNumber || '-'}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[203px]">{manifest.estimatedDeliveryDate}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white ">{manifest.trackingStatus}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[181px]">{manifest.actualDeliveryDate}</td>

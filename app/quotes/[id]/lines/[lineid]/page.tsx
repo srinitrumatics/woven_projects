@@ -54,6 +54,21 @@ interface QuoteLineItem {
     Total_GST_Amount__c?: number;
     VAT_Rate__c?: number;
     Total_VAT_Amount__c?: number;
+
+    gtherp__Sales_Tax_Rate__c?: number;
+    gtherp__Total_Sales_Tax_Amount__c?: number;
+    gtherp__Use_Tax_Rate__c?: number;
+    gtherp__Total_Use_Tax_Amount__c?: number;
+    gtherp__Local_Tax_Rate__c?: number;
+    gtherp__Total_Local_Tax_Amount__c?: number;
+    gtherp__Excise_Tax_Rate__c?: number;
+    gtherp__Total_Excise_Tax_Amount__c?: number;
+    gtherp__Gross_Receipts_Tax_Rate__c?: number;
+    gtherp__Total_Gross_Receipts_Tax_Amount__c?: number;
+    gtherp__GST_Rate__c?: number;
+    gtherp__Total_GST_Amount__c?: number;
+    gtherp__VAT_Rate__c?: number;
+    gtherp__Total_VAT_Amount__c?: number;
 }
 
 // Interface for mapped product data
@@ -142,12 +157,12 @@ export default function QuoteLineDetailPage({
                         lineName: item.Name || "",
                         status: item.Status__c || "Draft",
                         description: item.Product_Description__c || "",
-                        productFamily: item.Product_Family__c || "-",
-                        productGrouping: item.Product_Grouping__c || "-",
-                        grouping: item.Grouping__c || "-",
+                        productFamily: item.Product_Family__c || "",
+                        productGrouping: item.Product_Grouping__c || "",
+                        grouping: item.Grouping__c || "",
                         notes: item.Customer_Quote_Line_Notes__c || "",
-                        site: item.Site_Name || item.Site__c || "-",
-                        inventoryAccount: item.Inventory_Account_Name || item.Inventory_Account__c || "-",
+                        site: item.Site_Name || item.Site__c || "",
+                        inventoryAccount: item.Inventory_Account_Name || item.Inventory_Account__c || "",
                         isTaxable: item.IsTaxable__c ? "Yes" : "No",
                         availableToSell: item.Available_To_Sell__c || 0,
                         qtyShipped: item.Qty_Shipped__c || 0,
@@ -161,19 +176,19 @@ export default function QuoteLineDetailPage({
                         shipping: item.Shipping_Charges__c || 0,
                         taxes: item.Total_Taxes_Amount__c || 0,
                         grandTotal: item.Line_Grand_Total__c || 0,
-                        manufacturerDBA: item.Manufacturer_DBA__c || "-",
+                        manufacturerDBA: item.Manufacturer_DBA__c || "",
                         salesTaxRate: item.Sales_Tax_Rate__c || 0,
-                        salesTaxAmount: item.Total_Sales_Tax_Amount__c || 0,
+                        salesTaxAmount: item.Sales_Tax_Amount__c || 0,
                         useTaxRate: item.Use_Tax_Rate__c || 0,
-                        useTaxAmount: item.Total_Use_Tax_Amount__c || 0,
+                        useTaxAmount: item.Use_Tax_Amount__c || 0,
                         localTaxRate: item.Local_Tax_Rate__c || 0,
-                        localTaxAmount: item.Total_Local_Tax_Amount__c || 0,
+                        localTaxAmount: item.Local_Tax_Amount__c || 0,
                         exciseTaxRate: item.Excise_Tax_Rate__c || 0,
-                        exciseTaxAmount: item.Total_Excise_Tax_Amount__c || 0,
+                        exciseTaxAmount: item.Excise_Tax_Amount__c || 0,
                         grtRate: item.Gross_Receipts_Tax_Rate__c || 0,
-                        grtAmount: item.Total_Gross_Receipts_Tax_Amount__c || 0,
+                        grtAmount: item.Gross_Receipts_Tax_Amount__c || 0,
                         gstRate: item.GST_Rate__c || 0,
-                        gstAmount: item.Total_GST_Amount__c || 0,
+                        gstAmount: item.GST_Amount__c || 0,
                         vatRate: item.VAT_Rate__c || 0,
                         vatAmount: item.Total_VAT_Amount__c || 0
                     }));

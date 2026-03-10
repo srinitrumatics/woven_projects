@@ -66,7 +66,7 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {sortedCredits.map((cm) => (
                         <tr key={cm.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td className="px-3 py-2 text-sm font-medium sticky left-0 text-gray-900 dark:text-white truncate">
+                            <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white text-gray-900 dark:text-white truncate">
                                 {cm.name}
                             </td>
                             <td className="px-3 py-2">

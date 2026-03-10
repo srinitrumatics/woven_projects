@@ -64,7 +64,7 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                     {orders.map((order) => (
                         <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={order.name}>
-                                <div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate">
+                                <div className="text-sm font-medium  text-gray-900 dark:text-white truncate">
                                     {/*<Link href={`/orders/${order.id}`} className="text-primary hover:underline font-semibold">
                                             {order.name}
                                         </Link>*/}
