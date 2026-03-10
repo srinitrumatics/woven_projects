@@ -491,7 +491,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           fileSize: f.FileSize ? (f.ContentSize / 1024 / 1024).toFixed(2) + ' MB' : '0 MB',
           sizeInBytes: f.FileSize || 0,
           uploadedDate: f.CreatedDate,
-          uploadedBy: f.CreatedBy?.Name || 'Unknown',
+          uploadedBy: f.CreatedBy?.Name || "",
           contentDocumentId: f.ContentDocumentId
         }));
         setQuoteFiles(mappedFiles);
