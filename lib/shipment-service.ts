@@ -49,6 +49,7 @@ export async function getShipmentsFromSalesforce(
     }
 }
 
+/** Fetch shipment files from Salesforce */
 export async function getShipmentFilesFromSalesforce(accountId: string, contactId: string, shipmentId: string, objectName: string = "Shipping_Manifest__c"): Promise<any[]> {
     try {
         const session = await getSalesforceSession();

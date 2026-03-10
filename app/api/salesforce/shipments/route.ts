@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getShipmentsFromSalesforce, getShipmentFilesFromSalesforce } from "@/lib/shipment-service";
+import { getShipmentsFromSalesforce, getShipmentFilesFromSalesforce } from "../../../../lib/shipment-service";
 import { getFileUrl } from "@/lib/salesforce-service";
 
 export async function GET(req: Request) {
