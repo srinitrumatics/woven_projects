@@ -68,7 +68,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
     const { widths, handleResize } = useResizableColumns({
         name: 180,
         serialNumber: 150,
-        productSerialNumber: 180,
+        productSerialNumber: 200,
         productName: 180,
         productDescription: 250,
         shippingManifest: 180,
