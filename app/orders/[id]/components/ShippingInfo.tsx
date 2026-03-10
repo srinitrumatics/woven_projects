@@ -65,7 +65,6 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                                 return finalDisplay;
                             })() || ''}
                             readOnly
-                            disabled
                             className="w-full h-11 px-2 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed truncate"
                         />
                     </div>

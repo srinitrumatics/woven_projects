@@ -11,7 +11,7 @@ export default function DetailInput({ label, value }: DetailInputProps) {
             </label>
             <input
                 type="text"
-                disabled
+                readOnly
                 value={value || ''}
                 className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-0 truncate"
                 title={String(value ?? '')}

@@ -6,9 +6,7 @@ function EmptyTab({ label }: { label: string }) {
     );
 }
 
-export function SerialNumbersTab() {
-    return <EmptyTab label="Serial Numbers" />;
-}
+
 
 export function ShipmentFilesTab() {
     return <EmptyTab label="Files" />;

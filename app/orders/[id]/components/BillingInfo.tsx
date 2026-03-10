@@ -127,7 +127,6 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             type="text"
                             value={formData.paymentTerms || ''}
                             readOnly
-                            disabled
                             title={formData.paymentTerms || ''}
                             className="w-full h-11 px-2 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400  truncate"
                         />
@@ -140,7 +139,6 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             name="priceBook"
                             value={formData.priceBook || ''}
                             readOnly
-                            disabled
                             title={formData.priceBook || ''}
                             className="w-full h-11 px-2 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 truncate"
                         />

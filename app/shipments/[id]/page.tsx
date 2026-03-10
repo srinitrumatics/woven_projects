@@ -15,10 +15,10 @@ import ShipmentTabs, { ShipmentTabId } from "./components/ShipmentTabs";
 import ShipmentLinesTab from "./components/ShipmentLinesTab";
 import InventoryTab from "./components/InventoryTab";
 import {
-  SerialNumbersTab,
   ShipmentFilesTab,
   TrackingTimelineTab,
 } from "./components/PlaceholderTabs";
+import SerialNumbersTab from "./components/SerialNumbersTab";
 
 interface ShipmentDetailPageProps {
   params: Promise<{ id: string }>;
@@ -40,6 +40,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<ShipmentTabId>("lines");
   const [inventoryCount, setInventoryCount] = useState<number | undefined>(undefined);
+  const [serialCount, setSerialCount] = useState<number | undefined>(undefined);
 
   const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
   const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
@@ -150,7 +151,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
             <ShipmentTabs
               activeTab={activeTab}
               onTabChange={setActiveTab}
-              counts={{ lines: shipment.Total_Lines__c, inventory: inventoryCount }}
+              counts={{ lines: shipment.Total_Lines__c, inventory: inventoryCount, serial: serialCount }}
             />
           </div>
 
@@ -158,7 +159,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
           <div className="p-8">
             {activeTab === "lines" && <ShipmentLinesTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} />}
             {activeTab === "inventory" && <InventoryTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountLoaded={setInventoryCount} />}
-            {activeTab === "serial" && <SerialNumbersTab />}
+            {activeTab === "serial" && <SerialNumbersTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountLoaded={setSerialCount} />}
             {activeTab === "files" && <ShipmentFilesTab />}
             {activeTab === "tracking" && <TrackingTimelineTab />}
           </div>

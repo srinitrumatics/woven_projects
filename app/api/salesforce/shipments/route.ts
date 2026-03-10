@@ -21,6 +21,9 @@ export async function GET(req: Request) {
         const result = await getShipmentsFromSalesforce(accountId, contactId, objectName, tabName, objectId);
 
         if (result && result.success === false) {
+            if (result.message === "No Data Found") {
+                return NextResponse.json({ data: [], success: true, message: "No Data Found" });
+            }
             return NextResponse.json({ error: result.message || "Failed to fetch shipments" }, { status: 500 });
         }
 
