@@ -181,7 +181,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
 
                                 return (
                                     <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={item.name}><div className="text-sm font-medium font-mono text-gray-900 dark:text-white truncate ">{item.name}</div></td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={item.name}><div className="text-sm font-medium text-gray-900 dark:text-white truncate ">{item.name}</div></td>
                                         <td className="px-3 px-2 ">
                                             <span className={`inline-blocktext-sm font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                 item.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :

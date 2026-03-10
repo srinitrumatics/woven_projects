@@ -32,7 +32,7 @@ export default function InvoiceBillingInfo({
                     </div>
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Bill to Location">Bill to Location</label>
-                        <input type="text" readOnly value={billToLocation || '—'} title={billToLocation || '—'} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
+                        <input type="text" readOnly value={billToLocation || ""} title={billToLocation || ""} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
                     </div>
                 </div>
 
@@ -48,7 +48,7 @@ export default function InvoiceBillingInfo({
                     </div>
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Customer PO">Customer PO</label>
-                        <input type="text" readOnly value={customerPO || '—'} title={customerPO || '—'} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
+                        <input type="text" readOnly value={customerPO || ""} title={customerPO || ""} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
                     </div>
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Due Date">Due Date</label>

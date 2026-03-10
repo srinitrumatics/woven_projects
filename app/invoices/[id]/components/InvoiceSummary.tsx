@@ -28,7 +28,7 @@ function SummaryStatusRow({ label, value, variant }: { label: string; value?: st
     return (
         <div className="flex justify-between items-center text-sm gap-2">
             <span className="text-gray-600 dark:text-gray-400 font-medium truncate" title={label}>{label}</span>
-            <span className={`font-bold ${textColor} whitespace-nowrap`}>{value || '—'}</span>
+            <span className={`font-bold ${textColor} whitespace-nowrap`}>{value || ""}</span>
         </div>
     );
 }

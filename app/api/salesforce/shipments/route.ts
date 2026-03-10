@@ -22,7 +22,8 @@ export async function GET(req: Request) {
             if (!objectId) {
                 return NextResponse.json({ error: "Missing objectId for files action" }, { status: 400 });
             }
-            const files = await getShipmentFilesFromSalesforce(accountId, contactId, objectId);
+            const objectName = searchParams.get("objectName") || "Shipping_Manifest__c";
+            const files = await getShipmentFilesFromSalesforce(accountId, contactId, objectId, objectName);
             return NextResponse.json(files);
         }
 
@@ -38,7 +39,7 @@ export async function GET(req: Request) {
             return NextResponse.json(result);
         }
 
-        const objectName = "Shipping_Manifest__c";
+        const objectName = searchParams.get("objectName") || "Shipping_Manifest__c";
 
         const result = await getShipmentsFromSalesforce(accountId, contactId, objectName, tabName, objectId);
 

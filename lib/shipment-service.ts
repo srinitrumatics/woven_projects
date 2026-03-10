@@ -49,7 +49,7 @@ export async function getShipmentsFromSalesforce(
     }
 }
 
-export async function getShipmentFilesFromSalesforce(accountId: string, contactId: string, shipmentId: string): Promise<any[]> {
+export async function getShipmentFilesFromSalesforce(accountId: string, contactId: string, shipmentId: string, objectName: string = "Shipping_Manifest__c"): Promise<any[]> {
     try {
         const session = await getSalesforceSession();
 
@@ -59,7 +59,7 @@ export async function getShipmentFilesFromSalesforce(accountId: string, contactI
         }
 
         const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
-        const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(shipmentId)}&objectName=Shipping_Manifest__c`;
+        const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(shipmentId)}&objectName=${encodeURIComponent(objectName)}`;
 
         console.log('Fetching shipment files from Salesforce with URL:', url);
 
@@ -82,3 +82,9 @@ export async function getShipmentFilesFromSalesforce(accountId: string, contactI
         return [];
     }
 }
+
+/**
+ * Alias for getShipmentFilesFromSalesforce as requested
+ */
+export const file = getShipmentFilesFromSalesforce;
+

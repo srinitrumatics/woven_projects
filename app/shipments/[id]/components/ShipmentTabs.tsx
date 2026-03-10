@@ -15,7 +15,7 @@ interface ShipmentTabsProps {
 const TAB_DEFS: { id: ShipmentTabId; label: string }[] = [
     { id: "lines", label: "Shipping Manifest Lines" },
     { id: "inventory", label: "Inventory" },
-    { id: "serial", label: "Serial Numbers" },
+    { id: "serial", label: "Serial Numbers Logs" },
     { id: "files", label: "Files" },
     { id: "tracking", label: "Tracking Timeline" },
 ];
@@ -30,8 +30,8 @@ export default function ShipmentTabs({ activeTab, onTabChange, counts = {} }: Sh
                         key={tab.id}
                         onClick={() => onTabChange(tab.id)}
                         className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 text-sm font-medium ${activeTab === tab.id
-                                ? "bg-primary text-white"
-                                : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                            ? "bg-primary text-white"
+                            : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                             }`}
                     >
                         {tab.label}

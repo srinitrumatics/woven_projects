@@ -1,10 +1,14 @@
-export default function BottomTabs({ activeTab, setActiveTab }: { activeTab: "inventory" | "serial" | "files"; setActiveTab: (tab: "inventory" | "serial" | "files") => void }) {
+import InventoryTab from "./InventoryTab";
+import SerialNumbersTab from "./SerialNumbersTab";
+import FilesTab from "./FilesTab";
+
+export default function BottomTabs({ activeTab, setActiveTab, accountId, contactId, lineId }: { activeTab: "inventory" | "serial" | "files"; setActiveTab: (tab: "inventory" | "serial" | "files") => void; accountId: string; contactId: string; lineId: string; }) {
     return (
         <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
             <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 items-center">
                 {[
                     { id: "inventory", label: "Inventory" },
-                    { id: "serial", label: "Serial Numbers" },
+                    { id: "serial", label: "Serial Numbers Logs" },
                     { id: "files", label: "Files" }
                 ].map((tab) => (
                     <button
@@ -21,13 +25,13 @@ export default function BottomTabs({ activeTab, setActiveTab }: { activeTab: "in
             </div>
             <div className="mt-4">
                 {activeTab === 'inventory' && (
-                    <div className="text-sm text-gray-500 p-4">Inventory Data...</div>
+                    <InventoryTab accountId={accountId} contactId={contactId} lineId={lineId} />
                 )}
                 {activeTab === 'serial' && (
-                    <div className="text-sm text-gray-500 p-4">Serial Numbers Data...</div>
+                    <SerialNumbersTab accountId={accountId} contactId={contactId} lineId={lineId} />
                 )}
                 {activeTab === 'files' && (
-                    <div className="text-sm text-gray-500 p-4">Files Data...</div>
+                    <FilesTab accountId={accountId} contactId={contactId} lineId={lineId} />
                 )}
             </div>
         </div>

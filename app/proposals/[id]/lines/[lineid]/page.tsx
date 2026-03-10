@@ -814,7 +814,7 @@ export default function ProposalProductDetailPage({
                                 type="text"
                                 readOnly
                                 value={product.availableToSell?.toLocaleString() || "0"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white font-mono focus:outline-none cursor-default truncate"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
                                 title={product.availableToSell?.toLocaleString() || "0"}
                             />
                         </div>
