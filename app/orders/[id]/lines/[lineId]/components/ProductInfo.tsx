@@ -157,7 +157,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         type="text"
                         readOnly
                         value={formatNumber(product.availableToSell, 0)}
-                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                        className={`w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate ${product.availableToSell > 0 ? 'text-green-600 font-bold' : 'text-gray-900 dark:text-white'}`}
                         title={formatNumber(product.availableToSell, 0)}
                     />
                 </div>

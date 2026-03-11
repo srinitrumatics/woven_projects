@@ -297,7 +297,7 @@ export default function ShipmentFilesTab({ shipmentId, accountId, contactId, isE
             ) : sortedFiles.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
                     <p className="text-lg font-medium">No records found</p>
-                    <p className="text-sm">There are no files associated with this shipment.</p>
+                    <p className="text-sm">There are no Files associated with this shipment manifest</p>
                 </div>
             ) : (
                 <div className="overflow-auto">

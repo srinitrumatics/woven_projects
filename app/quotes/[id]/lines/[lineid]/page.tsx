@@ -475,7 +475,7 @@ export default function QuoteLineDetailPage({
                         </div>
                         <div className="md:col-span-1">
                             <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Available to Sell">Available to Sell</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate font-semibold text-green-600 cursor-default" title={product.availableToSell.toString()} value={product.availableToSell} />
+                            <input readOnly type="text" className={`w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm outline-none truncate font-semibold cursor-default ${product.availableToSell > 0 ? 'text-green-600' : 'text-gray-700'}`} title={product.availableToSell.toString()} value={product.availableToSell} />
                         </div>
                         <div className="md:col-span-1">
                             <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Total Cost">Total Cost</label>

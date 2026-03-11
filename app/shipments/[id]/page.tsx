@@ -50,9 +50,11 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
         setLoading(true);
 
         // Run both fetches in parallel
-        const [manifestRes, inventoryRes] = await Promise.allSettled([
+        const [manifestRes, inventoryRes, serialRes, filesRes] = await Promise.allSettled([
           fetch(`/api/salesforce/shipments?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}`),
           fetch(`/api/salesforce/shipments?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&tabName=Inventory`),
+          fetch(`/api/salesforce/shipments?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&objectName=Shipping_Manifest__c&tabName=Serial_Numbers`),
+          fetch(`/api/salesforce/shipments?action=files&accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&objectId=${encodeURIComponent(id)}`),
         ]);
 
         // ── Manifest ──────────────────────────────────────────────────────
@@ -69,6 +71,20 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
           const invJson = await inventoryRes.value.json();
           const invRows: any[] = invJson?.data?.[0]?.Inventory_Position__c ?? [];
           setInventoryCount(invRows.length);
+        }
+
+        // ── Serial Number count ───────────────────────────────────────────
+        if (serialRes.status === "fulfilled" && serialRes.value.ok) {
+          const serialJson = await serialRes.value.json();
+          const serialRows: any[] = serialJson?.data?.[0]?.Serial_Number_Log__c ?? [];
+          setSerialCount(serialRows.length);
+        }
+
+        // ── Files count ───────────────────────────────────────────────────
+        if (filesRes.status === "fulfilled" && filesRes.value.ok) {
+          const filesJson = await filesRes.value.json();
+          const filesRows: any[] = Array.isArray(filesJson) ? filesJson : [];
+          setFilesCount(filesRows.length);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
@@ -178,4 +194,5 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
       <div className="h-24" />
     </Sidebar>
   );
+
 }

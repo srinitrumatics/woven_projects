@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
+import TrackingTimelineModal from "./TrackingTimelineModal";
 
 interface ManifestSummaryProps {
     shipment: any;
@@ -21,6 +23,8 @@ function SummaryItem({ label, value, isMain = false }: { label: string; value: s
 }
 
 export default function ManifestSummary({ shipment }: ManifestSummaryProps) {
+    const [isTimelineOpen, setIsTimelineOpen] = useState(false);
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 h-full flex flex-col">
             <div className="flex items-center gap-3 mb-6">
@@ -50,9 +54,22 @@ export default function ManifestSummary({ shipment }: ManifestSummaryProps) {
                 </div>
             </div>
 
-            <button className="w-full mt-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary transition-all">
-                Track Shipment
-            </button>
+            <div className="flex gap-2 mt-6">
+                <button className="flex-1 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm">
+                    Track Shipment
+                </button>
+                <button
+                    onClick={() => setIsTimelineOpen(true)}
+                    className="flex-1 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm"
+                >
+                    Tracking Timeline
+                </button>
+            </div>
+
+            <TrackingTimelineModal
+                isOpen={isTimelineOpen}
+                onClose={() => setIsTimelineOpen(false)}
+            />
         </div>
     );
 }

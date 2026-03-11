@@ -35,51 +35,51 @@ type SortDir = "asc" | "desc";
 const DEFAULT_WIDTHS: Record<string, number> = {
     name: 170,
     receivedDate: 140,
-    daysInInventory: 140,
+    daysInInventory: 190,
     productName: 150,
     productDescription: 180,
-    manufacturerDBA: 155,
+    manufacturerDBA: 175,
     supplierName: 140,
-    purchaseOrderName: 140,
-    qtyOnHand: 110,
-    qtyAvailable: 120,
+    purchaseOrderName: 170,
+    qtyOnHand: 160,
+    qtyAvailable: 160,
     unitCost: 110,
-    inventoryLocation: 155,
+    inventoryLocation: 195,
     rack: 110,
     bay: 100,
-    levelPosition: 130,
+    levelPosition: 170,
     salesOrderName: 140,
-    shippingManifestName: 155,
-    shipConfirmed: 140,
+    shippingManifestName: 195,
+    shipConfirmed: 170,
 };
 
 // ─── Mapper ───────────────────────────────────────────────────────────────────
 function mapItem(raw: any): InventoryPosition {
     return {
         id: raw.Id,
-        name: raw.Name || "—",
+        name: raw.Name || "",
         receivedDate: raw.Received_Date__c ?? null,
         daysInInventory: raw.Days_in_Inventory__c ?? 0,
-        productName: raw.Product_Name || "—",
-        productDescription: raw.Product_Description__c || "—",
-        manufacturerDBA: raw.Manufacturer_DBA__c || "—",
-        supplierName: raw.Supplier_Name__c || "—",
-        purchaseOrderName: raw.Purchase_Order_Name || "—",
+        productName: raw.Product_Name || "",
+        productDescription: raw.Product_Description__c || "",
+        manufacturerDBA: raw.Manufacturer_DBA__c || "",
+        supplierName: raw.Supplier_Name__c || "",
+        purchaseOrderName: raw.Purchase_Order_Name || "",
         qtyOnHand: raw.Qty_On_Hand__c ?? 0,
         qtyAvailable: raw.Qty_Available__c ?? 0,
         unitCost: raw.Unit_Cost__c ?? 0,
-        inventoryLocation: raw.Inventory_Location_Name || "—",
-        rack: raw.Rack_Name || "—",
-        bay: raw.Bin_Name || "—",
-        levelPosition: raw.Rack_Level_Name || "—",
-        salesOrderName: raw.Sales_Order_Name || "—",
-        shippingManifestName: raw.Shipping_Manifest_Name || "—",
+        inventoryLocation: raw.Inventory_Location_Name || "",
+        rack: raw.Rack_Name || "",
+        bay: raw.Bin_Name || "",
+        levelPosition: raw.Rack_Level_Name || "",
+        salesOrderName: raw.Sales_Order_Name || "",
+        shippingManifestName: raw.Shipping_Manifest_Name || "",
         shipConfirmed: raw.Shipped_Date__c ?? null,
     };
 }
 
 function fmtDate(v: string | null | undefined): string {
-    if (!v) return "—";
+    if (!v) return "";
     return formatDate(v, "numeric-dash");
 }
 
@@ -163,8 +163,9 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
 
     if (items.length === 0) {
         return (
-            <div className="p-12 text-center bg-gray-50 dark:bg-gray-900/40 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-700">
-                <p className="text-gray-500 dark:text-gray-400 font-medium">No inventory positions found for this shipment.</p>
+            <div className="p-12 text-center bg-gray-50 dark:bg-gray-900/40 rounded-lg ">
+                <p className="text-lg font-medium">No records found</p>
+                <p className="text-sm">There are no Inventory Positions associated with this shipment manifest.</p>
             </div>
         );
     }
@@ -221,7 +222,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                                 <span className="truncate block" title={item.name}>{item.name}</span>
                             </td>
                             <TC v={fmtDate(item.receivedDate)} w={widths.receivedDate} />
-                            <TC v={formatNumber(item.daysInInventory, 2)} w={widths.daysInInventory} />
+                            <TC v={`${formatNumber(item.daysInInventory, 0)} Days`} w={widths.daysInInventory} />
                             <TC v={item.productName} w={widths.productName} />
                             <TC v={item.productDescription} w={widths.productDescription} />
                             <TC v={item.manufacturerDBA} w={widths.manufacturerDBA} />

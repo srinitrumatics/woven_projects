@@ -58,6 +58,9 @@ export default function ShipmentLineDetailPage({
     const [loading, setLoading] = useState(true);
     const [manifestLines, setManifestLines] = useState<ManifestLineItem[]>([]);
     const [currentLineIndex, setCurrentLineIndex] = useState(0);
+    const [inventoryCount, setInventoryCount] = useState<number | undefined>(undefined);
+    const [serialCount, setSerialCount] = useState<number | undefined>(undefined);
+    const [filesCount, setFilesCount] = useState<number | undefined>(undefined);
 
     const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
     const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
@@ -66,13 +69,18 @@ export default function ShipmentLineDetailPage({
         async function fetchLineData() {
             try {
                 setLoading(true);
-                const res = await fetch(`/api/salesforce/shipments?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&objectId=${encodeURIComponent(id)}&tabName=Products`);
+                const [res, inventoryRes, serialRes, filesRes] = await Promise.allSettled([
+                    fetch(`/api/salesforce/shipments?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&objectId=${encodeURIComponent(id)}&tabName=Products`),
+                    fetch(`/api/salesforce/shipments?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&objectId=${encodeURIComponent(lineid)}&objectName=Shipping_Manifest_Line__c&tabName=Inventory`),
+                    fetch(`/api/salesforce/shipments?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&objectId=${encodeURIComponent(lineid)}&objectName=Shipping_Manifest_Line__c&tabName=Serial_Numbers`),
+                    fetch(`/api/salesforce/shipments?action=files&accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&objectId=${encodeURIComponent(lineid)}&objectName=Shipping_Manifest_Line__c`),
+                ]);
 
-                if (!res.ok) {
-                    throw new Error(`Failed to fetch shipment lines: ${res.status}`);
+                if (res.status === "rejected" || !res.value.ok) {
+                    throw new Error(`Failed to fetch shipment lines`);
                 }
 
-                const json = await res.json();
+                const json = await res.value.json();
                 console.log("Fetched shipment lines data:", json);
 
                 let linesData: ManifestLineItem[] = [];
@@ -89,6 +97,27 @@ export default function ShipmentLineDetailPage({
                     if (lineIndex >= 0) {
                         setCurrentLineIndex(lineIndex);
                     }
+                }
+
+                // ── Inventory count ───────────────────────────────────────────────
+                if (inventoryRes.status === "fulfilled" && inventoryRes.value.ok) {
+                    const invJson = await inventoryRes.value.json();
+                    const invRows: any[] = invJson?.data?.[0]?.Inventory_Position__c ?? [];
+                    setInventoryCount(invRows.length);
+                }
+
+                // ── Serial Number count ───────────────────────────────────────────
+                if (serialRes.status === "fulfilled" && serialRes.value.ok) {
+                    const serialJson = await serialRes.value.json();
+                    const serialRows: any[] = serialJson?.data?.[0]?.Serial_Number_Log__c ?? [];
+                    setSerialCount(serialRows.length);
+                }
+
+                // ── Files count ───────────────────────────────────────────────────
+                if (filesRes.status === "fulfilled" && filesRes.value.ok) {
+                    const filesJson = await filesRes.value.json();
+                    const filesRows: any[] = Array.isArray(filesJson) ? filesJson : [];
+                    setFilesCount(filesRows.length);
                 }
             } catch (error) {
                 console.error("Error fetching shipment line data:", error);
@@ -241,7 +270,14 @@ export default function ShipmentLineDetailPage({
             <MetricsTable product={product} />
 
             {/* Bottom Tabs Card */}
-            <BottomTabs activeTab={activeTab} setActiveTab={setActiveTab} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} lineId={lineid} />
+            <BottomTabs
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                accountId={SF_ACCOUNT_ID}
+                contactId={SF_CONTACT_ID}
+                lineId={lineid}
+                initialCounts={{ inventory: inventoryCount, serial: serialCount, files: filesCount }}
+            />
 
             {/* Navigation Buttons - Below Tabs, Right aligned */}
             <div className="flex items-center justify-end gap-2 mt-4">

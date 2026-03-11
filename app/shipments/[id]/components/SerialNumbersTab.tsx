@@ -24,13 +24,13 @@ type SortDir = "asc" | "desc";
 
 // ─── Column widths ────────────────────────────────────────────────────────────
 const DEFAULT_WIDTHS: Record<string, number> = {
-    name: 200,
+    name: 220,
     serialNumber: 180,
-    productSerialNumber: 180,
+    productSerialNumber: 210,
     productName: 180,
-    productDescription: 200,
-    shippingManifest: 180,
-    shippingManifestLine: 200,
+    productDescription: 210,
+    shippingManifest: 220,
+    shippingManifestLine: 220,
     shipDate: 150,
     shipToAccount: 180,
 };
@@ -39,20 +39,20 @@ const DEFAULT_WIDTHS: Record<string, number> = {
 function mapLog(raw: any): SerialNumberLog {
     return {
         id: raw.Id,
-        name: raw.Name || "—",
-        serialNumber: raw.Serial_Number_Name || raw.Serial_Number__c || "—",
-        productSerialNumber: raw.Product_Serial_Number__c || "—",
-        productName: raw.Product_Name || "—",
-        productDescription: raw.Product_Description__c || "—",
-        shippingManifest: raw.Shipping_Manifest_Name || raw.Shipping_Manifest__c || "—",
-        shippingManifestLine: raw.Shipping_Manifest_Line_Name || raw.Shipping_Manifest_Line__c || "—",
+        name: raw.Name || "",
+        serialNumber: raw.Serial_Number_Name || raw.Serial_Number__c || "",
+        productSerialNumber: raw.Product_Serial_Number__c || "",
+        productName: raw.Product_Name || "",
+        productDescription: raw.Product_Description__c || "",
+        shippingManifest: raw.Shipping_Manifest_Name || raw.Shipping_Manifest__c || "",
+        shippingManifestLine: raw.Shipping_Manifest_Line_Name || raw.Shipping_Manifest_Line__c || "",
         shipDate: raw.Ship_Date__c || null,
-        shipToAccount: raw.Ship_to_Account_Name || raw.Ship_to_Account__c || "—",
+        shipToAccount: raw.Ship_to_Account_Name || raw.Ship_to_Account__c || "",
     };
 }
 
 function fmtDate(v: string | null | undefined): string {
-    if (!v) return "—";
+    if (!v) return "";
     return formatDate(v, "numeric-dash");
 }
 
@@ -145,8 +145,9 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
 
     if (logs.length === 0) {
         return (
-            <div className="p-12 text-center bg-gray-50 dark:bg-gray-900/40 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-700">
-                <p className="text-gray-500 dark:text-gray-400 font-medium">No serial number logs matched the criteria.</p>
+            <div className="p-12 text-center  rounded-lg ">
+                <p className="text-lg font-medium">No records found</p>
+                <p className="text-sm">There are no Serial Number Logs associated with this shipment manifest.</p>
             </div>
         );
     }
@@ -180,8 +181,8 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                             <TextCell v={log.productDescription} w={widths.productDescription} />
                             <TextCell v={log.shippingManifest} w={widths.shippingManifest} />
                             <TextCell v={log.shippingManifestLine} w={widths.shippingManifestLine} />
-                            <TextCell v={fmtDate(log.shipDate)} w={widths.shipDate} />
-                            <TextCell v={log.shipToAccount || "—"} w={widths.shipToAccount} />
+                            <TextCell v={formatDate(log.shipDate, "numeric-dash")} w={widths.shipDate} />
+                            <TextCell v={log.shipToAccount || ""} w={widths.shipToAccount} />
                         </tr>
                     ))}
                 </tbody>

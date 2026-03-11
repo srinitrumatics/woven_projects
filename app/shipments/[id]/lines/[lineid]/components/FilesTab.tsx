@@ -168,7 +168,7 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
                 <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no files associated with this shipment line.</p>
+                <p className="text-sm">There are no Files associated with this Shipment manifest line</p>
             </div>
         );
     }

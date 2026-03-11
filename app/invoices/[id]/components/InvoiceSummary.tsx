@@ -23,7 +23,7 @@ function SummaryRow({ label, value }: { label: string; value: number }) {
 function SummaryStatusRow({ label, value, variant }: { label: string; value?: string | number; variant: 'success' | 'danger' | 'neutral' }) {
     const textColor = variant === 'success' ? 'text-green-600 dark:text-green-400'
         : variant === 'danger' ? 'text-red-600 dark:text-red-400'
-            : 'text-amber-600 dark:text-amber-500';
+            : 'text-gray-600 dark:text-gray-400';
 
     return (
         <div className="flex justify-between items-center text-sm gap-2">
@@ -86,7 +86,7 @@ export default function InvoiceSummary({
                     </div>
 
                     <div className="space-y-2">
-                        <SummaryStatusRow label="Collection Status" value={collectionStatus} variant="neutral" />
+                        <SummaryStatusRow label="Collection Status" value={collectionStatus} variant={collectionStatus === 'Past Due' ? 'danger' : 'neutral'} />
                         <SummaryStatusRow label="Amount Paid" value={formatCurrency(amountPaid)} variant="success" />
                         <SummaryStatusRow label="Applied Credits" value={formatCurrency(appliedCredits)} variant="success" />
                         <SummaryStatusRow label="Open Balance" value={formatCurrency(amountDue)} variant="danger" />

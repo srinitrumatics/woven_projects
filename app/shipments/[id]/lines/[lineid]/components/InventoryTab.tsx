@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, formatNumber } from "@/lib/utils/formatting";
 
 interface InventoryTabProps {
     accountId: string;
@@ -107,7 +107,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
                 <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no Inventory Positions associated with this line.</p>
+                <p className="text-sm">There are no Inventory Positions associated with this shipping manifest line.</p>
             </div>
         );
     }
@@ -143,8 +143,8 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={pos.name}>
                                 {pos.name}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.receivedDate ? formatDate(pos.receivedDate) : ""}>{pos.receivedDate ? formatDate(pos.receivedDate) : ""}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.daysInInventory.toString()}>{pos.daysInInventory}</td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : ""}>{pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : ""}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={`${formatNumber(pos.daysInInventory, 0)} Days`}>{formatNumber(pos.daysInInventory, 0)} Days</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productName}>{pos.productName}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productDescription}>{pos.productDescription}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.manufacturerDBA}>{pos.manufacturerDBA}</td>
@@ -159,7 +159,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.levelPosition}>{pos.levelPosition}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.salesOrder}>{pos.salesOrder}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.shippingManifest}>{pos.shippingManifest}</td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate) : ""}>{pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate) : ""}</td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : ""}>{pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : ""}</td>
                         </tr>
                     ))}
                 </tbody>

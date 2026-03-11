@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/utils/formatting";
@@ -40,26 +40,26 @@ type SortDir = "asc" | "desc";
 const DEFAULT_WIDTHS: Record<string, number> = {
     name: 190,
     status: 110,
-    shippingManifestName: 160,
+    shippingManifestName: 190,
     salesOrderLineName: 160,
-    customerQuoteLineName: 160,
+    customerQuoteLineName: 185,
     productName: 150,
     productDescription: 180,
-    manufacturerDBA: 150,
+    manufacturerDBA: 170,
     unitPrice: 110,
-    totalOrderQty: 120,
+    totalOrderQty: 150,
     totalPrice: 110,
-    qtyShipped: 110,
-    boxCount: 90,
-    boxLength: 100,
-    boxWidth: 100,
-    boxHeight: 100,
-    boxNetWeight: 120,
-    boxGrossWeight: 130,
-    trackingNumber: 140,
-    trackingStatus: 130,
-    estimatedDeliveryDate: 170,
-    actualDeliveryDate: 150,
+    qtyShipped: 130,
+    boxCount: 120,
+    boxLength: 120,
+    boxWidth: 130,
+    boxHeight: 130,
+    boxNetWeight: 140,
+    boxGrossWeight: 170,
+    trackingNumber: 170,
+    trackingStatus: 160,
+    estimatedDeliveryDate: 200,
+    actualDeliveryDate: 210,
     action: 80,
 };
 
@@ -67,14 +67,14 @@ const DEFAULT_WIDTHS: Record<string, number> = {
 function mapLine(raw: any): ShipmentLine {
     return {
         id: raw.Id,
-        name: raw.Name || "—",
-        status: raw.Status__c || "—",
-        shippingManifestName: raw.Shipping_Manifest_Name || "—",
-        salesOrderLineName: raw.Sales_Order_Line_Name || "—",
-        customerQuoteLineName: raw.Customer_Quote_Line_Name || "—",
-        productName: raw.Product_Name || "—",
-        productDescription: raw.Product_Description__c || "—",
-        manufacturerDBA: raw.Manufacturer_DBA__c || "—",
+        name: raw.Name || "",
+        status: raw.Status__c || "",
+        shippingManifestName: raw.Shipping_Manifest_Name || "",
+        salesOrderLineName: raw.Sales_Order_Line_Name || "",
+        customerQuoteLineName: raw.Customer_Quote_Line_Name || "",
+        productName: raw.Product_Name || "",
+        productDescription: raw.Product_Description__c || "",
+        manufacturerDBA: raw.Manufacturer_DBA__c || "",
         unitPrice: raw.Unit_Price__c ?? 0,
         totalOrderQty: raw.Total_Order_Qty__c ?? 0,
         totalPrice: raw.Total_Price__c ?? 0,
@@ -93,12 +93,12 @@ function mapLine(raw: any): ShipmentLine {
 }
 
 function fmt(v: number | null | undefined, decimals = 2): string {
-    if (v === null || v === undefined) return "—";
+    if (v === null || v === undefined) return "";
     return formatNumber(v, decimals);
 }
 
 function fmtDate(v: string | null | undefined): string {
-    if (!v) return "—";
+    if (!v) return "";
     return formatDate(v, "numeric-dash");
 }
 
@@ -185,7 +185,8 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
     if (lines.length === 0) {
         return (
             <div className="p-12 text-center bg-gray-50 dark:bg-gray-900/40 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-700">
-                <p className="text-gray-500 dark:text-gray-400 font-medium">No shipment lines matched the criteria.</p>
+                <p className="text-lg font-medium">No records found</p>
+                <p className="text-sm">There are no Shipment Manifest Lines associated with this shipment manifest</p>
             </div>
         );
     }
@@ -235,7 +236,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                     className="text-primary font-bold hover:underline truncate"
                                     title={line.name}>{line.name}</Link>
                             </td>
-                            <TextCell v={line.status} w={widths.status} />
+                            <TextCell v={<StatusBadge status={line.status} />} w={widths.status} title={line.status} />
                             <TextCell v={line.shippingManifestName} w={widths.shippingManifestName} />
                             <TextCell v={line.salesOrderLineName} w={widths.salesOrderLineName} />
                             <TextCell v={line.customerQuoteLineName} w={widths.customerQuoteLineName} />
@@ -252,23 +253,24 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                             <NumCell v={fmt(line.boxHeight)} w={widths.boxHeight} />
                             <NumCell v={fmt(line.boxNetWeight)} w={widths.boxNetWeight} />
                             <NumCell v={fmt(line.boxGrossWeight)} w={widths.boxGrossWeight} />
-                            <TextCell v={line.trackingNumber ?? "—"} w={widths.trackingNumber} />
-                            <TextCell v={line.trackingStatus ?? "—"} w={widths.trackingStatus} />
+                            <TextCell v={line.trackingNumber ?? ""} w={widths.trackingNumber} />
+                            <TextCell v={line.trackingStatus ?? ""} w={widths.trackingStatus} />
                             <TextCell v={fmtDate(line.estimatedDeliveryDate)} w={widths.estimatedDeliveryDate} />
                             <TextCell v={fmtDate(line.actualDeliveryDate)} w={widths.actualDeliveryDate} />
                             {/* Action */}
                             <td className="px-3 py-2" style={{ width: widths.action }}>
                                 {line.trackingNumber ? (
-                                    <a
-                                        href={`https://www.google.com/search?q=${encodeURIComponent(line.trackingNumber)}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="px-3 py-1 bg-primary/10 text-primary dark:text-primary-light rounded text-xs font-semibold hover:bg-primary hover:text-white transition-colors whitespace-nowrap"
+                                    <button
+                                        className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                                        title="View proposal"
                                     >
-                                        View
-                                    </a>
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </button>
                                 ) : (
-                                    <span className="text-gray-300 dark:text-gray-600 text-xs">—</span>
+                                    <span className="text-gray-300 dark:text-gray-600 text-xs"> </span>
                                 )}
                             </td>
                         </tr>
@@ -280,9 +282,9 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
 }
 
 // ─── Cell helpers ─────────────────────────────────────────────────────────────
-function TextCell({ v, w }: { v: string; w: number }) {
+function TextCell({ v, w, title }: { v: ReactNode; w: number; title?: string }) {
     return (
-        <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={v}>
+        <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={title || (typeof v === 'string' ? v : undefined)}>
             {v}
         </td>
     );
@@ -292,5 +294,34 @@ function NumCell({ v, w }: { v: string; w: number }) {
         <td className="px-3 py-2 text-gray-900 dark:text-white text-left font-medium truncate" style={{ width: w }} title={v}>
             {v}
         </td>
+    );
+}
+function StatusBadge({ status }: { status: string }) {
+    const getStyles = () => {
+        switch (status) {
+            case "Shipped":
+            case "Delivered":
+                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+            case "In Transit":
+            case "Inprogress":
+            case "Out for Delivery":
+                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+            case "Pending":
+            case "Draft":
+            case "Picked":
+            case "Packed":
+                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+            case "Cancelled":
+            case "Exception":
+                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+            default:
+                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400";
+        }
+    };
+
+    return (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
+            {status || "N/A"}
+        </span>
     );
 }

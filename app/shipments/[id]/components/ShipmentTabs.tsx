@@ -14,10 +14,9 @@ interface ShipmentTabsProps {
 
 const TAB_DEFS: { id: ShipmentTabId; label: string }[] = [
     { id: "lines", label: "Shipping Manifest Lines" },
-    { id: "inventory", label: "Inventory" },
+    { id: "inventory", label: "Inventory Positions" },
     { id: "serial", label: "Serial Numbers Logs" },
     { id: "files", label: "Files" },
-    { id: "tracking", label: "Tracking Timeline" },
 ];
 
 export default function ShipmentTabs({ activeTab, onTabChange, counts = {} }: ShipmentTabsProps) {

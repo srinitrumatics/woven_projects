@@ -89,7 +89,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
                 <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no Serial Numbers Logs associated with this line.</p>
+                <p className="text-sm">There are no Serial Numbers Logs associated with this shipping manifest line.</p>
             </div>
         );
     }
@@ -122,7 +122,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productDescription}>{log.productDescription}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shippingManifest}>{log.shippingManifest}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shippingManifestLine}>{log.shippingManifestLine}</td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={log.shipDate ? formatDate(log.shipDate) : ""}>{log.shipDate ? formatDate(log.shipDate) : ""}</td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={log.shipDate ? formatDate(log.shipDate, "numeric-dash") : ""}>{log.shipDate ? formatDate(log.shipDate, "numeric-dash") : ""}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shipToAccount}>{log.shipToAccount}</td>
                         </tr>
                     ))}
