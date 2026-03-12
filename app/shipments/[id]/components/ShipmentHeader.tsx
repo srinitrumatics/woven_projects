@@ -47,7 +47,7 @@ export default function ShipmentHeader({ name, status, onBack }: ShipmentHeaderP
                         </div>
                         <div>
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={name}>{name}</h2>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">Shipping Manifest Details and Summary</div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400" title="Shipping Manifest Details and Summary">Shipping Manifest Details and Summary</div>
                         </div>
                     </div>
                     <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">

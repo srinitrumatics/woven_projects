@@ -17,8 +17,8 @@ export default function ShipmentInfo({ shipment, formatAddress }: ShipmentInfoPr
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Shipping Information</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Delivery Destination</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white" title="Shipping Information">Shipping Information</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400" title="Delivery Destination">Delivery Destination</p>
                 </div>
             </div>
             <div className="space-y-4 flex-1">

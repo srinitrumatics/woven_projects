@@ -6,7 +6,7 @@ interface DetailInputProps {
 export default function DetailInput({ label, value }: DetailInputProps) {
     return (
         <div>
-            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate">
+            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title={label}>
                 {label}
             </label>
             <input

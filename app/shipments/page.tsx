@@ -515,15 +515,15 @@ export default function ShipmentsPage() {
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.trackingStatus}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(shipment.deliveredDate, 'numeric-dash')}</td>
                       <td className="px-3 py-2 text-left" onClick={(e) => e.stopPropagation()}>
-                        <Link
-                          href={`/shipments/${shipment.Id}`}
-                          className="p-1 text-primary hover:bg-primary/10 rounded transition-colors inline-block"
-                          title="Track shipment"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        <button
+                          onClick={() => router.push(`/shipments/${shipment.Id}`)}
+                          className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                          title="View shipment" >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                           </svg>
-                        </Link>
+                        </button>
                       </td>
                     </tr>
                   ))

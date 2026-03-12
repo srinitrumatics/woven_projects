@@ -15,8 +15,8 @@ export default function TrackingInfo({ shipment }: TrackingInfoProps) {
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Tracking Information</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Delivery Status</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white" title="Tracking Information">Tracking Information</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400" title="Delivery Status">Delivery Status</p>
                 </div>
             </div>
             <div className="space-y-4 flex-1">

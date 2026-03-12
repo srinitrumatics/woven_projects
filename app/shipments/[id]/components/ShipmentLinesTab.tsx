@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/utils/formatting";
@@ -110,6 +111,7 @@ interface ShipmentLinesTabProps {
 }
 
 export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: ShipmentLinesTabProps) {
+    const router = useRouter();
     const [lines, setLines] = useState<ShipmentLine[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -262,7 +264,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 {line.trackingNumber ? (
                                     <button
                                         className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
-                                        title="View proposal"
+                                        title="View proposal" onClick={() => router.push(`/shipments/${shipmentId}/lines/${line.id}`)}
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

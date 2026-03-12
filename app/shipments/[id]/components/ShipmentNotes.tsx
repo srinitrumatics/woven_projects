@@ -12,8 +12,8 @@ export default function ShipmentNotes({ notes }: ShipmentNotesProps) {
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Shipping Manifest Notes</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Review Notes</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white" title="Shipping Manifest Notes">Shipping Manifest Notes</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400" title="Review Notes">Review Notes</p>
                 </div>
             </div>
             <textarea

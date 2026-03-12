@@ -34,8 +34,8 @@ export default function ManifestSummary({ shipment }: ManifestSummaryProps) {
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Manifest Summary</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Financial and Package Review</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white" title="Manifest Summary">Manifest Summary</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400" title="Financial and Package Review">Financial and Package Review</p>
                 </div>
             </div>
 
