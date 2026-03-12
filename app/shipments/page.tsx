@@ -131,16 +131,16 @@ export default function ShipmentsPage() {
     customerQuote: 150,
     proposal: 180,
     customerOrder: 150,
-    customerPO: 120,
+    customerPO: 150,
     shipToAccount: 180,
     shipToLocation: 180,
-    totalLines: 100,
+    totalLines: 140,
     totalPrice: 130,
-    logisticsPartner: 150,
-    shipDate: 120,
-    trackingNumber: 150,
-    trackingStatus: 120,
-    deliveredDate: 150,
+    logisticsPartner: 160,
+    shipDate: 180,
+    trackingNumber: 170,
+    trackingStatus: 170,
+    deliveredDate: 180,
     actions: 80
   });
 
@@ -511,7 +511,7 @@ export default function ShipmentsPage() {
                       <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 font-semibold text-left">{formatCurrency(shipment.totalPrice)}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.logisticsPartner}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(shipment.shipDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-sm font-mono text-gray-600 dark:text-gray-400">{shipment.trackingNumber}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.trackingNumber}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.trackingStatus}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(shipment.deliveredDate, 'numeric-dash')}</td>
                       <td className="px-3 py-2 text-left" onClick={(e) => e.stopPropagation()}>
