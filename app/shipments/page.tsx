@@ -435,7 +435,7 @@ export default function ShipmentsPage() {
         </div>
 
         {/* Table Area */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto p-4">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 text-gray-500 dark:text-gray-400">
               <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -500,7 +500,7 @@ export default function ShipmentsPage() {
                       <td className="px-3 py-2">
                         <StatusBadge status={shipment.status} />
                       </td>
-                      <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 font-bold">{shipment.salesOrder}</td>
+                      <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300">{shipment.salesOrder}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.customerQuote}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.proposal}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.customerOrder}</td>

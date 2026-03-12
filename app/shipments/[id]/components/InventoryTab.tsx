@@ -50,7 +50,7 @@ const DEFAULT_WIDTHS: Record<string, number> = {
     levelPosition: 170,
     salesOrderName: 140,
     shippingManifestName: 195,
-    shipConfirmed: 170,
+    shipConfirmed: 200,
 };
 
 // ─── Mapper ───────────────────────────────────────────────────────────────────
@@ -211,7 +211,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                         {/* 17 */}
                         <SortableHeader label="Shipping Manifest" field="shippingManifestName" sortConfig={sc} requestSort={handleSort} width={widths.shippingManifestName} onResize={handleResize} align="left" />
                         {/* 18 */}
-                        <SortableHeader label="Ship Confirmed" field="shipConfirmed" sortConfig={sc} requestSort={handleSort} width={widths.shipConfirmed} onResize={handleResize} align="left" />
+                        <SortableHeader label="Ship Confirmed Date" field="shipConfirmed" sortConfig={sc} requestSort={handleSort} width={widths.shipConfirmed} onResize={handleResize} align="left" />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

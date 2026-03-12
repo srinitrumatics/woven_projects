@@ -1,4 +1,4 @@
-export type InvoiceStatus = "Draft" | "Sent" | "Viewed" | "Partial" | "Paid" | "Overdue" | "Cancelled" | "Shipped";
+export type InvoiceStatus = "Draft" | "Sent" | "Viewed" | "Partial" | "Paid" | "Approved" | "Overdue" | "Cancelled" | "Shipped" | "Settled";
 export type PaymentStatus = "Pending" | "Processing" | "Completed" | "Failed" | "Refunded";
 export type PaymentMethod = "Credit Card" | "ACH" | "Wire Transfer" | "Check" | "Cash";
 
@@ -36,7 +36,7 @@ export interface InvoiceStats {
 export interface InvoiceLine {
   id: string;
   invoiceLineName: string; // The "Name" field INLI-...
-  status: string;
+  status: InvoiceStatus;
   productName: string;
   productSku: string;
   description: string;
@@ -160,4 +160,19 @@ export interface InvoiceDetails extends Invoice {
   gstAmount?: number;
   vatRate?: number;
   vatAmount?: number;
+  // Shipment fields
+  logisticsPartner?: string;
+  logisticsContact?: string;
+  trackingNumber?: string;
+  trackingStatus?: string;
+  trackingUrl?: string;
+  eta?: string;
+  boxCount?: number;
+  dimLength?: number;
+  dimWidth?: number;
+  dimHeight?: number;
+  netWeight?: number;
+  grossWeight?: number;
+  dw139?: number;
+  dw166?: number;
 }

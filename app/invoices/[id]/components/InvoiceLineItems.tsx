@@ -68,7 +68,7 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                                 )}
                             </td>
                             <td className="px-3 py-2 text-left">
-                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${line.status === 'Paid' || line.status === 'Settled'
+                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${line.status === 'Paid' || line.status === 'Settled' || line.status === 'Approved'
                                     ? 'bg-green-100 text-green-800'
                                     : 'bg-blue-100 text-blue-800'
                                     }`}>

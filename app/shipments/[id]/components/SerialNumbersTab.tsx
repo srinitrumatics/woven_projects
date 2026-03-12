@@ -158,7 +158,7 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
             <table className="w-full text-sm">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
-                        <SortableHeader label="Serial Number Log Name" field="name" sortConfig={sortConfig} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                        <SortableHeader label="Serial Number Log" field="name" sortConfig={sortConfig} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                         <SortableHeader label="Serial Number" field="serialNumber" sortConfig={sortConfig} requestSort={handleSort} width={widths.serialNumber} onResize={handleResize} align="left" />
                         <SortableHeader label="Product Serial Number" field="productSerialNumber" sortConfig={sortConfig} requestSort={handleSort} width={widths.productSerialNumber} onResize={handleResize} align="left" />
                         <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" />

@@ -195,7 +195,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
 
     // ── Table ──────────────────────────────────────────────────────────────
     return (
-        <div className="overflow-x-auto py-2">
+        <div className="overflow-x-auto">
             <table className="w-full text-sm">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>

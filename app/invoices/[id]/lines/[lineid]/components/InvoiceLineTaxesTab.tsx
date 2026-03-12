@@ -113,20 +113,20 @@ export default function InvoiceLineTaxesTab({ product }: InvoiceLineTaxesTabProp
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                             {sortedData.map((tax: TaxData) => (
                                 <tr key={tax.id} className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{(tax.salesTaxRate || 0).toFixed(3)}%</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.salesTaxAmount || 0)}</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{(tax.useTaxRate || 0).toFixed(3)}%</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.useTaxAmount || 0)}</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{(tax.localTaxRate || 0).toFixed(3)}%</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.localTaxAmount || 0)}</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{(tax.exciseTaxRate || 0).toFixed(3)}%</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.exciseTaxAmount || 0)}</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{(tax.grtRate || 0).toFixed(3)}%</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.grtAmount || 0)}</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{(tax.gstRate || 0).toFixed(3)}%</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.gstAmount || 0)}</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{(tax.vatRate || 0).toFixed(3)}%</td>
-                                    <td className="px-3 py-4 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.vatAmount || 0)}</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{(tax.salesTaxRate || 0).toFixed(3)}%</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.salesTaxAmount || 0)}</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{(tax.useTaxRate || 0).toFixed(3)}%</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.useTaxAmount || 0)}</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{(tax.localTaxRate || 0).toFixed(3)}%</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.localTaxAmount || 0)}</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{(tax.exciseTaxRate || 0).toFixed(3)}%</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.exciseTaxAmount || 0)}</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{(tax.grtRate || 0).toFixed(3)}%</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.grtAmount || 0)}</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{(tax.gstRate || 0).toFixed(3)}%</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.gstAmount || 0)}</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{(tax.vatRate || 0).toFixed(3)}%</td>
+                                    <td className="px-3 py-2 text-gray-900 dark:text-gray-100 truncate">{formatCurrency(tax.vatAmount || 0)}</td>
                                 </tr>
                             ))}
                         </tbody>

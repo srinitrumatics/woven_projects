@@ -21,7 +21,7 @@ const TAB_DEFS: { id: ShipmentTabId; label: string }[] = [
 
 export default function ShipmentTabs({ activeTab, onTabChange, counts = {} }: ShipmentTabsProps) {
     return (
-        <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 w-full">
+        <div className="flex flex-nowrap gap-2 overflow-x-auto w-full">
             {TAB_DEFS.map((tab) => {
                 const count = counts[tab.id];
                 return (

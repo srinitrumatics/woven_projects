@@ -29,6 +29,9 @@ export default function InvoiceHeader({ invoiceNumber, status, accountName, onBa
                 return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
             case "Shipped":
                 return "bg-green-200 text-green-900 dark:bg-green-900/30 dark:text-green-500";
+            case "Settled":
+            case "Approved":
+                return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400";
             default:
                 return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
         }
@@ -88,6 +91,9 @@ function StatusBadge({ status }: { status: InvoiceStatus }) {
                 return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
             case "Shipped":
                 return "bg-green-200 text-green-900 dark:bg-green-900/30 dark:text-green-500";
+            case "Settled":
+            case "Approved":
+                return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400";
             default:
                 return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
         }
