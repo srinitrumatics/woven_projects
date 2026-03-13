@@ -435,104 +435,105 @@ export default function ShipmentsPage() {
         </div>
 
         {/* Table Area */}
-        <div className="overflow-x-auto p-4">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-20 text-gray-500 dark:text-gray-400">
-              <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-              </svg>
-              <p className="text-sm font-medium">Loading shipments...</p>
-            </div>
-          ) : (
-            <table className="w-full">
-              <thead className="bg-primary-light dark:bg-gray-900">
-                <tr>
-                  <SortableHeader label="Shipping Manifest" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                  <SortableHeader label="Sales Order" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
-                  <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} />
-                  <SortableHeader label="Proposal Name" field="proposal" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal} onResize={handleResize} />
-                  <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
-                  <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
-                  <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
-                  <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} />
-                  <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
-                  <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                  <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={widths.logisticsPartner} onResize={handleResize} />
-                  <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipDate} onResize={handleResize} />
-                  <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} />
-                  <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} />
-                  <SortableHeader label="Ship Confirmation" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveredDate} onResize={handleResize} />
-                  <th
-                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700"
-                    style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
-                  >
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {paginatedShipments.length === 0 ? (
+        <div className="p-4">
+          <div className="overflow-x-auto">
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-20 text-gray-500 dark:text-gray-400">
+                <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+                <p className="text-sm font-medium">Loading shipments...</p>
+              </div>
+            ) : (
+              <table className="w-full">
+                <thead className="bg-primary-light dark:bg-gray-900">
                   <tr>
-                    <td colSpan={17} className="px-6 py-16 text-center">
-                      <div className="flex flex-col items-center justify-center">
-                        <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                        </svg>
-                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No shipments found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-sm">
-                          {searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No shipping manifests available"}
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  paginatedShipments.map((shipment) => (
-                    <tr
-                      key={shipment.Id}
-                      onClick={() => router.push(`/shipments/${shipment.Id}`)}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
+                    <SortableHeader label="Shipping Manifest" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                    <SortableHeader label="Sales Order" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
+                    <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} />
+                    <SortableHeader label="Proposal Name" field="proposal" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal} onResize={handleResize} />
+                    <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
+                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
+                    <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
+                    <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} />
+                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
+                    <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
+                    <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={widths.logisticsPartner} onResize={handleResize} />
+                    <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipDate} onResize={handleResize} />
+                    <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} />
+                    <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} />
+                    <SortableHeader label="Ship Confirmation" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveredDate} onResize={handleResize} />
+                    <th
+                      className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700"
+                      style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                     >
-                      <td className="px-3 py-2 text-sm font-semibold text-primary sticky left-0 bg-white dark:bg-gray-800 z-10">
-                        {shipment.name}
-                      </td>
-                      <td className="px-3 py-2">
-                        <StatusBadge status={shipment.status} />
-                      </td>
-                      <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300">{shipment.salesOrder}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.customerQuote}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.proposal}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.customerOrder}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.customerPO}</td>
-                      <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300">{shipment.shipToAccount}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.shipToLocation}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left">{shipment.totalLines}</td>
-                      <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 font-semibold text-left">{formatCurrency(shipment.totalPrice)}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.logisticsPartner}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(shipment.shipDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.trackingNumber}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.trackingStatus}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(shipment.deliveredDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-left" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={() => router.push(`/shipments/${shipment.Id}`)}
-                          className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
-                          title="View shipment" >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {paginatedShipments.length === 0 ? (
+                    <tr>
+                      <td colSpan={17} className="px-6 py-16 text-center">
+                        <div className="flex flex-col items-center justify-center">
+                          <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                           </svg>
-                        </button>
+                          <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No shipments found</p>
+                          <p className="text-gray-400 dark:text-gray-500 text-sm">
+                            {searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No shipping manifests available"}
+                          </p>
+                        </div>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          )}
+                  ) : (
+                    paginatedShipments.map((shipment) => (
+                      <tr
+                        key={shipment.Id}
+                        onClick={() => router.push(`/shipments/${shipment.Id}`)}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
+                      >
+                        <td className="px-3 py-2 text-sm font-semibold text-primary sticky left-0 bg-white dark:bg-gray-800 z-10">
+                          {shipment.name}
+                        </td>
+                        <td className="px-3 py-2">
+                          <StatusBadge status={shipment.status} />
+                        </td>
+                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300">{shipment.salesOrder}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.customerQuote}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.proposal}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.customerOrder}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.customerPO}</td>
+                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300">{shipment.shipToAccount}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.shipToLocation}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left">{shipment.totalLines}</td>
+                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 font-semibold text-left">{formatCurrency(shipment.totalPrice)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.logisticsPartner}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(shipment.shipDate, 'numeric-dash')}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.trackingNumber}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{shipment.trackingStatus}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(shipment.deliveredDate, 'numeric-dash')}</td>
+                        <td className="px-3 py-2 text-left" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            onClick={() => router.push(`/shipments/${shipment.Id}`)}
+                            className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                            title="View shipment" >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
-
         {/* Pagination Section */}
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
           <Pagination
