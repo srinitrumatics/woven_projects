@@ -62,7 +62,7 @@ export default function ProposalDetails({
                         </div>
                         <div>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Proposal Notes">Proposal Notes</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Review Your Proposal Notes</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Special Instructions or Notes</p>
                         </div>
                     </div>
 

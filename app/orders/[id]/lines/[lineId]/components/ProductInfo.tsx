@@ -31,7 +31,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                         Product Information
                     </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Essential Details about the Item</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Detailed Product Specifications</p>
                 </div>
             </div>
 

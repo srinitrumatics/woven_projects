@@ -33,7 +33,7 @@ export default function QuoteSummary({
                 </div>
                 <div>
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Quote Summary">Quote Summary</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Review Quote Summary</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Review Your Quote Summary</p>
                 </div>
             </div>
 

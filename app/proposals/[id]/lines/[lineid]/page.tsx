@@ -686,7 +686,7 @@ export default function ProposalProductDetailPage({
                     </div>
                     <div className="flex-1 flex flex-col">
                         <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-800 dark:text-white min-h-[200px]">
-                            <p className="text-gray-400">{product.ProductNotes}</p>
+                            <p className="text-gray-700">{product.ProductNotes}</p>
                         </div>
                     </div>
                 </div>

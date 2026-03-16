@@ -40,7 +40,7 @@ export default function OrderLineNotes({
                         <div className="h-full p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-900 dark:text-white min-h-[200px]">
                             <p
                                 className={
-                                    originalNotes ? "text-gray-900 dark:text-white" : "text-gray-400"
+                                    originalNotes ? "text-gray-700 dark:text-white" : "text-gray-700 dark:text-white"
                                 }
                             >
                                 {originalNotes || "No notes available"}

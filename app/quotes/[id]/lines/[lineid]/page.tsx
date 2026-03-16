@@ -409,7 +409,7 @@ export default function QuoteLineDetailPage({
                         </div>
                     </div>
                     <div>
-                        <div className="w-full h-[240px] p-4 bg-gray-50/50 border border-gray-100 rounded-lg text-sm text-gray-800 overflow-y-auto">
+                        <div className="w-full min-h-[240px] p-4 bg-gray-50/50 border border-gray-100 rounded-lg text-sm text-gray-700 overflow-y-auto">
                             {product.notes || "No notes available."}
                         </div>
                     </div>
@@ -424,8 +424,12 @@ export default function QuoteLineDetailPage({
                             </svg>
                         </div>
                         <div className="min-w-0">
-                            <h2 className="text-base font-bold text-gray-800 tracking-tight truncate" title="Product Information">Product Information</h2>
-                            <p className="text-sm text-gray-500 truncate" title="Detailed Specifications">Detailed Specifications</p>
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                    Product Information
+                                </h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Detailed Product Specifications</p>
+                            </div>
                         </div>
                     </div>
 

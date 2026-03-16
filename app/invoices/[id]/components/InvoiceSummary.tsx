@@ -76,7 +76,7 @@ export default function InvoiceSummary({
 }: InvoiceSummaryProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 flex flex-col h-full">
-            <SectionTitle title="Invoice Summary" subtitle="Review Invoice Summary" />
+            <SectionTitle title="Invoice Summary" subtitle="Review your Invoice Summary" />
 
             <div className="flex-1 flex flex-col justify-between">
                 <div className="flex-1 space-y-4">

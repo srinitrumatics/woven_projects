@@ -190,6 +190,40 @@ export async function getOrderslocationsFromSalesforce(accountId?: string, conta
   }
 }
 
+// Fetch authorized locations from Salesforce
+export async function getAuthorizedLocationsFromSalesforce(accountId: string, contactId: string): Promise<any> {
+  try {
+    const session = await getSalesforceSession();
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return null;
+    }
+
+    const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/authorizedlocations`;
+    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`;
+
+    console.log('Fetching authorized locations with URL:', url);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+    }
+
+    const resultdata = await response.json();
+    return resultdata;
+  } catch (error) {
+    console.error('Error fetching authorized locations from Salesforce:', error);
+    return null;
+  }
+}
+
 // Fetch order lines from Salesforce
 export async function getOrderLinesFromSalesforce(accountId: string, contactId: string, orderId: string): Promise<any[]> {
   try {

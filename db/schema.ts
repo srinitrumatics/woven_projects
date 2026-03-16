@@ -257,20 +257,11 @@ export const userSalesforceProfiles = pgTable(
   'user_salesforce_profiles',
   {
     userId: uuid('user_id')
+      .primaryKey()
       .notNull()
       .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
     contactId: text('contact_id').notNull(),
-    accountId: text('account_id').notNull(),
-    createdAt: text('created_at')
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: text('updated_at')
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-  },
-  (t) => ({
-    pk: primaryKey({ columns: [t.userId, t.accountId] }),
-  })
+  }
 );
 
 export const userSalesforceProfileRelations = relations(userSalesforceProfiles, ({ one }) => ({

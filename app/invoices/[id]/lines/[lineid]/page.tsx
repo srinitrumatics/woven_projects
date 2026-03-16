@@ -287,7 +287,7 @@ export default function InvoiceLineDetailPage({
                         </div>
                         <h2 className="text-lg font-bold text-gray-800 tracking-tight">Invoice Line Notes</h2>
                     </div>
-                    <div className="w-full h-[240px] p-4 bg-gray-50/50 border border-gray-200 rounded-lg text-sm text-gray-500 overflow-y-auto">
+                    <div className="w-full min-h-[240px] p-4 bg-gray-50/50 border border-gray-200 rounded-lg text-sm text-gray-700 overflow-y-auto">
                         {product.inventoryLineNotes || ""}
                     </div>
                 </div>
@@ -300,7 +300,12 @@ export default function InvoiceLineDetailPage({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <h2 className="text-lg font-bold text-gray-800 tracking-tight">Product Information</h2>
+                        <div>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                Product Information
+                            </h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Detailed Product Specifications</p>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-4">
