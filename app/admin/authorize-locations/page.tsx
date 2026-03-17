@@ -9,6 +9,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { AuthorizeLocation, LocationStatus } from "./types";
+import LocationModal from "./components/LocationModal";
 
 type TabFilter = "Active" | "Inactive" | "Pending" | "All";
 
@@ -31,6 +32,11 @@ export default function AuthorizeLocationsPage() {
     const [viewMode, setViewMode] = useState<'list' | 'card'>('list');
     const [locations, setLocations] = useState<AuthorizeLocation[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMode, setModalMode] = useState<"add" | "edit" | "view">("view");
+    const [selectedLocation, setSelectedLocation] = useState<AuthorizeLocation | null>(null);
+    const [locationTypes, setLocationTypes] = useState<string[]>([]);
+    const [addressTypes, setAddressTypes] = useState<string[]>([]);
 
     // Initialize resizable columns
     const { widths, handleResize } = useResizableColumns({
@@ -51,52 +57,61 @@ export default function AuthorizeLocationsPage() {
         actions: 140
     });
 
-    useEffect(() => {
-        const fetchLocations = async () => {
-            try {
-                // Use default ids from env, same pattern as other pages
-                const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-                const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
-                const response = await fetch(`/api/salesforce/authorizedlocations?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`);
+    const fetchLocations = async () => {
+        try {
+            setLoading(true);
+            // Use default ids from env, same pattern as other pages
+            const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
+            const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+            const response = await fetch(`/api/salesforce/authorizedlocations?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`);
 
-                if (!response.ok) {
-                    throw new Error("Failed to fetch locations");
-                }
-
-                const responseData = await response.json();
-
-                let authLocations: AuthorizeLocation[] = [];
-                // Structure: { data: [{ AuthorizedLocation: [ ... ] }] }
-                if (responseData?.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
-                    const items = responseData.data[0].AuthorizedLocation || [];
-                    authLocations = items.map((item: any) => ({
-                        id: item.Id,
-                        name: item.Name || "",
-                        accountName: item.Account_Name || "",
-                        addressType: item.Address_Type__c || "",
-                        locationId: item.Location_ID__c || "",
-                        locationType: item.Location_Type__c || "", // Will fallback if missing in object payload
-                        street: item.Address__c?.street || "",
-                        city: item.Address__c?.city || "",
-                        state: item.Address__c?.state || "",
-                        zipCode: item.Address__c?.postalCode || "",
-                        country: item.Address__c?.country || "",
-                        liftGate: !!item.Lift_Gate__c,
-                        insideDelivery: !!item.Inside_Delivery__c,
-                        deliveryNotes: item.Delivery_Notes__c || "",
-                        status: item.Active__c ? "Active" : "Inactive"
-                    }));
-                }
-
-                setLocations(authLocations);
-            } catch (error) {
-                console.error("Error loading locations:", error);
-                setLocations([]);
-            } finally {
-                setLoading(false);
+            if (!response.ok) {
+                throw new Error("Failed to fetch locations");
             }
-        };
 
+            const responseData = await response.json();
+
+            let authLocations: AuthorizeLocation[] = [];
+            // Structure: { data: [{ AuthorizedLocation: [ ... ] }] }
+            if (responseData?.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
+                const dataObj = responseData.data[0];
+                const items = dataObj.AuthorizedLocation || [];
+                authLocations = items.map((item: any) => ({
+                    id: item.Id,
+                    name: item.Name || "",
+                    accountName: item.Account_Name || "",
+                    addressType: item.Address_Type__c || "",
+                    locationId: item.Location_ID__c || "",
+                    locationType: item.Location_Type__c || "", // Will fallback if missing in object payload
+                    street: item.Address__c?.street || "",
+                    city: item.Address__c?.city || "",
+                    state: item.Address__c?.state || "",
+                    zipCode: item.Address__c?.postalCode || "",
+                    country: item.Address__c?.country || "",
+                    liftGate: !!item.Lift_Gate__c,
+                    insideDelivery: !!item.Inside_Delivery__c,
+                    deliveryNotes: item.Delivery_Notes__c || "",
+                    status: item.Active__c ? "Active" : "Inactive"
+                }));
+
+                if (Array.isArray(dataObj.Location_Type__c)) {
+                    setLocationTypes(dataObj.Location_Type__c);
+                }
+                if (Array.isArray(dataObj.Address_Type__c)) {
+                    setAddressTypes(dataObj.Address_Type__c);
+                }
+            }
+
+            setLocations(authLocations);
+        } catch (error) {
+            console.error("Error loading locations:", error);
+            setLocations([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchLocations();
     }, []);
 
@@ -153,7 +168,63 @@ export default function AuthorizeLocationsPage() {
     }, [totalPages, currentPage]);
 
     const handleCardClick = (filter: TabFilter) => setActiveTab(filter);
-    const handleViewLocation = (id: string) => alert(`Viewing Location: ${id}`);
+
+    const openModal = (mode: "add" | "edit" | "view", location: AuthorizeLocation | null = null) => {
+        setModalMode(mode);
+        setSelectedLocation(location);
+        setIsModalOpen(true);
+    };
+
+    const handleSaveLocation = async (data: Partial<AuthorizeLocation>) => {
+        try {
+            setLoading(true);
+            const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
+            const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+
+            const payload = {
+                authorizedLocations: [{
+                    ...(modalMode !== 'add' && selectedLocation?.id ? { Id: selectedLocation.id } : {}),
+                    Name: data.name || "",
+                    Account_Name__c: accountId,
+                    Address_Type__c: data.addressType || "",
+                    Location_ID__c: data.locationId || "",
+                    Location_Type__c: data.locationType || "",
+                    Street: data.street || "",
+                    City: data.city || "",
+                    State: data.state || "",
+                    ZipCode: data.zipCode || "",
+                    Country: "US",
+                    Lift_Gate__c: !!data.liftGate,
+                    Inside_Delivery__c: !!data.insideDelivery,
+                    Delivery_Notes__c: data.deliveryNotes || "",
+                    Active__c: data.status === "Active"
+                }],
+                accountId,
+                contactId
+            };
+
+            const isEdit = modalMode === 'edit';
+            const response = await fetch('/api/salesforce/authorizedlocations', {
+                method: isEdit ? 'PATCH' : 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Failed to save location");
+            }
+
+            console.log("Location saved successfully");
+            setIsModalOpen(false);
+            fetchLocations(); // Refresh the list
+        } catch (error: any) {
+            console.error("Error saving location:", error);
+            alert(error.message || "Failed to save location");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <>
@@ -180,23 +251,21 @@ export default function AuthorizeLocationsPage() {
                             </svg>
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-2">
-                            {['All', 'Active', 'Pending', 'Inactive'].map(status => (
-                                <button
-                                    key={status}
-                                    onClick={() => setActiveTab(status as TabFilter)}
-                                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${activeTab === status
-                                        ? 'bg-primary text-white shadow-sm'
-                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                                        }`}
-                                >
-                                    {status}
-                                </button>
-                            ))}
-                        </div>
 
-                        {/* View Mode Toggle */}
+
+                        {/* Add Button and View Mode Toggle */}
                         <div className="flex items-center gap-2 ml-auto">
+                            <button
+                                onClick={() => openModal("add")}
+                                className="p-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2 px-3"
+                                title="Add New Location"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span className="text-sm font-medium">Add</span>
+                            </button>
+                            <div className="h-8 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div>
                             <button
                                 onClick={() => setViewMode('list')}
                                 className={`p-2 rounded-lg transition-colors ${viewMode === "list"
@@ -243,8 +312,8 @@ export default function AuthorizeLocationsPage() {
                                 </div>
                             ) : (
                                 paginatedLocations.map((loc) => (
-                                    <div key={loc.id} className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer" onClick={() => handleViewLocation(loc.id)}>
-                                        <div className="p-5 flex flex-col flex-grow">
+                                    <div key={loc.id} className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group">
+                                        <div className="p-5 flex flex-col flex-grow cursor-pointer" onClick={() => openModal("view", loc)}>
                                             <div className="flex justify-between items-start mb-3">
                                                 <div className="pr-2 min-w-0">
                                                     <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate" title={loc.name}>
@@ -278,13 +347,31 @@ export default function AuthorizeLocationsPage() {
                                                 </div>
                                             </div>
 
-                                            <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-700">
+                                            <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-700 grid grid-cols-3 gap-2">
                                                 <button
-                                                    onClick={(e) => { e.stopPropagation(); handleViewLocation(loc.id); }}
-                                                    className="w-full px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                                                    onClick={(e) => { e.stopPropagation(); openModal("view", loc); }}
+                                                    className="p-2 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 rounded-lg transition-colors flex items-center justify-center"
+                                                    title="View Location"
                                                 >
-                                                    <span>View Details</span>
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                                </button>
+
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); openModal("edit", loc); }}
+                                                    className="p-2 bg-amber-50 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-lg transition-colors flex items-center justify-center"
+                                                    title="Edit Location"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                                </button>
+
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); router.push(`/admin/authorize-locations/${loc.id}/delivery-windows`); }}
+                                                    className="p-2 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg transition-colors flex items-center justify-center"
+                                                    title="Delivery Windows"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 1V5a2 2 0 00-2-2H9a2 2 0 00-2 2v3m10 11V7a2 2 0 00-2-2h-3M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                                    </svg>
                                                 </button>
                                             </div>
                                         </div>
@@ -293,7 +380,7 @@ export default function AuthorizeLocationsPage() {
                             )}
                         </div>
                     ) : (
-                        <table className="w-full">
+                        <table className="w-full border-collapse table-fixed" style={{ minWidth: Object.values(widths).reduce((a, b) => a + b, 0) }}>
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
                                     <SortableHeader label="Authorized Location" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
@@ -330,28 +417,55 @@ export default function AuthorizeLocationsPage() {
                                 ) : (
                                     paginatedLocations.map((loc) => (
                                         <tr key={loc.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                            <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={loc.name}>
+                                            <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={loc.name} style={{ width: widths.name, minWidth: widths.name, maxWidth: widths.name }}>
                                                 {loc.name}
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={loc.accountName}>{loc.accountName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{loc.addressType}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium">{loc.locationId}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{loc.locationType}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={loc.street}>{loc.street}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{loc.city}</td>
-                                            <td className="px-3 py-2 text-sm text-red-500 font-medium">{loc.state}</td>
-                                            <td className="px-3 py-2 text-sm text-red-500 font-medium">{loc.zipCode}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{loc.country}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{loc.liftGate ? 'Edit' : 'No'}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{loc.insideDelivery ? 'Edit' : 'No'}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={loc.deliveryNotes}>{loc.deliveryNotes}</td>
-                                            <td className="px-3 py-2">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={loc.accountName} style={{ width: widths.accountName, minWidth: widths.accountName, maxWidth: widths.accountName }}>{loc.accountName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.addressType, minWidth: widths.addressType, maxWidth: widths.addressType }}>{loc.addressType}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" style={{ width: widths.locationId, minWidth: widths.locationId, maxWidth: widths.locationId }}>{loc.locationId}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.locationType, minWidth: widths.locationType, maxWidth: widths.locationType }}>{loc.locationType}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={loc.street} style={{ width: widths.street, minWidth: widths.street, maxWidth: widths.street }}>{loc.street}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.city, minWidth: widths.city, maxWidth: widths.city }}>{loc.city}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.state, minWidth: widths.state, maxWidth: widths.state }}>{loc.state}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.zipCode, minWidth: widths.zipCode, maxWidth: widths.zipCode }}>{loc.zipCode}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.country, minWidth: widths.country, maxWidth: widths.country }}>{loc.country}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.liftGate, minWidth: widths.liftGate, maxWidth: widths.liftGate }}>{loc.liftGate ? 'Yes' : 'No'}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.insideDelivery, minWidth: widths.insideDelivery, maxWidth: widths.insideDelivery }}>{loc.insideDelivery ? 'Yes' : 'No'}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={loc.deliveryNotes} style={{ width: widths.deliveryNotes, minWidth: widths.deliveryNotes, maxWidth: widths.deliveryNotes }}>{loc.deliveryNotes}</td>
+                                            <td className="px-3 py-2" style={{ width: widths.status, minWidth: widths.status, maxWidth: widths.status }}>
                                                 <StatusBadge status={loc.status} />
                                             </td>
-                                            <td className="px-3 py-2">
+                                            <td className="px-3 py-2" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                                 <div className="flex gap-2">
-                                                    <button onClick={() => handleViewLocation(loc.id)} className="px-3 py-1.5 bg-primary-light/30 text-primary hover:bg-primary hover:text-white text-xs font-semibold rounded transition-colors whitespace-nowrap border border-primary/20" title="View Delivery Window Modal">
-                                                        Add / View
+                                                    <button
+                                                        onClick={() => openModal("view", loc)}
+                                                        className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                                                        title="View Location"
+                                                    >
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                        </svg>
+                                                    </button>
+
+                                                    <button
+                                                        onClick={() => openModal("edit", loc)}
+                                                        className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                                                        title="Edit Location"
+                                                    >
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                        </svg>
+                                                    </button>
+
+                                                    <button
+                                                        onClick={() => router.push(`/admin/authorize-locations/${loc.id}/delivery-windows`)}
+                                                        className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                                                        title="Delivery Windows"
+                                                    >
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 1V5a2 2 0 00-2-2H9a2 2 0 00-2 2v3m10 11V7a2 2 0 00-2-2h-3M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                                        </svg>
                                                     </button>
                                                 </div>
                                             </td>
@@ -372,6 +486,16 @@ export default function AuthorizeLocationsPage() {
                     itemName="locations"
                 />
             </div>
+
+            <LocationModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                location={selectedLocation}
+                mode={modalMode}
+                onSave={handleSaveLocation}
+                locationTypes={locationTypes}
+                addressTypes={addressTypes}
+            />
         </>
     );
 }

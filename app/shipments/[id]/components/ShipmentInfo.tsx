@@ -17,21 +17,15 @@ export default function ShipmentInfo({ shipment, formatAddress }: ShipmentInfoPr
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white" title="Shipping Information">Shipping Information</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400" title="Review Shipping Information">Review Shipping Information</p>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Shipping Information">Shipping Information</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Delivery Destination">Delivery Destination</p>
                 </div>
             </div>
-            <div className="space-y-6 flex-1 mt-6">
-                <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <DetailInput label="Ship to Account" value={shipment.Ship_to_Account_Name} />
-                        <DetailInput label="Ship to Location" value={shipment.Authorized_Ship_To_Location_Name} />
-                    </div>
-                </div>
-                <div className="pt-4">
+            <div className="text-sm mt-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <DetailInput label="Ship to Account" value={shipment.Ship_to_Account_Name} />
+                    <DetailInput label="Ship to Location" value={shipment.Authorized_Ship_To_Location_Name} />
                     <DetailInput label="Shipping Address" value={formatAddress(shipment.Authorized_Ship_To_Location_Address)} />
-                </div>
-                <div className="pt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <DetailInput label="Planned Ship Date" value={formatDate(shipment.Ship_Date__c, 'numeric-dash')} />
                     <DetailInput label="Drop-Ship" value={shipment.Drop_Ship__c ? "Yes" : "No"} />
                     <DetailInput label="Site" value={shipment.Site_Name} />

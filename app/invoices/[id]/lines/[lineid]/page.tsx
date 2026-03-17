@@ -8,11 +8,12 @@ import { formatCurrency } from "@/lib/utils/formatting";
 import InvoiceLineTaxesTab from "./components/InvoiceLineTaxesTab";
 import InvoiceLineCreditMemoTab from "./components/InvoiceLineCreditMemoTab";
 import InvoiceLineFilesTab from "./components/InvoiceLineFilesTab";
+import { InvoiceStatus } from "@/app/invoices/types";
 
 interface InvoiceLineData {
     id: string;
     lineName: string;
-    status: string;
+    status: InvoiceStatus;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -217,9 +218,7 @@ export default function InvoiceLineDetailPage({
                             Back to Invoice
                         </button>
                         {product.status && (
-                            <span className="text-xs font-medium px-2 py-1 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                                {product.status}
-                            </span>
+                            <StatusBadge status={product.status} />
                         )}
                     </div>
                 </div>
@@ -484,5 +483,39 @@ export default function InvoiceLineDetailPage({
                 )}
             </div>
         </Sidebar>
+    );
+}
+
+function StatusBadge({ status }: { status: InvoiceStatus }) {
+    const getStyles = () => {
+        switch (status) {
+            case "Paid":
+                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+            case "Partial":
+                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+            case "Sent":
+                return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
+            case "Viewed":
+                return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400";
+            case "Overdue":
+                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+            case "Draft":
+                return "bg-blue-200 text-blue-900 dark:bg-blue-800 dark:text-blue-400";
+            case "Cancelled":
+                return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
+            case "Shipped":
+                return "bg-green-200 text-green-900 dark:bg-green-900/30 dark:text-green-500";
+            case "Settled":
+            case "Approved":
+                return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400";
+            default:
+                return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+        }
+    };
+
+    return (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
+            {status}
+        </span>
     );
 }

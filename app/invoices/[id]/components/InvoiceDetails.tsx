@@ -104,7 +104,7 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
 
             {/* Row 2 Left - Billing & Shipping (70%) */}
             <div className="w1025:col-span-7">
-                <div className="grid grid-cols-1 w1025:grid-cols-2 gap-4 h-full">
+                <div className="flex flex-col gap-6">
                     <InvoiceBillingInfo
                         accountName={accountName}
                         billingAddress={billingAddress}

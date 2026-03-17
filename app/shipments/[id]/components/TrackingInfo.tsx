@@ -15,20 +15,15 @@ export default function TrackingInfo({ shipment }: TrackingInfoProps) {
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white" title="Tracking Information">Tracking Information</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400" title="Review Tracking Information">Review Tracking Information</p>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Tracking Information">Tracking Information</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Shipment Tracking">Shipment Tracking Details</p>
                 </div>
             </div>
-            <div className="space-y-6 flex-1 mt-6">
-                <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <DetailInput label="Logistics Partner" value={shipment.Logistics_Partner_Name} />
-                        <DetailInput label="Logistics Contact" value={shipment.Logistics_Contact_Name} />
-                    </div>
-
-                </div>
-                <div className="pt-4 "><DetailInput label="Tracking URL" value={shipment.Tracking_URL__c} /></div>
-                <div className="pt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="text-sm mt-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <DetailInput label="Logistics Partner" value={shipment.Logistics_Partner_Name} />
+                    <DetailInput label="Logistics Contact" value={shipment.Logistics_Contact_Name} />
+                    <DetailInput label="Tracking URL" value={shipment.Tracking_URL__c} />
                     <DetailInput label="Tracking Number" value={shipment.Tracking_Number__c} />
                     <DetailInput label="Tracking Status" value={shipment.Tracking_Status__c} />
                     <DetailInput label="ETA" value={formatDate(shipment.Estimated_Delivery_Date__c, 'numeric-dash')} />

@@ -12,15 +12,13 @@ export default function ShipmentNotes({ notes }: ShipmentNotesProps) {
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white" title="Shipping Manifest Notes">Shipping Manifest Notes</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400" title="Review Notes">Special Instructions or Notes</p>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Notes">Notes</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Information / Notes</p>
                 </div>
             </div>
-            <textarea
-                readOnly
-                className="flex-1 w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white resize-none focus:ring-0"
-                value={notes || "No special notes or instructions for this manifest."}
-            />
+            <div className="flex-1 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 font-normal text-sm text-gray-600 dark:text-gray-400 overflow-y-auto break-words whitespace-pre-wrap">
+                {notes || "No special notes or instructions for this manifest."}
+            </div>
         </div>
     );
 }

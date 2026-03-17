@@ -1,5 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthorizedLocationsFromSalesforce } from "@/lib/salesforce-service";
+import { createAuthorizedLocationInSalesforce, updateAuthorizedLocationInSalesforce } from "@/lib/authorized-location-service";
+
+export async function PATCH(req: NextRequest) {
+    try {
+        const body = await req.json();
+        console.log("=== Authorized Locations API Route ===");
+        console.log("Method: PATCH");
+        console.log("Payload:", JSON.stringify(body, null, 2));
+
+        const data = await updateAuthorizedLocationInSalesforce(body);
+        return NextResponse.json(data);
+    } catch (error: any) {
+        console.error("Error in authorizedlocations PATCH API:", error);
+        return NextResponse.json({ error: error.message || "Failed to update authorized location" }, { status: 500 });
+    }
+}
 
 export async function GET(req: NextRequest) {
     try {
@@ -25,5 +41,20 @@ export async function GET(req: NextRequest) {
     } catch (error) {
         console.error("Error in authorizedlocations API:", error);
         return NextResponse.json({ error: "Failed to fetch authorized locations" }, { status: 500 });
+    }
+}
+
+export async function POST(req: NextRequest) {
+    try {
+        const body = await req.json();
+        console.log("=== Authorized Locations API Route ===");
+        console.log("Method: POST");
+        console.log("Payload:", JSON.stringify(body, null, 2));
+
+        const data = await createAuthorizedLocationInSalesforce(body);
+        return NextResponse.json(data);
+    } catch (error: any) {
+        console.error("Error in authorizedlocations POST API:", error);
+        return NextResponse.json({ error: error.message || "Failed to create authorized location" }, { status: 500 });
     }
 }

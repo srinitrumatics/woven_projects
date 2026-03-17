@@ -29,29 +29,26 @@ export default function InvoiceShippingInfo({
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Delivery Destination">Delivery Destination</p>
                 </div>
             </div>
-            <div className="text-sm space-y-6">
-                <div className="grid grid-cols-2 gap-4 pt-2">
+            <div className="text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Ship to Account">Ship to Account</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Ship to Account">Ship to Account</label>
                         <input type="text" readOnly value={accountName} title={accountName} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
                     </div>
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Ship to Location">Ship to Location</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Ship to Location">Ship to Location</label>
                         <input type="text" readOnly value={shipToLocation || ""} title={shipToLocation || ""} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
                     </div>
-                </div>
-                <div className="pt-2">
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Shipping Address">Shipping Address</label>
-                    <input type="text" readOnly value={shippingAddress} title={shippingAddress} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Ship Confirmed Date">Ship Confirmed Date</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Shipping Address">Shipping Address</label>
+                        <input type="text" readOnly value={shippingAddress} title={shippingAddress} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Ship Confirmed Date">Ship Confirmed Date</label>
                         <input type="text" readOnly value={formatDate(shipConfirmedDate, 'numeric-dash')} title={formatDate(shipConfirmedDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
                     </div>
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Site">Site</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Site">Site</label>
                         <input type="text" readOnly value={siteName || ""} title={siteName || ""} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
                     </div>
                 </div>

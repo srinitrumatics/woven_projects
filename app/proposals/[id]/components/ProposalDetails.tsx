@@ -101,7 +101,7 @@ export default function ProposalDetails({
                     <div className="flex-1">
                         <textarea
                             readOnly
-                            className="w-full h-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white leading-relaxed resize-none focus:ring-0 focus:border-gray-300 min-h-[104px]"
+                            className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white leading-relaxed resize-none focus:ring-0 focus:border-gray-300 min-h-[54px]"
                             value={proposal.specialTerms || "No scope summary provided for this proposal."}
                         />
                     </div>

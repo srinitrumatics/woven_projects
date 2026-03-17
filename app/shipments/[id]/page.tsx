@@ -148,7 +148,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
 
         {/* Row 2 — Shipping + Tracking (7) + Summary (3) */}
         <div className="w1025:col-span-7">
-          <div className="grid grid-cols-1 w1025:grid-cols-2 gap-4 h-full">
+          <div className="flex flex-col gap-6">
             <ShipmentInfo shipment={shipment} formatAddress={formatAddress} />
             <TrackingInfo shipment={shipment} />
           </div>

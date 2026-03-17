@@ -90,3 +90,25 @@ export function formatFileSize(bytes: number | string | undefined | null): strin
   }
   return (b / (1024 * 1024)).toFixed(2) + ' MB';
 }
+
+/**
+ * Format a time string from HH:mm:ss or HH:mm into h:mm A
+ * @param timeString Time string (e.g., "14:30:00" or "09:00:00")
+ * @returns Formatted time string (e.g., "2:30 PM" or "9:00 AM")
+ */
+export function formatTime(timeString: string | null | undefined): string {
+  if (!timeString) return '';
+
+  // Extract only HH:mm part from strings like "14:30:00" or "14:30:00.000Z"
+  const match = timeString.match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return timeString;
+
+  let hours = parseInt(match[1], 10);
+  const minutes = match[2];
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  hours = hours % 12;
+  hours = hours ? hours : 12; // transition from 0 to 12
+
+  return `${hours}:${minutes} ${ampm}`;
+}

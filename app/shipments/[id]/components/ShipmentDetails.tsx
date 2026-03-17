@@ -15,11 +15,11 @@ export default function ShipmentDetails({ shipment }: ShipmentDetailsProps) {
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white" title="Shipping Manifest Details">Shipping Manifest Details</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400" title="Shipping Manifest Information">Shipping Manifest Information</p>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Shipping Manifest Details">Shipping Manifest Details</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Shipping Manifest Information">Shipping Manifest Information</p>
                 </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 w1025:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w1025:grid-cols-6 gap-4">
                 <DetailInput label="Proposal Name" value={shipment.Proposal_Name} />
                 <DetailInput label="Customer Order" value={shipment.Customer_Order_Name} />
                 <DetailInput label="Customer PO" value={shipment.Customer_PO__c} />
