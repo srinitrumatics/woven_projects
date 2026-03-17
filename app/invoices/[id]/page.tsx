@@ -120,7 +120,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           fileName: file.Title || 'N/A',
           fileType: file.FileExtension || 'N/A',
           sizeInBytes: file.FileSize || 0,
-          uploadedBy: file.CreatedBy?.Name || 'N/A',
+          uploadedBy: file.CreatedBy || 'N/A',
           uploadedDate: file.CreatedDate ? new Date(file.CreatedDate).toLocaleDateString() : 'N/A',
         }));
 
