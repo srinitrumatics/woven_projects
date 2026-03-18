@@ -13,7 +13,7 @@ export default function ShipmentNotes({ notes }: ShipmentNotesProps) {
                 </div>
                 <div>
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Notes">Notes</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Information / Notes</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Special Instructions or Notes</p>
                 </div>
             </div>
             <div className="flex-1 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 font-normal text-sm text-gray-600 dark:text-gray-400 overflow-y-auto break-words whitespace-pre-wrap">
