@@ -47,6 +47,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                             shippingManifestLine: item.gtherp__Shipping_Manifest_Line__c || item.Shipping_Manifest_Line_Name || item.Shipping_Manifest_Line__c || "",
                             shipDate: item.gtherp__Ship_Date__c || item.Ship_Date__c || "",
                             shipToAccount: item.gtherp__Ship_to_Account__c || item.Ship_to_Account_Name || item.Ship_to_Account__c || "",
+                            active: item.Active__c,
                         }));
                         setSerialData(mapped);
                     }
@@ -74,7 +75,8 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
         shippingManifest: 180,
         shippingManifestLine: 200,
         shipDate: 150,
-        shipToAccount: 180
+        shipToAccount: 180,
+        active: 100
     });
 
     if (loading) {
@@ -108,6 +110,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                         <SortableHeader label="Shipping Manifest Line" field="shippingManifestLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifestLine} onResize={handleResize} />
                         <SortableHeader label="Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipDate} onResize={handleResize} />
                         <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
+                        <SortableHeader label="Active" field="active" sortConfig={sortConfig} requestSort={requestSort} width={widths.active} onResize={handleResize} />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -124,6 +127,19 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shippingManifestLine}>{log.shippingManifestLine}</td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={log.shipDate ? formatDate(log.shipDate, "numeric-dash") : ""}>{log.shipDate ? formatDate(log.shipDate, "numeric-dash") : ""}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shipToAccount}>{log.shipToAccount}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.active }}>
+                                {log.active === true || log.active === "true" || log.active === "True" ? (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                        Active
+                                    </span>
+                                ) : log.active === false || log.active === "false" || log.active === "False" ? (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400">
+                                        Inactive
+                                    </span>
+                                ) : (
+                                    log.active?.toString() || ""
+                                )}
+                            </td>
                         </tr>
                     ))}
                 </tbody>

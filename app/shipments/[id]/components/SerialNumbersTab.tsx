@@ -17,6 +17,7 @@ interface SerialNumberLog {
     shippingManifestLine: string;
     shipDate: string | null;
     shipToAccount: string | null;
+    active: any;
 }
 
 type SortField = keyof SerialNumberLog;
@@ -33,6 +34,7 @@ const DEFAULT_WIDTHS: Record<string, number> = {
     shippingManifestLine: 220,
     shipDate: 150,
     shipToAccount: 180,
+    active: 100,
 };
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
@@ -48,6 +50,7 @@ function mapLog(raw: any): SerialNumberLog {
         shippingManifestLine: raw.Shipping_Manifest_Line_Name || raw.Shipping_Manifest_Line__c || "",
         shipDate: raw.Ship_Date__c || null,
         shipToAccount: raw.Ship_to_Account_Name || raw.Ship_to_Account__c || "",
+        active: raw.Active__c,
     };
 }
 
@@ -167,6 +170,7 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                         <SortableHeader label="Shipping Manifest Line" field="shippingManifestLine" sortConfig={sortConfig} requestSort={handleSort} width={widths.shippingManifestLine} onResize={handleResize} align="left" />
                         <SortableHeader label="Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={handleSort} width={widths.shipDate} onResize={handleResize} align="left" />
                         <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={handleSort} width={widths.shipToAccount} onResize={handleResize} align="left" />
+                        <SortableHeader label="Active" field="active" sortConfig={sortConfig} requestSort={handleSort} width={widths.active} onResize={handleResize} align="left" />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -183,6 +187,19 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                             <TextCell v={log.shippingManifestLine} w={widths.shippingManifestLine} />
                             <TextCell v={formatDate(log.shipDate, "numeric-dash")} w={widths.shipDate} />
                             <TextCell v={log.shipToAccount || ""} w={widths.shipToAccount} />
+                            <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: widths.active }}>
+                                {log.active === true || log.active === "true" || log.active === "True" ? (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                        Active
+                                    </span>
+                                ) : log.active === false || log.active === "false" || log.active === "False" ? (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400">
+                                        Inactive
+                                    </span>
+                                ) : (
+                                    log.active?.toString() || ""
+                                )}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
