@@ -7,6 +7,8 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
+import Link from "next/link";
+
 
 const ITEMS_PER_PAGE = 10;
 
@@ -63,7 +65,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
     }, [positions]);
 
     const { widths, handleResize } = useResizableColumns({
-        name: 180,
+        name: 220,
         receivedDate: 150,
         age: 120,
         po: 150,
@@ -125,12 +127,26 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{productName}</h1>
                         <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1">Detailed inventory positions and tracking history</p>
                     </div>
-                    <button
-                        onClick={() => router.push('/inventory')}
-                        className="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
+                    <Link
+                        href={`/inventory`}
+                        className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors inline-flex items-center gap-2"
                     >
-                        Back to List
-                    </button>
+                        <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                            />
+                        </svg>
+                        Back to Inventory
+                    </Link>
+
                 </div>
             </div>
 
@@ -156,11 +172,11 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                     <table className="w-full border-collapse text-sm">
                         <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200">
                             <tr>
-                                <SortableHeader label="Position ID" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                <SortableHeader label="Inventory Position ID" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                 <SortableHeader label="Received" field="Received_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.receivedDate} onResize={handleResize} />
                                 <SortableHeader label="Age" field="Days_in_Inventory__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} />
                                 <SortableHeader label="PO | RMA" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.po} onResize={handleResize} />
-                                <SortableHeader label="Supplier" field="Supplier_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplier} onResize={handleResize} />
+                                <SortableHeader label="Supplier Name" field="Supplier_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplier} onResize={handleResize} />
                                 <SortableHeader label="Qty On Hand" field="Qty_On_Hand__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} />
                                 <SortableHeader label="Qty Available" field="Qty_Available__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} />
                                 <SortableHeader label="On Hold" field="On_Hold__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.onHold} onResize={handleResize} />
@@ -171,7 +187,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                                 <SortableHeader label="Total CV (IN)" field="Total_Unit_CV_Inches__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvIn} onResize={handleResize} />
                                 <SortableHeader label="Total CV (SQFT)" field="Total_Unit_CV_SQFT__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvSqft} onResize={handleResize} />
                                 <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
-                                <SortableHeader label="Manifest" field="Shipping_Manifest_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifest} onResize={handleResize} />
+                                <SortableHeader label="ShippingManifest" field="Shipping_Manifest_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifest} onResize={handleResize} />
                                 <SortableHeader label="Condition" field="Condition__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.condition} onResize={handleResize} />
                                 <SortableHeader label="Invoiced" field="Invoiced__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiced} onResize={handleResize} />
                             </tr>

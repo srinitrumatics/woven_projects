@@ -2,13 +2,13 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatDate, formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { InventoryPosition, InventoryStatus } from "./types";
+import Link from "next/link";
 
 type TabFilter = "All" | "On Hold" | "Put-Away" | "Average Aged";
 
@@ -33,7 +33,7 @@ export default function InventoryPage() {
             if (response.ok) {
                 const responseData = await response.json();
                 console.log("Inventory API Raw Response:", responseData);
-                
+
                 if (responseData?.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
                     console.log("Inventory API Processed Data (responseData.data):", responseData.data);
                     setInventoryData(responseData.data[0]);
@@ -189,22 +189,36 @@ export default function InventoryPage() {
                 <button
                     onClick={() => handleCardClick("All")}
                     className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "All"
-                        ? "border-blue-500 ring-2 ring-blue-500/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-blue-500/50"
-                        }`}
-                >
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-300"></div>
+                        ? "border-primary ring-2 ring-primary/20"
+                        : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
+                        }`}>
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-dark"></div>
                     <div className="p-4 flex flex-col h-full">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1">Total Inventory Value</p>
+                                <Link
+                                    href="#"
+                                    onClick={() => handleCardClick("All")}
+                                    className="hover:underline block">
+                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Total Inventory Value</p>
+                                </Link>
                                 <div className="flex items-baseline gap-2 group/count">
-                                    <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4">{stats.uniqueProducts}</span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">Products</span>
+                                    <Link
+                                        href="#"
+                                        onClick={() => handleCardClick("All")}
+                                        className="hover:underline block">
+                                        <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4">{stats.uniqueProducts}</span>
+                                    </Link>
+                                    <Link
+                                        href="#"
+                                        onClick={() => handleCardClick("All")}
+                                        className="hover:underline block">
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">Products</span>
+                                    </Link>
                                 </div>
-                                <p className="text-xl font-bold text-blue-500 mt-2">{formatCurrency(stats.totalValue)}</p>
+                                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
                             </div>
-                            <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-blue-500 text-white" : "bg-blue-50 dark:bg-blue-900/20 text-blue-500 group-hover:bg-blue-500 group-hover:text-white"
+                            <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                                 } transition-colors`}>
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -212,12 +226,17 @@ export default function InventoryPage() {
                             </div>
                         </div>
                         <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700">
-                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-blue-500">
-                                View all inventory
-                                <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                </svg>
-                            </span>
+                            <Link
+                                href="#"
+                                onClick={() => handleCardClick("All")}
+                                className="hover:underline block">
+                                <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-blue-500">
+                                    View all inventory
+                                    <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </span>
+                            </Link>
                         </div>
                     </div>
                 </button>
@@ -391,7 +410,6 @@ export default function InventoryPage() {
                                     <SortableHeader label="Avg Inventory Age" field="avgInventoryAge" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} />
                                     <SortableHeader label="Total Positions" field="totalPositions" sortConfig={sortConfig} requestSort={requestSort} width={widths.positions} onResize={handleResize} />
                                     <SortableHeader label="Count Sites" field="countSites" sortConfig={sortConfig} requestSort={requestSort} width={widths.sites} onResize={handleResize} />
-                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                                     <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.actions }}>Action</th>
                                 </tr>
                             </thead>
@@ -434,9 +452,6 @@ export default function InventoryPage() {
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left">{formatNumber(item.avgInventoryAge ?? 0)}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left">{formatNumber(item.totalPositions ?? 0)}</td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left">{formatNumber(item.countSites ?? 0)}</td>
-                                            <td className="px-3 py-2">
-                                                <StatusBadge status={item.status} />
-                                            </td>
                                             <td className="px-3 py-2 text-sm text-left">
                                                 <button
                                                     onClick={() => router.push(`/inventory/${item.productId || item.id}`)}
@@ -469,26 +484,5 @@ export default function InventoryPage() {
                 </div>
             </div>
         </div>
-    );
-}
-
-function StatusBadge({ status }: { status: InventoryStatus }) {
-    const getStyles = () => {
-        switch (status) {
-            case "Available":
-                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-            case "Reserved":
-                return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400";
-            case "In Transit":
-                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-            default:
-                return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
-        }
-    };
-
-    return (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStyles()}`}>
-            {status}
-        </span>
     );
 }

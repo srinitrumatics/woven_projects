@@ -183,17 +183,33 @@ export default function InvoicesPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">All Invoices</p>
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("All")}
+                  className="hover:underline block">
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">All Invoices</p>
+                </Link>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                  <Link
+                    href="#"
+                    onClick={() => handleCardClick("All")}
+                    className="hover:underline block">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalCount}</span>
+
+                  </Link>
+                  <Link
+                    href="#"
+                    onClick={() => handleCardClick("All")}
+                    className="hover:underline block">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                  </Link>
                 </div>
                 <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
             </div>
@@ -212,18 +228,33 @@ export default function InvoicesPage() {
         <button
           onClick={() => handleCardClick("Outstanding")}
           className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Outstanding"
-            ? "border-amber-500 ring-2 ring-amber-500/20"
-            : "border-gray-200 dark:border-gray-700 hover:border-amber-400"
+            ? "border-yellow-500 ring-2 ring-yellow-500/20"
+            : "border-gray-200 dark:border-gray-700 hover:border-yellow-400"
             }`}
         >
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-amber-500"></div>
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Pending</p>
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Outstanding")}
+                  className="hover:underline block">
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Pending</p>
+                </Link>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.outstandingCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                  <Link
+                    href="#"
+                    onClick={() => handleCardClick("Outstanding")}
+                    className="hover:underline block">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.outstandingCount}</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    onClick={() => handleCardClick("Outstanding")}
+                    className="hover:underline block">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                  </Link>
                 </div>
                 <p className="text-lg font-semibold text-amber-600 dark:text-amber-400 mt-1">{formatCurrency(stats.outstandingValue)}</p>
               </div>
@@ -258,17 +289,37 @@ export default function InvoicesPage() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Past due</p>
+                  <Link
+                    href="#"
+                    onClick={() => handleCardClick("Overdue")}
+                    className="hover:underline block">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Past due</p>
+                  </Link>
                   {stats.overdueCount > 0 && (
                     <span className="flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                      <Link
+                        href="#"
+                        onClick={() => handleCardClick("Overdue")}
+                        className="hover:underline block">
+                        <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                      </Link>
                     </span>
                   )}
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.overdueCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                  <Link
+                    href="#"
+                    onClick={() => handleCardClick("Overdue")}
+                    className="hover:underline block">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.overdueCount}</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    onClick={() => handleCardClick("Overdue")}
+                    className="hover:underline block">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                  </Link>
                 </div>
                 <p className="text-lg font-semibold text-red-600 dark:text-red-400 mt-1">{formatCurrency(stats.overdueValue)}</p>
               </div>
@@ -281,7 +332,7 @@ export default function InvoicesPage() {
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
               <span className="inline-flex items-center text-xs font-medium text-red-600 dark:text-red-400 group-hover:underline">
-                Past Due
+                Past Dues
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -302,10 +353,25 @@ export default function InvoicesPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Paid</p>
+                <Link
+                  href="#"
+                  onClick={() => handleCardClick("Paid")}
+                  className="hover:underline block">
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Paid</p>
+                </Link>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.paidCount}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                  <Link
+                    href="#"
+                    onClick={() => handleCardClick("Paid")}
+                    className="hover:underline block">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.paidCount}</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    onClick={() => handleCardClick("Paid")}
+                    className="hover:underline block">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                  </Link>
                 </div>
                 <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.paidValue)}</p>
               </div>
@@ -326,12 +392,12 @@ export default function InvoicesPage() {
             </div>
           </div>
         </button>
-      </div>
+      </div >
 
       {/* Invoices Table Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+      < div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4" >
         {/* Header with Search and Filter */}
-        <div className="border-b border-gray-200 dark:border-gray-700">
+        < div className="border-b border-gray-200 dark:border-gray-700" >
           {/* Heading row */}
           {/* Search + filter pills row */}
           <div className="flex flex-wrap items-center gap-3 px-2 pb-4">
@@ -378,125 +444,127 @@ export default function InvoicesPage() {
                 ))}
             </div>
           </div>
-        </div>
+        </div >
 
         {/* Table Following Proposal Style */}
-        <div className="overflow-x-auto">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-              <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-              </svg>
-              <p className="text-sm">Loading invoices...</p>
-            </div>
-          ) : (
-            <table className="w-full">
-              <thead className="bg-primary-light dark:bg-gray-900">
-                <tr>
-                  <SortableHeader label="Invoice Number" field="invoiceNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                  <SortableHeader label="Sales Order" field="salesOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
-                  <SortableHeader label="Purchase Order" field="purchaseOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={handleResize} />
-                  <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
-                  <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
-                  <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
-                  <SortableHeader label="Bill to Account" field="accountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
-                  <SortableHeader label="Total Lines" field="lineItemCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
-                  <SortableHeader label="Grand Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
-                  <SortableHeader label="Issued Date" field="invoiceDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceDate} onResize={handleResize} />
-                  <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
-                  <SortableHeader label="Collection Status" field="collectionStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.collectionStatus} onResize={handleResize} />
-                  <SortableHeader label="Open Balance" field="amountDue" sortConfig={sortConfig} requestSort={requestSort} width={widths.amountDue} onResize={handleResize} />
-                  <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {paginatedInvoices.length === 0 ? (
+        < div className="overflow-x-auto" >
+          {
+            loading ? (
+              <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400" >
+                <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+                <p className="text-sm">Loading invoices...</p>
+              </div>
+            ) : (
+              <table className="w-full">
+                <thead className="bg-primary-light dark:bg-gray-900">
                   <tr>
-                    <td colSpan={10} className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center justify-center">
-                        <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
-                        </svg>
-                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No invoices found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-sm">
-                          {searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No invoices available"}
-                        </p>
-                      </div>
-                    </td>
+                    <SortableHeader label="Invoice Number" field="invoiceNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                    <SortableHeader label="Sales Order" field="salesOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
+                    <SortableHeader label="Purchase Order" field="purchaseOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={handleResize} />
+                    <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                    <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
+                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
+                    <SortableHeader label="Bill to Account" field="accountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
+                    <SortableHeader label="Total Lines" field="lineItemCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
+                    <SortableHeader label="Grand Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
+                    <SortableHeader label="Issued Date" field="invoiceDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceDate} onResize={handleResize} />
+                    <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
+                    <SortableHeader label="Collection Status" field="collectionStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.collectionStatus} onResize={handleResize} />
+                    <SortableHeader label="Open Balance" field="amountDue" sortConfig={sortConfig} requestSort={requestSort} width={widths.amountDue} onResize={handleResize} />
+                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                      Action
+                    </th>
                   </tr>
-                ) : (
-                  paginatedInvoices.map((invoice) => (
-                    <tr
-                      key={invoice.id}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
-                      onClick={() => router.push(`/invoices/${invoice.id}`)}
-                    >
-                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left">
-                        <div title={invoice.invoiceNumber}>{invoice.invoiceNumber}</div>
-                      </td>
-                      <td className="px-3 py-2">
-                        <StatusBadge status={invoice.status} />
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.salesOrderNumber}>{invoice.salesOrderNumber || 'N/A'}</div>
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.purchaseOrderNumber}>{invoice.purchaseOrderNumber || 'N/A'}</div>
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.proposalName}>{invoice.proposalName || 'N/A'}</div>
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerOrder}>{invoice.customerOrder || 'N/A'}</div>
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerPO}>{invoice.customerPO || 'N/A'}</div>
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.accountName}>{invoice.accountName}</div>
-                      </td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">{invoice.lineItemCount}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(invoice.totalAmount)}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(invoice.invoiceDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.paymentTerms}>{invoice.paymentTerms || 'N/A'}</div>
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.collectionStatus}>{invoice.collectionStatus || 'N/A'}</div>
-                      </td>
-                      <td className="px-3 py-2 text-sm text-left">
-                        <span className={`font-semibold ${invoice.amountDue > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
-                          {formatCurrency(invoice.amountDue)}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex gap-2">
-                          <Link
-                            href={`/invoices/${invoice.id}`}
-                            className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
-                            title="View invoice"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                          </Link>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {paginatedInvoices.length === 0 ? (
+                    <tr>
+                      <td colSpan={10} className="px-6 py-12 text-center">
+                        <div className="flex flex-col items-center justify-center">
+                          <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+                          </svg>
+                          <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No invoices found</p>
+                          <p className="text-gray-400 dark:text-gray-500 text-sm">
+                            {searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No invoices available"}
+                          </p>
                         </div>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          )}
-        </div>
+                  ) : (
+                    paginatedInvoices.map((invoice) => (
+                      <tr
+                        key={invoice.id}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
+                        onClick={() => router.push(`/invoices/${invoice.id}`)}
+                      >
+                        <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left">
+                          <div title={invoice.invoiceNumber}>{invoice.invoiceNumber}</div>
+                        </td>
+                        <td className="px-3 py-2">
+                          <StatusBadge status={invoice.status} />
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.salesOrderNumber}>{invoice.salesOrderNumber || 'N/A'}</div>
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.purchaseOrderNumber}>{invoice.purchaseOrderNumber || 'N/A'}</div>
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.proposalName}>{invoice.proposalName || 'N/A'}</div>
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerOrder}>{invoice.customerOrder || 'N/A'}</div>
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerPO}>{invoice.customerPO || 'N/A'}</div>
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.accountName}>{invoice.accountName}</div>
+                        </td>
+                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">{invoice.lineItemCount}</td>
+                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(invoice.totalAmount)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(invoice.invoiceDate, 'numeric-dash')}</td>
+                        <td className="px-3 py-2">
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.paymentTerms}>{invoice.paymentTerms || 'N/A'}</div>
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.collectionStatus}>{invoice.collectionStatus || 'N/A'}</div>
+                        </td>
+                        <td className="px-3 py-2 text-sm text-left">
+                          <span className={`font-semibold ${invoice.amountDue > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
+                            {formatCurrency(invoice.amountDue)}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex gap-2">
+                            <Link
+                              href={`/invoices/${invoice.id}`}
+                              className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                              title="View invoice"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                            </Link>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            )
+          }
+        </div >
 
         {/* Pagination */}
-        <Pagination
+        < Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           totalItems={filteredInvoices.length}
@@ -504,8 +572,8 @@ export default function InvoicesPage() {
           onPageChange={setCurrentPage}
           itemName="invoices"
         />
-      </div>
-    </Sidebar>
+      </div >
+    </Sidebar >
   );
 }
 

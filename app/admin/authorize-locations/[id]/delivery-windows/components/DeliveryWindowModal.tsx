@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { DeliveryWindow } from "../types";
 
 interface DeliveryWindowModalProps {
     isOpen: boolean;
@@ -8,6 +9,7 @@ interface DeliveryWindowModalProps {
     onSave: (data: any) => Promise<void>;
     locationId: string;
     initialData?: any;
+    existingWindows: DeliveryWindow[];
     title: string;
 }
 
@@ -91,6 +93,7 @@ export default function DeliveryWindowModal({
     onSave,
     locationId,
     initialData,
+    existingWindows,
     title
 }: DeliveryWindowModalProps) {
     const [formData, setFormData] = useState({
@@ -106,6 +109,7 @@ export default function DeliveryWindowModal({
     });
 
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const cleanTime = (timeStr: string) => {
@@ -159,12 +163,38 @@ export default function DeliveryWindowModal({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
+
+        // Validation 1: Window start must be before window end
+        if (formData.WindowStart__c >= formData.WindowEnd__c) {
+            setError("Window Start must be before Window End.");
+            return;
+        }
+
+        // Validation 2: Overlap check
+        const isOverlapping = (start1: string, end1: string, start2: string, end2: string) => {
+            // HH:mm:ss comparison works direct with strings
+            return start1 < end2 && start2 < end1;
+        };
+
+        const hasOverlap = existingWindows.some(dw => 
+            dw.dayOfWeek === formData.Day_of_Week__c && 
+            (initialData ? dw.id !== initialData.id : true) &&
+            isOverlapping(formData.WindowStart__c, formData.WindowEnd__c, dw.windowStart, dw.windowEnd)
+        );
+
+        if (hasOverlap) {
+            setError(`This delivery window overlaps with an existing window on ${formData.Day_of_Week__c}.`);
+            return;
+        }
+
         try {
             setLoading(true);
             await onSave(formData);
             onClose();
         } catch (error) {
             console.error("Error saving delivery window:", error);
+            setError("Failed to save delivery window. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -184,6 +214,12 @@ export default function DeliveryWindowModal({
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6">
+                    {/* Error Display */}
+                    {error && (
+                        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium animate-in slide-in-from-top-2 duration-300">
+                            {error}
+                        </div>
+                    )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Day of Week */}
                         <div className="col-span-2">

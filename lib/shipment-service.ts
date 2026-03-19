@@ -89,3 +89,32 @@ export async function getShipmentFilesFromSalesforce(accountId: string, contactI
  */
 export const file = getShipmentFilesFromSalesforce;
 
+/** Fetch tracking status from Salesforce */
+export async function getTrackingStatusFromSalesforce(shipmentId: string): Promise<any> {
+    try {
+        const session = await getSalesforceSession();
+        if (!session.accessToken) {
+            console.error('No Salesforce access token available');
+            return { success: false, message: "No access token" };
+        }
+
+        const url = `${session.instanceUrl}/services/apexrest/gtherp/track/${encodeURIComponent(shipmentId)}`;
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${session.accessToken}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching tracking status from Salesforce:', error);
+        return { success: false, message: error instanceof Error ? error.message : "Unknown error" };
+    }
+}

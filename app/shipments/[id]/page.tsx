@@ -40,6 +40,8 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
   const [inventoryCount, setInventoryCount] = useState<number | undefined>(undefined);
   const [serialCount, setSerialCount] = useState<number | undefined>(undefined);
   const [filesCount, setFilesCount] = useState<number | undefined>(undefined);
+  const [trackingData, setTrackingData] = useState<any>(null);
+  const [isLoadingTracking, setIsLoadingTracking] = useState(false);
 
   const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
   const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
@@ -96,6 +98,20 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
     if (id && SF_ACCOUNT_ID && SF_CONTACT_ID) fetchShipmentDetails();
   }, [id, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
+  const handleTrackShipment = async () => {
+    try {
+      setIsLoadingTracking(true);
+      const res = await fetch(`/api/shipments/${id}/track`);
+      if (!res.ok) throw new Error("Failed to fetch tracking");
+      const data = await res.json();
+      setTrackingData(data);
+    } catch (err) {
+      console.error("Error tracking shipment:", err);
+    } finally {
+      setIsLoadingTracking(false);
+    }
+  };
+
   // ── Loading ──────────────────────────────────────────────────────────────
   if (loading) {
     return (
@@ -150,11 +166,16 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
         <div className="w1025:col-span-7">
           <div className="flex flex-col gap-6">
             <ShipmentInfo shipment={shipment} formatAddress={formatAddress} />
-            <TrackingInfo shipment={shipment} />
+            <TrackingInfo shipment={shipment} trackingData={trackingData} />
           </div>
         </div>
         <div className="w1025:col-span-3">
-          <ManifestSummary shipment={shipment} />
+          <ManifestSummary
+            shipment={shipment}
+            onTrack={handleTrackShipment}
+            isLoadingTracking={isLoadingTracking}
+            trackingData={trackingData}
+          />
         </div>
       </div>
 
@@ -176,7 +197,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
             {activeTab === "inventory" && <InventoryTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountLoaded={setInventoryCount} />}
             {activeTab === "serial" && <SerialNumbersTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountLoaded={setSerialCount} />}
             {activeTab === "files" && <ShipmentFilesTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onFilesCountChange={setFilesCount} />}
-            {activeTab === "tracking" && <TrackingTimelineTab />}
+            {activeTab === "tracking" && <TrackingTimelineTab trackingData={trackingData} />}
           </div>
         </div>
       </div>

@@ -4,6 +4,9 @@ import TrackingTimelineModal from "./TrackingTimelineModal";
 
 interface ManifestSummaryProps {
     shipment: any;
+    onTrack: () => Promise<void>;
+    isLoadingTracking: boolean;
+    trackingData?: any;
 }
 
 function SummaryItem({ label, value, isMain = false }: { label: string; value: string; isMain?: boolean }) {
@@ -22,8 +25,20 @@ function SummaryItem({ label, value, isMain = false }: { label: string; value: s
     );
 }
 
-export default function ManifestSummary({ shipment }: ManifestSummaryProps) {
+export default function ManifestSummary({
+    shipment,
+    onTrack,
+    isLoadingTracking,
+    trackingData
+}: ManifestSummaryProps) {
     const [isTimelineOpen, setIsTimelineOpen] = useState(false);
+
+    const handleTrackClick = async () => {
+        await onTrack();
+        setIsTimelineOpen(true);
+    };
+
+    const hasTracking = shipment.Tracking_URL__c || shipment.Tracking_Number__c;
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 h-full flex flex-col">
@@ -59,12 +74,14 @@ export default function ManifestSummary({ shipment }: ManifestSummaryProps) {
 
             <div className="mt-8 flex gap-3">
                 <button
-
-                    className={`flex-1 py-3 border rounded-lg text-sm font-medium transition-all shadow-sm ${shipment.Tracking_URL__c
+                    onClick={handleTrackClick}
+                    disabled={isLoadingTracking || !hasTracking}
+                    className={`flex-1 py-3 border rounded-lg text-sm font-medium transition-all shadow-sm flex items-center justify-center gap-2 ${hasTracking
                         ? "bg-white dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:border-primary"
                         : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-400 cursor-not-allowed"
                         }`}
                 >
+                    {isLoadingTracking && <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />}
                     Track Shipment
                 </button>
                 <button
@@ -78,6 +95,7 @@ export default function ManifestSummary({ shipment }: ManifestSummaryProps) {
             <TrackingTimelineModal
                 isOpen={isTimelineOpen}
                 onClose={() => setIsTimelineOpen(false)}
+                trackingData={trackingData}
             />
         </div>
     );

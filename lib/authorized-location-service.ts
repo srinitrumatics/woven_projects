@@ -225,3 +225,38 @@ export async function updateDeliveryWindowInSalesforce(payload: CreateDeliveryWi
         throw error;
     }
 }
+
+export async function deleteDeliveryWindowFromSalesforce(accountId: string, contactId: string, deliveryWindowId: string) {
+    try {
+        const session = await getSalesforceSession();
+        if (!session.accessToken) {
+            throw new Error("No Salesforce access token available");
+        }
+
+        const url = `${session.instanceUrl}/services/apexrest/gtherp/deliverywindows?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&deliveryWindowId=${encodeURIComponent(deliveryWindowId)}`;
+
+        console.log("Deleting delivery window from Salesforce...");
+        console.log("URL:", url);
+
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${session.accessToken}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Salesforce API error response (Delete):", errorText);
+            throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log("Salesforce API response (Delete):", JSON.stringify(result, null, 2));
+        return result;
+    } catch (error) {
+        console.error("Error in deleteDeliveryWindowFromSalesforce:", error);
+        throw error;
+    }
+}

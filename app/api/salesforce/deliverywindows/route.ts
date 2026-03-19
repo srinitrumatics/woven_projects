@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDeliveryWindowsFromSalesforce, createDeliveryWindowInSalesforce, updateDeliveryWindowInSalesforce } from "@/lib/authorized-location-service";
+import { getDeliveryWindowsFromSalesforce, createDeliveryWindowInSalesforce, updateDeliveryWindowInSalesforce, deleteDeliveryWindowFromSalesforce } from "@/lib/authorized-location-service";
 
 export async function GET(request: NextRequest) {
     try {
@@ -65,6 +65,31 @@ export async function PATCH(request: NextRequest) {
         console.error("API Route Error (PATCH deliverywindows):", error);
         return NextResponse.json(
             { success: false, message: error.message || "Failed to update delivery window" },
+            { status: 500 }
+        );
+    }
+}
+
+export async function DELETE(request: NextRequest) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const accountId = searchParams.get("accountId");
+        const contactId = searchParams.get("contactId");
+        const deliveryWindowId = searchParams.get("deliveryWindowId");
+
+        if (!accountId || !contactId || !deliveryWindowId) {
+            return NextResponse.json(
+                { success: false, message: "Missing required parameters: accountId, contactId, or deliveryWindowId" },
+                { status: 400 }
+            );
+        }
+
+        const data = await deleteDeliveryWindowFromSalesforce(accountId, contactId, deliveryWindowId);
+        return NextResponse.json(data);
+    } catch (error: any) {
+        console.error("API Route Error (DELETE deliverywindows):", error);
+        return NextResponse.json(
+            { success: false, message: error.message || "Failed to delete delivery window" },
             { status: 500 }
         );
     }

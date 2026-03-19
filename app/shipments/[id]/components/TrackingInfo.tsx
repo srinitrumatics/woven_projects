@@ -3,9 +3,14 @@ import DetailInput from "./DetailInput";
 
 interface TrackingInfoProps {
     shipment: any;
+    trackingData?: any;
 }
 
-export default function TrackingInfo({ shipment }: TrackingInfoProps) {
+export default function TrackingInfo({ shipment, trackingData }: TrackingInfoProps) {
+    const logisticsPartner = trackingData?.logisticsPartner || shipment.Logistics_Partner_Name;
+    const trackingNumber = trackingData?.trackingNumber || shipment.Tracking_Number__c;
+    const trackingStatus = trackingData?.data?.currentStatusDescription || shipment.Tracking_Status__c;
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 flex flex-col">
             <div className="flex items-center gap-3 mb-6">
@@ -21,11 +26,11 @@ export default function TrackingInfo({ shipment }: TrackingInfoProps) {
             </div>
             <div className="text-sm mt-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <DetailInput label="Logistics Partner" value={shipment.Logistics_Partner_Name} />
+                    <DetailInput label="Logistics Partner" value={logisticsPartner} />
                     <DetailInput label="Logistics Contact" value={shipment.Logistics_Contact_Name} />
                     <DetailInput label="Tracking URL" value={shipment.Tracking_URL__c} />
-                    <DetailInput label="Tracking Number" value={shipment.Tracking_Number__c} />
-                    <DetailInput label="Tracking Status" value={shipment.Tracking_Status__c} />
+                    <DetailInput label="Tracking Number" value={trackingNumber} />
+                    <DetailInput label="Tracking Status" value={trackingStatus} />
                     <DetailInput label="ETA" value={formatDate(shipment.Estimated_Delivery_Date__c, 'numeric-dash')} />
                 </div>
             </div>

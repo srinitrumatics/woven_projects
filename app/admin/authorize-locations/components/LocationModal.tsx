@@ -130,252 +130,268 @@ export default function LocationModal({
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Authorize Location Name
-                            </label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                disabled={mode === "view"}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                                placeholder="Enter location name"
-                            />
-                        </div>
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        if (onSave) {
+                            onSave(formData);
+                        }
+                    }}
+                    className="flex-1 overflow-y-auto flex flex-col"
+                >
+                    <div className="flex-1 overflow-y-auto p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Authorize Location Name <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    disabled={mode === "view"}
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
+                                    placeholder="Enter location name"
+                                />
+                            </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Location ID
-                            </label>
-                            <input
-                                type="text"
-                                name="locationId"
-                                value={formData.locationId}
-                                onChange={handleChange}
-                                disabled={mode === "view"}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                                placeholder="Enter location ID"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Location Type
-                            </label>
-                            <select
-                                name="locationType"
-                                value={formData.locationType}
-                                onChange={handleChange as any}
-                                disabled={mode === "view"}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                            >
-                                <option value="">Select Location Type</option>
-                                {locationTypes.map((type, index) => {
-                                    const val = typeof type === 'object' ? (type as any).value || (type as any).label : type;
-                                    const lab = typeof type === 'object' ? (type as any).label || (type as any).value : type;
-                                    return <option key={val || index} value={val}>{lab}</option>;
-                                })}
-                                {formData.locationType && !locationTypes.some(t => (typeof t === 'object' ? (t as any).value : t) === formData.locationType) && (
-                                    <option value={formData.locationType}>{formData.locationType}</option>
-                                )}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Address Type
-                            </label>
-                            <select
-                                name="addressType"
-                                value={formData.addressType}
-                                onChange={handleChange as any}
-                                disabled={mode === "view"}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                            >
-                                <option value="">Select Address Type</option>
-                                {addressTypes.map((type, index) => {
-                                    const val = typeof type === 'object' ? (type as any).value || (type as any).label : type;
-                                    const lab = typeof type === 'object' ? (type as any).label || (type as any).value : type;
-                                    return <option key={val || index} value={val}>{lab}</option>;
-                                })}
-                                {formData.addressType && !addressTypes.some(t => (typeof t === 'object' ? (t as any).value : t) === formData.addressType) && (
-                                    <option value={formData.addressType}>{formData.addressType}</option>
-                                )}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Street
-                            </label>
-                            <input
-                                type="text"
-                                name="street"
-                                value={formData.street}
-                                onChange={handleChange}
-                                disabled={mode === "view"}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                                placeholder="Enter street address"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                City
-                            </label>
-                            <input
-                                type="text"
-                                name="city"
-                                value={formData.city}
-                                onChange={handleChange}
-                                disabled={mode === "view"}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                                placeholder="Enter city"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                State
-                            </label>
-                            <select
-                                name="state"
-                                value={formData.state}
-                                onChange={handleChange as any}
-                                disabled={mode === "view"}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                            >
-                                <option value="">Select State</option>
-                                {USA_STATES.map((state) => (
-                                    <option key={state.code} value={state.code}>
-                                        {state.name}
-                                    </option>
-                                ))}
-                                {formData.state && !USA_STATES.some(s => s.code === formData.state) && (
-                                    <option value={formData.state}>{formData.state}</option>
-                                )}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Zipcode
-                            </label>
-                            <input
-                                type="text"
-                                name="zipCode"
-                                value={formData.zipCode}
-                                onChange={handleChange}
-                                disabled={mode === "view"}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                                placeholder="Enter zipcode"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Country
-                            </label>
-                            <input
-                                type="text"
-                                name="country"
-                                value="US"
-                                disabled={true}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:disabled:bg-gray-900/50 text-gray-500 outline-none cursor-not-allowed"
-                                placeholder="US"
-                            />
-                        </div>
-
-                        <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4 items-end mt-2">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Status
+                                    Location ID <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="locationId"
+                                    value={formData.locationId}
+                                    onChange={handleChange}
+                                    disabled={mode === "view"}
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
+                                    placeholder="Enter location ID"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Location Type <span className="text-red-500">*</span>
                                 </label>
                                 <select
-                                    name="status"
-                                    value={formData.status}
+                                    name="locationType"
+                                    value={formData.locationType}
                                     onChange={handleChange as any}
                                     disabled={mode === "view"}
+                                    required
                                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
                                 >
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
+                                    <option value="">Select Location Type</option>
+                                    {locationTypes.map((type, index) => {
+                                        const val = typeof type === 'object' ? (type as any).value || (type as any).label : type;
+                                        const lab = typeof type === 'object' ? (type as any).label || (type as any).value : type;
+                                        return <option key={val || index} value={val}>{lab}</option>;
+                                    })}
+                                    {formData.locationType && !locationTypes.some(t => (typeof t === 'object' ? (t as any).value : t) === formData.locationType) && (
+                                        <option value={formData.locationType}>{formData.locationType}</option>
+                                    )}
                                 </select>
                             </div>
 
-                            <div className="flex items-center gap-2 pb-3">
-                                <input
-                                    type="checkbox"
-                                    id="liftGate"
-                                    name="liftGate"
-                                    checked={formData.liftGate}
-                                    onChange={handleChange}
-                                    disabled={mode === "view"}
-                                    className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
-                                />
-                                <label htmlFor="liftGate" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Lift Gate
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Address Type <span className="text-red-500">*</span>
                                 </label>
+                                <select
+                                    name="addressType"
+                                    value={formData.addressType}
+                                    onChange={handleChange as any}
+                                    disabled={mode === "view"}
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
+                                >
+                                    <option value="">Select Address Type</option>
+                                    {addressTypes.map((type, index) => {
+                                        const val = typeof type === 'object' ? (type as any).value || (type as any).label : type;
+                                        const lab = typeof type === 'object' ? (type as any).label || (type as any).value : type;
+                                        return <option key={val || index} value={val}>{lab}</option>;
+                                    })}
+                                    {formData.addressType && !addressTypes.some(t => (typeof t === 'object' ? (t as any).value : t) === formData.addressType) && (
+                                        <option value={formData.addressType}>{formData.addressType}</option>
+                                    )}
+                                </select>
                             </div>
 
-                            <div className="flex items-center gap-2 pb-3">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Street <span className="text-red-500">*</span>
+                                </label>
                                 <input
-                                    type="checkbox"
-                                    id="insideDelivery"
-                                    name="insideDelivery"
-                                    checked={formData.insideDelivery}
+                                    type="text"
+                                    name="street"
+                                    value={formData.street}
                                     onChange={handleChange}
                                     disabled={mode === "view"}
-                                    className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
+                                    placeholder="Enter street address"
                                 />
-                                <label htmlFor="insideDelivery" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Inside Delivery
-                                </label>
                             </div>
-                        </div>
 
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Delivery Note
-                            </label>
-                            <textarea
-                                name="deliveryNotes"
-                                value={formData.deliveryNotes}
-                                onChange={handleChange}
-                                disabled={mode === "view"}
-                                rows={3}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50 resize-none"
-                                placeholder="Enter delivery notes"
-                            />
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    City <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="city"
+                                    value={formData.city}
+                                    onChange={handleChange}
+                                    disabled={mode === "view"}
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
+                                    placeholder="Enter city"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    State <span className="text-red-500">*</span>
+                                </label>
+                                <select
+                                    name="state"
+                                    value={formData.state}
+                                    onChange={handleChange as any}
+                                    disabled={mode === "view"}
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
+                                >
+                                    <option value="">Select State</option>
+                                    {USA_STATES.map((state) => (
+                                        <option key={state.code} value={state.code}>
+                                            {state.name}
+                                        </option>
+                                    ))}
+                                    {formData.state && !USA_STATES.some(s => s.code === formData.state) && (
+                                        <option value={formData.state}>{formData.state}</option>
+                                    )}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Zipcode <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="zipCode"
+                                    value={formData.zipCode}
+                                    onChange={handleChange}
+                                    disabled={mode === "view"}
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
+                                    placeholder="Enter zipcode"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Country
+                                </label>
+                                <input
+                                    type="text"
+                                    name="country"
+                                    value="US"
+                                    disabled={true}
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:disabled:bg-gray-900/50 text-gray-500 outline-none cursor-not-allowed"
+                                    placeholder="US"
+                                />
+                            </div>
+
+                            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4 items-end mt-2">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Status <span className="text-red-500">*</span>
+                                    </label>
+                                    <select
+                                        name="status"
+                                        value={formData.status}
+                                        onChange={handleChange as any}
+                                        disabled={mode === "view"}
+                                        required
+                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
+                                    >
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                </div>
+
+                                <div className="flex items-center gap-2 pb-3">
+                                    <input
+                                        type="checkbox"
+                                        id="liftGate"
+                                        name="liftGate"
+                                        checked={formData.liftGate}
+                                        onChange={handleChange}
+                                        disabled={mode === "view"}
+                                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                    />
+                                    <label htmlFor="liftGate" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Lift Gate
+                                    </label>
+                                </div>
+
+                                <div className="flex items-center gap-2 pb-3">
+                                    <input
+                                        type="checkbox"
+                                        id="insideDelivery"
+                                        name="insideDelivery"
+                                        checked={formData.insideDelivery}
+                                        onChange={handleChange}
+                                        disabled={mode === "view"}
+                                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                    />
+                                    <label htmlFor="insideDelivery" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Inside Delivery
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Delivery Note
+                                </label>
+                                <textarea
+                                    name="deliveryNotes"
+                                    value={formData.deliveryNotes}
+                                    onChange={handleChange}
+                                    disabled={mode === "view"}
+                                    rows={3}
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50 resize-none"
+                                    placeholder="Enter delivery notes"
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Footer */}
-                <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900/40 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-3">
-                    <button
-                        onClick={onClose}
-                        className="px-6 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-sm"
-                    >
-                        {mode === "view" ? "Close" : "Cancel"}
-                    </button>
-                    {mode !== "view" && (
+                    {/* Footer */}
+                    <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900/40 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-3">
                         <button
-                            onClick={() => {
-                                if (onSave) {
-                                    onSave(formData);
-                                }
-                            }}
-                            className="px-6 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm"
+                            type="button"
+                            onClick={onClose}
+                            className="px-6 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-sm"
                         >
-                            Save Location
+                            {mode === "view" ? "Close" : "Cancel"}
                         </button>
-                    )}
-                </div>
+                        {mode !== "view" && (
+                            <button
+                                type="submit"
+                                className="px-6 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm"
+                            >
+                                Save Location
+                            </button>
+                        )}
+                    </div>
+                </form>
             </div>
         </div>
     );
