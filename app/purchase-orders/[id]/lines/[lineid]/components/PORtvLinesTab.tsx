@@ -1,0 +1,143 @@
+"use client";
+
+import React, { useState, useMemo } from 'react';
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { useSortableData } from "@/hooks/useSortableData";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import Pagination from "@/components/ui/Pagination";
+import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+
+interface RtvLine {
+    Id: string;
+    Name: string;
+    Status__c: string;
+    RTV__c: string;
+    RTV_Name: string;
+    Purchase_Order_Line__c: string;
+    Purchase_Order_Line_Name: string;
+    Customer_Order_Line__c: string;
+    Customer_Quote_Line_Name: string;
+    Reason_Code__c: string;
+    Product_Name__c: string;
+    Product_Name: string;
+    Product_Description__c: string;
+    Manufacturer_DBA__c: string;
+    Unit_Cost__c: number;
+    Return_Qty__c: number;
+    Total_Cost__c: number;
+}
+
+interface PORtvLinesTabProps {
+    lines: RtvLine[];
+}
+
+const ITEMS_PER_PAGE = 10;
+
+export default function PORtvLinesTab({ lines }: PORtvLinesTabProps) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData(lines);
+
+    const initialWidths = {
+        name: 180,
+        status: 120,
+        rtv: 150,
+        poLine: 180,
+        quoteLine: 180,
+        reason: 150,
+        productName: 180,
+        description: 250,
+        manufacturer: 180,
+        unitCost: 120,
+        qty: 120,
+        total: 140
+    };
+
+    const { widths: columnWidths, handleResize } = useResizableColumns(initialWidths);
+
+    const paginatedData = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return sortedData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [sortedData, currentPage]);
+
+    const totalPages = Math.ceil(lines.length / ITEMS_PER_PAGE);
+
+    const StatusBadge = ({ status }: { status: string }) => {
+        const colors: Record<string, string> = {
+            "Draft": "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+            "Pending": "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+            "Approved": "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+            "Completed": "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400"
+        };
+        const colorClass = colors[status] || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+
+        return (
+            <span className={`inline-flex px-2 py-1 text-[11px] font-bold uppercase tracking-wider rounded ${colorClass}`}>
+                {status || '-'}
+            </span>
+        );
+    };
+
+    if (lines.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+                <p className="text-sm font-medium">No RTV lines found</p>
+                <p className="text-xs mt-1">There are no RTV lines associated with this record.</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mt-4">
+            <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
+                <table className="w-full border-separate border-spacing-0">
+                    <thead className="bg-[#e9f1f7] dark:bg-gray-900 sticky top-0 z-20">
+                        <tr>
+                            <SortableHeader label="RTV Line" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-[#e9f1f7] dark:bg-gray-900 z-30" />
+                            <SortableHeader label="Status" field="Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
+                            <SortableHeader label="RTV" field="RTV__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rtv} onResize={handleResize} />
+                            <SortableHeader label="Purchase Order Line" field="Purchase_Order_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.poLine} onResize={handleResize} />
+                            <SortableHeader label="Customer Quote Line" field="Customer_Order_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.quoteLine} onResize={handleResize} />
+                            <SortableHeader label="Reason Code" field="Reason_Code__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.reason} onResize={handleResize} />
+                            <SortableHeader label="Product Name" field="Product_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
+                            <SortableHeader label="Product Description" field="Product_Description__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.description} onResize={handleResize} />
+                            <SortableHeader label="Manufacturer DBA" field="Manufacturer_DBA__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.manufacturer} onResize={handleResize} />
+                            <SortableHeader label="Unit Cost" field="Unit_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.unitCost} onResize={handleResize} />
+                            <SortableHeader label="Return Qty" field="Return_Qty__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.qty} onResize={handleResize} />
+                            <SortableHeader label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.total} onResize={handleResize} />
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {paginatedData.map((line) => (
+                            <tr key={line.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700">
+                                    <div className="truncate" title={line.Name}>{line.Name}</div>
+                                </td>
+                                <td className="px-4 py-3"><StatusBadge status={line.Status__c} /></td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="truncate" title={line.RTV_Name}>{line.RTV_Name || ' '}</div></td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="truncate" title={line.Purchase_Order_Line_Name}>{line.Purchase_Order_Line_Name || ' '}</div></td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="truncate" title={line.Customer_Quote_Line_Name}>{line.Customer_Quote_Line_Name || ' '}</div></td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{line.Reason_Code__c || ' '}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="truncate" title={line.Product_Name}>{line.Product_Name || ' '}</div></td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="truncate" title={line.Product_Description__c}>{line.Product_Description__c || ' '}</div></td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white"><div className="truncate" title={line.Manufacturer_DBA__c}>{line.Manufacturer_DBA__c || ' '}</div></td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left">{formatCurrency(line.Unit_Cost__c || 0)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left">{line.Return_Qty__c || 0}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left">{formatCurrency(line.Total_Cost__c || 0)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="border-t border-gray-200 dark:border-gray-700">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={lines.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName=""
+                />
+            </div>
+        </div>
+    );
+}

@@ -13,6 +13,7 @@ async function seedPermissions() {
       { name: 'Order Management', description: 'Order related permissions' },
       { name: 'Proposal Management', description: 'Proposal related permissions' },
       { name: 'Quote Management', description: 'Quote related permissions' },
+      { name: 'Purchase-Order Management', description: 'Purchase Order related permissions' },
       { name: 'Invoice Management', description: 'Invoice related permissions' },
       { name: 'Shipment Management', description: 'Shipment related permissions' },
       { name: 'Inventory Management', description: 'Inventory related permissions' },
