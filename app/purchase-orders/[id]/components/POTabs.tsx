@@ -15,7 +15,7 @@ interface POTabsProps {
 
 export default function POTabs({ activeTab, onTabChange, counts = {} }: POTabsProps) {
     const tabs = [
-        { id: "lines", label: "Lines", count: counts.lines },
+        { id: "lines", label: "Purchase Order Lines", count: counts.lines },
         { id: "bills", label: "Supplier Bills", count: counts.bills },
         { id: "serialNumbers", label: "Serial Numbers", count: counts.serialNumbers },
         { id: "returns", label: "Returns", count: counts.returns },

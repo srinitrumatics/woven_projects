@@ -18,6 +18,7 @@ import POFilesTable from "./components/POFilesTable";
 import POSupplierBillsTable from "./components/POSupplierBillsTable";
 import POSerialNumbersTable from "./components/POSerialNumbersTable";
 import POReturnsTab from "./components/POReturnsTab";
+import TrackingInformationTab from "./components/TrackingInformationTab";
 
 type POTabType = "lines" | "bills" | "serialNumbers" | "returns" | "tracking" | "files";
 
@@ -77,6 +78,8 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                     logisticsPartner: p.Logistics_Partner_Name || '',
                     logisticsContact: p.Logistics_Contact_Name || '',
                     trackingNumber: p.Tracking_Number__c || '',
+                    serviceLevel: p.Service_Level__c || '',
+                    trackingUrl: p.Tracking_URL__c || '',
                     estimatedDeliveryDate: p.Estimated_Delivery_Date__c || '',
                     trackingStatus: p.Tracking_Status__c || '',
                     actualDeliveryDate: p.Actual_Delivery_Date__c || '',
@@ -101,28 +104,60 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
 
             if (linesRes.ok) {
                 const linesData = await linesRes.json();
+                console.log('PO Lines Raw Response:', linesData);
                 setPoLines(linesData?.Purchase_Order_Line__c || []);
             }
             if (billsRes.ok) {
                 const billsData = await billsRes.json();
+                console.log('PO Bills Raw Response:', billsData);
                 setBills(billsData?.Supplier_Bill__c || []);
             }
             if (returnsRes.ok) {
                 const returnsData = await returnsRes.json();
-                setDebitMemos(returnsData?.Debit_Memo__c || []);
-                setRtv(returnsData?.RTV__c || []);
+                console.log('PO Returns Raw Response:', returnsData);
+                setDebitMemos(returnsData?.Debit_Memo_Line__c || returnsData?.Debit_Memo__c || []);
+                setRtv(returnsData?.RTV_Line__c || returnsData?.RTV__c || []);
             }
             if (filesRes.ok) {
-                const filesData = await filesRes.json();
-                setFiles(filesData || []);
+                const filesResponse = await filesRes.json();
+                console.log('PO Files Raw Response:', filesResponse);
+                // Files could be directly the array or wrapped in a data property
+                const filesData = Array.isArray(filesResponse) ? filesResponse : (filesResponse.data || []);
+                const mappedFiles = filesData.map((f: any) => ({
+                    id: f.ContentVersionId || f.Id,
+                    fileName: f.Title || f.Name || '',
+                    fileType: (f.FileExtension || f.FileType || '').toUpperCase(),
+                    sizeInBytes: f.ContentSize || 0,
+                    uploadedBy: f.OwnerName || f.CreatedByName || '',
+                    uploadedDate: f.CreatedDate || ''
+                }));
+                setFiles(mappedFiles);
             }
             if (serialRes.ok) {
                 const serialData = await serialRes.json();
+                console.log('PO Serial Numbers Raw Response:', serialData);
                 setSerialNumbers(serialData?.Serial_Number_Log__c || []);
             }
 
-            // For Tracking (fetch logic if API exists, else placeholder)
-            setTracking([]);
+            // For Tracking
+            if (data?.Tracking_Information__c) {
+                setTracking(data.Tracking_Information__c || []);
+            } else if (data?.Purchase_Order__c?.[0]) {
+                const p = data.Purchase_Order__c[0];
+                setTracking([{
+                    Logistics_Partner__c: p.Logistics_Partner_Name || '',
+                    Logistics_Contact__c: p.Logistics_Contact_Name || '',
+                    Shipping_Method__c: p.Shipping_Method__c || '',
+                    Service_Level__c: p.Service_Level__c || '',
+                    Tracking_URL__c: p.Tracking_URL__c || '',
+                    Tracking_Number__c: p.Tracking_Number__c || '',
+                    Tracking_Status__c: p.Tracking_Status__c || '',
+                    Estimated_Delivery_Date__c: p.Estimated_Delivery_Date__c || '',
+                    Actual_Delivery_Date__c: p.Actual_Delivery_Date__c || ''
+                }]);
+            } else {
+                setTracking([]);
+            }
 
         } catch (error) {
             console.error("Error fetching PO data:", error);
@@ -244,12 +279,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                     {activeTab === "bills" && <POSupplierBillsTable bills={bills} />}
                     {activeTab === "serialNumbers" && <POSerialNumbersTable serialNumbers={serialNumbers} />}
                     {activeTab === "returns" && <POReturnsTab debitMemos={debitMemos} rtv={rtv} />}
-                    {activeTab === "tracking" && (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium">No records found</p>
-                            <p className="text-sm">There is no Tracking Information associated with this purchase order.</p>
-                        </div>
-                    )}
+                    {activeTab === "tracking" && <TrackingInformationTab data={tracking} />}
                     {activeTab === "files" && <POFilesTable files={files} poId={id} />}
                 </div>
             </div>

@@ -9,6 +9,7 @@ import { PurchaseOrderLine } from "../../../types";
 import POSupplierBillLinesTable from "./components/POSupplierBillLinesTable";
 import POSerialNumberLogLinesTab from "./components/poserialnumberloglinestab";
 import POReturnsTab from "./components/POReturnsTab";
+import FileTabsLines from "./components/FileTabsLines";
 
 export default function POLineDetailPage({
     params,
@@ -27,6 +28,7 @@ export default function POLineDetailPage({
     const [debitMemos, setDebitMemos] = useState<any[]>([]);
     const [rtv, setRtv] = useState<any[]>([]);
     const [serialNumbers, setSerialNumbers] = useState<any[]>([]);
+    const [files, setFiles] = useState<any[]>([]);
     const [subTabLoading, setSubTabLoading] = useState(false);
 
     const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
@@ -94,16 +96,18 @@ export default function POLineDetailPage({
             if (!lineid) return;
             try {
                 setSubTabLoading(true);
-                const [billsRes, returnsRes, serialRes] = await Promise.all([
+                const [billsRes, returnsRes, serialRes, filesRes] = await Promise.all([
                     fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=bills&objectName=Purchase_Order_Line__c&tabName=Purchases`),
                     fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=returns&objectName=Purchase_Order_Line__c&tabName=Returns`),
-                    fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=serialNumbers&objectName=Purchase_Order_Line__c&tabName=Serial_Numbers`)
+                    fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=serialNumbers&objectName=Purchase_Order_Line__c&tabName=Serial_Numbers`),
+                    fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=files&objectName=Purchase_Order_Line__c`)
                 ]);
 
-                const [billsData, returnsData, serialData] = await Promise.all([
+                const [billsData, returnsData, serialData, filesRaw] = await Promise.all([
                     billsRes.json(),
                     returnsRes.json(),
-                    serialRes.json()
+                    serialRes.json(),
+                    filesRes.json()
                 ]);
 
                 if (billsData && billsData.Supplier_Bill_Line__c) {
@@ -121,6 +125,21 @@ export default function POLineDetailPage({
                 }
 
                 setSerialNumbers(serialData.Serial_Number_Log__c || []);
+
+                if (filesRaw) {
+                    const filesData = Array.isArray(filesRaw) ? filesRaw : (filesRaw.data || []);
+                    const mappedFiles = filesData.map((f: any) => ({
+                        id: f.ContentVersionId || f.Id,
+                        fileName: f.Title || f.Name || '',
+                        fileType: (f.FileExtension || f.FileType || '').toUpperCase(),
+                        sizeInBytes: f.ContentSize || 0,
+                        uploadedBy: f.OwnerName || f.CreatedByName || '',
+                        uploadedDate: f.CreatedDate || ''
+                    }));
+                    setFiles(mappedFiles);
+                } else {
+                    setFiles([]);
+                }
 
             } catch (err) {
                 console.error("Error fetching sub-tab data:", err);
@@ -384,7 +403,9 @@ export default function POLineDetailPage({
                                     </div>
                                 )}
                                 {activeTab === "files" && (
-                                    <div className="h-32 flex items-center justify-center border-2 border-dashed border-gray-100 dark:border-gray-700 rounded-lg text-gray-400 text-sm italic">No files attached to this line item.</div>
+                                    <div className="space-y-4">
+                                        <FileTabsLines files={files} poLineId={lineid} />
+                                    </div>
                                 )}
                             </>
                         )}

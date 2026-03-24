@@ -39,6 +39,8 @@ export interface PurchaseOrder {
     shippingMethod?: string;
     logisticsPartner?: string;
     logisticsContact?: string;
+    serviceLevel?: string;
+    trackingUrl?: string;
     trackingNumber?: string;
     estimatedDeliveryDate?: string;
     trackingStatus?: string;

@@ -175,7 +175,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                     onPageChange={setCurrentPage}
                     totalItems={rtv.length}
                     itemsPerPage={ITEMS_PER_PAGE}
-                    itemName="RTVs"
+                    itemName=""
                 />
             </div>
         </div>

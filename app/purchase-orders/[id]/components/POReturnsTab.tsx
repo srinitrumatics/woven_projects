@@ -23,7 +23,7 @@ export default function POReturnsTab({ debitMemos, rtv }: POReturnsTabProps) {
             <div className="flex gap-4 border-b border-gray-100 dark:border-gray-700 pb-2">
                 <button
                     onClick={() => setActiveSubTab('debit')}
-                    className={`text-xs font-bold  pb-1 transition-all border-b-2 ${activeSubTab === 'debit'
+                    className={`text-sm font-bold  pb-1 transition-all border-b-2 ${activeSubTab === 'debit'
                         ? "text-primary border-primary"
                         : "text-gray-400 border-transparent hover:text-gray-600"
                         }`}
@@ -32,7 +32,7 @@ export default function POReturnsTab({ debitMemos, rtv }: POReturnsTabProps) {
                 </button>
                 <button
                     onClick={() => setActiveSubTab('rtv')}
-                    className={`text-xs font-bold  pb-1 transition-all border-b-2 ${activeSubTab === 'rtv'
+                    className={`text-sm font-bold  pb-1 transition-all border-b-2 ${activeSubTab === 'rtv'
                         ? "text-primary border-primary"
                         : "text-gray-400 border-transparent hover:text-gray-600"
                         }`}
@@ -41,12 +41,7 @@ export default function POReturnsTab({ debitMemos, rtv }: POReturnsTabProps) {
                 </button>
             </div>
 
-            <div className="text-[10px] text-gray-400 italic mb-2">
-                {activeSubTab === 'debit' ?
-                    "* Debit Memos (Not Visible to Client ONLY to Client-Partner or Partner)" :
-                    "* RTVs (Not Visible to Client ONLY to Client-Partner or Partner)"
-                }
-            </div>
+
 
             {/* Content Area */}
             <div className="mt-2">

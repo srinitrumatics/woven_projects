@@ -181,7 +181,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                     onPageChange={setCurrentPage}
                     totalItems={debitMemos.length}
                     itemsPerPage={ITEMS_PER_PAGE}
-                    itemName="Debit Memos"
+                    itemName=""
                 />
             </div>
         </div>
