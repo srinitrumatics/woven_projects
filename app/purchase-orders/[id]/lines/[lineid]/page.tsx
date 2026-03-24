@@ -230,7 +230,7 @@ export default function POLineDetailPage({
                             </h1>
                         </div>
                         <div className="flex items-center gap-2">
-                            <Link href={`/purchase-orders/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2 font-bold uppercase tracking-widest text-[10px]">
+                            <Link href={`/purchase-orders/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2 font-bold">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                                 Back to PO
                             </Link>
@@ -249,22 +249,60 @@ export default function POLineDetailPage({
                 {/* Row 1: Image + Line Note + Detailed Information */}
                 <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">
                     {/* Image Carousel (3 of 12) */}
-                    <div className="xl:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex flex-col min-h-[300px]">
+                    <div className="xl:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                         <div className="relative flex-1 flex flex-col">
-                            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-700 flex items-center justify-center flex-1">
+                            {/* Main Image Display */}
+                            <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
                                 <div className="text-center">
-                                    <svg className="w-16 h-16 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-                                    <span className="text-xs text-gray-400 mt-2 block">{productImages[currentImageIndex].label}</span>
+                                    <svg
+                                        className="w-16 h-16 text-gray-400 mx-auto"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={1.5}
+                                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                                        />
+                                    </svg>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block">
+                                        {productImages[currentImageIndex].label}
+                                    </span>
                                 </div>
                             </div>
-                            <div className="flex items-center justify-between mt-4 px-2">
-                                <button onClick={handlePrevImage} className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 shadow-sm border flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-600">&lt;</button>
-                                <div className="flex gap-1.5">
-                                    {productImages.map((_, idx) => (
-                                        <div key={idx} className={`w-1.5 h-1.5 rounded-full ${idx === currentImageIndex ? "bg-primary" : "bg-gray-300 dark:bg-gray-600"}`} />
-                                    ))}
-                                </div>
-                                <button onClick={handleNextImage} className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 shadow-sm border flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-600">&gt;</button>
+
+                            {/* Carousel Navigation Arrows */}
+                            <button
+                                onClick={handlePrevImage}
+                                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button
+                                onClick={handleNextImage}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+
+                            {/* Carousel Dots */}
+                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+                                {productImages.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setCurrentImageIndex(index)}
+                                        className={`w-2 h-2 rounded-full transition-colors ${index === currentImageIndex
+                                            ? "bg-primary"
+                                            : "bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500"
+                                            }`}
+                                    />
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -277,7 +315,7 @@ export default function POLineDetailPage({
                             </div>
                             <h2 className="text-base font-semibold text-gray-900 dark:text-white">Purchase Order Line Note</h2>
                         </div>
-                        <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-100 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 min-h-[200px] overflow-y-auto italic">
+                        <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-gray-700 min-h-[200px] overflow-y-auto">
                             {line.poLineNotes || "No notes available for this line item."}
                         </div>
                     </div>
@@ -351,7 +389,7 @@ export default function POLineDetailPage({
                                 onClick={() => setActiveTab(tab.id as any)}
                                 className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 text-sm font-medium ${activeTab === tab.id
                                     ? "bg-primary text-white"
-                                    : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                                    : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600"
                                     }`}
                             >
                                 {tab.label}
@@ -400,8 +438,8 @@ export default function POLineDetailPage({
                         onClick={handlePrevLine}
                         disabled={!hasPrevLine}
                         className={`px-3 py-1.5 text-sm border rounded-lg transition-colors inline-flex items-center gap-1 ${hasPrevLine
-                                ? "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                                : "border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed"
+                            ? "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                            : "border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed"
                             }`}
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
@@ -418,8 +456,8 @@ export default function POLineDetailPage({
                         onClick={handleNextLine}
                         disabled={!hasNextLine}
                         className={`px-3 py-1.5 text-sm border rounded-lg transition-colors inline-flex items-center gap-1 ${hasNextLine
-                                ? "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                                : "border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed"
+                            ? "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                            : "border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed"
                             }`}
                     >
                         Next
