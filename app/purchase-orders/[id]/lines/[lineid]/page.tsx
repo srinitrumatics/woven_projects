@@ -230,27 +230,7 @@ export default function POLineDetailPage({
                             </h1>
                         </div>
                         <div className="flex items-center gap-2">
-                            {/* Prev/Next line navigation */}
-                            <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1 mr-4">
-                                <button
-                                    onClick={handlePrevLine}
-                                    disabled={!hasPrevLine}
-                                    className={`p-1.5 rounded-md transition-colors ${hasPrevLine ? "text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-700 shadow-sm" : "text-gray-400 cursor-not-allowed"}`}
-                                    title="Previous Line"
-                                >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-                                </button>
-                                <button
-                                    onClick={handleNextLine}
-                                    disabled={!hasNextLine}
-                                    className={`p-1.5 rounded-md transition-colors ${hasNextLine ? "text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-700 shadow-sm" : "text-gray-400 cursor-not-allowed"}`}
-                                    title="Next Line"
-                                >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                                </button>
-                            </div>
-
-                            <Link href={`/purchase-orders/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2">
+                            <Link href={`/purchase-orders/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2 font-bold uppercase tracking-widest text-[10px]">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                                 Back to PO
                             </Link>
@@ -355,6 +335,7 @@ export default function POLineDetailPage({
                     </table>
                 </div>
 
+
                 {/* Row 3: Related Items Tabs (Supplier Bills, Serial Numbers, Returns, Files) */}
                 <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                     {/* Tabs Header */}
@@ -363,7 +344,7 @@ export default function POLineDetailPage({
                             { id: "bills", label: "Supplier Bill Line", count: bills.length },
                             { id: "serialNumbers", label: "Serial Numbers", count: serialNumbers.length },
                             { id: "returns", label: "Returns", count: debitMemos.length + rtv.length },
-                            { id: "files", label: "File", count: 0 }
+                            { id: "files", label: "File", count: files.length }
                         ].map((tab) => (
                             <button
                                 key={tab.id}
@@ -410,6 +391,40 @@ export default function POLineDetailPage({
                             </>
                         )}
                     </div>
+                </div>
+
+                {/* Navigation Buttons - Below Detail Tabs Card, Right aligned */}
+                <div className="flex items-center justify-end gap-2 mt-4">
+                    {/* Previous Line Button */}
+                    <button
+                        onClick={handlePrevLine}
+                        disabled={!hasPrevLine}
+                        className={`px-3 py-1.5 text-sm border rounded-lg transition-colors inline-flex items-center gap-1 ${hasPrevLine
+                                ? "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                : "border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed"
+                            }`}
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                        Prev
+                    </button>
+
+                    {/* Line indicator */}
+                    <span className="text-xs text-gray-500 dark:text-gray-400 px-2 font-medium">
+                        {lineNumber}/{totalLines}
+                    </span>
+
+                    {/* Next Line Button */}
+                    <button
+                        onClick={handleNextLine}
+                        disabled={!hasNextLine}
+                        className={`px-3 py-1.5 text-sm border rounded-lg transition-colors inline-flex items-center gap-1 ${hasNextLine
+                                ? "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                : "border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed"
+                            }`}
+                    >
+                        Next
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                    </button>
                 </div>
             </div>
         </Sidebar>
