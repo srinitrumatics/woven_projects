@@ -230,12 +230,12 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
           <p className="text-white/90 text-base md:text-lg mb-6 leading-relaxed">
             Sign up and discover a great amount of new opportunities!
           </p>
-          <button
+          {/*<button
             onClick={handleSignUpClick}
             className="w-full md:w-auto px-8 py-3 bg-white text-[var(--primary-dark)] rounded-full font-semibold hover:bg-gray-100 transition-all duration-200 shadow-lg"
           >
             Sign Up
-          </button>
+          </button>*/}
         </div>
       </div>
     </div>

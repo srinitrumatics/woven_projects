@@ -4,6 +4,7 @@ import { formatCurrency } from "@/lib/utils/formatting";
 
 interface POSummaryProps {
     po: PurchaseOrder;
+    poLines: any[];
     isUploading: boolean;
     handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleDownloadPDF: () => void;
@@ -12,11 +13,25 @@ interface POSummaryProps {
 
 export default function POSummary({
     po,
+    poLines,
     isUploading,
     handleFileUpload,
     handleDownloadPDF,
     className = ""
 }: POSummaryProps) {
+    const serviceLines = poLines.filter(l => l.Product_Record_Type__c === 'Services');
+    const serviceCost = serviceLines.reduce((sum, l) => sum + (l.Total_Product_Cost__c || 0), 0);
+    const serviceCount = serviceLines.length;
+    const productLinesCount = po.totalLines - serviceCount;
+
+    // We assume po.productCost from the main record might already be the sum of product lines
+    // but if it's the sum of all lines (Product + Services), we should adjust it.
+    // However, usually Total_Product_Cost__c on PO record is the sum of all lines' Product Cost field.
+    // If the user wants separate lines, we might need to adjust po.productCost if it includes services.
+
+    // Let's assume po.productCost is actually the "All Lines Subtotal"
+    const productSubtotal = po.productCost - serviceCost;
+
     return (
         <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden w-full h-full flex flex-col ${className}`}>
             <div className="flex items-center gap-3 p-4">
@@ -34,27 +49,27 @@ export default function POSummary({
             <div className="px-6 flex flex-col flex-1 divide-y divide-gray-300 dark:divide-gray-700 pt-6">
                 <div className="py-2 space-y-3">
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-900 dark:text-gray-700">({po.totalLines}) Products - Subtotal</span>
-                        <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(po.productCost)}</span>
+                        <span className="text-gray-900 dark:text-gray-700" title="Products - Subtotal">({productLinesCount}) Products - Subtotal</span>
+                        <span className="text-gray-900 dark:text-white font-medium" title={formatCurrency(productSubtotal)}>{formatCurrency(productSubtotal)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-900 dark:text-gray-700">(0) Services - Subtotal</span>
-                        <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(0)}</span>
+                        <span className="text-gray-900 dark:text-gray-700" title="Services - Subtotal">({serviceCount}) Services - Subtotal</span>
+                        <span className="text-gray-900 dark:text-white font-medium" title={formatCurrency(serviceCost)}>{formatCurrency(serviceCost)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-900 dark:text-gray-700">Shipping</span>
-                        <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(po.shippingCost)}</span>
+                        <span className="text-gray-900 dark:text-gray-700" title="Shipping">Shipping</span>
+                        <span className="text-gray-900 dark:text-white font-medium" title={formatCurrency(po.shippingCost)}>{formatCurrency(po.shippingCost)}</span>
                     </div>
                     <div className="flex justify-between text-sm ">
-                        <span className="text-gray-900 dark:text-gray-700">Taxes</span>
-                        <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(0)}</span>
+                        <span className="text-gray-900 dark:text-gray-700" title="Taxes">Taxes</span>
+                        <span className="text-gray-900 dark:text-white font-medium" title={formatCurrency(0)}>{formatCurrency(0)}</span>
                     </div>
                 </div>
 
                 <div className="p-2 ">
                     <div className="flex justify-between items-center">
-                        <span className="text-lg font-bold text-gray-900 dark:text-white">Grand Total</span>
-                        <span className="text-xl font-bold text-blue-600 dark:text-blue-400">{formatCurrency(po.totalCost)}</span>
+                        <span className="text-lg font-bold text-gray-900 dark:text-white" title="Grand Total">Grand Total</span>
+                        <span className="text-xl font-bold text-blue-600 dark:text-blue-400" title={formatCurrency(po.totalCost)}>{formatCurrency(po.totalCost)}</span>
                     </div>
                 </div>
                 <div className="p-2 pt-5">

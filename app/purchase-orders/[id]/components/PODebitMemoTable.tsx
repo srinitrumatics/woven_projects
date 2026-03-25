@@ -117,7 +117,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                 </td>
                                 <td className="px-3 py-2">
                                     <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full ${d.Status__c === 'Draft' ? 'bg-gray-100 text-gray-700' : 'bg-green-100 text-green-700'
-                                        }`}>
+                                        }`} title={d.Status__c}>
                                         {d.Status__c}
                                     </span>
                                 </td>
@@ -142,30 +142,30 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
                                     <div className="truncate" title={d.Debit_to_Contact_Name}>{d.Debit_to_Contact_Name || '-'}</div>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
-                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" >
+                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium" >
                                         {d.Total_Lines__c || 0}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title="${(d.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}">
                                     ${(d.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title="${(d.Total_Shipping_Charges__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}">
                                     ${(d.Total_Shipping_Charges__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left font-semibold">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left font-semibold" title="${(d.Total_Debit_Amount__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}">
                                     ${(d.Total_Debit_Amount__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={d.Issued_Date__c ? formatDate(d.Issued_Date__c, 'numeric-dash') : '-'}>
                                     {d.Issued_Date__c ? formatDate(d.Issued_Date__c, 'numeric-dash') : '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={d.Approval_Date__c ? formatDate(d.Approval_Date__c, 'numeric-dash') : '-'}>
                                     {d.Approval_Date__c ? formatDate(d.Approval_Date__c, 'numeric-dash') : '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left font-medium">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left font-medium" title="${(d.Available_Debit_Balance__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}">
                                     ${(d.Available_Debit_Balance__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={d.Settled_Date__c ? formatDate(d.Settled_Date__c, 'numeric-dash') : '-'}>
                                     {d.Settled_Date__c ? formatDate(d.Settled_Date__c, 'numeric-dash') : '-'}
                                 </td>
                             </tr>

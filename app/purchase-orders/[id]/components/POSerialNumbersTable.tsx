@@ -111,12 +111,12 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
                                     <div className="truncate" title={s.RMA_Name}>{s.RMA_Name || '-'}</div>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : '-'}>
                                     {s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
                                     <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full ${s.Active__c ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                                        }`}>
+                                        }`} title={s.Active__c ? 'Yes' : 'No'}>
                                         {s.Active__c ? 'Yes' : 'No'}
                                     </span>
                                 </td>

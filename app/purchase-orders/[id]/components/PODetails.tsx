@@ -24,8 +24,8 @@ export default function PODetails({ po }: PODetailsProps) {
                     <DetailRow label="Acknowledged" value={formatDate(po.acknowledgedDate, 'numeric-dash')} />
                     <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
                         <div className="flex justify-between items-baseline mb-2">
-                            <span className="text-sm font-semibold text-gray-400 uppercase tracking-widest">Total Cost</span>
-                            <span className="text-2xl font-black text-primary">{formatCurrency(po.totalCost)}</span>
+                            <span className="text-sm font-semibold text-gray-400 uppercase tracking-widest"> title="Total Cost">Total Cost</span>
+                            <span className="text-2xl font-black text-primary"> title={formatCurrency(po.totalCost)}>{formatCurrency(po.totalCost)}</span>
                         </div>
                     </div>
                 </div>
@@ -82,10 +82,10 @@ export default function PODetails({ po }: PODetailsProps) {
 function DetailRow({ label, value, isBold = false, icon = null }: any) {
     return (
         <div className="flex justify-between items-start group">
-            <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">{label}</span>
+            <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest"> title={label}>{label}</span>
             <div className="flex items-center gap-1.5">
                 {icon}
-                <span className={`text-sm text-right ${isBold ? 'font-bold text-gray-900 dark:text-white underline-offset-4 decoration-primary/30 group-hover:underline' : 'font-medium text-gray-700 dark:text-gray-300'}`}>
+                <span className={`text-sm text-right ${isBold ? 'font-bold text-gray-900 dark:text-white underline-offset-4 decoration-primary/30 group-hover:underline' : 'font-medium text-gray-700 dark:text-gray-300'}`}> title={value}>
                     {value}
                 </span>
             </div>

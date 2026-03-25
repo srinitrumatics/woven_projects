@@ -15,35 +15,35 @@ export default function POKeyDates({ po }: POKeyDatesProps) {
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Purchase Order Details">Purchase Order Details</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Purchase Order Information</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Key Dates">Key Dates</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Important Timeline Information</p>
                 </div>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate  ">Account Rep</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.buyerName || ''} placeholder="N/A" />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Buyer Name">Buyer Name</label>
+                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.buyerName || ''} placeholder="N/A" title={po.buyerName} />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate  ">Proposal Name</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.proposalName || ''} placeholder="N/A" />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Proposal Name">Proposal Name</label>
+                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.proposalName || ''} placeholder="N/A" title={po.proposalName} />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate  ">Customer Order</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.customerOrderName || ''} placeholder="N/A" />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Customer Order">Customer Order</label>
+                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.customerOrderName || ''} placeholder="N/A" title={po.customerOrderName} />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate  ">Logistics Partner</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.logisticsPartner || ''} placeholder="N/A" />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Customer Quote">Customer Quote</label>
+                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.customerQuoteName || ''} placeholder="N/A" title={po.customerQuoteName} />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate  ">Purchase Order</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.customerPO || ''} placeholder="N/A" />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Issued Date">Issued Date</label>
+                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : ''} placeholder="N/A" title={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : undefined} />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate  ">Issued Date</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={formatDate(po.issuedDate, 'numeric-dash') || ''} placeholder="N/A" />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Request Date">Request Date</label>
+                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : ''} placeholder="N/A" title={po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : undefined} />
                 </div>
             </div>
         </div>

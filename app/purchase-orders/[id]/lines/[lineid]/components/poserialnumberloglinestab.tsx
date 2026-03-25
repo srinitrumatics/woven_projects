@@ -87,41 +87,40 @@ export default function POSerialNumberLogLinesTab({ serialNumbers }: POSerialNum
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((s) => (
                             <tr key={s.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700" title="{s.Name}">
                                     <div className="truncate" title={s.Name}>{s.Name}</div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{s.Serial_Number_Name || ' '}">
                                     <div className="truncate" title={s.Serial_Number_Name}>{s.Serial_Number_Name || ' '}</div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{s.Product_Serial_Number__c || ' '}">
                                     <div className="truncate" title={s.Product_Serial_Number__c}>{s.Product_Serial_Number__c || ' '}</div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium" title="{s.Product_Name || ' '}">
                                     <div className="truncate" title={s.Product_Name}>{s.Product_Name || ' '}</div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{s.Product_Description__c || ' '}">
                                     <div className="truncate" title={s.Product_Description__c}>{s.Product_Description__c || ' '}</div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{s.Purchase_Order_Name || ' '}">
                                     <div className="truncate" title={s.Purchase_Order_Name}>{s.Purchase_Order_Name || ' '}</div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{s.Purchase_Order_Line_Name || ' '}">
                                     <div className="truncate" title={s.Purchase_Order_Line_Name}>{s.Purchase_Order_Line_Name || ' '}</div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{s.RMA_Name || ' '}">
                                     <div className="truncate" title={s.RMA_Name}>{s.RMA_Name || ' '}</div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{s.RMA_Line_Name || ' '}">
                                     <div className="truncate" title={s.RMA_Line_Name}>{s.RMA_Line_Name || ' '}</div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title={s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : ' '}>
                                     {s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : ' '}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left">
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left" title="{s.Active__c ? 'Yes' : 'No'}">
                                     <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full ${s.Active__c ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                                        }`}>
-                                        {s.Active__c ? 'Yes' : 'No'}
-                                    </span>
+                                        }`} title={s.Active__c ? 'Yes' : 'No'}>
+                                        {s.Active__c ? 'Yes' : 'No'}</span>
                                 </td>
                             </tr>
                         ))}

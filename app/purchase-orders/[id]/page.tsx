@@ -45,7 +45,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
     const fetchPOData = useCallback(async () => {
         try {
             setLoading(true);
-            const res = await fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=view&tabName=Purchase_Order`);
+            const res = await fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=view&tabName=Purchase_Order`);
             if (!res.ok) throw new Error('Failed to fetch PO data');
             const data = await res.json();
 
@@ -95,11 +95,11 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
             }
 
             const [linesRes, billsRes, returnsRes, filesRes, serialRes] = await Promise.all([
-                fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Products`),
-                fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=bills&tabName=Purchases&objectName=Purchase_Order__c`),
-                fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=returns&tabName=Returns&objectName=Purchase_Order__c`),
-                fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=files&objectName=Purchase_Order__c`),
-                fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=serialNumbers&tabName=Serial_Numbers&objectName=Purchase_Order__c`)
+                fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Products`),
+                fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=bills&tabName=Purchases&objectName=Purchase_Order__c`),
+                fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=returns&tabName=Returns&objectName=Purchase_Order__c`),
+                fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=files&objectName=Purchase_Order__c`),
+                fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=serialNumbers&tabName=Serial_Numbers&objectName=Purchase_Order__c`)
             ]);
 
             if (linesRes.ok) {
@@ -247,6 +247,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
 
                     <POSummary
                         po={po}
+                        poLines={poLines}
                         isUploading={isUploading}
                         handleFileUpload={handleFileUpload}
                         handleDownloadPDF={handleDownloadPDF}

@@ -38,7 +38,7 @@ export default function POLineDetailPage({
         async function fetchLines() {
             try {
                 setLoading(true);
-                const res = await fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Products&objectName=Purchase_Order__c`);
+                const res = await fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Products&objectName=Purchase_Order__c`);
                 if (!res.ok) throw new Error("Failed to fetch lines");
                 const data = await res.json();
 
@@ -97,10 +97,10 @@ export default function POLineDetailPage({
             try {
                 setSubTabLoading(true);
                 const [billsRes, returnsRes, serialRes, filesRes] = await Promise.all([
-                    fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=bills&objectName=Purchase_Order_Line__c&tabName=Purchases`),
-                    fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=returns&objectName=Purchase_Order_Line__c&tabName=Returns`),
-                    fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=serialNumbers&objectName=Purchase_Order_Line__c&tabName=Serial_Numbers`),
-                    fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=files&objectName=Purchase_Order_Line__c`)
+                    fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=bills&objectName=Purchase_Order_Line__c&tabName=Purchases`),
+                    fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=returns&objectName=Purchase_Order_Line__c&tabName=Returns`),
+                    fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=serialNumbers&objectName=Purchase_Order_Line__c&tabName=Serial_Numbers`),
+                    fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=files&objectName=Purchase_Order_Line__c`)
                 ]);
 
                 const [billsData, returnsData, serialData, filesRaw] = await Promise.all([
@@ -225,7 +225,7 @@ export default function POLineDetailPage({
 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white" title={line.name}>
                                 {line.name}
                             </h1>
                         </div>
@@ -313,7 +313,7 @@ export default function POLineDetailPage({
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                             </div>
-                            <h2 className="text-base font-semibold text-gray-900 dark:text-white">Purchase Order Line Note</h2>
+                            <h2 className="text-base font-semibold text-gray-900 dark:text-white" title="Purchase Order Line Note">Purchase Order Line Note</h2>
                         </div>
                         <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-gray-700 min-h-[200px] overflow-y-auto">
                             {line.poLineNotes || "No notes available for this line item."}
@@ -327,7 +327,7 @@ export default function POLineDetailPage({
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                             </div>
                             <div>
-                                <h3 className="text-base font-semibold text-gray-900 dark:text-white">Product Information</h3>
+                                <h3 className="text-base font-semibold text-gray-900 dark:text-white" title="Product Information">Product Information</h3>
                                 <p className="text-xs text-gray-500">Detailed Product Specifications</p>
                             </div>
                         </div>
@@ -362,12 +362,28 @@ export default function POLineDetailPage({
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-primary-light dark:bg-gray-900">
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300">Unit Price</th><th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300">Order Qty</th><th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300">MOQ</th><th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300">Total Order Qty</th><th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300">Total Price</th><th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300">Shipping</th><th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300">Taxes</th><th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300">Grand Total</th><th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300">Qty Shipped</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300">Unit Price</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Order Qty">Order Qty</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="MOQ">MOQ</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Total Order Qty">Total Order Qty</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Total Price">Total Price</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Shipping">Shipping</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Taxes">Taxes</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Grand Total">Grand Total</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Qty Shipped">Qty Shipped</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr className="text-gray-900 dark:text-white">
-                                <td className="px-4 py-3 text-sm font-medium ">{formatCurrency(line.unitCost)}</td><td className="px-4 py-3 text-sm font-medium text-gray-500">{line.orderQty}</td><td className="px-4 py-3 text-sm font-medium text-gray-500">{line.moq}</td><td className="px-4 py-3 text-sm font-medium text-gray-500">{line.totalOrderQty}</td><td className="px-4 py-3 text-sm font-medium text-gray-500">{formatCurrency(line.totalProductCost)}</td><td className="px-4 py-3 text-sm font-medium text-gray-500">{formatCurrency(line.shippingCharges)}</td><td className="px-4 py-3 text-sm font-medium text-gray-500">{formatCurrency(0)}</td><td className="px-4 py-3 text-sm font-bold text-blue-400">{formatCurrency(line.totalCost)}</td><td className="px-4 py-3 text-sm font-medium text-gray-500">{line.qtyShipped || 0}</td>
+                                <td className="px-4 py-3 text-sm font-medium " title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500" >{line.orderQty}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500" >{line.moq}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500" >{line.totalOrderQty}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500" title={formatCurrency(line.totalProductCost)}>{formatCurrency(line.totalProductCost)}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500" title={formatCurrency(line.shippingCharges)}>{formatCurrency(line.shippingCharges)}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500" title={formatCurrency(0)}>{formatCurrency(0)}</td>
+                                <td className="px-4 py-3 text-sm font-bold text-blue-400" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500" >{line.qtyShipped || 0}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -482,19 +498,6 @@ function InfoField({ label, value, highlight = false }: { label: string, value: 
                 className={`w-full px-3 py-1.5 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded text-sm focus:outline-none cursor-default truncate ${highlight ? "text-primary font-bold border-primary/20 bg-primary/5" : "text-gray-900 dark:text-white"}`}
                 title={String(value || "")}
             />
-        </div>
-    );
-}
-
-function CompactInfoField({ label, value, highlight = false }: { label: string, value: any, highlight?: boolean }) {
-    return (
-        <div className="flex flex-col gap-1 min-w-[100px]">
-            <label className="text-[10px] font-bold uppercase tracking-tight text-gray-400 whitespace-nowrap">
-                {label}
-            </label>
-            <div className={`text-sm font-semibold truncate ${highlight ? "text-primary dark:text-primary" : "text-gray-900 dark:text-white"}`}>
-                {value || "-"}
-            </div>
         </div>
     );
 }

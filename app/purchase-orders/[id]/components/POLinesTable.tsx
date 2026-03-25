@@ -114,23 +114,23 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                     </Link>
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white"><StatusBadge status={line.status} /></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.purchaseOrder}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.customerQuoteLine}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.productName}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.purchaseOrder}>{line.purchaseOrder}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.customerQuoteLine}>{line.customerQuoteLine}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.productName}>{line.productName}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white whitespace-normal max-w-[300px] truncate" title={line.productDescription}>{line.productDescription}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.manufacturerDBA}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{formatCurrency(line.unitCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.totalOrderQty}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{formatCurrency(line.productCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{formatCurrency(line.shippingCost)}</td>
-                                <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(line.totalCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.openBalanceQty}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.trackingNumber}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.trackingStatus}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{line.invoiceStatus}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.manufacturerDBA}>{line.manufacturerDBA}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.totalOrderQty}>{line.totalOrderQty}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={formatCurrency(line.productCost)}>{formatCurrency(line.productCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={formatCurrency(line.shippingCost)}>{formatCurrency(line.shippingCost)}</td>
+                                <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.openBalanceQty}>{line.openBalanceQty}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.trackingNumber}>{line.trackingNumber}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}>{line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.trackingStatus}>{line.trackingStatus}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}>{line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}>{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.invoiceStatus}>{line.invoiceStatus}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -176,7 +176,7 @@ function StatusBadge({ status }: { status: string }) {
     };
 
     return (
-        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold border ${getStyles()}`}>
+        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold border ${getStyles()}`} title={status}>
             {status}
         </span>
     );

@@ -92,7 +92,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
         const colorClass = colors[status] || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
 
         return (
-            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${colorClass}`}>
+            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${colorClass}`} title={status}>
                 {status}
             </span>
         );
@@ -162,41 +162,41 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                     <div className="truncate" title={b.Supplier_Contact_Name}>{b.Supplier_Contact_Name || '-'}</div>
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
-                                    <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 text-xs font-semibold">
+                                    <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 text-xs font-semibold" >
                                         {b.Total_Lines__c || 0}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title={formatCurrency(b.Total_Product_Amount__c || 0)}>
                                     {formatCurrency(b.Total_Product_Amount__c || 0)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title={formatCurrency(b.Total_Shipping_Charges__c || 0)}>
                                     {formatCurrency(b.Total_Shipping_Charges__c || 0)}
                                 </td>
-                                <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white text-left">
+                                <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white text-left" title={formatCurrency(b.TotalAmount__c || 0)}>
                                     {formatCurrency(b.TotalAmount__c || 0)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={b.Billed_Date__c ? formatDate(b.Billed_Date__c, 'numeric-dash') : '-'}>
                                     {b.Billed_Date__c ? formatDate(b.Billed_Date__c, 'numeric-dash') : '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
                                     <div className="truncate" title={b.Payment_Terms__c}>{b.Payment_Terms__c || '-'}</div>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={b.Due_Date__c ? formatDate(b.Due_Date__c, 'numeric-dash') : '-'}>
                                     {b.Due_Date__c ? formatDate(b.Due_Date__c, 'numeric-dash') : '-'}
                                 </td>
                                 <td className="px-3 py-2">
                                     <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full ${b.Remittance_Status__c === 'Paid' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
-                                        }`}>
+                                        }`} title={b.Remittance_Status__c || 'Pending'}>
                                         {b.Remittance_Status__c || 'Pending'}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title={formatCurrency(b.Open_Balance__c || 0)}>
                                     {formatCurrency(b.Open_Balance__c || 0)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
                                     {b.Days_Outstanding__c || 0}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={b.Settled_Date__c ? formatDate(b.Settled_Date__c, 'numeric-dash') : '-'}>
                                     {b.Settled_Date__c ? formatDate(b.Settled_Date__c, 'numeric-dash') : '-'}
                                 </td>
                             </tr>

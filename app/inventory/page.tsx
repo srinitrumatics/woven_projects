@@ -55,7 +55,7 @@ export default function InventoryPage() {
         if (!inventoryData) return [];
 
         let rawRecords = [];
-        if (activeTab === "All") rawRecords = inventoryData.Inventory_Position__c || [];
+        if (activeTab === "All") rawRecords = inventoryData["Total Inventory Value"] || [];
         else if (activeTab === "On Hold") rawRecords = inventoryData["Products On Hold"] || [];
         else if (activeTab === "Put-Away") rawRecords = inventoryData["Put-Away"] || [];
         else if (activeTab === "Average Aged") rawRecords = inventoryData["Average Aged"] || [];
@@ -133,17 +133,24 @@ export default function InventoryPage() {
 
     // Summary stats
     const stats = useMemo(() => {
-        if (!inventoryData) return { total: 0, totalValue: 0, uniqueProducts: 0, avgAge: 0, putAwayCount: 0, putAwayUniqueProducts: 0, putAwayTotalValue: 0, onHoldCount: 0, onHoldUniqueProducts: 0, onHoldTotalValue: 0 };
+        if (!inventoryData) return { total: 0, totalValue: 0, uniqueProducts: 0, agedUniqueProducts: 0, agedTotalValue: 0, putAwayCount: 0, putAwayUniqueProducts: 0, putAwayTotalValue: 0, onHoldCount: 0, onHoldUniqueProducts: 0, onHoldTotalValue: 0 };
 
         // Card 1: Total Inventory Value - from API "Total Inventory Value" array
         const totalInvItems = inventoryData["Total Inventory Value"] || [];
-        const totalValue = totalInvItems.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
-        const uniqueProducts = new Set(totalInvItems.map((item: any) => item.Product_Name || item.Name)).size;
+        const filteredTotalInvItems = totalInvItems.filter((item: any) => item.gtherp__Enable_Inventory_Calculation__c === true || item.gtherp__Enable_Inventory_Calculation__c === 'true');
+        const itemsToUse = filteredTotalInvItems.length > 0 ? filteredTotalInvItems : totalInvItems; // fallback if true not present
+        const totalValue = itemsToUse.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
+        const uniqueProducts = new Set(itemsToUse.map((item: any) => item.Product_Name || item.Name)).size;
 
-        // Card 2: Average Aged - from API "Average Aged" array
-        const agedItems = inventoryData["Average Aged"] || [];
-        const totalAgeSum = agedItems.reduce((sum: number, item: any) => sum + (item.Avg_Inventory_Age__c || 0), 0);
-        const avgAge = agedItems.length > 0 ? (totalAgeSum / agedItems.length) : 0;
+        // Card 2: Average Aged
+        const agedItemsRaw = inventoryData["Average Aged"] || inventoryData["Total Inventory Value"] || [];
+        const filteredAgedItems = agedItemsRaw.filter((item: any) =>
+            (item.gtherp__Enable_Inventory_Calculation__c === true || item.gtherp__Enable_Inventory_Calculation__c === 'true') &&
+            (item.gtherp__Days_in_Inventory__c !== null && item.gtherp__Days_in_Inventory__c !== undefined)
+        );
+        const agedItemsToUse = filteredAgedItems.length > 0 ? filteredAgedItems : agedItemsRaw;
+        const agedUniqueProducts = new Set(agedItemsToUse.map((item: any) => item.Product_Name || item.Name)).size;
+        const agedTotalValue = agedItemsToUse.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
 
         // Card 3: Put-Away - from API "Put-Away" array
         const putAwayItems = inventoryData["Put-Away"] || [];
@@ -158,10 +165,11 @@ export default function InventoryPage() {
         const onHoldTotalValue = onHoldItems.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
 
         return {
-            total: (inventoryData.Inventory_Position__c || []).length,
+            total: totalInvItems.length,
             totalValue,
             uniqueProducts,
-            avgAge,
+            agedUniqueProducts,
+            agedTotalValue,
             putAwayCount,
             putAwayUniqueProducts,
             putAwayTotalValue,
@@ -253,12 +261,27 @@ export default function InventoryPage() {
                     <div className="p-4 flex flex-col h-full">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1">Average Aged</p>
+                                <Link
+                                    href="#"
+                                    onClick={() => handleCardClick("Average Aged")}
+                                    className="hover:underline block">
+                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Average Aged</p>
+                                </Link>
                                 <div className="flex items-baseline gap-2 group/count">
-                                    <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4">{Math.round(stats.avgAge)}</span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">Days</span>
+                                    <Link
+                                        href="#"
+                                        onClick={() => handleCardClick("Average Aged")}
+                                        className="hover:underline block">
+                                        <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4">{stats.agedUniqueProducts}</span>
+                                    </Link>
+                                    <Link
+                                        href="#"
+                                        onClick={() => handleCardClick("Average Aged")}
+                                        className="hover:underline block">
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">Products</span>
+                                    </Link>
                                 </div>
-                                <p className="text-xl font-bold text-slate-600 dark:text-slate-400 mt-2">{formatCurrency(stats.totalValue)}</p>
+                                <p className="text-lg font-semibold text-slate-500 mt-1">{formatCurrency(stats.agedTotalValue)}</p>
                             </div>
                             <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Average Aged" ? "bg-slate-500 text-white" : "bg-slate-50 dark:bg-slate-900/20 text-slate-500 group-hover:bg-slate-500 group-hover:text-white"
                                 } transition-colors`}>
@@ -429,15 +452,17 @@ export default function InventoryPage() {
                                 ) : (
                                     paginatedInventory.map((item) => (
                                         <tr key={item.id} className="hover:bg-primary-light/20 dark:hover:bg-primary/5 transition-colors group">
-                                            <td className="px-3 py-2 text-sm text-primary font-bold sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10" style={{ width: widths.productName }}>
-                                                <button onClick={() => router.push(`/inventory/${item.productId || item.id}`)} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
+                                            <td className="px-3 py-2 text-sm text-primary font-bold sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10" style={{ width: widths.productName, maxWidth: widths.productName }}>
+                                                <button onClick={() => router.push(`/inventory/${item.productId || item.id}`)} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
                                                     {item.productName}
                                                 </button>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.description }}>
-                                                <div title={item.productDescription}>{item.productDescription}</div>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.description, maxWidth: widths.description }}>
+                                                <div className="truncate" title={item.productDescription}>{item.productDescription}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{item.manufacturerDBA}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.manufacturer, maxWidth: widths.manufacturer }}>
+                                                <div className="truncate" title={item.manufacturerDBA}>{item.manufacturerDBA}</div>
+                                            </td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">
                                                 <div className="truncate">
                                                     <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">{item.productFamily}</span>

@@ -114,7 +114,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                 </td>
                                 <td className="px-3 py-2">
                                     <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full ${r.Status__c === 'Draft' ? 'bg-gray-100 text-gray-700' : 'bg-green-100 text-green-700'
-                                        }`}>
+                                        }`} title={r.Status__c}>
                                         {r.Status__c}
                                     </span>
                                 </td>
@@ -146,20 +146,20 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                     <div className="truncate" title={r.Supplier_Contact_Name}>{r.Supplier_Contact_Name || '-'}</div>
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
-                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium">
+                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium" >
                                         {r.Total_Lines__c || 0}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title="${(r.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}">
                                     ${(r.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={r.Issued_Date__c ? formatDate(r.Issued_Date__c, 'numeric-dash') : '-'}>
                                     {r.Issued_Date__c ? formatDate(r.Issued_Date__c, 'numeric-dash') : '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={r.Approval_Date__c ? formatDate(r.Approval_Date__c, 'numeric-dash') : '-'}>
                                     {r.Approval_Date__c ? formatDate(r.Approval_Date__c, 'numeric-dash') : '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={r.Return_by_Date__c ? formatDate(r.Return_by_Date__c, 'numeric-dash') : '-'}>
                                     {r.Return_by_Date__c ? formatDate(r.Return_by_Date__c, 'numeric-dash') : '-'}
                                 </td>
                             </tr>

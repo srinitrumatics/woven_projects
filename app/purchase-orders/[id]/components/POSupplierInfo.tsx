@@ -36,15 +36,15 @@ export default function POSupplierInfo({ po }: POSupplierInfoProps) {
                 <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                     {/* Row 1 */}
                     <div className="md:col-span-3">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">Bill to Account</label>
-                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.billToAccountName || ''} placeholder="N/A" />
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Bill to Account">Bill to Account</label>
+                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.billToAccountName || ''} placeholder="N/A" title={po.billToAccountName || ''} />
                     </div>
                     <div className="md:col-span-3">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Bill to Location">
                             Bill to Location
                         </label>
                         <div className="relative">
-                            <input type="text" readOnly className="w-full h-11 pl-3 pr-10 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.siteName || ''} placeholder="N/A" />
+                            <input type="text" readOnly className="w-full h-11 pl-3 pr-10 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.siteName || ''} placeholder="N/A" title={po.siteName || ''} />
                             <svg className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
@@ -53,26 +53,26 @@ export default function POSupplierInfo({ po }: POSupplierInfoProps) {
 
                     {/* Row 2 */}
                     <div className="md:col-span-6">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Billing Address">
                             Billing Address
                         </label>
-                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={formatAddress(po.billingAddress) === 'N/A' ? '' : formatAddress(po.billingAddress)} placeholder="N/A" />
+                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={formatAddress(po.billingAddress) === 'N/A' ? '' : formatAddress(po.billingAddress)} placeholder="N/A" title={formatAddress(po.billingAddress) === 'N/A' ? '' : formatAddress(po.billingAddress)} />
                     </div>
 
                     {/* Row 3 */}
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Customer PO">
                             Customer PO
                         </label>
-                        <input type="text" readOnly className="w-full h-11 px-3 bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.customerPO || ''} placeholder="Enter PO number" />
+                        <input type="text" readOnly className="w-full h-11 px-3 bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.customerPO || ''} placeholder="Enter PO number" title={po.customerPO || ''} />
                     </div>
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">Payment Terms</label>
-                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.paymentTerms || ''} placeholder="N/A" />
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Payment Terms">Payment Terms</label>
+                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.paymentTerms || ''} placeholder="N/A" title={po.paymentTerms || ''} />
                     </div>
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">Price Book</label>
-                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value="Standard Price Book" />
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Price Book">Price Book</label>
+                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value="Standard Price Book" title="Standard Price Book" />
                     </div>
                 </div>
             </div>

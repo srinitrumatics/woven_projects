@@ -37,35 +37,35 @@ export default function POShipToInfo({ po }: POShipToInfoProps) {
                 <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                     {/* Row 1 */}
                     <div className="md:col-span-3">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">Ship to Account</label>
-                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.shipToAccountName || ''} placeholder="N/A" />
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Ship to Account"> Ship to Account</label>
+                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.shipToAccountName || ''} placeholder="N/A" title={po.shipToAccountName || ''} />
                     </div>
                     <div className="md:col-span-3">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Ship to Location">
                             Ship to Location
                         </label>
                         <div className="relative">
-                            <input type="text" readOnly className="w-full h-11 pl-3 pr-10 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.shipToLocationName || ''} placeholder="N/A" />
+                            <input type="text" readOnly className="w-full h-11 pl-3 pr-10 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={po.shipToLocationName || ''} placeholder="N/A" title={po.shipToLocationName || ''} />
                         </div>
                     </div>
 
                     {/* Row 2 */}
                     <div className="md:col-span-6">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Shipping Address">
                             Shipping Address
                         </label>
-                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={formatAddress(po.shippingAddress) === 'N/A' ? '' : formatAddress(po.shippingAddress)} placeholder="N/A" />
+                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={formatAddress(po.shippingAddress) === 'N/A' ? '' : formatAddress(po.shippingAddress)} placeholder="N/A" title={formatAddress(po.shippingAddress) === 'N/A' ? '' : formatAddress(po.shippingAddress)} />
                     </div>
 
                     {/* Row 3 */}
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Request Date">
                             Request Date
                         </label>
-                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={formatDate(po.requestDate, 'numeric-dash') || ''} placeholder="N/A" />
+                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50" value={formatDate(po.requestDate, 'numeric-dash') || ''} placeholder="N/A" title={formatDate(po.requestDate, 'numeric-dash') || ''} />
                     </div>
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">Drop-Ship</label>
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Drop-Ship">Drop-Ship</label>
                         <div className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg flex items-center gap-3">
                             <input
                                 type="checkbox"
@@ -73,12 +73,12 @@ export default function POShipToInfo({ po }: POShipToInfoProps) {
                                 readOnly
                                 className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600 cursor-default"
                             />
-                            <span className="text-sm text-gray-900 dark:text-white">{po.dropShip ? 'Required' : 'Not Required'}</span>
+                            <span className="text-sm text-gray-900 dark:text-white" title={po.dropShip ? 'Required' : 'Not Required'}>{po.dropShip ? 'Required' : 'Not Required'}</span>
                         </div>
                     </div>
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate">Site</label>
-                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.siteName || ''} placeholder="N/A" />
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Site">Site</label>
+                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.siteName || ''} placeholder="N/A" title={po.siteName || ''} />
                     </div>
                 </div>
             </div>

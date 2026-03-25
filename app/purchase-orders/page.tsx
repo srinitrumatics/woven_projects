@@ -45,7 +45,7 @@ export default function PurchaseOrdersPage() {
     useEffect(() => {
         async function fetchPurchaseOrders() {
             try {
-                const res = await fetch(`/api/salesforce/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectName=Purchase_Order__c&tabName=Purchase_Order`);
+                const res = await fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectName=Purchase_Order__c&tabName=Purchase_Order`);
                 if (!res.ok) throw new Error('Failed to fetch purchase orders');
                 const data = await res.json();
 
@@ -97,8 +97,9 @@ export default function PurchaseOrdersPage() {
 
     // Stats calculation matching Proposal style
     const stats = useMemo(() => {
-        const totalCount = purchaseOrders.length;
-        const totalValue = purchaseOrders.reduce((sum, po) => sum + (po.totalCost || 0), 0);
+        const cardOneRecords = purchaseOrders.filter(po => ["Approved", "Partial", "Closed"].includes(po.status));
+        const totalCount = cardOneRecords.length;
+        const totalValue = cardOneRecords.reduce((sum, po) => sum + (po.totalCost || 0), 0);
 
         const issued = purchaseOrders.filter(po => po.status === "Issued");
         const issuedCount = issued.length;
@@ -112,11 +113,21 @@ export default function PurchaseOrdersPage() {
         const receivedCount = received.length;
         const receivedValue = received.reduce((sum, po) => sum + (po.totalCost || 0), 0);
 
+        const approved = purchaseOrders.filter(po => po.status === "Approved");
+        const approvedCount = approved.length;
+        const approvedValue = approved.reduce((sum, po) => sum + (po.totalCost || 0), 0);
+
+        const partial = purchaseOrders.filter(po => po.status === "Partial");
+        const partialCount = partial.length;
+        const partialValue = partial.reduce((sum, po) => sum + (po.totalCost || 0), 0);
+
         return {
             totalCount, totalValue,
             issuedCount, issuedValue,
             acknowledgedCount, acknowledgedValue,
-            receivedCount, receivedValue
+            receivedCount, receivedValue,
+            approvedCount, approvedValue,
+            partialCount, partialValue
         };
     }, [purchaseOrders]);
 
@@ -126,6 +137,8 @@ export default function PurchaseOrdersPage() {
 
         if (activeTab !== "All") {
             filtered = filtered.filter(po => po.status === activeTab);
+        } else {
+            filtered = filtered.filter(po => ["Approved", "Partial", "Closed"].includes(po.status));
         }
 
         if (searchQuery.trim()) {
@@ -167,31 +180,33 @@ export default function PurchaseOrdersPage() {
             {/* Stats Cards - Compact & Engaging Design (Matched to Proposal) */}
             <div className="grid grid-cols-1 md:grid-cols-2 w1025:grid-cols-4 gap-4 mb-6">
                 <StatCard
-                    label="All POs"
+                    label="All Purchase Orders"
                     count={stats.totalCount}
                     value={stats.totalValue}
                     isActive={activeTab === "All"}
                     onClick={() => handleCardClick("All")}
                     icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>}
                     color="primary"
+
                 />
                 <StatCard
-                    label="Issued"
-                    count={stats.issuedCount}
-                    value={stats.issuedValue}
-                    isActive={activeTab === "Issued"}
-                    onClick={() => handleCardClick("Issued")}
+                    label="Approved"
+                    count={stats.approvedCount}
+                    value={stats.approvedValue}
+                    isActive={activeTab === "Approved"}
+                    onClick={() => handleCardClick("Approved")}
                     icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
-                    color="gray"
+                    color="blue"
+
                 />
                 <StatCard
-                    label="Acknowledged"
-                    count={stats.acknowledgedCount}
-                    value={stats.acknowledgedValue}
-                    isActive={activeTab === "Acknowledged"}
-                    onClick={() => handleCardClick("Acknowledged")}
+                    label="Partial"
+                    count={stats.partialCount}
+                    value={stats.partialValue}
+                    isActive={activeTab === "Partial"}
+                    onClick={() => handleCardClick("Partial")}
                     icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>}
-                    color="blue"
+                    color="amber"
                 />
                 <StatCard
                     label="Received"
@@ -205,7 +220,7 @@ export default function PurchaseOrdersPage() {
             </div>
 
             {/* Main Table Section (Matched to Proposal) */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 <div className="flex flex-wrap items-center gap-3 mb-4">
                     <div className="relative min-w-[220px] max-w-xs transition-all duration-200">
                         <input
@@ -221,7 +236,7 @@ export default function PurchaseOrdersPage() {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
-                        {["All", "Draft", "Approved", "Issued", "Acknowledged", "Received", "Closed"].map(status => (
+                        {["All", "Draft", "Approved", "Issued", "Acknowledged", "Received", "Partial", "Closed"].map(status => (
                             <button
                                 key={status}
                                 onClick={() => setActiveTab(status)}
@@ -236,7 +251,7 @@ export default function PurchaseOrdersPage() {
                     </div>
                 </div>
 
-                <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                <div className="overflow-x-auto shadow-sm">
                     {loading ? (
                         <LoadingState />
                     ) : (
@@ -256,7 +271,7 @@ export default function PurchaseOrdersPage() {
                                     <SortableHeader label="Acknowledged Date" field="acknowledgedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.acknowledgedDate} onResize={handleResize} />
                                     <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestDate} onResize={handleResize} />
                                     <SortableHeader label="Promised Date" field="promiseDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.promiseDate} onResize={handleResize} />
-                                    <th className="text-sm px-4 py-3 text-left font-bold text-gray-700 dark:text-gray-200 ">Action</th>
+                                    <th className="text-sm px-2 py-2 text-left font-bold text-gray-700 dark:text-gray-200 ">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
@@ -265,20 +280,20 @@ export default function PurchaseOrdersPage() {
                                 ) : (
                                     paginatedPOs.map(po => (
                                         <tr key={po.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onClick={() => router.push(`/purchase-orders/${po.id}`)}>
-                                            <td className="px-4 py-3 text-sm font-semibold text-primary group-hover:underline">{po.name}</td>
-                                            <td className="px-4 py-3 text-sm"><StatusBadge status={po.status} /></td>
-                                            <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{po.proposalName || '-'}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{po.customerOrderName || '-'}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{po.customerQuoteName || '-'}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{po.shipToAccountName || '-'}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{po.shipToLocationName || '-'}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">{po.totalLines || 0}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold">{formatCurrency(po.totalCost)}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{po.acknowledgedDate ? formatDate(po.acknowledgedDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{po.promiseDate ? formatDate(po.promiseDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-4 py-3 text-sm">
+                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline" title={po.name}>{po.name}</td>
+                                            <td className="px-2 py-2 text-sm" title={po.status}><StatusBadge status={po.status} /></td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={po.proposalName || '-'}>{po.proposalName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={po.customerOrderName || '-'}>{po.customerOrderName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={po.customerQuoteName || '-'}>{po.customerQuoteName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={po.shipToAccountName || '-'}>{po.shipToAccountName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={po.shipToLocationName || '-'}>{po.shipToLocationName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-medium" title={String(po.totalLines || 0)}>{po.totalLines || 0}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold" title={formatCurrency(po.totalCost)}>{formatCurrency(po.totalCost)}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400" title={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}>{po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400" title={po.acknowledgedDate ? formatDate(po.acknowledgedDate, 'numeric-dash') : '-'}>{po.acknowledgedDate ? formatDate(po.acknowledgedDate, 'numeric-dash') : '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400" title={po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : '-'}>{po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400" title={po.promiseDate ? formatDate(po.promiseDate, 'numeric-dash') : '-'}>{po.promiseDate ? formatDate(po.promiseDate, 'numeric-dash') : '-'}</td>
+                                            <td className="px-2 py-2 text-sm">
                                                 <div className="flex items-center gap-2">
                                                     <button className="p-1.5 text-gray-400 hover:text-primary transition-colors hover:bg-primary/10 rounded-lg">
                                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
@@ -306,10 +321,11 @@ export default function PurchaseOrdersPage() {
     );
 }
 
-function StatCard({ label, count, value, isActive, onClick, icon, color }: any) {
+function StatCard({ label, count, value, isActive, onClick, icon, color, customFooter }: any) {
     const colorClasses: any = {
         primary: "from-primary to-primary-dark",
         gray: "from-gray-400 to-gray-500",
+        amber: "from-amber-400 to-amber-500",
         blue: "from-blue-400 to-blue-600",
         green: "from-emerald-400 to-emerald-600",
     };
@@ -317,6 +333,7 @@ function StatCard({ label, count, value, isActive, onClick, icon, color }: any) 
     const activeBorderClasses: any = {
         primary: "border-primary ring-2 ring-primary/20",
         gray: "border-gray-500 ring-2 ring-gray-500/20",
+        amber: "border-amber-500 ring-2 ring-amber-500/20",
         blue: "border-blue-500 ring-2 ring-blue-500/20",
         green: "border-emerald-500 ring-2 ring-emerald-500/20",
     };
@@ -324,6 +341,7 @@ function StatCard({ label, count, value, isActive, onClick, icon, color }: any) 
     const textColors: any = {
         primary: "text-primary",
         gray: "text-gray-600 dark:text-gray-300",
+        amber: "text-amber-600 dark:text-amber-300",
         blue: "text-blue-600 dark:text-blue-400",
         green: "text-emerald-600 dark:text-emerald-400",
     };
@@ -331,6 +349,7 @@ function StatCard({ label, count, value, isActive, onClick, icon, color }: any) 
     const iconClasses: any = {
         primary: isActive ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white",
         gray: isActive ? "bg-gray-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-600 group-hover:text-white",
+        amber: isActive ? "bg-amber-600 text-white" : "bg-amber-100 dark:bg-amber-700 text-amber-500 dark:text-amber-400 group-hover:bg-amber-600 group-hover:text-white",
         blue: isActive ? "bg-blue-600 text-white" : "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white",
         green: isActive ? "bg-emerald-600 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white",
     };
@@ -370,17 +389,19 @@ function StatCard({ label, count, value, isActive, onClick, icon, color }: any) 
                         {icon}
                     </div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-                    <span className={`inline-flex items-center text-xs font-medium ${color === 'primary' ? 'text-primary' : textColors[color]} group-hover:underline`}>
-                        <Link
-                            href="#"
-                            onClick={(e) => { e.preventDefault(); onClick(); }}
-                            className="hover:underline block">
-                            View {label.toLowerCase()}</Link>
-                        <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                    </span>
+                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 z-10 relative">
+                    {customFooter ? customFooter : (
+                        <span className={`inline-flex items-center text-xs font-medium ${color === 'primary' ? 'text-primary' : textColors[color]} group-hover:underline`}>
+                            <Link
+                                href="#"
+                                onClick={(e) => { e.preventDefault(); onClick(); }}
+                                className="hover:underline block">
+                                View {label.toLowerCase()}</Link>
+                            <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </span>
+                    )}
                 </div>
             </div>
         </button>
