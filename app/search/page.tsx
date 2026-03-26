@@ -42,8 +42,8 @@ function InfiniteHits() {
   if (hits.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500">
-        <p className="text-lg">No results found.</p>
-        <p className="text-sm">Try adjusting your search or filters.</p>
+        <p className="text-lg truncate" title="No results found.">No results found.</p>
+        <p className="text-sm truncate" title="Try adjusting your search or filters.">Try adjusting your search or filters.</p>
       </div>
     );
   }
@@ -65,8 +65,8 @@ function InfiniteHits() {
                     onError={(e) => (e.currentTarget.style.display = 'none')}
                   />
                 ) : (
-                  <div className="flex items-center justify-center h-full text-gray-400">
-                    <span className="text-4xl">📦</span>
+                  <div className="flex items-center justify-center h-full text-gray-400 min-w-0">
+                    <span className="text-4xl truncate">📦</span>
                   </div>
                 );
               })()}
@@ -79,29 +79,29 @@ function InfiniteHits() {
 
             <div className="p-4 flex flex-col flex-grow">
               <div className="mb-2">
-                <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+                <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 uppercase tracking-wider truncate">
                   {Array.isArray(hit.genre) ? hit.genre[0] : (hit.genre || hit.category || "Product")}
                 </span>
               </div>
-              <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+              <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
                 {hit.title || hit.name || hit.original_title || "Untitled"}
               </h3>
 
               {hit.description && (
-                <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
+                <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3 truncate">
                   {hit.description}
                 </p>
               )}
 
               <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
                 {hit.price ? (
-                  <span className="text-lg font-bold text-gray-900 dark:text-white">
+                  <span className="text-lg font-bold text-gray-900 dark:text-white truncate">
                     ${typeof hit.price === 'number' ? hit.price.toFixed(2) : hit.price}
                   </span>
                 ) : (
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Price not available</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Price not available</span>
                 )}
-                <button className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg transition-colors">
+                <button className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg transition-colors truncate">
                   View
                 </button>
               </div>
@@ -115,7 +115,7 @@ function InfiniteHits() {
         <div ref={sentinelRef} className="flex justify-center py-8">
           <div className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400">
             <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-indigo-600"></div>
-            <span className="text-sm">Loading more products...</span>
+            <span className="text-sm truncate">Loading more products...</span>
           </div>
         </div>
       )}
@@ -125,7 +125,7 @@ function InfiniteHits() {
         <div className="flex justify-center mt-6">
           <button
             onClick={showMore}
-            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors shadow-sm"
+            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors shadow-sm truncate"
           >
             Load More Products
           </button>
@@ -135,7 +135,7 @@ function InfiniteHits() {
       {/* End of Results Message */}
       {isLastPage && hits.length > 0 && (
         <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          <p className="text-sm">You've reached the end of the results</p>
+          <p className="text-sm truncate" title="You've reached the end of the results">You've reached the end of the results</p>
         </div>
       )}
     </div>
@@ -179,16 +179,16 @@ export default function SearchPage() {
     return (
       <Sidebar>
         <div className="p-8 text-center text-red-600">
-          <h2 className="text-2xl font-bold mb-2">Configuration Missing</h2>
-          <p className="mb-4">Please add NEXT_PUBLIC_ALGOLIA_APP_ID and NEXT_PUBLIC_ALGOLIA_SEARCH_KEY to your .env.local file.</p>
+          <h2 className="text-2xl font-bold mb-2 truncate">Configuration Missing</h2>
+          <p className="mb-4 truncate" title="Please add NEXT_PUBLIC_ALGOLIA_APP_ID and NEXT_PUBLIC_ALGOLIA_SEARCH_KEY to your .env.local file.">Please add NEXT_PUBLIC_ALGOLIA_APP_ID and NEXT_PUBLIC_ALGOLIA_SEARCH_KEY to your .env.local file.</p>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-left max-w-3xl mx-auto">
-            <h3 className="font-bold mb-2 text-gray-900 dark:text-white">To fix this:</h3>
+            <h3 className="font-bold mb-2 text-gray-900 dark:text-white truncate">To fix this:</h3>
             <ol className="list-decimal list-inside mb-2 text-gray-700 dark:text-gray-300">
               <li>Copy the .env_example.env file to .env.local</li>
               <li>Add your Algolia credentials to .env.local</li>
               <li>Make sure to use the correct NEXT_PUBLIC_ prefixed variables</li>
             </ol>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Note: Never commit .env.local to version control</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 truncate" title="Note: Never commit .env.local to version control">Note: Never commit .env.local to version control</p>
           </div>
         </div>
       </Sidebar>
@@ -200,7 +200,7 @@ export default function SearchPage() {
       <Sidebar>
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-600 mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Initializing search...</p>
+          <p className="text-gray-600 dark:text-gray-400 truncate" title="Initializing search...">Initializing search...</p>
         </div>
       </Sidebar>
     );
@@ -253,12 +253,12 @@ export default function SearchPage() {
             </div>
 
             {/* Filters and Results Layout */}
-            <div className="flex flex-col lg:flex-row gap-6">
+            <div className="flex flex-col lg:flex-row gap-6 min-w-0">
               {/* Filters Sidebar */}
               <aside className="lg:w-64 flex-shrink-0">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sticky top-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">Filters</h2>
+                  <div className="flex items-center justify-between mb-4 min-w-0">
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">Filters</h2>
                     <ClearRefinements
                       classNames={{
                         root: "",
@@ -273,7 +273,7 @@ export default function SearchPage() {
 
                   {/* Category Filter */}
                   <div className="mb-6">
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Category</h3>
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 truncate">Category</h3>
                     <RefinementList
                       attribute="category"
                       limit={50}
@@ -301,7 +301,7 @@ export default function SearchPage() {
 
                   {/* Genre/Type Filter (if available) */}
                   <div className="mb-6">
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Type</h3>
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 truncate">Type</h3>
                     <RefinementList
                       attribute="genre"
                       limit={50}

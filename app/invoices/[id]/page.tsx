@@ -224,7 +224,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
   if (loading) {
     return (
       <Sidebar>
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-[400px] min-w-0">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
       </Sidebar>
@@ -235,10 +235,10 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
     return (
       <Sidebar>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Invoice not found</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white truncate">Invoice not found</h2>
           <button
             onClick={handleBack}
-            className="mt-4 text-primary hover:underline"
+            className="mt-4 text-primary hover:underline truncate"
           >
             Back to Invoices
           </button>
@@ -353,7 +353,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
         <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
           <button
             onClick={handleBack}
-            className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
+            className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium truncate"
           >
             Back to Invoices
           </button>

@@ -132,7 +132,7 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
     // ── States ─────────────────────────────────────────────────────────────
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
             </div>
         );
@@ -141,7 +141,7 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
     if (error) {
         return (
             <div className="p-8 text-center bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-red-600 dark:text-red-300 font-medium">{error}</p>
+                <p className="text-red-600 dark:text-red-300 font-medium truncate">{error}</p>
             </div>
         );
     }
@@ -149,8 +149,8 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
     if (logs.length === 0) {
         return (
             <div className="p-12 text-center  rounded-lg ">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no Serial Number Logs associated with this shipment manifest.</p>
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no Serial Number Logs associated with this shipment manifest.">There are no Serial Number Logs associated with this shipment manifest.</p>
             </div>
         );
     }
@@ -158,7 +158,7 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
     // ── Table ──────────────────────────────────────────────────────────────
     return (
         <div className="overflow-x-auto py-2">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
                         <SortableHeader label="Serial Number Log" field="name" sortConfig={sortConfig} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
@@ -189,11 +189,11 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                             <TextCell v={log.shipToAccount || ""} w={widths.shipToAccount} />
                             <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: widths.active }}>
                                 {log.active === true || log.active === "true" || log.active === "True" ? (
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 truncate">
                                         Active
                                     </span>
                                 ) : log.active === false || log.active === "false" || log.active === "False" ? (
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400">
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 truncate">
                                         Inactive
                                     </span>
                                 ) : (

@@ -65,14 +65,8 @@ export function SortableHeader({
             >
                 <div className="flex-1 min-w-0">
                     <span
-                        className={`line-clamp-2 text-${align} block w-full`}
+                        className={`text-${align} block w-full truncate`}
                         title={label}
-                        style={{
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden'
-                        }}
                     >
                         {label}
                     </span>

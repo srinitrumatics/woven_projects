@@ -197,7 +197,7 @@ export default function FilesTab({
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -206,18 +206,18 @@ export default function FilesTab({
     return (
         <div className="overflow-x-auto p-4">
             {files.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium">No records found</p>
-                    <p className="text-sm">There are no files attached to this proposal.</p>
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                    <p className="text-sm truncate" title="There are no files attached to this proposal.">There are no files attached to this proposal.</p>
                 </div>
             ) : (
-                <table className="w-full ">
+                <table className="w-full table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
-                            <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white w-[50px]">
+                            <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white w-[50px] truncate">
                                 <input
                                     type="checkbox"
-                                    className="rounded border-gray-300 text-primary focus:ring-primary"
+                                    className="rounded border-gray-300 text-primary focus:ring-primary truncate"
                                     checked={selectedFiles.size === files.length && files.length > 0}
                                     onChange={onSelectAll}
                                 />
@@ -227,7 +227,7 @@ export default function FilesTab({
                             <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} />
                             <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white">Action</th>
+                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Action</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -237,28 +237,28 @@ export default function FilesTab({
                                 className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer ${selectedFiles.has(file.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}
                                 onClick={() => onFileSelect(file.id)}
                             >
-                                <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
+                                <td className="px-3 py-2 text-center truncate" onClick={(e) => e.stopPropagation()}>
                                     <input
                                         type="checkbox"
-                                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                                        className="rounded border-gray-300 text-primary focus:ring-primary truncate"
                                         checked={selectedFiles.has(file.id)}
                                         onChange={() => onFileSelect(file.id)}
                                     />
                                 </td>
-                                <td className="px-3 py-2">
+                                <td className="px-3 py-2 truncate">
                                     <div className="flex gap-3">
                                         {getFileIcon(file.fileType)}
                                         <span className="text-sm font-medium text-gray-900 dark:text-white truncate" title={file.fileName}>{file.fileName}</span>
                                     </div>
                                 </td>
-                                <td className="px-3 py-2 text-left">
-                                    <span className="text-sm  text-gray-600 dark:text-gray-400">{file.fileType}</span>
+                                <td className="px-3 py-2 text-left truncate">
+                                    <span className="text-sm  text-gray-600 dark:text-gray-400 truncate">{file.fileType}</span>
                                 </td>
-                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white">{formatFileSize(file.sizeInBytes)}</td>
-                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white " title={file.uploadedBy}><div className="text-sm text-gray-900 dark:text-white truncate">{file.uploadedBy}</div></td>
-                                <td className="px-3 py-2 text-left text-sm text-gray-600 dark:text-gray-400 ">{file.uploadedDate}</td>
-                                <td className="px-3 py-2 text-left" onClick={(e) => e.stopPropagation()}>
-                                    <div className="flex items-center gap-2">
+                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white truncate">{formatFileSize(file.sizeInBytes)}</td>
+                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white  truncate" title={file.uploadedBy}><div className="text-sm text-gray-900 dark:text-white truncate">{file.uploadedBy}</div></td>
+                                <td className="px-3 py-2 text-left text-sm text-gray-600 dark:text-gray-400  truncate">{file.uploadedDate}</td>
+                                <td className="px-3 py-2 text-left truncate" onClick={(e) => e.stopPropagation()}>
+                                    <div className="flex items-center gap-2 min-w-0">
                                         {/* View / Preview button */}
                                         <button
                                             onClick={() => handlePreview(file)}

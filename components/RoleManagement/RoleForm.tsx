@@ -135,8 +135,8 @@ const RoleForm: React.FC<RoleFormProps> = ({
     >
       {/* Header */}
       <div className="bg-gradient-to-r from-[#96C2DB] to-[#6B9DB8] px-8 py-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between min-w-0">
+          <div className="flex items-center gap-3 min-w-0">
             <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
               <Shield className="w-6 h-6 text-white" />
             </div>
@@ -175,7 +175,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#96C2DB] focus:border-transparent transition-all"
                   placeholder="e.g., Administrator, Manager, Viewer"
-                  required
+                  required title={String(formData.name ?? '')}
                 />
               </div>
 
@@ -195,8 +195,8 @@ const RoleForm: React.FC<RoleFormProps> = ({
 
               {/* Permission Summary */}
               <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-4 border border-purple-200">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between mb-2 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
                     <Key className="w-5 h-5 text-purple-600" />
                     <span className="font-semibold text-gray-900">Permissions Selected</span>
                   </div>
@@ -217,7 +217,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
 
             {/* Right Column - Permissions */}
             <div>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 min-w-0">
                 <label className="block text-sm font-semibold text-gray-700">
                   Assign Permissions
                 </label>
@@ -245,7 +245,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
                     <div key={groupId} className="border-b border-gray-100 last:border-b-0">
                       {/* Group Header */}
                       <div className="bg-gradient-to-r from-gray-50 to-white px-4 py-3">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between min-w-0">
                           <button
                             type="button"
                             onClick={() => toggleGroup(group.id)}
@@ -347,7 +347,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-6 border-t border-gray-200">
+          <div className="flex items-center justify-end gap-3 pt-6 border-t border-gray-200 min-w-0">
             <button
               type="button"
               onClick={handleCancel}

@@ -178,7 +178,7 @@ export default function QuoteReturnsTab({ quoteId, data, loading }: QuoteReturns
     ];
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full min-w-0">
             <div className="border-b border-gray-200 dark:border-gray-700">
                 <nav className="-mb-px flex space-x-8 px-4" aria-label="Tabs">
                     {tabs.map((tab) => (

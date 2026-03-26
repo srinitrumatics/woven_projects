@@ -185,10 +185,10 @@ export default function InventoryPage() {
     };
 
     return (
-        <div className="flex flex-col gap-6 p-1">
-            <div className="flex flex-col">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Inventory</h1>
-                <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1">Manage and track your product inventory across all locations.</p>
+        <div className="flex flex-col gap-6 p-1 min-w-0">
+            <div className="flex flex-col min-w-0">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Inventory</h1>
+                <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and track your product inventory across all locations.">Manage and track your product inventory across all locations.</p>
             </div>
 
             {/* Stat Cards - Inherited Design from Proposals */}
@@ -208,23 +208,23 @@ export default function InventoryPage() {
                                     href="#"
                                     onClick={() => handleCardClick("All")}
                                     className="hover:underline block">
-                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Total Inventory Value</p>
+                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Total Inventory Value">Total Inventory Value</p>
                                 </Link>
                                 <div className="flex items-baseline gap-2 group/count">
                                     <Link
                                         href="#"
                                         onClick={() => handleCardClick("All")}
                                         className="hover:underline block">
-                                        <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4">{stats.uniqueProducts}</span>
+                                        <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4 truncate">{stats.uniqueProducts}</span>
                                     </Link>
                                     <Link
                                         href="#"
                                         onClick={() => handleCardClick("All")}
                                         className="hover:underline block">
-                                        <span className="text-sm text-gray-500 dark:text-gray-400">Products</span>
+                                        <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Products</span>
                                     </Link>
                                 </div>
-                                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
+                                <p className="text-lg font-semibold text-primary mt-1 truncate">{formatCurrency(stats.totalValue)}</p>
                             </div>
                             <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                                 } transition-colors`}>
@@ -238,7 +238,7 @@ export default function InventoryPage() {
                                 href="#"
                                 onClick={() => handleCardClick("All")}
                                 className="hover:underline block">
-                                <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-blue-500">
+                                <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-blue-500 truncate">
                                     View all inventory
                                     <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -265,23 +265,23 @@ export default function InventoryPage() {
                                     href="#"
                                     onClick={() => handleCardClick("Average Aged")}
                                     className="hover:underline block">
-                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Average Aged</p>
+                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Average Aged">Average Aged</p>
                                 </Link>
                                 <div className="flex items-baseline gap-2 group/count">
                                     <Link
                                         href="#"
                                         onClick={() => handleCardClick("Average Aged")}
                                         className="hover:underline block">
-                                        <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4">{stats.agedUniqueProducts}</span>
+                                        <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4 truncate">{stats.agedUniqueProducts}</span>
                                     </Link>
                                     <Link
                                         href="#"
                                         onClick={() => handleCardClick("Average Aged")}
                                         className="hover:underline block">
-                                        <span className="text-sm text-gray-500 dark:text-gray-400">Products</span>
+                                        <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Products</span>
                                     </Link>
                                 </div>
-                                <p className="text-lg font-semibold text-slate-500 mt-1">{formatCurrency(stats.agedTotalValue)}</p>
+                                <p className="text-lg font-semibold text-slate-500 mt-1 truncate">{formatCurrency(stats.agedTotalValue)}</p>
                             </div>
                             <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Average Aged" ? "bg-slate-500 text-white" : "bg-slate-50 dark:bg-slate-900/20 text-slate-500 group-hover:bg-slate-500 group-hover:text-white"
                                 } transition-colors`}>
@@ -291,7 +291,7 @@ export default function InventoryPage() {
                             </div>
                         </div>
                         <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700">
-                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-slate-500">
+                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-slate-500 truncate">
                                 View aged inventory
                                 <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -313,21 +313,21 @@ export default function InventoryPage() {
                     <div className="p-4 flex flex-col h-full">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1">Put-Away</p>
+                                <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1 truncate" title="Put-Away">Put-Away</p>
                                 <div className="flex items-baseline gap-2 group/count">
-                                    <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4">{stats.putAwayCount}</span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">Items</span>
+                                    <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4 truncate">{stats.putAwayCount}</span>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Items</span>
                                 </div>
-                                <p className="text-xl font-bold text-amber-500 mt-2">{formatCurrency(stats.putAwayTotalValue)}</p>
+                                <p className="text-xl font-bold text-amber-500 mt-2 truncate">{formatCurrency(stats.putAwayTotalValue)}</p>
                             </div>
-                            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-500 flex items-center justify-center">
+                            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-500 flex items-center justify-center min-w-0">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
                         </div>
                         <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700">
-                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-amber-500">
+                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-amber-500 truncate">
                                 View put-away items
                                 <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -349,12 +349,12 @@ export default function InventoryPage() {
                     <div className="p-4 flex flex-col h-full">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1">Products On Hold</p>
+                                <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1 truncate" title="Products On Hold">Products On Hold</p>
                                 <div className="flex items-baseline gap-2 group/count">
-                                    <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4">{stats.onHoldCount}</span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">Items</span>
+                                    <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4 truncate">{stats.onHoldCount}</span>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Items</span>
                                 </div>
-                                <p className="text-xl font-bold text-red-500 mt-2">{formatCurrency(stats.onHoldTotalValue)}</p>
+                                <p className="text-xl font-bold text-red-500 mt-2 truncate">{formatCurrency(stats.onHoldTotalValue)}</p>
                             </div>
                             <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "On Hold" ? "bg-red-500 text-white" : "bg-red-50 dark:bg-red-900/20 text-red-500 group-hover:bg-red-500 group-hover:text-white"
                                 } transition-colors`}>
@@ -364,7 +364,7 @@ export default function InventoryPage() {
                             </div>
                         </div>
                         <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700">
-                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-red-500">
+                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-red-500 truncate">
                                 View items on hold
                                 <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -412,9 +412,9 @@ export default function InventoryPage() {
 
                 <div className="overflow-x-auto rounded-lg">
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center py-20 bg-gray-50/50 dark:bg-gray-900/50 rounded-lg">
+                        <div className="flex flex-col items-center justify-center py-20 bg-gray-50/50 dark:bg-gray-900/50 rounded-lg min-w-0">
                             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mb-4"></div>
-                            <p className="text-sm font-medium text-gray-500">Loading inventory data...</p>
+                            <p className="text-sm font-medium text-gray-500 truncate" title="Loading inventory data...">Loading inventory data...</p>
                         </div>
                     ) : (
                         <table className="w-full text-sm">
@@ -433,51 +433,51 @@ export default function InventoryPage() {
                                     <SortableHeader label="Avg Inventory Age" field="avgInventoryAge" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} />
                                     <SortableHeader label="Total Positions" field="totalPositions" sortConfig={sortConfig} requestSort={requestSort} width={widths.positions} onResize={handleResize} />
                                     <SortableHeader label="Count Sites" field="countSites" sortConfig={sortConfig} requestSort={requestSort} width={widths.sites} onResize={handleResize} />
-                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.actions }}>Action</th>
+                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: widths.actions }}>Action</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
                                 {paginatedInventory.length === 0 ? (
                                     <tr>
-                                        <td colSpan={15} className="px-6 py-16 text-center text-gray-500 rounded-b-lg">
-                                            <div className="flex flex-col items-center justify-center">
+                                        <td colSpan={15} className="px-6 py-16 text-center text-gray-500 rounded-b-lg truncate">
+                                            <div className="flex flex-col items-center justify-center min-w-0">
                                                 <svg className="w-20 h-20 text-gray-200 dark:text-gray-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                 </svg>
-                                                <p className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No inventory items found</p>
-                                                <p className="text-gray-500">Try adjusting your filters or search query to find what you&apos;re looking for.</p>
+                                                <p className="text-xl font-semibold text-gray-900 dark:text-white mb-2 truncate" title="No inventory items found">No inventory items found</p>
+                                                <p className="text-gray-500 truncate" title="Try adjusting your filters or search query to find what you&apos;re looking for.">Try adjusting your filters or search query to find what you&apos;re looking for.</p>
                                             </div>
                                         </td>
                                     </tr>
                                 ) : (
                                     paginatedInventory.map((item) => (
                                         <tr key={item.id} className="hover:bg-primary-light/20 dark:hover:bg-primary/5 transition-colors group">
-                                            <td className="px-3 py-2 text-sm text-primary font-bold sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10" style={{ width: widths.productName, maxWidth: widths.productName }}>
+                                            <td className="px-3 py-2 text-sm text-primary font-bold sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" style={{ width: widths.productName, maxWidth: widths.productName }}>
                                                 <button onClick={() => router.push(`/inventory/${item.productId || item.id}`)} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
                                                     {item.productName}
                                                 </button>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.description, maxWidth: widths.description }}>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.description, maxWidth: widths.description }}>
                                                 <div className="truncate" title={item.productDescription}>{item.productDescription}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.manufacturer, maxWidth: widths.manufacturer }}>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.manufacturer, maxWidth: widths.manufacturer }}>
                                                 <div className="truncate" title={item.manufacturerDBA}>{item.manufacturerDBA}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                                                 <div className="truncate">
-                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">{item.productFamily}</span>
+                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">{item.productFamily}</span>
                                                 </div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left">{formatNumber(item.qtyOnHand)}</td>
-                                            <td className="px-3 py-2 text-sm text-primary font-bold text-left">{formatNumber(item.qtyAvailable)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">{formatCurrency(item.unitCost)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold text-left">{formatCurrency(item.totalPrice ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left">{formatNumber(item.totalUnitCVInches ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left">{formatNumber(item.totalUnitCVSQFT ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left">{formatNumber(item.avgInventoryAge ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left">{formatNumber(item.totalPositions ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left">{formatNumber(item.countSites ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-left">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.qtyOnHand)}</td>
+                                            <td className="px-3 py-2 text-sm text-primary font-bold text-left truncate">{formatNumber(item.qtyAvailable)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate">{formatCurrency(item.unitCost)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold text-left truncate">{formatCurrency(item.totalPrice ?? 0)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{formatNumber(item.totalUnitCVInches ?? 0)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{formatNumber(item.totalUnitCVSQFT ?? 0)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.avgInventoryAge ?? 0)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.totalPositions ?? 0)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.countSites ?? 0)}</td>
+                                            <td className="px-3 py-2 text-sm text-left truncate">
                                                 <button
                                                     onClick={() => router.push(`/inventory/${item.productId || item.id}`)}
                                                     className="p-1.5 text-gray-400 hover:text-primary dark:text-gray-600 dark:hover:text-primary transition-all hover:scale-110 active:scale-95"

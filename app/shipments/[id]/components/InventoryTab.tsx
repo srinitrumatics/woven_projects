@@ -147,7 +147,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
     // ── States ──────────────────────────────────────────────────────────────
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
             </div>
         );
@@ -156,7 +156,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
     if (error) {
         return (
             <div className="p-8 text-center bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-red-600 dark:text-red-300 font-medium">{error}</p>
+                <p className="text-red-600 dark:text-red-300 font-medium truncate">{error}</p>
             </div>
         );
     }
@@ -164,8 +164,8 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
     if (items.length === 0) {
         return (
             <div className="p-12 text-center bg-gray-50 dark:bg-gray-900/40 rounded-lg ">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no Inventory Positions associated with this shipment manifest.</p>
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no Inventory Positions associated with this shipment manifest.">There are no Inventory Positions associated with this shipment manifest.</p>
             </div>
         );
     }
@@ -173,7 +173,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
     // ── Table ───────────────────────────────────────────────────────────────
     return (
         <div className="overflow-x-auto py-2">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
                         {/* 1 – sticky */}
@@ -218,7 +218,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                     {sorted.map((item) => (
                         <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             {/* 1 – sticky */}
-                            <td className="px-3 py-2 text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10" style={{ width: widths.name }}>
+                            <td className="px-3 py-2 text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
                                 <span className="truncate block" title={item.name}>{item.name}</span>
                             </td>
                             <TC v={fmtDate(item.receivedDate)} w={widths.receivedDate} />

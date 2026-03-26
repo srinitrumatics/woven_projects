@@ -168,8 +168,8 @@ export default function SupplierBillsPage() {
     return (
         <Sidebar>
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Supplier Bills</h1>
-                <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1">Manage and Track Supplier Invoices and Payments</p>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Supplier Bills</h1>
+                <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Supplier Invoices and Payments">Manage and Track Supplier Invoices and Payments</p>
             </div>
 
             {/* Stats Cards */}
@@ -265,7 +265,7 @@ export default function SupplierBillsPage() {
                                     <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.dueDate} onResize={handleResize} />
                                     <SortableHeader label="Remittance Status" field="remittanceStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.remittanceStatus} onResize={handleResize} />
                                     <SortableHeader label="Open Balance" field="openBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalance} onResize={handleResize} />
-                                    <th className="text-sm px-3 py-2 text-left font-bold text-gray-700 dark:text-gray-200 ">Action</th>
+                                    <th className="text-sm px-3 py-2 text-left font-bold text-gray-700 dark:text-gray-200  truncate">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
@@ -274,23 +274,23 @@ export default function SupplierBillsPage() {
                                 ) : (
                                     paginatedBills.map(bill => (
                                         <tr key={bill.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onClick={() => router.push(`/supplier-bills/${bill.id}`)}>
-                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline" title={bill.name}>{bill.name}</td>
-                                            <td className="px-2 py-2 text-sm" title={bill.status}><StatusBadge status={bill.status} /></td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={bill.purchaseOrderName}>{bill.purchaseOrderName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={bill.customerQuoteName}>{bill.customerQuoteName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate" title={bill.name}>{bill.name}</td>
+                                            <td className="px-2 py-2 text-sm truncate" title={bill.status}><StatusBadge status={bill.status} /></td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.purchaseOrderName}>{bill.purchaseOrderName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerQuoteName}>{bill.customerQuoteName || '-'}</td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[180px]" title={bill.proposalName}>{bill.proposalName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={bill.customerOrderName}>{bill.customerOrderName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={bill.supplierName}>{bill.supplierName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 font-medium" >{bill.totalLines}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold">{formatCurrency(bill.totalAmount)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400" title={bill.billedDate}>{bill.billedDate ? formatDate(bill.billedDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400" title={bill.paymentTerms || '-'}>{bill.paymentTerms || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400" title={bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}>{bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-2 py-2 text-sm" title={bill.remittanceStatus}><RemittanceBadge status={bill.remittanceStatus} /></td>
-                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-medium">{formatCurrency(bill.openBalance)}</td>
-                                            <td className="px-2 py-2 text-sm">
-                                                <div className="flex items-center gap-2">
-                                                    <button className="p-1.5 text-gray-400 hover:text-primary transition-colors hover:bg-primary/10 rounded-lg" title="View Supplier Bill">
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerOrderName}>{bill.customerOrderName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.supplierName}>{bill.supplierName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 font-medium truncate" >{bill.totalLines}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(bill.totalAmount)}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.billedDate}>{bill.billedDate ? formatDate(bill.billedDate, 'numeric-dash') : '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.paymentTerms || '-'}>{bill.paymentTerms || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}>{bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}</td>
+                                            <td className="px-2 py-2 text-sm truncate" title={bill.remittanceStatus}><RemittanceBadge status={bill.remittanceStatus} /></td>
+                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(bill.openBalance)}</td>
+                                            <td className="px-2 py-2 text-sm truncate">
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                    <button className="p-1.5 text-gray-400 hover:text-primary transition-colors hover:bg-primary/10 rounded-lg truncate" title="View Supplier Bill">
                                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                                     </button>
                                                 </div>
@@ -369,7 +369,7 @@ function StatCard({ label, count, value, isActive, onClick, icon, color }: any) 
                             onClick={(e) => { e.preventDefault(); onClick(); }}
                             className="hover:underline block"
                         >
-                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">{label}</p>
+                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate">{label}</p>
                         </Link>
                         <Link
                             href="#"
@@ -377,8 +377,8 @@ function StatCard({ label, count, value, isActive, onClick, icon, color }: any) 
                             className="hover:underline block"
                         >
                             <div className="flex items-baseline gap-2">
-                                <span className="text-3xl font-bold text-gray-900 dark:text-white">{count}</span>
-                                <span className="text-sm text-gray-500 dark:text-gray-400">Bills</span>
+                                <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{count}</span>
+                                <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Bills</span>
                             </div>
                         </Link>
                         <p className={`text-lg font-semibold mt-1 ${textColors[color]}`}>
@@ -457,9 +457,9 @@ function RemittanceBadge({ status }: { status: string }) {
 
 function LoadingState() {
     return (
-        <div className="flex flex-col items-center justify-center py-20 animate-pulse">
+        <div className="flex flex-col items-center justify-center py-20 animate-pulse min-w-0">
             <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-500 dark:text-gray-400 font-medium tracking-wide">Synchronizing data from Salesforce...</p>
+            <p className="text-gray-500 dark:text-gray-400 font-medium tracking-wide truncate" title="Synchronizing data from Salesforce...">Synchronizing data from Salesforce...</p>
         </div>
     );
 }
@@ -467,10 +467,10 @@ function LoadingState() {
 function EmptyState({ query }: { query: string }) {
     return (
         <tr>
-            <td colSpan={14} className="px-6 py-4 text-center">
-                <div className="flex flex-col items-center max-w-sm mx-auto">
-                    <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">No Supplier Bills Found</p>
-                    <p className="text-gray-500 dark:text-gray-400">
+            <td colSpan={14} className="px-6 py-4 text-center truncate">
+                <div className="flex flex-col items-center max-w-sm mx-auto min-w-0">
+                    <p className="text-sm font-bold text-gray-900 dark:text-white mb-1 truncate" title="No Supplier Bills Found">No Supplier Bills Found</p>
+                    <p className="text-gray-500 dark:text-gray-400 truncate">
                         {query ? `We couldn't find any results matching "${query}". Try a different search term.` : "There are currently no supplier bills in the system."}
                     </p>
                 </div>

@@ -29,15 +29,15 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
     if (lines.length === 0) {
         return (
             <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No invoice lines found</p>
-                <p className="text-sm">There are no items associated with this invoice.</p>
+                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No invoice lines found">No invoice lines found</p>
+                <p className="text-sm truncate" title="There are no items associated with this invoice.">There are no items associated with this invoice.</p>
             </div>
         );
     }
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
                         <SortableHeader label="Invoice Line" field="invoiceLineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
@@ -58,7 +58,7 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {sortedLines.map((line) => (
                         <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td className="px-3 py-2 text-sm font-bold text-left sticky left-0 bg-white dark:bg-gray-800">
+                            <td className="px-3 py-2 text-sm font-bold text-left sticky left-0 bg-white dark:bg-gray-800 truncate">
                                 {invoiceId ? (
                                     <Link href={`/invoices/${invoiceId}/lines/${line.id}`} className="text-primary hover:underline truncate block" title={line.invoiceLineName}>
                                         {line.invoiceLineName}
@@ -67,7 +67,7 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                                     <span className="text-primary truncate block" title={line.invoiceLineName}>{line.invoiceLineName}</span>
                                 )}
                             </td>
-                            <td className="px-3 py-2 text-left">
+                            <td className="px-3 py-2 text-left truncate">
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${line.status === 'Paid' || line.status === 'Settled' || line.status === 'Approved'
                                     ? 'bg-green-100 text-green-800'
                                     : 'bg-blue-100 text-blue-800'
@@ -75,31 +75,31 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                                     {line.status}
                                 </span>
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">
                                 <div className="truncate" title={line.productName}>{line.productName}</div>
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left">
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">
                                 <div className="truncate" title={line.description}>{line.description}</div>
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">
                                 {line.manufacturerDBA}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 {formatCurrency(line.unitPrice)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 {line.quantity.toFixed(2)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold truncate">
                                 {formatCurrency(line.subtotal)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 {formatCurrency(line.shippingCharges)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 {formatCurrency(line.totalTaxesAmount)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[170px] font-bold text-primary">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[170px] font-bold text-primary truncate">
                                 {formatCurrency(line.lineGrandTotal)}
                             </td>
                         </tr>

@@ -197,8 +197,8 @@ export default function ProposalsPage() {
   return (
     <Sidebar>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Proposals</h1>
-        <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1">Manage and Track Sales Proposals</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Proposals</h1>
+        <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Sales Proposals">Manage and Track Sales Proposals</p>
       </div>
 
       {/* Stats Cards - Compact & Engaging Design */}
@@ -220,7 +220,7 @@ export default function ProposalsPage() {
                   onClick={(e) => { e.preventDefault(); handleCardClick("Pipeline"); }}
                   className="hover:underline block"
                 >
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Pipeline</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Pipeline">Pipeline</p>
                 </Link>
                 <Link
                   href="#"
@@ -228,11 +228,11 @@ export default function ProposalsPage() {
                   className="hover:underline block"
                 >
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.pipelineCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Proposals</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.pipelineCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Proposals</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.pipelineValue)}</p>
+                <p className="text-lg font-semibold text-primary mt-1 truncate">{formatCurrency(stats.pipelineValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Pipeline" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                 } transition-colors`}>
@@ -242,7 +242,7 @@ export default function ProposalsPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline truncate">
                 <Link
                   href="#"
                   onClick={(e) => { e.preventDefault(); handleCardClick("Pipeline"); }}
@@ -272,7 +272,7 @@ export default function ProposalsPage() {
                   href="#"
                   onClick={() => handleCardClick("Draft")}
                   className="hover:underline block">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">In Progress</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="In Progress">In Progress</p>
                 </Link>
                 <Link
                   href="#"
@@ -280,13 +280,13 @@ export default function ProposalsPage() {
                   className="hover:underline block">
                   <div className="flex items-baseline gap-2">
 
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.inProgressCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Proposals</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.inProgressCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Proposals</span>
 
 
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.inProgressValue)}</p>
+                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1 truncate">{formatCurrency(stats.inProgressValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-gray-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-600 group-hover:text-white"
                 } transition-colors`}>
@@ -296,7 +296,7 @@ export default function ProposalsPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white group-hover:underline truncate">
                 <Link
                   href="#"
                   onClick={() => handleCardClick("Draft")}
@@ -322,17 +322,17 @@ export default function ProposalsPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-1 min-w-0">
                   <Link
                     href="#"
                     onClick={() => handleCardClick("Client Review")}
                     className="hover:underline block">
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Client Review</p>
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide truncate" title="Client Review">Client Review</p>
                   </Link>
                   {stats.clientReviewCount > 0 && (
-                    <span className="flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-yellow-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                    <span className="flex h-2 w-2 truncate">
+                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-yellow-400 opacity-75 truncate"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500 truncate"></span>
                     </span>
                   )}
                 </div>
@@ -341,12 +341,12 @@ export default function ProposalsPage() {
                   onClick={() => handleCardClick("Client Review")}
                   className="hover:underline block">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.clientReviewCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Proposals</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.clientReviewCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Proposals</span>
                   </div>
                 </Link>
 
-                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.clientReviewValue)}</p>
+                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1 truncate">{formatCurrency(stats.clientReviewValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Client Review" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
                 } transition-colors`}>
@@ -356,7 +356,7 @@ export default function ProposalsPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline truncate">
                 <Link
                   href="#"
                   onClick={() => handleCardClick("Client Review")}
@@ -386,18 +386,18 @@ export default function ProposalsPage() {
                   href="#"
                   onClick={() => handleCardClick("Won")}
                   className="hover:underline block">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Won</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Won">Won</p>
                 </Link>
                 <Link
                   href="#"
                   onClick={() => handleCardClick("Won")}
                   className="hover:underline block">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.wonCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Awarded</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.wonCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Awarded</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.wonValue)}</p>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1 truncate">{formatCurrency(stats.wonValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Won" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
                 } transition-colors`}>
@@ -407,7 +407,7 @@ export default function ProposalsPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline truncate">
                 <Link
                   href="#"
                   onClick={() => handleCardClick("Won")}
@@ -479,7 +479,7 @@ export default function ProposalsPage() {
         {/* Table */}
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
               <svg
                 className="animate-spin h-10 w-10 text-primary mb-4"
                 xmlns="http://www.w3.org/2000/svg"
@@ -500,7 +500,7 @@ export default function ProposalsPage() {
                   d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
                 ></path>
               </svg>
-              <p className="text-sm">Loading proposals...</p>
+              <p className="text-sm truncate" title="Loading proposals...">Loading proposals...</p>
             </div>
           ) : (
             <table className="w-full">
@@ -519,7 +519,7 @@ export default function ProposalsPage() {
                   <SortableHeader label="Request Date" field="proposalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} />
 
                   <th
-                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
                     Action
@@ -529,13 +529,13 @@ export default function ProposalsPage() {
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {paginatedProposals.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center justify-center">
+                    <td colSpan={9} className="px-6 py-12 text-center truncate">
+                      <div className="flex flex-col items-center justify-center min-w-0">
                         <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No proposals found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-sm">
+                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2 truncate" title="No proposals found">No proposals found</p>
+                        <p className="text-gray-400 dark:text-gray-500 text-sm truncate">
                           {searchQuery || activeTab !== "All"
                             ? "Try adjusting your filters"
                             : "Get started by creating your first proposal"}
@@ -546,34 +546,34 @@ export default function ProposalsPage() {
                 ) : (
                   paginatedProposals.map((proposal, index) => (
                     <tr key={proposal.id || index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left">
-                        <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline">
+                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
+                        <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline truncate">
                           <div title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
                         </Link>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <StatusBadge status={proposal.status} />
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.proposalName}>{proposal.proposalName}</div>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerOrder}>{proposal.customerOrder}</div>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerPO}>{proposal.customerPO}</div>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billTo}>{proposal.billTo}</div>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipTo}>{proposal.shipTo}</div>
                       </td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[130px]">{proposal.productCount}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(proposal.totalAmount)}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[150px]">{formatDate(proposal.proposalDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[130px] truncate">{proposal.productCount}</td>
+                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(proposal.totalAmount)}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[150px] truncate">{formatDate(proposal.proposalDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-2 truncate">
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleViewProposal(proposal.id)}

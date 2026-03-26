@@ -28,7 +28,7 @@ export default function QuoteSupplierBillsSubTab({
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -37,9 +37,9 @@ export default function QuoteSupplierBillsSubTab({
     return (
         <div className="overflow-x-auto py-2">
             {bills.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium">No records found</p>
-                    <p className="text-sm">There are no supplier bills associated with this quote.</p>
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                    <p className="text-sm truncate" title="There are no supplier bills associated with this quote.">There are no supplier bills associated with this quote.</p>
                 </div>
             ) : (
                 <table className="w-full truncate">
@@ -69,8 +69,8 @@ export default function QuoteSupplierBillsSubTab({
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {bills.map((bill) => (
                             <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800" style={{ width: widths.billNumber }}>{bill.billNumber}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.status }}>
+                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.billNumber }}>{bill.billNumber}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${bill.status === 'Draft' ? 'bg-gray-100 text-gray-800' :
                                         bill.status === 'Posted' ? 'bg-blue-100 text-blue-800' :
                                             bill.status === 'Paid' ? 'bg-green-100 text-green-800' :
@@ -79,23 +79,23 @@ export default function QuoteSupplierBillsSubTab({
                                         {bill.status}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.purchaseOrder }}>{bill.purchaseOrder}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.customerQuote }}>{bill.customerQuote}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.customerOrder }}>{bill.customerOrder}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.supplierName }}>{bill.supplierName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.supplierDBA }}>{bill.supplierDBA}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.supplierContact }}>{bill.supplierContact}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white " style={{ width: widths.totalLines }}>{bill.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold" style={{ width: widths.totalCost }}>{formatCurrency(bill.totalCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipping }}>{formatCurrency(bill.shipping)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary" style={{ width: widths.totalAmount }}>{formatCurrency(bill.totalAmount)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.billedDate }}>{formatDate(bill.billedDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.paymentTerms }}>{bill.paymentTerms}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.dueDate }}>{formatDate(bill.dueDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.remittanceStatus }}>{bill.remittanceStatus}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.openBalance }}>{formatCurrency(bill.openBalance)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white " style={{ width: widths.daysOutstanding }}>{bill.daysOutstanding}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.settledDate }}>{formatDate(bill.settledDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>{bill.purchaseOrder}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>{bill.customerQuote}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>{bill.customerOrder}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierName }}>{bill.supplierName}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierDBA }}>{bill.supplierDBA}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierContact }}>{bill.supplierContact}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate" style={{ width: widths.totalLines }}>{bill.totalLines}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalCost }}>{formatCurrency(bill.totalCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(bill.shipping)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary truncate" style={{ width: widths.totalAmount }}>{formatCurrency(bill.totalAmount)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billedDate }}>{formatDate(bill.billedDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.paymentTerms }}>{bill.paymentTerms}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.dueDate }}>{formatDate(bill.dueDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.remittanceStatus }}>{bill.remittanceStatus}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.openBalance }}>{formatCurrency(bill.openBalance)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate" style={{ width: widths.daysOutstanding }}>{bill.daysOutstanding}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.settledDate }}>{formatDate(bill.settledDate, 'numeric-dash')}</td>
                             </tr>
                         ))}
                     </tbody>

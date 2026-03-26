@@ -144,10 +144,10 @@ export default function InvoiceLineFilesTab({ lineId, accountId, contactId }: In
 
     const getFileIcon = (fileType: string) => {
         const type = fileType?.toUpperCase();
-        if (type === "PDF") return <span className="text-red-500 font-bold text-xs">PDF</span>;
-        if (type === "XLSX" || type === "XLS") return <span className="text-green-600 font-bold text-xs">XLS</span>;
-        if (type === "PNG" || type === "JPG" || type === "JPEG") return <span className="text-blue-500 font-bold text-xs">IMG</span>;
-        return <span className="text-gray-500 font-bold text-xs">FILE</span>;
+        if (type === "PDF") return <span className="text-red-500 font-bold text-xs truncate">PDF</span>;
+        if (type === "XLSX" || type === "XLS") return <span className="text-green-600 font-bold text-xs truncate">XLS</span>;
+        if (type === "PNG" || type === "JPG" || type === "JPEG") return <span className="text-blue-500 font-bold text-xs truncate">IMG</span>;
+        return <span className="text-gray-500 font-bold text-xs truncate">FILE</span>;
     };
 
     if (loading) {
@@ -161,15 +161,15 @@ export default function InvoiceLineFilesTab({ lineId, accountId, contactId }: In
     if (files.length === 0) {
         return (
             <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No records found</p>
-                <p className="text-sm">There are no files associated with this invoice line.</p>
+                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no files associated with this invoice line.">There are no files associated with this invoice line.</p>
             </div>
         );
     }
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
                         <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
@@ -177,24 +177,24 @@ export default function InvoiceLineFilesTab({ lineId, accountId, contactId }: In
                         <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={widths.size} onResize={handleResize} />
                         <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedBy} onResize={handleResize} />
                         <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.date} onResize={handleResize} />
-                        <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.action }}>Action</th>
+                        <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: widths.action }}>Action</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {sortedFiles.map((file) => (
                         <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium">
-                                <div className="flex items-center gap-2">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">
+                                <div className="flex items-center gap-2 min-w-0">
                                     {getFileIcon(file.fileType)}
                                     <span className="truncate" title={file.fileName}>{file.fileName}</span>
                                 </div>
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{file.fileType}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{formatFileSize(file.sizeInBytes)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{file.fileType}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatFileSize(file.sizeInBytes)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>{file.uploadedBy}</td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{file.uploadedDate}</td>
-                            <td className="px-3 py-2 text-left">
-                                <div className="flex items-center gap-2">
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{file.uploadedDate}</td>
+                            <td className="px-3 py-2 text-left truncate">
+                                <div className="flex items-center gap-2 min-w-0">
                                     <button onClick={() => handlePreview(file)} className="text-blue-600 hover:text-blue-800 p-1" title="Preview">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

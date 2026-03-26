@@ -31,7 +31,7 @@ export default function QuoteLinesTab({
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -39,9 +39,9 @@ export default function QuoteLinesTab({
 
     if (products.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no quote lines listed in this quote.</p>
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no quote lines listed in this quote.">There are no quote lines listed in this quote.</p>
             </div>
         );
     }
@@ -68,7 +68,7 @@ export default function QuoteLinesTab({
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {products.map((line) => (
                         <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" style={{ width: widths.Name }}>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" style={{ width: widths.Name }}>
                                 <Link
                                     href={`/quotes/${quoteId}/lines/${line.id}`}
                                     className="text-primary font-bold hover:underline truncate"
@@ -80,10 +80,10 @@ export default function QuoteLinesTab({
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.status }} title={line.status}>
                                 {line.status}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.productName }}>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>
                                 <div className="truncate" title={line.productName}>{line.productName}</div>
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.description }}>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.description }}>
                                 <div className="max-w-xs truncate" title={line.description}>{line.description}</div>
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.manufacturerDBA }} title={line.manufacturerDBA}>

@@ -336,10 +336,10 @@ export default function OrderLineDetailPage({
   if (loading) {
     return (
       <>
-        <div className="flex items-center justify-center h-64">
+        <div className="flex items-center justify-center h-64 min-w-0">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-gray-500 dark:text-gray-400">Loading order line details...</p>
+            <p className="text-gray-500 dark:text-gray-400 truncate" title="Loading order line details...">Loading order line details...</p>
           </div>
         </div>
       </>
@@ -349,15 +349,15 @@ export default function OrderLineDetailPage({
   // No data state
   if (!product) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex items-center justify-center h-64 min-w-0">
         <div className="text-center">
           <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <p className="text-gray-500 dark:text-gray-400 mb-4">Order line not found</p>
+          <p className="text-gray-500 dark:text-gray-400 mb-4 truncate" title="Order line not found">Order line not found</p>
           <Link
             href={`/orders/${id}`}
-            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors truncate"
           >
             Back to Order
           </Link>

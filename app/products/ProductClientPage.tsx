@@ -55,12 +55,12 @@ function Content() {
   const products = hits as unknown as Product[];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6">
+    <div className="flex flex-col lg:flex-row gap-6 min-w-0">
       {/* Filters Sidebar */}
       <aside className="lg:w-64 flex-shrink-0">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sticky top-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Filters</h2>
+          <div className="flex items-center justify-between mb-4 min-w-0">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">Filters</h2>
             <ClearRefinements
               classNames={{
                 root: "",
@@ -75,7 +75,7 @@ function Content() {
 
           {/* Category Filter */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Category</h3>
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 truncate">Category</h3>
             <RefinementList
               attribute="category"
               limit={50}
@@ -102,7 +102,7 @@ function Content() {
 
           {/* Type Filter */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Type</h3>
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 truncate">Type</h3>
             <RefinementList
               attribute="genre"
               limit={50}
@@ -128,7 +128,7 @@ function Content() {
       <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         {/* Search and View Mode Header */}
         <div className="mb-6">
-          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between min-w-0">
             {/* Search */}
             <div className="flex-1 relative w-full md:max-w-md">
               <input
@@ -144,7 +144,7 @@ function Content() {
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <button
                 onClick={() => setViewMode('card')}
                 className={`p-2 rounded-lg transition-colors ${viewMode === "card"
@@ -195,7 +195,7 @@ function Content() {
           <div ref={sentinelRef} className="flex justify-center py-8">
             <div className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400">
               <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-primary"></div>
-              <span className="text-sm">Loading more products...</span>
+              <span className="text-sm truncate">Loading more products...</span>
             </div>
           </div>
         )}
@@ -205,7 +205,7 @@ function Content() {
           <div className="flex justify-center mt-6">
             <button
               onClick={showMore}
-              className="px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-colors shadow-sm"
+              className="px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-colors shadow-sm truncate"
             >
               Load More Products
             </button>
@@ -215,7 +215,7 @@ function Content() {
         {/* End of Results Message */}
         {isLastPage && products.length > 0 && (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-            <p className="text-sm">You've reached the end of the results</p>
+            <p className="text-sm truncate" title="You've reached the end of the results">You've reached the end of the results</p>
           </div>
         )}
       </div>
@@ -229,7 +229,7 @@ export default function ProductClientPage() {
   if (!process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || !process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY) {
     return (
       <div className="p-8 text-center text-red-600 bg-white dark:bg-gray-800 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-2">Search Configuration Missing</h2>
+        <h2 className="text-xl font-bold mb-2 truncate">Search Configuration Missing</h2>
         <p>Please check your environment variables.</p>
       </div>
     );
@@ -283,8 +283,8 @@ const CardView = ({ products }: ViewProps) => (
                   onError={(e) => (e.currentTarget.style.display = 'none')}
                 />
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-400">
-                  <span className="text-4xl">📦</span>
+                <div className="flex items-center justify-center h-full text-gray-400 min-w-0">
+                  <span className="text-4xl truncate">📦</span>
                 </div>
               )}
               {/* Badge for Selling Price */}
@@ -295,30 +295,30 @@ const CardView = ({ products }: ViewProps) => (
 
             <div className="p-4 flex flex-col flex-grow">
               <div className="mb-2">
-                <span className="text-xs font-medium text-primary uppercase tracking-wider">
+                <span className="text-xs font-medium text-primary uppercase tracking-wider truncate">
                   {category}
                 </span>
               </div>
-              <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+              <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-primary transition-colors truncate">
                 {product.name}
               </h3>
 
-              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
+              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3 truncate">
                 {product.description}
               </p>
 
               <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700 flex flex-col gap-1">
-                <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 min-w-0">
                   <span>List Price:</span>
-                  <span className="line-through">{formatCurrency(listPrice)}</span>
+                  <span className="line-through truncate">{formatCurrency(listPrice)}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Selling Price:</span>
-                  <span className="text-lg font-bold text-gray-900 dark:text-white">
+                <div className="flex justify-between items-center min-w-0">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">Selling Price:</span>
+                  <span className="text-lg font-bold text-gray-900 dark:text-white truncate">
                     {formatCurrency(sellingPrice)}
                   </span>
                 </div>
-                <button className="w-full mt-2 px-3 py-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-medium rounded-lg transition-colors">
+                <button className="w-full mt-2 px-3 py-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-medium rounded-lg transition-colors truncate">
                   Add to Order
                 </button>
               </div>
@@ -335,18 +335,18 @@ const ListView = ({ products }: ViewProps) => (
     <table className="w-full">
       <thead className="bg-primary-light dark:bg-gray-900">
         <tr>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">&nbsp;</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Product Name</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Category</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">List Price</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Selling Price</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Action</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">&nbsp;</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Product Name</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Category</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Description</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">List Price</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Selling Price</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Action</th>
         </tr>
       </thead>
       <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
         {products.length === 0 ? (
-          <tr key="no-matches"><td colSpan={7} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">No products found.</td></tr>
+          <tr key="no-matches"><td colSpan={7} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400 truncate">No products found.</td></tr>
         ) : (
           products.map((product) => {
             // Cast to access Algolia fields
@@ -360,7 +360,7 @@ const ListView = ({ products }: ViewProps) => (
 
             return (
               <tr key={p.objectID || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 truncate">
                   <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden">
                     {thumbnail ? (
                       <img src={thumbnail} alt={product.name} className="w-full h-full object-cover" />
@@ -369,21 +369,21 @@ const ListView = ({ products }: ViewProps) => (
                     )}
                   </div>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 truncate">
                   <div className="line-clamp-2" title={product.name}>
                     <div className="text-sm font-bold text-gray-900 dark:text-white">{product.name}</div>
                     <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">{product.sku}</div>
                   </div>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 truncate">
                   <div className="line-clamp-2" title={category}>
-                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">{category}</span>
+                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">{category}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400" style={{ maxWidth: '300px' }}><div className="line-clamp-2">{product.description}</div></td>
-                <td className="px-4 py-3 text-sm text-right text-gray-500 dark:text-gray-400 line-through">{formatCurrency(listPrice)}</td>
-                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold">{formatCurrency(sellingPrice)}</td>
-                <td className="px-4 py-3 text-left"><button className="px-4 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-sm font-medium whitespace-nowrap">Add to Order</button></td>
+                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ maxWidth: '300px' }}><div className="line-clamp-2">{product.description}</div></td>
+                <td className="px-4 py-3 text-sm text-right text-gray-500 dark:text-gray-400 line-through truncate">{formatCurrency(listPrice)}</td>
+                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(sellingPrice)}</td>
+                <td className="px-4 py-3 text-left truncate"><button className="px-4 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-sm font-medium whitespace-nowrap truncate">Add to Order</button></td>
               </tr>
             );
           })

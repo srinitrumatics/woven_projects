@@ -10,7 +10,7 @@ export default function Navigation() {
     <nav className="bg-white dark:bg-gray-900 shadow-sm fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
+          <div className="flex items-center min-w-0">
             <Link href="/" className="flex-shrink-0 flex items-center">
               <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                 WOVN
@@ -129,7 +129,7 @@ export default function Navigation() {
             </Link>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-center px-4 space-x-3">
+            <div className="flex items-center px-4 space-x-3 min-w-0">
               <Link
                 href="/auth"
                 className="block w-full text-center px-4 py-2 text-base font-medium text-blue-600 dark:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md"

@@ -7,7 +7,7 @@ export default function QuoteScopeSummary({ description }: QuoteScopeSummaryProp
         <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
             <div className="mb-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Scope Summary">Scope Summary</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Project Scope and Deliverables Overview</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Project Scope and Deliverables Overview">Project Scope and Deliverables Overview</p>
             </div>
 
             <textarea

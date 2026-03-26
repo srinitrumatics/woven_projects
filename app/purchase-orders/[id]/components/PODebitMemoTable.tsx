@@ -77,9 +77,9 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
 
     if (debitMemos.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no Debit Memos associated with this purchase order.</p>
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no Debit Memos associated with this purchase order.">There are no Debit Memos associated with this purchase order.</p>
             </div>
         );
     }
@@ -112,60 +112,60 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((d) => (
                             <tr key={d.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700">
-                                    <div className="truncate" title={d.Name}>{d.Name}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={d.Name}>
+                                    {d.Name}
                                 </td>
-                                <td className="px-3 py-2">
-                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full ${d.Status__c === 'Draft' ? 'bg-gray-100 text-gray-700' : 'bg-green-100 text-green-700'
+                                <td className="px-3 py-2 truncate">
+                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full truncate ${d.Status__c === 'Draft' ? 'bg-gray-100 text-gray-700' : 'bg-green-100 text-green-700'
                                         }`} title={d.Status__c}>
                                         {d.Status__c}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={d.Supplier_Bill_Name}>{d.Supplier_Bill_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Supplier_Bill_Name || '-'}>
+                                    {d.Supplier_Bill_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={d.Purchase_Order_Name}>{d.Purchase_Order_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Purchase_Order_Name || '-'}>
+                                    {d.Purchase_Order_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={d.Customer_Quote_Name}>{d.Customer_Quote_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Quote_Name || '-'}>
+                                    {d.Customer_Quote_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={d.Customer_Order_Name}>{d.Customer_Order_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Order_Name || '-'}>
+                                    {d.Customer_Order_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate max-w-[200px]">
-                                    <div className="truncate" title={d.Supplier_Credit_Memo__c}>{d.Supplier_Credit_Memo__c || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Supplier_Credit_Memo__c || '-'}>
+                                    {d.Supplier_Credit_Memo__c || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={d.Debit_to_Account_Name}>{d.Debit_to_Account_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Debit_to_Account_Name || '-'}>
+                                    {d.Debit_to_Account_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={d.Debit_to_Contact_Name}>{d.Debit_to_Contact_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Debit_to_Contact_Name || '-'}>
+                                    {d.Debit_to_Contact_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" >
-                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium" >
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(d.Total_Lines__c || 0)}>
+                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium truncate" >
                                         {d.Total_Lines__c || 0}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title="${(d.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={`$${(d.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${(d.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title="${(d.Total_Shipping_Charges__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={`$${(d.Total_Shipping_Charges__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${(d.Total_Shipping_Charges__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left font-semibold" title="${(d.Total_Debit_Amount__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left font-semibold truncate" title={`$${(d.Total_Debit_Amount__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${(d.Total_Debit_Amount__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={d.Issued_Date__c ? formatDate(d.Issued_Date__c, 'numeric-dash') : '-'}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={d.Issued_Date__c ? formatDate(d.Issued_Date__c, 'numeric-dash') : '-'}>
                                     {d.Issued_Date__c ? formatDate(d.Issued_Date__c, 'numeric-dash') : '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={d.Approval_Date__c ? formatDate(d.Approval_Date__c, 'numeric-dash') : '-'}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={d.Approval_Date__c ? formatDate(d.Approval_Date__c, 'numeric-dash') : '-'}>
                                     {d.Approval_Date__c ? formatDate(d.Approval_Date__c, 'numeric-dash') : '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left font-medium" title="${(d.Available_Debit_Balance__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left font-medium truncate" title={`$${(d.Available_Debit_Balance__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${(d.Available_Debit_Balance__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={d.Settled_Date__c ? formatDate(d.Settled_Date__c, 'numeric-dash') : '-'}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={d.Settled_Date__c ? formatDate(d.Settled_Date__c, 'numeric-dash') : '-'}>
                                     {d.Settled_Date__c ? formatDate(d.Settled_Date__c, 'numeric-dash') : '-'}
                                 </td>
                             </tr>

@@ -86,8 +86,8 @@ export default function QuoteLineTaxesTab({ product }: QuoteLineTaxesTabProps) {
             <div className="overflow-auto pt-0">
                 {product.isTaxable === "No" ? (
                     <div className="py-4 text-sm text-gray-500 dark:text-gray-400 text-center">
-                        <p className="text-lg font-medium tracking-tight">No records found</p>
-                        <p className="text-sm">There are no taxes associated with this quote line.</p>
+                        <p className="text-lg font-medium tracking-tight truncate" title="No records found">No records found</p>
+                        <p className="text-sm truncate" title="There are no taxes associated with this quote line.">There are no taxes associated with this quote line.</p>
                     </div>
                 ) : (
                     <table className="w-full text-sm text-left">

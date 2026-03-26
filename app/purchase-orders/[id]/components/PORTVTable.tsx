@@ -75,9 +75,9 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
 
     if (rtv.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no RTVs associated with this purchase order.</p>
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no RTVs associated with this purchase order.">There are no RTVs associated with this purchase order.</p>
             </div>
         );
     }
@@ -109,57 +109,57 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((r) => (
                             <tr key={r.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700">
-                                    <div className="truncate" title={r.Name}>{r.Name}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={r.Name}>
+                                    {r.Name}
                                 </td>
-                                <td className="px-3 py-2">
-                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full ${r.Status__c === 'Draft' ? 'bg-gray-100 text-gray-700' : 'bg-green-100 text-green-700'
+                                <td className="px-3 py-2 truncate">
+                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full truncate ${r.Status__c === 'Draft' ? 'bg-gray-100 text-gray-700' : 'bg-green-100 text-green-700'
                                         }`} title={r.Status__c}>
                                         {r.Status__c}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={r.Purchase_Order_Name}>{r.Purchase_Order_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Purchase_Order_Name || '-'}>
+                                    {r.Purchase_Order_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={r.Customer_Quote_Name}>{r.Customer_Quote_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Customer_Quote_Name || '-'}>
+                                    {r.Customer_Quote_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={r.Customer_Order_Name}>{r.Customer_Order_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Customer_Order_Name || '-'}>
+                                    {r.Customer_Order_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={r.RTV_Type__c}>{r.RTV_Type__c || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.RTV_Type__c || '-'}>
+                                    {r.RTV_Type__c || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={r.Supplier_RMA_Number__c}>{r.Supplier_RMA_Number__c || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Supplier_RMA_Number__c || '-'}>
+                                    {r.Supplier_RMA_Number__c || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={r.Ship_from_Account_Name}>{r.Ship_from_Account_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Ship_from_Account_Name || '-'}>
+                                    {r.Ship_from_Account_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={r.Ship_from_Contact_Name}>{r.Ship_from_Contact_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Ship_from_Contact_Name || '-'}>
+                                    {r.Ship_from_Contact_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={r.Supplier_Name}>{r.Supplier_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Supplier_Name || '-'}>
+                                    {r.Supplier_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={r.Supplier_Contact_Name}>{r.Supplier_Contact_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Supplier_Contact_Name || '-'}>
+                                    {r.Supplier_Contact_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
-                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium" >
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(r.Total_Lines__c || 0)}>
+                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium truncate" >
                                         {r.Total_Lines__c || 0}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title="${(r.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={`$${(r.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${(r.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={r.Issued_Date__c ? formatDate(r.Issued_Date__c, 'numeric-dash') : '-'}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={r.Issued_Date__c ? formatDate(r.Issued_Date__c, 'numeric-dash') : '-'}>
                                     {r.Issued_Date__c ? formatDate(r.Issued_Date__c, 'numeric-dash') : '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={r.Approval_Date__c ? formatDate(r.Approval_Date__c, 'numeric-dash') : '-'}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={r.Approval_Date__c ? formatDate(r.Approval_Date__c, 'numeric-dash') : '-'}>
                                     {r.Approval_Date__c ? formatDate(r.Approval_Date__c, 'numeric-dash') : '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={r.Return_by_Date__c ? formatDate(r.Return_by_Date__c, 'numeric-dash') : '-'}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={r.Return_by_Date__c ? formatDate(r.Return_by_Date__c, 'numeric-dash') : '-'}>
                                     {r.Return_by_Date__c ? formatDate(r.Return_by_Date__c, 'numeric-dash') : '-'}
                                 </td>
                             </tr>

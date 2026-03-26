@@ -28,7 +28,7 @@ export default function QuotePurchasesSubTab({
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -37,9 +37,9 @@ export default function QuotePurchasesSubTab({
     return (
         <div className="overflow-x-auto py-2">
             {purchases.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium">No records found</p>
-                    <p className="text-sm">There are no purchases associated with this quote.</p>
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                    <p className="text-sm truncate" title="There are no purchases associated with this quote.">There are no purchases associated with this quote.</p>
                 </div>
             ) : (
                 <table className="w-full truncate">
@@ -78,8 +78,8 @@ export default function QuotePurchasesSubTab({
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {purchases.map((po) => (
                             <tr key={po.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800" style={{ width: widths.purchaseOrderNumber }}>{po.purchaseOrderNumber}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.status }}>
+                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.purchaseOrderNumber }}>{po.purchaseOrderNumber}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${po.status === 'Draft' ? 'bg-gray-100 text-gray-800' :
                                         po.status === 'Issued' ? 'bg-blue-100 text-blue-800' :
                                             po.status === 'Received' ? 'bg-green-100 text-green-800' :
@@ -88,32 +88,32 @@ export default function QuotePurchasesSubTab({
                                         {po.status}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.customerQuote }}>{po.customerQuote}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.customerOrder }}>{po.customerOrder}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.customerPO }}>{po.customerPO}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.supplierName }}>{po.supplierName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.supplierDBA }}>{po.supplierDBA}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.supplierContact }}>{po.supplierContact}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipToAccount }}>{po.shipToAccount}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipToLocation }}>{po.shipToLocation}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white " style={{ width: widths.shipToContact }}>{po.shipToContact}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white " style={{ width: widths.dropShip }}>{po.dropShip ? 'Yes' : 'No'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white " style={{ width: widths.totalLines }}>{po.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold" style={{ width: widths.productCost }}>{formatCurrency(po.productCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipping }}>{formatCurrency(po.shipping)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary" style={{ width: widths.totalCost }}>{formatCurrency(po.totalCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.issuedDate }}>{formatDate(po.issuedDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.acknowledgedDate }}>{formatDate(po.acknowledgedDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.requestDate }}>{formatDate(po.requestDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.promiseDate }}>{formatDate(po.promiseDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shippingMethod }}>{po.shippingMethod}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.logisticsPartner }}>{po.logisticsPartner}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.logisticsContact }}>{po.logisticsContact}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.trackingNumber }}>{po.trackingNumber}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(po.estimatedDeliveryDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.trackingStatus }}>{po.trackingStatus}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.actualDeliveryDate }}>{formatDate(po.actualDeliveryDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.goodsReceiptDate }}>{formatDate(po.goodsReceiptDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>{po.customerQuote}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>{po.customerOrder}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{po.customerPO}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierName }}>{po.supplierName}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierDBA }}>{po.supplierDBA}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierContact }}>{po.supplierContact}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToAccount }}>{po.shipToAccount}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToLocation }}>{po.shipToLocation}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate" style={{ width: widths.shipToContact }}>{po.shipToContact}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate" style={{ width: widths.dropShip }}>{po.dropShip ? 'Yes' : 'No'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate" style={{ width: widths.totalLines }}>{po.totalLines}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.productCost }}>{formatCurrency(po.productCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(po.shipping)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary truncate" style={{ width: widths.totalCost }}>{formatCurrency(po.totalCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.issuedDate }}>{formatDate(po.issuedDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.acknowledgedDate }}>{formatDate(po.acknowledgedDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.requestDate }}>{formatDate(po.requestDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.promiseDate }}>{formatDate(po.promiseDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shippingMethod }}>{po.shippingMethod}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsPartner }}>{po.logisticsPartner}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsContact }}>{po.logisticsContact}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingNumber }}>{po.trackingNumber}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(po.estimatedDeliveryDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingStatus }}>{po.trackingStatus}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.actualDeliveryDate }}>{formatDate(po.actualDeliveryDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.goodsReceiptDate }}>{formatDate(po.goodsReceiptDate, 'numeric-dash')}</td>
                             </tr>
                         ))}
                     </tbody>

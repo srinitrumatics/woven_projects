@@ -108,7 +108,7 @@ export default function LineFulfillmentsTab({
     if (loading) {
         return (
             <div className="p-6">
-                <div className="flex justify-center items-center py-12">
+                <div className="flex justify-center items-center py-12 min-w-0">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                 </div>
             </div>
@@ -143,12 +143,12 @@ export default function LineFulfillmentsTab({
                 {activeTab === "quotes" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                                <p className="text-lg font-medium">No records found</p>
-                                <p className="text-sm">There are no customer quotes associated with this proposal.</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                                <p className="text-sm truncate" title="There are no customer quotes associated with this proposal.">There are no customer quotes associated with this proposal.</p>
                             </div>
                         ) : (
-                            <table className="w-full">
+                            <table className="w-full table-fixed">
                                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
                                         <SortableHeader
@@ -177,33 +177,33 @@ export default function LineFulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as CustomerQuote[]).map((quote) => (
                                         <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left">{quote.name}</td>
-                                            <td className="px-3 py-2">
-                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">{quote.name}</td>
+                                            <td className="px-3 py-2 truncate">
+                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
                                                     {quote.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{quote.customerQuoteName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{quote.productName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={quote.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{quote.productDescription}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[163px]">{quote.manufacturerDBA}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{quote.customerQuoteName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{quote.productName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={quote.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{quote.productDescription}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[163px] truncate">{quote.manufacturerDBA}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                 ${quote.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[154px]">{quote.totalOrderQty}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[154px] truncate">{quote.totalOrderQty}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                 ${quote.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
                                                 ${quote.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
                                                 ${quote.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-primary font-bold">
+                                            <td className="px-3 py-2 text-sm  text-primary font-bold truncate">
                                                 ${quote.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[121px]">{quote.qtyShipped}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[121px] truncate">{quote.qtyShipped}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -216,12 +216,12 @@ export default function LineFulfillmentsTab({
                 {activeTab === "sales" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                                <p className="text-lg font-medium">No records found</p>
-                                <p className="text-sm">There are no sales orders associated with this proposal.</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                                <p className="text-sm truncate" title="There are no sales orders associated with this proposal.">There are no sales orders associated with this proposal.</p>
                             </div>
                         ) : (
-                            <table className="w-full ">
+                            <table className="w-full table-fixed">
                                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
                                         <SortableHeader
@@ -253,39 +253,39 @@ export default function LineFulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as SalesOrder[]).map((order) => (
                                         <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left">{order.name}</td>
-                                            <td className="px-3 py-2">
-                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">{order.name}</td>
+                                            <td className="px-3 py-2 truncate">
+                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 truncate">
                                                     {order.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{order.salesOrderName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{order.customerQuoteLineName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{order.productName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={order.productDescription}>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{order.salesOrderName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{order.customerQuoteLineName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{order.productName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={order.productDescription}>
                                                 <div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{order.productDescription}
                                                 </div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[163px]">{order.manufacturerDBA}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[163px] truncate">{order.manufacturerDBA}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                 ${order.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[161px]">{order.totalOrderQty}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[161px] truncate">{order.totalOrderQty}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                 ${order.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
                                                 ${order.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
                                                 ${order.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-primary font-bold">
+                                            <td className="px-3 py-2 text-sm  text-primary font-bold truncate">
                                                 ${order.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[114px]">{order.qtyPicked}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[149px]">{order.backOrderQty}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[123px]">{order.qtyShipped}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[114px] truncate">{order.qtyPicked}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[149px] truncate">{order.backOrderQty}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[123px] truncate">{order.qtyShipped}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -298,12 +298,12 @@ export default function LineFulfillmentsTab({
                 {activeTab === "invoices" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                                <p className="text-lg font-medium">No records found</p>
-                                <p className="text-sm">There are no invoices associated with this proposal.</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                                <p className="text-sm truncate" title="There are no invoices associated with this proposal.">There are no invoices associated with this proposal.</p>
                             </div>
                         ) : (
-                            <table className="w-full">
+                            <table className="w-full table-fixed">
                                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
                                         <SortableHeader
@@ -334,49 +334,49 @@ export default function LineFulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as Invoice[]).map((invoice) => (
                                         <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
                                                 <div className="truncate" title={invoice.name}>{invoice.name}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-left">
-                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                            <td className="px-3 py-2 text-left truncate">
+                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
                                                     {invoice.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                 <div className="truncate" title={invoice.invoiceName}>{invoice.invoiceName}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                 <div className="truncate" title={invoice.salesOrderLineName}>{invoice.salesOrderLineName}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                 <div className="truncate" title={invoice.customerQuoteLineName}>{invoice.customerQuoteLineName}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                 <div className="truncate" title={invoice.purchaseOrderLineName}>{invoice.purchaseOrderLineName}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                 <div className="truncate" title={invoice.productName}>{invoice.productName}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                 <div className="max-w-xs truncate" title={invoice.productDescription}>{invoice.productDescription}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left min-w-[159px]">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left min-w-[159px] truncate">
                                                 <div className="truncate" title={invoice.manufacturerDBA}>{invoice.manufacturerDBA}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                 ${invoice.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[121px]">{invoice.invoiceQty}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[121px] truncate">{invoice.invoiceQty}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                 ${invoice.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
                                                 ${invoice.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
                                                 ${invoice.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-primary font-bold">
+                                            <td className="px-3 py-2 text-sm  text-primary font-bold truncate">
                                                 ${invoice.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
                                         </tr>
@@ -391,12 +391,12 @@ export default function LineFulfillmentsTab({
                 {activeTab === "shipping" && (
                     <div className="overflow-x-auto">
                         {sortedData.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                                <p className="text-lg font-medium">No records found</p>
-                                <p className="text-sm">There are no shipping manifests associated with this proposal.</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                                <p className="text-sm truncate" title="There are no shipping manifests associated with this proposal.">There are no shipping manifests associated with this proposal.</p>
                             </div>
                         ) : (
-                            <table className="w-full ">
+                            <table className="w-full table-fixed">
                                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                     <tr>
                                         <SortableHeader
@@ -431,46 +431,46 @@ export default function LineFulfillmentsTab({
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     {(sortedData as ShippingManifest[]).map((manifest) => (
                                         <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left min-w-[198px]" title={manifest.name}>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left min-w-[198px] truncate" title={manifest.name}>
                                                 <div className="text-sm font-medium  text-gray-900 dark:text-white truncate">{manifest.name}</div></td>
-                                            <td className="px-3 py-2">
-                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                            <td className="px-3 py-2 truncate">
+                                                <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
                                                     {manifest.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.shippingManifestName}>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shippingManifestName}>
                                                 <div className="text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.shippingManifestName}
                                                 </div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.salesOrderLineName}>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.salesOrderLineName}>
                                                 <div className="text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.salesOrderLineName}
                                                 </div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{manifest.customerQuoteLineName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={manifest.productName}><div className="text-sm text-gray-900 dark:text-white truncate">{manifest.productName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={manifest.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{manifest.productDescription}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px]" title={manifest.manufacturerDBA}>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{manifest.customerQuoteLineName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.productName}><div className="text-sm text-gray-900 dark:text-white truncate">{manifest.productName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={manifest.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{manifest.productDescription}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate" title={manifest.manufacturerDBA}>
                                                 <div
                                                     className="text-sm text-gray-900 dark:text-white truncate">{manifest.manufacturerDBA}
                                                 </div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[118px]">{manifest.boxCount}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[140px]">{manifest.boxNetWeight}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[162px]">{manifest.boxGrossWeight}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[118px] truncate">{manifest.boxCount}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[140px] truncate">{manifest.boxNetWeight}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[162px] truncate">{manifest.boxGrossWeight}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                 ${manifest.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[160px]">{manifest.totalOrderQty}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[160px] truncate">{manifest.totalOrderQty}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                 ${manifest.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[124px]">{manifest.qtyShipped}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium ">{manifest.trackingNumber}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[205px]">{manifest.estimatedDeliveryDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{manifest.trackingStatus}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[178px]">{manifest.actualDeliveryDate}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[124px] truncate">{manifest.qtyShipped}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium  truncate">{manifest.trackingNumber}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[205px] truncate">{manifest.estimatedDeliveryDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{manifest.trackingStatus}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[178px] truncate">{manifest.actualDeliveryDate}</td>
                                         </tr>
                                     ))}
                                 </tbody>

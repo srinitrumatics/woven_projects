@@ -28,7 +28,7 @@ export default function QuoteRMASubTab({
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -37,9 +37,9 @@ export default function QuoteRMASubTab({
     return (
         <div className="overflow-x-auto py-2">
             {rmas.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium">No records found</p>
-                    <p className="text-sm">There are no RMAs associated with this quote.</p>
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                    <p className="text-sm truncate" title="There are no RMAs associated with this quote.">There are no RMAs associated with this quote.</p>
                 </div>
             ) : (
                 <table className="w-full truncate">
@@ -74,7 +74,7 @@ export default function QuoteRMASubTab({
                         {rmas.map((rma) => (
                             <tr key={rma.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                 <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.rmaNumber }} title={rma.rmaNumber}>{rma.rmaNumber}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.status }}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${rma.status === 'Approved' ? 'bg-green-100 text-green-800' :
                                         rma.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
                                             'bg-gray-100 text-gray-800'

@@ -51,7 +51,7 @@ const PermissionList: React.FC<PermissionListProps> = ({
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
           <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 animate-pulse">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-4 min-w-0">
               <div className="h-10 w-10 bg-gray-200 rounded-xl"></div>
               <div className="h-6 bg-gray-200 rounded w-48"></div>
             </div>
@@ -126,8 +126,8 @@ const PermissionList: React.FC<PermissionListProps> = ({
           >
             {/* Group Header */}
             <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 flex-1">
+              <div className="flex items-center justify-between min-w-0">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
                   <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                     {groupData.group ? (
                       <Folder className="w-5 h-5 text-white" />
@@ -145,7 +145,7 @@ const PermissionList: React.FC<PermissionListProps> = ({
                       </p>
                     )}
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-lg">
                       <span className="text-white font-semibold text-sm">
                         {permissionCount} {permissionCount === 1 ? 'permission' : 'permissions'}
@@ -201,7 +201,7 @@ const PermissionList: React.FC<PermissionListProps> = ({
                               )}
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 flex-shrink-0">
+                          <div className="flex items-center gap-2 flex-shrink-0 min-w-0">
                             <button
                               onClick={() => handleEdit(permission)}
                               className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"

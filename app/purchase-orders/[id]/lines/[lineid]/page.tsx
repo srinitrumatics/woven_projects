@@ -190,7 +190,7 @@ export default function POLineDetailPage({
     if (loading) {
         return (
             <Sidebar>
-                <div className="flex items-center justify-center min-h-[400px]">
+                <div className="flex items-center justify-center min-h-[400px] min-w-0">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
                 </div>
             </Sidebar>
@@ -203,7 +203,7 @@ export default function POLineDetailPage({
                 <div className="p-8 text-center text-gray-500">
                     Purchase Order Line not found.
                     <div className="mt-4">
-                        <Link href={`/purchase-orders/${id}`} className="text-primary hover:underline">Back to Purchase Order</Link>
+                        <Link href={`/purchase-orders/${id}`} className="text-primary hover:underline truncate">Back to Purchase Order</Link>
                     </div>
                 </div>
             </Sidebar>
@@ -212,35 +212,35 @@ export default function POLineDetailPage({
 
     return (
         <Sidebar>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 min-w-0">
                 {/* Breadcrumb - Compact style from Proposals */}
                 <div className="mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
-                        <Link href="/purchase-orders" className="hover:text-primary">Purchase Orders</Link>
+                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1 min-w-0">
+                        <Link href="/purchase-orders" className="hover:text-primary truncate">Purchase Orders</Link>
                         <span>&gt;</span>
-                        <Link href={`/purchase-orders/${id}`} className="hover:text-primary">Purchase Order Details</Link>
+                        <Link href={`/purchase-orders/${id}`} className="hover:text-primary truncate">Purchase Order Details</Link>
                         <span>&gt;</span>
-                        <span className="text-gray-900 dark:text-white">{line.name}</span>
+                        <span className="text-gray-900 dark:text-white truncate" title={line.name}>{line.name}</span>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white" title={line.name}>
+                    <div className="flex items-center justify-between min-w-0">
+                        <div className="flex items-center gap-4 min-w-0">
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={line.name}>
                                 {line.name}
                             </h1>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Link href={`/purchase-orders/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2 font-bold">
+                        <div className="flex items-center gap-2 min-w-0">
+                            <Link href={`/purchase-orders/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2 font-bold truncate">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                                 Back to PO
                             </Link>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 mt-1">
-                        <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">
+                    <div className="flex items-center gap-2 mt-1 min-w-0">
+                        <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded truncate">
                             Line {lineNumber} of {totalLines}
                         </span>
-                        <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-bold rounded text-[10px] uppercase tracking-wider">
+                        <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-bold rounded text-[10px] uppercase tracking-wider truncate" title={line.status === "Approved" ? "Awarded" : line.status}>
                             {line.status === "Approved" ? "Awarded" : line.status}
                         </span>
                     </div>
@@ -267,7 +267,7 @@ export default function POLineDetailPage({
                                             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                                         />
                                     </svg>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block">
+                                    <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block truncate">
                                         {productImages[currentImageIndex].label}
                                     </span>
                                 </div>
@@ -276,7 +276,7 @@ export default function POLineDetailPage({
                             {/* Carousel Navigation Arrows */}
                             <button
                                 onClick={handlePrevImage}
-                                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors truncate"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -284,7 +284,7 @@ export default function POLineDetailPage({
                             </button>
                             <button
                                 onClick={handleNextImage}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors truncate"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -309,11 +309,13 @@ export default function POLineDetailPage({
 
                     {/* Purchase Order Line Note (3 of 12) */}
                     <div className="xl:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
-                        <div className="flex items-center gap-2 mb-3">
+                        <div className="flex items-center gap-2 mb-3 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                             </div>
-                            <h2 className="text-base font-semibold text-gray-900 dark:text-white" title="Purchase Order Line Note">Purchase Order Line Note</h2>
+                            <div className="min-w-0">
+                                <h2 className="text-base font-semibold text-gray-900 dark:text-white truncate" title="Purchase Order Line Notes">Purchase Order Line Notes</h2>
+                            </div>
                         </div>
                         <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-gray-700 min-h-[200px] overflow-y-auto">
                             {line.poLineNotes || "No notes available for this line item."}
@@ -322,13 +324,13 @@ export default function POLineDetailPage({
 
                     {/* Product Information (6 of 12) */}
                     <div className="xl:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
-                        <div className="flex items-center gap-2 mb-4">
+                        <div className="flex items-center gap-2 mb-4 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                             </div>
-                            <div>
-                                <h3 className="text-base font-semibold text-gray-900 dark:text-white" title="Product Information">Product Information</h3>
-                                <p className="text-xs text-gray-500">Detailed Product Specifications</p>
+                            <div className="min-w-0">
+                                <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate" title="Product Information">Product Information</h3>
+                                <p className="text-xs text-gray-500 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
                             </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -362,28 +364,28 @@ export default function POLineDetailPage({
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-primary-light dark:bg-gray-900">
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300">Unit Price</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Order Qty">Order Qty</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="MOQ">MOQ</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Total Order Qty">Total Order Qty</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Total Price">Total Price</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Shipping">Shipping</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Taxes">Taxes</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Grand Total">Grand Total</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300" title="Qty Shipped">Qty Shipped</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate">Unit Price</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Order Qty">Order Qty</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="MOQ">MOQ</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Total Order Qty">Total Order Qty</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Total Price">Total Price</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Shipping">Shipping</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Taxes">Taxes</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Grand Total">Grand Total</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Qty Shipped">Qty Shipped</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr className="text-gray-900 dark:text-white">
-                                <td className="px-4 py-3 text-sm font-medium " title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-500" >{line.orderQty}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-500" >{line.moq}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-500" >{line.totalOrderQty}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-500" title={formatCurrency(line.totalProductCost)}>{formatCurrency(line.totalProductCost)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-500" title={formatCurrency(line.shippingCharges)}>{formatCurrency(line.shippingCharges)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-500" title={formatCurrency(0)}>{formatCurrency(0)}</td>
-                                <td className="px-4 py-3 text-sm font-bold text-blue-400" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-500" >{line.qtyShipped || 0}</td>
+                                <td className="px-4 py-3 text-sm font-medium truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500 truncate" title={String(line.orderQty)}>{line.orderQty}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500 truncate" title={String(line.moq)}>{line.moq}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500 truncate" title={String(line.totalOrderQty)}>{line.totalOrderQty}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500 truncate" title={formatCurrency(line.totalProductCost)}>{formatCurrency(line.totalProductCost)}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500 truncate" title={formatCurrency(line.shippingCharges)}>{formatCurrency(line.shippingCharges)}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500 truncate" title={formatCurrency(0)}>{formatCurrency(0)}</td>
+                                <td className="px-4 py-3 text-sm font-bold text-blue-400 truncate" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-500 truncate" title={String(line.qtyShipped || 0)}>{line.qtyShipped || 0}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -393,7 +395,7 @@ export default function POLineDetailPage({
                 {/* Row 3: Related Items Tabs (Supplier Bills, Serial Numbers, Returns, Files) */}
                 <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                     {/* Tabs Header */}
-                    <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 mb-6 items-center">
+                    <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 mb-6 items-center min-w-0">
                         {[
                             { id: "bills", label: "Supplier Bill Line", count: bills.length },
                             { id: "serialNumbers", label: "Serial Numbers", count: serialNumbers.length },
@@ -407,6 +409,7 @@ export default function POLineDetailPage({
                                     ? "bg-primary text-white"
                                     : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600"
                                     }`}
+                                title={`${tab.label}${tab.count > 0 ? ` (${tab.count})` : ''}`}
                             >
                                 {tab.label}
                                 {tab.count > 0 && ` (${tab.count})`}
@@ -416,7 +419,7 @@ export default function POLineDetailPage({
 
                     <div className="p-6">
                         {subTabLoading ? (
-                            <div className="flex justify-center items-center py-20">
+                            <div className="flex justify-center items-center py-20 min-w-0">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                             </div>
                         ) : (
@@ -448,22 +451,23 @@ export default function POLineDetailPage({
                 </div>
 
                 {/* Navigation Buttons - Below Detail Tabs Card, Right aligned */}
-                <div className="flex items-center justify-end gap-2 mt-4">
+                <div className="flex items-center justify-end gap-2 mt-4 min-w-0">
                     {/* Previous Line Button */}
                     <button
                         onClick={handlePrevLine}
                         disabled={!hasPrevLine}
-                        className={`px-3 py-1.5 text-sm border rounded-lg transition-colors inline-flex items-center gap-1 ${hasPrevLine
+                        className={`px-3 py-1.5 text-sm border rounded-lg transition-colors inline-flex items-center gap-1 truncate ${hasPrevLine
                             ? "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                             : "border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed"
                             }`}
+                        title="Previous Line"
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                        <svg className="w-4 h-4 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                         Prev
                     </button>
 
                     {/* Line indicator */}
-                    <span className="text-xs text-gray-500 dark:text-gray-400 px-2 font-medium">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 px-2 font-medium truncate">
                         {lineNumber}/{totalLines}
                     </span>
 
@@ -471,13 +475,14 @@ export default function POLineDetailPage({
                     <button
                         onClick={handleNextLine}
                         disabled={!hasNextLine}
-                        className={`px-3 py-1.5 text-sm border rounded-lg transition-colors inline-flex items-center gap-1 ${hasNextLine
+                        className={`px-3 py-1.5 text-sm border rounded-lg transition-colors inline-flex items-center gap-1 truncate ${hasNextLine
                             ? "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                             : "border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed"
                             }`}
+                        title="Next Line"
                     >
                         Next
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                        <svg className="w-4 h-4 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                     </button>
                 </div>
             </div>

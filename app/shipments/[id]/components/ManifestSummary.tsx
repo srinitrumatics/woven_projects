@@ -11,7 +11,7 @@ interface ManifestSummaryProps {
 
 function SummaryItem({ label, value, isMain = false }: { label: string; value: string; isMain?: boolean }) {
     return (
-        <div className="flex justify-between items-center gap-4">
+        <div className="flex justify-between items-center gap-4 min-w-0">
             <span
                 className={`text-gray-700 dark:text-gray-300 truncate flex-1 ${isMain ? "font-medium" : "text-sm"}`}
                 title={label}
@@ -42,15 +42,15 @@ export default function ManifestSummary({
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 h-full flex flex-col">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-6 min-w-0">
                 <div className="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
                     <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
                 </div>
-                <div>
+                <div className="min-w-0">
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Manifest Summary">Manifest Summary</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400" title="Review Your Shipping Manifest Summary">Review Your Shipping Manifest Summary</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Your Shipping Manifest Summary">Review Your Shipping Manifest Summary</p>
                 </div>
             </div>
 

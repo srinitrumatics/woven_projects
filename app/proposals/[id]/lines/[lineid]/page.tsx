@@ -481,19 +481,19 @@ export default function ProposalProductDetailPage({
             <Sidebar>
                 {/* Breadcrumb - Compact (Skeleton) */}
                 <div className="mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
-                        <button className="hover:text-gray-700 dark:hover:text-gray-300">Proposals</button>
+                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1 min-w-0">
+                        <button className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Proposals</button>
                         <span>&gt;</span>
-                        <button className="hover:text-gray-700 dark:hover:text-gray-300">Proposal Details</button>
+                        <button className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Proposal Details</button>
                         <span>&gt;</span>
-                        <span className="text-gray-900 dark:text-white">Product Details</span>
+                        <span className="text-gray-900 dark:text-white truncate">Product Details</span>
                     </div>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-between min-w-0">
+                        <div className="flex items-center gap-4 min-w-0">
                             <div className="h-8 w-64 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"></div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Link href={`/proposals/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors inline-flex items-center gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                            <Link href={`/proposals/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors inline-flex items-center gap-2 truncate">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                                 </svg>
@@ -503,10 +503,10 @@ export default function ProposalProductDetailPage({
                     </div>
                 </div>
 
-                <div className="flex items-center justify-center h-64">
+                <div className="flex items-center justify-center h-64 min-w-0">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                        <p className="text-gray-500 dark:text-gray-400">Loading product details...</p>
+                        <p className="text-gray-500 dark:text-gray-400 truncate" title="Loading product details...">Loading product details...</p>
                     </div>
                 </div>
             </Sidebar>
@@ -517,15 +517,15 @@ export default function ProposalProductDetailPage({
     if (!loading && !product) {
         return (
             <Sidebar>
-                <div className="flex items-center justify-center h-64">
+                <div className="flex items-center justify-center h-64 min-w-0">
                     <div className="text-center">
                         <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <p className="text-gray-500 dark:text-gray-400 mb-4">Product not found</p>
+                        <p className="text-gray-500 dark:text-gray-400 mb-4 truncate" title="Product not found">Product not found</p>
                         <Link
                             href={`/proposals/${id}`}
-                            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+                            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors truncate"
                         >
                             Back to Proposal
                         </Link>
@@ -539,7 +539,7 @@ export default function ProposalProductDetailPage({
         <Sidebar>
             {/* Breadcrumb - Compact */}
             <div className="mb-4">
-                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
+                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1 min-w-0">
                     <button
                         onClick={() => router.push("/proposals")}
                         className="hover:text-gray-700 dark:hover:text-gray-300"
@@ -553,19 +553,19 @@ export default function ProposalProductDetailPage({
                         Proposal Details
                     </button>
                     <span>&gt;</span>
-                    <span className="text-gray-900 dark:text-white">{product.sku}</span>
+                    <span className="text-gray-900 dark:text-white truncate">{product.sku}</span>
                 </div>
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <div className="flex items-center justify-between min-w-0">
+                    <div className="flex items-center gap-4 min-w-0">
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate">
                             {product.sku}
                         </h1>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
                         {/* Back to Proposal Button */}
                         <Link
                             href={`/proposals/${id}`}
-                            className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors inline-flex items-center gap-2"
+                            className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors inline-flex items-center gap-2 truncate"
                         >
                             <svg
                                 className="w-4 h-4"
@@ -584,8 +584,8 @@ export default function ProposalProductDetailPage({
                         </Link>
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded truncate">
                         Line {lineNumber} of {totalLines}
                     </span>
                 </div>
@@ -612,7 +612,7 @@ export default function ProposalProductDetailPage({
                                         d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                                     />
                                 </svg>
-                                <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block">
+                                <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block truncate">
                                     {productImages[currentImageIndex].label}
                                 </span>
                             </div>
@@ -621,7 +621,7 @@ export default function ProposalProductDetailPage({
                         {/* Carousel Navigation Arrows */}
                         <button
                             onClick={handlePrevImage}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors truncate"
                         >
                             <svg
                                 className="w-4 h-4"
@@ -639,7 +639,7 @@ export default function ProposalProductDetailPage({
                         </button>
                         <button
                             onClick={handleNextImage}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors truncate"
                         >
                             <svg
                                 className="w-4 h-4"
@@ -674,26 +674,26 @@ export default function ProposalProductDetailPage({
 
                 {/* Proposal Note - 25% width (3 of 12 cols) */}
                 <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2 mb-3 min-w-0">
                         <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                             <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
-                        <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+                        <h2 className="text-base font-semibold text-gray-900 dark:text-white truncate">
                             Proposal Line Note
                         </h2>
                     </div>
-                    <div className="flex-1 flex flex-col">
+                    <div className="flex-1 flex flex-col min-w-0">
                         <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-800 dark:text-white min-h-[200px]">
-                            <p className="text-gray-700">{product.ProductNotes}</p>
+                            <p className="text-gray-700 truncate">{product.ProductNotes}</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Product Information Card - 50% width (6 of 12 cols) */}
                 <div className="w1025:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2 mb-3 min-w-0">
                         <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                             <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -885,7 +885,7 @@ export default function ProposalProductDetailPage({
                 {/* Details Card - Full width */}
                 < div className="w1025:col-span-5 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4" >
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm ">
+                        <table className="w-full text-left text-sm table-fixed">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
                                     <th className=" px-3 py-2 font-bold text-gray-900 truncate">Unit Price</th>
@@ -901,25 +901,25 @@ export default function ProposalProductDetailPage({
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className="px-3 py-2 text-gray-600 font-medium">
+                                    <td className="px-3 py-2 text-gray-600 font-medium truncate">
                                         ${unitPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-3 py-2 text-gray-600 ">{quantity}</td>
-                                    <td className="px-3 py-2 text-gray-600 ">{product.moq}</td>
-                                    <td className="px-3 py-2 text-gray-600 ">{product.quantity}</td>
-                                    <td className="px-3 py-2 text-gray-600 ">
+                                    <td className="px-3 py-2 text-gray-600  truncate">{quantity}</td>
+                                    <td className="px-3 py-2 text-gray-600  truncate">{product.moq}</td>
+                                    <td className="px-3 py-2 text-gray-600  truncate">{product.quantity}</td>
+                                    <td className="px-3 py-2 text-gray-600  truncate">
                                         ${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-3 py-2 text-gray-600 ">
+                                    <td className="px-3 py-2 text-gray-600  truncate">
                                         ${shippingCharges.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-3 py-2 text-gray-600 ">
+                                    <td className="px-3 py-2 text-gray-600  truncate">
                                         ${taxes.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
                                     <td className="px-3 py-2 text-sm font-bold text-primary dark:text-primary-light truncate">
                                         ${grandTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
-                                    <td className="px-3 py-2 text-gray-600 ">{product.qtyShipped}</td>
+                                    <td className="px-3 py-2 text-gray-600  truncate">{product.qtyShipped}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -930,7 +930,7 @@ export default function ProposalProductDetailPage({
             {/* Row 3: Related Items Tabs (Fulfillments, Purchases, Returns) */}
             < div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4" >
                 {/* Tabs Header */}
-                <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 mb-6 items-center">
+                <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 mb-6 items-center min-w-0">
                     {
                         [
                             { id: "taxes", label: "Taxes", count: product.taxDetail ? 1 : 0 },
@@ -1001,7 +1001,7 @@ export default function ProposalProductDetailPage({
                     hasPrevLine ? (
                         <Link
                             href={`/proposals/${id}/lines/${prevLineId}`}
-                            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
+                            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1 truncate"
                         >
                             <svg
                                 className="w-4 h-4"
@@ -1019,7 +1019,7 @@ export default function ProposalProductDetailPage({
                             Prev
                         </Link>
                     ) : (
-                        <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
+                        <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed truncate">
                             <svg
                                 className="w-4 h-4"
                                 fill="none"
@@ -1039,7 +1039,7 @@ export default function ProposalProductDetailPage({
                 }
 
                 {/* Line indicator */}
-                <span className="text-xs text-gray-500 dark:text-gray-400 px-2">
+                <span className="text-xs text-gray-500 dark:text-gray-400 px-2 truncate">
                     {lineNumber}/{totalLines}
                 </span>
 
@@ -1048,7 +1048,7 @@ export default function ProposalProductDetailPage({
                     hasNextLine ? (
                         <Link
                             href={`/proposals/${id}/lines/${nextLineId}`}
-                            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
+                            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1 truncate"
                         >
                             Next
                             <svg
@@ -1066,7 +1066,7 @@ export default function ProposalProductDetailPage({
                             </svg>
                         </Link>
                     ) : (
-                        <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
+                        <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed truncate">
                             Next
                             <svg
                                 className="w-4 h-4"

@@ -173,8 +173,8 @@ export default function PurchaseOrdersPage() {
     return (
         <Sidebar>
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Purchase Orders</h1>
-                <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1">Manage and Track Supplier Purchase Orders</p>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Purchase Orders</h1>
+                <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Supplier Purchase Orders">Manage and Track Supplier Purchase Orders</p>
             </div>
 
             {/* Stats Cards - Compact & Engaging Design (Matched to Proposal) */}
@@ -271,7 +271,7 @@ export default function PurchaseOrdersPage() {
                                     <SortableHeader label="Acknowledged Date" field="acknowledgedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.acknowledgedDate} onResize={handleResize} />
                                     <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestDate} onResize={handleResize} />
                                     <SortableHeader label="Promised Date" field="promiseDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.promiseDate} onResize={handleResize} />
-                                    <th className="text-sm px-2 py-2 text-left font-bold text-gray-700 dark:text-gray-200 ">Action</th>
+                                    <th className="text-sm px-2 py-2 text-left font-bold text-gray-700 dark:text-gray-200  truncate">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
@@ -280,22 +280,22 @@ export default function PurchaseOrdersPage() {
                                 ) : (
                                     paginatedPOs.map(po => (
                                         <tr key={po.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onClick={() => router.push(`/purchase-orders/${po.id}`)}>
-                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline" title={po.name}>{po.name}</td>
-                                            <td className="px-2 py-2 text-sm" title={po.status}><StatusBadge status={po.status} /></td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={po.proposalName || '-'}>{po.proposalName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={po.customerOrderName || '-'}>{po.customerOrderName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={po.customerQuoteName || '-'}>{po.customerQuoteName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={po.shipToAccountName || '-'}>{po.shipToAccountName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400" title={po.shipToLocationName || '-'}>{po.shipToLocationName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-medium" title={String(po.totalLines || 0)}>{po.totalLines || 0}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold" title={formatCurrency(po.totalCost)}>{formatCurrency(po.totalCost)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400" title={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}>{po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400" title={po.acknowledgedDate ? formatDate(po.acknowledgedDate, 'numeric-dash') : '-'}>{po.acknowledgedDate ? formatDate(po.acknowledgedDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400" title={po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : '-'}>{po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400" title={po.promiseDate ? formatDate(po.promiseDate, 'numeric-dash') : '-'}>{po.promiseDate ? formatDate(po.promiseDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-2 py-2 text-sm">
-                                                <div className="flex items-center gap-2">
-                                                    <button className="p-1.5 text-gray-400 hover:text-primary transition-colors hover:bg-primary/10 rounded-lg">
+                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate max-w-[200px]" title={po.name}>{po.name}</td>
+                                            <td className="px-2 py-2 text-sm truncate" title={po.status}><StatusBadge status={po.status} /></td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.proposalName || '-'}>{po.proposalName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerOrderName || '-'}>{po.customerOrderName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerQuoteName || '-'}>{po.customerQuoteName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.shipToAccountName || '-'}>{po.shipToAccountName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.shipToLocationName || '-'}>{po.shipToLocationName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-medium truncate" title={String(po.totalLines || 0)}>{po.totalLines || 0}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" title={formatCurrency(po.totalCost)}>{formatCurrency(po.totalCost)}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}>{po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={po.acknowledgedDate ? formatDate(po.acknowledgedDate, 'numeric-dash') : '-'}>{po.acknowledgedDate ? formatDate(po.acknowledgedDate, 'numeric-dash') : '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : '-'}>{po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={po.promiseDate ? formatDate(po.promiseDate, 'numeric-dash') : '-'}>{po.promiseDate ? formatDate(po.promiseDate, 'numeric-dash') : '-'}</td>
+                                            <td className="px-2 py-2 text-sm truncate">
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                    <button className="p-1.5 text-gray-400 hover:text-primary transition-colors hover:bg-primary/10 rounded-lg truncate">
                                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                                     </button>
                                                 </div>
@@ -369,7 +369,7 @@ function StatCard({ label, count, value, isActive, onClick, icon, color, customF
                             onClick={(e) => { e.preventDefault(); onClick(); }}
                             className="hover:underline block"
                         >
-                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">{label}</p>
+                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate">{label}</p>
                         </Link>
                         <Link
                             href="#"
@@ -377,8 +377,8 @@ function StatCard({ label, count, value, isActive, onClick, icon, color, customF
                             className="hover:underline block"
                         >
                             <div className="flex items-baseline gap-2">
-                                <span className="text-3xl font-bold text-gray-900 dark:text-white">{count}</span>
-                                <span className="text-sm text-gray-500 dark:text-gray-400">POs</span>
+                                <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{count}</span>
+                                <span className="text-sm text-gray-500 dark:text-gray-400 truncate">POs</span>
                             </div>
                         </Link>
                         <p className={`text-lg font-semibold mt-1 ${textColors[color]}`}>
@@ -437,9 +437,9 @@ function StatusBadge({ status }: { status: string }) {
 
 function LoadingState() {
     return (
-        <div className="flex flex-col items-center justify-center py-20 animate-pulse">
+        <div className="flex flex-col items-center justify-center py-20 animate-pulse min-w-0">
             <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-500 dark:text-gray-400 font-medium tracking-wide">Synchronizing data from Salesforce...</p>
+            <p className="text-gray-500 dark:text-gray-400 font-medium tracking-wide truncate" title="Synchronizing data from Salesforce...">Synchronizing data from Salesforce...</p>
         </div>
     );
 }
@@ -447,11 +447,11 @@ function LoadingState() {
 function EmptyState({ query }: { query: string }) {
     return (
         <tr>
-            <td colSpan={14} className="px-6 py-4 text-center">
-                <div className="flex flex-col items-center max-w-sm mx-auto">
+            <td colSpan={14} className="px-6 py-4 text-center truncate">
+                <div className="flex flex-col items-center max-w-sm mx-auto min-w-0">
 
-                    <p className="text-lg font-bold text-gray-900 dark:text-white mb-1">No Purchase Orders Found</p>
-                    <p className="text-gray-500 dark:text-gray-400">
+                    <p className="text-lg font-bold text-gray-900 dark:text-white mb-1 truncate" title="No Purchase Orders Found">No Purchase Orders Found</p>
+                    <p className="text-gray-500 dark:text-gray-400 truncate">
                         {query ? `We couldn't find any results matching "${query}". Try a different search term.` : "There are currently no purchase orders in the system."}
                     </p>
                 </div>

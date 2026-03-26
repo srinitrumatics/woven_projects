@@ -76,16 +76,16 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
         const colorClass = colors[status] || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
 
         return (
-            <span className={`inline-flex px-2 py-1 text-[11px] font-bold uppercase tracking-wider rounded ${colorClass}`} title={status || '-'}>
+            <span className={`inline-flex px-2 py-1 text-[11px] font-bold uppercase tracking-wider rounded truncate ${colorClass}`} title={status || '-'}>
                 {status || '-'}</span>
         );
     };
 
     if (lines.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-                <p className="text-sm font-medium">No Debit Memo lines found</p>
-                <p className="text-xs mt-1">There are no debit memo lines associated with this record.</p>
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 min-w-0">
+                <p className="text-sm font-medium truncate" title="No Debit Memo lines found">No Debit Memo lines found</p>
+                <p className="text-xs mt-1 truncate" title="There are no debit memo lines associated with this record.">There are no debit memo lines associated with this record.</p>
             </div>
         );
     }
@@ -115,24 +115,24 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((line) => (
                             <tr key={line.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700" title="{line.Name}">
-                                    <div className="truncate" title={line.Name}>{line.Name}</div>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={line.Name}>
+                                    {line.Name}
                                 </td>
-                                <td className="px-4 py-3"><StatusBadge status={line.Status__c} /></td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{line.Debit_Memo_Name || ' '}">
-                                    <div className="truncate" title={line.Debit_Memo_Name}>{line.Debit_Memo_Name || ' '}</div>
+                                <td className="px-4 py-3 truncate"><StatusBadge status={line.Status__c} /></td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Debit_Memo_Name || ' '}>
+                                    {line.Debit_Memo_Name || ' '}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{line.Supplier_Bill_Line_Name || ' '}"><div className="truncate" title={line.Supplier_Bill_Line_Name}>{line.Supplier_Bill_Line_Name || ' '}</div></td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{line.Customer_Quote_Line_Name || ' '}"><div className="truncate" title={line.Customer_Quote_Line_Name}>{line.Customer_Quote_Line_Name || ' '}</div></td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{line.Purchase_Order_Line_Name || ' '}"><div className="truncate" title={line.Purchase_Order_Line_Name}>{line.Purchase_Order_Line_Name || ' '}</div></td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{line.Product_Name || ' '}"><div className="truncate" title={line.Product_Name}>{line.Product_Name || ' '}</div></td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{line.Product_Description__c || ' '}"><div className="truncate" title={line.Product_Description__c}>{line.Product_Description__c || ' '}</div></td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white" title="{line.Manufacturer_DBA__c || ' '}"><div className="truncate" title={line.Manufacturer_DBA__c}>{line.Manufacturer_DBA__c || ' '}</div></td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left" >{formatCurrency(line.Unit_Cost__c || 0)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left">{line.Debit_Qty__c || 0}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left" title={formatCurrency(line.Total_Cost__c || 0)}>{formatCurrency(line.Total_Cost__c || 0)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left" title={formatCurrency(line.Shipping_Charges__c || 0)}>{formatCurrency(line.Shipping_Charges__c || 0)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold text-left" title={formatCurrency(line.Line_Grand_Total__c || 0)}>{formatCurrency(line.Line_Grand_Total__c || 0)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Supplier_Bill_Line_Name || ' '}>{line.Supplier_Bill_Line_Name || ' '}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || ' '}>{line.Customer_Quote_Line_Name || ' '}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Purchase_Order_Line_Name || ' '}>{line.Purchase_Order_Line_Name || ' '}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || ' '}>{line.Product_Name || ' '}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || ' '}>{line.Product_Description__c || ' '}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Manufacturer_DBA__c || ' '}>{line.Manufacturer_DBA__c || ' '}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={String(line.Debit_Qty__c || 0)}>{line.Debit_Qty__c || 0}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left truncate" title={formatCurrency(line.Total_Cost__c || 0)}>{formatCurrency(line.Total_Cost__c || 0)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Shipping_Charges__c || 0)}>{formatCurrency(line.Shipping_Charges__c || 0)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold text-left truncate" title={formatCurrency(line.Line_Grand_Total__c || 0)}>{formatCurrency(line.Line_Grand_Total__c || 0)}</td>
                             </tr>
                         ))}
                     </tbody>

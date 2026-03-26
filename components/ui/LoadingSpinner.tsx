@@ -15,7 +15,7 @@ export default function LoadingSpinner({ size = "md", text }: LoadingSpinnerProp
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-12">
+    <div className="flex flex-col items-center justify-center py-12 min-w-0">
       <div
         className={`${sizeClasses[size]} border-4 border-gray-200 dark:border-gray-700 border-t-primary rounded-full animate-spin`}
       />

@@ -103,16 +103,16 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
     if (creditMemoLines.length === 0) {
         return (
             <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No records found</p>
-                <p className="text-sm">There is no credit memo associated with this invoice line.</p>
+                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There is no credit memo associated with this invoice line.">There is no credit memo associated with this invoice line.</p>
             </div>
         );
     }
 
     return (
         <div className="bg-white dark:bg-gray-800">
-            <div className="overflow-auto max-h-[500px]">
-                <table className="w-full text-sm">
+            <div className="overflow-auto ">
+                <table className="w-full text-sm table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <SortableHeader label="Credit Memo Line" field="lineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 top-0 z-20 bg-primary-light dark:bg-gray-900" />
@@ -136,9 +136,9 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                         {sortedData.map((item) => (
                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700">
                                 {/* Sticky column — z-10, inherits row bg */}
-                                <td className="px-3 py-2 text-sm text-left sticky left-0 bg-white dark:bg-gray-800 ">{item.lineName}</td>
-                                <td className="px-3 py-2 text-sm">
-                                    <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                <td className="px-3 py-2 text-sm text-left sticky left-0 bg-white dark:bg-gray-800  truncate">{item.lineName}</td>
+                                <td className="px-3 py-2 text-sm truncate">
+                                    <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
                                         {item.status}
                                     </span>
                                 </td>

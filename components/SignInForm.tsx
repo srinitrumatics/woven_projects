@@ -63,7 +63,7 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen">
+    <div className="flex flex-col md:flex-row h-screen min-w-0">
       {/* Left Panel - Sign In Form */}
       <div className="w-full md:w-1/2 flex items-center justify-center bg-white px-6 md:px-12 py-10 overflow-auto">
         <div className="w-full max-w-md">

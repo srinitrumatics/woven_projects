@@ -15,7 +15,7 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -23,16 +23,16 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
 
     if (taxes.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no taxes associated with this proposal.</p>
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no taxes associated with this proposal.">There are no taxes associated with this proposal.</p>
             </div>
         );
     }
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900">
                     <tr>
                         <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxRate} onResize={onResize} align="left" />
@@ -54,46 +54,46 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {sortedData.map((tax) => (
                         <tr key={tax.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 {tax.salesTaxRate?.toFixed(3)}%
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[163px]">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[163px] truncate">
                                 ${tax.salesTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 {tax.useTaxRate?.toFixed(3)}%
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 ${tax.useTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white ">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white  truncate">
                                 {tax.localTaxRate?.toFixed(3)}%
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[158px]">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[158px] truncate">
                                 ${tax.localTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 {tax.exciseTaxRate?.toFixed(3)}%
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[178px]">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[178px] truncate">
                                 ${tax.exciseTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 {tax.grossReceiptsTaxRate?.toFixed(3)}%
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 ${tax.grossReceiptsTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 {tax.gstRate?.toFixed(3)}%
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 ${tax.gstAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 {tax.vatRate?.toFixed(3)}%
                             </td>
-                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white ">
+                            <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white  truncate">
                                 ${tax.vatAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
                         </tr>

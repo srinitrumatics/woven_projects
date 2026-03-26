@@ -11,7 +11,7 @@ interface SupplierBillDetailProps {
 export default function SupplierBillDetail({ bill }: SupplierBillDetailProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 h-full">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-6 min-w-0">
                 <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                     <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -19,7 +19,7 @@ export default function SupplierBillDetail({ bill }: SupplierBillDetailProps) {
                 </div>
                 <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Supplier Bill Detail">Supplier Bill Detail</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Bill Information</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Bill Information">Bill Information</p>
                 </div>
             </div>
 

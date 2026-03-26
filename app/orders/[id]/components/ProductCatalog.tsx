@@ -91,7 +91,7 @@ export default function ProductCatalog({
         <>
             {/* Consistent success banner — shown for both single and bulk adds */}
             {bannerMessage && (
-                <div className="flex items-center gap-2 mb-3 px-4 py-2.5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg text-sm text-green-700 dark:text-green-300 font-medium">
+                <div className="flex items-center gap-2 mb-3 px-4 py-2.5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg text-sm text-green-700 dark:text-green-300 font-medium min-w-0">
                     <svg className="w-4 h-4 shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
@@ -102,16 +102,16 @@ export default function ProductCatalog({
                 {isEditing && selectedProductIds.size > 0 && (
                     <button
                         onClick={handleBulkAdd}
-                        className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors shadow-sm"
+                        className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors shadow-sm truncate"
                     >
                         Add Selected ({selectedProductIds.size})
                     </button>
                 )}
             </div>
             {paginatedCatalogProducts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium">No records found</p>
-                    <p className="text-sm mt-1">{searchQuery ? "No products found matching your search." : "All products have been added to your order."}</p>
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                    <p className="text-sm mt-1 truncate">{searchQuery ? "No products found matching your search." : "All products have been added to your order."}</p>
                 </div>
             ) : (
                 <div className="overflow-auto">
@@ -120,7 +120,7 @@ export default function ProductCatalog({
                             <tr>
                                 {isEditing && (
                                     <th
-                                        className="px-2 py-3 text-left"
+                                        className="px-2 py-3 text-left truncate"
                                         style={{ width: widths.selection, minWidth: widths.selection, maxWidth: widths.selection }}
                                     >
                                         <input
@@ -132,7 +132,7 @@ export default function ProductCatalog({
                                     </th>
                                 )}
                                 {/*<th
-                                className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white"
+                                className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white truncate"
                             style={{ width: widths.image, minWidth: widths.image, maxWidth: widths.image }}
                             >Image</th>*/}
                                 <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
@@ -145,7 +145,7 @@ export default function ProductCatalog({
                                     <>
                                         <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
                                         <th
-                                            className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                                            className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate"
                                             style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                                         >Action</th>
                                     </>
@@ -156,7 +156,7 @@ export default function ProductCatalog({
                             {paginatedCatalogProducts.map((product) => (
                                 <tr key={product.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${selectedProductIds.has(product.id) ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
                                     {isEditing && (
-                                        <td className="px-2 py-2 text-left">
+                                        <td className="px-2 py-2 text-left truncate">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedProductIds.has(product.id)}
@@ -165,7 +165,7 @@ export default function ProductCatalog({
                                             />
                                         </td>
                                     )}
-                                    {/*<td className="px-4 py-2 text-center">
+                                    {/*<td className="px-4 py-2 text-center truncate">
                                         <div
                                             className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity mx-auto"
                                             onClick={() => handleImageClick(product)}
@@ -175,33 +175,33 @@ export default function ProductCatalog({
                                             </svg>
                                         </div>
                                     </td>*/}
-                                    <td className="px-3 py-2 text-left">
+                                    <td className="px-3 py-2 text-left truncate">
                                         <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.name}>{truncateText(product.name, 50)}</div>
                                         <div className="text-sm text-gray-500 dark:text-gray-400 truncate break-words" title={product.description || ""}>
-                                            {product.description ? truncateText(product.description, 50) : <span className="invisible">Empty Description</span>}
+                                            {product.description ? truncateText(product.description, 50) : <span className="invisible truncate">Empty Description</span>}
                                         </div>
                                     </td>
-                                    <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">
+                                    <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                         <div className="truncate" title={product.manufacturer}>{product.manufacturer}</div>
                                     </td>
-                                    <td className="px-3 py-2 text-left">
+                                    <td className="px-3 py-2 text-left truncate">
                                         <div className="truncate" title={product.productFamily}>
-                                            <span className="inline-block px-2 py-0.5 text-sm font-medium rounded bg-primary/10 text-primary  tracking-wider whitespace-normal">
+                                            <span className="inline-block px-2 py-0.5 text-sm font-medium rounded bg-primary/10 text-primary  tracking-wider whitespace-normal truncate">
                                                 {product.productFamily}
                                             </span>
                                         </div>
                                     </td>
-                                    <td className="px-3 py-2 text-sm text-left text-gray-500 dark:text-gray-400 line-through">
+                                    <td className="px-3 py-2 text-sm text-left text-gray-500 dark:text-gray-400 line-through truncate">
                                         {formatCurrency(product.listPrice)}
                                     </td>
-                                    <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">
+                                    <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">
                                         {formatCurrency(product.unitPrice)}
                                     </td>
                                     {/* Removed Available Qty Cell */}
                                     {isEditing && (
                                         <>
-                                            <td className="px-3 py-2 text-left">
-                                                <div className="flex flex-col gap-1">
+                                            <td className="px-3 py-2 text-left truncate">
+                                                <div className="flex flex-col gap-1 min-w-0">
                                                     <div className="flex gap-1">
                                                         <button
                                                             onClick={() => {
@@ -260,8 +260,8 @@ export default function ProductCatalog({
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="px-3 py-2 text-left">
-                                                <div className="flex flex-col gap-1">
+                                            <td className="px-3 py-2 text-left truncate">
+                                                <div className="flex flex-col gap-1 min-w-0">
                                                     <button
                                                         onClick={() => {
                                                             if (qtyWarnings[product.id]) return;
@@ -299,7 +299,7 @@ export default function ProductCatalog({
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={handleClosePopup}>
                         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full p-6 relative" onClick={e => e.stopPropagation()}>
                             <button
-                                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 truncate"
                                 onClick={handleClosePopup}
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -307,36 +307,36 @@ export default function ProductCatalog({
                                 </svg>
                             </button>
 
-                            <div className="flex flex-col items-center">
+                            <div className="flex flex-col items-center min-w-0">
                                 <div className="w-64 h-64 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center mb-6">
                                     <svg className="w-32 h-32 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                     </svg>
                                 </div>
 
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 text-center">{popupProduct.name}</h3>
-                                <p className="text-sm font-mono text-gray-500 dark:text-gray-400 mb-4">{popupProduct.sku}</p>
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 text-center truncate" title={popupProduct.name}>{popupProduct.name}</h3>
+                                <p className="text-sm font-mono text-gray-500 dark:text-gray-400 mb-4 truncate">{popupProduct.sku}</p>
 
                                 <div className="w-full grid grid-cols-2 gap-4 mb-6">
                                     <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                                        <span className="text-xs text-gray-500 dark:text-gray-400 block">Manufacturer</span>
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white">{popupProduct.manufacturer}</span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Manufacturer</span>
+                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{popupProduct.manufacturer}</span>
                                     </div>
                                     <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                                        <span className="text-xs text-gray-500 dark:text-gray-400 block">Family</span>
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white">{popupProduct.productFamily}</span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Family</span>
+                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{popupProduct.productFamily}</span>
                                     </div>
                                     <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                                        <span className="text-xs text-gray-500 dark:text-gray-400 block">Price</span>
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white">{formatCurrency(popupProduct.unitPrice)}</span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Price</span>
+                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{formatCurrency(popupProduct.unitPrice)}</span>
                                     </div>
                                     <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                                        <span className="text-xs text-gray-500 dark:text-gray-400 block">Available</span>
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white">{formatNumber(popupProduct.availableQty)}</span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Available</span>
+                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{formatNumber(popupProduct.availableQty)}</span>
                                     </div>
                                 </div>
 
-                                <p className="text-gray-600 dark:text-gray-300 text-center mb-6">
+                                <p className="text-gray-600 dark:text-gray-300 text-center mb-6 truncate">
                                     {popupProduct.description || "No description available."}
                                 </p>
 

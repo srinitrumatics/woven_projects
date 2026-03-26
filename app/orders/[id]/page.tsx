@@ -1511,7 +1511,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       {/* Products Search - Full Width */}
       <div className="mt-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
             {/* Search — top on mobile/tablet (<1024px), left on desktop (>=1024px) */}
             <div className="flex-1 relative w-full">
               <input
@@ -1641,7 +1641,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         >
           Cancel
         </button>
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto min-w-0">
           {submitError && (
             <div className="text-sm text-red-600 dark:text-red-400 max-w-md text-center sm:text-left">
               {submitError}
@@ -1656,7 +1656,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 <button
                   onClick={handleSaveDraft}
                   disabled={isSubmitting}
-                  className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed truncate"
                 >
                   {isSubmitting ? "Saving..." : "Save Draft"}
                 </button>
@@ -1667,7 +1667,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed truncate"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Order"}
                 </button>

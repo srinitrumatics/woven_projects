@@ -116,9 +116,9 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
   if (loading) {
     return (
       <Sidebar>
-        <div className="flex flex-col items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center justify-center min-h-[400px] min-w-0">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
-          <p className="text-gray-500 dark:text-gray-400">Loading shipment details...</p>
+          <p className="text-gray-500 dark:text-gray-400 truncate" title="Loading shipment details...">Loading shipment details...</p>
         </div>
       </Sidebar>
     );
@@ -129,8 +129,8 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
     return (
       <Sidebar>
         <div className="p-8 text-center bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <h2 className="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Error</h2>
-          <p className="text-red-600 dark:text-red-300">{error || "Shipment not found"}</p>
+          <h2 className="text-xl font-semibold text-red-700 dark:text-red-400 mb-2 truncate">Error</h2>
+          <p className="text-red-600 dark:text-red-300 truncate">{error || "Shipment not found"}</p>
           <button
             onClick={() => router.push("/shipments")}
             className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
@@ -164,7 +164,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
 
         {/* Row 2 — Shipping + Tracking (7) + Summary (3) */}
         <div className="w1025:col-span-7">
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 min-w-0">
             <ShipmentInfo shipment={shipment} formatAddress={formatAddress} />
             <TrackingInfo shipment={shipment} trackingData={trackingData} />
           </div>

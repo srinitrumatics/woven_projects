@@ -13,18 +13,18 @@ export default function ProposalHeader({ proposalNumber, status, description, on
     const router = useRouter();
     return (
         <div className="mb-6">
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
-                <button onClick={onBack} className="hover:text-gray-700 dark:hover:text-gray-300">Proposals</button>
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2 min-w-0">
+                <button onClick={onBack} className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Proposals</button>
                 <span>&gt;</span>
-                <span className="hover:text-gray-700 dark:text-gray-300">View Proposal</span>
+                <span className="hover:text-gray-700 dark:text-gray-300 truncate">View Proposal</span>
                 <span>&gt;</span>
-                <span className="text-gray-900 dark:text-white">{proposalNumber}</span>
+                <span className="text-gray-900 dark:text-white truncate">{proposalNumber}</span>
             </div>
 
             {/* Proposal header card (full width) */}
             <div className="w-full dark:bg-gray-800 rounded-lg p-4">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
-                    <div className="flex items-center gap-4 w-full sm:w-auto">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 min-w-0">
+                    <div className="flex items-center gap-4 w-full sm:w-auto min-w-0">
                         <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0">
                             <svg className="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                 <path d="M3 3h18v4H3z" />
@@ -33,12 +33,12 @@ export default function ProposalHeader({ proposalNumber, status, description, on
                             </svg>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{proposalNumber}</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={proposalNumber}>{proposalNumber}</h2>
                             <div className="text-sm text-gray-500 dark:text-gray-400">Proposal Details and Summary</div>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end min-w-0">
                         <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                             status === 'Pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
                                 status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :

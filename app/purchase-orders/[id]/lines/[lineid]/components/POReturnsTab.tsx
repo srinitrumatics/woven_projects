@@ -13,7 +13,7 @@ export default function POReturnsTab({ debitMemos, rtv }: POReturnsTabProps) {
     const [activeSubTab, setActiveSubTab] = useState<"debitMemo" | "rtv">("debitMemo");
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full min-w-0">
             {/* Sub-tabs Header */}
             <div className="flex gap-4 border-b border-gray-100 dark:border-gray-700 pb-2">
                 <button

@@ -97,7 +97,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -105,16 +105,16 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
 
     if (inventoryData.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no Inventory Positions associated with this shipping manifest line.</p>
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no Inventory Positions associated with this shipping manifest line.">There are no Inventory Positions associated with this shipping manifest line.</p>
             </div>
         );
     }
 
     return (
         <div className="overflow-x-auto mt-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <table className="w-full">
+            <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
                         <SortableHeader label="Inventory Position" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />

@@ -23,7 +23,7 @@ export function TrackingTimelineTab({ trackingData }: { trackingData?: any }) {
 
     return (
         <div className="p-6">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Tracking Status: {trackingData.data.currentStatusDescription}</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 truncate">Tracking Status: {trackingData.data.currentStatusDescription}</h3>
             <div className="relative">
                 {events.map((item: any, index: number) => (
                     <div key={index} className="flex gap-4 mb-8 last:mb-0 relative">
@@ -45,12 +45,12 @@ export function TrackingTimelineTab({ trackingData }: { trackingData?: any }) {
                         </div>
                         <div className="flex-1 min-w-0 flex justify-between gap-4">
                             <div className="min-w-0">
-                                <h4 className="text-base font-bold text-gray-900 dark:text-white truncate">{item.status}</h4>
-                                <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">{item.description}</p>
-                                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{item.location}</p>
+                                <h4 className="text-base font-bold text-gray-900 dark:text-white truncate" title={item.status}>{item.status}</h4>
+                                <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5 truncate">{item.description}</p>
+                                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1 truncate">{item.location}</p>
                             </div>
                             <div className="shrink-0 text-right">
-                                <span className="text-xs font-medium text-gray-400 dark:text-gray-500 whitespace-nowrap">{item.dateTime}</span>
+                                <span className="text-xs font-medium text-gray-400 dark:text-gray-500 whitespace-nowrap truncate">{item.dateTime}</span>
                             </div>
                         </div>
                     </div>

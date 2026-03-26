@@ -28,7 +28,7 @@ export default function QuoteShippingManifestsSubTab({
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -37,9 +37,9 @@ export default function QuoteShippingManifestsSubTab({
     return (
         <div className="overflow-x-auto py-2">
             {manifests.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium">No records found</p>
-                    <p className="text-sm">There are no shipping manifests associated with this quote.</p>
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                    <p className="text-sm truncate" title="There are no shipping manifests associated with this quote.">There are no shipping manifests associated with this quote.</p>
                 </div>
             ) : (
                 <table className="w-full truncate">
@@ -74,8 +74,8 @@ export default function QuoteShippingManifestsSubTab({
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {manifests.map((manifest) => (
                             <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800" style={{ width: widths.manifestNumber }}>{manifest.manifestNumber}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.status }}>
+                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.manifestNumber }}>{manifest.manifestNumber}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${manifest.status === 'Draft' ? 'bg-gray-100 text-gray-800' :
                                         manifest.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
                                             manifest.status === 'Delivered' ? 'bg-green-100 text-green-800' :
@@ -84,33 +84,33 @@ export default function QuoteShippingManifestsSubTab({
                                         {manifest.status}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.salesOrder }}>{manifest.salesOrder}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.customerQuote }}>{manifest.customerQuote}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.customerOrder }}>{manifest.customerOrder}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.customerPO }}>{manifest.customerPO}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipToAccount }}>{manifest.shipToAccount}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipToLocation }}>{manifest.shipToLocation}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipToContact }}>{manifest.shipToContact}</td>
-                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.dropShip }}>{manifest.dropShip ? 'Yes' : 'No'}</td>
-                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.boxCount }}>{manifest.boxCount}</td>
-                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.boxNetWeight }}>{manifest.boxNetWeight} kg</td>
-                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.boxGrossWeight }}>{manifest.boxGrossWeight} kg</td>
-                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white" style={{ width: widths.totalLines }}>{manifest.totalLines}</td>
-                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-bold" style={{ width: widths.totalPrice }}>{formatCurrency(manifest.totalPrice)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.plannedShipDate }}>{formatDate(manifest.plannedShipDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shipConfirmedDate }}>{formatDate(manifest.shipConfirmedDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.shippingMethod }}>{manifest.shippingMethod}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.logisticsPartner }}>{manifest.logisticsPartner}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.logisticsContact }}>{manifest.logisticsContact}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.trackingNumber }}>{manifest.trackingNumber}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(manifest.estimatedDeliveryDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.trackingStatus }}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>{manifest.salesOrder}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>{manifest.customerQuote}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>{manifest.customerOrder}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{manifest.customerPO}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToAccount }}>{manifest.shipToAccount}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToLocation }}>{manifest.shipToLocation}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToContact }}>{manifest.shipToContact}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.dropShip }}>{manifest.dropShip ? 'Yes' : 'No'}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.boxCount }}>{manifest.boxCount}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.boxNetWeight }}>{manifest.boxNetWeight} kg</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.boxGrossWeight }}>{manifest.boxGrossWeight} kg</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{manifest.totalLines}</td>
+                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(manifest.totalPrice)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.plannedShipDate }}>{formatDate(manifest.plannedShipDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipConfirmedDate }}>{formatDate(manifest.shipConfirmedDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shippingMethod }}>{manifest.shippingMethod}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsPartner }}>{manifest.logisticsPartner}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsContact }}>{manifest.logisticsContact}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingNumber }}>{manifest.trackingNumber}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(manifest.estimatedDeliveryDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingStatus }}>
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${manifest.trackingStatus === 'Delivered' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                                         }`}>
                                         {manifest.trackingStatus}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.actualDeliveryDate }}>{formatDate(manifest.actualDeliveryDate, 'numeric-dash')}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.actualDeliveryDate }}>{formatDate(manifest.actualDeliveryDate, 'numeric-dash')}</td>
                             </tr>
                         ))}
                     </tbody>

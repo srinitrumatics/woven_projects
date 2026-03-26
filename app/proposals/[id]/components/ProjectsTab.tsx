@@ -18,7 +18,7 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -27,9 +27,9 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
     return (
         <div className="overflow-x-auto">
             {projects.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium">No records found</p>
-                    <p className="text-sm">There are no projects associated with this proposal.</p>
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                    <p className="text-sm truncate" title="There are no projects associated with this proposal.">There are no projects associated with this proposal.</p>
                 </div>
             ) : (
                 <table className="w-full ">
@@ -53,10 +53,10 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {projects.map((project) => (
                             <tr key={project.id} className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
                                     <div className="truncate" title={project.projectNumber}> {project.projectNumber} </div>
                                 </td>
-                                <td className="px-3 py-2">
+                                <td className="px-3 py-2 truncate">
                                     <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${project.status === 'New' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
                                         project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
                                             project.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
@@ -66,30 +66,30 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                                         {project.status}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" title={project.name}><div className="text-sm font-medium text-gray-900 dark:text-white truncate">{project.name}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={project.customerAccountName}><div className="text-sm text-gray-900 dark:text-white truncate">{project.customerAccountName}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={project.customerContactName}><div className="text-sm text-gray-900 dark:text-white truncate">{project.customerContactName}</div></td>
-                                <td className="px-3 py-2">
-                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate" title={project.name}><div className="text-sm font-medium text-gray-900 dark:text-white truncate">{project.name}</div></td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.customerAccountName}><div className="text-sm text-gray-900 dark:text-white truncate">{project.customerAccountName}</div></td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.customerContactName}><div className="text-sm text-gray-900 dark:text-white truncate">{project.customerContactName}</div></td>
+                                <td className="px-3 py-2 truncate">
+                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">
                                         {project.billingType}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={project.projectManagerName}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.projectManagerName}>
                                     <div className="text-sm text-gray-900 dark:text-white truncate">{project.projectManagerName}</div></td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold min-w-[186px]">
+                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold min-w-[186px] truncate">
                                     ${project.estimatedBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white min-w-[147px]">
-                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 font-semibold">
+                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white min-w-[147px] truncate">
+                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 font-semibold truncate">
                                         {project.totalMilestones}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white">
-                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white truncate">
+                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
                                         {project.totalTasks}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-left min-w-[137px]">
+                                <td className="px-3 py-2 text-left min-w-[137px] truncate">
                                     {project.percentCompleted !== null ? (
                                         <div className="flex gap-2">
                                             <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -98,14 +98,14 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                                                     style={{ width: `${project.percentCompleted}%` }}
                                                 ></div>
                                             </div>
-                                            <span className="text-sm text-gray-600 dark:text-gray-400">{project.percentCompleted}%</span>
+                                            <span className="text-sm text-gray-600 dark:text-gray-400 truncate">{project.percentCompleted}%</span>
                                         </div>
                                     ) : (
-                                        <span className="text-sm text-gray-400">-</span>
+                                        <span className="text-sm text-gray-400 truncate">-</span>
                                     )}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[175px]">{project.estimatedStartDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[175px]">{project.estimatedEndDate}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[175px] truncate">{project.estimatedStartDate}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[175px] truncate">{project.estimatedEndDate}</td>
                             </tr>
                         ))}
                     </tbody>

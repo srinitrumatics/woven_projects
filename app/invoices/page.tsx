@@ -165,8 +165,8 @@ export default function InvoicesPage() {
   return (
     <Sidebar>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Invoices</h1>
-        <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1">Manage Invoices and Track Payments</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Invoices</h1>
+        <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage Invoices and Track Payments">Manage Invoices and Track Payments</p>
       </div>
 
       {/* Stats Cards - Following Proposal Design */}
@@ -187,24 +187,24 @@ export default function InvoicesPage() {
                   href="#"
                   onClick={() => handleCardClick("All")}
                   className="hover:underline block">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">All Invoices</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="All Invoices">All Invoices</p>
                 </Link>
                 <div className="flex items-baseline gap-2">
                   <Link
                     href="#"
                     onClick={() => handleCardClick("All")}
                     className="hover:underline block">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalCount}</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.totalCount}</span>
 
                   </Link>
                   <Link
                     href="#"
                     onClick={() => handleCardClick("All")}
                     className="hover:underline block">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Invoices</span>
                   </Link>
                 </div>
-                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
+                <p className="text-lg font-semibold text-primary mt-1 truncate">{formatCurrency(stats.totalValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                 } transition-colors`}>
@@ -214,7 +214,7 @@ export default function InvoicesPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline truncate">
                 View all invoices
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -240,23 +240,23 @@ export default function InvoicesPage() {
                   href="#"
                   onClick={() => handleCardClick("Outstanding")}
                   className="hover:underline block">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Pending</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Pending">Pending</p>
                 </Link>
                 <div className="flex items-baseline gap-2">
                   <Link
                     href="#"
                     onClick={() => handleCardClick("Outstanding")}
                     className="hover:underline block">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.outstandingCount}</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.outstandingCount}</span>
                   </Link>
                   <Link
                     href="#"
                     onClick={() => handleCardClick("Outstanding")}
                     className="hover:underline block">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Invoices</span>
                   </Link>
                 </div>
-                <p className="text-lg font-semibold text-amber-600 dark:text-amber-400 mt-1">{formatCurrency(stats.outstandingValue)}</p>
+                <p className="text-lg font-semibold text-amber-600 dark:text-amber-400 mt-1 truncate">{formatCurrency(stats.outstandingValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Outstanding" ? "bg-amber-500 text-white" : "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 group-hover:bg-amber-500 group-hover:text-white"
                 } transition-colors`}>
@@ -266,7 +266,7 @@ export default function InvoicesPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-amber-600 dark:text-amber-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-amber-600 dark:text-amber-400 group-hover:underline truncate">
                 View Pending
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -288,21 +288,21 @@ export default function InvoicesPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-1 min-w-0">
                   <Link
                     href="#"
                     onClick={() => handleCardClick("Overdue")}
                     className="hover:underline block">
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Past due</p>
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide truncate" title="Past due">Past due</p>
                   </Link>
                   {stats.overdueCount > 0 && (
-                    <span className="flex h-2 w-2">
+                    <span className="flex h-2 w-2 truncate">
                       <Link
                         href="#"
                         onClick={() => handleCardClick("Overdue")}
                         className="hover:underline block">
-                        <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                        <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75 truncate"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 truncate"></span>
                       </Link>
                     </span>
                   )}
@@ -312,16 +312,16 @@ export default function InvoicesPage() {
                     href="#"
                     onClick={() => handleCardClick("Overdue")}
                     className="hover:underline block">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.overdueCount}</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.overdueCount}</span>
                   </Link>
                   <Link
                     href="#"
                     onClick={() => handleCardClick("Overdue")}
                     className="hover:underline block">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Invoices</span>
                   </Link>
                 </div>
-                <p className="text-lg font-semibold text-red-600 dark:text-red-400 mt-1">{formatCurrency(stats.overdueValue)}</p>
+                <p className="text-lg font-semibold text-red-600 dark:text-red-400 mt-1 truncate">{formatCurrency(stats.overdueValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Overdue" ? "bg-red-500 text-white" : "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 group-hover:bg-red-500 group-hover:text-white"
                 } transition-colors`}>
@@ -331,7 +331,7 @@ export default function InvoicesPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-red-600 dark:text-red-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-red-600 dark:text-red-400 group-hover:underline truncate">
                 Past Dues
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -357,23 +357,23 @@ export default function InvoicesPage() {
                   href="#"
                   onClick={() => handleCardClick("Paid")}
                   className="hover:underline block">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Paid</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Paid">Paid</p>
                 </Link>
                 <div className="flex items-baseline gap-2">
                   <Link
                     href="#"
                     onClick={() => handleCardClick("Paid")}
                     className="hover:underline block">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.paidCount}</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.paidCount}</span>
                   </Link>
                   <Link
                     href="#"
                     onClick={() => handleCardClick("Paid")}
                     className="hover:underline block">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Invoices</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Invoices</span>
                   </Link>
                 </div>
-                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.paidValue)}</p>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1 truncate">{formatCurrency(stats.paidValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Paid" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
                 } transition-colors`}>
@@ -383,7 +383,7 @@ export default function InvoicesPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline truncate">
                 View paid
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -455,7 +455,7 @@ export default function InvoicesPage() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                 </svg>
-                <p className="text-sm">Loading invoices...</p>
+                <p className="text-sm truncate" title="Loading invoices...">Loading invoices...</p>
               </div>
             ) : (
               <table className="w-full">
@@ -475,7 +475,7 @@ export default function InvoicesPage() {
                     <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
                     <SortableHeader label="Collection Status" field="collectionStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.collectionStatus} onResize={handleResize} />
                     <SortableHeader label="Open Balance" field="amountDue" sortConfig={sortConfig} requestSort={requestSort} width={widths.amountDue} onResize={handleResize} />
-                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                       Action
                     </th>
                   </tr>
@@ -483,13 +483,13 @@ export default function InvoicesPage() {
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {paginatedInvoices.length === 0 ? (
                     <tr>
-                      <td colSpan={10} className="px-6 py-12 text-center">
-                        <div className="flex flex-col items-center justify-center">
+                      <td colSpan={10} className="px-6 py-12 text-center truncate">
+                        <div className="flex flex-col items-center justify-center min-w-0">
                           <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
                           </svg>
-                          <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No invoices found</p>
-                          <p className="text-gray-400 dark:text-gray-500 text-sm">
+                          <p className="text-gray-500 dark:text-gray-400 text-lg mb-2 truncate" title="No invoices found">No invoices found</p>
+                          <p className="text-gray-400 dark:text-gray-500 text-sm truncate">
                             {searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No invoices available"}
                           </p>
                         </div>
@@ -502,49 +502,49 @@ export default function InvoicesPage() {
                         className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
                         onClick={() => router.push(`/invoices/${invoice.id}`)}
                       >
-                        <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left">
+                        <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
                           <div title={invoice.invoiceNumber}>{invoice.invoiceNumber}</div>
                         </td>
-                        <td className="px-3 py-2">
+                        <td className="px-3 py-2 truncate">
                           <StatusBadge status={invoice.status} />
                         </td>
-                        <td className="px-3 py-2">
+                        <td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.salesOrderNumber}>{invoice.salesOrderNumber || 'N/A'}</div>
                         </td>
-                        <td className="px-3 py-2">
+                        <td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.purchaseOrderNumber}>{invoice.purchaseOrderNumber || 'N/A'}</div>
                         </td>
-                        <td className="px-3 py-2">
+                        <td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.proposalName}>{invoice.proposalName || 'N/A'}</div>
                         </td>
-                        <td className="px-3 py-2">
+                        <td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerOrder}>{invoice.customerOrder || 'N/A'}</div>
                         </td>
-                        <td className="px-3 py-2">
+                        <td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerPO}>{invoice.customerPO || 'N/A'}</div>
                         </td>
-                        <td className="px-3 py-2">
+                        <td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.accountName}>{invoice.accountName}</div>
                         </td>
-                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">{invoice.lineItemCount}</td>
-                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(invoice.totalAmount)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(invoice.invoiceDate, 'numeric-dash')}</td>
-                        <td className="px-3 py-2">
+                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{invoice.lineItemCount}</td>
+                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(invoice.totalAmount)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(invoice.invoiceDate, 'numeric-dash')}</td>
+                        <td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.paymentTerms}>{invoice.paymentTerms || 'N/A'}</div>
                         </td>
-                        <td className="px-3 py-2">
+                        <td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.collectionStatus}>{invoice.collectionStatus || 'N/A'}</div>
                         </td>
-                        <td className="px-3 py-2 text-sm text-left">
+                        <td className="px-3 py-2 text-sm text-left truncate">
                           <span className={`font-semibold ${invoice.amountDue > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
                             {formatCurrency(invoice.amountDue)}
                           </span>
                         </td>
-                        <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
+                        <td className="px-3 py-2 truncate" onClick={(e) => e.stopPropagation()}>
                           <div className="flex gap-2">
                             <Link
                               href={`/invoices/${invoice.id}`}
-                              className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                              className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors truncate"
                               title="View invoice"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

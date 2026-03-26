@@ -12,32 +12,32 @@ interface POHeaderProps {
 export default function POHeader({ poNumber, status, supplierName, onBack }: POHeaderProps) {
     return (
         <div className="mb-6">
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
-                <button onClick={onBack} className="hover:text-gray-700 dark:hover:text-gray-300">Purchase Orders</button>
-                <span> &gt;</span>
-                <span className="hover:text-gray-700 dark:text-gray-300" title="View Purchase Order">View Purchase Order</span>
-                <span> &gt;</span>
-                <span className="text-gray-900 dark:text-white" title={poNumber}>{poNumber}</span>
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6 min-w-0">
+                <button onClick={onBack} className="hover:text-gray-700 dark:hover:text-gray-300 shrink-0 truncate" title="Purchase Orders">Purchase Orders</button>
+                <span className="shrink-0 truncate"> &gt;</span>
+                <span className="hover:text-gray-700 dark:text-gray-300 shrink-0 truncate" title="View Purchase Order">View Purchase Order</span>
+                <span className="shrink-0 truncate"> &gt;</span>
+                <span className="text-gray-900 dark:text-white truncate" title={poNumber}>{poNumber}</span>
             </div>
 
             <div className="w-full rounded-lg px-2">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
-                    <div className="flex items-center gap-4 w-full sm:w-auto">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 min-w-0">
+                    <div className="flex items-center gap-4 w-full sm:w-auto min-w-0">
                         <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0">
                             <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                 <path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight" title={poNumber}>{poNumber}</h2>
-                            <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1" title={supplierName} >
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title={poNumber}>{poNumber}</h2>
+                            <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1 truncate" title={`${supplierName} • Purchase Order Details`} >
                                 {supplierName} • Purchase Order Details
                             </div>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-                        <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold ${status === 'Draft' ? 'bg-blue-100 text-blue-800 dark:bg-blue-700 dark:text-blue-300' :
+                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end min-w-0">
+                        <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold truncate ${status === 'Draft' ? 'bg-blue-100 text-blue-800 dark:bg-blue-700 dark:text-blue-300' :
                             status === 'Issued' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
                                 status === 'Acknowledged' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
                                     status === 'Received' || status === 'Awarded' || status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :

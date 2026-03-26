@@ -34,48 +34,49 @@ export default function POSummary({
 
     return (
         <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden w-full h-full flex flex-col ${className}`}>
-            <div className="flex items-center gap-3 p-4">
+            <div className="flex items-center gap-3 p-4 min-w-0">
                 <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                     <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
                 </div>
-                <div>
+                <div className="min-w-0">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Purchase Order Summary">Purchase Order Summary</h3>
-                    <p className="text-sm text-gray-900 dark:text-gray-700 truncate">Review your Purchase Summary</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-700 truncate" title="Review your Purchase Summary">Review your Purchase Summary</p>
                 </div>
             </div>
 
-            <div className="px-6 flex flex-col flex-1 divide-y divide-gray-300 dark:divide-gray-700 pt-6">
+            <div className="px-6 flex flex-col flex-1 divide-y divide-gray-300 dark:divide-gray-700 pt-6 text-[10px] w1025:text-sm">
                 <div className="py-2 space-y-3">
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray-900 dark:text-gray-700" title="Products - Subtotal">({productLinesCount}) Products - Subtotal</span>
-                        <span className="text-gray-900 dark:text-white font-medium" title={formatCurrency(productSubtotal)}>{formatCurrency(productSubtotal)}</span>
+                    <div className="flex justify-between min-w-0">
+                        <span className="text-gray-900 dark:text-gray-700 mr-2 truncate" title={`(${productLinesCount}) Products - Subtotal`}>({productLinesCount}) Products - Subtotal</span>
+                        <span className="text-gray-900 dark:text-white font-medium truncate" title={formatCurrency(productSubtotal)}>{formatCurrency(productSubtotal)}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray-900 dark:text-gray-700" title="Services - Subtotal">({serviceCount}) Services - Subtotal</span>
-                        <span className="text-gray-900 dark:text-white font-medium" title={formatCurrency(serviceCost)}>{formatCurrency(serviceCost)}</span>
+                    <div className="flex justify-between min-w-0">
+                        <span className="text-gray-900 dark:text-gray-700 mr-2 truncate" title={`(${serviceCount}) Services - Subtotal`}>({serviceCount}) Services - Subtotal</span>
+                        <span className="text-gray-900 dark:text-white font-medium truncate" title={formatCurrency(serviceCost)}>{formatCurrency(serviceCost)}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray-900 dark:text-gray-700" title="Shipping">Shipping</span>
-                        <span className="text-gray-900 dark:text-white font-medium" title={formatCurrency(po.shippingCost)}>{formatCurrency(po.shippingCost)}</span>
+                    <div className="flex justify-between min-w-0">
+                        <span className="text-gray-900 dark:text-gray-700 mr-2 truncate" title="Shipping">Shipping</span>
+                        <span className="text-gray-900 dark:text-white font-medium truncate" title={formatCurrency(po.shippingCost)}>{formatCurrency(po.shippingCost)}</span>
                     </div>
-                    <div className="flex justify-between text-sm ">
-                        <span className="text-gray-900 dark:text-gray-700" title="Taxes">Taxes</span>
-                        <span className="text-gray-900 dark:text-white font-medium" title={formatCurrency(0)}>{formatCurrency(0)}</span>
+                    <div className="flex justify-between min-w-0">
+                        <span className="text-gray-900 dark:text-gray-700 mr-2 truncate" title="Taxes">Taxes</span>
+                        <span className="text-gray-900 dark:text-white font-medium truncate" title={formatCurrency(0)}>{formatCurrency(0)}</span>
                     </div>
                 </div>
 
                 <div className="p-2 ">
-                    <div className="flex justify-between items-center">
-                        <span className="text-lg font-bold text-gray-900 dark:text-white" title="Grand Total">Grand Total</span>
-                        <span className="text-xl font-bold text-blue-600 dark:text-blue-400" title={formatCurrency(po.totalCost)}>{formatCurrency(po.totalCost)}</span>
+                    <div className="flex justify-between items-center min-w-0">
+                        <span className="text-lg font-bold text-gray-900 dark:text-white mr-2 truncate" title="Grand Total">Grand Total</span>
+                        <span className="text-xl font-bold text-blue-600 dark:text-blue-400 truncate" title={formatCurrency(po.totalCost)}>{formatCurrency(po.totalCost)}</span>
                     </div>
                 </div>
                 <div className="p-2 pt-5">
                     <button
                         onClick={() => { }}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors text-sm font-medium"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors text-sm font-medium truncate"
+                        title="Download PDF"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

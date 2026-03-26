@@ -577,9 +577,9 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   if (loading) {
     return (
       <Sidebar>
-        <div className="flex flex-col items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center justify-center min-h-[400px] min-w-0">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-          <p className="text-gray-500 dark:text-gray-400">Loading quote details...</p>
+          <p className="text-gray-500 dark:text-gray-400 truncate" title="Loading quote details...">Loading quote details...</p>
         </div>
       </Sidebar>
     );
@@ -589,8 +589,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
     return (
       <Sidebar>
         <div className="p-8 text-center bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <h2 className="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Error</h2>
-          <p className="text-red-600 dark:text-red-300">{error || 'Quote not found'}</p>
+          <h2 className="text-xl font-semibold text-red-700 dark:text-red-400 mb-2 truncate">Error</h2>
+          <p className="text-red-600 dark:text-red-300 truncate">{error || 'Quote not found'}</p>
           <button
             onClick={() => router.push("/quotes")}
             className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
@@ -620,7 +620,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
 
       <div className="mt-8">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
             {/* Tab buttons — left on desktop (>=1024px) */}
             <div className="w-full lg:flex-1 min-w-0">
               <QuoteTabs
@@ -708,7 +708,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
         >
           Back to Quotes
         </button>
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto min-w-0">
         </div>
       </div>
 

@@ -101,7 +101,7 @@ const UserList: React.FC<UserListProps> = ({
     <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
       {/* Search Bar */}
       <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-teal-50 to-cyan-50">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 min-w-0">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
@@ -159,7 +159,7 @@ const UserList: React.FC<UserListProps> = ({
                 >
                   {/* User Info */}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
                       <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center flex-shrink-0">
                         <Users className="w-5 h-5 text-white" />
                       </div>
@@ -167,7 +167,7 @@ const UserList: React.FC<UserListProps> = ({
                         <div className="text-sm font-semibold text-gray-900 truncate">
                           {user.name}
                         </div>
-                        <div className="flex items-center gap-1 text-sm text-gray-500 truncate">
+                        <div className="flex items-center gap-1 text-sm text-gray-500 truncate min-w-0">
                           <Mail className="w-3 h-3 flex-shrink-0" />
                           <span className="truncate">{user.email}</span>
                         </div>
@@ -177,10 +177,10 @@ const UserList: React.FC<UserListProps> = ({
 
                   {/* Organizations */}
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
                       {orgCount > 0 ? (
                         <>
-                          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-100 border border-blue-200">
+                          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-100 border border-blue-200 min-w-0">
                             <Building2 className="w-3.5 h-3.5 text-blue-700" />
                             <span className="text-sm font-medium text-blue-700">
                               {orgCount}
@@ -199,9 +199,9 @@ const UserList: React.FC<UserListProps> = ({
 
                   {/* Roles */}
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
                       {totalRoles > 0 ? (
-                        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-100 border border-purple-200">
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-100 border border-purple-200 min-w-0">
                           <Shield className="w-3.5 h-3.5 text-purple-700" />
                           <span className="text-sm font-medium text-purple-700">
                             {totalRoles} {totalRoles === 1 ? 'role' : 'roles'}
@@ -215,7 +215,7 @@ const UserList: React.FC<UserListProps> = ({
 
                   {/* Actions */}
                   <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="flex items-center justify-end gap-2">
+                    <div className="flex items-center justify-end gap-2 min-w-0">
                       <button
                         onClick={() => handleEdit(user)}
                         className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
@@ -242,11 +242,11 @@ const UserList: React.FC<UserListProps> = ({
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between min-w-0">
             <div className="text-sm text-gray-600">
               Showing {startIndex + 1} to {Math.min(startIndex + ITEMS_PER_PAGE, filteredUsers.length)} of {filteredUsers.length} users
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
@@ -255,7 +255,7 @@ const UserList: React.FC<UserListProps> = ({
                 <ChevronLeft className="w-4 h-4" />
               </button>
 
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 min-w-0">
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   let pageNum;
                   if (totalPages <= 5) {

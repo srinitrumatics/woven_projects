@@ -90,8 +90,8 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
 
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm">
-      <div className="flex items-center justify-between px-6 py-4">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between px-6 py-4 min-w-0">
+        <div className="flex items-center gap-4 min-w-0">
           {/* Mobile hamburger (left) */}
           <button className="md:hidden p-2" onClick={() => setMobileOpen(true)} aria-label="Open menu">
             <Bars3Icon className="h-6 w-6 text-gray-600" />
@@ -99,7 +99,7 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
 
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 min-w-0">
           {/* Organization selector dropdown */}
           {user?.organizations && user.organizations.length > 0 && (
             <div className="relative org-dropdown">

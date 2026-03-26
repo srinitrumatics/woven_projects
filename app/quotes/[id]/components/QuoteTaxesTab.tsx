@@ -28,7 +28,7 @@ export default function QuoteTaxesTab({
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -37,9 +37,9 @@ export default function QuoteTaxesTab({
     return (
         <div className="overflow-x-auto py-2">
             {taxes.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium">No records found</p>
-                    <p className="text-sm">There are no taxes associated with this quote.</p>
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                    <p className="text-sm truncate" title="There are no taxes associated with this quote.">There are no taxes associated with this quote.</p>
                 </div>
             ) : (
                 <table className="w-full">
@@ -64,20 +64,20 @@ export default function QuoteTaxesTab({
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {taxes.map((tax) => (
                             <tr key={tax.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.salesTaxRate }}>{tax.salesTaxRate?.toFixed(3)}%</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[160px]" style={{ width: widths.salesTaxAmount }}>{formatCurrency(tax.salesTaxAmount)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.useTaxRate }}>{tax.useTaxRate?.toFixed(3)}%</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.useTaxAmount }}>{formatCurrency(tax.useTaxAmount)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.localTaxRate }}>{tax.localTaxRate?.toFixed(3)}%</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[160px]" style={{ width: widths.localTaxAmount }}>{formatCurrency(tax.localTaxAmount)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.exciseTaxRate }}>{tax.exciseTaxRate?.toFixed(3)}%</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[165px]" style={{ width: widths.exciseTaxAmount }}>{formatCurrency(tax.exciseTaxAmount)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.grtRate }}>{tax.grtRate?.toFixed(3)}%</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.grtAmount }}>{formatCurrency(tax.grtAmount)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.gstRate }}>{tax.gstRate?.toFixed(3)}%</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.gstAmount }}>{formatCurrency(tax.gstAmount)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.vatRate }}>{tax.vatRate?.toFixed(3)}%</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" style={{ width: widths.vatAmount }}>{formatCurrency(tax.vatAmount)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesTaxRate }}>{tax.salesTaxRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[160px] truncate" style={{ width: widths.salesTaxAmount }}>{formatCurrency(tax.salesTaxAmount)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.useTaxRate }}>{tax.useTaxRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.useTaxAmount }}>{formatCurrency(tax.useTaxAmount)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.localTaxRate }}>{tax.localTaxRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[160px] truncate" style={{ width: widths.localTaxAmount }}>{formatCurrency(tax.localTaxAmount)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.exciseTaxRate }}>{tax.exciseTaxRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[165px] truncate" style={{ width: widths.exciseTaxAmount }}>{formatCurrency(tax.exciseTaxAmount)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.grtRate }}>{tax.grtRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.grtAmount }}>{formatCurrency(tax.grtAmount)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.gstRate }}>{tax.gstRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.gstAmount }}>{formatCurrency(tax.gstAmount)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.vatRate }}>{tax.vatRate?.toFixed(3)}%</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.vatAmount }}>{formatCurrency(tax.vatAmount)}</td>
                             </tr>
                         ))}
                     </tbody>

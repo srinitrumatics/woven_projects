@@ -441,14 +441,14 @@ export default function OrdersPage() {
     <>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Orders</h1>
-          <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1">Manage and Track Sales Orders</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Orders</h1>
+          <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Sales Orders">Manage and Track Sales Orders</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={handleCreateOrder}
             disabled={loading}
-            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 truncate"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -477,7 +477,7 @@ export default function OrdersPage() {
                   onClick={() => handleCardClick("Total")}
                   className="hover:underline block"
                 >
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Total Orders</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Total Orders">Total Orders</p>
                 </Link>
                 <Link
                   href="#"
@@ -485,11 +485,11 @@ export default function OrdersPage() {
                   className="hover:underline block"
                 >
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalOrders}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Orders</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.totalOrders}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Orders</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
+                <p className="text-lg font-semibold text-primary mt-1 truncate">{formatCurrency(stats.totalValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Total" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                 } transition-colors`}>
@@ -499,7 +499,7 @@ export default function OrdersPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline truncate">
                 <Link
                   href="#"
                   onClick={() => handleCardClick("Total")}
@@ -529,18 +529,18 @@ export default function OrdersPage() {
                   href="#"
                   onClick={() => handleCardClick("Draft")}
                   className="hover:underline block">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Drafts</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Drafts">Drafts</p>
                 </Link>
                 <Link
                   href="#"
                   onClick={() => handleCardClick("Draft")}
                   className="hover:underline block">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Orders</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.draftCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Orders</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.draftValue)}</p>
+                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1 truncate">{formatCurrency(stats.draftValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-gray-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-600 group-hover:text-white"
                 } transition-colors`}>
@@ -550,7 +550,7 @@ export default function OrdersPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white group-hover:underline truncate">
                 <Link
                   href="#"
                   onClick={() => handleCardClick("Draft")}
@@ -576,17 +576,17 @@ export default function OrdersPage() {
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-1 min-w-0">
                   <Link
                     href="#"
                     onClick={() => handleCardClick("Pending")}
                     className="hover:underline block">
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">Pending/Submitted</p>
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide truncate" title="Pending/Submitted">Pending/Submitted</p>
                   </Link>
                   {stats.pendingCount > 0 && (
-                    <span className="flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-yellow-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                    <span className="flex h-2 w-2 truncate">
+                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-yellow-400 opacity-75 truncate"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500 truncate"></span>
                     </span>
                   )}
                 </div>
@@ -595,12 +595,12 @@ export default function OrdersPage() {
                   onClick={() => handleCardClick("Pending")}
                   className="hover:underline block">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.pendingCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Orders</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.pendingCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Orders</span>
                   </div>
                 </Link>
 
-                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.pendingValue)}</p>
+                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1 truncate">{formatCurrency(stats.pendingValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Pending" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
                 } transition-colors`}>
@@ -610,7 +610,7 @@ export default function OrdersPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline truncate">
                 <Link
                   href="#"
                   onClick={() => handleCardClick("Pending")}
@@ -640,18 +640,18 @@ export default function OrdersPage() {
                   href="#"
                   onClick={() => handleCardClick("Success")}
                   className="hover:underline block">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Fulfilled/Success</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Fulfilled/Success">Fulfilled/Success</p>
                 </Link>
                 <Link
                   href="#"
                   onClick={() => handleCardClick("Success")}
                   className="hover:underline block">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.fulfilledCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Orders</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.fulfilledCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Orders</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.fulfilledValue)}</p>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1 truncate">{formatCurrency(stats.fulfilledValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Success" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
                 } transition-colors`}>
@@ -661,7 +661,7 @@ export default function OrdersPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline truncate">
                 <Link
                   href="#"
                   onClick={() => handleCardClick("Success")}
@@ -742,15 +742,15 @@ export default function OrdersPage() {
         {/* Table */}
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
               <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
               </svg>
-              <p className="text-sm">Loading orders...</p>
+              <p className="text-sm truncate" title="Loading orders...">Loading orders...</p>
             </div>
           ) : (
-            <table className="w-full">
+            <table className="w-full table-fixed">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
                   <SortableHeader label="Order Number" field="name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-20" />
@@ -763,7 +763,7 @@ export default function OrdersPage() {
                   <SortableHeader label="Total Price" field="total" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
                   <SortableHeader label="Request Date" field="requestedDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestedDate} onResize={handleResize} />
                   <th
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700"
+                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 truncate"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
                     Actions
@@ -774,13 +774,13 @@ export default function OrdersPage() {
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {paginatedOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={10} className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center justify-center">
+                    <td colSpan={10} className="px-6 py-12 text-center truncate">
+                      <div className="flex flex-col items-center justify-center min-w-0">
                         <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
-                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No orders found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-sm">
+                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2 truncate" title="No orders found">No orders found</p>
+                        <p className="text-gray-400 dark:text-gray-500 text-sm truncate">
                           {searchQuery || activeTab !== "All"
                             ? "Try adjusting your filters"
                             : "Get started by creating your first order"}
@@ -791,30 +791,30 @@ export default function OrdersPage() {
                 ) : (
                   paginatedOrders.map((order) => (
                     <tr key={`order-row-${order.Id ?? order.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-3 text-sm text-primary font-semibold sticky left-0 z-10 bg-white dark:bg-gray-800 text-left">
-                        <Link href={`/orders/${order.id}`} className="text-sm font-semibold text-primary hover:underline">
+                      <td className="px-3 py-3 text-sm text-primary font-semibold sticky left-0 z-10 bg-white dark:bg-gray-800 text-left truncate">
+                        <Link href={`/orders/${order.id}`} className="text-sm font-semibold text-primary hover:underline truncate">
                           <div title={order.name}>{order.name}</div>
                         </Link>
                       </td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 truncate">
                         <StatusBadge status={order.status as OrderStatus} />
                       </td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 truncate">
                         <div className="text-sm text-gray-900 dark:text-white font-medium" title={order.proposal_name}>{order.proposal_name}</div>
                       </td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={order.customerPO}>{order.customerPO}</div>
                       </td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billTo}>{order.billTo}</div>
                       </td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipTo}>{order.shipTo}</div>
                       </td>
-                      <td className="px-3 py-3 text-sm text-gray-900 dark:text-white">{formatNumber(order.items, 0)}</td>
-                      <td className="px-3 py-3 text-sm text-gray-900 dark:text-white font-semibold">{formatCurrency(order.total)}</td>
-                      <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400">{formatDate(order.requestedDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 text-sm text-gray-900 dark:text-white truncate">{formatNumber(order.items, 0)}</td>
+                      <td className="px-3 py-3 text-sm text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(order.total)}</td>
+                      <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(order.requestedDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-3 truncate">
                         <div className="flex gap-2">
                           {order.status !== "Canceled" && order.status !== "Cancelled" && (
                             <>

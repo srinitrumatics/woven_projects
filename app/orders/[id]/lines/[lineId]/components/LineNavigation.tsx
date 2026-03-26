@@ -22,12 +22,12 @@ export default function LineNavigation({
     totalLines,
 }: LineNavigationProps) {
     return (
-        <div className="flex items-center justify-end gap-2 mt-4">
+        <div className="flex items-center justify-end gap-2 mt-4 min-w-0">
             {/* Previous Line Button */}
             {hasPrevLine ? (
                 <Link
                     href={`/orders/${id}/lines/${prevLineId}`}
-                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
+                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1 truncate"
                 >
                     <svg
                         className="w-4 h-4"
@@ -45,7 +45,7 @@ export default function LineNavigation({
                     Prev
                 </Link>
             ) : (
-                <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
+                <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed truncate">
                     <svg
                         className="w-4 h-4"
                         fill="none"
@@ -64,7 +64,7 @@ export default function LineNavigation({
             )}
 
             {/* Line indicator */}
-            <span className="text-sm text-gray-500 dark:text-gray-400 px-2">
+            <span className="text-sm text-gray-500 dark:text-gray-400 px-2 truncate">
                 {lineNumber}/{totalLines}
             </span>
 
@@ -72,7 +72,7 @@ export default function LineNavigation({
             {hasNextLine ? (
                 <Link
                     href={`/orders/${id}/lines/${nextLineId}`}
-                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1"
+                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-1 truncate"
                 >
                     Next
                     <svg
@@ -90,7 +90,7 @@ export default function LineNavigation({
                     </svg>
                 </Link>
             ) : (
-                <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
+                <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed truncate">
                     Next
                     <svg
                         className="w-4 h-4"

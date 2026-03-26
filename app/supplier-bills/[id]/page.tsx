@@ -141,7 +141,7 @@ export default function SupplierBillDetailPage() {
     if (isLoading) {
         return (
             <Sidebar>
-                <div className="flex items-center justify-center h-screen">
+                <div className="flex items-center justify-center h-screen min-w-0">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
                 </div>
             </Sidebar>
@@ -179,7 +179,7 @@ export default function SupplierBillDetailPage() {
 
                 {/* Row 2 — Billing + Shipping (7) + Summary (3) */}
                 <div className="w1025:col-span-7">
-                    <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-6 min-w-0">
                         <BillingInformation bill={bill} />
                         <ShippingInformation bill={bill} />
                     </div>
@@ -207,15 +207,15 @@ export default function SupplierBillDetailPage() {
                     <div className="flex-1 p-6">
                         {activeTab === 'lines' && <SupplierBillLinesTable lines={lines} />}
                         {activeTab === 'payments' && (
-                            <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-                                <p className="text-lg font-medium">No Payments Recorded</p>
-                                <p className="text-sm">There are no payment records associated with this bill.</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 min-w-0">
+                                <p className="text-lg font-medium truncate" title="No Payments Recorded">No Payments Recorded</p>
+                                <p className="text-sm truncate" title="There are no payment records associated with this bill.">There are no payment records associated with this bill.</p>
                             </div>
                         )}
                         {activeTab === 'debits' && (
-                            <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-                                <p className="text-lg font-medium">No Debits Recorded</p>
-                                <p className="text-sm">There are no debit records associated with this bill.</p>
+                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 min-w-0">
+                                <p className="text-lg font-medium truncate" title="No Debits Recorded">No Debits Recorded</p>
+                                <p className="text-sm truncate" title="There are no debit records associated with this bill.">There are no debit records associated with this bill.</p>
                             </div>
                         )}
                         {activeTab === 'files' && <SupplierBillFilesTable files={files} billId={id} />}
@@ -231,7 +231,7 @@ export default function SupplierBillDetailPage() {
                 >
                     Back to Supplier Bills
                 </button>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 min-w-0">
 
                 </div>
             </div>

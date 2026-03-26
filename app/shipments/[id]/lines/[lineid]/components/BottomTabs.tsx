@@ -83,7 +83,7 @@ export default function BottomTabs({ activeTab, setActiveTab, accountId, contact
     }, [accountId, contactId, lineId, initialCounts]);
     return (
         <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 items-center">
+            <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 items-center min-w-0">
                 {[
                     { id: "inventory", label: `Inventory Positions${counts.inventory > 0 ? ` (${counts.inventory})` : ""}` },
                     { id: "serial", label: `Serial Numbers Logs${counts.serial > 0 ? ` (${counts.serial})` : ""}` },

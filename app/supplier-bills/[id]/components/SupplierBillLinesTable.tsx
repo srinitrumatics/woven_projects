@@ -40,15 +40,15 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
 
     if (lines.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no lines for this supplier bill.</p>
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no lines for this supplier bill.">There are no lines for this supplier bill.</p>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col min-w-0">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                 <table className="w-full border-separate border-spacing-0">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
@@ -66,22 +66,22 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((line) => (
                             <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-4 py-3 text-sm font-semibold text-primary">{line.name}</td>
-                                <td className="px-4 py-3 text-sm">
+                                <td className="px-4 py-3 text-sm font-semibold text-primary truncate">{line.name}</td>
+                                <td className="px-4 py-3 text-sm truncate">
                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${line.status === 'Approved' ? 'bg-green-100/80 text-green-700 border-green-200' : 'bg-gray-100/80 text-gray-700 border-gray-200'
                                         }`}>
                                         {line.status}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{line.purchaseOrderLineName || '-'}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate">{line.purchaseOrderLineName || '-'}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">
                                     <div className="font-medium truncate max-w-[200px]" title={line.productName}>{line.productName}</div>
                                     <div className="text-xs text-gray-500 truncate max-w-[200px]" title={line.productDescription}>{line.productDescription}</div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">{line.billedQty}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold">{formatCurrency(line.unitCost)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold">{formatCurrency(line.totalBillAmount)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : '-'}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate">{line.billedQty}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(line.unitCost)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(line.totalBillAmount)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : '-'}</td>
                             </tr>
                         ))}
                     </tbody>

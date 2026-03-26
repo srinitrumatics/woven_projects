@@ -9,7 +9,7 @@ interface LineTaxesTabProps {
 export default function LineTaxesTab({ product, loading }: LineTaxesTabProps) {
     if (loading) {
         return (
-            <div className="flex items-center justify-center py-10">
+            <div className="flex items-center justify-center py-10 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -38,35 +38,35 @@ export default function LineTaxesTab({ product, loading }: LineTaxesTabProps) {
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div className="flex items-center gap-2 mb-2">
-                <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+            <div className="flex items-center gap-2 mb-2 min-w-0">
+                <h2 className="text-base font-semibold text-gray-900 dark:text-white truncate">
                     Taxes
                 </h2>
             </div>
             <div className="overflow-x-auto">
                 {product.isTaxable === "No" ? (
                     <div className="py-4 text-sm text-gray-500 dark:text-gray-400 text-center">
-                        <p className="text-lg font-medium">No records found</p>
-                        <p className="text-sm">There are no taxes associated with this Order.</p>
+                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                        <p className="text-sm truncate" title="There are no taxes associated with this Order.">There are no taxes associated with this Order.</p>
                     </div>
                 ) : (
-                    <table className="w-full">
+                    <table className="w-full table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900">
                             <tr>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Sales Tax Rate</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Sales Tax Amount</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Use Tax Rate</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Use Tax Amount</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Local Tax Rate</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Local Tax Amount</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Excise Tax Rate</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">Excise Tax Amount</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GRT Rate</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GRT Amount</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GST Rate</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">GST Amount</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">VAT Rate</th>
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left">VAT Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Sales Tax Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">Sales Tax Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">Use Tax Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">Use Tax Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">Local Tax Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">Local Tax Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">Excise Tax Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">Excise Tax Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">GRT Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">GRT Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">GST Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">GST Amount</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">VAT Rate</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white text-left truncate">VAT Amount</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

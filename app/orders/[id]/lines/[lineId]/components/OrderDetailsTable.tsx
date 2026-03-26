@@ -74,14 +74,14 @@ export default function OrderDetailsTable({
                     <label className="block text-sm font-bold  text-gray-700 dark:text-gray-400   mb-1 truncate" title="Order Qty">Order Qty</label>
                     <div className="text-sm font-medium text-gray-900 dark:text-white">
                         {isEditing ? (
-                            <div className="flex flex-col gap-1">
-                                <div className="flex items-center gap-2">
-                                    <button onClick={decrementQty} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-600 rounded border border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 shadow-sm transition-colors text-lg">-</button>
+                            <div className="flex flex-col gap-1 min-w-0">
+                                <div className="flex items-center gap-2 min-w-0">
+                                    <button onClick={decrementQty} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-600 rounded border border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 shadow-sm transition-colors text-lg truncate">-</button>
                                     <input type="text" value={editedQty} onChange={(e) => handleManualQtyChange(e.target.value)} className={`w-16 h-8 px-1 border rounded text-center bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent ${qtyWarning ? 'border-amber-500 focus:ring-amber-400' : 'border-gray-300 dark:border-gray-600 focus:ring-primary'}`} />
-                                    <button onClick={incrementQty} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-600 rounded border border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 shadow-sm transition-colors text-lg">+</button>
+                                    <button onClick={incrementQty} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-600 rounded border border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 shadow-sm transition-colors text-lg truncate">+</button>
                                 </div>
                                 {qtyWarning ? (
-                                    <div className="flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-1">
+                                    <div className="flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-1 min-w-0">
                                         <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg>
                                         Exceeds available ({available})
                                     </div>
@@ -138,16 +138,16 @@ export default function OrderDetailsTable({
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                         <tr>
                             <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(unitPrice)}>{formatCurrency(unitPrice)}</td>
-                            <td className="px-4 py-4 text-sm text-gray-900 dark:text-white">
+                            <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate">
                                 {isEditing ? (
-                                    <div className="flex flex-col gap-1">
-                                        <div className="flex items-center gap-2">
-                                            <button onClick={decrementQty} className="w-6 h-6 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 shadow-sm">-</button>
+                                    <div className="flex flex-col gap-1 min-w-0">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <button onClick={decrementQty} className="w-6 h-6 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 shadow-sm truncate">-</button>
                                             <input type="text" value={editedQty} onChange={(e) => handleManualQtyChange(e.target.value)} className={`w-16 px-1 py-0.5 border rounded text-center bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent ${qtyWarning ? 'border-amber-500 focus:ring-amber-400' : 'border-gray-300 dark:border-gray-600 focus:ring-primary'}`} />
-                                            <button onClick={incrementQty} className="w-6 h-6 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 shadow-sm">+</button>
+                                            <button onClick={incrementQty} className="w-6 h-6 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 shadow-sm truncate">+</button>
                                         </div>
                                         {qtyWarning ? (
-                                            <div className="flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+                                            <div className="flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium min-w-0">
                                                 <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg>
                                                 Exceeds available ({available})
                                             </div>

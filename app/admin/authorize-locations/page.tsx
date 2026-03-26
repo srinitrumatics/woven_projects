@@ -229,8 +229,8 @@ export default function AuthorizeLocationsPage() {
     return (
         <>
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Authorize Locations</h1>
-                <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1">Manage and Track Authorized Locations</p>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Authorize Locations</h1>
+                <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Authorized Locations">Manage and Track Authorized Locations</p>
             </div>
 
             {/* Table Section */}
@@ -254,7 +254,7 @@ export default function AuthorizeLocationsPage() {
 
 
                         {/* Add Button and View Mode Toggle */}
-                        <div className="flex items-center gap-2 ml-auto">
+                        <div className="flex items-center gap-2 ml-auto min-w-0">
                             <button
                                 onClick={() => openModal("add")}
                                 className="p-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2 px-3"
@@ -263,7 +263,7 @@ export default function AuthorizeLocationsPage() {
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                 </svg>
-                                <span className="text-sm font-medium">Add</span>
+                                <span className="text-sm font-medium truncate">Add</span>
                             </button>
                             <div className="h-8 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div>
                             <button
@@ -292,22 +292,22 @@ export default function AuthorizeLocationsPage() {
 
                 <div className="overflow-x-auto">
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
                             <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                             </svg>
-                            <p className="text-sm">Loading locations...</p>
+                            <p className="text-sm truncate" title="Loading locations...">Loading locations...</p>
                         </div>
                     ) : viewMode === 'card' ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
                             {paginatedLocations.length === 0 ? (
                                 <div className="col-span-full text-center py-12 text-gray-500 dark:text-gray-400">
-                                    <div className="flex flex-col items-center justify-center">
+                                    <div className="flex flex-col items-center justify-center min-w-0">
                                         <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
-                                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No locations found</p>
+                                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2 truncate" title="No locations found">No locations found</p>
                                     </div>
                                 </div>
                             ) : (
@@ -329,19 +329,19 @@ export default function AuthorizeLocationsPage() {
                                             <div className="space-y-3 mt-4 flex-grow">
                                                 <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-sm">
                                                     <div>
-                                                        <span className="text-xs text-gray-500 dark:text-gray-400 block mb-0.5 uppercase tracking-wide">Location ID</span>
-                                                        <span className="font-medium text-gray-900 dark:text-white">{loc.locationId}</span>
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400 block mb-0.5 uppercase tracking-wide truncate">Location ID</span>
+                                                        <span className="font-medium text-gray-900 dark:text-white truncate">{loc.locationId}</span>
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <span className="text-xs text-gray-500 dark:text-gray-400 block mb-0.5 uppercase tracking-wide">Location Type</span>
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400 block mb-0.5 uppercase tracking-wide truncate">Location Type</span>
                                                         <span className="font-medium text-gray-900 dark:text-white truncate block" title={loc.locationType}>{loc.locationType}</span>
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <span className="text-xs text-gray-500 dark:text-gray-400 block mb-0.5 uppercase tracking-wide">Address Type</span>
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400 block mb-0.5 uppercase tracking-wide truncate">Address Type</span>
                                                         <span className="font-medium text-gray-900 dark:text-white truncate block" title={loc.addressType}>{loc.addressType}</span>
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <span className="text-xs text-gray-500 dark:text-gray-400 block mb-0.5 uppercase tracking-wide">Address</span>
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400 block mb-0.5 uppercase tracking-wide truncate">Address</span>
                                                         <span className="font-medium text-gray-900 dark:text-white block truncate" title={`${loc.street}, ${loc.city}`}>{loc.city}, {loc.state}</span>
                                                     </div>
                                                 </div>
@@ -397,7 +397,7 @@ export default function AuthorizeLocationsPage() {
                                     <SortableHeader label="Inside Delivery" field="insideDelivery" sortConfig={sortConfig} requestSort={requestSort} width={widths.insideDelivery} onResize={handleResize} />
                                     <SortableHeader label="Delivery Notes" field="deliveryNotes" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveryNotes} onResize={handleResize} />
                                     <SortableHeader label="Active" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                         Action
                                     </th>
                                 </tr>
@@ -405,12 +405,12 @@ export default function AuthorizeLocationsPage() {
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 {paginatedLocations.length === 0 ? (
                                     <tr>
-                                        <td colSpan={7} className="px-6 py-12 text-center">
-                                            <div className="flex flex-col items-center justify-center">
+                                        <td colSpan={7} className="px-6 py-12 text-center truncate">
+                                            <div className="flex flex-col items-center justify-center min-w-0">
                                                 <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                 </svg>
-                                                <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No locations found</p>
+                                                <p className="text-gray-500 dark:text-gray-400 text-lg mb-2 truncate" title="No locations found">No locations found</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -421,21 +421,21 @@ export default function AuthorizeLocationsPage() {
                                                 {loc.name}
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={loc.accountName} style={{ width: widths.accountName, minWidth: widths.accountName, maxWidth: widths.accountName }}>{loc.accountName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.addressType, minWidth: widths.addressType, maxWidth: widths.addressType }}>{loc.addressType}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium" style={{ width: widths.locationId, minWidth: widths.locationId, maxWidth: widths.locationId }}>{loc.locationId}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.locationType, minWidth: widths.locationType, maxWidth: widths.locationType }}>{loc.locationType}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.addressType, minWidth: widths.addressType, maxWidth: widths.addressType }}>{loc.addressType}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate" style={{ width: widths.locationId, minWidth: widths.locationId, maxWidth: widths.locationId }}>{loc.locationId}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.locationType, minWidth: widths.locationType, maxWidth: widths.locationType }}>{loc.locationType}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={loc.street} style={{ width: widths.street, minWidth: widths.street, maxWidth: widths.street }}>{loc.street}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.city, minWidth: widths.city, maxWidth: widths.city }}>{loc.city}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.state, minWidth: widths.state, maxWidth: widths.state }}>{loc.state}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.zipCode, minWidth: widths.zipCode, maxWidth: widths.zipCode }}>{loc.zipCode}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.country, minWidth: widths.country, maxWidth: widths.country }}>{loc.country}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.liftGate, minWidth: widths.liftGate, maxWidth: widths.liftGate }}>{loc.liftGate ? 'Yes' : 'No'}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.insideDelivery, minWidth: widths.insideDelivery, maxWidth: widths.insideDelivery }}>{loc.insideDelivery ? 'Yes' : 'No'}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.city, minWidth: widths.city, maxWidth: widths.city }}>{loc.city}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.state, minWidth: widths.state, maxWidth: widths.state }}>{loc.state}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.zipCode, minWidth: widths.zipCode, maxWidth: widths.zipCode }}>{loc.zipCode}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.country, minWidth: widths.country, maxWidth: widths.country }}>{loc.country}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.liftGate, minWidth: widths.liftGate, maxWidth: widths.liftGate }}>{loc.liftGate ? 'Yes' : 'No'}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.insideDelivery, minWidth: widths.insideDelivery, maxWidth: widths.insideDelivery }}>{loc.insideDelivery ? 'Yes' : 'No'}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={loc.deliveryNotes} style={{ width: widths.deliveryNotes, minWidth: widths.deliveryNotes, maxWidth: widths.deliveryNotes }}>{loc.deliveryNotes}</td>
-                                            <td className="px-3 py-2" style={{ width: widths.status, minWidth: widths.status, maxWidth: widths.status }}>
+                                            <td className="px-3 py-2 truncate" style={{ width: widths.status, minWidth: widths.status, maxWidth: widths.status }}>
                                                 <StatusBadge status={loc.status} />
                                             </td>
-                                            <td className="px-3 py-2" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                                            <td className="px-3 py-2 truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => openModal("view", loc)}

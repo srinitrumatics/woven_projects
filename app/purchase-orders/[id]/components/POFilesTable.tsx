@@ -126,17 +126,17 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
 
     if (files.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no files attached to this purchase order.</p>
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no files attached to this purchase order.">There are no files attached to this purchase order.</p>
             </div>
         );
     }
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Files ({files.length})</h3>
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 min-w-0">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate" title={`Files (${files.length})`}>Files ({files.length})</h3>
             </div>
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                 <table className="w-full border-separate border-spacing-0">
@@ -183,32 +183,32 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.uploadedDate}
                                 onResize={handleResize}
                             />
-                            <th className="px-3 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Action</th>
+                            <th className="px-3 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider truncate">Action</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((file) => (
                             <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700">
-                                    <div className="flex items-center gap-3">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={file.fileName}>
+                                    <div className="flex items-center gap-3 truncate min-w-0">
                                         {getFileIcon(file.fileType)}
-                                        <div className="truncate" title={file.fileName}>{file.fileName}</div>
+                                        {file.fileName}
                                     </div>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400" title={file.fileType}>
+                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>
                                     {file.fileType}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={formatFileSize(file.sizeInBytes)}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatFileSize(file.sizeInBytes)}>
                                     {formatFileSize(file.sizeInBytes)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={file.uploadedBy}>{file.uploadedBy}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>
+                                    {file.uploadedBy}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400" title={file.uploadedDate ? formatDate(file.uploadedDate) : '-'}>
+                                <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? formatDate(file.uploadedDate) : '-'}>
                                     {file.uploadedDate ? formatDate(file.uploadedDate) : '-'}
                                 </td>
-                                <td className="px-3 py-2">
-                                    <div className="flex items-center gap-3">
+                                <td className="px-3 py-2 truncate">
+                                    <div className="flex items-center gap-3 min-w-0">
                                         <button
                                             onClick={() => handleAction(file, 'preview')}
                                             className="text-blue-600 hover:text-blue-800 transition-colors"

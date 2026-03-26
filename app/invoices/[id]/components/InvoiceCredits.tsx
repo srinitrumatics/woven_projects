@@ -32,8 +32,8 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
     if (credits.length === 0) {
         return (
             <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No record found</p>
-                <p className="text-sm">There are no credit memos associated with this invoice.</p>
+                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No record found">No record found</p>
+                <p className="text-sm truncate" title="There are no credit memos associated with this invoice.">There are no credit memos associated with this invoice.</p>
             </div>
         );
     }
@@ -41,7 +41,7 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
     return (
         <div className="overflow-x-auto">
 
-            <table className="w-full">
+            <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
                         <SortableHeader label="Credit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
@@ -69,51 +69,51 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                             <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white text-gray-900 dark:text-white truncate">
                                 {cm.name}
                             </td>
-                            <td className="px-3 py-2">
+                            <td className="px-3 py-2 truncate">
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${cm.status === 'Posted' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
                                     {cm.status}
                                 </span>
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                 {cm.invoiceName}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                 {cm.customerQuoteName}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                 {cm.customerOrderName}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                 {cm.creditToAccountName}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                 {cm.creditToContactName}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-center">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-center truncate">
                                 {cm.totalLines}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate">
                                 {formatCurrency(cm.totalPrice)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                 {formatCurrency(cm.shipping)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                 {formatCurrency(cm.taxes)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary min-w-[160px]">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary min-w-[160px] truncate">
                                 {formatCurrency(cm.totalCreditAmount)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                 {formatDate(cm.issuedDate, 'numeric-dash')}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                 {formatDate(cm.expirationDate, 'numeric-dash')}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate">
                                 {formatCurrency(cm.availableCreditBalance)}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                 {formatDate(cm.settledDate, 'numeric-dash')}
                             </td>
                         </tr>

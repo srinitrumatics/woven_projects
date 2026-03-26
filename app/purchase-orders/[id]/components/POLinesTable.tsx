@@ -78,7 +78,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
     return (
         <div className="w-full">
             <div className="overflow-x-auto">
-                <table className="w-full text-left whitespace-nowrap text-sm">
+                <table className="w-full text-left whitespace-nowrap text-sm table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 ">
                         <tr>
                             <SortableHeader label="Purchase Order Line" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
@@ -105,40 +105,41 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedLines.map((line: any) => (
                             <tr key={line.Id || Math.random()} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" title={line.name}>
                                     <Link
                                         href={`/purchase-orders/${poId}/lines/${line.Id}`}
-                                        className="text-primary hover:text-primary-dark hover:underline font-semibold"
+                                        className="text-primary hover:text-primary-dark hover:underline font-semibold block truncate"
+                                        title={line.name}
                                     >
                                         {line.name}
                                     </Link>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white"><StatusBadge status={line.status} /></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.purchaseOrder}>{line.purchaseOrder}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.customerQuoteLine}>{line.customerQuoteLine}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.productName}>{line.productName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white whitespace-normal max-w-[300px] truncate" title={line.productDescription}>{line.productDescription}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.manufacturerDBA}>{line.manufacturerDBA}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.totalOrderQty}>{line.totalOrderQty}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={formatCurrency(line.productCost)}>{formatCurrency(line.productCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={formatCurrency(line.shippingCost)}>{formatCurrency(line.shippingCost)}</td>
-                                <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.openBalanceQty}>{line.openBalanceQty}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.trackingNumber}>{line.trackingNumber}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}>{line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.trackingStatus}>{line.trackingStatus}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}>{line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}>{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={line.invoiceStatus}>{line.invoiceStatus}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate"><StatusBadge status={line.status} /></td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.purchaseOrder}>{line.purchaseOrder}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.customerQuoteLine}>{line.customerQuoteLine}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productName}>{line.productName}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{line.productDescription}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.manufacturerDBA}>{line.manufacturerDBA}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={String(line.totalOrderQty)}>{line.totalOrderQty}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(line.productCost)}>{formatCurrency(line.productCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(line.shippingCost)}>{formatCurrency(line.shippingCost)}</td>
+                                <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white truncate" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={String(line.openBalanceQty)}>{line.openBalanceQty}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.trackingNumber}>{line.trackingNumber}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}>{line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.trackingStatus}>{line.trackingStatus}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}>{line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}>{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.invoiceStatus}>{line.invoiceStatus}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
                 {paginatedLines.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                        <p className="text-lg font-medium">No records found</p>
-                        <p className="text-sm">There are no Purchase Order Lines associated with this purchase order.</p>
+                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                        <p className="text-sm truncate" title="There are no Purchase Order Lines associated with this purchase order.">There are no Purchase Order Lines associated with this purchase order.</p>
                     </div>
                 )}
             </div>
@@ -176,7 +177,7 @@ function StatusBadge({ status }: { status: string }) {
     };
 
     return (
-        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold border ${getStyles()}`} title={status}>
+        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold border truncate ${getStyles()}`} title={status}>
             {status}
         </span>
     );

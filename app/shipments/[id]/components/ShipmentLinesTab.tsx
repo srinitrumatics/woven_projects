@@ -170,7 +170,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
     // ── States ─────────────────────────────────────────────────────────────
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
             </div>
         );
@@ -179,7 +179,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
     if (error) {
         return (
             <div className="p-8 text-center bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-red-600 dark:text-red-300 font-medium">{error}</p>
+                <p className="text-red-600 dark:text-red-300 font-medium truncate">{error}</p>
             </div>
         );
     }
@@ -187,8 +187,8 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
     if (lines.length === 0) {
         return (
             <div className="p-12 text-center bg-gray-50 dark:bg-gray-900/40 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-700">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no Shipment Manifest Lines associated with this shipment manifest</p>
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no Shipment Manifest Lines associated with this shipment manifest">There are no Shipment Manifest Lines associated with this shipment manifest</p>
             </div>
         );
     }
@@ -196,7 +196,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
     // ── Table ──────────────────────────────────────────────────────────────
     return (
         <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
                         {/* Sticky first column */}
@@ -223,7 +223,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                         <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={handleSort} width={widths.estimatedDeliveryDate} onResize={handleResize} align="left" />
                         <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={handleSort} width={widths.actualDeliveryDate} onResize={handleResize} align="left" />
                         {/* Action – non-sortable */}
-                        <th className="px-3 py-2 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap" style={{ width: widths.action }}>
+                        <th className="px-3 py-2 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap truncate" style={{ width: widths.action }}>
                             Action
                         </th>
                     </tr>
@@ -232,7 +232,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                     {sorted.map((line) => (
                         <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             {/* Line name – sticky */}
-                            <td className="px-3 py-2 font-bold text-primary dark:text-primary-light sticky left-0 bg-white dark:bg-gray-800 z-10" style={{ width: widths.name }}>
+                            <td className="px-3 py-2 font-bold text-primary dark:text-primary-light sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
                                 <Link
                                     href={`/shipments/${shipmentId}/lines/${line.id}`}
                                     className="text-primary font-bold hover:underline truncate"
@@ -260,10 +260,10 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                             <TextCell v={fmtDate(line.estimatedDeliveryDate)} w={widths.estimatedDeliveryDate} />
                             <TextCell v={fmtDate(line.actualDeliveryDate)} w={widths.actualDeliveryDate} />
                             {/* Action */}
-                            <td className="px-3 py-2" style={{ width: widths.action }}>
+                            <td className="px-3 py-2 truncate" style={{ width: widths.action }}>
                                 {line.trackingNumber ? (
                                     <button
-                                        className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                                        className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors truncate"
                                         title="View proposal" onClick={() => router.push(`/shipments/${shipmentId}/lines/${line.id}`)}
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -272,7 +272,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                         </svg>
                                     </button>
                                 ) : (
-                                    <span className="text-gray-300 dark:text-gray-600 text-xs"> </span>
+                                    <span className="text-gray-300 dark:text-gray-600 text-xs truncate"> </span>
                                 )}
                             </td>
                         </tr>

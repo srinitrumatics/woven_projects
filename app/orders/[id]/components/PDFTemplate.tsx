@@ -31,7 +31,7 @@ export default function PDFTemplate({
             {/* Header */}
             <div className="flex justify-between items-start mb-10">
                 <div>
-                    <h1 className="text-4xl font-bold mb-2 text-primary" style={{ color: 'rgb(150, 194, 219)', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>WOVN</h1>
+                    <h1 className="text-4xl font-bold mb-2 text-primary truncate" style={{ color: 'rgb(150, 194, 219)', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>WOVN</h1>
                     <div className="text-sm text-gray-600">
                         <p>123 Business Street</p>
                         <p>Business City, ST 12345</p>
@@ -39,11 +39,11 @@ export default function PDFTemplate({
                     </div>
                 </div>
                 <div className="text-right">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Purchase Order</h2>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-2 truncate">Purchase Order</h2>
                     <div className="text-sm">
-                        <p><span className="font-semibold">PO No:</span> {formData.purchaseOrder || "N/A"}</p>
-                        <p><span className="font-semibold">Date:</span> {formatDate(new Date(), 'numeric-dash')}</p>
-                        <p><span className="font-semibold">Status:</span> {orderStatus}</p>
+                        <p><span className="font-semibold truncate">PO No:</span> {formData.purchaseOrder || "N/A"}</p>
+                        <p><span className="font-semibold truncate">Date:</span> {formatDate(new Date(), 'numeric-dash')}</p>
+                        <p><span className="font-semibold truncate">Status:</span> {orderStatus}</p>
                     </div>
                 </div>
             </div>
@@ -56,12 +56,12 @@ export default function PDFTemplate({
                         Billing Information
                     </div>
                     <div className="px-4 text-sm text-gray-700">
-                        <p className="font-bold mb-1">{formData.billTo !== "same" ? shipLocations.find(l => l.Id === formData.billTo)?.Name : "Same as Shipping"}</p>
-                        <p className="whitespace-pre-wrap">{formData.billingAddress}</p>
+                        <p className="font-bold mb-1 truncate">{formData.billTo !== "same" ? shipLocations.find(l => l.Id === formData.billTo)?.Name : "Same as Shipping"}</p>
+                        <p className="whitespace-pre-wrap truncate">{formData.billingAddress}</p>
                         <div className="mt-4">
-                            <p><span className="font-semibold">Contact:</span> {formData.locationContact}</p>
-                            <p><span className="font-semibold">Email:</span> {formData.contactEmail}</p>
-                            <p><span className="font-semibold">Phone:</span> {formData.contactPhone}</p>
+                            <p><span className="font-semibold truncate">Contact:</span> {formData.locationContact}</p>
+                            <p><span className="font-semibold truncate">Email:</span> {formData.contactEmail}</p>
+                            <p><span className="font-semibold truncate">Phone:</span> {formData.contactPhone}</p>
                         </div>
                     </div>
                 </div>
@@ -72,12 +72,12 @@ export default function PDFTemplate({
                         Shipping Information
                     </div>
                     <div className="px-4 text-sm text-gray-700">
-                        <p className="font-bold mb-1">{shipLocations.find(l => l.Id === formData.shipTo)?.Name}</p>
-                        <p className="whitespace-pre-wrap">{formData.shippingAddress}</p>
+                        <p className="font-bold mb-1 truncate">{shipLocations.find(l => l.Id === formData.shipTo)?.Name}</p>
+                        <p className="whitespace-pre-wrap truncate">{formData.shippingAddress}</p>
                         <div className="mt-4">
-                            <p><span className="font-semibold">Contact:</span> {formData.locationContact}</p>
-                            <p><span className="font-semibold">Email:</span> {formData.contactEmail}</p>
-                            <p><span className="font-semibold">Phone:</span> {formData.contactPhone}</p>
+                            <p><span className="font-semibold truncate">Contact:</span> {formData.locationContact}</p>
+                            <p><span className="font-semibold truncate">Email:</span> {formData.contactEmail}</p>
+                            <p><span className="font-semibold truncate">Phone:</span> {formData.contactPhone}</p>
                         </div>
                     </div>
                 </div>
@@ -114,21 +114,21 @@ export default function PDFTemplate({
                 <table className="w-full mb-8">
                     <thead>
                         <tr className="bg-primary-light dark:bg-gray-900 text-black text-sm uppercase font-semibold" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', verticalAlign: 'middle', height: '35px' }}>
-                            <th className="px-4 py-2 text-left">Item name</th>
-                            <th className="px-4 py-2 text-left">SKU</th>
-                            <th className="px-4 py-2 text-left">Qty</th>
-                            <th className="px-4 py-2 text-left">Unit Price</th>
-                            <th className="px-4 py-2 text-left">Total</th>
+                            <th className="px-4 py-2 text-left truncate">Item name</th>
+                            <th className="px-4 py-2 text-left truncate">SKU</th>
+                            <th className="px-4 py-2 text-left truncate">Qty</th>
+                            <th className="px-4 py-2 text-left truncate">Unit Price</th>
+                            <th className="px-4 py-2 text-left truncate">Total</th>
                         </tr>
                     </thead>
                     <tbody className="text-xs text-gray-700">
                         {orderProducts.map((product, index) => (
                             <tr key={index} className="border-b border-gray-200">
-                                <td className="px-4 py-3">{product.name}</td>
-                                <td className="px-4 py-3">{product.sku}</td>
-                                <td className="px-4 py-3 text-left">{product.orderQty}</td>
-                                <td className="px-4 py-3 text-left">{formatCurrency(product.unitPrice)}</td>
-                                <td className="px-4 py-3 text-left">{formatCurrency(product.subtotal)}</td>
+                                <td className="px-4 py-3 truncate">{product.name}</td>
+                                <td className="px-4 py-3 truncate">{product.sku}</td>
+                                <td className="px-4 py-3 text-left truncate">{product.orderQty}</td>
+                                <td className="px-4 py-3 text-left truncate">{formatCurrency(product.unitPrice)}</td>
+                                <td className="px-4 py-3 text-left truncate">{formatCurrency(product.subtotal)}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -139,15 +139,15 @@ export default function PDFTemplate({
             <div className="flex justify-end">
                 <div className="w-1/3">
                     <div className="flex justify-between py-2 border-b border-gray-200 text-sm">
-                        <span className="font-semibold">Subtotal</span>
+                        <span className="font-semibold truncate">Subtotal</span>
                         <span>{formatCurrency(productsSubtotal)}</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-200 text-sm">
-                        <span className="font-semibold">Tax (15%)</span>
+                        <span className="font-semibold truncate">Tax (15%)</span>
                         <span>{formatCurrency(totalExciseTax)}</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-200 text-sm">
-                        <span className="font-semibold">Shipping</span>
+                        <span className="font-semibold truncate">Shipping</span>
                         <span>{formatCurrency(shipping)}</span>
                     </div>
                     <div className="flex justify-between text-lg font-semibold bg-primary-light dark:bg-gray-900 text-black px-2 mt-2 items-center" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', display: 'flex', alignItems: 'center', height: '35px' }}>

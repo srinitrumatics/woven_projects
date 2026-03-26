@@ -174,7 +174,7 @@ export default function Sidebar({ children }: SidebarProps) {
           }`}
       >
         {/* Logo + Toggle */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 min-w-0">
           {!isCollapsed && (
             <Link href="/dashboard" className="flex items-center">
               <span className="text-2xl font-bold text-primary dark:text-primary">WOVN</span>
@@ -232,8 +232,8 @@ export default function Sidebar({ children }: SidebarProps) {
         {/* Footer - profile / settings */}
         <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           {user ? (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between min-w-0">
+              <div className="flex items-center gap-3 min-w-0">
                 <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
@@ -252,7 +252,7 @@ export default function Sidebar({ children }: SidebarProps) {
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0">
               <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">U</div>
               {!isCollapsed && <div className="text-sm">User Name</div>}
             </div>

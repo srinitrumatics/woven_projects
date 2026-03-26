@@ -35,7 +35,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center p-12">
+            <div className="flex justify-center items-center p-12 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -56,7 +56,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                     >
                         {tab.label}
                         {tab.count > 0 && (
-                            <span className="ml-1">
+                            <span className="ml-1 truncate">
                                 ({tab.count})
                             </span>
                         )}
@@ -67,9 +67,9 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
             {/* Content */}
             <div className="overflow-x-auto">
                 {sortedData.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                        <p className="text-lg font-medium">No records found</p>
-                        <p className="text-sm">
+                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                        <p className="text-sm truncate">
                             There are no {activeTab === 'rma' ? 'RMAs' :
                                 activeTab === 'credit' ? 'Credit Memos' :
                                     activeTab === 'rtv' ? 'RTVs' :
@@ -77,7 +77,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                         </p>
                     </div>
                 ) : (
-                    <table className="w-full">
+                    <table className="w-full table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900">
                             <tr>
 
@@ -181,8 +181,8 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
 
                                 return (
                                     <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left" title={item.name}><div className="text-sm font-medium text-gray-900 dark:text-white truncate ">{item.name}</div></td>
-                                        <td className="px-3 px-2 ">
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={item.name}><div className="text-sm font-medium text-gray-900 dark:text-white truncate ">{item.name}</div></td>
+                                        <td className="px-3 px-2  truncate">
                                             <span className={`inline-blocktext-sm font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                 item.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                     'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -193,15 +193,15 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
 
                                         {activeTab === 'rma' ? (
                                             <>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white" title={rma.salesOrderName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.salesOrderName}</div></td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white" title={rma.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.customerQuoteName}</div></td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white" title={rma.customerOrderName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.customerOrderName}</div></td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white" title={rma.rmaType}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.rmaType}</div></td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white" title={rma.shipFromAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.shipFromAccountName}</div></td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white" title={rma.shipFromContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.shipFromContactName}</div></td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white" title={rma.returnToAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.returnToAccountName}</div></td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white" title={rma.returnToContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.returnToContactName}</div></td>
-                                                <td className="px-3 px-2 min-w-[103px]">
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white truncate" title={rma.salesOrderName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.salesOrderName}</div></td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white truncate" title={rma.customerQuoteName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.customerQuoteName}</div></td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white truncate" title={rma.customerOrderName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.customerOrderName}</div></td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white truncate" title={rma.rmaType}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.rmaType}</div></td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white truncate" title={rma.shipFromAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.shipFromAccountName}</div></td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white truncate" title={rma.shipFromContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.shipFromContactName}</div></td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white truncate" title={rma.returnToAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.returnToAccountName}</div></td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white truncate" title={rma.returnToContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.returnToContactName}</div></td>
+                                                <td className="px-3 px-2 min-w-[103px] truncate">
                                                     <span className={`inline-flex text-sm font-medium rounded ${rma.dropShip
                                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -209,109 +209,109 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                         {rma.dropShip ? 'Yes' : 'No'}
                                                     </span>
                                                 </td>
-                                                <td className="px-3 px-2  text-sm text-gray-900 dark:text-white min-w-[123px]">
-                                                    <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                <td className="px-3 px-2  text-sm text-gray-900 dark:text-white min-w-[123px] truncate">
+                                                    <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
                                                         {(rma.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </span>
                                                 </td>
-                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white">
+                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white truncate">
                                                     ${rma.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{rma.issuedDate}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{rma.returnByDate}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{rma.shippingMethod}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{rma.logisticsPartner}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{rma.logisticsContact}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{rma.trackingNumber}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 min-w-[198px]">{rma.estimatedDeliveryDate}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{rma.trackingStatus}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 min-w-[173px]">{rma.actualDeliveryDate}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 min-w-[199px]">{rma.goodsReceiptDate}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.issuedDate}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.returnByDate}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.shippingMethod}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.logisticsPartner}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.logisticsContact}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.trackingNumber}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 min-w-[198px] truncate">{rma.estimatedDeliveryDate}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.trackingStatus}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 min-w-[173px] truncate">{rma.actualDeliveryDate}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 min-w-[199px] truncate">{rma.goodsReceiptDate}</td>
                                             </>
                                         ) : activeTab === 'rtv' ? (
                                             <>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.purchaseOrderName}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.customerQuoteName}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.customerOrderName}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.rtvType}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.rmaNumber}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.shipFromAccountName}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.shipFromContactName}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.supplierName}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{rtv.supplierContact}</td>
-                                                <td className="px-3 px-2  text-sm text-gray-900 dark:text-white min-w-[115px]">
-                                                    <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.purchaseOrderName}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.customerQuoteName}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.customerOrderName}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.rtvType}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.rmaNumber}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.shipFromAccountName}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.shipFromContactName}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.supplierName}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.supplierContact}</td>
+                                                <td className="px-3 px-2  text-sm text-gray-900 dark:text-white min-w-[115px] truncate">
+                                                    <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
                                                         {(rtv.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </span>
                                                 </td>
-                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white">
+                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white truncate">
                                                     ${rtv.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{rtv.issuedDate}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{rtv.approvalDate}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{rtv.returnByDate}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rtv.issuedDate}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rtv.approvalDate}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rtv.returnByDate}</td>
                                             </>
                                         ) : activeTab === 'credit' ? (
                                             <>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{credit.invoiceName}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{credit.customerQuoteName}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{credit.customerOrderName}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{credit.creditToAccountName}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{credit.creditToContactName}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white min-w-[125px]">
-                                                    <span className="inline-flex items-center justify-center h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{credit.invoiceName}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{credit.customerQuoteName}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{credit.customerOrderName}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{credit.creditToAccountName}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{credit.creditToContactName}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-900 dark:text-white min-w-[125px] truncate">
+                                                    <span className="inline-flex items-center justify-center h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
                                                         {(credit.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </span>
                                                 </td>
-                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white">
+                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white truncate">
                                                     ${credit.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white">
+                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white truncate">
                                                     ${credit.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white">
+                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white truncate">
                                                     ${credit.totalTaxesAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white font-semibold min-w-[176px]">
+                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white font-semibold min-w-[176px] truncate">
                                                     ${credit.totalCreditAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{credit.issuedDate}</td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{credit.expirationDate}</td>
-                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white min-w-[201px]">
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{credit.issuedDate}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{credit.expirationDate}</td>
+                                                <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white min-w-[201px] truncate">
                                                     ${credit.availableCreditBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{credit.settledDate}</td>
+                                                <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{credit.settledDate}</td>
                                             </>
                                         ) : (
                                             <>
                                                 {activeTab === 'debit' && (
                                                     <>
-                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{debit.supplierBillName}</td>
-                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{debit.purchaseOrderName}</td>
-                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{debit.customerOrderName}</td>
-                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white min-w-[190px]">{debit.supplierCreditMemoName}</td>
-                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{debit.debitToAccountName}</td>
-                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white ">{debit.debitToContactName}</td>
-                                                        <td className="px-3 px-2  text-sm text-gray-900 dark:text-white min-w-[110px]">
-                                                            <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold">
+                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{debit.supplierBillName}</td>
+                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{debit.purchaseOrderName}</td>
+                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{debit.customerOrderName}</td>
+                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white min-w-[190px] truncate">{debit.supplierCreditMemoName}</td>
+                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{debit.debitToAccountName}</td>
+                                                        <td className="px-3 px-2 text-sm text-gray-900 dark:text-white  truncate">{debit.debitToContactName}</td>
+                                                        <td className="px-3 px-2  text-sm text-gray-900 dark:text-white min-w-[110px] truncate">
+                                                            <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
                                                                 {(debit.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                             </span>
                                                         </td>
-                                                        <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white">
+                                                        <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white truncate">
                                                             ${debit.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                         </td>
-                                                        <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white">
+                                                        <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white truncate">
                                                             ${debit.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                         </td>
-                                                        <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white font-semibold min-w-[171px]">
+                                                        <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white font-semibold min-w-[171px] truncate">
                                                             ${debit.totalDebitAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                         </td>
-                                                        <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{debit.issuedDate}</td>
-                                                        <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{debit.approvalDate}</td>
-                                                        <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white min-w-[199px]">
+                                                        <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{debit.issuedDate}</td>
+                                                        <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{debit.approvalDate}</td>
+                                                        <td className="px-3 px-2 text-sm  text-gray-900 dark:text-white min-w-[199px] truncate">
                                                             ${debit.availableDebitBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                         </td>
-                                                        <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400 ">{debit.settledDate}</td>
+                                                        <td className="px-3 px-2 text-sm text-gray-600 dark:text-gray-400  truncate">{debit.settledDate}</td>
                                                     </>
                                                 )}
                                             </>

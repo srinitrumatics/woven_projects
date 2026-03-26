@@ -11,7 +11,7 @@ interface ShippingInformationProps {
 export default function ShippingInformation({ bill }: ShippingInformationProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 h-full flex flex-col">
-            <div className="flex items-center gap-3 mb-6 shrink-0">
+            <div className="flex items-center gap-3 mb-6 shrink-0 min-w-0">
                 <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                     <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
@@ -19,7 +19,7 @@ export default function ShippingInformation({ bill }: ShippingInformationProps) 
                 </div>
                 <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Shipping Information">Shipping Information</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Delivery Destination</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Delivery Destination">Delivery Destination</p>
                 </div>
             </div>
 

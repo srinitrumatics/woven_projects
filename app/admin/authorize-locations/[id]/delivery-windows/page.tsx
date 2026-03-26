@@ -204,13 +204,13 @@ export default function DeliveryWindowsPage() {
         <div className="p-6">
             <div className="mb-6">
                 <div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                        <Link href="/admin/authorize-locations" className="hover:text-primary transition-colors">Authorize Locations</Link>
+                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-2 min-w-0">
+                        <Link href="/admin/authorize-locations" className="hover:text-primary transition-colors truncate">Authorize Locations</Link>
                         <span>/</span>
-                        <span className="text-gray-900 dark:text-white font-medium">Delivery Windows</span>
+                        <span className="text-gray-900 dark:text-white font-medium truncate">Delivery Windows</span>
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Delivery Windows</h1>
-                    <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1">Manage and track delivery windows for this location</p>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Delivery Windows</h1>
+                    <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and track delivery windows for this location">Manage and track delivery windows for this location</p>
                 </div>
             </div>
 
@@ -232,7 +232,7 @@ export default function DeliveryWindowsPage() {
                         </div>
 
                         {/* Status Pills */}
-                        <div className="flex items-center gap-2 mr-auto">
+                        <div className="flex items-center gap-2 mr-auto min-w-0">
                             {(['All', 'Active', 'Inactive'] as TabFilter[]).map((tab) => (
                                 <button
                                     key={tab}
@@ -248,7 +248,7 @@ export default function DeliveryWindowsPage() {
                         </div>
 
                         {/* Add Button */}
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
                             <button
                                 onClick={() => {
                                     setEditingWindow(null);
@@ -260,7 +260,7 @@ export default function DeliveryWindowsPage() {
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                 </svg>
-                                <span className="text-sm font-medium">Add</span>
+                                <span className="text-sm font-medium truncate">Add</span>
                             </button>
                         </div>
                     </div>
@@ -269,20 +269,20 @@ export default function DeliveryWindowsPage() {
                 {/* Table */}
                 <div className="overflow-x-auto">
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
                             <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                             </svg>
-                            <p className="text-sm font-medium">Loading delivery windows...</p>
+                            <p className="text-sm font-medium truncate" title="Loading delivery windows...">Loading delivery windows...</p>
                         </div>
                     ) : paginatedWindows.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-16 text-center">
+                        <div className="flex flex-col items-center justify-center py-16 text-center min-w-0">
                             <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 1V5a2 2 0 00-2-2H9a2 2 0 00-2 2v3m10 11V7a2 2 0 00-2-2h-3M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
-                            <p className="text-gray-500 dark:text-gray-400 text-lg font-medium mb-1">No delivery windows found</p>
-                            <p className="text-gray-400 dark:text-gray-500 text-sm">There are no delivery window records for this location</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-lg font-medium mb-1 truncate" title="No delivery windows found">No delivery windows found</p>
+                            <p className="text-gray-400 dark:text-gray-500 text-sm truncate" title="There are no delivery window records for this location">There are no delivery window records for this location</p>
                         </div>
                     ) : (
                         <table className="w-full border-collapse table-fixed" style={{ minWidth: Object.values(widths).reduce((a, b) => a + b, 0) }}>
@@ -298,7 +298,7 @@ export default function DeliveryWindowsPage() {
                                     <SortableHeader label="Closed for Deliveries" field="closedForDeliveries" sortConfig={sortConfig} requestSort={requestSort} width={widths.closedForDeliveries} onResize={handleResize} />
                                     <SortableHeader label="Delivery Notes" field="deliveryNotes" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveryNotes} onResize={handleResize} />
                                     <SortableHeader label="Active" field="active" sortConfig={sortConfig} requestSort={requestSort} width={widths.active} onResize={handleResize} />
-                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                         Action
                                     </th>
                                 </tr>
@@ -310,17 +310,17 @@ export default function DeliveryWindowsPage() {
                                             {dw.name}
                                         </td>
                                         <td className="px-3 py-3 text-sm text-gray-900 dark:text-white truncate" title={dw.shipToLocation} style={{ width: widths.shipToLocation, minWidth: widths.shipToLocation, maxWidth: widths.shipToLocation }}>{dw.shipToLocation}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.dayOfWeek, minWidth: widths.dayOfWeek, maxWidth: widths.dayOfWeek }}>{dw.dayOfWeek}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-900 dark:text-white font-medium" style={{ width: widths.windowStart, minWidth: widths.windowStart, maxWidth: widths.windowStart }}>{formatTime(dw.windowStart)}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.windowEnd, minWidth: widths.windowEnd, maxWidth: widths.windowEnd }}>{formatTime(dw.windowEnd)}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.open24Hours, minWidth: widths.open24Hours, maxWidth: widths.open24Hours }}>{dw.open24Hours ? 'Yes' : 'No'}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.receiveOnFederalHolidays, minWidth: widths.receiveOnFederalHolidays, maxWidth: widths.receiveOnFederalHolidays }}>{dw.receiveOnFederalHolidays ? 'Yes' : 'No'}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400" style={{ width: widths.closedForDeliveries, minWidth: widths.closedForDeliveries, maxWidth: widths.closedForDeliveries }}>{dw.closedForDeliveries ? 'Yes' : 'No'}</td>
+                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.dayOfWeek, minWidth: widths.dayOfWeek, maxWidth: widths.dayOfWeek }}>{dw.dayOfWeek}</td>
+                                        <td className="px-3 py-3 text-sm text-gray-900 dark:text-white font-medium truncate" style={{ width: widths.windowStart, minWidth: widths.windowStart, maxWidth: widths.windowStart }}>{formatTime(dw.windowStart)}</td>
+                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.windowEnd, minWidth: widths.windowEnd, maxWidth: widths.windowEnd }}>{formatTime(dw.windowEnd)}</td>
+                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.open24Hours, minWidth: widths.open24Hours, maxWidth: widths.open24Hours }}>{dw.open24Hours ? 'Yes' : 'No'}</td>
+                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.receiveOnFederalHolidays, minWidth: widths.receiveOnFederalHolidays, maxWidth: widths.receiveOnFederalHolidays }}>{dw.receiveOnFederalHolidays ? 'Yes' : 'No'}</td>
+                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.closedForDeliveries, minWidth: widths.closedForDeliveries, maxWidth: widths.closedForDeliveries }}>{dw.closedForDeliveries ? 'Yes' : 'No'}</td>
                                         <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={dw.deliveryNotes} style={{ width: widths.deliveryNotes, minWidth: widths.deliveryNotes, maxWidth: widths.deliveryNotes }}>{dw.deliveryNotes}</td>
-                                        <td className="px-3 py-3" style={{ width: widths.active, minWidth: widths.active, maxWidth: widths.active }}>
+                                        <td className="px-3 py-3 truncate" style={{ width: widths.active, minWidth: widths.active, maxWidth: widths.active }}>
                                             <StatusBadge active={dw.active} />
                                         </td>
-                                        <td className="px-3 py-3" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                                        <td className="px-3 py-3 truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                             <div className="flex gap-2">
                                                 <button
                                                     onClick={() => {
@@ -385,7 +385,7 @@ function StatCard({ label, value, color, active, onClick }: { label: string, val
             onClick={onClick}
             className={`cursor-pointer p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border ${active ? 'border-primary ring-1 ring-primary' : 'border-gray-100 dark:border-gray-700'} hover:border-primary transition-all`}
         >
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{label}</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider truncate">{label}</p>
             <p className={`text-3xl font-bold mt-1 ${colors[color]}`}>{value}</p>
         </div>
     );

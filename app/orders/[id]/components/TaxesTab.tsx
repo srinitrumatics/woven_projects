@@ -9,7 +9,7 @@ interface TaxesTabProps {
 export default function TaxesTab({ order, loading }: TaxesTabProps) {
     if (loading) {
         return (
-            <div className="flex items-center justify-center py-10">
+            <div className="flex items-center justify-center py-10 min-w-0">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
         );
@@ -25,9 +25,9 @@ export default function TaxesTab({ order, loading }: TaxesTabProps) {
         !order.VAT_Rate__c && !order.Total_VAT_Amount__c
     )) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no taxes associated with this order.</p>
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no taxes associated with this order.">There are no taxes associated with this order.</p>
             </div>
         );
     }
@@ -49,7 +49,7 @@ export default function TaxesTab({ order, loading }: TaxesTabProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-auto">
-                <table className="w-full">
+                <table className="w-full table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
                         <tr>
                             <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Sales Tax Rate</th>

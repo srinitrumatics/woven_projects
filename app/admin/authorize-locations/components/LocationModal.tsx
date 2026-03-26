@@ -118,10 +118,10 @@ export default function LocationModal({
             >
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white truncate" title={title}>{title}</h2>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors truncate"
                     >
                         <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -142,8 +142,8 @@ export default function LocationModal({
                     <div className="flex-1 overflow-y-auto p-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Authorize Location Name <span className="text-red-500">*</span>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
+                                    Authorize Location Name <span className="text-red-500 truncate">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -152,14 +152,14 @@ export default function LocationModal({
                                     onChange={handleChange}
                                     disabled={mode === "view"}
                                     required
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                                    placeholder="Enter location name"
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50 truncate"
+                                    placeholder="Enter location name" title={String(formData.name ?? '')}
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Location ID <span className="text-red-500">*</span>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
+                                    Location ID <span className="text-red-500 truncate">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -168,14 +168,14 @@ export default function LocationModal({
                                     onChange={handleChange}
                                     disabled={mode === "view"}
                                     required
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                                    placeholder="Enter location ID"
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50 truncate"
+                                    placeholder="Enter location ID" title={String(formData.locationId ?? '')}
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Location Type <span className="text-red-500">*</span>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
+                                    Location Type <span className="text-red-500 truncate">*</span>
                                 </label>
                                 <select
                                     name="locationType"
@@ -198,8 +198,8 @@ export default function LocationModal({
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Address Type <span className="text-red-500">*</span>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
+                                    Address Type <span className="text-red-500 truncate">*</span>
                                 </label>
                                 <select
                                     name="addressType"
@@ -222,8 +222,8 @@ export default function LocationModal({
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Street <span className="text-red-500">*</span>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
+                                    Street <span className="text-red-500 truncate">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -232,14 +232,14 @@ export default function LocationModal({
                                     onChange={handleChange}
                                     disabled={mode === "view"}
                                     required
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                                    placeholder="Enter street address"
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50 truncate"
+                                    placeholder="Enter street address" title={String(formData.street ?? '')}
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    City <span className="text-red-500">*</span>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
+                                    City <span className="text-red-500 truncate">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -248,14 +248,14 @@ export default function LocationModal({
                                     onChange={handleChange}
                                     disabled={mode === "view"}
                                     required
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                                    placeholder="Enter city"
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50 truncate"
+                                    placeholder="Enter city" title={String(formData.city ?? '')}
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    State <span className="text-red-500">*</span>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
+                                    State <span className="text-red-500 truncate">*</span>
                                 </label>
                                 <select
                                     name="state"
@@ -278,8 +278,8 @@ export default function LocationModal({
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Zipcode <span className="text-red-500">*</span>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
+                                    Zipcode <span className="text-red-500 truncate">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -288,13 +288,13 @@ export default function LocationModal({
                                     onChange={handleChange}
                                     disabled={mode === "view"}
                                     required
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50"
-                                    placeholder="Enter zipcode"
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none disabled:bg-gray-50 dark:disabled:bg-gray-900/50 truncate"
+                                    placeholder="Enter zipcode" title={String(formData.zipCode ?? '')}
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
                                     Country
                                 </label>
                                 <input
@@ -302,15 +302,15 @@ export default function LocationModal({
                                     name="country"
                                     value="US"
                                     disabled={true}
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:disabled:bg-gray-900/50 text-gray-500 outline-none cursor-not-allowed"
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:disabled:bg-gray-900/50 text-gray-500 outline-none cursor-not-allowed truncate"
                                     placeholder="US"
                                 />
                             </div>
 
                             <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4 items-end mt-2">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Status <span className="text-red-500">*</span>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
+                                        Status <span className="text-red-500 truncate">*</span>
                                     </label>
                                     <select
                                         name="status"
@@ -325,7 +325,7 @@ export default function LocationModal({
                                     </select>
                                 </div>
 
-                                <div className="flex items-center gap-2 pb-3">
+                                <div className="flex items-center gap-2 pb-3 min-w-0">
                                     <input
                                         type="checkbox"
                                         id="liftGate"
@@ -333,14 +333,14 @@ export default function LocationModal({
                                         checked={formData.liftGate}
                                         onChange={handleChange}
                                         disabled={mode === "view"}
-                                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary truncate"
                                     />
-                                    <label htmlFor="liftGate" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <label htmlFor="liftGate" className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
                                         Lift Gate
                                     </label>
                                 </div>
 
-                                <div className="flex items-center gap-2 pb-3">
+                                <div className="flex items-center gap-2 pb-3 min-w-0">
                                     <input
                                         type="checkbox"
                                         id="insideDelivery"
@@ -348,16 +348,16 @@ export default function LocationModal({
                                         checked={formData.insideDelivery}
                                         onChange={handleChange}
                                         disabled={mode === "view"}
-                                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary truncate"
                                     />
-                                    <label htmlFor="insideDelivery" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <label htmlFor="insideDelivery" className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
                                         Inside Delivery
                                     </label>
                                 </div>
                             </div>
 
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
                                     Delivery Note
                                 </label>
                                 <textarea
@@ -378,14 +378,14 @@ export default function LocationModal({
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-sm"
+                            className="px-6 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-sm truncate"
                         >
                             {mode === "view" ? "Close" : "Cancel"}
                         </button>
                         {mode !== "view" && (
                             <button
                                 type="submit"
-                                className="px-6 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm"
+                                className="px-6 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm truncate"
                             >
                                 Save Location
                             </button>

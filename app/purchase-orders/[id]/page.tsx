@@ -184,10 +184,10 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
     if (loading) {
         return (
             <Sidebar>
-                <div className="flex h-[80vh] items-center justify-center">
+                <div className="flex h-[80vh] items-center justify-center min-w-0">
                     <div className="text-center">
                         <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4 mx-auto"></div>
-                        <p className="text-gray-500 dark:text-gray-400 font-medium text-lg">Loading PO Details...</p>
+                        <p className="text-gray-500 dark:text-gray-400 font-medium text-lg truncate" title="Loading PO Details...">Loading PO Details...</p>
                     </div>
                 </div>
             </Sidebar>
@@ -198,8 +198,8 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
         return (
             <Sidebar>
                 <div className="p-8 text-center bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Purchase Order Not Found</h2>
-                    <p className="text-gray-500 dark:text-gray-400 mb-6">The purchase order you're looking for doesn't exist or you don't have access.</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 truncate">Purchase Order Not Found</h2>
+                    <p className="text-gray-500 dark:text-gray-400 mb-6 truncate" title="The purchase order you're looking for doesn't exist or you don't have access.">The purchase order you're looking for doesn't exist or you don't have access.</p>
                     <button onClick={() => router.push("/purchase-orders")} className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">Back to List</button>
                 </div>
             </Sidebar>
@@ -224,15 +224,15 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                 <div className="w1025:col-span-3 flex flex-col gap-6 h-full">
                     {/* PO Notes */}
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 flex flex-col h-fit min-h-[180px]">
-                        <div className="flex items-center gap-3 mb-6">
+                        <div className="flex items-center gap-3 mb-6 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                             </div>
-                            <div>
+                            <div className="min-w-0">
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Purchase Order Notes">Purchase Order Notes</h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">Special Instructions or Notes</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Special Instructions or Notes">Special Instructions or Notes</p>
                             </div>
                         </div>
                         <div className="flex-1">
@@ -258,7 +258,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
 
             {/* Tab section Matched to Proposal */}
             <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
                     <div className="w-full lg:flex-1 min-w-0">
                         <POTabs
                             activeTab={activeTab}

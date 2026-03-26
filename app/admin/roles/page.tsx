@@ -183,16 +183,16 @@ const RoleManagement: React.FC = () => {
           className="mb-8"
         >
           <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between min-w-0">
+              <div className="flex items-center gap-4 min-w-0">
                 <div className="w-14 h-14 bg-gradient-to-br from-[#96C2DB] to-[#6B9DB8] rounded-xl flex items-center justify-center shadow-lg">
                   <Shield className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent truncate">
                     Role Management
                   </h1>
-                  <p className="text-gray-500 text-sm mt-1">
+                  <p className="text-gray-500 text-sm mt-1 truncate" title="Create and manage roles with granular permissions">
                     Create and manage roles with granular permissions
                   </p>
                 </div>
@@ -263,8 +263,8 @@ const RoleManagement: React.FC = () => {
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">No Roles Yet</h3>
-              <p className="text-gray-500 mb-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2 truncate">No Roles Yet</h3>
+              <p className="text-gray-500 mb-8 truncate" title="Get started by creating your first role with custom permissions to control access across your application.">
                 Get started by creating your first role with custom permissions to control access across your application.
               </p>
               <motion.button

@@ -77,20 +77,20 @@ export default function MyOrderTable({
     };
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 min-w-0">
             {loadingOrder ? (
-                <div className="flex justify-center items-center py-12">
+                <div className="flex justify-center items-center py-12 min-w-0">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                 </div>
             ) : paginatedProducts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium">No records found</p>
-                    <p className="text-sm mt-1">{searchQuery ? "No products found matching your search." : "There are no products associated with this order."}</p>
-                    {!searchQuery && isEditing && <p className="text-sm mt-1 text-center">Your order is empty. Click 'Add Products' to start adding items.</p>}
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                    <p className="text-sm mt-1 truncate">{searchQuery ? "No products found matching your search." : "There are no products associated with this order."}</p>
+                    {!searchQuery && isEditing && <p className="text-sm mt-1 text-center truncate" title="Your order is empty. Click 'Add Products' to start adding items.">Your order is empty. Click 'Add Products' to start adding items.</p>}
                 </div>
             ) : (
                 <div className="overflow-auto">
-                    <table className="w-full text-sm ">
+                    <table className="w-full text-sm table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
                             <tr>
                                 <SortableHeader label="Order Line " field="sku" sortConfig={sortConfig} requestSort={requestSort} width={widths.sku} onResize={onResize} />
@@ -102,7 +102,7 @@ export default function MyOrderTable({
                                 <SortableHeader label="Sub Total" field="subtotal" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} />
                                 {isEditing && (
                                     <th
-                                        className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                                        className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate"
                                         style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                                     >
                                         Action
@@ -113,7 +113,7 @@ export default function MyOrderTable({
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 text-sm">
                             {paginatedProducts.map((product) => (
                                 <tr key={product.lineItemKey || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                    <td className="px-2 py-3 text-left min-w-[100px]">
+                                    <td className="px-2 py-3 text-left min-w-[100px] truncate">
                                         <Link
                                             href={`/orders/${orderId}/lines/${product.orderLineId || product.id}`}
                                             className="text-sm font-semibold text-primary hover:underline truncate block"
@@ -122,7 +122,7 @@ export default function MyOrderTable({
                                             {product.sku}
                                         </Link>
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white font-medium text-left w-[100px]">
+                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white font-medium text-left w-[100px] truncate">
                                         {/* Product name with hover tooltip showing full details */}
                                         <span
                                             className="underline cursor-help block truncate"
@@ -137,15 +137,15 @@ export default function MyOrderTable({
                                             </div>
                                         )}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left w-[100px]" title={product.manufacturer}><div className="text-sm text-gray-900 dark:text-white truncate">{product.manufacturer}</div></td>
-                                    <td className="px-2 py-3 w-[150px] text-left" title={product.productFamily}>
-                                        <div className="truncate"><span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
+                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left w-[100px] truncate" title={product.manufacturer}><div className="text-sm text-gray-900 dark:text-white truncate">{product.manufacturer}</div></td>
+                                    <td className="px-2 py-3 w-[150px] text-left truncate" title={product.productFamily}>
+                                        <div className="truncate"><span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">
                                             {product.productFamily}
                                         </span></div></td>
-                                    <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white w-[100px]">{formatCurrency(product.unitPrice)}</td>
-                                    <td className="px-2 py-3 text-left w-[150px]">
+                                    <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white w-[100px] truncate">{formatCurrency(product.unitPrice)}</td>
+                                    <td className="px-2 py-3 text-left w-[150px] truncate">
                                         {isEditing ? (
-                                            <div className="flex flex-col gap-1">
+                                            <div className="flex flex-col gap-1 min-w-0">
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => {
@@ -206,9 +206,9 @@ export default function MyOrderTable({
                                             </div>
                                         )}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold w-[100px]">{formatCurrency(product.subtotal)}</td>
+                                    <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold w-[100px] truncate">{formatCurrency(product.subtotal)}</td>
                                     {isEditing && (
-                                        <td className="px-2 py-3 text-left">
+                                        <td className="px-2 py-3 text-left truncate">
                                             <button
                                                 onClick={() => handleRemoveProduct(product.lineItemKey!)}
                                                 title="Remove from order"

@@ -123,12 +123,12 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
             <div className="overflow-x-auto">
                 {activeTab === 'rma' ? (
                     sortedData.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium">No records found</p>
-                            <p className="text-sm">There are no RMAs associated with this proposal line.</p>
+                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                            <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                            <p className="text-sm truncate" title="There are no RMAs associated with this proposal line.">There are no RMAs associated with this proposal line.</p>
                         </div>
                     ) : (
-                        <table className="w-full">
+                        <table className="w-full table-fixed">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
                                     <SortableHeader
@@ -164,8 +164,8 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     const rma = item as RMA;
                                     return (
                                         <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                            <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 text-left" title={rma.name}><div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate" title={rma.name}>{rma.name}</div></td>
-                                            <td className="px-3 py-2 text-left">
+                                            <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={rma.name}><div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate" title={rma.name}>{rma.name}</div></td>
+                                            <td className="px-3 py-2 text-left truncate">
                                                 <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${rma.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                     rma.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                         'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -173,40 +173,40 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                     {rma.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate">
                                                 <div className="text-sm truncate" title={rma.rmaName}>{rma.rmaName}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                 <div className="text-sm truncate" title={rma.salesOrderLineName}>{rma.salesOrderLineName}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                 <div className="text-sm truncate" title={rma.customerQuoteLineName}>{rma.customerQuoteLineName}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                 <div className="text-sm truncate" title={rma.reason}>{rma.reason}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                 <div className="text-sm truncate" title={rma.productName}>{rma.productName}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                 <div className="text-sm max-w-xs truncate" title={rma.productDescription}>{rma.productDescription}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px]">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate">
                                                 <div className="text-sm truncate" title={rma.manufacturerDBA}>{rma.manufacturerDBA}</div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                 ${rma.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[112px]">{rma.returnQty}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[112px] truncate">{rma.returnQty}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                 ${rma.totalAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[160px]">{rma.openBalanceQty}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{rma.trackingNumber}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[203px]">{rma.estimatedDeliveryDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{rma.trackingStatus}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[173px]">{rma.actualDeliveryDate}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[192px]">{rma.goodsReceiptDate}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[160px] truncate">{rma.openBalanceQty}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{rma.trackingNumber}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[203px] truncate">{rma.estimatedDeliveryDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{rma.trackingStatus}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[173px] truncate">{rma.actualDeliveryDate}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[192px] truncate">{rma.goodsReceiptDate}</td>
                                         </tr>
                                     );
                                 })}
@@ -215,12 +215,12 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                     )
                 ) : activeTab === 'rtv' ? (
                     sortedData.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium">No records found</p>
-                            <p className="text-sm">There are no RTVs associated with this proposal line.</p>
+                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                            <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                            <p className="text-sm truncate" title="There are no RTVs associated with this proposal line.">There are no RTVs associated with this proposal line.</p>
                         </div>
                     ) : (
-                        <table className="w-full">
+                        <table className="w-full table-fixed">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
                                     <SortableHeader
@@ -250,30 +250,30 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     const rtv = item as RTV;
                                     return (
                                         <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                            <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 " title={rtv.name}>
+                                            <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800  truncate" title={rtv.name}>
                                                 <div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate">{rtv.name}</div></td>
-                                            <td className="px-3 py-2">
+                                            <td className="px-3 py-2 truncate">
                                                 <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${rtv.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                     'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                     }`}>
                                                     {rtv.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={rtv.rtvName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.rtvName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={rtv.purchaseOrderLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.purchaseOrderLineName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={rtv.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.customerQuoteLineName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={rtv.reason}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.reason}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white" title={rtv.productName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.productName}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={rtv.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{rtv.productDescription}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px]" title={rtv.manufacturerDBA}>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.rtvName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.rtvName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.purchaseOrderLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.purchaseOrderLineName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.customerQuoteLineName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.reason}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.reason}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.productName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.productName}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={rtv.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{rtv.productDescription}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate" title={rtv.manufacturerDBA}>
                                                 <div className="text-sm text-gray-900 dark:text-white truncate">{rtv.manufacturerDBA}
                                                 </div>
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                 ${rtv.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[111px]">{rtv.returnQty}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[111px] truncate">{rtv.returnQty}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                 ${rtv.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
                                         </tr>
@@ -284,12 +284,12 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                     )
                 ) : activeTab === 'credit' ? (
                     sortedData.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium">No records found</p>
-                            <p className="text-sm">There are no Credit Memos associated with this proposal line.</p>
+                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                            <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                            <p className="text-sm truncate" title="There are no Credit Memos associated with this proposal line.">There are no Credit Memos associated with this proposal line.</p>
                         </div>
                     ) : (
-                        <table className="w-full">
+                        <table className="w-full table-fixed">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
                                     <SortableHeader
@@ -321,34 +321,34 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     const credit = item as CreditMemo;
                                     return (
                                         <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                            <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800">{credit.name}</td>
-                                            <td className="px-3 py-2">
+                                            <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800 truncate">{credit.name}</td>
+                                            <td className="px-3 py-2 truncate">
                                                 <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${credit.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                     'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                     }`}>
                                                     {credit.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{credit.creditMemoName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{credit.invoiceLineName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{credit.salesOrderLineName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{credit.productName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={credit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{credit.productDescription}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[161px]">{credit.manufacturerDBA}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.creditMemoName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.invoiceLineName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.salesOrderLineName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.productName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={credit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{credit.productDescription}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[161px] truncate">{credit.manufacturerDBA}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                 ${credit.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[116px]">{credit.creditQty}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[116px] truncate">{credit.creditQty}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                 ${credit.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                 ${credit.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                 ${credit.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-bold text-primary">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-bold text-primary truncate">
                                                 ${credit.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
                                         </tr>
@@ -359,12 +359,12 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                     )
                 ) : activeTab === 'debit' ? (
                     sortedData.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium">No records found</p>
-                            <p className="text-sm">There are no Debit Memos associated with this proposal line.</p>
+                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                            <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                            <p className="text-sm truncate" title="There are no Debit Memos associated with this proposal line.">There are no Debit Memos associated with this proposal line.</p>
                         </div>
                     ) : (
-                        <table className="w-full">
+                        <table className="w-full table-fixed">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
                                     <SortableHeader
@@ -395,31 +395,31 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     const debit = item as DebitMemo;
                                     return (
                                         <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                            <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800">{debit.name}</td>
-                                            <td className="px-3 py-2">
+                                            <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate">{debit.name}</td>
+                                            <td className="px-3 py-2 truncate">
                                                 <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${debit.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                     'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                     }`}>
                                                     {debit.status}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{debit.debitMemoName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{debit.supplierBillLineName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{debit.purchaseOrderLineName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">{debit.productName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs" title={debit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{debit.productDescription}</div></td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px]">{debit.manufacturerDBA}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.debitMemoName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.supplierBillLineName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.purchaseOrderLineName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.productName}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={debit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{debit.productDescription}</div></td>
+                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate">{debit.manufacturerDBA}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                 ${debit.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white">{debit.debitQty}</td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">{debit.debitQty}</td>
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                 ${debit.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                 ${debit.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
-                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-bold text-primary">
+                                            <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-bold text-primary truncate">
                                                 ${debit.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                             </td>
                                         </tr>
@@ -430,21 +430,21 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                     )
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="w-full">
+                        <table className="w-full table-fixed">
                             <thead className="bg-gray-50 dark:bg-gray-800/50">
                                 <tr>
-                                    <th className="px-3 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">Amount</th>
+                                    <th className="px-3 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white truncate">Amount</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                                 {activeData.length === 0 ? (
                                     <tr>
-                                        <td colSpan={4} className="px-4 py-12 text-left text-gray-500 dark:text-gray-400">
-                                            <div className="flex flex-col items-center justify-center">
+                                        <td colSpan={4} className="px-4 py-12 text-left text-gray-500 dark:text-gray-400 truncate">
+                                            <div className="flex flex-col items-center justify-center min-w-0">
                                                 <svg className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                                                 </svg>
-                                                <p className="text-lg font-medium">No {tabs.find(t => t.id === activeTab)?.label} found</p>
+                                                <p className="text-lg font-medium truncate">No {tabs.find(t => t.id === activeTab)?.label} found</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -452,8 +452,8 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                     activeData.map((item) => {
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white font-medium">{item.name}</td>
-                                                <td className="px-3 py-2 text-left">
+                                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white font-medium truncate">{item.name}</td>
+                                                <td className="px-3 py-2 text-left truncate">
                                                     <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                         item.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                                                             'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -461,8 +461,8 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                         {item.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{item.requestDate}</td>
-                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold">
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{item.requestDate}</td>
+                                                <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                     ${item.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </td>
                                             </tr>

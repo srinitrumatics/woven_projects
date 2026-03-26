@@ -25,15 +25,15 @@ export default function ShipToContact({
 }: ShipToContactProps) {
     return (
         <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 h-full ${className}`}>
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-6 min-w-0">
                 <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                     <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ship to Contact</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Who Should We Contact About This Delivery?</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">Ship to Contact</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Who Should We Contact About This Delivery?">Who Should We Contact About This Delivery?</p>
                 </div>
             </div>
             <div className="text-sm">
@@ -66,7 +66,7 @@ export default function ShipToContact({
 
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Contact Name">
-                            Contact Name <span className="text-red-500">*</span>
+                            Contact Name <span className="text-red-500 truncate">*</span>
                         </label>
                         <input
                             type="text"
@@ -81,7 +81,7 @@ export default function ShipToContact({
 
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Phone Number">
-                            Phone Number <span className="text-red-500">*</span>
+                            Phone Number <span className="text-red-500 truncate">*</span>
                         </label>
                         <input
                             type="tel"
@@ -96,7 +96,7 @@ export default function ShipToContact({
 
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Email Address">
-                            Email Address <span className="text-red-500">*</span>
+                            Email Address <span className="text-red-500 truncate">*</span>
                         </label>
                         <input
                             type="email"

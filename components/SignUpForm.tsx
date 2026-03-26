@@ -190,7 +190,7 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Name"
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.name ?? '')}
                 />
               </div>
 
@@ -207,7 +207,7 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
                   value={formData.surname}
                   onChange={handleChange}
                   placeholder="Surname"
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.surname ?? '')}
                 />
               </div>
             </div>
@@ -225,7 +225,7 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Email"
-                className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.email ?? '')}
               />
             </div>
 
@@ -243,7 +243,7 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Password"
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.password ?? '')}
                 />
                 <button
                   type="button"

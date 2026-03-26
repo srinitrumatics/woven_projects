@@ -52,10 +52,10 @@ export default function TrackingTimelineModal({ isOpen, onClose, trackingData }:
             >
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Tracking Timeline</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white truncate">Tracking Timeline</h2>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors truncate"
                     >
                         <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -95,15 +95,15 @@ export default function TrackingTimelineModal({ isOpen, onClose, trackingData }:
                                             <h3 className="text-base font-bold text-gray-900 dark:text-white truncate">
                                                 {item.status}
                                             </h3>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
+                                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5 truncate">
                                                 {item.description}
                                             </p>
-                                            <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+                                            <p className="text-sm text-gray-400 dark:text-gray-500 mt-1 truncate">
                                                 {item.location}
                                             </p>
                                         </div>
                                         <div className="shrink-0 text-right">
-                                            <span className="text-xs font-medium text-gray-400 dark:text-gray-500 whitespace-nowrap">
+                                            <span className="text-xs font-medium text-gray-400 dark:text-gray-500 whitespace-nowrap truncate">
                                                 {item.dateTime}
                                             </span>
                                         </div>
@@ -122,7 +122,7 @@ export default function TrackingTimelineModal({ isOpen, onClose, trackingData }:
                 <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900/40 border-t border-gray-100 dark:border-gray-700 flex justify-end">
                     <button
                         onClick={onClose}
-                        className="px-6 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-sm"
+                        className="px-6 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-sm truncate"
                     >
                         Close
                     </button>

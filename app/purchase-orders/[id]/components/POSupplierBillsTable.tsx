@@ -92,7 +92,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
         const colorClass = colors[status] || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
 
         return (
-            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${colorClass}`} title={status}>
+            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full truncate ${colorClass}`} title={status}>
                 {status}
             </span>
         );
@@ -100,9 +100,9 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
 
     if (bills.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-900 dark:text-gray-700">
-                <p className="text-lg font-medium">No records found</p>
-                <p className="text-sm">There are no Supplier Bills associated with this purchase order.</p>
+            <div className="flex flex-col items-center justify-center py-12 text-gray-900 dark:text-gray-700 min-w-0">
+                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                <p className="text-sm truncate" title="There are no Supplier Bills associated with this purchase order.">There are no Supplier Bills associated with this purchase order.</p>
             </div>
         );
     }
@@ -137,66 +137,66 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((b) => (
                             <tr key={b.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 ">
-                                    <div className="truncate" title={b.Name}>{b.Name}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={b.Name}>
+                                    {b.Name}
                                 </td>
-                                <td className="px-3 py-2">
+                                <td className="px-3 py-2 truncate">
                                     <StatusBadge status={b.Status__c} />
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={b.Purchase_Order_Name}>{b.Purchase_Order_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Purchase_Order_Name || '-'}>
+                                    {b.Purchase_Order_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={b.Customer_Quote_Name}>{b.Customer_Quote_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Quote_Name || '-'}>
+                                    {b.Customer_Quote_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={b.Customer_Order_Name}>{b.Customer_Order_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Order_Name || '-'}>
+                                    {b.Customer_Order_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={b.Supplier_Name}>{b.Supplier_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Supplier_Name || '-'}>
+                                    {b.Supplier_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={b.Supplier_DBA__c}>{b.Supplier_DBA__c || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Supplier_DBA__c || '-'}>
+                                    {b.Supplier_DBA__c || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={b.Supplier_Contact_Name}>{b.Supplier_Contact_Name || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Supplier_Contact_Name || '-'}>
+                                    {b.Supplier_Contact_Name || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
-                                    <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 text-xs font-semibold" >
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(b.Total_Lines__c || 0)}>
+                                    <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 text-xs font-semibold truncate" >
                                         {b.Total_Lines__c || 0}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title={formatCurrency(b.Total_Product_Amount__c || 0)}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(b.Total_Product_Amount__c || 0)}>
                                     {formatCurrency(b.Total_Product_Amount__c || 0)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title={formatCurrency(b.Total_Shipping_Charges__c || 0)}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(b.Total_Shipping_Charges__c || 0)}>
                                     {formatCurrency(b.Total_Shipping_Charges__c || 0)}
                                 </td>
-                                <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white text-left" title={formatCurrency(b.TotalAmount__c || 0)}>
+                                <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white text-left truncate" title={formatCurrency(b.TotalAmount__c || 0)}>
                                     {formatCurrency(b.TotalAmount__c || 0)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={b.Billed_Date__c ? formatDate(b.Billed_Date__c, 'numeric-dash') : '-'}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={b.Billed_Date__c ? formatDate(b.Billed_Date__c, 'numeric-dash') : '-'}>
                                     {b.Billed_Date__c ? formatDate(b.Billed_Date__c, 'numeric-dash') : '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white">
-                                    <div className="truncate" title={b.Payment_Terms__c}>{b.Payment_Terms__c || '-'}</div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Payment_Terms__c || '-'}>
+                                    {b.Payment_Terms__c || '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={b.Due_Date__c ? formatDate(b.Due_Date__c, 'numeric-dash') : '-'}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={b.Due_Date__c ? formatDate(b.Due_Date__c, 'numeric-dash') : '-'}>
                                     {b.Due_Date__c ? formatDate(b.Due_Date__c, 'numeric-dash') : '-'}
                                 </td>
-                                <td className="px-3 py-2">
-                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full ${b.Remittance_Status__c === 'Paid' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
+                                <td className="px-3 py-2 truncate">
+                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full truncate ${b.Remittance_Status__c === 'Paid' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
                                         }`} title={b.Remittance_Status__c || 'Pending'}>
                                         {b.Remittance_Status__c || 'Pending'}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left" title={formatCurrency(b.Open_Balance__c || 0)}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(b.Open_Balance__c || 0)}>
                                     {formatCurrency(b.Open_Balance__c || 0)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(b.Days_Outstanding__c || 0)}>
                                     {b.Days_Outstanding__c || 0}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700" title={b.Settled_Date__c ? formatDate(b.Settled_Date__c, 'numeric-dash') : '-'}>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={b.Settled_Date__c ? formatDate(b.Settled_Date__c, 'numeric-dash') : '-'}>
                                     {b.Settled_Date__c ? formatDate(b.Settled_Date__c, 'numeric-dash') : '-'}
                                 </td>
                             </tr>

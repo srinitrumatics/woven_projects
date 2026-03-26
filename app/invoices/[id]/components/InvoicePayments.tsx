@@ -60,8 +60,8 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
         if (receivePayments.length === 0) {
             return (
                 <div className="text-center py-12">
-                    <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No record found</p>
-                    <p className="text-sm">There are no recieved payments associated with this invoice.</p>
+                    <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No record found">No record found</p>
+                    <p className="text-sm truncate" title="There are no recieved payments associated with this invoice.">There are no recieved payments associated with this invoice.</p>
 
                 </div>
             );
@@ -69,7 +69,7 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
 
         return (
             <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <SortableHeader label="Receive Payment" field="name" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.name} onResize={handleReceiveResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
@@ -87,7 +87,7 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
                         {sortedPayments.map((payment) => (
                             <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                 <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white text-gray-900 dark:text-white truncate" title={payment.name}>{payment.name}</td>
-                                <td className="px-3 py-2">
+                                <td className="px-3 py-2 truncate">
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(payment.status)}`} title={payment.status}>{payment.status}</span>
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(payment.amount)}>{formatCurrency(payment.amount)}</td>
@@ -109,15 +109,15 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
         if (creditMemos.length === 0) {
             return (
                 <div className="text-center py-12">
-                    <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg">No record found</p>
-                    <p className="text-sm">These is no applied credit payments associated with this invoice.</p>
+                    <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No record found">No record found</p>
+                    <p className="text-sm truncate" title="These is no applied credit payments associated with this invoice.">These is no applied credit payments associated with this invoice.</p>
                 </div>
             );
         }
 
         return (
             <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <SortableHeader label="Applied Credit Payment" field="name" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.acpName} onResize={handleAppliedResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10 min-w-[200px]" />
@@ -135,7 +135,7 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
                         {sortedMemos.map((memo) => (
                             <tr key={memo.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                 <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white text-gray-900 dark:text-white truncate" title={memo.name}>{memo.name}</td>
-                                <td className="px-3 py-2">
+                                <td className="px-3 py-2 truncate">
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(memo.status)}`}>{memo.status}</span>
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(memo.appliedAmount)}>{formatCurrency(memo.appliedAmount)}</td>
@@ -144,7 +144,7 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.appliedDate, 'numeric-dash')}>{formatDate(memo.appliedDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.postedDate, 'numeric-dash')}>{formatDate(memo.postedDate, 'numeric-dash')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(memo.availableCreditBalance)}>{formatCurrency(memo.availableCreditBalance)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">
+                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                                     <div className="truncate" title={memo.notes}>{memo.notes}</div>
                                 </td>
                             </tr>

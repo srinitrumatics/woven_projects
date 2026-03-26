@@ -152,8 +152,8 @@ export default function QuotesPage() {
   return (
     <Sidebar>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Quotes</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and Track Customer Quotes</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Quotes</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1 truncate" title="Manage and Track Customer Quotes">Manage and Track Customer Quotes</p>
       </div>
 
       {/* Stats Cards */}
@@ -179,7 +179,7 @@ export default function QuotesPage() {
                   }}
                   className="hover:underline block"
                 >
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Draft</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Draft">Draft</p>
                 </Link>
                 <Link
                   href="#"
@@ -191,12 +191,12 @@ export default function QuotesPage() {
                 >
                   <div className="flex items-baseline gap-2">
 
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.draftCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.draftCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Quotes</span>
 
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.draftValue)}</p>
+                <p className="text-lg font-semibold text-primary mt-1 truncate">{formatCurrency(stats.draftValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                 } transition-colors`}>
@@ -206,7 +206,7 @@ export default function QuotesPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-primary group-hover:underline truncate">
                 View draft quotes
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -233,7 +233,7 @@ export default function QuotesPage() {
                   onClick={() => handleCardClick("Approved")}
                   className="hover:underline block"
                 >
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Approved</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Approved">Approved</p>
                 </Link>
                 <Link
                   href="#"
@@ -241,11 +241,11 @@ export default function QuotesPage() {
                   className="hover:underline block"
                 >
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.approvedCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.approvedCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Quotes</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1">{formatCurrency(stats.approvedValue)}</p>
+                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1 truncate">{formatCurrency(stats.approvedValue)}</p>
               </div>
 
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Approved" ? "bg-gray-500 text-white" : "bg-gray-50 dark:bg-gray-900/20 text-gray-600 dark:text-gray-400 group-hover:bg-gray-500 group-hover:text-white"
@@ -256,7 +256,7 @@ export default function QuotesPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:underline truncate">
                 View approved quotes
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -283,7 +283,7 @@ export default function QuotesPage() {
                   onClick={() => handleCardClick("Partial Shipment")}
                   className="hover:underline block"
                 >
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Partial Shipment</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Partial Shipment">Partial Shipment</p>
                 </Link>
                 <Link
                   href="#"
@@ -291,11 +291,11 @@ export default function QuotesPage() {
                   className="hover:underline block"
                 >
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.partialShipmentCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.partialShipmentCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Quotes</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1">{formatCurrency(stats.partialShipmentValue)}</p>
+                <p className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mt-1 truncate">{formatCurrency(stats.partialShipmentValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Partial Shipment" ? "bg-yellow-500 text-white" : "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white"
                 } transition-colors`}>
@@ -305,7 +305,7 @@ export default function QuotesPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline truncate">
                 View partial shipments
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -332,7 +332,7 @@ export default function QuotesPage() {
                   onClick={() => handleCardClick("Shipped")}
                   className="hover:underline block"
                 >
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">Shipped</p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Shipped">Shipped</p>
                 </Link>
                 <Link
                   href="#"
@@ -340,11 +340,11 @@ export default function QuotesPage() {
                   className="hover:underline block"
                 >
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.shippedCount}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Quotes</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{stats.shippedCount}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Quotes</span>
                   </div>
                 </Link>
-                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">{formatCurrency(stats.shippedValue)}</p>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1 truncate">{formatCurrency(stats.shippedValue)}</p>
               </div>
               <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${activeTab === "Shipped" ? "bg-green-500 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 group-hover:bg-green-500 group-hover:text-white"
                 } transition-colors`}>
@@ -354,7 +354,7 @@ export default function QuotesPage() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline">
+              <span className="inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 group-hover:underline truncate">
                 View shipped quotes
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -421,15 +421,15 @@ export default function QuotesPage() {
         {/* Table */}
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
               <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
               </svg>
-              <p className="text-sm">Loading quotes...</p>
+              <p className="text-sm truncate" title="Loading quotes...">Loading quotes...</p>
             </div>
           ) : (
-            <table className="w-full">
+            <table className="w-full table-fixed">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
                   <SortableHeader label="Quote Number" field="quoteNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.quoteNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
@@ -444,7 +444,7 @@ export default function QuotesPage() {
                   <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestDate} onResize={handleResize} />
                   <SortableHeader label="Planned Ship Date" field="plannedShipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.plannedShipDate} onResize={handleResize} />
                   <th
-                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
                     Action
@@ -454,13 +454,13 @@ export default function QuotesPage() {
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {paginatedQuotes.length === 0 ? (
                   <tr>
-                    <td colSpan={12} className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center justify-center">
+                    <td colSpan={12} className="px-6 py-12 text-center truncate">
+                      <div className="flex flex-col items-center justify-center min-w-0">
                         <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">No quotes found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-sm">
+                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2 truncate" title="No quotes found">No quotes found</p>
+                        <p className="text-gray-400 dark:text-gray-500 text-sm truncate">
                           {searchQuery || activeTab !== "All"
                             ? "Try adjusting your filters"
                             : "Get started by creating your first quote"}
@@ -471,34 +471,34 @@ export default function QuotesPage() {
                 ) : (
                   paginatedQuotes.map((quote) => (
                     <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left">
-                        <Link href={`/quotes/${quote.id}`} className="text-sm font-semibold text-primary hover:underline">
+                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
+                        <Link href={`/quotes/${quote.id}`} className="text-sm font-semibold text-primary hover:underline truncate">
                           <div title={quote.quoteNumber}>{quote.quoteNumber}</div>
                         </Link>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <StatusBadge status={quote.status} />
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{quote.proposalName}</div>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerOrder}>{quote.customerOrder}</div>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerPO}>{quote.customerPO}</div>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={quote.billToAccountName}>{quote.billToAccountName}</div>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={quote.shipToAccountName}>{quote.shipToAccountName}</div>
                       </td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white">{quote.totalLines}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(quote.totalAmount)}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(quote.requestDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400">{formatDate(quote.plannedShipDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{quote.totalLines}</td>
+                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(quote.totalAmount)}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.requestDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.plannedShipDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-2 truncate">
                         <div className="flex gap-2">
                           <button
                             onClick={() => router.push(`/quotes/${quote.id}`)}

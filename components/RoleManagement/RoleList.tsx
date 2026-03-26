@@ -106,7 +106,7 @@ const RoleList: React.FC<RoleListProps> = ({
             <div className="relative p-6">
               {/* Header with Icon */}
               <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 min-w-0">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#96C2DB] to-[#6B9DB8] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                     <Shield className="w-6 h-6 text-white" />
                   </div>
@@ -114,7 +114,7 @@ const RoleList: React.FC<RoleListProps> = ({
                     <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#6B9DB8] transition-colors">
                       {role.name}
                     </h3>
-                    <div className="flex items-center gap-1 text-sm text-gray-500 mt-0.5">
+                    <div className="flex items-center gap-1 text-sm text-gray-500 mt-0.5 min-w-0">
                       <Key className="w-3 h-3" />
                       <span>{permissionCount} {permissionCount === 1 ? 'permission' : 'permissions'}</span>
                     </div>
@@ -153,7 +153,7 @@ const RoleList: React.FC<RoleListProps> = ({
               )}
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
+              <div className="flex items-center gap-2 pt-4 border-t border-gray-100 min-w-0">
                 <button
                   onClick={() => handleEdit(role)}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#96C2DB] to-[#6B9DB8] text-white rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 font-medium text-sm"

@@ -261,7 +261,7 @@ export default function QuoteLineReturnsTab({
     }
 
     return (
-        <div className="flex flex-col h-full py-4">
+        <div className="flex flex-col h-full py-4 min-w-0">
             {/* Sub Tabs */}
             <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-6">
                 {[
@@ -287,9 +287,9 @@ export default function QuoteLineReturnsTab({
             <div className="bg-white dark:bg-gray-800">
                 <div className="overflow-x-auto">
                     {sortedData.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium">No records found</p>
-                            <p className="text-sm">There are no {
+                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                            <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                            <p className="text-sm truncate">There are no {
                                 activeSubTab === "RMAs" ? "RMAs" :
                                     activeSubTab === "CreditMemos" ? "credit memos" :
                                         activeSubTab === "RTVs" ? "RTVs" : "debit memos"
@@ -389,8 +389,8 @@ export default function QuoteLineReturnsTab({
                                 {sortedData.map((item: any) => (
                                     <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800">{item.lineName}</td>
-                                        <td className="px-3 py-2 text-sm">
-                                            <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                        <td className="px-3 py-2 text-sm truncate">
+                                            <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
                                                 {item.status}
                                             </span>
                                         </td>

@@ -78,7 +78,7 @@ const UserForm: React.FC<UserFormProps> = ({
               value={formData.name}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              required title={String(formData.name ?? '')}
             />
           </div>
           <div>
@@ -89,7 +89,7 @@ const UserForm: React.FC<UserFormProps> = ({
               value={formData.email}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              required title={String(formData.email ?? '')}
             />
           </div>
         </div>
@@ -103,7 +103,7 @@ const UserForm: React.FC<UserFormProps> = ({
               value={formData.password}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required={!editingUser}
+              required={!editingUser} title={String(formData.password ?? '')}
             />
           </div>
         )}
@@ -140,7 +140,7 @@ const UserForm: React.FC<UserFormProps> = ({
                 
                 return (
                   <div key={orgId} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                    <div className="flex items-center mb-2">
+                    <div className="flex items-center mb-2 min-w-0">
                       <Building2 className="w-5 h-5 text-gray-600 mr-2" />
                       <div className="font-medium text-gray-800">{organization.name}</div>
                     </div>

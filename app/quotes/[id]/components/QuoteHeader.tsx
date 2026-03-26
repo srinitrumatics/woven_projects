@@ -10,16 +10,16 @@ interface QuoteHeaderProps {
 export default function QuoteHeader({ quoteNumber, status, description, onBack }: QuoteHeaderProps) {
     return (
         <div className="mb-6">
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
-                <button onClick={onBack} className="hover:text-gray-700 dark:hover:text-gray-300">Quotes</button>
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2 min-w-0">
+                <button onClick={onBack} className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Quotes</button>
                 <span>&gt;</span>
-                <span className="hover:text-gray-700 dark:text-gray-300">View Quote</span>
+                <span className="hover:text-gray-700 dark:text-gray-300 truncate">View Quote</span>
                 <span>&gt;</span>
                 <span className="text-gray-900 dark:text-white truncate" title={quoteNumber}>{quoteNumber}</span>
             </div>
             <div className="w-full dark:bg-gray-800 rounded-lg p-4">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
-                    <div className="flex items-center gap-4 w-full sm:w-auto">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 min-w-0">
+                    <div className="flex items-center gap-4 w-full sm:w-auto min-w-0">
                         <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center shrink-0">
                             <svg className="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                 <path d="M3 3h18v4H3z" />
@@ -27,12 +27,12 @@ export default function QuoteHeader({ quoteNumber, status, description, onBack }
                                 <path d="M7 12h10" />
                             </svg>
                         </div>
-                        <div>
+                        <div className="min-w-0">
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={quoteNumber}>{quoteNumber}</h2>
                             <div className="text-sm text-gray-500 dark:text-gray-400 truncate">Quote Details and Summary</div>
                         </div>
                     </div>
-                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end min-w-0">
                         <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full mt-2 ${status === 'Draft' ? 'bg-blue-200 text-blue-900 dark:bg-blue-900 dark:text-blue-400' :
                             status === 'Pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
                                 status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :

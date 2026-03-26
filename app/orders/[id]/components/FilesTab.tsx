@@ -257,21 +257,21 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-4 min-w-0">
                 <div></div>
                 <div className="flex gap-2">
                     {selectedFileIds.size > 0 && (
                         <>
                             <button
                                 onClick={handleBulkDownload}
-                                className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors"
+                                className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors truncate"
                             >
                                 Download Selected ({selectedFileIds.size})
                             </button>
                             {isEditing && (
                                 <button
                                     onClick={handleBulkDelete}
-                                    className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
+                                    className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors truncate"
                                 >
                                     Delete Selected ({selectedFileIds.size})
                                 </button>
@@ -282,21 +282,21 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
             </div>
 
             {loading ? (
-                <div className="flex justify-center items-center py-12">
+                <div className="flex justify-center items-center py-12 min-w-0">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                 </div>
             ) : sortedFiles.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium">No records found</p>
-                    <p className="text-sm">There are no files associated with this order.</p>
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                    <p className="text-sm truncate" title="There are no files associated with this order.">There are no files associated with this order.</p>
                 </div>
             ) : (
                 <div className="overflow-auto">
-                    <table className="w-full">
+                    <table className="w-full table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
                             <tr>
                                 {isEditing && (
-                                    <th className="px-2 py-3 text-left w-10">
+                                    <th className="px-2 py-3 text-left w-10 truncate">
                                         <input
                                             type="checkbox"
                                             onChange={handleSelectAll}
@@ -311,14 +311,14 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                                 <SortableHeader label="Uploaded By" field="CreatedBy" sortConfig={sortConfig} requestSort={requestSort} />
 
                                 <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} />
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             {sortedFiles.map(file => (
                                 <tr key={file.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                     {isEditing && (
-                                        <td className="px-2 py-3">
+                                        <td className="px-2 py-3 truncate">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedFileIds.has(file.Id)}
@@ -327,12 +327,12 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                                             />
                                         </td>
                                     )}
-                                    <td className="px-2 py-3 text-sm font-medium text-gray-900 dark:text-white" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white truncate">{file.Title}</div></td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.FileExtension}</td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{formatFileSize(file.FileSize)}</td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedBy}</td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400">{file.CreatedDate}</td>
-                                    <td className="px-2 py-3">
+                                    <td className="px-2 py-3 text-sm font-medium text-gray-900 dark:text-white truncate" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white truncate">{file.Title}</div></td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{file.FileExtension}</td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{formatFileSize(file.FileSize)}</td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{file.CreatedBy}</td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{file.CreatedDate}</td>
+                                    <td className="px-2 py-3 truncate">
                                         <div>
                                             {/* View / Preview button */}
                                             <button

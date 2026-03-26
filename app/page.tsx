@@ -20,7 +20,7 @@ export default function HomePage() {
   };
 
   return (
-    <Suspense fallback={<div className="flex bg-white h-screen items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<div className="flex bg-white h-screen items-center justify-center min-w-0">Loading...</div>}>
       <div className="relative w-full min-h-screen overflow-hidden">
         {/* Container with smooth slide transition */}
         <div

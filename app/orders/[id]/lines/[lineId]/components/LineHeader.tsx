@@ -35,7 +35,7 @@ export default function LineHeader({
     return (
         <div className="mb-4">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1 min-w-0">
                 <button
                     onClick={() => router.push("/orders")}
                     className="hover:text-gray-700 dark:hover:text-gray-300"
@@ -56,14 +56,14 @@ export default function LineHeader({
                 </span>
             </div>
 
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between min-w-0">
+                <div className="flex items-center gap-4 min-w-0">
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={productSku || `Order Line #${lineId}`}>
                         {productSku || `Order Line #${lineId}`}
                     </h1>
 
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 min-w-0">
                     {!["Approved", "Delivered", "Canceled"].includes(orderStatus) && (
                         <button
                             onClick={onEditToggle}
@@ -103,7 +103,7 @@ export default function LineHeader({
                         <button
                             onClick={onSave}
                             disabled={isSubmitting}
-                            className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2 disabled:opacity-50"
+                            className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2 disabled:opacity-50 truncate"
                         >
                             <svg
                                 className="w-4 h-4"
@@ -125,7 +125,7 @@ export default function LineHeader({
                     {/* Back to Order Button */}
                     <Link
                         href={`/orders/${id}`}
-                        className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors inline-flex items-center gap-2"
+                        className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors inline-flex items-center gap-2 truncate"
                     >
                         <svg
                             className="w-4 h-4"
@@ -144,8 +144,8 @@ export default function LineHeader({
                     </Link>
                 </div>
             </div>
-            <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+            <div className="flex items-center gap-2 min-w-0">
+                <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded truncate">
                     Line {lineNumber} of {totalLines}
                 </span>
             </div>

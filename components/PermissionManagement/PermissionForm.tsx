@@ -96,8 +96,8 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
     >
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-8 py-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between min-w-0">
+          <div className="flex items-center gap-3 min-w-0">
             <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
               <Key className="w-6 h-6 text-white" />
             </div>
@@ -135,7 +135,7 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                 placeholder="e.g., USER_CREATE, ORDER_DELETE, REPORT_VIEW"
-                required
+                required title={String(formData.name ?? '')}
               />
               <p className="mt-1.5 text-xs text-gray-500">
                 Use UPPERCASE with underscores (e.g., MODULE_ACTION)
@@ -159,7 +159,7 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
 
             {/* Permission Group */}
             <div>
-              <div className="flex justify-between items-center mb-2">
+              <div className="flex justify-between items-center mb-2 min-w-0">
                 <label className="block text-sm font-semibold text-gray-700">
                   Permission Group
                 </label>
@@ -229,7 +229,7 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
                             onChange={handleGroupInputChange}
                             className="w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             placeholder="e.g., User Management, Order Management"
-                            required={showGroupForm}
+                            required={showGroupForm} title={String(newGroupData.name ?? '')}
                           />
                         </div>
                         <div>
@@ -270,7 +270,7 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-8 border-t border-gray-200 mt-8">
+          <div className="flex items-center justify-end gap-3 pt-8 border-t border-gray-200 mt-8 min-w-0">
             <button
               type="button"
               onClick={handleCancel}
