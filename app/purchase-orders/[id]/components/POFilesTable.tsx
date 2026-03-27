@@ -183,7 +183,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.uploadedDate}
                                 onResize={handleResize}
                             />
-                            <th className="px-3 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider truncate">Action</th>
+                            <th className="px-3 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white  truncate">Action</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

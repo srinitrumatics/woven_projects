@@ -121,13 +121,18 @@ export default function PurchaseOrdersPage() {
         const partialCount = partial.length;
         const partialValue = partial.reduce((sum, po) => sum + (po.totalCost || 0), 0);
 
+        const closed = purchaseOrders.filter(po => po.status === "Closed");
+        const closedCount = closed.length;
+        const closedValue = closed.reduce((sum, po) => sum + (po.totalCost || 0), 0);
+
         return {
             totalCount, totalValue,
             issuedCount, issuedValue,
             acknowledgedCount, acknowledgedValue,
             receivedCount, receivedValue,
             approvedCount, approvedValue,
-            partialCount, partialValue
+            partialCount, partialValue,
+            closedCount, closedValue
         };
     }, [purchaseOrders]);
 
@@ -196,7 +201,7 @@ export default function PurchaseOrdersPage() {
                     isActive={activeTab === "Approved"}
                     onClick={() => handleCardClick("Approved")}
                     icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
-                    color="blue"
+                    color="green"
 
                 />
                 <StatCard
@@ -209,13 +214,14 @@ export default function PurchaseOrdersPage() {
                     color="amber"
                 />
                 <StatCard
-                    label="Received"
-                    count={stats.receivedCount}
-                    value={stats.receivedValue}
-                    isActive={activeTab === "Received"}
-                    onClick={() => handleCardClick("Received")}
+                    label="Closed"
+                    count={stats.closedCount}
+                    value={stats.closedValue}
+                    isActive={activeTab === "Closed"}
+                    onClick={() => handleCardClick("Closed")}
                     icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>}
-                    color="green"
+                    color="red"
+
                 />
             </div>
 
@@ -281,7 +287,7 @@ export default function PurchaseOrdersPage() {
                                     paginatedPOs.map(po => (
                                         <tr key={po.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onClick={() => router.push(`/purchase-orders/${po.id}`)}>
                                             <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate max-w-[200px]" title={po.name}>{po.name}</td>
-                                            <td className="px-2 py-2 text-sm truncate" title={po.status}><StatusBadge status={po.status} /></td>
+                                            <td className="px-2 py-2 truncate" title={po.status}><StatusBadge status={po.status} /></td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.proposalName || '-'}>{po.proposalName || '-'}</td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerOrderName || '-'}>{po.customerOrderName || '-'}</td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerQuoteName || '-'}>{po.customerQuoteName || '-'}</td>
@@ -328,6 +334,7 @@ function StatCard({ label, count, value, isActive, onClick, icon, color, customF
         amber: "from-amber-400 to-amber-500",
         blue: "from-blue-400 to-blue-600",
         green: "from-emerald-400 to-emerald-600",
+        red: "from-red-400 to-red-600",
     };
 
     const activeBorderClasses: any = {
@@ -336,6 +343,7 @@ function StatCard({ label, count, value, isActive, onClick, icon, color, customF
         amber: "border-amber-500 ring-2 ring-amber-500/20",
         blue: "border-blue-500 ring-2 ring-blue-500/20",
         green: "border-emerald-500 ring-2 ring-emerald-500/20",
+        red: "border-red-500 ring-2 ring-red-500/20",
     };
 
     const textColors: any = {
@@ -344,6 +352,7 @@ function StatCard({ label, count, value, isActive, onClick, icon, color, customF
         amber: "text-amber-600 dark:text-amber-300",
         blue: "text-blue-600 dark:text-blue-400",
         green: "text-emerald-600 dark:text-emerald-400",
+        red: "text-red-600 dark:text-red-400",
     };
 
     const iconClasses: any = {
@@ -352,6 +361,7 @@ function StatCard({ label, count, value, isActive, onClick, icon, color, customF
         amber: isActive ? "bg-amber-600 text-white" : "bg-amber-100 dark:bg-amber-700 text-amber-500 dark:text-amber-400 group-hover:bg-amber-600 group-hover:text-white",
         blue: isActive ? "bg-blue-600 text-white" : "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white",
         green: isActive ? "bg-emerald-600 text-white" : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white",
+        red: isActive ? "bg-red-600 text-white" : "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 group-hover:bg-red-600 group-hover:text-white",
     };
 
     return (

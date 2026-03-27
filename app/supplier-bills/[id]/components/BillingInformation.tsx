@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { SupplierBill } from "../../types";
+import { formatDate } from "@/lib/utils/formatting";
 
 interface BillingInformationProps {
     bill: SupplierBill;
@@ -24,24 +25,24 @@ export default function BillingInformation({ bill }: BillingInformationProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 w1025:grid-cols-3 gap-6 flex-1">
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Bill-to Account">Bill-to Account</label>
-                    <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.billToAccount || '-'} title={bill.billToAccount} />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Bill-to Account">Bill to Account</label>
+                    <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.billToAccount || ''} title={bill.billToAccount} />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Bill-to Location">Bill-to Location</label>
-                    <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.billToLocation || '-'} title={bill.billToLocation} />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Bill-to Location">Bill to Location</label>
+                    <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.billToLocation || ''} title={bill.billToLocation} />
                 </div>
                 <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Billing Address">Billing Address</label>
-                    <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.billingAddress || '-'} title={bill.billingAddress} />
+                    <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.billingAddress || ''} title={bill.billingAddress} />
                 </div>
                 <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Payment Terms">Payment Terms</label>
-                    <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.paymentTerms || '-'} title={bill.paymentTerms} />
+                    <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.paymentTerms || ''} title={bill.paymentTerms} />
                 </div>
                 <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Due Date">Due Date</label>
-                    <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.dueDate || '-'} title={bill.dueDate} />
+                    <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : ''} title={bill.dueDate} />
                 </div>
                 <div className="hidden w1025:block">
                     {/* Placeholder for 2nd row 3rd column if needed */}

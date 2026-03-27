@@ -115,7 +115,7 @@ export default function ProductCatalog({
                 </div>
             ) : (
                 <div className="overflow-auto">
-                    <table className="w-full">
+                    <table className="w-full table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
                             <tr>
                                 {isEditing && (

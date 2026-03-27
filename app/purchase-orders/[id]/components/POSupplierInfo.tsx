@@ -71,8 +71,8 @@ export default function POSupplierInfo({ po }: POSupplierInfoProps) {
                         <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.paymentTerms || ''} placeholder="N/A" title={po.paymentTerms || ''} />
                     </div>
                     <div className="md:col-span-2 min-w-0">
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Price Book">Price Book</label>
-                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value="Standard Price Book" title="Standard Price Book" />
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Price Book">Goods Receipt Date</label>
+                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={formatDate(po.goodsReceiptsDate, 'numeric-dash') || ''} title={formatDate(po.goodsReceiptsDate, 'numeric-dash') || ''} />
                     </div>
                 </div>
             </div>

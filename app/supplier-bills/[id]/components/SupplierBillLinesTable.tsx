@@ -8,6 +8,9 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 
+import Link from "next/link";
+import { useParams } from "next/navigation";
+
 interface SupplierBillLinesTableProps {
     lines: SupplierBillLine[];
 }
@@ -15,18 +18,26 @@ interface SupplierBillLinesTableProps {
 const ITEMS_PER_PAGE = 10;
 
 export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTableProps) {
+    const params = useParams();
+    const id = params.id as string;
     const [currentPage, setCurrentPage] = useState(1);
     const { items: sortedData, requestSort, sortConfig } = useSortableData<SupplierBillLine>(lines);
 
     const initialWidths = {
         name: 180,
         status: 120,
-        purchaseOrderLine: 180,
+        supplierBillName: 160,
+        customerQuoteLineName: 180,
+        purchaseOrderLineName: 180,
         productName: 200,
-        billedQty: 100,
+        productDescription: 250,
+        manufacturerDBA: 180,
         unitCost: 120,
-        totalAmount: 140,
-        goodsReceiptDate: 150
+        billedQty: 160,
+        billAmount: 180,
+        shipping: 190,
+        totalBillAmount: 200,
+        goodsReceiptDate: 200
     };
 
     const { widths: columnWidths, handleResize } = useResizableColumns(initialWidths);
@@ -50,38 +61,51 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
     return (
         <div className="flex flex-col min-w-0">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0">
+                <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="Line Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} />
+                            <SortableHeader label="Supplier Bill Line" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
-                            <SortableHeader label="PO Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrderLine} onResize={handleResize} />
-                            <SortableHeader label="Product" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
-                            <SortableHeader label="Billed Qty" field="billedQty" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billedQty} onResize={handleResize} />
+                            <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierBillName} onResize={handleResize} />
+                            <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuoteLineName} onResize={handleResize} />
+                            <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrderLineName} onResize={handleResize} />
+                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
+                            <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productDescription} onResize={handleResize} />
+                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.manufacturerDBA} onResize={handleResize} />
                             <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.unitCost} onResize={handleResize} />
-                            <SortableHeader label="Total Amount" field="totalBillAmount" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalAmount} onResize={handleResize} />
-                            <SortableHeader label="Receipt Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.goodsReceiptDate} onResize={handleResize} />
+                            <SortableHeader label="Billed Qty" field="billedQty" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billedQty} onResize={handleResize} />
+                            <SortableHeader label="Bill Amount" field="billAmount" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billAmount} onResize={handleResize} />
+                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipping} onResize={handleResize} />
+                            <SortableHeader label="Total Bill Amount" field="totalBillAmount" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalBillAmount} onResize={handleResize} />
+                            <SortableHeader label="Goods Receipt Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.goodsReceiptDate} onResize={handleResize} />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((line) => (
                             <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-4 py-3 text-sm font-semibold text-primary truncate">{line.name}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate">
+                                    <Link href={`/supplier-bills/${id}/lines/${line.id}`} className="hover:underline text-primary font-bold">
+                                        {line.name}
+                                    </Link>
+                                </td>
                                 <td className="px-4 py-3 text-sm truncate">
-                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${line.status === 'Approved' ? 'bg-green-100/80 text-green-700 border-green-200' : 'bg-gray-100/80 text-gray-700 border-gray-200'
+                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${line.status === 'Approved' ? 'bg-green-100/80 text-green-700 border-green-200' : 'bg-red-100/80 text-red-700 border-red-200'
                                         }`}>
                                         {line.status}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate">{line.purchaseOrderLineName || '-'}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">
-                                    <div className="font-medium truncate max-w-[200px]" title={line.productName}>{line.productName}</div>
-                                    <div className="text-xs text-gray-500 truncate max-w-[200px]" title={line.productDescription}>{line.productDescription}</div>
-                                </td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{line.supplierBillName || '-'}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{line.customerQuoteLineName || '-'}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{line.purchaseOrderLineName || '-'}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate">{line.productName}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{line.productDescription}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{line.manufacturerDBA || '-'}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.unitCost)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate">{line.billedQty}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(line.unitCost)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.billAmount)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.shipping)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(line.totalBillAmount)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : '-'}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate">{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : '-'}</td>
                             </tr>
                         ))}
                     </tbody>

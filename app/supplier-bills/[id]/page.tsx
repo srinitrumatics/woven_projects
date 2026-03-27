@@ -12,7 +12,8 @@ import SupplierBillSummary from './components/SupplierBillSummary';
 import SupplierBillTabs from './components/SupplierBillTabs';
 import SupplierBillLinesTable from './components/SupplierBillLinesTable';
 import SupplierBillFilesTable from './components/SupplierBillFilesTable';
-import { SupplierBill, SupplierBillLine } from '../types';
+import SupplierBillPaymentsTab from './components/SupplierBillPaymentsTab';
+import { SupplierBill, SupplierBillLine, BillPayment, AppliedDebitMemo } from '../types';
 
 export default function SupplierBillDetailPage() {
     const params = useParams();
@@ -22,6 +23,8 @@ export default function SupplierBillDetailPage() {
     const [bill, setBill] = useState<SupplierBill | null>(null);
     const [lines, setLines] = useState<SupplierBillLine[]>([]);
     const [files, setFiles] = useState<any[]>([]);
+    const [billPayments, setBillPayments] = useState<BillPayment[]>([]);
+    const [appliedDebits, setAppliedDebits] = useState<AppliedDebitMemo[]>([]);
     const [activeTab, setActiveTab] = useState('lines');
     const [isLoading, setIsLoading] = useState(true);
 
@@ -40,11 +43,12 @@ export default function SupplierBillDetailPage() {
 
                 if (billData && billData.Supplier_Bill__c && billData.Supplier_Bill__c.length > 0) {
                     const b = billData.Supplier_Bill__c[0];
+                    const a = billData.Billing_Information__c?.[0] || {};
                     setBill({
                         id: b.Id,
                         name: b.Name || '',
                         status: b.Status__c || '',
-                        apRep: b.Owner_Full_Name__c || b.OwnerId || '',
+                        apRep: b.Owner_Name || '',
                         purchaseOrderName: b.Purchase_Order_Name || b.Purchase_Order__r?.Name || '',
                         customerQuoteName: b.Customer_Quote_Name || '',
                         customerOrderName: b.Customer_Order_Name || '',
@@ -55,21 +59,21 @@ export default function SupplierBillDetailPage() {
                         totalLines: b.Total_Lines__c || 0,
                         totalProductAmount: b.Total_Product_Amount__c || 0,
                         totalShippingCharges: b.Total_Shipping_Charges__c || 0,
-                        totalAmount: b.TotalAmount__c || 0,
-                        billedDate: b.BillDate__c || '',
-                        paymentTerms: b.Payment_Terms__c || '',
-                        dueDate: b.DueDate__c || '',
-                        remittanceStatus: b.Remittance_Status__c || '',
-                        openBalance: b.Open_Balance__c || 0,
-                        daysOutstanding: b.Days_Outstanding__c || 0,
-                        settledDate: b.Settled_Date__c || '',
-                        billToAccount: b.Bill_to_Account__c || 'Woven',
-                        billToLocation: b.Bill_to_Location__c || 'Woven HQ',
-                        billingAddress: b.Billing_Address__c || '',
-                        shipToAccount: b.Ship_to_Account__c || '',
-                        shipToLocation: b.Authorized_Ship_To_Location__r?.Name || '',
-                        shippingAddress: b.Authorized_Ship_To_Location_Address__c || '',
-                        site: b.Site_Name__c || b.Site__c || '',
+                        totalAmount: b.TotalAmount__c || b.Total_Amount__c || 0,
+                        billedDate: b.Billed_Date__c || b.BillDate__c || b.Bill_Date__c || '',
+                        paymentTerms: b.Payment_Terms__c || b.PaymentTerms__c || '',
+                        dueDate: b.Due_Date__c || '',
+                        remittanceStatus: b.Remittance_Status__c || b.RemittanceStatus__c || '',
+                        openBalance: b.Open_Balance__c || b.OpenBalance__c || 0,
+                        daysOutstanding: b.Days_Outstanding__c || b.DaysOutstanding__c || 0,
+                        settledDate: b.Settled_Date__c || b.SettledDate__c || '',
+                        billToAccount: a.Bill_To_Account__c || '',
+                        billToLocation: a.Bill_To_Location__c || '',
+                        billingAddress: a.Address__c || '',
+                        shipToAccount: b.Ship_to_Account_Name || b.Ship_to_Account__c || (b.Ship_to_Account__r as any)?.Name || '',
+                        shipToLocation: b.Authorized_Ship_To_Location_Name || b.Authorized_Ship_To_Location__c || (b.Authorized_Ship_To_Location__r as any)?.Name || '',
+                        shippingAddress: b.Authorized_Ship_To_Location_Address || b.Authorized_Ship_To_Location_Address__c || '',
+                        site: b.Site_Name || '',
                         goodsReceiptDate: b.Goods_Receipt_Date__c || '',
                         productsSubtotal: b.Total_Product_Amount__c || 0,
                         servicesSubtotal: b.Total_Service_Amount__c || 0,
@@ -82,7 +86,7 @@ export default function SupplierBillDetailPage() {
                 }
 
                 // 2. Fetch lines
-                const linesRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Supplier_Bill_Line`);
+                const linesRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Products`);
                 const linesData = await linesRes.json();
                 if (linesData && linesData.Supplier_Bill_Line__c) {
                     const mappedLines = linesData.Supplier_Bill_Line__c.map((l: any) => ({
@@ -90,13 +94,14 @@ export default function SupplierBillDetailPage() {
                         name: l.Name || '',
                         status: l.Status__c || '',
                         supplierBillName: l.Supplier_Bill_Name || '',
+                        customerQuoteLineName: l.Customer_Quote_Line_Name || '',
                         purchaseOrderLineName: l.Purchase_Order_Line_Name || '',
                         productName: l.Product_Name || '',
-                        productDescription: l.Product_Description || '',
-                        manufacturerDBA: l.Manufacturer_DBA || '',
+                        productDescription: l.Product_Description__c || '',
+                        manufacturerDBA: l.Manufacturer_DBA__c || '',
                         unitCost: l.Unit_Cost__c || 0,
                         billedQty: l.Billed_Qty__c || 0,
-                        billAmount: l.Bill_Amount__c || 0,
+                        billAmount: l.BillAmount__c || 0,
                         shipping: l.Shipping_Charges__c || 0,
                         totalBillAmount: l.Total_Bill_Amount__c || 0,
                         goodsReceiptDate: l.Goods_Receipt_Date__c || '',
@@ -117,7 +122,7 @@ export default function SupplierBillDetailPage() {
                 }
 
                 // 3. Fetch files
-                const filesRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=files`);
+                const filesRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&objectName=Supplier_Bill__c&action=files`);
                 const filesData = await filesRes.json();
                 setFiles(filesData.map((f: any) => ({
                     id: f.ContentVersionId,
@@ -127,6 +132,71 @@ export default function SupplierBillDetailPage() {
                     uploadedBy: f.CreatedBy,
                     uploadedDate: f.CreatedDate
                 })));
+
+                // 4. Fetch Payments and Debits
+                try {
+                    let newAppliedDebits: any[] = [];
+                    const paymentsRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Payments`);
+                    if (paymentsRes.ok) {
+                        const paymentsData = await paymentsRes.json();
+                        if (paymentsData) {
+                            if (paymentsData.Bill_Payment__c) {
+                                setBillPayments(paymentsData.Bill_Payment__c.map((p: any) => ({
+                                    id: p.Id,
+                                    name: p.Name || '',
+                                    status: p.Status__c || '',
+                                    amount: p.Amount__c || 0,
+                                    paymentMethod: p.Payment_Method__c || '',
+                                    referenceNo: p.Reference_No__c || '',
+                                    transactionDate: p.Transaction_Date__c || '',
+                                    scheduledDate: p.Scheduled_Date__c || '',
+                                    failedDate: p.Failed_Date__c || '',
+                                    postedDate: p.Posted_Date__c || '',
+                                    supplierBillName: p.Supplier_Bill_Name || '',
+                                })));
+                            }
+                            if (paymentsData.Applied_Debit_Memo__c) {
+                                newAppliedDebits = [...newAppliedDebits, ...paymentsData.Applied_Debit_Memo__c.map((d: any) => ({
+                                    id: d.Id,
+                                    name: d.Name || '',
+                                    status: d.Status__c || '',
+                                    debitMemoName: d.Debit_Memo_Name || '',
+                                    supplierBillName: d.Supplier_Bill_Name || '',
+                                    appliedAmount: d.Applied_Amount__c || 0,
+                                    availableDebitBalance: d.Available_Debit_Balance__c || 0,
+                                    appliedDate: d.Applied_Date__c || '',
+                                    postedDate: d.Posted_Date__c || '',
+                                    notes: d.Applied_Debit_Memo_Notes__c || '',
+                                }))];
+                            }
+                        }
+                    }
+
+                    const returnsRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Returns`);
+                    if (returnsRes.ok) {
+                        const returnsData = await returnsRes.json();
+                        if (returnsData && returnsData.Applied_Debit_Memo__c) {
+                            newAppliedDebits = [...newAppliedDebits, ...returnsData.Applied_Debit_Memo__c.map((d: any) => ({
+                                id: d.Id,
+                                name: d.Name || '',
+                                status: d.Status__c || '',
+                                debitMemoName: d.Debit_Memo_Name || '',
+                                supplierBillName: d.Supplier_Bill_Name || '',
+                                appliedAmount: d.Applied_Amount__c || 0,
+                                availableDebitBalance: d.Available_Debit_Balance__c || 0,
+                                appliedDate: d.Applied_Date__c || '',
+                                postedDate: d.Posted_Date__c || '',
+                                notes: d.Applied_Debit_Memo_Notes__c || '',
+                            }))];
+                        }
+                    }
+
+                    // Remove duplicates just in case both APIs returned the same records
+                    const uniqueDebits = Array.from(new Map(newAppliedDebits.map(item => [item.id, item])).values());
+                    setAppliedDebits(uniqueDebits);
+                } catch (e) {
+                    console.error("Error fetching payments data:", e);
+                }
 
             } catch (error) {
                 console.error("Error fetching supplier bill details:", error);
@@ -198,26 +268,14 @@ export default function SupplierBillDetailPage() {
                             onTabChange={setActiveTab}
                             counts={{
                                 lines: lines.length,
-                                payments: 0,
-                                debits: 0,
+                                payments: billPayments.length + appliedDebits.length,
                                 files: files.length
                             }}
                         />
                     </div>
                     <div className="flex-1 p-6">
                         {activeTab === 'lines' && <SupplierBillLinesTable lines={lines} />}
-                        {activeTab === 'payments' && (
-                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 min-w-0">
-                                <p className="text-lg font-medium truncate" title="No Payments Recorded">No Payments Recorded</p>
-                                <p className="text-sm truncate" title="There are no payment records associated with this bill.">There are no payment records associated with this bill.</p>
-                            </div>
-                        )}
-                        {activeTab === 'debits' && (
-                            <div className="flex flex-col items-center justify-center py-12 text-gray-500 min-w-0">
-                                <p className="text-lg font-medium truncate" title="No Debits Recorded">No Debits Recorded</p>
-                                <p className="text-sm truncate" title="There are no debit records associated with this bill.">There are no debit records associated with this bill.</p>
-                            </div>
-                        )}
+                        {activeTab === 'payments' && <SupplierBillPaymentsTab billPayments={billPayments} appliedDebits={appliedDebits} />}
                         {activeTab === 'files' && <SupplierBillFilesTable files={files} billId={id} />}
                     </div>
                 </div>

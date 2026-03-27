@@ -605,7 +605,7 @@ export async function deleteFullOrderFromSalesforce(accountId: string, contactId
 }
 
 // Fetch files from Salesforce
-export async function getFilesFromSalesforce(accountId: string, contactId: string, orderId: string): Promise<any[]> {
+export async function getFilesFromSalesforce(accountId: string, contactId: string, orderId: string, objectName: string = "Customer_Order__c"): Promise<any[]> {
   try {
     const session = await getSalesforceSession();
 
@@ -616,7 +616,7 @@ export async function getFilesFromSalesforce(accountId: string, contactId: strin
 
     // Construct URL with query parameters
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
-    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(orderId)}&objectName=Customer_Order__c`;
+    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(orderId)}&objectName=${encodeURIComponent(objectName)}`;
 
     console.log('Fetching files from Salesforce with URL:', url);
 

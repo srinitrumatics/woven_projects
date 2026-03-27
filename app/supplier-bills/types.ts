@@ -45,6 +45,7 @@ export interface SupplierBillLine {
   name: string; // Supplier Bill Line Name
   status: string;
   supplierBillName: string; // Parent Supplier Bill
+  customerQuoteLineName?: string;
   purchaseOrderLineName: string;
   productName: string;
   productDescription: string;
@@ -55,4 +56,35 @@ export interface SupplierBillLine {
   shipping: number;
   totalBillAmount: number;
   goodsReceiptDate: string;
+  supplierBillLineNotes?: string;
+  proposedProduct?: string;
+  site?: string;
+  inventoryAccount?: string;
+}
+
+export interface BillPayment {
+  id: string;
+  name: string;
+  status: string;
+  amount: number;
+  paymentMethod: string;
+  referenceNo: string;
+  transactionDate: string;
+  scheduledDate: string;
+  failedDate: string;
+  postedDate: string;
+  supplierBillName: string;
+}
+
+export interface AppliedDebitMemo {
+  id: string;
+  name: string;
+  status: string;
+  debitMemoName: string;
+  supplierBillName: string;
+  appliedAmount: number;
+  availableDebitBalance: number;
+  appliedDate: string;
+  postedDate: string;
+  notes: string;
 }

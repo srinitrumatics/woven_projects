@@ -1,17 +1,15 @@
 "use client";
 
-import { use, useState, useEffect, useCallback } from "react";
+import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import { formatDate, formatCurrency } from "@/lib/utils/formatting";
-import { PurchaseOrderLine } from "../../../types";
-import POSupplierBillLinesTable from "./components/POSupplierBillLinesTable";
-import POSerialNumberLogLinesTab from "./components/poserialnumberloglinestab";
-import POReturnsTab from "./components/POReturnsTab";
-import FileTabsLines from "./components/FileTabsLines";
+import { SupplierBillLine } from "../../../types";
+import SBLFilesTab from "./components/SBLFilesTab";
+import SBLDebitMemoLinesTab from "./components/SBLDebitMemoLinesTab";
 
-export default function POLineDetailPage({
+export default function SupplierBillLineDetailPage({
     params,
 }: {
     params: Promise<{ id: string; lineid: string }>;
@@ -20,14 +18,11 @@ export default function POLineDetailPage({
     const router = useRouter();
 
     const [loading, setLoading] = useState(true);
-    const [lines, setLines] = useState<PurchaseOrderLine[]>([]);
+    const [lines, setLines] = useState<SupplierBillLine[]>([]);
     const [currentLineIndex, setCurrentLineIndex] = useState(0);
 
-    const [activeTab, setActiveTab] = useState<"bills" | "returns" | "serialNumbers" | "files">("bills");
-    const [bills, setBills] = useState<any[]>([]);
-    const [debitMemos, setDebitMemos] = useState<any[]>([]);
-    const [rtv, setRtv] = useState<any[]>([]);
-    const [serialNumbers, setSerialNumbers] = useState<any[]>([]);
+    const [activeTab, setActiveTab] = useState<"debitMemos" | "files">("debitMemos");
+    const [debitMemoLines, setDebitMemoLines] = useState<any[]>([]);
     const [files, setFiles] = useState<any[]>([]);
     const [subTabLoading, setSubTabLoading] = useState(false);
 
@@ -38,44 +33,31 @@ export default function POLineDetailPage({
         async function fetchLines() {
             try {
                 setLoading(true);
-                const res = await fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Products&objectName=Purchase_Order__c`);
+                const res = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Products&objectName=Supplier_Bill__c`);
                 if (!res.ok) throw new Error("Failed to fetch lines");
                 const data = await res.json();
 
-                if (data && data.Purchase_Order_Line__c) {
-                    const mappedLines: PurchaseOrderLine[] = data.Purchase_Order_Line__c.map((item: any) => ({
+                if (data && data.Supplier_Bill_Line__c) {
+                    const mappedLines: SupplierBillLine[] = data.Supplier_Bill_Line__c.map((item: any) => ({
                         id: item.Id,
                         name: item.Name,
                         status: item.Status__c,
-                        purchaseOrderName: item.Purchase_Order_Name,
-                        purchaseOrder: item.Purchase_Order__c,
+                        supplierBillName: item.Supplier_Bill_Name,
+                        customerQuoteLineName: item.Customer_Quote_Line_Name,
+                        purchaseOrderLineName: item.Purchase_Order_Line_Name,
                         productName: item.Product_Name,
                         productDescription: item.Product_Description__c,
-                        productFamily: item.Product_Family,
-                        productRecordType: item.Product_Record_Type__c,
                         manufacturerDBA: item.Manufacturer_DBA__c,
-                        unitCost: item.Unit_Cost__c,
-                        totalProductCost: item.Total_Product_Cost__c,
-                        shippingCharges: item.Shipping_Charges__c,
-                        totalCost: item.Total_Cost__c,
-                        totalOrderQty: item.Total_Order_Qty__c,
-                        orderQty: item.Order_Qty__c,
-                        openBalanceQty: item.Open_Balance_Qty__c,
-                        moq: item.MOQ__c,
-                        leadTimeWks: item.Lead_Time_Wks__c,
-                        transitLTDays: item.Transit_LT_Days__c,
-                        promiseDate: item.Promise_Date__c,
-                        shipByDate: item.Ship_by_Date__c,
-                        needByDate: item.Need_By_Date__c,
+                        proposedProduct: item.Proposed_Product_Name,
+                        site: item.Site_Name,
+                        inventoryAccount: item.Inventory_Account_Name,
                         goodsReceiptDate: item.Goods_Receipt_Date__c,
-                        actualDeliveryDate: item.Actual_Delivery_Date__c,
-                        estimatedDeliveryDate: item.Estimated_Delivery_Date__c,
-                        trackingNumber: item.Tracking_Number__c,
-                        trackingStatus: item.Tracking_Status__c,
-                        invoiceStatus: item.Invoice_Status__c,
-                        poLineNotes: item.Purchase_Order_Line_Notes__c,
-                        customerQuoteLineName: item.Customer_Quote_Line_Name,
-                        customerQuoteLine: item.Customer_Quote_Line__c,
+                        supplierBillLineNotes: item.Supplier_Bill_Line_Notes__c,
+                        unitCost: item.Unit_Cost__c,
+                        billedQty: item.Billed_Qty__c,
+                        billAmount: item.BillAmount__c,
+                        shipping: item.Shipping_Charges__c,
+                        totalBillAmount: item.Total_Bill_Amount__c,
                     }));
 
                     setLines(mappedLines);
@@ -96,35 +78,15 @@ export default function POLineDetailPage({
             if (!lineid) return;
             try {
                 setSubTabLoading(true);
-                const [billsRes, returnsRes, serialRes, filesRes] = await Promise.all([
-                    fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=bills&objectName=Purchase_Order_Line__c&tabName=Purchases`),
-                    fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=returns&objectName=Purchase_Order_Line__c&tabName=Returns`),
-                    fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=serialNumbers&objectName=Purchase_Order_Line__c&tabName=Serial_Numbers`),
-                    fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=files&objectName=Purchase_Order_Line__c`)
+                const [filesRes, debitMemosRes] = await Promise.all([
+                    fetch(`/api/salesforce/orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&orderId=${lineid}&action=files&objectName=Supplier_Bill_Line__c`),
+                    fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${lineid}&action=returns&objectName=Supplier_Bill_Line__c&tabName=Returns`)
                 ]);
 
-                const [billsData, returnsData, serialData, filesRaw] = await Promise.all([
-                    billsRes.json(),
-                    returnsRes.json(),
-                    serialRes.json(),
-                    filesRes.json()
+                const [filesRaw, debitMemosRaw] = await Promise.all([
+                    filesRes.json(),
+                    debitMemosRes.ok ? debitMemosRes.json() : null
                 ]);
-
-                if (billsData && billsData.Supplier_Bill_Line__c) {
-                    setBills(billsData.Supplier_Bill_Line__c);
-                } else {
-                    setBills([]);
-                }
-
-                if (returnsData) {
-                    setDebitMemos(returnsData.Debit_Memo_Line__c || []);
-                    setRtv(returnsData.RTV_Line__c || []);
-                } else {
-                    setDebitMemos([]);
-                    setRtv([]);
-                }
-
-                setSerialNumbers(serialData.Serial_Number_Log__c || []);
 
                 if (filesRaw) {
                     const filesData = Array.isArray(filesRaw) ? filesRaw : (filesRaw.data || []);
@@ -139,6 +101,12 @@ export default function POLineDetailPage({
                     setFiles(mappedFiles);
                 } else {
                     setFiles([]);
+                }
+
+                if (debitMemosRaw && debitMemosRaw.Debit_Memo_Line__c) {
+                    setDebitMemoLines(debitMemosRaw.Debit_Memo_Line__c);
+                } else {
+                    setDebitMemoLines([]);
                 }
 
             } catch (err) {
@@ -161,29 +129,20 @@ export default function POLineDetailPage({
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const productImages = [
         { id: 1, label: "Image 1" },
-        { id: 2, label: "Image 2" },
-        { id: 3, label: "Image 3" },
+        { id: 2, label: "Image 2" }
     ];
-
-    const handlePrevImage = () => {
-        setCurrentImageIndex((prev) => prev === 0 ? productImages.length - 1 : prev - 1);
-    };
-
-    const handleNextImage = () => {
-        setCurrentImageIndex((prev) => prev === productImages.length - 1 ? 0 : prev + 1);
-    };
 
     const handlePrevLine = () => {
         if (hasPrevLine) {
             const prevLine = lines[currentLineIndex - 1];
-            router.push(`/purchase-orders/${id}/lines/${prevLine.id}`);
+            router.push(`/supplier-bills/${id}/lines/${prevLine.id}`);
         }
     };
 
     const handleNextLine = () => {
         if (hasNextLine) {
             const nextLine = lines[currentLineIndex + 1];
-            router.push(`/purchase-orders/${id}/lines/${nextLine.id}`);
+            router.push(`/supplier-bills/${id}/lines/${nextLine.id}`);
         }
     };
 
@@ -201,9 +160,9 @@ export default function POLineDetailPage({
         return (
             <Sidebar>
                 <div className="p-8 text-center text-gray-500">
-                    Purchase Order Line not found.
+                    Supplier Bill Line not found.
                     <div className="mt-4">
-                        <Link href={`/purchase-orders/${id}`} className="text-primary hover:underline truncate">Back to Purchase Order</Link>
+                        <Link href={`/supplier-bills/${id}`} className="text-primary hover:underline truncate">Back to Supplier Bill</Link>
                     </div>
                 </div>
             </Sidebar>
@@ -213,12 +172,12 @@ export default function POLineDetailPage({
     return (
         <Sidebar>
             <div className="flex flex-col gap-4 min-w-0">
-                {/* Breadcrumb - Compact style from Proposals */}
+                {/* Breadcrumb */}
                 <div className="mb-4">
                     <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1 min-w-0">
-                        <Link href="/purchase-orders" className="hover:text-primary truncate">Purchase Orders</Link>
+                        <Link href="/supplier-bills" className="hover:text-primary truncate">Supplier Bills</Link>
                         <span>&gt;</span>
-                        <Link href={`/purchase-orders/${id}`} className="hover:text-primary truncate">Purchase Order Details</Link>
+                        <Link href={`/supplier-bills/${id}`} className="hover:text-primary truncate">Supplier Bill Line</Link>
                         <span>&gt;</span>
                         <span className="text-gray-900 dark:text-white truncate" title={line.name}>{line.name}</span>
                     </div>
@@ -230,9 +189,9 @@ export default function POLineDetailPage({
                             </h1>
                         </div>
                         <div className="flex items-center gap-2 min-w-0">
-                            <Link href={`/purchase-orders/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2 font-bold truncate">
+                            <Link href={`/supplier-bills/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2 truncate">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                                Back to PO
+                                Back to SB
                             </Link>
                         </div>
                     </div>
@@ -275,50 +234,62 @@ export default function POLineDetailPage({
 
                             {/* Carousel Navigation Arrows */}
                             <button
-                                onClick={handlePrevImage}
-                                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors truncate"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                onClick={() => setCurrentImageIndex(i => (i - 1 + productImages.length) % productImages.length)}
+                                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M15 19l-7-7 7-7"
+                                    />
                                 </svg>
                             </button>
                             <button
-                                onClick={handleNextImage}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors truncate"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                onClick={() => setCurrentImageIndex(i => (i + 1) % productImages.length)}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 5l7 7-7 7"
+                                    />
                                 </svg>
                             </button>
 
                             {/* Carousel Dots */}
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-                                {productImages.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setCurrentImageIndex(index)}
-                                        className={`w-2 h-2 rounded-full transition-colors ${index === currentImageIndex
-                                            ? "bg-primary"
-                                            : "bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500"
-                                            }`}
-                                    />
+                                {productImages.map((_, i) => (
+                                    <div key={i} className={`w-2 h-2 rounded-full transition-colors ${i === currentImageIndex
+                                        ? "bg-primary"
+                                        : "bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500"
+                                        }`} />
                                 ))}
                             </div>
                         </div>
                     </div>
 
-                    {/* Purchase Order Line Note (3 of 12) */}
+                    {/* Supplier Bill Line Note (3 of 12) */}
                     <div className="xl:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                         <div className="flex items-center gap-2 mb-3 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                             </div>
                             <div className="min-w-0">
-                                <h2 className="text-base font-semibold text-gray-900 dark:text-white truncate" title="Purchase Order Line Notes">Purchase Order Line Notes</h2>
+                                <h2 className="text-base font-semibold text-gray-900 dark:text-white truncate" title="Supplier Bill Line Notes">Supplier Bill Line Notes</h2>
                             </div>
                         </div>
                         <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-gray-700 min-h-[200px] overflow-y-auto">
-                            {line.poLineNotes || "No notes available for this line item."}
+                            {line.supplierBillLineNotes || "No notes available for this line item."}
                         </div>
                     </div>
 
@@ -339,71 +310,54 @@ export default function POLineDetailPage({
                                 <InfoField label="Product Name" value={line.productName} />
                                 <InfoField label="Description" value={line.productDescription} />
                                 <InfoField label="Manufacturer DBA" value={line.manufacturerDBA} />
-                                <InfoField label="Product Family" value={line.productFamily} />
                             </div>
                             {/* Column 2 */}
                             <div className="space-y-3">
-                                <InfoField label="Need by Date" value={formatDate(line.needByDate, 'numeric-dash')} />
-                                <InfoField label="Ship by Date" value={formatDate(line.shipByDate, 'numeric-dash')} />
-                                <InfoField label="Promise Date" value={formatDate(line.promiseDate, 'numeric-dash')} />
-                                <InfoField label="Goods Receipt Date" value={formatDate(line.goodsReceiptDate, 'numeric-dash')} />
+                                <InfoField label="Proposed Product" value={line.proposedProduct} />
+                                <InfoField label="Customer Quote Line" value={line.customerQuoteLineName} />
+                                <InfoField label="Purchase Order Lines" value={line.purchaseOrderLineName} />
                             </div>
                             {/* Column 3 */}
                             <div className="space-y-3">
-                                <InfoField label="Tracking Number" value={line.trackingNumber} />
-                                <InfoField label="Tracking Status" value={line.trackingStatus} />
-                                <InfoField label="Estimated Delivery Date" value={formatDate(line.estimatedDeliveryDate, 'numeric-dash')} />
-                                <InfoField label="Actual Delivery Date" value={formatDate(line.actualDeliveryDate, 'numeric-dash')} />
+                                <InfoField label="Site" value={line.site} />
+                                <InfoField label="Inventory Account" value={line.inventoryAccount} />
+                                <InfoField label="Goods Receipt Date" value={formatDate(line.goodsReceiptDate, 'numeric-dash')} />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Row 2: Standard Styled Table Layout */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden p-4">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden p-4">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-primary-light dark:bg-gray-900">
                                 <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Unit Cost">Unit Cost</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Order Qty">Order Qty</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="MOQ">MOQ</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Total Order Qty">Total Order Qty</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Total Product Cost">Total Product Cost</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Billed Qty">Billed Qty</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Product Amount">Product Amount</th>
                                 <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Shipping">Shipping</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Total Cost">Total Cost</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="LT (Wks)">LT (Wks)</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Transit LT (Days)">Transit LT (Days)</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Open Balance Qty">Open Balance Qty</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Total Bill Amount">Total Bill Amount</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr className="text-gray-900 dark:text-white">
-                                <td className="px-4 py-3 text-sm font-medium truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={String(line.orderQty)}>{line.orderQty}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={String(line.moq)}>{line.moq}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={String(line.totalOrderQty)}>{line.totalOrderQty}</td>
-                                <td className="px-4 py-3 text-sm font-bold text-gray-700 truncate" title={formatCurrency(line.totalProductCost)}>{formatCurrency(line.totalProductCost)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={formatCurrency(line.shippingCharges)}>{formatCurrency(line.shippingCharges)}</td>
-                                <td className="px-4 py-3 text-sm font-bold text-primary truncate" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate">{line.leadTimeWks}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={String(line.transitLTDays || 0)}>{line.transitLTDays || 0} days</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={String(line.openBalanceQty || 0)}>{line.openBalanceQty || 0}</td>
-
+                                <td className="px-4 py-3 text-sm font-medium border-t border-gray-100 dark:border-gray-700 truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 truncate" title={String(line.billedQty)}>{line.billedQty}</td>
+                                <td className="px-4 py-3 text-sm font-bold text-gray-700 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 truncate" title={formatCurrency(line.billAmount)}>{formatCurrency(line.billAmount)}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 truncate" title={formatCurrency(line.shipping)}>{formatCurrency(line.shipping)}</td>
+                                <td className="px-4 py-3 text-sm font-bold text-primary border-t border-gray-100 dark:border-gray-700 truncate" title={formatCurrency(line.totalBillAmount)}>{formatCurrency(line.totalBillAmount)}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-
-                {/* Row 3: Related Items Tabs (Supplier Bills, Serial Numbers, Returns, Files) */}
+                {/* Row 3: Related Items Tabs (Debit Memo Lines, Files) */}
                 <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                     {/* Tabs Header */}
                     <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 mb-6 items-center min-w-0">
                         {[
-                            { id: "bills", label: "Supplier Bill Line", count: bills.length },
-                            { id: "serialNumbers", label: "Serial Numbers", count: serialNumbers.length },
-                            { id: "returns", label: "Returns", count: debitMemos.length + rtv.length },
-                            { id: "files", label: "File", count: files.length }
+                            { id: "debitMemos", label: "Debit Memo Lines", count: debitMemoLines.length },
+                            { id: "files", label: "Files", count: files.length }
                         ].map((tab) => (
                             <button
                                 key={tab.id}
@@ -427,25 +381,14 @@ export default function POLineDetailPage({
                             </div>
                         ) : (
                             <>
-                                {activeTab === "bills" && (
+                                {activeTab === "debitMemos" && (
                                     <div className="space-y-4">
-
-                                        <POSupplierBillLinesTable lines={bills} />
-                                    </div>
-                                )}
-                                {activeTab === "serialNumbers" && (
-                                    <div className="space-y-4">
-                                        <POSerialNumberLogLinesTab serialNumbers={serialNumbers} />
-                                    </div>
-                                )}
-                                {activeTab === "returns" && (
-                                    <div className="space-y-4">
-                                        <POReturnsTab debitMemos={debitMemos} rtv={rtv} />
+                                        <SBLDebitMemoLinesTab debitMemos={debitMemoLines} />
                                     </div>
                                 )}
                                 {activeTab === "files" && (
                                     <div className="space-y-4">
-                                        <FileTabsLines files={files} poLineId={lineid} />
+                                        <SBLFilesTab files={files} poId={lineid} />
                                     </div>
                                 )}
                             </>
@@ -455,7 +398,6 @@ export default function POLineDetailPage({
 
                 {/* Navigation Buttons - Below Detail Tabs Card, Right aligned */}
                 <div className="flex items-center justify-end gap-2 mt-4 min-w-0">
-                    {/* Previous Line Button */}
                     <button
                         onClick={handlePrevLine}
                         disabled={!hasPrevLine}
@@ -469,12 +411,10 @@ export default function POLineDetailPage({
                         Prev
                     </button>
 
-                    {/* Line indicator */}
                     <span className="text-xs text-gray-500 dark:text-gray-400 px-2 font-medium truncate">
                         {lineNumber}/{totalLines}
                     </span>
 
-                    {/* Next Line Button */}
                     <button
                         onClick={handleNextLine}
                         disabled={!hasNextLine}

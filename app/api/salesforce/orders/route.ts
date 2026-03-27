@@ -10,6 +10,7 @@ export async function GET(req: Request) {
     const orderId = searchParams.get("orderId");
     const contactId = searchParams.get("contactId") ?? "abc";
     const contentVersionId = searchParams.get("contentVersionId");
+    const objectName = searchParams.get("objectName") || "Customer_Order__c";
 
     const rawAction = (searchParams.get("action") || "").toLowerCase();
     console.log("=== Orders API Route ===");
@@ -45,7 +46,7 @@ export async function GET(req: Request) {
       if (!orderId) {
         return NextResponse.json({ error: "Missing orderId for files action" }, { status: 400 });
       }
-      result = await getFilesFromSalesforce(accountId, contactId, orderId);
+      result = await getFilesFromSalesforce(accountId, contactId, orderId, objectName);
     } else if (rawAction === "orderlines") {
       if (!orderId) {
         return NextResponse.json({ error: "Missing orderId for orderlines action" }, { status: 400 });

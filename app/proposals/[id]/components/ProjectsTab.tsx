@@ -32,7 +32,7 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                     <p className="text-sm truncate" title="There are no projects associated with this proposal.">There are no projects associated with this proposal.</p>
                 </div>
             ) : (
-                <table className="w-full ">
+                <table className="w-full table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <SortableHeader label="Project Number" field="projectNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectNumber} onResize={onResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />

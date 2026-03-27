@@ -31,7 +31,7 @@ export default function ShipToContact({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                 </div>
-                <div>
+                <div className="min-w-0">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">Ship to Contact</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Who Should We Contact About This Delivery?">Who Should We Contact About This Delivery?</p>
                 </div>

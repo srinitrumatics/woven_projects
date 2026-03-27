@@ -60,9 +60,9 @@ export default function POShipToInfo({ po }: POShipToInfoProps) {
                     {/* Row 3 */}
                     <div className="md:col-span-2 min-w-0">
                         <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Request Date">
-                            Request Date
+                            Promised Date
                         </label>
-                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={formatDate(po.requestDate, 'numeric-dash') || ''} placeholder="N/A" title={formatDate(po.requestDate, 'numeric-dash') || ''} />
+                        <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={formatDate(po.promiseDate, 'numeric-dash') || ''} placeholder="N/A" title={formatDate(po.promiseDate, 'numeric-dash') || ''} />
                     </div>
                     <div className="md:col-span-2 min-w-0">
                         <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 truncate" title="Drop-Ship">Drop-Ship</label>

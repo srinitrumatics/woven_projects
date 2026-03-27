@@ -7,7 +7,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { formatFileSize, formatDate } from "@/lib/utils/formatting";
 
-interface BillFile {
+interface POFile {
     id: string;
     fileName: string;
     fileType: string;
@@ -16,17 +16,17 @@ interface BillFile {
     uploadedDate: string;
 }
 
-interface SupplierBillFilesTableProps {
-    files: BillFile[];
-    billId: string;
+interface SBLFilesTabProps {
+    files: POFile[];
+    poId: string;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default function SupplierBillFilesTable({ files, billId }: SupplierBillFilesTableProps) {
+export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<BillFile>(files);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<POFile>(files);
 
     const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
     const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
@@ -77,7 +77,7 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
         );
     };
 
-    const handleAction = async (file: BillFile, action: 'preview' | 'download') => {
+    const handleAction = async (file: POFile, action: 'preview' | 'download') => {
         const contentVersionId = file.id;
         if (!contentVersionId) return;
 
@@ -90,7 +90,7 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
 
         try {
             const res = await fetch(
-                `/api/supplier-bills?action=${action}&contentVersionId=${encodeURIComponent(contentVersionId)}&accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&objectName=Supplier_Bill__c`
+                `/api/salesforce/orders?action=${action}&contentVersionId=${encodeURIComponent(contentVersionId)}&accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&orderId=${poId}&objectName=Supplier_Bill_Line__c`
             );
 
             if (!res.ok) throw new Error("Failed to get URL");
@@ -128,50 +128,111 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
                 <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no files attached to this supplier bill.">There are no files attached to this supplier bill.</p>
+                <p className="text-sm truncate" title="There are no files attached.">There are no files attached.</p>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 min-w-0">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate">Files ({files.length})</h3>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate" title={`Files (${files.length})`}>Files ({files.length})</h3>
             </div>
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                 <table className="w-full border-separate border-spacing-0">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.fileName} onResize={handleResize} className="px-4 py-3 sticky left-0 bg-primary-light dark:bg-gray-900 z-30 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]" />
-                            <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.fileType} onResize={handleResize} className="px-4 py-3" />
-                            <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.sizeInBytes} onResize={handleResize} className="px-4 py-3" />
-                            <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.uploadedBy} onResize={handleResize} className="px-4 py-3" />
-                            <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.uploadedDate} onResize={handleResize} className="px-4 py-3" />
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: columnWidths.action }}>Action</th>
+                            <SortableHeader
+                                label="File Name"
+                                field="fileName"
+                                sortConfig={sortConfig}
+                                requestSort={requestSort}
+                                width={columnWidths.fileName}
+                                onResize={handleResize}
+                                className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30"
+                            />
+                            <SortableHeader
+                                label="Type"
+                                field="fileType"
+                                sortConfig={sortConfig}
+                                requestSort={requestSort}
+                                width={columnWidths.fileType}
+                                onResize={handleResize}
+                            />
+                            <SortableHeader
+                                label="Size"
+                                field="sizeInBytes"
+                                sortConfig={sortConfig}
+                                requestSort={requestSort}
+                                width={columnWidths.sizeInBytes}
+                                onResize={handleResize}
+                            />
+                            <SortableHeader
+                                label="Uploaded By"
+                                field="uploadedBy"
+                                sortConfig={sortConfig}
+                                requestSort={requestSort}
+                                width={columnWidths.uploadedBy}
+                                onResize={handleResize}
+                            />
+                            <SortableHeader
+                                label="Date"
+                                field="uploadedDate"
+                                sortConfig={sortConfig}
+                                requestSort={requestSort}
+                                width={columnWidths.uploadedDate}
+                                onResize={handleResize}
+                            />
+                            <SortableHeader
+                                label="Action"
+                                field="action"
+                                sortConfig={sortConfig}
+                                requestSort={requestSort}
+                                width={columnWidths.action}
+                                onResize={handleResize}
+                                className="px-3 py-2"
+                            />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((file) => (
                             <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] truncate">
-                                    <div className="flex items-center gap-3 min-w-0">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={file.fileName}>
+                                    <div className="flex items-center gap-3 truncate min-w-0">
                                         {getFileIcon(file.fileType)}
-                                        <div className="truncate" title={file.fileName}>{file.fileName}</div>
+                                        {file.fileName}
                                     </div>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>{file.fileType}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={formatFileSize(file.sizeInBytes)}>{formatFileSize(file.sizeInBytes)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate"><div className="truncate" title={file.uploadedBy}>{file.uploadedBy}</div></td>
-                                <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? formatDate(file.uploadedDate) : '-'}>{file.uploadedDate ? formatDate(file.uploadedDate) : '-'}</td>
-                                <td className="px-4 py-3 truncate">
+                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>
+                                    {file.fileType}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatFileSize(file.sizeInBytes)}>
+                                    {formatFileSize(file.sizeInBytes)}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>
+                                    {file.uploadedBy}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? formatDate(file.uploadedDate) : '-'}>
+                                    {file.uploadedDate ? formatDate(file.uploadedDate) : '-'}
+                                </td>
+                                <td className="px-3 py-2 truncate">
                                     <div className="flex items-center gap-3 min-w-0">
-                                        <button onClick={() => handleAction(file, 'preview')} className="text-blue-600 hover:text-blue-800 transition-colors" title="Preview">
+                                        <button
+                                            onClick={() => handleAction(file, 'preview')}
+                                            className="text-blue-600 hover:text-blue-800 transition-colors"
+                                            title="Preview"
+                                        >
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
                                         </button>
-                                        <button onClick={() => handleAction(file, 'download')} disabled={downloadingIds.has(file.id)} className={`${downloadingIds.has(file.id) ? 'text-gray-400 cursor-wait' : 'text-primary hover:text-primary-dark'} transition-colors`} title="Download">
+                                        <button
+                                            onClick={() => handleAction(file, 'download')}
+                                            disabled={downloadingIds.has(file.id)}
+                                            className={`${downloadingIds.has(file.id) ? 'text-gray-400 cursor-wait' : 'text-primary hover:text-primary-dark'} transition-colors`}
+                                            title="Download"
+                                        >
                                             {downloadingIds.has(file.id) ? (
                                                 <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
                                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
