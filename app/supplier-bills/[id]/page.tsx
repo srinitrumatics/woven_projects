@@ -72,7 +72,7 @@ export default function SupplierBillDetailPage() {
                         billingAddress: a.Address__c || '',
                         shipToAccount: b.Ship_to_Account_Name || b.Ship_to_Account__c || (b.Ship_to_Account__r as any)?.Name || '',
                         shipToLocation: b.Authorized_Ship_To_Location_Name || b.Authorized_Ship_To_Location__c || (b.Authorized_Ship_To_Location__r as any)?.Name || '',
-                        shippingAddress: b.Authorized_Ship_To_Location_Address || b.Authorized_Ship_To_Location_Address__c || '',
+                        shippingAddress: b.Authorized_Ship_To_Location_Address.street || '',
                         site: b.Site_Name || '',
                         goodsReceiptDate: b.Goods_Receipt_Date__c || '',
                         productsSubtotal: b.Total_Product_Amount__c || 0,

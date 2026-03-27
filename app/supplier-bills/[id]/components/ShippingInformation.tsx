@@ -25,11 +25,11 @@ export default function ShippingInformation({ bill }: ShippingInformationProps) 
 
             <div className="grid grid-cols-1 md:grid-cols-2 w1025:grid-cols-3 gap-6 flex-1">
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Ship-to Account">Ship-to Account</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Ship-to Account">Ship to Account</label>
                     <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.shipToAccount || ''} title={bill.shipToAccount} />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Ship-to Location">Ship-to Location</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Ship-to Location">Ship to Location</label>
                     <input type="text" readOnly className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" value={bill.shipToLocation || ''} title={bill.shipToLocation} />
                 </div>
                 <div>
