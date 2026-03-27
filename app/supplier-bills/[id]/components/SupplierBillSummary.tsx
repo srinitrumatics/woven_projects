@@ -68,9 +68,9 @@ export default function SupplierBillSummary({
                         </div>
 
                         <div className="pt-3 mt-3 border-t border-gray-100 dark:border-gray-700">
-                            <div className="flex justify-between items-center text-lg font-bold min-w-0">
+                            <div className="flex justify-between items-center text-sm  min-w-0">
                                 <span className="text-gray-900 dark:text-white truncate">Open Balance</span>
-                                <span className="text-red-500 dark:text-red-400 truncate">{formatCurrency(bill.openBalance || 0)}</span>
+                                <span className="text-red-500 dark:text-red-400 truncate font-semibold">{formatCurrency(bill.openBalance || 0)}</span>
                             </div>
                         </div>
                     </div>
