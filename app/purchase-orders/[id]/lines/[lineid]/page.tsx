@@ -360,7 +360,7 @@ export default function POLineDetailPage({
                 </div>
 
                 {/* Row 2: Standard Styled Table Layout */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden p-4">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 p-4">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-primary-light dark:bg-gray-900">

@@ -13,7 +13,8 @@ import SupplierBillTabs from './components/SupplierBillTabs';
 import SupplierBillLinesTable from './components/SupplierBillLinesTable';
 import SupplierBillFilesTable from './components/SupplierBillFilesTable';
 import SupplierBillPaymentsTab from './components/SupplierBillPaymentsTab';
-import { SupplierBill, SupplierBillLine, BillPayment, AppliedDebitMemo } from '../types';
+import SupplierBillDebitsTab from './components/SupplierBillDebitsTab';
+import { SupplierBill, SupplierBillLine, BillPayment, AppliedDebitMemo, DebitMemo } from '../types';
 
 export default function SupplierBillDetailPage() {
     const params = useParams();
@@ -25,6 +26,7 @@ export default function SupplierBillDetailPage() {
     const [files, setFiles] = useState<any[]>([]);
     const [billPayments, setBillPayments] = useState<BillPayment[]>([]);
     const [appliedDebits, setAppliedDebits] = useState<AppliedDebitMemo[]>([]);
+    const [debitMemos, setDebitMemos] = useState<DebitMemo[]>([]);
     const [activeTab, setActiveTab] = useState('lines');
     const [isLoading, setIsLoading] = useState(true);
 
@@ -69,10 +71,14 @@ export default function SupplierBillDetailPage() {
                         settledDate: b.Settled_Date__c || b.SettledDate__c || '',
                         billToAccount: a.Bill_To_Account__c || '',
                         billToLocation: a.Bill_To_Location__c || '',
-                        billingAddress: a.Address__c || '',
+                        billingAddress: a ?
+                            (typeof a.Address__c === 'object' && a.Address__c !== null ?
+                                [a.Address__c.street, a.Address__c.city, a.Address__c.state, a.Address__c.postalCode, a.Address__c.country].filter(Boolean).join(', ') :
+                                [a.Address__c, a.City__c, a.State__c, a.Postal_Code__c || a.PIN_Code__c || a.Zip_Code__c, a.Country__c].filter(Boolean).join(', ')) : '',
                         shipToAccount: b.Ship_to_Account_Name || b.Ship_to_Account__c || (b.Ship_to_Account__r as any)?.Name || '',
                         shipToLocation: b.Authorized_Ship_To_Location_Name || b.Authorized_Ship_To_Location__c || (b.Authorized_Ship_To_Location__r as any)?.Name || '',
-                        shippingAddress: b.Authorized_Ship_To_Location_Address.street || '',
+                        shippingAddress: b.Authorized_Ship_To_Location_Address ?
+                            [b.Authorized_Ship_To_Location_Address.street, b.Authorized_Ship_To_Location_Address.city, b.Authorized_Ship_To_Location_Address.state, b.Authorized_Ship_To_Location_Address.postalCode, b.Authorized_Ship_To_Location_Address.country].filter(Boolean).join(', ') : '',
                         site: b.Site_Name || '',
                         goodsReceiptDate: b.Goods_Receipt_Date__c || '',
                         productsSubtotal: b.Total_Product_Amount__c || 0,
@@ -175,19 +181,43 @@ export default function SupplierBillDetailPage() {
                     const returnsRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Returns`);
                     if (returnsRes.ok) {
                         const returnsData = await returnsRes.json();
-                        if (returnsData && returnsData.Applied_Debit_Memo__c) {
-                            newAppliedDebits = [...newAppliedDebits, ...returnsData.Applied_Debit_Memo__c.map((d: any) => ({
-                                id: d.Id,
-                                name: d.Name || '',
-                                status: d.Status__c || '',
-                                debitMemoName: d.Debit_Memo_Name || '',
-                                supplierBillName: d.Supplier_Bill_Name || '',
-                                appliedAmount: d.Applied_Amount__c || 0,
-                                availableDebitBalance: d.Available_Debit_Balance__c || 0,
-                                appliedDate: d.Applied_Date__c || '',
-                                postedDate: d.Posted_Date__c || '',
-                                notes: d.Applied_Debit_Memo_Notes__c || '',
-                            }))];
+                        if (returnsData) {
+                            if (returnsData.Applied_Debit_Memo__c) {
+                                newAppliedDebits = [...newAppliedDebits, ...returnsData.Applied_Debit_Memo__c.map((d: any) => ({
+                                    id: d.Id,
+                                    name: d.Name || '',
+                                    status: d.Status__c || '',
+                                    debitMemoName: d.Debit_Memo_Name || '',
+                                    supplierBillName: d.Supplier_Bill_Name || '',
+                                    appliedAmount: d.Applied_Amount__c || 0,
+                                    availableDebitBalance: d.Available_Debit_Balance__c || 0,
+                                    appliedDate: d.Applied_Date__c || '',
+                                    postedDate: d.Posted_Date__c || '',
+                                    notes: d.Applied_Debit_Memo_Notes__c || '',
+                                }))];
+                            }
+                            if (returnsData.Debit_Memo__c) {
+                                setDebitMemos(returnsData.Debit_Memo__c.map((d: any) => ({
+                                    id: d.Id,
+                                    name: d.Name || '',
+                                    status: d.Status__c || '',
+                                    supplierBillName: d.Supplier_Bill_Name || '',
+                                    purchaseOrderName: d.Purchase_Order_Name || '',
+                                    customerQuoteName: d.Customer_Quote_Name || '',
+                                    customerOrderName: d.Customer_Order_Name || '',
+                                    supplierCreditMemo: d.Supplier_Credit_Memo__c || '',
+                                    debitToAccountName: d.Debit_to_Account_Name || '',
+                                    debitToContactName: d.Debit_to_Contact_Name || '',
+                                    totalLines: d.Total_Lines__c || 0,
+                                    totalCost: d.Total_Cost__c || 0,
+                                    totalShippingCharges: d.Total_Shipping_Charges__c || 0,
+                                    totalDebitAmount: d.Total_Debit_Amount__c || 0,
+                                    issuedDate: d.Issued_Date__c || '',
+                                    approvalDate: d.Approval_Date__c || '',
+                                    availableDebitBalance: d.Available_Debit_Balance__c || 0,
+                                    settledDate: d.Settled_Date__c || '',
+                                })));
+                            }
                         }
                     }
 
@@ -269,6 +299,7 @@ export default function SupplierBillDetailPage() {
                             counts={{
                                 lines: lines.length,
                                 payments: billPayments.length + appliedDebits.length,
+                                debits: debitMemos.length,
                                 files: files.length
                             }}
                         />
@@ -276,6 +307,7 @@ export default function SupplierBillDetailPage() {
                     <div className="flex-1 p-6">
                         {activeTab === 'lines' && <SupplierBillLinesTable lines={lines} />}
                         {activeTab === 'payments' && <SupplierBillPaymentsTab billPayments={billPayments} appliedDebits={appliedDebits} />}
+                        {activeTab === 'debits' && <SupplierBillDebitsTab debitMemos={debitMemos} />}
                         {activeTab === 'files' && <SupplierBillFilesTable files={files} billId={id} />}
                     </div>
                 </div>

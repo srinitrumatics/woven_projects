@@ -88,3 +88,24 @@ export interface AppliedDebitMemo {
   postedDate: string;
   notes: string;
 }
+
+export interface DebitMemo {
+  id: string;
+  name: string;
+  status: string;
+  supplierBillName?: string;
+  purchaseOrderName?: string;
+  customerQuoteName?: string;
+  customerOrderName?: string;
+  supplierCreditMemo?: string;
+  debitToAccountName?: string;
+  debitToContactName?: string;
+  totalLines?: number;
+  totalCost?: number;
+  totalShippingCharges?: number;
+  totalDebitAmount?: number;
+  issuedDate?: string;
+  approvalDate?: string;
+  availableDebitBalance?: number;
+  settledDate?: string;
+}

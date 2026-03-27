@@ -122,26 +122,26 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                         {paginatedPayments.map((payment) => (
                                             <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                                <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">{payment.name}</td>
-                                                <td className="px-4 py-3 text-sm truncate">
+                                                <td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">{payment.name}</td>
+                                                <td className="px-3 py-2 text-sm truncate">
                                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${payment.status === 'Paid' || payment.status === 'Approved' ? 'bg-green-100/80 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50' : 'bg-gray-100/80 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800/50'}`}>
                                                         {payment.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(payment.amount)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.paymentMethod || '-'}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.referenceNo || '-'}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.transactionDate ? formatDate(payment.transactionDate, 'numeric-dash') : '-'}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.scheduledDate ? formatDate(payment.scheduledDate, 'numeric-dash') : '-'}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.failedDate ? formatDate(payment.failedDate, 'numeric-dash') : '-'}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.postedDate ? formatDate(payment.postedDate, 'numeric-dash') : '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(payment.amount)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.paymentMethod || '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.referenceNo || '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.transactionDate ? formatDate(payment.transactionDate, 'numeric-dash') : '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.scheduledDate ? formatDate(payment.scheduledDate, 'numeric-dash') : '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.failedDate ? formatDate(payment.failedDate, 'numeric-dash') : '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.postedDate ? formatDate(payment.postedDate, 'numeric-dash') : '-'}</td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
                             {billPayments.length > ITEMS_PER_PAGE && (
-                                <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+                                <div className="mt-4 px-3 py-2 border-t border-gray-200 dark:border-gray-700">
                                     <Pagination
                                         currentPage={currentPagePayments}
                                         totalPages={totalPagesPayments}
@@ -181,26 +181,26 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                         {paginatedDebits.map((debit) => (
                                             <tr key={debit.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                                <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">{debit.name}</td>
-                                                <td className="px-4 py-3 text-sm truncate">
+                                                <td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">{debit.name}</td>
+                                                <td className="px-3 py-2 text-sm truncate">
                                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${debit.status === 'Applied' || debit.status === 'Approved' ? 'bg-green-100/80 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50' : 'bg-gray-100/80 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800/50'}`}>
                                                         {debit.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.appliedAmount)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.debitMemoName || '-'}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.supplierBillName || '-'}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.appliedDate ? formatDate(debit.appliedDate, 'numeric-dash') : '-'}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.postedDate ? formatDate(debit.postedDate, 'numeric-dash') : '-'}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.availableDebitBalance)}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-400 truncate" title={debit.notes}>{debit.notes || '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.appliedAmount)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.debitMemoName || '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.supplierBillName || '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.appliedDate ? formatDate(debit.appliedDate, 'numeric-dash') : '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.postedDate ? formatDate(debit.postedDate, 'numeric-dash') : '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.availableDebitBalance)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={debit.notes}>{debit.notes || '-'}</td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
                             {appliedDebits.length > ITEMS_PER_PAGE && (
-                                <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+                                <div className="mt-4 px-3 py-2 border-t border-gray-200 dark:border-gray-700">
                                     <Pagination
                                         currentPage={currentPageDebits}
                                         totalPages={totalPagesDebits}

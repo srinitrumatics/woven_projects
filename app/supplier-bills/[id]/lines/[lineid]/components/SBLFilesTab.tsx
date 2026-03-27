@@ -190,7 +190,7 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
                                 requestSort={requestSort}
                                 width={columnWidths.action}
                                 onResize={handleResize}
-                                className="px-3 py-2"
+
                             />
                         </tr>
                     </thead>
@@ -253,7 +253,7 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
             </div>
 
             {files.length > ITEMS_PER_PAGE && (
-                <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-left">
+                <div className="mt-4 px-3 py-2 border-t border-gray-200 dark:border-gray-700 text-left">
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}

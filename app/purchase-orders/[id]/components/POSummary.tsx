@@ -60,10 +60,6 @@ export default function POSummary({
                         <span className="text-gray-900 dark:text-gray-700 mr-2 truncate" title="Shipping">Shipping</span>
                         <span className="text-gray-900 dark:text-white font-medium truncate" title={formatCurrency(po.shippingCost)}>{formatCurrency(po.shippingCost)}</span>
                     </div>
-                    <div className="flex justify-between min-w-0">
-                        <span className="text-gray-900 dark:text-gray-700 mr-2 truncate" title="Taxes">Taxes</span>
-                        <span className="text-gray-900 dark:text-white font-medium truncate" title={formatCurrency(0)}>{formatCurrency(0)}</span>
-                    </div>
                 </div>
 
                 <div className="p-2 ">
@@ -72,10 +68,10 @@ export default function POSummary({
                         <span className="text-xl font-bold text-blue-600 dark:text-blue-400 truncate" title={formatCurrency(po.totalCost)}>{formatCurrency(po.totalCost)}</span>
                     </div>
                 </div>
-                <div className="p-2 pt-5">
+                <div className="p-8">
                     <button
                         onClick={() => { }}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors text-sm font-medium truncate"
+                        className="w-full flex items-center justify-center gap-2 px-3 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:text-white dark:hover:border-primary transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed truncate"
                         title="Download PDF"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
