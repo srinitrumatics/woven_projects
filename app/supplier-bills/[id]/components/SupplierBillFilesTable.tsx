@@ -93,14 +93,18 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
                 `/api/supplier-bills?action=${action}&contentVersionId=${encodeURIComponent(contentVersionId)}&accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&objectName=Supplier_Bill__c`
             );
 
-            if (!res.ok) throw new Error("Failed to get URL");
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                throw new Error(errorData.error || "Failed to get URL");
+            }
 
             const result = await res.json();
-            let url = result?.previewUrl || result?.downloadUrl;
+            let url = action === 'download' ? (result?.downloadUrl || result?.previewUrl) : (result?.previewUrl || result?.downloadUrl);
 
             if (!url) throw new Error("URL missing from response");
 
-            if (action === 'download' && !url.includes('download=1')) {
+            // For some Salesforce URLs, we might still need the download=1 for the preview landing page if downloadUrl is missing
+            if (action === 'download' && !result?.downloadUrl && !url.includes('download=1')) {
                 url += (url.includes('?') ? '&' : '?') + 'download=1';
             }
 
@@ -109,10 +113,10 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
             } else {
                 window.open(url, '_blank', 'noopener');
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(`${action} error:`, err);
             if (win) win.close();
-            alert(`Failed to ${action} file`);
+            alert(`Failed to ${action} file: ${err.message || 'Unknown error'}`);
         } finally {
             if (action === 'download') {
                 setDownloadingIds(prev => {
@@ -137,8 +141,8 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
         <div className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden ">
 
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full ">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <table className="w-full">
+                    <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
                             <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.fileName} onResize={handleResize} className=" sticky left-0 bg-primary-light dark:bg-gray-900 z-30 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]" />
                             <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.fileType} onResize={handleResize} />

@@ -1006,7 +1006,7 @@ export async function createContentDistribution(
     }
 
     const payload = {
-      Name: "Public File",
+      Name: `Public_Access_${contentVersionId}`,
       ContentVersionId: contentVersionId,
       PreferencesAllowOriginalDownload: true,
       PreferencesAllowViewInBrowser: true,
@@ -1040,10 +1040,10 @@ export async function createContentDistribution(
   }
 }
 
-// Get public distribution URL from distribution ID
+// Get public distribution URLs from distribution ID
 export async function getPublicDistributionUrl(
   distributionId: string
-): Promise<string | null> {
+): Promise<{ previewUrl: string; downloadUrl: string } | null> {
   try {
     const session = await getSalesforceSession();
 
@@ -1069,37 +1069,84 @@ export async function getPublicDistributionUrl(
     }
 
     const result = await response.json();
-    console.log('ContentDistribution URL:', result.DistributionPublicUrl);
-    return result.DistributionPublicUrl;
+    console.log('ContentDistribution URLs - Preview:', result.DistributionPublicUrl, 'Download:', result.ContentDownloadUrl);
+    
+    return {
+      previewUrl: result.DistributionPublicUrl,
+      downloadUrl: result.ContentDownloadUrl
+    };
   } catch (error) {
     console.error('Error getting public distribution URL:', error);
     return null;
   }
 }
 
-// Get file preview URL - creates ContentDistribution and returns public URLs
+// Get file preview and download URLs - creates ContentDistribution and returns public URLs
 export async function getFileUrl(
-  contentVersionId: string
-): Promise<{ previewUrl: string; } | null> {
+  id: string
+): Promise<{ previewUrl: string; downloadUrl: string; } | null> {
   try {
+    const session = await getSalesforceSession();
+    if (!session.accessToken) return null;
+
+    let contentVersionId = id;
+
+    // Check if the ID is a ContentDocumentLink ID (starts with 06A)
+    if (id.startsWith('06A')) {
+      const query = `SELECT ContentDocumentId FROM ContentDocumentLink WHERE Id = '${id}'`;
+      const response = await fetch(
+        `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`,
+        {
+          headers: { 'Authorization': `Bearer ${session.accessToken}` }
+        }
+      );
+      if (response.ok) {
+        const result = await response.json();
+        if (result.records && result.records.length > 0) {
+          id = result.records[0].ContentDocumentId; // Fall through to 069 check
+          contentVersionId = id;
+        }
+      }
+    }
+
+    // Check if the ID is a ContentDocument ID (starts with 069)
+    if (id.startsWith('069')) {
+      const query = `SELECT LatestPublishedVersionId FROM ContentDocument WHERE Id = '${id}'`;
+      const response = await fetch(
+        `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`,
+        {
+          headers: { 'Authorization': `Bearer ${session.accessToken}` }
+        }
+      );
+      if (response.ok) {
+        const result = await response.json();
+        if (result.records && result.records.length > 0) {
+          contentVersionId = result.records[0].LatestPublishedVersionId;
+        }
+      }
+    }
+
+    console.log('getFileUrl for ID:', id, 'resolved to ContentVersionId:', contentVersionId);
+
     // Step 1: Create ContentDistribution
     const distributionId = await createContentDistribution(contentVersionId);
     if (!distributionId) {
-      console.error('Failed to create ContentDistribution');
+      console.error('Failed to create ContentDistribution for:', contentVersionId);
       return null;
     }
     // Step 2: Get public URL
-    const publicUrl = await getPublicDistributionUrl(distributionId);
+    const urls = await getPublicDistributionUrl(distributionId);
 
-    if (!publicUrl) {
-      console.error('Failed to get public URL');
+    if (!urls) {
+      console.error('Failed to get public URLs for distribution:', distributionId);
       return null;
     }
 
-    return { previewUrl: publicUrl };
+    console.log('getFileUrl success:', urls);
+    return urls;
 
   } catch (error) {
-    console.error('Error getting file preview URL:', error);
+    console.error('Error in getFileUrl:', error);
     return null;
   }
 }

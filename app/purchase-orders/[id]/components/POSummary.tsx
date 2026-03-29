@@ -70,7 +70,7 @@ export default function POSummary({
                 </div>
                 <div className="p-8">
                     <button
-                        onClick={() => { }}
+                        onClick={handleDownloadPDF}
                         className="w-full flex items-center justify-center gap-2 px-3 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:text-white dark:hover:border-primary transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed truncate"
                         title="Download PDF"
                     >

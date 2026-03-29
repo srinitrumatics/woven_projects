@@ -93,14 +93,18 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
                 `/api/salesforce/orders?action=${action}&contentVersionId=${encodeURIComponent(contentVersionId)}&accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&orderId=${poId}&objectName=Supplier_Bill_Line__c`
             );
 
-            if (!res.ok) throw new Error("Failed to get URL");
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                throw new Error(errorData.error || "Failed to get URL");
+            }
 
             const result = await res.json();
-            let url = result?.previewUrl || result?.downloadUrl;
+            let url = action === 'download' ? (result?.downloadUrl || result?.previewUrl) : (result?.previewUrl || result?.downloadUrl);
 
             if (!url) throw new Error("URL missing from response");
 
-            if (action === 'download' && !url.includes('download=1')) {
+            // For some Salesforce URLs, we might still need the download=1 for the preview landing page if downloadUrl is missing
+            if (action === 'download' && !result?.downloadUrl && !url.includes('download=1')) {
                 url += (url.includes('?') ? '&' : '?') + 'download=1';
             }
 
@@ -109,10 +113,10 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
             } else {
                 window.open(url, '_blank', 'noopener');
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(`${action} error:`, err);
             if (win) win.close();
-            alert(`Failed to ${action} file`);
+            alert(`Failed to ${action} file: ${err.message || 'Unknown error'}`);
         } finally {
             if (action === 'download') {
                 setDownloadingIds(prev => {
@@ -139,8 +143,8 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate" title={`Files (${files.length})`}>Files ({files.length})</h3>
             </div>
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <table className="w-full">
+                    <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
                             <SortableHeader
                                 label="File Name"
@@ -183,15 +187,7 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
                                 width={columnWidths.uploadedDate}
                                 onResize={handleResize}
                             />
-                            <SortableHeader
-                                label="Action"
-                                field="action"
-                                sortConfig={sortConfig}
-                                requestSort={requestSort}
-                                width={columnWidths.action}
-                                onResize={handleResize}
-
-                            />
+                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: columnWidths.action }}>Action</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

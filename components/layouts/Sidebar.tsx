@@ -21,7 +21,7 @@ interface NavigationItem {
 
 const navigation: NavigationItem[] = [
   {
-    name: "Dashboard", href: "/dashboard", icon: (
+    name: "Program 360", href: "/dashboard", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
       </svg>
@@ -33,6 +33,13 @@ const navigation: NavigationItem[] = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
       </svg>
     ), permissions: ["product-list"]
+  },
+  {
+    name: "Inventory", href: "/inventory", icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+      </svg>
+    ), permissions: ["inventory-list"]
   },
   {
     name: "Orders", href: "/orders", icon: (
@@ -56,13 +63,6 @@ const navigation: NavigationItem[] = [
     ), permissions: ["quote-list"]
   },
   {
-    name: "Invoices", href: "/invoices", icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
-      </svg>
-    ), permissions: ["invoices"]
-  },
-  {
     name: "Purchase Orders", href: "/purchase-orders", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -84,11 +84,19 @@ const navigation: NavigationItem[] = [
     ), permissions: ["shipment-list"]
   },
   {
-    name: "Inventory", href: "/inventory", icon: (
+    name: "Invoices", href: "/invoices", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
       </svg>
-    ), permissions: ["inventory-list"]
+    ), permissions: ["invoices"]
+  },
+  {
+    name: "Locations", href: "/admin/authorize-locations", icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ), permissions: ["organization-management"]
   },
   {
     name: "Reports", href: "/reports", icon: (
@@ -125,14 +133,6 @@ const navigation: NavigationItem[] = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
       </svg>
     ), permissions: ["permission-management"]
-  },
-  {
-    name: "Authorize Location", href: "/admin/authorize-locations", icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-    ), permissions: ["organization-management"]
   },
 ];
 
@@ -177,7 +177,7 @@ export default function Sidebar({ children }: SidebarProps) {
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 min-w-0">
           {!isCollapsed && (
             <Link href="/dashboard" className="flex items-center">
-              <span className="text-2xl font-bold text-primary dark:text-primary">WOVN</span>
+              <span className="text-2xl font-bold text-primary dark:text-primary">GTH</span>
             </Link>
           )}
           <button
@@ -212,6 +212,9 @@ export default function Sidebar({ children }: SidebarProps) {
               const isActive = pathname === item.href;
               return (
                 <li key={item.name}>
+                  {item.name === "Admin" && (
+                    <div className="my-4 border-t border-gray-200 dark:border-gray-700 mx-3" />
+                  )}
                   <Link
                     href={item.href}
                     className={`flex items-center px-3 py-2 rounded-lg transition-colors group ${isActive
@@ -267,7 +270,7 @@ export default function Sidebar({ children }: SidebarProps) {
       >
         <div className="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
           <Link href="/dashboard" className="flex items-center">
-            <span className="text-xl font-bold text-primary dark:text-primary">WOVN</span>
+            <span className="text-xl font-bold text-primary dark:text-primary">GTH</span>
           </Link>
           <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="p-2">
             <XMarkIcon className="h-6 w-6 text-gray-600" />
@@ -288,6 +291,9 @@ export default function Sidebar({ children }: SidebarProps) {
 
               return (
                 <li key={item.name}>
+                  {item.name === "Admin" && (
+                    <div className="my-4 border-t border-gray-200 dark:border-gray-700 mx-3" />
+                  )}
                   <Link
                     href={item.href}
                     onClick={() => setMobileOpen(false)}

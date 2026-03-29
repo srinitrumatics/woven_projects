@@ -130,13 +130,13 @@ export default function SupplierBillDetailPage() {
                 // 3. Fetch files
                 const filesRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&objectName=Supplier_Bill__c&action=files`);
                 const filesData = await filesRes.json();
-                setFiles(filesData.map((f: any) => ({
-                    id: f.ContentVersionId,
-                    fileName: f.Title,
-                    fileType: f.FileType,
-                    sizeInBytes: f.ContentSize,
-                    uploadedBy: f.CreatedBy,
-                    uploadedDate: f.CreatedDate
+                setFiles((filesData || []).map((f: any) => ({
+                    id: f.ContentVersionId || f.Id,
+                    fileName: f.Title || f.Name || '',
+                    fileType: (f.FileType || f.FileExtension || '').toUpperCase(),
+                    sizeInBytes: f.ContentSize || f.Size || 0,
+                    uploadedBy: f.CreatedBy || f.OwnerName || '',
+                    uploadedDate: f.CreatedDate || ''
                 })));
 
                 // 4. Fetch Payments and Debits
@@ -257,6 +257,10 @@ export default function SupplierBillDetailPage() {
             </Sidebar>
         );
     }
+
+    const handleDownloadPDF = () => {
+        alert("Downloading Supplier Bill PDF...");
+    };
 
     return (
         <Sidebar>

@@ -93,14 +93,18 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                 `/api/purchase-orders?action=${action}&contentVersionId=${encodeURIComponent(contentVersionId)}&accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&objectName=Purchase_Order__c`
             );
 
-            if (!res.ok) throw new Error("Failed to get URL");
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                throw new Error(errorData.error || "Failed to get URL");
+            }
 
             const result = await res.json();
-            let url = result?.previewUrl || result?.downloadUrl;
+            let url = action === 'download' ? (result?.downloadUrl || result?.previewUrl) : (result?.previewUrl || result?.downloadUrl);
 
             if (!url) throw new Error("URL missing from response");
 
-            if (action === 'download' && !url.includes('download=1')) {
+            // For some Salesforce URLs, we might still need the download=1 for the preview landing page if downloadUrl is missing
+            if (action === 'download' && !result?.downloadUrl && !url.includes('download=1')) {
                 url += (url.includes('?') ? '&' : '?') + 'download=1';
             }
 
@@ -109,10 +113,10 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
             } else {
                 window.open(url, '_blank', 'noopener');
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(`${action} error:`, err);
             if (win) win.close();
-            alert(`Failed to ${action} file`);
+            alert(`Failed to ${action} file: ${err.message || 'Unknown error'}`);
         } finally {
             if (action === 'download') {
                 setDownloadingIds(prev => {
@@ -135,12 +139,10 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 min-w-0">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate" title={`Files (${files.length})`}>Files ({files.length})</h3>
-            </div>
+
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <table className="w-full">
+                    <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
                             <SortableHeader
                                 label="File Name"
@@ -149,7 +151,6 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 requestSort={requestSort}
                                 width={columnWidths.fileName}
                                 onResize={handleResize}
-                                className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30"
                             />
                             <SortableHeader
                                 label="Type"
@@ -183,14 +184,14 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.uploadedDate}
                                 onResize={handleResize}
                             />
-                            <th className="px-3 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white  truncate">Action</th>
+                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white  truncate">Action</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((file) => (
                             <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={file.fileName}>
-                                    <div className="flex items-center gap-3 truncate min-w-0">
+                                    <div className="flex items-center gap-3 truncate">
                                         {getFileIcon(file.fileType)}
                                         {file.fileName}
                                     </div>

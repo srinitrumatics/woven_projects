@@ -15,7 +15,7 @@ export default function SupplierBillHeader({ billNumber, status, supplierName, o
             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6 min-w-0">
                 <button onClick={onBack} className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Supplier Bills</button>
                 <span> &gt;</span>
-                <span className="hover:text-gray-700 dark:text-gray-300 truncate" title="View Supplier Bill">View Supplier Bill</span>
+                <span className="hover:text-gray-700 dark:text-gray-300 truncate" title="Supplier Bill Details">Supplier Bill Details</span>
                 <span> &gt;</span>
                 <span className="text-gray-900 dark:text-white truncate" title={billNumber}>{billNumber}</span>
             </div>
@@ -29,7 +29,7 @@ export default function SupplierBillHeader({ billNumber, status, supplierName, o
                             </svg>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title={billNumber}>{billNumber}</h2>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title={billNumber}>{billNumber}</h1>
                             <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1" title={supplierName} >
                                 {supplierName} • Supplier Bill Details
                             </div>
