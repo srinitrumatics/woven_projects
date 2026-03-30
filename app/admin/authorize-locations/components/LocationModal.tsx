@@ -108,7 +108,7 @@ export default function LocationModal({
         setFormData(prev => ({ ...prev, [name]: val }));
     };
 
-    const title = mode === "add" ? "Add Authorize Location" : mode === "edit" ? "Edit Authorize Location" : "View Authorize Location";
+    const title = mode === "add" ? "Add Location Details" : mode === "edit" ? "Edit Location Details" : "Location Details";
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>

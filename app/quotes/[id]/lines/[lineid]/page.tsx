@@ -300,7 +300,7 @@ export default function QuoteLineDetailPage({
                             <span>&gt;</span>
                             <Link href={`/quotes/${id}`} className="hover:underline truncate">Quote Details</Link>
                             <span>&gt;</span>
-                            <span className="text-gray-900 font-medium truncate">{product.lineName}</span>
+                            <span className="text-gray-900 font-medium truncate">Quote Line</span>
                         </div>
                         <div className="flex flex-col min-w-0">
                             <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={product.lineName}>{product.lineName}</h1>

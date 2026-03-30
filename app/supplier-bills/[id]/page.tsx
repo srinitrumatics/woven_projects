@@ -15,6 +15,7 @@ import SupplierBillFilesTable from './components/SupplierBillFilesTable';
 import SupplierBillPaymentsTab from './components/SupplierBillPaymentsTab';
 import SupplierBillDebitsTab from './components/SupplierBillDebitsTab';
 import { SupplierBill, SupplierBillLine, BillPayment, AppliedDebitMemo, DebitMemo } from '../types';
+import { StatusBadge, RemittanceBadge } from './components/Badges';
 
 export default function SupplierBillDetailPage() {
     const params = useParams();
@@ -266,7 +267,7 @@ export default function SupplierBillDetailPage() {
         <Sidebar>
             <SupplierBillHeader
                 billNumber={bill.name}
-                status={bill.status}
+                status={<StatusBadge status={bill.status} />}
                 supplierName={bill.supplierName}
                 onBack={() => router.push('/supplier-bills')}
             />
@@ -289,7 +290,10 @@ export default function SupplierBillDetailPage() {
                     </div>
                 </div>
                 <div className="w1025:col-span-3">
-                    <SupplierBillSummary bill={bill} />
+                    <SupplierBillSummary
+                        bill={bill}
+                        remittanceStatusNode={<RemittanceBadge status={bill.remittanceStatus || 'Pending'} />}
+                    />
                 </div>
             </div>
 
@@ -323,7 +327,7 @@ export default function SupplierBillDetailPage() {
                     onClick={() => router.push('/supplier-bills')}
                     className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
                 >
-                    Back to Supplier Bills
+                    Cancel
                 </button>
                 <div className="flex items-center gap-3 min-w-0">
 

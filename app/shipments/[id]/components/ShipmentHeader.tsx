@@ -32,6 +32,8 @@ export default function ShipmentHeader({ name, status, onBack }: ShipmentHeaderP
                     Shipments
                 </button>
                 <span>&gt;</span>
+                <span className="hover:text-gray-700 dark:text-gray-300 truncate">Shipment Details</span>
+                <span>&gt;</span>
                 <span className="text-gray-900 dark:text-white truncate">{name}</span>
             </div>
 

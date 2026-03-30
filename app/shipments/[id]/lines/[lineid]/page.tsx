@@ -173,9 +173,9 @@ export default function ShipmentLineDetailPage({
                         <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1 min-w-0">
                             <span>Shipping Manifest</span>
                             <span>&gt;</span>
-                            <Link href={`/shipments/${id}`} className="hover:underline truncate">Shipping Manifest Line</Link>
+                            <Link href={`/shipments/${id}`} className="hover:underline truncate">Shipment Details</Link>
                             <span>&gt;</span>
-                            <span className="text-gray-900 dark:text-white font-medium truncate">{product.Name}</span>
+                            <span className="text-gray-900 dark:text-white font-medium truncate">Shipment Line</span>
                         </div>
                         <div className="flex flex-col min-w-0">
                             <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={product.Name}>{product.Name}</h1>

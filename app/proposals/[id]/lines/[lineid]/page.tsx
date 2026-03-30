@@ -486,7 +486,7 @@ export default function ProposalProductDetailPage({
                         <span>&gt;</span>
                         <button className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Proposal Details</button>
                         <span>&gt;</span>
-                        <span className="text-gray-900 dark:text-white truncate">Product Details</span>
+                        <span className="text-gray-900 dark:text-white truncate">Proposed Product</span>
                     </div>
                     <div className="flex items-center justify-between min-w-0">
                         <div className="flex items-center gap-4 min-w-0">

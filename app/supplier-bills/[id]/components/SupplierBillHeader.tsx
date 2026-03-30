@@ -4,7 +4,7 @@ import React from 'react';
 
 interface SupplierBillHeaderProps {
     billNumber: string;
-    status: string;
+    status: React.ReactNode;
     supplierName: string;
     onBack: () => void;
 }
@@ -37,13 +37,7 @@ export default function SupplierBillHeader({ billNumber, status, supplierName, o
                     </div>
 
                     <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end min-w-0">
-                        <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold ${
-                            status === 'Draft' ? 'bg-blue-100/80 text-blue-700 border-blue-200 dark:bg-blue-900/30' :
-                            status === 'Approved' ? 'bg-green-100/80 text-green-700 border-green-200 dark:bg-green-900/30' :
-                            'bg-gray-100/80 text-gray-700 border-gray-200 dark:bg-gray-900/30'
-                            }`} title={status}>
-                            {status}
-                        </span>
+                        {status}
                     </div>
                 </div>
             </div>

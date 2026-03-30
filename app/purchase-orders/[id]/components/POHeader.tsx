@@ -15,7 +15,7 @@ export default function POHeader({ poNumber, status, supplierName, onBack }: POH
             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6 min-w-0">
                 <button onClick={onBack} className="hover:text-gray-700 dark:hover:text-gray-300 shrink-0 truncate" title="Purchase Orders">Purchase Orders</button>
                 <span className="shrink-0 truncate"> &gt;</span>
-                <span className="hover:text-gray-700 dark:text-gray-300 shrink-0 truncate" title="View Purchase Order">View Purchase Order</span>
+                <span className="hover:text-gray-700 dark:text-gray-300 shrink-0 truncate" title="View Purchase Order">Purchase Order Details</span>
                 <span className="shrink-0 truncate"> &gt;</span>
                 <span className="text-gray-900 dark:text-white truncate" title={poNumber}>{poNumber}</span>
             </div>

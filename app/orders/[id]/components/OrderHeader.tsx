@@ -20,7 +20,7 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2 min-w-0">
                 <button onClick={() => router.push("/orders")} className="hover:text-gray-700 dark:hover:text-gray-300">Orders</button>
                 <span>&gt;</span>
-                <span className="hover:text-gray-700 dark:text-gray-300 truncate">Edit Order</span>
+                <span className="hover:text-gray-700 dark:text-gray-300 truncate">Order Details</span>
                 <span>&gt;</span>
                 <span className="text-gray-900 dark:text-white truncate" title={name || id}>{name || id}</span>
             </div>

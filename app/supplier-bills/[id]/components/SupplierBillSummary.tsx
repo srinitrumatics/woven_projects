@@ -4,11 +4,13 @@ import { formatCurrency } from "@/lib/utils/formatting";
 
 interface SupplierBillSummaryProps {
     bill: SupplierBill;
+    remittanceStatusNode?: React.ReactNode;
     className?: string;
 }
 
 export default function SupplierBillSummary({
     bill,
+    remittanceStatusNode,
     className = ""
 }: SupplierBillSummaryProps) {
     return (
@@ -54,9 +56,11 @@ export default function SupplierBillSummary({
 
                     {/* Remittance Section */}
                     <div className="space-y-3 pt-4 border-t border-gray-300 dark:border-white-900/40">
-                        <div className="flex justify-between text-sm">
+                        <div className="flex justify-between text-sm items-center">
                             <span className="text-gray-600 dark:text-gray-400 truncate">Remittance Status</span>
-                            <span className="text-gray-900 dark:text-white font-medium truncate">{bill.remittanceStatus || 'Pending'}</span>
+                            <span className="text-gray-900 dark:text-white font-medium truncate">
+                                {remittanceStatusNode || bill.remittanceStatus || 'Pending'}
+                            </span>
                         </div>
                         <div className="flex justify-between text-sm">
                             <span className="text-gray-600 dark:text-gray-400 truncate">Amount Paid</span>

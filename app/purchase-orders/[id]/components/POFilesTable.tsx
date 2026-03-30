@@ -25,19 +25,31 @@ const ITEMS_PER_PAGE = 10;
 
 export default function POFilesTable({ files, poId }: POFilesTableProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<POFile>(files);
+
+    const filteredData = useMemo(() => {
+        if (!searchQuery) return files;
+        const query = searchQuery.toLowerCase();
+        return files.filter(f =>
+            f.fileName.toLowerCase().includes(query) ||
+            f.fileType.toLowerCase().includes(query) ||
+            f.uploadedBy.toLowerCase().includes(query)
+        );
+    }, [files, searchQuery]);
+
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<POFile>(filteredData);
 
     const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
     const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
 
     const initialWidths = {
         fileName: 300,
-        fileType: 120,
-        sizeInBytes: 120,
-        uploadedBy: 180,
-        uploadedDate: 150,
-        action: 100
+        fileType: 200,
+        sizeInBytes: 180,
+        uploadedBy: 220,
+        uploadedDate: 190,
+        action: 180
     };
 
     const { widths: columnWidths, handleResize } = useResizableColumns(initialWidths);
@@ -184,20 +196,17 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.uploadedDate}
                                 onResize={handleResize}
                             />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white  truncate">Action</th>
+                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white  truncate">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((file) => (
                             <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={file.fileName}>
-                                    <div className="flex items-center gap-3 truncate">
-                                        {getFileIcon(file.fileType)}
-                                        {file.fileName}
-                                    </div>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={file.fileName}>
+                                    {file.fileName}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>
-                                    {file.fileType}
+                                    {file.fileType.toLowerCase()}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatFileSize(file.sizeInBytes)}>
                                     {formatFileSize(file.sizeInBytes)}
@@ -205,8 +214,8 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>
                                     {file.uploadedBy}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? formatDate(file.uploadedDate) : '-'}>
-                                    {file.uploadedDate ? formatDate(file.uploadedDate) : '-'}
+                                <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? file.uploadedDate.split('T')[0] : '-'}>
+                                    {file.uploadedDate ? file.uploadedDate.split('T')[0] : '-'}
                                 </td>
                                 <td className="px-3 py-2 truncate">
                                     <div className="flex items-center gap-3 min-w-0">
@@ -223,7 +232,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                         <button
                                             onClick={() => handleAction(file, 'download')}
                                             disabled={downloadingIds.has(file.id)}
-                                            className={`${downloadingIds.has(file.id) ? 'text-gray-400 cursor-wait' : 'text-primary hover:text-primary-dark'} transition-colors`}
+                                            className={`${downloadingIds.has(file.id) ? 'text-gray-400 cursor-wait' : 'text-blue-600 hover:text-blue-800'} transition-colors`}
                                             title="Download"
                                         >
                                             {downloadingIds.has(file.id) ? (

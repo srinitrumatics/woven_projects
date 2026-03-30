@@ -208,7 +208,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
           onClick={() => router.push("/shipments")}
           className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
         >
-          Back to Shipments
+          Cancel
         </button>
       </div>
 

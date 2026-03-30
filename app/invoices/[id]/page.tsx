@@ -240,7 +240,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
             onClick={handleBack}
             className="mt-4 text-primary hover:underline truncate"
           >
-            Back to Invoices
+            Cancel
           </button>
         </div>
       </Sidebar>
@@ -355,7 +355,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
             onClick={handleBack}
             className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium truncate"
           >
-            Back to Invoices
+            Cancel
           </button>
         </div>
       </div>

@@ -177,9 +177,9 @@ export default function SupplierBillLineDetailPage({
                     <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1 min-w-0">
                         <Link href="/supplier-bills" className="hover:text-primary truncate">Supplier Bills</Link>
                         <span>&gt;</span>
-                        <Link href={`/supplier-bills/${id}`} className="hover:text-primary truncate">Supplier Bill Line</Link>
+                        <Link href={`/supplier-bills/${id}`} className="hover:text-primary truncate">Supplier Bill Details</Link>
                         <span>&gt;</span>
-                        <span className="text-gray-900 dark:text-white truncate" title={line.name}>{line.name}</span>
+                        <span className="text-gray-900 dark:text-white truncate" title={line.name}>Supplier Bill Line</span>
                     </div>
 
                     <div className="flex items-center justify-between min-w-0">
@@ -191,7 +191,7 @@ export default function SupplierBillLineDetailPage({
                         <div className="flex items-center gap-2 min-w-0">
                             <Link href={`/supplier-bills/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2 truncate">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                                Back to SB
+                                Back to Supplier Bill
                             </Link>
                         </div>
                     </div>
@@ -199,9 +199,7 @@ export default function SupplierBillLineDetailPage({
                         <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded truncate">
                             Line {lineNumber} of {totalLines}
                         </span>
-                        <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-bold rounded text-[10px] uppercase tracking-wider truncate" title={line.status === "Approved" ? "Awarded" : line.status}>
-                            {line.status === "Approved" ? "Awarded" : line.status}
-                        </span>
+                        <StatusBadge status={line.status === "Approved" ? "Awarded" : line.status} />
                     </div>
                 </div>
 
@@ -447,5 +445,31 @@ function InfoField({ label, value, highlight = false }: { label: string, value: 
                 title={String(value || "")}
             />
         </div>
+    );
+}
+
+function StatusBadge({ status }: { status: string }) {
+    const getStyles = () => {
+        switch (status) {
+            case "Approved":
+            case "Awarded":
+            case "Paid":
+                return "bg-green-100/80 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50";
+            case "Pending":
+                return "bg-yellow-100/80 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800/50";
+            case "Draft":
+                return "bg-blue-100/80 text-blue-600 border-blue-200 dark:bg-blue-700 dark:text-blue-300 dark:border-blue-600/50";
+            case "Cancelled":
+            case "Closed":
+                return "bg-red-100/80 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50";
+            default:
+                return "bg-gray-100/80 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800/50";
+        }
+    };
+
+    return (
+        <span className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-bold border ${getStyles()}`}>
+            {status}
+        </span>
     );
 }

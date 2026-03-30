@@ -43,13 +43,7 @@ export default function LineHeader({
                     Orders
                 </button>
                 <span>&gt;</span>
-                <button
-                    onClick={() => router.push(`/orders/${id}`)}
-                    className="hover:text-gray-700 dark:hover:text-gray-300 truncate max-w-[200px]"
-                    title={orderName || `Order #${id}`}
-                >
-                    {orderName || `Order #${id}`}
-                </button>
+                <span className="hover:text-gray-700 dark:text-gray-300 truncate">Order Line</span>
                 <span>&gt;</span>
                 <span className="text-gray-900 dark:text-white truncate max-w-[200px]" title={productSku || `Line #${lineId}`}>
                     {productSku || `Line #${lineId}`}
