@@ -1127,14 +1127,37 @@ export async function getFileUrl(
     }
 
     console.log('getFileUrl for ID:', id, 'resolved to ContentVersionId:', contentVersionId);
+    
+    // Step 1: Check if an active ContentDistribution already exists
+    const existingDistQuery = `SELECT Id, DistributionPublicUrl, ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = '${contentVersionId}' AND IsDeleted = false LIMIT 1`;
+    const distResponse = await fetch(
+      `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(existingDistQuery)}`,
+      {
+        headers: { 'Authorization': `Bearer ${session.accessToken}` }
+      }
+    );
+    
+    if (distResponse.ok) {
+      const distResult = await distResponse.json();
+      if (distResult.records && distResult.records.length > 0) {
+        const existing = distResult.records[0];
+        if (existing.DistributionPublicUrl || existing.ContentDownloadUrl) {
+          console.log('getFileUrl: Reusing existing ContentDistribution:', existing.Id);
+          return {
+            previewUrl: existing.DistributionPublicUrl,
+            downloadUrl: existing.ContentDownloadUrl
+          };
+        }
+      }
+    }
 
-    // Step 1: Create ContentDistribution
+    // Step 2: Create ContentDistribution if not found
     const distributionId = await createContentDistribution(contentVersionId);
     if (!distributionId) {
       console.error('Failed to create ContentDistribution for:', contentVersionId);
       return null;
     }
-    // Step 2: Get public URL
+    // Step 3: Get public URL for the newly created distribution
     const urls = await getPublicDistributionUrl(distributionId);
 
     if (!urls) {

@@ -47,7 +47,7 @@ export default function ProtectedPageWrapper({
               You don't have permission to access this resource.
             </p>
             <button 
-              onClick={() => router.push('/dashboard')}
+              onClick={() => router.push('/program360')}
               className="inline-block px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
             >
               Go to Dashboard

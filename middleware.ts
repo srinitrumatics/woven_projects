@@ -97,7 +97,7 @@ export async function middleware(request: NextRequest) {
 // Check if a route requires authentication
 function isProtectedRoutePath(pathname: string): boolean {
   const protectedRoutes = [
-    '/dashboard',
+    '/program360',
     '/admin',
     '/admin/users',
     '/admin/roles',

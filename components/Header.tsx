@@ -169,7 +169,7 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                               // Properly handle existing query parameters
                               const currentUrl = new URL(window.location.href);
                               currentUrl.searchParams.set('organizationId', org.id.toString());
-                              window.location.href = '/dashboard';
+                              window.location.href = '/program360';
                             } catch (error) {
                               console.error('Error switching organization:', error);
                             }

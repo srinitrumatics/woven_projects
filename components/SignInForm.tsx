@@ -15,7 +15,7 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
   const [error, setError] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnUrl = searchParams?.get('return') || '/dashboard';
+  const returnUrl = searchParams?.get('return') || '/program360';
   const { login } = useUserSession();
 
   const handleSignUpClick = () => {

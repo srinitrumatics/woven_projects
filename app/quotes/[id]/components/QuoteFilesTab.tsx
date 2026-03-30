@@ -69,6 +69,9 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
 
         setDownloadingIds(prev => new Set(prev).add(file.id));
 
+        const win = window.open('', '_blank');
+        if (win) win.document.write('Loading download...');
+
         try {
             const res = await fetch(
                 `/api/salesforce/quotes?action=download&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&quoteId=${encodeURIComponent(quoteId)}&contentVersionId=${encodeURIComponent(contentVersionId)}`
@@ -82,9 +85,14 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
             if (!previewURL) throw new Error("Preview URL missing from API response");
 
             const downloadUrl = addDownloadParam(previewURL);
-            window.open(downloadUrl, '_blank', 'noopener');
+            if (win) {
+                win.location.href = downloadUrl;
+            } else {
+                window.open(downloadUrl, '_blank', 'noopener');
+            }
         } catch (error) {
             console.error("Error downloading file:", error);
+            if (win) win.close();
             alert("Failed to download file");
         } finally {
             setDownloadingIds(prev => {
@@ -103,12 +111,16 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
             return;
         }
 
+        const win = window.open('', '_blank');
+        if (win) win.document.write('Loading preview...');
+
         try {
             const response = await fetch(
                 `/api/salesforce/quotes?action=preview&contentVersionId=${encodeURIComponent(contentVersionId)}&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`
             );
 
             if (!response.ok) {
+                if (win) win.close();
                 alert("Unable to open preview.");
                 return;
             }
@@ -116,13 +128,19 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
             const previewUrl = result?.previewUrl;
 
             if (!previewUrl) {
+                if (win) win.close();
                 alert("Preview URL missing");
                 return;
             }
 
-            window.open(previewUrl, "_blank");
+            if (win) {
+                win.location.href = previewUrl;
+            } else {
+                window.open(previewUrl, "_blank");
+            }
         } catch (err) {
             console.error("Preview error:", err);
+            if (win) win.close();
             alert("Failed to open preview");
         }
     };
