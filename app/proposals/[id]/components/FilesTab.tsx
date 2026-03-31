@@ -204,100 +204,98 @@ export default function FilesTab({
     }
 
     return (
-        <div className="overflow-x-auto p-4">
-            {files.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                    <p className="text-sm truncate" title="There are no files attached to this proposal.">There are no files attached to this proposal.</p>
-                </div>
-            ) : (
-                <table className="w-full table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900">
-                        <tr>
-                            <th className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white w-[50px] truncate">
-                                <input
-                                    type="checkbox"
-                                    className="rounded border-gray-300 text-primary focus:ring-primary truncate"
-                                    checked={selectedFiles.size === files.length && files.length > 0}
-                                    onChange={onSelectAll}
-                                />
-                            </th>
-                            <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} />
-                            <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {files.map(file => (
-                            <tr
-                                key={file.id}
-                                className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer ${selectedFiles.has(file.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}
-                                onClick={() => onFileSelect(file.id)}
-                            >
-                                <td className="px-3 py-2 text-center truncate" onClick={(e) => e.stopPropagation()}>
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
+            <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
+                {files.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                        <p className="text-sm truncate" title="There are no files attached to this proposal.">There are no files attached to this proposal.</p>
+                    </div>
+                ) : (
+                    <table className="w-full border-separate border-spacing-0 table-fixed">
+                        <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                            <tr>
+                                <th className="px-3 py-2 text-center text-xs font-bold text-gray-900 dark:text-white w-[50px] border-b border-gray-100 dark:border-gray-700">
                                     <input
                                         type="checkbox"
-                                        className="rounded border-gray-300 text-primary focus:ring-primary truncate"
-                                        checked={selectedFiles.has(file.id)}
-                                        onChange={() => onFileSelect(file.id)}
+                                        className="rounded border-gray-300 text-primary focus:ring-primary h-3.5 w-3.5"
+                                        checked={selectedFiles.size === files.length && files.length > 0}
+                                        onChange={onSelectAll}
                                     />
-                                </td>
-                                <td className="px-3 py-2 truncate">
-                                    <div className="flex gap-3">
-                                        {getFileIcon(file.fileType)}
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate" title={file.fileName}>{file.fileName}</span>
-                                    </div>
-                                </td>
-                                <td className="px-3 py-2 text-left truncate">
-                                    <span className="text-sm  text-gray-600 dark:text-gray-400 truncate">{file.fileType}</span>
-                                </td>
-                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white truncate">{formatFileSize(file.sizeInBytes)}</td>
-                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white  truncate" title={file.uploadedBy}><div className="text-sm text-gray-900 dark:text-white truncate">{file.uploadedBy}</div></td>
-                                <td className="px-3 py-2 text-left text-sm text-gray-600 dark:text-gray-400  truncate">{file.uploadedDate}</td>
-                                <td className="px-3 py-2 text-left truncate" onClick={(e) => e.stopPropagation()}>
-                                    <div className="flex items-center gap-2 min-w-0">
-                                        {/* View / Preview button */}
-                                        <button
-                                            onClick={() => handlePreview(file)}
-                                            className="p-1 text-blue-600 hover:text-blue-800"
-                                            title="Preview File"
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                        </button>
-                                        {/* Download button */}
-                                        <button
-                                            onClick={() => handleDownload(file)}
-                                            disabled={downloadingIds.has(file.id)}
-                                            className={`p-1 ${downloadingIds.has(file.id) ? 'text-gray-400 cursor-wait' : 'text-primary hover:text-primary-dark'}`}
-                                            title={downloadingIds.has(file.id) ? 'Downloading...' : 'Download'}
-                                        >
-                                            {downloadingIds.has(file.id) ? (
-                                                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                </svg>
-                                            ) : (
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                                </svg>
-                                            )}
-                                        </button>
-                                    </div>
-                                </td>
+                                </th>
+                                <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} />
+                                <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={100} />
+                                <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={100} />
+                                <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={180} />
+                                <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={150} />
+                                <th className="px-3 py-2 text-left text-xs font-bold text-gray-900 dark:text-white w-[100px] border-b border-gray-100 dark:border-gray-700 uppercase tracking-wider">Action</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            {files.map(file => (
+                                <tr
+                                    key={file.id}
+                                    className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors cursor-pointer ${selectedFiles.has(file.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}
+                                    onClick={() => onFileSelect(file.id)}
+                                >
+                                    <td className="px-3 py-2 text-center border-r border-gray-100 dark:border-gray-700" onClick={(e) => e.stopPropagation()}>
+                                        <input
+                                            type="checkbox"
+                                            className="rounded border-gray-300 text-primary focus:ring-primary h-3.5 w-3.5"
+                                            checked={selectedFiles.has(file.id)}
+                                            onChange={() => onFileSelect(file.id)}
+                                        />
+                                    </td>
+                                    <td className="px-3 py-2 truncate">
+                                        <div className="flex items-center gap-3">
+                                            {getFileIcon(file.fileType)}
+                                            <span className="text-sm font-medium text-gray-900 dark:text-white truncate" title={file.fileName}>{file.fileName}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{file.fileType}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatFileSize(file.sizeInBytes)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium" title={file.uploadedBy}>{file.uploadedBy}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{file.uploadedDate}</td>
+                                    <td className="px-3 py-2 truncate" onClick={(e) => e.stopPropagation()}>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => handlePreview(file)}
+                                                className="p-1 text-blue-600 hover:text-blue-800 transition-colors"
+                                                title="Preview File"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                            </button>
+                                            <button
+                                                onClick={() => handleDownload(file)}
+                                                disabled={downloadingIds.has(file.id)}
+                                                className={`p-1 transition-colors ${downloadingIds.has(file.id) ? 'text-gray-400 cursor-wait' : 'text-primary hover:text-primary-dark'}`}
+                                                title={downloadingIds.has(file.id) ? 'Downloading...' : 'Download'}
+                                            >
+                                                {downloadingIds.has(file.id) ? (
+                                                    <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                ) : (
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                    </svg>
+                                                )}
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </div>
         </div>
     );
 }

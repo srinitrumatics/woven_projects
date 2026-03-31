@@ -15,7 +15,7 @@ import SupplierBillFilesTable from './components/SupplierBillFilesTable';
 import SupplierBillPaymentsTab from './components/SupplierBillPaymentsTab';
 import SupplierBillDebitsTab from './components/SupplierBillDebitsTab';
 import { SupplierBill, SupplierBillLine, BillPayment, AppliedDebitMemo, DebitMemo } from '../types';
-import { StatusBadge, RemittanceBadge } from './components/Badges';
+import { StatusBadge, RemittanceBadge } from "@/components/ui/StatusBadge";
 
 export default function SupplierBillDetailPage() {
     const params = useParams();
@@ -56,7 +56,7 @@ export default function SupplierBillDetailPage() {
                         customerQuoteName: b.Customer_Quote_Name || '',
                         customerOrderName: b.Customer_Order_Name || '',
                         proposalName: b.Proposal_Name || '',
-                        supplierName: b.Supplier_Name__c || '',
+                        supplierName: b.Supplier_Name || '',
                         supplierDBA: b.Supplier_DBA__c || '',
                         supplierContact: b.Supplier_Contact__c || '',
                         totalLines: b.Total_Lines__c || 0,
@@ -298,9 +298,9 @@ export default function SupplierBillDetailPage() {
             </div>
 
             {/* Third Row: Tabs and Content */}
-            <div className="mt-8">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 flex flex-col">
-                    <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
+                    <div className="w-full lg:flex-1 min-w-0">
                         <SupplierBillTabs
                             activeTab={activeTab}
                             onTabChange={setActiveTab}
@@ -312,12 +312,12 @@ export default function SupplierBillDetailPage() {
                             }}
                         />
                     </div>
-                    <div className="flex-1 p-6">
-                        {activeTab === 'lines' && <SupplierBillLinesTable lines={lines} />}
-                        {activeTab === 'payments' && <SupplierBillPaymentsTab billPayments={billPayments} appliedDebits={appliedDebits} />}
-                        {activeTab === 'debits' && <SupplierBillDebitsTab debitMemos={debitMemos} />}
-                        {activeTab === 'files' && <SupplierBillFilesTable files={files} billId={id} />}
-                    </div>
+                </div>
+                <div className="p-4">
+                    {activeTab === 'lines' && <SupplierBillLinesTable lines={lines} />}
+                    {activeTab === 'payments' && <SupplierBillPaymentsTab billPayments={billPayments} appliedDebits={appliedDebits} />}
+                    {activeTab === 'debits' && <SupplierBillDebitsTab debitMemos={debitMemos} />}
+                    {activeTab === 'files' && <SupplierBillFilesTable files={files} billId={id} />}
                 </div>
             </div>
 

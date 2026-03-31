@@ -10,6 +10,7 @@ import QuoteLineFulfillmentsTab from "./components/QuoteLineFulfillmentsTab";
 import QuoteLineTaxesTab from "./components/QuoteLineTaxesTab";
 import QuoteLinePurchasesTab from "./components/QuoteLinePurchasesTab";
 import QuoteLineReturnsTab from "./components/QuoteLineReturnsTab";
+import QuoteLineFilesTab from "./components/QuoteLineFilesTab";
 
 // Interface for quote line item from Salesforce
 interface QuoteLineItem {
@@ -115,6 +116,17 @@ interface ProductData {
     vatAmount: number;
 }
 
+interface QuoteLineFile {
+    id: string;
+    fileName: string;
+    fileType: string;
+    fileSize: string;
+    sizeInBytes: number;
+    uploadedDate: string;
+    uploadedBy: string;
+    contentDocumentId: string;
+}
+
 export default function QuoteLineDetailPage({
     params,
 }: {
@@ -131,8 +143,12 @@ export default function QuoteLineDetailPage({
     const [counts, setCounts] = useState({
         fulfillment: 0,
         purchases: 0,
-        returns: 0
+        returns: 0,
+        files: 0
     });
+
+    const [quoteFiles, setQuoteFiles] = useState<QuoteLineFile[]>([]);
+    const [filesLoading, setFilesLoading] = useState(false);
 
     const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
     const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
@@ -212,9 +228,9 @@ export default function QuoteLineDetailPage({
         }
     }, [id, lineid, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
-    // Fetch counts for tabs
+    // Fetch counts and files for tabs
     useEffect(() => {
-        async function fetchCounts() {
+        async function fetchCountsAndFiles() {
             if (!SF_ACCOUNT_ID || !SF_CONTACT_ID || !lineid) return;
 
             try {
@@ -242,17 +258,36 @@ export default function QuoteLineDetailPage({
                     (returnData.Credit_Memo_Line__c?.length || 0) +
                     (returnData.RTV_Line__c?.length || 0) : 0;
 
+                // Fetch files
+                setFilesLoading(true);
+                const filesRes = await fetch(`/api/salesforce/quotes?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&quoteId=${encodeURIComponent(lineid)}&action=files&objectName=Customer_Quote_Line__c`);
+                const filesData = filesRes.ok ? await filesRes.json() : [];
+                const mappedFiles = (filesData || []).map((f: any) => ({
+                    id: f.Id,
+                    fileName: f.Title,
+                    fileType: f.FileExtension,
+                    fileSize: f.ContentSize ? (f.ContentSize / 1024 / 1024).toFixed(2) + ' MB' : '0 MB',
+                    sizeInBytes: f.ContentSize || 0,
+                    uploadedDate: f.CreatedDate,
+                    uploadedBy: f.CreatedBy || "",
+                    contentDocumentId: f.ContentDocumentId
+                }));
+                setQuoteFiles(mappedFiles);
+
                 setCounts({
                     fulfillment: fulfillCount,
                     purchases: purchaseCount,
-                    returns: returnCount
+                    returns: returnCount,
+                    files: mappedFiles.length
                 });
             } catch (error) {
-                console.error("Error fetching tab counts:", error);
+                console.error("Error fetching tab counts and files:", error);
+            } finally {
+                setFilesLoading(false);
             }
         }
 
-        fetchCounts();
+        fetchCountsAndFiles();
     }, [lineid, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
     const product = quoteLines[currentLineIndex];
@@ -543,7 +578,8 @@ export default function QuoteLineDetailPage({
                         },
                         { id: "fulfillment", label: "Fulfillment", count: counts.fulfillment },
                         { id: "purchases", label: "Purchases", count: counts.purchases },
-                        { id: "returns", label: "Returns", count: counts.returns }
+                        { id: "returns", label: "Returns", count: counts.returns },
+                        { id: "files", label: "Files", count: counts.files }
                     ].map((tab) => (
                         <button
                             key={tab.id}
@@ -590,6 +626,16 @@ export default function QuoteLineDetailPage({
                             loading={false}
                             accountId={SF_ACCOUNT_ID}
                             contactId={SF_CONTACT_ID}
+                        />
+                    )}
+
+                    {activeTab === 'files' && (
+                        <QuoteLineFilesTab
+                            lineId={lineid}
+                            accountId={SF_ACCOUNT_ID}
+                            contactId={SF_CONTACT_ID}
+                            files={quoteFiles}
+                            loading={filesLoading}
                         />
                     )}
                 </div>

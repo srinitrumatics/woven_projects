@@ -1,17 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
-import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import QuoteLineRMALinesSubTab from "./QuoteLineRMALinesSubTab";
+import QuoteLineCreditMemoLinesSubTab from "./QuoteLineCreditMemoLinesSubTab";
+import QuoteLineRTVLinesSubTab from "./QuoteLineRTVLinesSubTab";
+import QuoteLineDebitMemoLinesSubTab from "./QuoteLineDebitMemoLinesSubTab";
 
 interface DebitMemoLine {
     id: string;
     lineName: string;
     status: string;
     debitMemoName: string;
+    debitMemoId: string;
     purchaseOrderLine: string;
+    purchaseOrderLineId: string;
     customerQuoteLine: string;
+    customerQuoteLineId: string;
     supplierBillLine: string;
+    supplierBillLineId: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -27,8 +33,11 @@ interface RTVLine {
     lineName: string;
     status: string;
     rtvName: string;
+    rtvId: string;
     purchaseOrderLine: string;
+    purchaseOrderLineId: string;
     customerQuoteLine: string;
+    customerQuoteLineId: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -43,9 +52,13 @@ interface CreditMemoLine {
     lineName: string;
     status: string;
     creditMemoName: string;
+    creditMemoId: string;
     salesOrderLine: string;
+    salesOrderLineId: string;
     customerQuoteLine: string;
+    customerQuoteLineId: string;
     invoiceLine: string;
+    invoiceLineId: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -62,8 +75,11 @@ interface RMALine {
     lineName: string;
     status: string;
     rmaName: string;
+    rmaId: string;
     salesOrderLine: string;
+    salesOrderLineId: string;
     customerQuoteLine: string;
+    customerQuoteLineId: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -92,7 +108,7 @@ export default function QuoteLineReturnsTab({
     accountId,
     contactId
 }: QuoteLineReturnsTabProps) {
-    const [activeSubTab, setActiveSubTab] = useState<"DebitMemos" | "RTVs" | "CreditMemos" | "RMAs">("DebitMemos");
+    const [activeSubTab, setActiveSubTab] = useState<"DebitMemos" | "RTVs" | "CreditMemos" | "RMAs">("RMAs");
     const [loading, setLoading] = useState(initialLoading);
     const [dmliData, setDmliData] = useState<DebitMemoLine[]>([]);
     const [rtvlData, setRtvlData] = useState<RTVLine[]>([]);
@@ -120,9 +136,13 @@ export default function QuoteLineReturnsTab({
                             lineName: item.Name,
                             status: item.Status__c,
                             debitMemoName: item.Debit_Memo_Name,
+                            debitMemoId: item.Debit_Memo__c,
                             purchaseOrderLine: item.Purchase_Order_Line_Name,
+                            purchaseOrderLineId: item.Purchase_Order_Line__c,
                             customerQuoteLine: item.Customer_Quote_Line_Name,
+                            customerQuoteLineId: item.Customer_Quote_Line__c,
                             supplierBillLine: item.Supplier_Bill_Line_Name,
+                            supplierBillLineId: item.Supplier_Bill_Line__c,
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
@@ -141,8 +161,11 @@ export default function QuoteLineReturnsTab({
                             lineName: item.Name,
                             status: item.Status__c,
                             rtvName: item.RTV_Name,
+                            rtvId: item.RTV__c,
                             purchaseOrderLine: item.Purchase_Order_Line_Name,
+                            purchaseOrderLineId: item.Purchase_Order_Line__c,
                             customerQuoteLine: item.Customer_Quote_Line_Name,
+                            customerQuoteLineId: item.Customer_Quote_Line__c,
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
@@ -160,9 +183,13 @@ export default function QuoteLineReturnsTab({
                             lineName: item.Name,
                             status: item.Status__c,
                             creditMemoName: item.Credit_Memo_Name,
+                            creditMemoId: item.Credit_Memo__c,
                             salesOrderLine: item.Sales_Order_Line_Name,
+                            salesOrderLineId: item.Sales_Order_Line__c,
                             customerQuoteLine: item.Customer_Quote_Line_Name,
+                            customerQuoteLineId: item.Customer_Quote_Line__c,
                             invoiceLine: item.Invoice_Line_Name,
+                            invoiceLineId: item.Invoice_Line__c,
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
@@ -182,8 +209,11 @@ export default function QuoteLineReturnsTab({
                             lineName: item.Name,
                             status: item.Status__c,
                             rmaName: item.RMA_Name,
+                            rmaId: item.RMA__c,
                             salesOrderLine: item.Sales_Order_Line_Name,
+                            salesOrderLineId: item.Sales_Order_Line__c,
                             customerQuoteLine: item.Customer_Quote_Line_Name,
+                            customerQuoteLineId: item.Customer_Quote_Line__c,
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
@@ -252,7 +282,7 @@ export default function QuoteLineReturnsTab({
         receiptDate: 150
     });
 
-    if (loading) {
+    if (loading && activeData.length === 0) {
         return (
             <div className="flex justify-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -285,192 +315,46 @@ export default function QuoteLineReturnsTab({
 
             {/* Table Area */}
             <div className="bg-white dark:bg-gray-800">
-                <div className="overflow-x-auto">
-                    {sortedData.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                            <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                            <p className="text-sm truncate">There are no {
-                                activeSubTab === "RMAs" ? "RMAs" :
-                                    activeSubTab === "CreditMemos" ? "credit memos" :
-                                        activeSubTab === "RTVs" ? "RTVs" : "debit memos"
-                            } associated with this quote line.</p>
-                        </div>
-                    ) : (
-                        <table className="w-full text-sm">
-                            <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                                <tr>
-                                    <SortableHeader
-                                        label={
-                                            activeSubTab === "DebitMemos" ? "Debit Memo Line" :
-                                                activeSubTab === "RTVs" ? "RTV Line" :
-                                                    activeSubTab === "CreditMemos" ? "Credit Memo Line" : "RMA Line"
-                                        }
-                                        field="lineName"
-                                        sortConfig={sortConfig}
-                                        requestSort={requestSort}
-                                        width={widths.lineName}
-                                        onResize={handleResize}
-                                        className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
-                                    />
-                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-
-                                    {activeSubTab === "RMAs" && (
-                                        <>
-                                            <SortableHeader label="RMA" field="rmaName" sortConfig={sortConfig} requestSort={requestSort} width={widths.rmaName} onResize={handleResize} />
-                                            <SortableHeader label="Sales Order Line" field="salesOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} />
-                                            <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
-                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
-                                            <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
-                                            <SortableHeader label="Reason Code" field="reasonCode" sortConfig={sortConfig} requestSort={requestSort} width={widths.reasonCode} onResize={handleResize} />
-                                            <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
-                                            <SortableHeader label="Return Qty" field="returnQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.returnQty} onResize={handleResize} />
-                                            <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                                            <SortableHeader label="Open Balance Qty" field="openBalanceQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalanceQty} onResize={handleResize} />
-                                            <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} />
-                                            <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={handleResize} />
-                                            <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} />
-                                            <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={handleResize} />
-                                            <SortableHeader label="Goods Receipt Date" field="receiptDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.receiptDate} onResize={handleResize} />
-                                        </>
-                                    )}
-                                    {activeSubTab === "CreditMemos" && (
-                                        <>
-                                            <SortableHeader label="Credit Memo" field="creditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditMemoName} onResize={handleResize} />
-                                            <SortableHeader label="Sales Order Line" field="salesOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} />
-                                            <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
-                                            <SortableHeader label="Invoice Line" field="invoiceLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceLine} onResize={handleResize} />
-                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
-                                            <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
-                                            <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
-                                            <SortableHeader label="Credit Qty" field="creditQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditQty} onResize={handleResize} />
-                                            <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
-                                            <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
-                                            <SortableHeader label="Line Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
-                                        </>
-                                    )}
-
-                                    {activeSubTab === "RTVs" && (
-                                        <>
-                                            <SortableHeader label="RTV" field="rtvName" sortConfig={sortConfig} requestSort={requestSort} width={widths.rtvName} onResize={handleResize} />
-                                            <SortableHeader label="Purchase Order Line" field="purchaseOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderLine} onResize={handleResize} />
-                                            <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
-                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
-                                            <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
-                                            <SortableHeader label="Reason Code" field="reasonCode" sortConfig={sortConfig} requestSort={requestSort} width={widths.reasonCode} onResize={handleResize} />
-                                            <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitCost} onResize={handleResize} />
-                                            <SortableHeader label="Return Qty" field="returnQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.returnQty} onResize={handleResize} />
-                                            <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCost} onResize={handleResize} />
-                                        </>
-                                    )}
-
-                                    {activeSubTab === "DebitMemos" && (
-                                        <>
-                                            <SortableHeader label="Debit Memo" field="debitMemoName" sortConfig={sortConfig} requestSort={requestSort} width={widths.debitMemoName} onResize={handleResize} />
-                                            <SortableHeader label="Purchase Order Line" field="purchaseOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderLine} onResize={handleResize} />
-                                            <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
-                                            <SortableHeader label="Supplier Bill Line" field="supplierBillLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierBillLine} onResize={handleResize} />
-                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
-                                            <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
-                                            <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitCost} onResize={handleResize} />
-                                            <SortableHeader label="Debit Qty" field="debitQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.debitQty} onResize={handleResize} />
-                                            <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCost} onResize={handleResize} />
-                                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
-                                            <SortableHeader label="Line Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
-                                        </>
-                                    )}
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white dark:bg-gray-800">
-                                {sortedData.map((item: any) => (
-                                    <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800">{item.lineName}</td>
-                                        <td className="px-3 py-2 text-sm truncate">
-                                            <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
-                                                {item.status}
-                                            </span>
-                                        </td>
-
-                                        {activeSubTab === "DebitMemos" && (
-                                            <>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.debitMemoName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.purchaseOrderLine}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.supplierBillLine}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[160px] truncate" title={item.description}>{item.description}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.manufacturerDBA}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.unitCost)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.debitQty}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalCost)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
-                                                <td className="px-3 py-2 text-sm text-primary font-bold truncate min-w-[185px]">{formatCurrency(item.grandTotal)}</td>
-                                            </>
-                                        )}
-
-                                        {activeSubTab === "RTVs" && (
-                                            <>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.rtvName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.purchaseOrderLine}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{item.description}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.manufacturerDBA}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.reasonCode}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.unitCost)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.returnQty}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(item.totalCost)}</td>
-                                            </>
-                                        )}
-
-                                        {activeSubTab === "CreditMemos" && (
-                                            <>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.creditMemoName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.salesOrderLine}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.invoiceLine}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{item.description}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.manufacturerDBA}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.unitPrice)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[165px]">{item.creditQty}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(item.totalPrice)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
-                                                <td className="px-3 py-2 text-sm text-primary font-bold truncate min-w-[165px]">{formatCurrency(item.grandTotal)}</td>
-                                            </>
-                                        )}
-
-                                        {activeSubTab === "RMAs" && (
-                                            <>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.rmaName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.salesOrderLine}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{item.description}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[170px]">{item.manufacturerDBA}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.reasonCode}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.unitPrice)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[115px]">{item.returnQty}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalPrice)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[190px]">{item.openBalanceQty}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[170px]">{item.trackingNumber}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[211px]">{formatDate(item.estimatedDeliveryDate, 'numeric-dash')}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[145px]">{item.trackingStatus}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[211px]">{formatDate(item.actualDeliveryDate, 'numeric-dash')}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate min-w-[211px]">{formatDate(item.receiptDate, 'numeric-dash')}</td>
-                                            </>
-                                        )}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
+                {activeSubTab === "RMAs" && (
+                    <QuoteLineRMALinesSubTab
+                        data={rmalData}
+                        loading={loading}
+                        sortConfig={sortConfig}
+                        requestSort={requestSort}
+                        widths={widths}
+                        handleResize={handleResize}
+                    />
+                )}
+                {activeSubTab === "CreditMemos" && (
+                    <QuoteLineCreditMemoLinesSubTab
+                        data={cmliData}
+                        loading={loading}
+                        sortConfig={sortConfig}
+                        requestSort={requestSort}
+                        widths={widths}
+                        handleResize={handleResize}
+                    />
+                )}
+                {activeSubTab === "RTVs" && (
+                    <QuoteLineRTVLinesSubTab
+                        data={rtvlData}
+                        loading={loading}
+                        sortConfig={sortConfig}
+                        requestSort={requestSort}
+                        widths={widths}
+                        handleResize={handleResize}
+                    />
+                )}
+                {activeSubTab === "DebitMemos" && (
+                    <QuoteLineDebitMemoLinesSubTab
+                        data={dmliData}
+                        loading={loading}
+                        sortConfig={sortConfig}
+                        requestSort={requestSort}
+                        widths={widths}
+                        handleResize={handleResize}
+                    />
+                )}
             </div>
         </div>
     );

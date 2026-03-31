@@ -1,6 +1,9 @@
 import { QuoteRTV } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import Link from "next/link";
+import Pagination from "@/components/ui/Pagination";
+import { useState, useMemo } from "react";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -14,6 +17,8 @@ interface QuoteRTVSubTabProps {
     onResize: (field: string, width: number) => void;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 export default function QuoteRTVSubTab({
     rtvs,
     loading,
@@ -23,8 +28,16 @@ export default function QuoteRTVSubTab({
     widths,
     onResize
 }: QuoteRTVSubTabProps) {
+    const [currentPage, setCurrentPage] = useState(1);
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteRTV);
+
+    const paginatedRTVs = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return rtvs.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [rtvs, currentPage]);
+
+    const totalPages = Math.ceil(rtvs.length / ITEMS_PER_PAGE);
 
     if (loading) {
         return (
@@ -35,65 +48,120 @@ export default function QuoteRTVSubTab({
     }
 
     return (
-        <div className="overflow-x-auto py-2">
-            {rtvs.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                    <p className="text-sm truncate" title="There are no RTVs associated with this quote.">There are no RTVs associated with this quote.</p>
-                </div>
-            ) : (
-                <table className="w-full truncate">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                        <tr>
-                            <SortableHeader label="RTV" field="rtvNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.rtvNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
-                            <SortableHeader label="Purchase Order" field="purchaseOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={onResize} align="left" />
-                            <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" />
-                            <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" />
-                            <SortableHeader label="RTV Type" field="rtvType" sortConfig={sortConfig} requestSort={requestSort} width={widths.rtvType} onResize={onResize} align="left" />
-                            <SortableHeader label="RMA Number" field="rmaNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.rmaNumber} onResize={onResize} align="left" />
-                            <SortableHeader label="Ship from Account" field="shipFromAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipFromAccount} onResize={onResize} align="left" />
-                            <SortableHeader label="Ship from Contact" field="shipFromContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipFromContact} onResize={onResize} align="left" />
-                            <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierName} onResize={onResize} align="left" />
-                            <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierContact} onResize={onResize} align="left" />
-                            <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" />
-                            <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCost} onResize={onResize} align="left" />
-                            <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={onResize} align="left" />
-                            <SortableHeader label="Approval Date" field="approvalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.approvalDate} onResize={onResize} align="left" />
-                            <SortableHeader label="Return by Date" field="returnByDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.returnByDate} onResize={onResize} align="left" />
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {rtvs.map((rtv) => (
-                            <tr key={rtv.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.rtvNumber }}>{rtv.rtvNumber}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${rtv.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
-                                        rtv.status === 'Completed' ? 'bg-green-100 text-green-800' :
-                                            'bg-gray-100 text-gray-800'
-                                        }`}>
-                                        {rtv.status}
-                                    </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>{rtv.purchaseOrder}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>{rtv.customerQuote}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>{rtv.customerOrder}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.rtvType }}>{rtv.rtvType}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.rmaNumber }}>{rtv.rmaNumber}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.shipFromAccount }}>{rtv.shipFromAccount}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.shipFromContact }}>{rtv.shipFromContact}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.supplierName }}>{rtv.supplierName}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.supplierContact }}>{rtv.supplierContact}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{rtv.totalLines}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalCost }}>{formatCurrency(rtv.totalCost)}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.issuedDate }}>{formatDate(rtv.issuedDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.approvalDate }}>{formatDate(rtv.approvalDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.returnByDate }}>{formatDate(rtv.returnByDate, 'numeric-dash')}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
+        <div>
+            <div className="overflow-x-auto py-2">
+                {rtvs.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                        <p className="text-sm truncate" title="There are no RTVs associated with this quote.">There are no RTVs associated with this quote.</p>
+                    </div>
+                ) : (
+                    <>
+                        <table className="w-full truncate">
+                            <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                                <tr>
+                                    <SortableHeader label="RTV" field="rtvNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.rtvNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
+                                    <SortableHeader label="Purchase Order" field="purchaseOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={onResize} align="left" />
+                                    <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" />
+                                    <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" />
+                                    <SortableHeader label="Supplier Bill" field="supplierBill" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierBill} onResize={onResize} align="left" />
+                                    <SortableHeader label="Sales Order" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={onResize} align="left" />
+                                    <SortableHeader label="RTV Type" field="rtvType" sortConfig={sortConfig} requestSort={requestSort} width={widths.rtvType} onResize={onResize} align="left" />
+                                    <SortableHeader label="RMA Number" field="rmaNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.rmaNumber} onResize={onResize} align="left" />
+                                    <SortableHeader label="Ship from Account" field="shipFromAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipFromAccount} onResize={onResize} align="left" />
+                                    <SortableHeader label="Ship from Contact" field="shipFromContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipFromContact} onResize={onResize} align="left" />
+                                    <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierName} onResize={onResize} align="left" />
+                                    <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierContact} onResize={onResize} align="left" />
+                                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" />
+                                    <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCost} onResize={onResize} align="left" />
+                                    <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={onResize} align="left" />
+                                    <SortableHeader label="Approval Date" field="approvalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.approvalDate} onResize={onResize} align="left" />
+                                    <SortableHeader label="Return by Date" field="returnByDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.returnByDate} onResize={onResize} align="left" />
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                {paginatedRTVs.map((rtv) => (
+                                    <tr key={rtv.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                        <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.rtvNumber }}>
+                                            {/* No direct RTV module listed, but keeping it consistent */}
+                                            {rtv.rtvNumber}
+                                        </td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
+                                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${rtv.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
+                                                rtv.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                                                    'bg-gray-100 text-gray-800'
+                                                }`}>
+                                                {rtv.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
+                                            {rtv.purchaseOrderId ? (
+                                                <Link href={`/purchase-orders/${rtv.purchaseOrderId}`} className="text-primary hover:underline font-bold">
+                                                    {rtv.purchaseOrder}
+                                                </Link>
+                                            ) : rtv.purchaseOrder}
+                                        </td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
+                                            {rtv.customerQuoteId ? (
+                                                <Link href={`/quotes/${rtv.customerQuoteId}`} className="text-primary hover:underline font-bold">
+                                                    {rtv.customerQuote}
+                                                </Link>
+                                            ) : rtv.customerQuote}
+                                        </td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
+                                            {rtv.customerOrderId ? (
+                                                <Link href={`/orders/${rtv.customerOrderId}`} className="text-primary hover:underline font-bold">
+                                                    {rtv.customerOrder}
+                                                </Link>
+                                            ) : rtv.customerOrder}
+                                        </td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.supplierBill }}>
+                                            {rtv.supplierBillId ? (
+                                                <Link href={`/supplier-bills/${rtv.supplierBillId}`} className="text-primary hover:underline font-bold">
+                                                    {rtv.supplierBill}
+                                                </Link>
+                                            ) : rtv.supplierBill}
+                                        </td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>
+                                            {rtv.salesOrderId ? (
+                                                <Link href={`/orders/${rtv.salesOrderId}`} className="text-primary hover:underline font-bold">
+                                                    {rtv.salesOrder}
+                                                </Link>
+                                            ) : rtv.salesOrder}
+                                        </td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.rtvType }}>{rtv.rtvType}</td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.rmaNumber }}>
+                                            {/* No direct RMA module listed, but keeping it consistent if we had rmaId */}
+                                            {rtv.rmaNumber}
+                                        </td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.shipFromAccount }}>{rtv.shipFromAccount}</td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.shipFromContact }}>{rtv.shipFromContact}</td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.supplierName }}>{rtv.supplierName}</td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.supplierContact }}>{rtv.supplierContact}</td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{rtv.totalLines}</td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalCost }}>{formatCurrency(rtv.totalCost)}</td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.issuedDate }}>{formatDate(rtv.issuedDate, 'numeric-dash')}</td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.approvalDate }}>{formatDate(rtv.approvalDate, 'numeric-dash')}</td>
+                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.returnByDate }}>{formatDate(rtv.returnByDate, 'numeric-dash')}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                    </>
+                )}
+            </div>
+            <div className="px-3 py-2">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalItems={rtvs.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    onPageChange={setCurrentPage}
+                    itemName=""
+                />
+            </div>
         </div>
     );
 }

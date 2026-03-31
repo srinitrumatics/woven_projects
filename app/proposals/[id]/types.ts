@@ -67,6 +67,7 @@ export interface Order {
     name: string;
     status: string;
     customerPO: string;
+    purchaseOrderId?: string;
     customerPODate: string;
     billToAccountName: string;
     billToLocationName: string;
@@ -105,6 +106,14 @@ export interface Invoice {
     shipping: number;
     taxes: number;
     lineGrandTotal: number;
+    // Related IDs
+    salesOrderId?: string;
+    salesOrderLineId?: string;
+    customerQuoteId?: string;
+    customerQuoteLineId?: string;
+    customerOrderId?: string;
+    purchaseOrderId?: string;
+    purchaseOrderLineId?: string;
     // Keeping old fields just in case, but they might not be used in the new table view
     customerPO?: string;
     billToAccountName?: string;
@@ -160,6 +169,13 @@ export interface ShippingManifest {
     logisticsPartnerName?: string;
     logisticsContactName?: string;
     requestDate?: string;
+    // Related IDs
+    salesOrderId?: string;
+    salesOrderLineId?: string;
+    customerQuoteId?: string;
+    customerQuoteLineId?: string;
+    customerOrderId?: string;
+    purchaseOrderId?: string;
 }
 
 export interface SalesOrder {
@@ -200,6 +216,12 @@ export interface SalesOrder {
     pickCompleteDate?: string;
     shipDate?: string;
     deliveredDate?: string;
+    // Related IDs
+    customerQuoteId?: string;
+    customerQuoteLineId?: string;
+    customerOrderId?: string;
+    purchaseOrderId?: string;
+    salesOrderId?: string;
 }
 
 export interface CustomerQuote {
@@ -236,6 +258,10 @@ export interface CustomerQuote {
     requestDate?: string;
     shipDate?: string;
     deliveredDate?: string;
+    // Related IDs
+    customerOrderId?: string;
+    purchaseOrderId?: string;
+    customerQuoteId?: string;
 }
 
 export interface PurchaseOrder {
@@ -244,6 +270,8 @@ export interface PurchaseOrder {
     status: string;
     customerQuoteName: string;
     customerOrderName: string;
+    salesOrderName?: string;
+    shipmentName?: string;
     customerPO: string;
     supplierName: string;
     supplierDBA: string;
@@ -268,6 +296,12 @@ export interface PurchaseOrder {
     trackingStatus: string;
     actualDeliveryDate: string;
     goodsReceiptsDate: string;
+    // Related IDs
+    customerQuoteId?: string;
+    customerOrderId?: string;
+    purchaseOrderId?: string; // This is the ID for the Customer PO link
+    salesOrderId?: string;
+    shipmentId?: string;
 }
 
 export interface PurchaseOrderLine {
@@ -310,9 +344,14 @@ export interface PurchaseOrderLine {
     requestDate?: string;
     promiseDate?: string;
     shippingMethod?: string;
-    logisticsPartner?: string;
     logisticsContact?: string;
     goodsReceiptsDate?: string;
+    // Related IDs
+    customerQuoteId?: string;
+    customerQuoteLineId?: string;
+    customerOrderId?: string;
+    purchaseOrderId?: string;
+    salesOrderId?: string;
 }
 
 export interface SupplierBill {
@@ -322,6 +361,8 @@ export interface SupplierBill {
     purchaseOrderName: string;
     customerQuoteName: string;
     customerOrderName: string;
+    salesOrderName?: string;
+    shipmentName?: string;
     supplierName: string;
     supplierDBA: string;
     supplierContact: string;
@@ -336,6 +377,12 @@ export interface SupplierBill {
     openBalance: number;
     daysOutstanding: number;
     settledDate: string;
+    // Related IDs
+    purchaseOrderId?: string;
+    customerQuoteId?: string;
+    customerOrderId?: string;
+    salesOrderId?: string;
+    shipmentId?: string;
 }
 
 export interface SupplierBillLine {
@@ -372,6 +419,14 @@ export interface SupplierBillLine {
     daysOutstanding?: number;
     holdStatus?: string;
     settledDate?: string;
+    // Related IDs
+    purchaseOrderId?: string;
+    purchaseOrderLineId?: string;
+    customerQuoteId?: string;
+    customerQuoteLineId?: string;
+    customerOrderId?: string;
+    salesOrderId?: string;
+    shipmentId?: string;
 }
 
 export interface PurchasesData {
@@ -417,9 +472,17 @@ export interface DebitMemo extends Return {
     approvalDate?: string;
     availableDebitBalance?: number;
     settledDate?: string;
+    // Related IDs
+    customerOrderId?: string;
+    purchaseOrderId?: string;
+    supplierBillId?: string;
+    salesOrderId?: string;
+    customerQuoteId?: string;
+    shipmentId?: string;
+    customerQuoteName?: string;
+    salesOrderName?: string;
+    shipmentName?: string;
 }
-
-
 
 export interface CreditMemo extends Return {
     creditMemoName: string; // Parent Credit Memo
@@ -448,6 +511,18 @@ export interface CreditMemo extends Return {
     expirationDate?: string;
     availableCreditBalance?: number;
     settledDate?: string;
+    // Related IDs
+    invoiceId?: string;
+    customerQuoteId?: string;
+    customerOrderId?: string;
+    salesOrderId?: string;
+    purchaseOrderId?: string;
+    shipmentId?: string;
+    salesOrderName?: string;
+    purchaseOrderName?: string;
+    supplierBillName?: string;
+    supplierBillId?: string;
+    shipmentName?: string;
 }
 
 export interface RMA extends Return {
@@ -482,8 +557,19 @@ export interface RMA extends Return {
     shippingMethod?: string;
     logisticsPartner?: string;
     logisticsContact?: string;
+    // Related IDs
+    salesOrderId?: string;
+    salesOrderLineId?: string;
+    customerQuoteId?: string;
+    customerQuoteLineId?: string;
+    customerOrderId?: string;
+    purchaseOrderId?: string;
+    shipmentId?: string;
+    customerPO?: string;
+    supplierBillName?: string;
+    supplierBillId?: string;
+    shipmentName?: string;
 }
-
 
 export interface RTV extends Return {
     rtvName: string; // Parent RTV
@@ -509,6 +595,16 @@ export interface RTV extends Return {
     issuedDate?: string;
     approvalDate?: string;
     returnByDate?: string;
+    // Related IDs
+    purchaseOrderId?: string;
+    customerQuoteId?: string;
+    customerOrderId?: string;
+    salesOrderId?: string;
+    shipmentId?: string;
+    salesOrderName?: string;
+    supplierBillName?: string;
+    supplierBillId?: string;
+    shipmentName?: string;
 }
 
 export interface ReturnsData {

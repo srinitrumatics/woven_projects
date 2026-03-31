@@ -67,17 +67,29 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
     const totalPages = Math.ceil(lines.length / ITEMS_PER_PAGE);
 
     const StatusBadge = ({ status }: { status: string }) => {
-        const colors: Record<string, string> = {
-            "Draft": "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
-            "Pending": "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
-            "Approved": "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-            "Completed": "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400"
+        const getStyles = () => {
+            switch (status) {
+                case "Approved":
+                case "Paid":
+                case "Awarded":
+                case "Completed":
+                    return "bg-green-100/80 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50";
+                case "Pending":
+                    return "bg-yellow-100/80 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800/50";
+                case "Draft":
+                    return "bg-blue-100/80 text-blue-600 border-blue-200 dark:bg-blue-700 dark:text-blue-300 dark:border-blue-600/50";
+                case "Cancelled":
+                case "Closed":
+                    return "bg-red-100/80 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50";
+                default:
+                    return "bg-gray-100/80 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800/50";
+            }
         };
-        const colorClass = colors[status] || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
 
         return (
-            <span className={`inline-flex px-2 py-1 text-[11px] font-bold uppercase tracking-wider rounded truncate ${colorClass}`} title={status || '-'}>
-                {status || '-'}</span>
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${getStyles()}`} title={status || '-'}>
+                {status || '-'}
+            </span>
         );
     };
 

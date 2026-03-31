@@ -8,6 +8,8 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import Pagination from "@/components/ui/Pagination";
 
+import { StatusBadge } from "@/components/ui/StatusBadge";
+
 interface POLinesTableProps {
     lines: any[];
     poId: string;
@@ -76,12 +78,12 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
     });
 
     return (
-        <div className="w-full">
-            <div className="overflow-x-auto">
-                <table className="w-full text-left whitespace-nowrap text-sm table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 ">
+        <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
+                <table className="w-full text-left whitespace-nowrap text-sm table-fixed border-separate border-spacing-0">
+                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="Purchase Order Line" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                            <SortableHeader label="Purchase Order Line" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                             <SortableHeader label="Purchase Order" field="purchaseOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={handleResize} />
                             <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
@@ -104,8 +106,8 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedLines.map((line: any) => (
-                            <tr key={line.Id || Math.random()} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" title={line.name}>
+                            <tr key={line.Id || Math.random()} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={line.name}>
                                     <Link
                                         href={`/purchase-orders/${poId}/lines/${line.Id}`}
                                         className="text-primary hover:text-primary-dark hover:underline font-semibold block truncate"
@@ -114,7 +116,9 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                         {line.name}
                                     </Link>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate"><StatusBadge status={line.status} /></td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                    <StatusBadge status={line.status} />
+                                </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.purchaseOrder}>{line.purchaseOrder}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.customerQuoteLine}>{line.customerQuoteLine}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productName}>{line.productName}</td>
@@ -144,41 +148,17 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                 )}
             </div>
 
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={sortedLines.length}
-                itemsPerPage={ITEMS_PER_PAGE}
-                onPageChange={setCurrentPage}
-                itemName="lines"
-            />
+            <div className="border-t border-gray-100 dark:border-gray-700">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalItems={sortedLines.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    onPageChange={setCurrentPage}
+                    itemName="lines"
+                />
+            </div>
         </div>
     );
 }
 
-function StatusBadge({ status }: { status: string }) {
-    const getStyles = () => {
-        switch (status) {
-            case "Approved":
-            case "Acknowledged":
-            case "Received":
-                return "bg-green-100/80 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50";
-            case "Issued":
-            case "Pending Approval":
-                return "bg-yellow-100/80 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800/50";
-            case "Draft":
-                return "bg-blue-100/80 text-blue-600 border-blue-200 dark:bg-blue-700 dark:text-blue-300 dark:border-blue-600/50";
-            case "Cancelled":
-            case "Closed":
-                return "bg-red-100/80 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50";
-            default:
-                return "bg-gray-100/80 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800/50";
-        }
-    };
-
-    return (
-        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold border truncate ${getStyles()}`} title={status}>
-            {status}
-        </span>
-    );
-}

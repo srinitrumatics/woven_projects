@@ -25,92 +25,93 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
     }
 
     return (
-        <div className="overflow-x-auto">
-            {projects.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                    <p className="text-sm truncate" title="There are no projects associated with this proposal.">There are no projects associated with this proposal.</p>
-                </div>
-            ) : (
-                <table className="w-full table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                        <tr>
-                            <SortableHeader label="Project Number" field="projectNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectNumber} onResize={onResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} />
-                            <SortableHeader label="Project Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
-                            <SortableHeader label="Customer Account" field="customerAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerAccountName} onResize={onResize} />
-                            <SortableHeader label="Customer Contact" field="customerContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerContactName} onResize={onResize} />
-                            <SortableHeader label="Billing Type" field="billingType" sortConfig={sortConfig} requestSort={requestSort} width={widths.billingType} onResize={onResize} />
-                            <SortableHeader label="Project Manager" field="projectManagerName" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectManagerName} onResize={onResize} />
-                            <SortableHeader label="Estimated Budget" field="estimatedBudget" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedBudget} onResize={onResize} />
-                            <SortableHeader label="Total Milestones" field="totalMilestones" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalMilestones} onResize={onResize} />
-                            <SortableHeader label="Total Task" field="totalTasks" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalTasks} onResize={onResize} />
-                            <SortableHeader label="% Completed" field="percentCompleted" sortConfig={sortConfig} requestSort={requestSort} width={widths.percentCompleted} onResize={onResize} />
-                            <SortableHeader label="Estimated Start Date" field="estimatedStartDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedStartDate} onResize={onResize} />
-                            <SortableHeader label="Estimated End Date" field="estimatedEndDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedEndDate} onResize={onResize} />
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {projects.map((project) => (
-                            <tr key={project.id} className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
-                                    <div className="truncate" title={project.projectNumber}> {project.projectNumber} </div>
-                                </td>
-                                <td className="px-3 py-2 truncate">
-                                    <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${project.status === 'New' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
-                                        project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                                            project.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                                project.status === 'On Hold' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
-                                                    'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                        }`}>
-                                        {project.status}
-                                    </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate" title={project.name}><div className="text-sm font-medium text-gray-900 dark:text-white truncate">{project.name}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.customerAccountName}><div className="text-sm text-gray-900 dark:text-white truncate">{project.customerAccountName}</div></td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.customerContactName}><div className="text-sm text-gray-900 dark:text-white truncate">{project.customerContactName}</div></td>
-                                <td className="px-3 py-2 truncate">
-                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">
-                                        {project.billingType}
-                                    </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.projectManagerName}>
-                                    <div className="text-sm text-gray-900 dark:text-white truncate">{project.projectManagerName}</div></td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold min-w-[186px] truncate">
-                                    ${project.estimatedBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white min-w-[147px] truncate">
-                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 font-semibold truncate">
-                                        {project.totalMilestones}
-                                    </span>
-                                </td>
-                                <td className="px-3 py-2 text-left text-sm text-gray-900 dark:text-white truncate">
-                                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
-                                        {project.totalTasks}
-                                    </span>
-                                </td>
-                                <td className="px-3 py-2 text-left min-w-[137px] truncate">
-                                    {project.percentCompleted !== null ? (
-                                        <div className="flex gap-2">
-                                            <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                                                <div
-                                                    className="bg-primary h-2 rounded-full"
-                                                    style={{ width: `${project.percentCompleted}%` }}
-                                                ></div>
-                                            </div>
-                                            <span className="text-sm text-gray-600 dark:text-gray-400 truncate">{project.percentCompleted}%</span>
-                                        </div>
-                                    ) : (
-                                        <span className="text-sm text-gray-400 truncate">-</span>
-                                    )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[175px] truncate">{project.estimatedStartDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[175px] truncate">{project.estimatedEndDate}</td>
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
+            <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
+                {projects.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
+                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
+                        <p className="text-sm truncate" title="There are no projects associated with this proposal.">There are no projects associated with this proposal.</p>
+                    </div>
+                ) : (
+                    <table className="w-full border-separate border-spacing-0 table-fixed">
+                        <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                            <tr>
+                                <SortableHeader label="Project Number" field="projectNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectNumber} onResize={onResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
+                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} />
+                                <SortableHeader label="Project Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
+                                <SortableHeader label="Customer Account" field="customerAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerAccountName} onResize={onResize} />
+                                <SortableHeader label="Customer Contact" field="customerContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerContactName} onResize={onResize} />
+                                <SortableHeader label="Billing Type" field="billingType" sortConfig={sortConfig} requestSort={requestSort} width={widths.billingType} onResize={onResize} />
+                                <SortableHeader label="Project Manager" field="projectManagerName" sortConfig={sortConfig} requestSort={requestSort} width={widths.projectManagerName} onResize={onResize} />
+                                <SortableHeader label="Estimated Budget" field="estimatedBudget" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedBudget} onResize={onResize} />
+                                <SortableHeader label="Total Milestones" field="totalMilestones" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalMilestones} onResize={onResize} />
+                                <SortableHeader label="Total Task" field="totalTasks" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalTasks} onResize={onResize} />
+                                <SortableHeader label="% Completed" field="percentCompleted" sortConfig={sortConfig} requestSort={requestSort} width={widths.percentCompleted} onResize={onResize} />
+                                <SortableHeader label="Estimated Start Date" field="estimatedStartDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedStartDate} onResize={onResize} />
+                                <SortableHeader label="Estimated End Date" field="estimatedEndDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedEndDate} onResize={onResize} />
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            {projects.map((project) => (
+                                <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate">
+                                        {project.projectNumber}
+                                    </td>
+                                    <td className="px-3 py-2 truncate">
+                                        <span className={`inline-block px-2 py-0.5 text-xs font-bold rounded-full ${project.status === 'New' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
+                                            project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                                project.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
+                                                    project.status === 'On Hold' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
+                                                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                            }`}>
+                                            {project.status}
+                                        </span>
+                                    </td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.name}>{project.name}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.customerAccountName}>{project.customerAccountName}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.customerContactName}>{project.customerContactName}</td>
+                                    <td className="px-3 py-2 truncate">
+                                        <span className="inline-block px-2 py-0.5 text-xs font-bold rounded-full bg-primary/10 text-primary truncate">
+                                            {project.billingType}
+                                        </span>
+                                    </td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.projectManagerName}>{project.projectManagerName}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">
+                                        ${project.estimatedBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                        <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 text-xs font-bold">
+                                            {project.totalMilestones}
+                                        </span>
+                                    </td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                        <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
+                                            {project.totalTasks}
+                                        </span>
+                                    </td>
+                                    <td className="px-3 py-2 truncate">
+                                        {project.percentCompleted !== null ? (
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                    <div
+                                                        className="bg-primary h-1.5 rounded-full"
+                                                        style={{ width: `${project.percentCompleted}%` }}
+                                                    ></div>
+                                                </div>
+                                                <span className="text-xs text-gray-600 dark:text-gray-400 truncate font-medium">{project.percentCompleted}%</span>
+                                            </div>
+                                        ) : (
+                                            <span className="text-xs text-gray-400 truncate font-medium">-</span>
+                                        )}
+                                    </td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{project.estimatedStartDate}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{project.estimatedEndDate}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </div>
         </div>
     );
 }

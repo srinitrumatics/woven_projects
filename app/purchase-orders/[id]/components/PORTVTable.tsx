@@ -7,6 +7,8 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { formatDate } from "@/lib/utils/formatting";
 
+import { StatusBadge } from "@/components/ui/StatusBadge";
+
 interface RTV {
     Id: string;
     Name: string;
@@ -83,9 +85,9 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
     }
 
     return (
-        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0">
+                <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="RTV" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
@@ -113,10 +115,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                     {r.Name}
                                 </td>
                                 <td className="px-3 py-2 truncate">
-                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full truncate ${r.Status__c === 'Draft' ? 'bg-gray-100 text-gray-700' : 'bg-green-100 text-green-700'
-                                        }`} title={r.Status__c}>
-                                        {r.Status__c}
-                                    </span>
+                                    <StatusBadge status={r.Status__c} />
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Purchase_Order_Name || '-'}>
                                     {r.Purchase_Order_Name || '-'}
@@ -168,7 +167,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                 </table>
             </div>
 
-            <div className="border-t border-gray-200 dark:border-gray-700">
+            <div className="px-3 py-2">
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}

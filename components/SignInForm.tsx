@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUserSession } from './UserSessionContext';
@@ -205,15 +206,25 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
               </div>
             </div>
 
-            <div>
+            <div className="flex flex-col space-y-4 pt-2">
               <button
                 type="submit"
-                className="w-full md:w-full flex justify-center py-3 px-4 rounded-full text-sm font-semibold text-white bg-[var(--primary)] hover:bg-[var(--primary-dark)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] transition-all"
+                className="w-full flex justify-center py-3 px-4 rounded-full text-sm font-semibold text-white bg-[var(--primary)] hover:bg-[var(--primary-dark)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] transition-all"
               >
                 Sign In
               </button>
+              
+              <div className="flex justify-center">
+                <Link 
+                  href="/forgot-password" 
+                  className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors duration-200"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
             </div>
           </form>
+
         </div>
       </div>
 

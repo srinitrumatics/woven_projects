@@ -7,6 +7,8 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { formatDate } from "@/lib/utils/formatting";
 
+import { StatusBadge } from "@/components/ui/StatusBadge";
+
 interface SerialNumberLog {
     Id: string;
     Name: string;
@@ -63,7 +65,7 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
 
     if (serialNumbers.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-900 dark:text-gray-700 min-w-0">
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
                 <p className="text-lg font-medium truncate" title="No records found">No records found</p>
                 <p className="text-sm truncate" title="There are no Serial Number Logs associated with this purchase order.">There are no Serial Number Logs associated with this purchase order.</p>
             </div>
@@ -71,9 +73,9 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
     }
 
     return (
-        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0">
+                <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="Serial Number Log" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
@@ -115,10 +117,7 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
                                     {s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate">
-                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full truncate ${s.Active__c ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                                        }`} title={s.Active__c ? 'Yes' : 'No'}>
-                                        {s.Active__c ? 'Yes' : 'No'}
-                                    </span>
+                                    <StatusBadge status={s.Active__c ? 'Yes' : 'No'} />
                                 </td>
                             </tr>
                         ))}
@@ -126,7 +125,7 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
                 </table>
             </div>
 
-            <div className="border-t border-gray-200 dark:border-gray-700">
+            <div className="border-t border-gray-100 dark:border-gray-700">
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}

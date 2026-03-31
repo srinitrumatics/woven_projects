@@ -3,6 +3,7 @@ import { QuotePurchase, QuoteSupplierBill } from "../../types";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import QuotePurchasesSubTab from "./QuotePurchasesSubTab";
 import QuoteSupplierBillsSubTab from "./QuoteSupplierBillsSubTab";
+import Pagination from "@/components/ui/Pagination";
 
 type PurchasesSubTab = "purchases" | "supplierBills";
 
@@ -15,6 +16,8 @@ interface QuotePurchasesTabProps {
     loading: boolean;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurchasesTabProps) {
     const [activeSubTab, setActiveSubTab] = useState<PurchasesSubTab>("purchases");
     const { purchases = [], supplierBills = [] } = data;
@@ -26,6 +29,10 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
     // Supplier Bills State
     const [billSortField, setBillSortField] = useState<keyof QuoteSupplierBill>("billNumber");
     const [billSortDirection, setBillSortDirection] = useState<'asc' | 'desc'>('asc');
+
+    // Pagination State
+    const [currentPagePurchases, setCurrentPagePurchases] = useState(1);
+    const [currentPageBills, setCurrentPageBills] = useState(1);
 
     // Setup resizable columns for Purchases
     const { widths: purchaseWidths, handleResize: handlePurchaseResize } = useResizableColumns({
@@ -126,6 +133,19 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
         return 0;
     });
 
+    // Sub-tab Pagination
+    const paginatedPurchases = sortedPurchases.slice(
+        (currentPagePurchases - 1) * ITEMS_PER_PAGE,
+        currentPagePurchases * ITEMS_PER_PAGE
+    );
+    const totalPagesPurchases = Math.ceil(purchases.length / ITEMS_PER_PAGE);
+
+    const paginatedBills = sortedBills.slice(
+        (currentPageBills - 1) * ITEMS_PER_PAGE,
+        currentPageBills * ITEMS_PER_PAGE
+    );
+    const totalPagesBills = Math.ceil(supplierBills.length / ITEMS_PER_PAGE);
+
     const tabs: { id: PurchasesSubTab; label: string }[] = [
         { id: "purchases", label: "Purchases Order" },
         { id: "supplierBills", label: "Supplier Bills" },
@@ -139,7 +159,9 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
-                            onClick={() => setActiveSubTab(tab.id)}
+                            onClick={() => {
+                                setActiveSubTab(tab.id);
+                            }}
                             className={`
                                 truncate py-4 px-1 border-b-2 font-medium text-sm transition-colors
                                 ${activeSubTab === tab.id
@@ -159,26 +181,50 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
             {/* Tab Content */}
             <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2">
                 {activeSubTab === "purchases" && (
-                    <QuotePurchasesSubTab
-                        purchases={sortedPurchases}
-                        loading={false}
-                        sortField={purchaseSortField}
-                        sortDirection={purchaseSortDirection}
-                        onSort={handlePurchaseSort}
-                        widths={purchaseWidths}
-                        onResize={handlePurchaseResize}
-                    />
+                    <div className="flex flex-col">
+                        <QuotePurchasesSubTab
+                            purchases={paginatedPurchases}
+                            loading={false}
+                            sortField={purchaseSortField}
+                            sortDirection={purchaseSortDirection}
+                            onSort={handlePurchaseSort}
+                            widths={purchaseWidths}
+                            onResize={handlePurchaseResize}
+                        />
+                        <div className="px-4 py-3">
+                            <Pagination
+                                currentPage={currentPagePurchases}
+                                totalPages={totalPagesPurchases}
+                                onPageChange={setCurrentPagePurchases}
+                                totalItems={purchases.length}
+                                itemsPerPage={ITEMS_PER_PAGE}
+                                itemName=""
+                            />
+                        </div>
+                    </div>
                 )}
                 {activeSubTab === "supplierBills" && (
-                    <QuoteSupplierBillsSubTab
-                        bills={sortedBills}
-                        loading={false}
-                        sortField={billSortField}
-                        sortDirection={billSortDirection}
-                        onSort={handleBillSort}
-                        widths={billWidths}
-                        onResize={handleBillResize}
-                    />
+                    <div className="flex flex-col">
+                        <QuoteSupplierBillsSubTab
+                            bills={paginatedBills}
+                            loading={false}
+                            sortField={billSortField}
+                            sortDirection={billSortDirection}
+                            onSort={handleBillSort}
+                            widths={billWidths}
+                            onResize={handleBillResize}
+                        />
+                        <div className="px-4 py-3 ">
+                            <Pagination
+                                currentPage={currentPageBills}
+                                totalPages={totalPagesBills}
+                                onPageChange={setCurrentPageBills}
+                                totalItems={supplierBills.length}
+                                itemsPerPage={ITEMS_PER_PAGE}
+                                itemName=""
+                            />
+                        </div>
+                    </div>
                 )}
             </div>
         </div>

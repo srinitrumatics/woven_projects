@@ -7,6 +7,8 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { formatDate, formatCurrency } from "@/lib/utils/formatting";
 
+import { StatusBadge, RemittanceBadge } from "@/components/ui/StatusBadge";
+
 interface SupplierBill {
     Id: string;
     Name: string;
@@ -82,25 +84,9 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
 
     const totalPages = Math.ceil(bills.length / ITEMS_PER_PAGE);
 
-    const StatusBadge = ({ status }: { status: string }) => {
-        const colors: Record<string, string> = {
-            "Draft": "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
-            "Pending": "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
-            "Approved": "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-            "Paid": "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
-        };
-        const colorClass = colors[status] || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
-
-        return (
-            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full truncate ${colorClass}`} title={status}>
-                {status}
-            </span>
-        );
-    };
-
     if (bills.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-900 dark:text-gray-700 min-w-0">
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
                 <p className="text-lg font-medium truncate" title="No records found">No records found</p>
                 <p className="text-sm truncate" title="There are no Supplier Bills associated with this purchase order.">There are no Supplier Bills associated with this purchase order.</p>
             </div>
@@ -108,9 +94,9 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
     }
 
     return (
-        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0">
+                <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="Supplier Bill" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
@@ -185,10 +171,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                     {b.Due_Date__c ? formatDate(b.Due_Date__c, 'numeric-dash') : '-'}
                                 </td>
                                 <td className="px-3 py-2 truncate">
-                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full truncate ${b.Remittance_Status__c === 'Paid' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
-                                        }`} title={b.Remittance_Status__c || 'Pending'}>
-                                        {b.Remittance_Status__c || 'Pending'}
-                                    </span>
+                                    <RemittanceBadge status={b.Remittance_Status__c || 'Pending'} />
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(b.Open_Balance__c || 0)}>
                                     {formatCurrency(b.Open_Balance__c || 0)}
@@ -205,7 +188,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                 </table>
             </div>
 
-            <div className="border-t border-gray-200 dark:border-gray-700">
+            <div className="border-t border-gray-100 dark:border-gray-700">
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}

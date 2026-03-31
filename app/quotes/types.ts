@@ -1,12 +1,21 @@
-export type QuoteStatus = "Draft" | "Pending" | "Approved" | "Rejected" | "Expired" | "Converted" | "Partial Shipment" | "Shipped";
+export type QuoteStatus = "Draft" | "Pending" | "Approved" | "Rejected" | "Expired" | "Converted" | "Partial Shipment" | "Shipped" | "Canceled";
 
 export interface QuoteCreditMemo {
   id: string;
   memoNumber: string; // 1. Name
   status: string; // 2. gtherp__Status__c
   invoice: string; // 3. gtherp__Invoice__c
+  invoiceId?: string;
   customerQuote: string; // 4. gtherp__Customer_Quote__c
+  customerQuoteId?: string;
   customerOrder: string; // 5. gtherp__Customer_Order__c
+  customerOrderId?: string;
+  supplierBill?: string;
+  supplierBillId?: string;
+  purchaseOrder?: string;
+  purchaseOrderId?: string;
+  salesOrder?: string;
+  salesOrderId?: string;
   creditToAccount: string; // 6. gtherp__Credit_to_Account__c
   creditToContact: string; // 7. gtherp__Credit_to_Contact__c
   totalLines: number; // 8. gtherp__Total_Lines__c
@@ -65,6 +74,16 @@ export interface QuoteLine {
   taxes: number;
   lineGrandTotal: number;
   qtyShipped: number;
+  customerQuote?: string;
+  customerQuoteId?: string;
+  supplierBill?: string;
+  supplierBillId?: string;
+  purchaseOrder?: string;
+  purchaseOrderId?: string;
+  customerOrder?: string;
+  customerOrderId?: string;
+  salesOrder?: string;
+  salesOrderId?: string;
 }
 
 export interface QuoteTax {
@@ -90,7 +109,9 @@ export interface QuoteSalesOrder {
   salesOrderNumber: string;
   status: string;
   customerQuote: string;
+  customerQuoteId?: string;
   customerOrder: string;
+  customerOrderId?: string;
   customerPO: string;
   billToAccount: string;
   billToLocation: string;
@@ -116,8 +137,11 @@ export interface QuoteShippingManifest {
   manifestNumber: string;
   status: string;
   salesOrder: string;
+  salesOrderId?: string;
   customerQuote: string;
+  customerQuoteId?: string;
   customerOrder: string;
+  customerOrderId?: string;
   customerPO: string;
   shipToAccount: string;
   shipToLocation: string;
@@ -144,8 +168,11 @@ export interface QuoteInvoice {
   invoiceNumber: string;
   status: string;
   salesOrder: string;
+  salesOrderId?: string;
   customerQuote: string;
+  customerQuoteId?: string;
   customerOrder: string;
+  customerOrderId?: string;
   customerPO: string;
   billToAccount: string;
   billToLocation: string;
@@ -169,7 +196,9 @@ export interface QuotePurchase {
   purchaseOrderNumber: string; // 1. Name
   status: string; // 2. gtherp__Status__c
   customerQuote: string; // 3. gtherp__Customer_Quote__c
+  customerQuoteId?: string;
   customerOrder: string; // 4. gtherp__Customer_Order__c
+  customerOrderId?: string;
   customerPO: string; // 5. gtherp__Customer_PO__c
   supplierName: string; // 6. gtherp__Supplier_Name__c
   supplierDBA: string; // 7. gtherp__Supplier_DBA__c
@@ -201,8 +230,11 @@ export interface QuoteSupplierBill {
   billNumber: string; // 1. Name
   status: string; // 2. gtherp__Status__c
   purchaseOrder: string; // 3. gtherp__Purchase_Order__c
+  purchaseOrderId?: string;
   customerQuote: string; // 4. gtherp__Customer_Quote__c
+  customerQuoteId?: string;
   customerOrder: string; // 5. gtherp__Customer_Order__c
+  customerOrderId?: string;
   supplierName: string; // 6. gtherp__Supplier_Name__c
   supplierDBA: string; // 7. gtherp__Supplier_DBA__c
   supplierContact: string; // 8. gtherp__Supplier_Contact__c
@@ -224,8 +256,15 @@ export interface QuoteRMA {
   rmaNumber: string;
   status: string;
   salesOrder: string;
+  salesOrderId?: string;
   customerQuote: string;
+  customerQuoteId?: string;
   customerOrder: string;
+  customerOrderId?: string;
+  supplierBill?: string;
+  supplierBillId?: string;
+  purchaseOrder?: string;
+  purchaseOrderId?: string;
   rmaType: string;
   shipFromAccount: string;
   shipFromContact: string;
@@ -252,8 +291,15 @@ export interface QuoteRTV {
   rtvNumber: string; // 1. Name
   status: string; // 2. gtherp__Status__c
   purchaseOrder: string; // 3. gtherp__Purchase_Order__c
+  purchaseOrderId?: string;
   customerQuote: string; // 4. gtherp__Customer_Quote__c
+  customerQuoteId?: string;
   customerOrder: string; // 5. gtherp__Customer_Order__c
+  customerOrderId?: string;
+  supplierBill?: string;
+  supplierBillId?: string;
+  salesOrder?: string;
+  salesOrderId?: string;
   rtvType: string; // 6. gtherp__RTV_Type__c
   rmaNumber: string; // 7. gtherp__Supplier_RMA_Number__c
   shipFromAccount: string; // 8. gtherp__Ship_from_Account__c
@@ -272,9 +318,15 @@ export interface QuoteDebitMemo {
   memoNumber: string;
   status: string;
   supplierBill: string;
+  supplierBillId?: string;
   purchaseOrder: string;
+  purchaseOrderId?: string;
   customerQuote: string;
+  customerQuoteId?: string;
   customerOrder: string;
+  customerOrderId?: string;
+  salesOrder?: string;
+  salesOrderId?: string;
   supplierCredit: string;
   debitToAccount: string;
   debitToContact: string;

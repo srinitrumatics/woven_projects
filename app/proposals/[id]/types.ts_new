@@ -1,0 +1,178 @@
+
+export interface Return {
+    id: string;
+    name: string;
+    status: string;
+    description: string;
+    requestDate: string;
+    type: string;
+    reason: string;
+    totalAmount: number;
+}
+
+export interface DebitMemo extends Return {
+    debitMemoName: string; // Parent Debit Memo
+    supplierBillLineName: string;
+    purchaseOrderLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitCost: number;
+    debitQty: number;
+    totalCost: number;
+    shipping: number;
+    lineGrandTotal: number;
+    // Keeping old fields as optional/legacy
+    supplierBillName?: string;
+    purchaseOrderName?: string;
+    customerOrderName?: string;
+    supplierCreditMemoName?: string;
+    debitToAccountName?: string;
+    debitToContactName?: string;
+    totalLines?: number;
+    totalShippingCharges?: number;
+    totalDebitAmount?: number;
+    issuedDate?: string;
+    approvalDate?: string;
+    availableDebitBalance?: number;
+    settledDate?: string;
+    // Related IDs
+    customerOrderId?: string;
+    purchaseOrderId?: string;
+    supplierBillId?: string;
+    salesOrderId?: string;
+    customerQuoteId?: string;
+    shipmentId?: string;
+    customerQuoteName?: string;
+    salesOrderName?: string;
+    shipmentName?: string;
+}
+
+
+
+export interface CreditMemo extends Return {
+    creditMemoName: string; // Parent Credit Memo
+    invoiceLineName: string;
+    salesOrderLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitPrice: number;
+    creditQty: number;
+    totalPrice: number;
+    shipping: number;
+    taxes: number;
+    lineGrandTotal: number;
+    // Keeping old fields as optional/legacy
+    invoiceName?: string;
+    customerQuoteName?: string;
+    customerOrderName?: string;
+    creditToAccountName?: string;
+    creditToContactName?: string;
+    totalLines?: number;
+    totalShippingCharges?: number;
+    totalTaxesAmount?: number;
+    totalCreditAmount?: number;
+    issuedDate?: string;
+    expirationDate?: string;
+    availableCreditBalance?: number;
+    settledDate?: string;
+    // Related IDs
+    invoiceId?: string;
+    customerQuoteId?: string;
+    customerOrderId?: string;
+    salesOrderId?: string;
+    shipmentId?: string;
+    salesOrderName?: string;
+    purchaseOrderName?: string;
+    supplierBillName?: string;
+    supplierBillId?: string;
+    shipmentName?: string;
+}
+
+export interface RMA extends Return {
+    rmaName: string; // Parent RMA
+    salesOrderLineName: string;
+    customerQuoteLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitPrice: number;
+    returnQty: number;
+    openBalanceQty: number;
+    trackingNumber: string; // Already in Return but explicit here for clarity if needed or removed from Return? Inherited is fine.
+    estimatedDeliveryDate: string;
+    trackingStatus: string;
+    actualDeliveryDate: string;
+    goodsReceiptDate: string;
+    // Keeping old fields as optional/legacy
+    salesOrderName?: string;
+    customerQuoteName?: string;
+    customerOrderName?: string;
+    rmaType?: string;
+    shipFromAccountName?: string;
+    shipFromContactName?: string;
+    returnToAccountName?: string;
+    returnToContactName?: string;
+    dropShip?: boolean;
+    totalLines?: number;
+    totalPrice?: number;
+    issuedDate?: string;
+    returnByDate?: string;
+    shippingMethod?: string;
+    logisticsPartner?: string;
+    logisticsContact?: string;
+    // Related IDs
+    salesOrderId?: string;
+    customerQuoteId?: string;
+    customerOrderId?: string;
+    shipmentId?: string;
+    customerPO?: string;
+    supplierBillName?: string;
+    supplierBillId?: string;
+    shipmentName?: string;
+}
+
+
+export interface RTV extends Return {
+    rtvName: string; // Parent RTV
+    purchaseOrderLineName: string;
+    customerQuoteLineName: string;
+    productName: string;
+    productDescription: string;
+    manufacturerDBA: string;
+    unitCost: number;
+    returnQty: number;
+    totalCost: number;
+    // Keeping old fields as optional/legacy
+    purchaseOrderName?: string;
+    customerQuoteName?: string;
+    customerOrderName?: string;
+    rtvType?: string;
+    rmaNumber?: string;
+    shipFromAccountName?: string;
+    shipFromContactName?: string;
+    supplierName?: string;
+    supplierContact?: string;
+    totalLines?: number;
+    issuedDate?: string;
+    approvalDate?: string;
+    returnByDate?: string;
+    // Related IDs
+    purchaseOrderId?: string;
+    customerQuoteId?: string;
+    customerOrderId?: string;
+    salesOrderId?: string;
+    shipmentId?: string;
+    salesOrderName?: string;
+    supplierBillName?: string;
+    supplierBillId?: string;
+    shipmentName?: string;
+}
+
+export interface ReturnsData {
+    rma: RMA[];
+    rtv: RTV[];
+    creditMemos: CreditMemo[];
+    debitMemos: DebitMemo[];
+}

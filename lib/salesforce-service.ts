@@ -1040,6 +1040,13 @@ export async function createContentDistribution(
   }
 }
 
+// Helper to decode HTML entities in URLs (e.g. &amp; -> &)
+function decodeSalesforceUrl(url: string): string {
+    if (!url) return url;
+    return url.replace(/&amp;/g, '&');
+}
+
+
 // Get public distribution URLs from distribution ID
 export async function getPublicDistributionUrl(
   distributionId: string
@@ -1072,8 +1079,8 @@ export async function getPublicDistributionUrl(
     console.log('ContentDistribution URLs - Preview:', result.DistributionPublicUrl, 'Download:', result.ContentDownloadUrl);
     
     return {
-      previewUrl: result.DistributionPublicUrl,
-      downloadUrl: result.ContentDownloadUrl
+      previewUrl: decodeSalesforceUrl(result.DistributionPublicUrl),
+      downloadUrl: decodeSalesforceUrl(result.ContentDownloadUrl)
     };
   } catch (error) {
     console.error('Error getting public distribution URL:', error);
@@ -1144,8 +1151,8 @@ export async function getFileUrl(
         if (existing.DistributionPublicUrl || existing.ContentDownloadUrl) {
           console.log('getFileUrl: Reusing existing ContentDistribution:', existing.Id);
           return {
-            previewUrl: existing.DistributionPublicUrl,
-            downloadUrl: existing.ContentDownloadUrl
+            previewUrl: decodeSalesforceUrl(existing.DistributionPublicUrl),
+            downloadUrl: decodeSalesforceUrl(existing.ContentDownloadUrl)
           };
         }
       }

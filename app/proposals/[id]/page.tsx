@@ -149,6 +149,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     status: 120,
     customerQuoteName: 180,
     customerOrderName: 180,
+    salesOrderName: 180,
+    shipmentName: 180,
     customerPO: 150,
     supplierName: 180,
     supplierDBA: 180,
@@ -181,6 +183,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     purchaseOrderName: 180,
     customerQuoteName: 180,
     customerOrderName: 180,
+    salesOrderName: 180,
+    shipmentName: 180,
     supplierName: 180,
     supplierDBA: 180,
     supplierContact: 180,
@@ -246,25 +250,27 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       returnToContactName: 180, dropShip: 100, totalLines: 100, totalPrice: 120, issuedDate: 150,
       returnByDate: 150, shippingMethod: 150, logisticsPartner: 180, logisticsContact: 180,
       trackingNumber: 180, estimatedDeliveryDate: 150, trackingStatus: 150, actualDeliveryDate: 150,
-      goodsReceiptDate: 150
+      goodsReceiptDate: 150, customerPO: 150, supplierBillName: 180, shipmentName: 180
     },
     rtv: {
       purchaseOrderName: 180, customerQuoteName: 180, customerOrderName: 180, rtvType: 150,
       rmaNumber: 150, shipFromAccountName: 180, shipFromContactName: 180, supplierName: 180,
       supplierContact: 180, totalLines: 100, totalCost: 120, issuedDate: 150, approvalDate: 150,
-      returnByDate: 150, name: 180, status: 120
+      returnByDate: 150, name: 180, status: 120, salesOrderName: 180, supplierBillName: 180, shipmentName: 180
     },
     credit: {
       invoiceName: 180, customerQuoteName: 180, customerOrderName: 180, creditToAccountName: 180,
       creditToContactName: 180, totalLines: 100, totalPrice: 120, totalShippingCharges: 120,
       totalTaxesAmount: 120, totalCreditAmount: 150, issuedDate: 150, expirationDate: 150,
-      availableCreditBalance: 150, settledDate: 150, name: 180, status: 120
+      availableCreditBalance: 150, settledDate: 150, name: 180, status: 120,
+      salesOrderName: 180, purchaseOrderName: 180, supplierBillName: 180, shipmentName: 180
     },
     debit: {
       supplierBillName: 180, purchaseOrderName: 180, customerOrderName: 180, supplierCreditMemoName: 180,
       debitToAccountName: 180, debitToContactName: 180, totalLines: 100, totalCost: 120,
       totalShippingCharges: 120, totalDebitAmount: 150, issuedDate: 150, approvalDate: 150,
-      availableDebitBalance: 150, settledDate: 150, name: 180, status: 120
+      availableDebitBalance: 150, settledDate: 150, name: 180, status: 120,
+      customerQuoteName: 180, salesOrderName: 180, shipmentName: 180
     }
   });
 
@@ -507,6 +513,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               name: order.Name || '',
               status: order.Status__c || '',
               customerPO: order.Customer_PO__c || '',
+              purchaseOrderId: order.Purchase_Order__c || '',
               customerPODate: formatDate(order.Customer_PO_Date__c, 'numeric-dash'),
               billToAccountName: order.Bill_to_Account_Name || '',
               billToLocationName: order.Authorized_Bill_To_Location_Name || '',
@@ -539,6 +546,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               status: p.Status__c || '',
               customerQuoteName: p.Customer_Quote_Name || '',
               customerOrderName: p.Customer_Order_Name || '',
+              salesOrderName: p.Sales_Order_Name || p.Sales_Order__r?.Name || '',
+              shipmentName: p.Shipment_Name || p.Shipment__r?.Name || '',
               customerPO: p.Customer_PO__c || '',
               supplierName: p.Supplier_Name || p.Supplier__r?.Name || p.Supplier_Name__c || '',
               supplierDBA: p.Supplier_DBA__c || '',
@@ -562,7 +571,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               estimatedDeliveryDate: formatDate(p.Estimated_Delivery_Date__c, 'numeric-dash'),
               trackingStatus: p.Tracking_Status__c || '',
               actualDeliveryDate: formatDate(p.Actual_Delivery_Date__c, 'numeric-dash'),
-              goodsReceiptsDate: formatDate(p.Goods_Receipt_Date__c, 'numeric-dash')
+              goodsReceiptsDate: formatDate(p.Goods_Receipt_Date__c, 'numeric-dash'),
+              customerQuoteId: p.Customer_Quote__c || '',
+              customerOrderId: p.Customer_Order_Name__c || p.Customer_Order__c || '',
+              purchaseOrderId: p.Purchase_Order__c || '',
+              salesOrderId: p.Sales_Order__c || '',
+              shipmentId: p.Shipment__c || ''
             })));
           } else {
             setPurchases([]);
@@ -577,6 +591,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               purchaseOrderName: sb.Purchase_Order_Name || sb.gtherp__Purchase_Order__r?.Name || sb.gtherp__Purchase_Order__c || '',
               customerQuoteName: sb.Customer_Quote_Name || '',
               customerOrderName: sb.Customer_Order_Name || '',
+              salesOrderName: sb.Sales_Order_Name || sb.Sales_Order__r?.Name || '',
+              shipmentName: sb.Shipment_Name || sb.Shipment__r?.Name || '',
               supplierName: sb.Supplier_Name || sb.Supplier__r?.Name || sb.Supplier_Name__c || '',
               supplierDBA: sb.Supplier_DBA__c || '',
               supplierContact: sb.Supplier_Contact_Name || sb.Supplier_Contact__c || '',
@@ -590,7 +606,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               remittanceStatus: sb.Remittance_Status__c || '',
               openBalance: sb.Open_Balance__c || 0,
               daysOutstanding: sb.Days_Outstanding__c || 0,
-              settledDate: formatDate(sb.Settled_Date__c, 'numeric-dash')
+              settledDate: formatDate(sb.Settled_Date__c, 'numeric-dash'),
+              purchaseOrderId: sb.gtherp__Purchase_Order__c || '',
+              customerQuoteId: sb.Customer_Quote__c || '',
+              customerOrderId: sb.Customer_Order__c || '',
+              salesOrderId: sb.Sales_Order__c || '',
+              shipmentId: sb.Shipment__c || ''
             })));
           } else {
             setSupplierBills([]);
@@ -624,12 +645,19 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               trackingStatus: r.Tracking_Status__c || '',
               actualDeliveryDate: formatDate(r.Actual_Delivery_Date__c, 'numeric-dash'),
               goodsReceiptDate: formatDate(r.Goods_Receipt_Date__c, 'numeric-dash'),
+              customerPO: r.Customer_PO__c || '',
+              supplierBillName: r.Supplier_Bill_Name || r.gtherp__Supplier_Bill__r?.Name || '',
+              shipmentName: r.Shipment_Name || r.Shipment__r?.Name || '',
               // Existing fields for compatibility if needed (Base Return interface requirements)
               description: r.Name || '',
               requestDate: formatDate(r.Goods_Receipt_Date__c, 'numeric-dash'),
               type: 'RMA',
               reason: r.RMA_Type__c || '',
-              totalAmount: r.Total_Price__c || 0
+              totalAmount: r.Total_Price__c || 0,
+              salesOrderId: r.Sales_Order__c || '',
+              customerQuoteId: r.Customer_Quote__c || '',
+              customerOrderId: r.Customer_Order__c || '',
+              shipmentId: r.Shipment__c || ''
             })),
             rtv: (json.RTV__c || []).map((r: any) => ({
               id: r.Id,
@@ -640,6 +668,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               customerOrderName: r.Customer_Order_Name || '',
               rtvType: r.RTV_Type__c || '',
               rmaNumber: r.Supplier_RMA_Number__c || '',
+              salesOrderName: r.Sales_Order_Name || r.gtherp__Sales_Order__r?.Name || '',
+              supplierBillName: r.Supplier_Bill_Name || r.gtherp__Supplier_Bill__r?.Name || '',
+              shipmentName: r.Shipment_Name || r.Shipment__r?.Name || '',
               shipFromAccountName: r.Ship_from_Account_Name || '',
               shipFromContactName: r.Ship_from_Contact_Name || '',
               supplierName: r.Supplier_Name || '',
@@ -654,7 +685,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               requestDate: formatDate(r.Issued_Date__c, 'numeric-dash'),
               type: r.RTV_Type__c || 'RTV',
               reason: '',
-              totalAmount: r.Total_Cost__c || 0
+              totalAmount: r.Total_Cost__c || 0,
+              purchaseOrderId: r.gtherp__Purchase_Order__c || '',
+              customerQuoteId: r.Customer_Quote__c || '',
+              customerOrderId: r.Customer_Order__c || '',
+              salesOrderId: r.Sales_Order__c || '',
+              shipmentId: r.Shipment__c || ''
             })),
             creditMemos: (json.Credit_Memo__c || []).map((c: any) => ({
               id: c.Id,
@@ -665,6 +701,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               customerOrderName: c.Customer_Order_Name || c.gtherp__Customer_Order__c || '',
               creditToAccountName: c.Credit_to_Account_Name || c.gtherp__Credit_to_Account__c || '',
               creditToContactName: c.Credit_to_Contact_Name || c.gtherp__Credit_to_Contact__c || '',
+              salesOrderName: c.Sales_Order_Name || c.gtherp__Sales_Order__r?.Name || '',
+              purchaseOrderName: c.Purchase_Order_Name || c.gtherp__Purchase_Order__r?.Name || '',
+              supplierBillName: c.Supplier_Bill_Name || c.gtherp__Supplier_Bill__r?.Name || '',
+              shipmentName: c.Shipment_Name || c.Shipment__r?.Name || '',
               totalLines: c.Total_Lines__c || 0,
               totalPrice: c.Total_Price__c || 0,
               totalShippingCharges: c.Total_Shipping_Charges__c || 0,
@@ -679,7 +719,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               requestDate: formatDate(c.Issued_Date__c, 'numeric-dash'),
               type: 'Credit Memo',
               reason: '',
-              totalAmount: c.Total_Credit_Amount__c || 0
+              totalAmount: c.Total_Credit_Amount__c || 0,
+              invoiceId: c.gtherp__Invoice__c || '',
+              customerQuoteId: c.gtherp__Customer_Quote__c || '',
+              customerOrderId: c.gtherp__Customer_Order__c || '',
+              salesOrderId: c.Sales_Order__c || '',
+              shipmentId: c.Shipment__c || ''
             })),
             debitMemos: (json.Debit_Memo__c || []).map((d: any) => ({
               id: d.Id,
@@ -691,6 +736,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               supplierCreditMemoName: d.Supplier_Credit_Memo__c || d.gtherp__Supplier_Credit_Memo__c || '',
               debitToAccountName: d.Debit_to_Account_Name || d.gtherp__Debit_to_Account__c || '',
               debitToContactName: d.Debit_to_Contact_Name || d.gtherp__Debit_to_Contact__c || '',
+              customerQuoteName: d.Customer_Quote_Name || d.gtherp__Customer_Quote__r?.Name || '',
+              salesOrderName: d.Sales_Order_Name || d.gtherp__Sales_Order__r?.Name || '',
+              shipmentName: d.Shipment_Name || d.Shipment__r?.Name || '',
               totalLines: d.Total_Lines__c || 0,
               totalCost: d.Total_Cost__c || 0,
               totalShippingCharges: d.Total_Shipping_Charges__c || 0,
@@ -704,7 +752,13 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               requestDate: formatDate(d.Issued_Date__c, 'numeric-dash'),
               type: 'Debit Memo',
               reason: '',
-              totalAmount: d.Total_Debit_Amount__c || 0
+              totalAmount: d.Total_Debit_Amount__c || 0,
+              supplierBillId: d.gtherp__Supplier_Bill__c || '',
+              purchaseOrderId: d.gtherp__Purchase_Order__c || '',
+              customerOrderId: d.gtherp__Customer_Order__c || '',
+              salesOrderId: d.Sales_Order__c || '',
+              customerQuoteId: d.Customer_Quote__c || '',
+              shipmentId: d.Shipment__c || ''
             })),
           });
           break;
@@ -762,6 +816,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               salesOrderName: inv.Sales_Order_Name || '',
               customerOrderName: inv.Customer_Order_Name || '',
               customerPO: inv.Customer_PO__c || '',
+              salesOrderId: inv.Sales_Order__c || '',
+              customerQuoteId: inv.Customer_Quote__c || '',
+              customerOrderId: inv.Customer_Order__c || '',
+              purchaseOrderId: inv.Purchase_Order__c || '',
               billToAccountName: inv.Bill_to_Account_Name || '',
               billToLocationName: inv.Authorized_Bill_To_Location_Name || '',
               billToContactName: inv.Bill_to_Contact_Name || '',
@@ -786,6 +844,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               salesOrderName: sm.Sales_Order_Name || '',
               customerOrderName: sm.Customer_Order_Name || '',
               customerPO: sm.Customer_PO__c || '',
+              salesOrderId: sm.Sales_Order__c || '',
+              customerQuoteId: sm.Customer_Quote__c || '',
+              customerOrderId: sm.Customer_Order__c || '',
+              purchaseOrderId: sm.Purchase_Order__c || '',
               shipToAccountName: sm.Ship_to_Account_Name || '',
               shipToLocationName: sm.Authorized_Ship_To_Location_Name || '',
               shipToContactName: sm.Ship_to_Contact_Name || '',
@@ -813,6 +875,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               customerQuoteName: so.Customer_Quote_Name || '',
               customerOrderName: so.Customer_Order_Name || '',
               customerPO: so.Customer_PO__c || '',
+              customerQuoteId: so.Customer_Quote__c || '',
+              customerOrderId: so.Customer_Order__c || '',
+              purchaseOrderId: so.Purchase_Order__c || '',
               billToAccountName: so.Bill_to_Account_Name || '',
               billToLocationName: so.Authorized_Bill_To_Location_Name || '',
               billToContactName: so.Bill_to_Contact_Name || '',
@@ -837,6 +902,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               status: cq.Status__c || '',
               customerOrderName: cq.Customer_Order_Name || '',
               customerPO: cq.Customer_PO__c || '',
+              customerOrderId: cq.Customer_Order__c || '',
+              purchaseOrderId: cq.Purchase_Order__c || '',
               billToAccountName: cq.Bill_to_Account_Name || '',
               billToLocationName: cq.Authorized_Bill_To_Location_Name || '',
               billToContactName: cq.Bill_to_Contact_Name || '',

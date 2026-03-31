@@ -1,5 +1,9 @@
+import { useState, useMemo } from "react";
 import { ProposalElement, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
+import Pagination from "../../../../components/ui/Pagination";
+
+const ITEMS_PER_PAGE = 10;
 
 interface ElementsTabProps {
     elements: ProposalElement[];
@@ -12,8 +16,20 @@ interface ElementsTabProps {
 }
 
 export default function ElementsTab({ elements, sortField, sortDirection, onSort, loading, widths, onResize }: ElementsTabProps) {
+    const [currentPage, setCurrentPage] = useState(1);
+
     const sortConfig = { key: sortField as string, direction: sortDirection };
-    const requestSort = (key: string) => onSort(key as keyof ProposalElement);
+    const requestSort = (key: string) => {
+        onSort(key as keyof ProposalElement);
+        setCurrentPage(1);
+    };
+
+    const paginatedElements = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return elements.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [elements, currentPage]);
+
+    const totalPages = Math.ceil(elements.length / ITEMS_PER_PAGE);
 
     if (loading) {
         return (
@@ -35,37 +51,45 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
     }
 
     return (
-        <div className="overflow-x-auto">
-            <table className="w-full table-fixed">
-                <thead className="bg-primary-light dark:bg-gray-900">
-                    <tr>
-                        <SortableHeader label="WBS" field="wbs" sortConfig={sortConfig} requestSort={requestSort} width={widths.wbs} onResize={onResize} />
-                        <SortableHeader label="Proposal Element" field="proposalElement" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalElement} onResize={onResize} />
-                        <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={onResize} />
-                    </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {elements.map(element => (
-                        <tr key={element.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 ">
-                            <td className="px-3 py-2 text-left truncate">
-                                <span className="inline-block px-1  text-sm  font-semibold  rounded bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 truncate">
-                                    {element.wbs}
-                                </span>
-                            </td>
-                            <td className="px-3 py-2 truncate" title={element.proposalElement}>
-                                <div className="truncate text-left">
-                                    <div className="text-sm font-medium text-gray-900 dark:text-white">{element.proposalElement}</div>
-                                </div>
-                            </td>
-                            <td className="px-3 py-2 truncate" title={element.description}>
-                                <div className="truncate text-left">
-                                    <div className="text-sm text-gray-600 dark:text-gray-400">{element.description}</div>
-                                </div>
-                            </td>
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+            <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
+                <table className="w-full border-separate border-spacing-0 table-fixed">
+                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                        <tr>
+                            <SortableHeader label="WBS" field="wbs" sortConfig={sortConfig} requestSort={requestSort} width={widths.wbs} onResize={onResize} className="bg-primary-light dark:bg-gray-900" />
+                            <SortableHeader label="Proposal Element" field="proposalElement" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalElement} onResize={onResize} />
+                            <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={onResize} />
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {paginatedElements.map(element => (
+                            <tr key={element.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                <td className="px-3 py-2 text-left truncate">
+                                    <span className="inline-block px-2 py-0.5 text-xs font-bold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 truncate">
+                                        {element.wbs}
+                                    </span>
+                                </td>
+                                <td className="px-3 py-2 truncate" title={element.proposalElement}>
+                                    <div className="text-sm font-medium text-gray-900 dark:text-white truncate">{element.proposalElement}</div>
+                                </td>
+                                <td className="px-3 py-2 truncate" title={element.description}>
+                                    <div className="text-sm text-gray-600 dark:text-gray-400 truncate">{element.description}</div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="px-3 py-2">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={elements.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName=""
+                />
+            </div>
         </div>
     );
 }

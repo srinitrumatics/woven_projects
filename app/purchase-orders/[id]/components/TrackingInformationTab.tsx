@@ -1,6 +1,9 @@
-"use client";
-
-import React from 'react';
+import { useSortableData } from "@/hooks/useSortableData";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import Pagination from "@/components/ui/Pagination";
+import { StatusBadge } from "@/components/ui/StatusBadge";
+import { useState, useMemo } from 'react';
 import { formatDate } from "@/lib/utils/formatting";
 
 interface TrackingInfo {
@@ -19,7 +22,47 @@ interface TrackingInformationTabProps {
     data: TrackingInfo[];
 }
 
+const ITEMS_PER_PAGE = 10;
+
 export default function TrackingInformationTab({ data }: TrackingInformationTabProps) {
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const mappedData = useMemo(() => data.map((item, index) => ({
+        ...item,
+        id: index,
+        logisticsPartner: item.Logistics_Partner__c,
+        logisticsContact: item.Logistics_Contact__c,
+        shippingMethod: item.Shipping_Method__c,
+        serviceLevel: item.Service_Level__c,
+        trackingNumber: item.Tracking_Number__c,
+        trackingStatus: item.Tracking_Status__c,
+        estimatedDelivery: item.Estimated_Delivery_Date__c,
+        actualDelivery: item.Actual_Delivery_Date__c,
+    })), [data]);
+
+    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData);
+
+    const initialWidths = {
+        logisticsPartner: 180,
+        logisticsContact: 180,
+        shippingMethod: 150,
+        serviceLevel: 150,
+        trackingUrl: 200,
+        trackingNumber: 150,
+        trackingStatus: 120,
+        estimatedDelivery: 180,
+        actualDelivery: 180,
+    };
+
+    const { widths: columnWidths, handleResize } = useResizableColumns(initialWidths);
+
+    const paginatedData = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return sortedData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [sortedData, currentPage]);
+
+    const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
+
     if (!data || data.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
@@ -30,49 +73,57 @@ export default function TrackingInformationTab({ data }: TrackingInformationTabP
     }
 
     return (
-        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0">
+                <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Logistics Partner">Logistics Partner</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Logistics Contact">Logistics Contact</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Shipping Method">Shipping Method</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Service Level">Service Level</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Tracking URL">Tracking URL</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Tracking Number">Tracking Number</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Tracking Status">Tracking Status</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Estimated Delivery Date">Estimated Delivery Date</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Actual Delivery Date">Actual Delivery Date</th>
+                            <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.logisticsPartner} onResize={handleResize} />
+                            <SortableHeader label="Logistics Contact" field="logisticsContact" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.logisticsContact} onResize={handleResize} />
+                            <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shippingMethod} onResize={handleResize} />
+                            <SortableHeader label="Service Level" field="serviceLevel" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.serviceLevel} onResize={handleResize} />
+                            <SortableHeader label="Tracking URL" field="Tracking_URL__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.trackingUrl} onResize={handleResize} />
+                            <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.trackingNumber} onResize={handleResize} />
+                            <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.trackingStatus} onResize={handleResize} />
+                            <SortableHeader label="Estimated Delivery Date" field="estimatedDelivery" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.estimatedDelivery} onResize={handleResize} />
+                            <SortableHeader label="Actual Delivery Date" field="actualDelivery" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.actualDelivery} onResize={handleResize} />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {data.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={item.Logistics_Partner__c || ' '}>{item.Logistics_Partner__c || ' '}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={item.Logistics_Contact__c || ' '}>{item.Logistics_Contact__c || ' '}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={item.Shipping_Method__c || ' '}>{item.Shipping_Method__c || ' '}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={item.Service_Level__c || ' '}>{item.Service_Level__c || ' '}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={item.Tracking_URL__c || ' '}>
+                        {paginatedData.map((item) => (
+                            <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Logistics_Partner__c || '-'}>{item.Logistics_Partner__c || '-'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Logistics_Contact__c || '-'}>{item.Logistics_Contact__c || '-'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Shipping_Method__c || '-'}>{item.Shipping_Method__c || '-'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Service_Level__c || '-'}>{item.Service_Level__c || '-'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Tracking_URL__c || '-'}>
                                     {item.Tracking_URL__c ? (
-                                        item.Tracking_URL__c
-                                    ) : ' '}
+                                        <a href={item.Tracking_URL__c} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline block truncate" title={item.Tracking_URL__c}>
+                                            {item.Tracking_URL__c}
+                                        </a>
+                                    ) : '-'}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={item.Tracking_Number__c || ' '}>{item.Tracking_Number__c || ' '}</td>
-                                <td className="px-4 py-3 text-sm truncate" title={item.Tracking_Status__c || ' '}>
-                                    <span className={`px-2 py-1 rounded-full text-sm font-medium truncate ${item.Tracking_Status__c === 'Delivered' ? 'bg-green-100 text-green-800' :
-                                        item.Tracking_Status__c === 'In Transit' ? 'bg-blue-100 text-blue-800' :
-                                            'bg-amber-100 text-amber-800'
-                                        }`} title={item.Tracking_Status__c || ' '}>
-                                        {item.Tracking_Status__c || ' '}
-                                    </span>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Tracking_Number__c || '-'}>{item.Tracking_Number__c || '-'}</td>
+                                <td className="px-3 py-2 text-sm truncate">
+                                    <StatusBadge status={item.Tracking_Status__c || '-'} />
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') || ' '}>{formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') || ' '}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') || ' '}>{formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') || ' '}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Estimated_Delivery_Date__c ? formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') : '-'}>{item.Estimated_Delivery_Date__c ? formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') : '-'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Actual_Delivery_Date__c ? formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') : '-'}>{item.Actual_Delivery_Date__c ? formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') : '-'}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            <div className="border-t border-gray-100 dark:border-gray-700">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={data.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName="Tracking Info"
+                />
             </div>
         </div>
     );

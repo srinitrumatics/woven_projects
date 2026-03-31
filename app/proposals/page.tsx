@@ -61,7 +61,9 @@ export default function ProposalsPage() {
           proposalNumber: item.Proposal_Number__c || item.Name || 'N/A',
           proposalName: item.Name || item.Proposal_Name__c || 'N/A',
           customerOrder: item.Customer_Order_Name || 'N/A',
+          orderId: item.Customer_Order__c || '',
           customerPO: item.Customer_PO__c || 'N/A',
+          purchaseOrderId: item.Purchase_Order__c || item.Purchase_Order_Id__c || '',
           accountName: item.Bill_to_Account_Name || item.Ship_to_Account_Name || 'N/A',
           contactName: item.Bill_to_Contact_Name || item.Ship_to_Contact_Name || 'N/A',
           status: (item.Status__c || item.status_c || item.Status || 'Draft') as ProposalStatus,
@@ -557,11 +559,35 @@ export default function ProposalsPage() {
                       <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.proposalName}>{proposal.proposalName}</div>
                       </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerOrder}>{proposal.customerOrder}</div>
+                      <td className="px-3 py-2 truncate text-left">
+                        {proposal.orderId && proposal.customerOrder !== 'N/A' ? (
+                          <Link 
+                            href={`/orders/${proposal.orderId}`} 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm font-semibold text-primary hover:underline truncate" 
+                            title={proposal.customerOrder}
+                          >
+                            {proposal.customerOrder}
+                          </Link>
+                        ) : (
+                          <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerOrder}>{proposal.customerOrder}</div>
+                        )}
                       </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerPO}>{proposal.customerPO}</div>
+                      <td className="px-3 py-2 truncate text-left">
+                        {proposal.purchaseOrderId && proposal.customerPO !== 'N/A' ? (
+                          <Link 
+                            href={`/purchase-orders/${proposal.purchaseOrderId}`} 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm font-semibold text-primary hover:underline truncate" 
+                            title={proposal.customerPO}
+                          >
+                            {proposal.customerPO}
+                          </Link>
+                        ) : (
+                          <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerPO}>{proposal.customerPO}</div>
+                        )}
                       </td>
                       <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billTo}>{proposal.billTo}</div>

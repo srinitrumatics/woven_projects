@@ -103,7 +103,6 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
 
             if (!url) throw new Error("URL missing from response");
 
-            // For some Salesforce URLs, we might still need the download=1 for the preview landing page if downloadUrl is missing
             if (action === 'download' && !result?.downloadUrl && !url.includes('download=1')) {
                 url += (url.includes('?') ? '&' : '?') + 'download=1';
             }
@@ -138,13 +137,12 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
     }
 
     return (
-        <div className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden ">
-
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full">
-                    <thead className="bg-primary-light dark:bg-gray-900">
+                <table className="w-full border-separate border-spacing-0 table-fixed">
+                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.fileName} onResize={handleResize} className=" sticky left-0 bg-primary-light dark:bg-gray-900 z-30 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]" />
+                            <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.fileName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.fileType} onResize={handleResize} />
                             <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.sizeInBytes} onResize={handleResize} />
                             <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.uploadedBy} onResize={handleResize} />
@@ -155,7 +153,7 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((file) => (
                             <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] truncate">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate">
                                     <div className="flex items-center gap-3 min-w-0">
                                         {getFileIcon(file.fileType)}
                                         <div className="truncate" title={file.fileName}>{file.fileName}</div>
@@ -163,7 +161,7 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>{file.fileType}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatFileSize(file.sizeInBytes)}>{formatFileSize(file.sizeInBytes)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate"><div className="truncate" title={file.uploadedBy}>{file.uploadedBy}</div></td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>{file.uploadedBy}</td>
                                 <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? formatDate(file.uploadedDate) : '-'}>{file.uploadedDate ? formatDate(file.uploadedDate) : '-'}</td>
                                 <td className="px-3 py-2 truncate">
                                     <div className="flex items-center gap-3 min-w-0">
@@ -193,18 +191,16 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
                 </table>
             </div>
 
-            {files.length > ITEMS_PER_PAGE && (
-                <div className="mt-4 px-3 py-2 border-t border-gray-200 dark:border-gray-700 text-left">
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        totalItems={files.length}
-                        itemsPerPage={ITEMS_PER_PAGE}
-                        itemName="Files"
-                    />
-                </div>
-            )}
+            <div className="px-3 py-2">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={files.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName=""
+                />
+            </div>
         </div>
     );
 }

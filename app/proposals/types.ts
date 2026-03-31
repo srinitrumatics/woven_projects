@@ -42,6 +42,7 @@ export interface Proposal {
   accountId?: string;
   contactId?: string;
   orderId?: string;
+  purchaseOrderId?: string;
   proposalType?: string;
   priceBook?: string;
   site?: string;

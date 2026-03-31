@@ -7,6 +7,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -59,16 +60,7 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
     }
 
     return (
-        <div className="flex flex-col min-w-0">
-            {/* Sub Tabs Header */}
-            <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6 font-bold">
-                <button
-                    className="px-6 py-3 text-sm font-bold border-b-2 border-primary text-primary transition-colors"
-                >
-                    Supplier Bill Lines ({lines.length})
-                </button>
-            </div>
-
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                 <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
@@ -98,10 +90,7 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                                     </Link>
                                 </td>
                                 <td className="px-3 py-2 text-sm truncate">
-                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${line.status === 'Approved' ? 'bg-green-100/80 text-green-700 border-green-200' : 'bg-red-100/80 text-red-700 border-red-200'
-                                        }`}>
-                                        {line.status}
-                                    </span>
+                                    <StatusBadge status={line.status} />
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{line.supplierBillName || '-'}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{line.customerQuoteLineName || '-'}</td>
@@ -121,18 +110,16 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                 </table>
             </div>
 
-            {lines.length > ITEMS_PER_PAGE && (
-                <div className="mt-4 px-3 py-2 border-t border-gray-200 dark:border-gray-700">
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        totalItems={lines.length}
-                        itemsPerPage={ITEMS_PER_PAGE}
-                        itemName="Supplier Bill Lines"
-                    />
-                </div>
-            )}
+            <div className="border-t border-gray-100 dark:border-gray-700">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={lines.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName="Supplier Bill Lines"
+                />
+            </div>
         </div>
     );
 }
