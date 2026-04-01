@@ -127,7 +127,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productDescription}>{log.productDescription}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={log.shippingManifestName}>
                                 {log.shippingManifestId ? (
-                                    <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-bold" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                    <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
                                         {log.shippingManifestName || "View Manifest"}
                                     </Link>
                                 ) : (

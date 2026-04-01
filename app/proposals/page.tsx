@@ -548,8 +548,8 @@ export default function ProposalsPage() {
                 ) : (
                   paginatedProposals.map((proposal, index) => (
                     <tr key={proposal.id || index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
-                        <Link href={`/proposals/${proposal.id}`} className="text-sm font-semibold text-primary hover:underline truncate">
+                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white text-gray-600 dark:bg-gray-400 text-left truncate">
+                        <Link href={`/proposals/${proposal.id}`} className="text-primary hover:underline truncate">
                           <div title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
                         </Link>
                       </td>
@@ -561,11 +561,11 @@ export default function ProposalsPage() {
                       </td>
                       <td className="px-3 py-2 truncate text-left">
                         {proposal.orderId && proposal.customerOrder !== 'N/A' ? (
-                          <Link 
-                            href={`/orders/${proposal.orderId}`} 
+                          <Link
+                            href={`/orders/${proposal.orderId}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm font-semibold text-primary hover:underline truncate" 
+                            className="text-sm font-semibold text-primary hover:underline truncate"
                             title={proposal.customerOrder}
                           >
                             {proposal.customerOrder}
@@ -576,11 +576,11 @@ export default function ProposalsPage() {
                       </td>
                       <td className="px-3 py-2 truncate text-left">
                         {proposal.purchaseOrderId && proposal.customerPO !== 'N/A' ? (
-                          <Link 
-                            href={`/purchase-orders/${proposal.purchaseOrderId}`} 
+                          <Link
+                            href={`/purchase-orders/${proposal.purchaseOrderId}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm font-semibold text-primary hover:underline truncate" 
+                            className="text-sm font-semibold text-primary hover:underline truncate"
                             title={proposal.customerPO}
                           >
                             {proposal.customerPO}

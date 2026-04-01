@@ -180,31 +180,17 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                                         {paginatedDebits.map((debit) => (
                                             <tr key={debit.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                                                 <td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 border-r border-gray-100 dark:border-gray-700">
-                                                    <Link href={`#`} className="text-primary hover:underline font-bold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                                        {debit.name}
-                                                    </Link>
+                                                    {debit.name || ''}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm truncate">
                                                     <StatusBadge status={debit.status} />
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.appliedAmount)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
-                                                    {debit.debitMemoId ? (
-                                                        <Link href={`#`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                                            {debit.debitMemoName || 'View Debit Memo'}
-                                                        </Link>
-                                                    ) : (
-                                                        debit.debitMemoName || '-'
-                                                    )}
+                                                    {debit.debitMemoName || ' '}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
-                                                    {debit.supplierBillId ? (
-                                                        <Link href={`/supplier-bills/${debit.supplierBillId}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                                            {debit.supplierBillName || 'View Bill'}
-                                                        </Link>
-                                                    ) : (
-                                                        debit.supplierBillName || '-'
-                                                    )}
+                                                    {debit.supplierBillName || ''}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.appliedDate ? formatDate(debit.appliedDate, 'numeric-dash') : '-'}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.postedDate ? formatDate(debit.postedDate, 'numeric-dash') : '-'}</td>

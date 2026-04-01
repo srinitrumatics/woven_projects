@@ -87,7 +87,7 @@ export default function QuoteInvoicesSubTab({
                                 {paginatedInvoices.map((invoice) => (
                                     <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                         <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.invoiceNumber }}>
-                                            <Link href={`/invoices/${invoice.id}`} className="text-primary hover:underline font-bold">
+                                            <Link href={`/invoices/${invoice.id}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {invoice.invoiceNumber}
                                             </Link>
                                         </td>
@@ -102,21 +102,21 @@ export default function QuoteInvoicesSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>
                                             {invoice.salesOrderId ? (
-                                                <Link href={`/orders/${invoice.salesOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/orders/${invoice.salesOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {invoice.salesOrder}
                                                 </Link>
                                             ) : invoice.salesOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {invoice.customerQuoteId ? (
-                                                <Link href={`/quotes/${invoice.customerQuoteId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/quotes/${invoice.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {invoice.customerQuote}
                                                 </Link>
                                             ) : invoice.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {invoice.customerOrderId ? (
-                                                <Link href={`/orders/${invoice.customerOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/orders/${invoice.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {invoice.customerOrder}
                                                 </Link>
                                             ) : invoice.customerOrder}

@@ -152,9 +152,7 @@ export default function FulfillmentsTab({
                                                     {quote.name}
                                                 </td>
                                                 <td className="px-3 py-2 truncate">
-                                                    <span className="inline-block px-2 py-0.5 text-xs font-bold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                                                        {quote.status}
-                                                    </span>
+                                                    <StatusBadge status={quote.status as any} />
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {quote.customerOrderName && quote.customerOrderId ? (
@@ -285,9 +283,7 @@ export default function FulfillmentsTab({
                                                     {order.name}
                                                 </td>
                                                 <td className="px-3 py-2 truncate">
-                                                    <span className="inline-block px-2 py-0.5 text-xs font-bold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                                                        {order.status}
-                                                    </span>
+                                                    <StatusBadge status={order.status as any} />
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {order.customerQuoteName && order.customerQuoteId ? (
@@ -432,9 +428,7 @@ export default function FulfillmentsTab({
                                                     {invoice.name}
                                                 </td>
                                                 <td className="px-3 py-2 truncate">
-                                                    <span className="inline-block px-2 py-0.5 text-xs font-bold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                                                        {invoice.status}
-                                                    </span>
+                                                    <StatusBadge status={invoice.status as any} />
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {invoice.salesOrderName && invoice.salesOrderId ? (
@@ -590,9 +584,7 @@ export default function FulfillmentsTab({
                                                     {manifest.name}
                                                 </td>
                                                 <td className="px-3 py-2 truncate">
-                                                    <span className="inline-block px-2 py-0.5 text-xs font-bold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                                                        {manifest.status}
-                                                    </span>
+                                                    <StatusBadge status={manifest.status as any} />
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.salesOrderName && manifest.salesOrderId ? (
@@ -705,5 +697,46 @@ export default function FulfillmentsTab({
                 )}
             </div>
         </div>
+    );
+}
+function StatusBadge({ status }: { status: string }) {
+    const getStyles = () => {
+        switch (status) {
+            case "Approved":
+                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+            case "Accepted":
+                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+            case "Pending Review":
+                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+            case "Under Review":
+                return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
+            case "Draft":
+                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+            case "Rejected":
+            case "Partial Rejected":
+                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+            case "Expired":
+                return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
+            case "Lead":
+                return "bg-green-200 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+            case "Quote Requested":
+                return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400";
+            case "Quote Ready":
+                return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400";
+            case "Proposal Sent":
+                return "bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400";
+            case "Negotiation":
+                return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400";
+            case "Awarded":
+                return "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400";
+            default:
+                return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+        }
+    };
+
+    return (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
+            {status}
+        </span>
     );
 }

@@ -105,35 +105,35 @@ export default function QuoteRMASubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }} title={rma.salesOrder}>
                                             {rma.salesOrderId ? (
-                                                <Link href={`/orders/${rma.salesOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/orders/${rma.salesOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {rma.salesOrder}
                                                 </Link>
                                             ) : rma.salesOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }} title={rma.customerQuote}>
                                             {rma.customerQuoteId ? (
-                                                <Link href={`/quotes/${rma.customerQuoteId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/quotes/${rma.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {rma.customerQuote}
                                                 </Link>
                                             ) : rma.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }} title={rma.customerOrder}>
                                             {rma.customerOrderId ? (
-                                                <Link href={`/orders/${rma.customerOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/orders/${rma.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {rma.customerOrder}
                                                 </Link>
                                             ) : rma.customerOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierBill }} title={rma.supplierBill}>
                                             {rma.supplierBillId ? (
-                                                <Link href={`/supplier-bills/${rma.supplierBillId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/supplier-bills/${rma.supplierBillId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {rma.supplierBill}
                                                 </Link>
                                             ) : rma.supplierBill}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }} title={rma.purchaseOrder}>
                                             {rma.purchaseOrderId ? (
-                                                <Link href={`/purchase-orders/${rma.purchaseOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/purchase-orders/${rma.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {rma.purchaseOrder}
                                                 </Link>
                                             ) : rma.purchaseOrder}

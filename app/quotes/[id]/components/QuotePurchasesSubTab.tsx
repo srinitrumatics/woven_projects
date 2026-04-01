@@ -93,7 +93,7 @@ export default function QuotePurchasesSubTab({
                             {paginatedPurchases.map((po) => (
                                 <tr key={po.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                     <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.purchaseOrderNumber }}>
-                                        <Link href={`/purchase-orders/${po.id}`} className="text-primary hover:underline font-bold">
+                                        <Link href={`/purchase-orders/${po.id}`} target="_blank" className="text-primary hover:underline font-bold">
                                             {po.purchaseOrderNumber}
                                         </Link>
                                     </td>
@@ -102,14 +102,14 @@ export default function QuotePurchasesSubTab({
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                         {po.customerQuoteId ? (
-                                            <Link href={`/quotes/${po.customerQuoteId}`} className="text-primary hover:underline font-bold">
+                                            <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {po.customerQuote}
                                             </Link>
                                         ) : po.customerQuote}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                         {po.customerOrderId ? (
-                                            <Link href={`/orders/${po.customerOrderId}`} className="text-primary hover:underline font-bold">
+                                            <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {po.customerOrder}
                                             </Link>
                                         ) : po.customerOrder}

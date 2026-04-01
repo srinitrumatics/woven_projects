@@ -135,21 +135,21 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Purchase_Order_Name || '-'}>
                                     {b.Purchase_Order__c ? (
-                                        <Link href={`/purchase-orders/${b.Purchase_Order__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/purchase-orders/${b.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {b.Purchase_Order_Name || 'View PO'}
                                         </Link>
                                     ) : b.Purchase_Order_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Quote_Name || '-'}>
                                     {b.Customer_Quote__c ? (
-                                        <Link href={`/quotes/${b.Customer_Quote__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/quotes/${b.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {b.Customer_Quote_Name || 'View Quote'}
                                         </Link>
                                     ) : b.Customer_Quote_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Order_Name || '-'}>
                                     {b.Customer_Order__c ? (
-                                        <Link href={`/orders/${b.Customer_Order__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/orders/${b.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {b.Customer_Order_Name || 'View Order'}
                                         </Link>
                                     ) : b.Customer_Order_Name || '-'}

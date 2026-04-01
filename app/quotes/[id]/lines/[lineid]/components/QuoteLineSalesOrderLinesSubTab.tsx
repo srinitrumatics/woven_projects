@@ -109,11 +109,7 @@ export default function QuoteLineSalesOrderLinesSubTab({
                                         ) : item.salesOrderName}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuoteLine }}>
-                                        {item.customerQuoteLineId ? (
-                                            <Link href={`/quotes/lines/${item.customerQuoteLineId}`} className="text-primary hover:underline font-bold">
-                                                {item.customerQuoteLine}
-                                            </Link>
-                                        ) : item.customerQuoteLine}
+                                        {item.customerQuoteLine}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{item.productName}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{item.description}</td>

@@ -245,7 +245,8 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                             <td className="px-3 py-2 font-bold text-primary dark:text-primary-light sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
                                 <Link
                                     href={`/shipments/${shipmentId}/lines/${line.id}`}
-                                    className="text-primary font-bold hover:underline truncate"
+                                    className="text-primary font-medium hover:underline truncate"
+                                    target="_blank"
                                     title={line.name}>{line.name}</Link>
                             </td>
                             <TextCell v={<StatusBadge status={line.status} />} w={widths.status} title={line.status} />
@@ -253,7 +254,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 v={line.shippingManifestId ? (
                                     <Link
                                         href={`/shipments/${line.shippingManifestId}`}
-                                        className="text-primary hover:underline font-bold"
+                                        className="text-primary hover:underline font-medium truncate"
                                         onClick={(e: React.MouseEvent) => e.stopPropagation()}
                                         target="_blank"
                                     >

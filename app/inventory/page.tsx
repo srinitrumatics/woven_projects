@@ -452,7 +452,7 @@ export default function InventoryPage() {
                                 ) : (
                                     paginatedInventory.map((item) => (
                                         <tr key={item.id} className="hover:bg-primary-light/20 dark:hover:bg-primary/5 transition-colors group">
-                                            <td className="px-3 py-2 text-sm text-primary font-bold sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" style={{ width: widths.productName, maxWidth: widths.productName }}>
+                                            <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-600 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" style={{ width: widths.productName, maxWidth: widths.productName }}>
                                                 <button onClick={() => router.push(`/inventory/${item.productId || item.id}`)} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
                                                     {item.productName}
                                                 </button>
@@ -470,17 +470,17 @@ export default function InventoryPage() {
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.qtyOnHand)}</td>
                                             <td className="px-3 py-2 text-sm text-primary font-bold text-left truncate">{formatNumber(item.qtyAvailable)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate">{formatCurrency(item.unitCost)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold text-left truncate">{formatCurrency(item.totalPrice ?? 0)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white text-left truncate">{formatCurrency(item.unitCost)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-semibold text-left truncate">{formatCurrency(item.totalPrice ?? 0)}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{formatNumber(item.totalUnitCVInches ?? 0)}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{formatNumber(item.totalUnitCVSQFT ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.avgInventoryAge ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.totalPositions ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.countSites ?? 0)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-medium text-left truncate">{formatNumber(item.avgInventoryAge ?? 0)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-medium text-left truncate">{formatNumber(item.totalPositions ?? 0)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-medium text-left truncate">{formatNumber(item.countSites ?? 0)}</td>
                                             <td className="px-3 py-2 text-sm text-left truncate">
                                                 <button
                                                     onClick={() => router.push(`/inventory/${item.productId || item.id}`)}
-                                                    className="p-1.5 text-gray-400 hover:text-primary dark:text-gray-600 dark:hover:text-primary transition-all hover:scale-110 active:scale-95"
+                                                    className="p-1.5 text-gray-600 hover:text-primary dark:text-gray-600 dark:hover:text-primary transition-all hover:scale-110 active:scale-95"
                                                     title="View details"
                                                 >
                                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

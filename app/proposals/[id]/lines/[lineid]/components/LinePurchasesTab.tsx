@@ -171,18 +171,10 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                                         </span>
                                                     </td>
                                                     <td className="px-3 py-2 truncate">
-                                                        {p.purchaseOrderName && p.purchaseOrderId ? (
-                                                            <Link href={`/purchase-orders/${p.purchaseOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={p.purchaseOrderName}>{p.purchaseOrderName}</Link>
-                                                        ) : (
-                                                            <div className="text-sm truncate" title={p.purchaseOrderName}>{p.purchaseOrderName}</div>
-                                                        )}
+                                                        <div className="text-sm truncate" title={p.purchaseOrderName}>{p.purchaseOrderName}</div>
                                                     </td>
                                                     <td className="px-3 py-2 truncate">
-                                                        {p.customerQuoteLineName && p.customerQuoteLineId ? (
-                                                            <Link href={`/quotes/${p.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={p.customerQuoteLineName}>{p.customerQuoteLineName}</Link>
-                                                        ) : (
-                                                            <div className="text-sm truncate" title={p.customerQuoteLineName}>{p.customerQuoteLineName}</div>
-                                                        )}
+                                                        <div className="text-sm truncate" title={p.customerQuoteLineName}>{p.customerQuoteLineName}</div>
                                                     </td>
                                                     <td className="px-3 py-2 truncate">
                                                         <div className="text-sm truncate" title={p.productName}>{p.productName}</div>

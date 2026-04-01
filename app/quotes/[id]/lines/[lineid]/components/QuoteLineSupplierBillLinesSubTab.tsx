@@ -100,24 +100,16 @@ export default function QuoteLineSupplierBillLinesSubTab({
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierBill }}>
                                         {item.supplierBillId ? (
-                                            <Link href={`/purchases/bills/${item.supplierBillId}`} className="text-primary hover:underline font-bold">
+                                            <Link href={`/purchases/bills/${item.supplierBillId}`} className="text-primary hover:underline font-medium">
                                                 {item.supplierBill}
                                             </Link>
                                         ) : item.supplierBill}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuoteLine }}>
-                                        {item.customerQuoteLineId ? (
-                                            <Link href={`/quotes/lines/${item.customerQuoteLineId}`} className="text-primary hover:underline font-bold">
-                                                {item.customerQuoteLine}
-                                            </Link>
-                                        ) : item.customerQuoteLine}
+                                        {item.customerQuoteLine}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrderLine }}>
-                                        {item.purchaseOrderLineId ? (
-                                            <Link href={`/purchases/orders/lines/${item.purchaseOrderLineId}`} className="text-primary hover:underline font-bold">
-                                                {item.purchaseOrderLine}
-                                            </Link>
-                                        ) : item.purchaseOrderLine}
+                                        {item.purchaseOrderLine}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{item.productName}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{item.description}</td>

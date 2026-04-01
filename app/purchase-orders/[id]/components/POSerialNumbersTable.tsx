@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -17,6 +18,7 @@ interface SerialNumberLog {
     Product_Name?: string;
     Product_Description__c?: string;
     Purchase_Order_Name?: string;
+    Purchase_Order__c?: string;
     RMA_Name?: string;
     Received_Date__c?: string;
     Active__c?: boolean;
@@ -108,7 +110,13 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
                                     {s.Product_Description__c || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Name || '-'}>
-                                    {s.Purchase_Order_Name || '-'}
+                                    {s.Purchase_Order__c ? (
+                                        <Link href={`/purchase-orders/${s.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                            {s.Purchase_Order_Name || 'View PO'}
+                                        </Link>
+                                    ) : (
+                                        s.Purchase_Order_Name || '-'
+                                    )}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={s.RMA_Name || '-'}>
                                     {s.RMA_Name || '-'}

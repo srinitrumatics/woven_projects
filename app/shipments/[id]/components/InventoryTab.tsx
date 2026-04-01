@@ -239,7 +239,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                             <TC v={item.supplierName} w={widths.supplierName} />
                             <TC
                                 v={item.purchaseOrderId ? (
-                                    <Link href={`/purchase-orders/${item.purchaseOrderId}`} className="text-primary hover:underline font-bold" target="_blank">
+                                    <Link href={`/purchase-orders/${item.purchaseOrderId}`} className="text-primary hover:underline font-medium" target="_blank">
                                         {item.purchaseOrderName || "View PO"}
                                     </Link>
                                 ) : (
@@ -250,22 +250,13 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                             <TC v={formatNumber(item.qtyOnHand, 2)} w={widths.qtyOnHand} />
                             <TC v={formatNumber(item.qtyAvailable, 2)} w={widths.qtyAvailable} />
                             <TC v={formatCurrency(item.unitCost)} w={widths.unitCost} />
-                            <TC
-                                v={item.inventoryLocationId ? (
-                                    <Link href={`/locations/${item.inventoryLocationId}`} className="text-primary hover:underline font-bold" target="_blank">
-                                        {item.inventoryLocation || "View Location"}
-                                    </Link>
-                                ) : (
-                                    item.inventoryLocation || " "
-                                )}
-                                w={widths.inventoryLocation}
-                            />
+                            <TC v={item.inventoryLocation || " "} w={widths.inventoryLocation} />
                             <TC v={item.rack} w={widths.rack} />
                             <TC v={item.bay} w={widths.bay} />
                             <TC v={item.levelPosition} w={widths.levelPosition} />
                             <TC
                                 v={item.salesOrderId ? (
-                                    <Link href={`/orders/${item.salesOrderId}`} className="text-primary hover:underline font-bold" target="_blank">
+                                    <Link href={`/orders/${item.salesOrderId}`} className="text-primary hover:underline font-medium" target="_blank">
                                         {item.salesOrderName || "View SO"}
                                     </Link>
                                 ) : (
@@ -275,7 +266,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                             />
                             <TC
                                 v={item.shippingManifestId ? (
-                                    <Link href={`/shipments/${item.shippingManifestId}`} className="text-primary hover:underline font-bold" target="_blank">
+                                    <Link href={`/shipments/${item.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank">
                                         {item.shippingManifestName || "View Manifest"}
                                     </Link>
                                 ) : (

@@ -463,7 +463,7 @@ export default function InvoicesPage() {
                 <p className="text-sm truncate" title="Loading invoices...">Loading invoices...</p>
               </div>
             ) : (
-              <table className="w-full">
+              <table className="w-full text-sm">
                 <thead className="bg-primary-light dark:bg-gray-900">
                   <tr>
                     <SortableHeader label="Invoice Number" field="invoiceNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
@@ -504,36 +504,22 @@ export default function InvoicesPage() {
                     paginatedInvoices.map((invoice) => (
                       <tr
                         key={invoice.id}
-                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
-                        onClick={() => router.push(`/invoices/${invoice.id}`)}
-                      >
-                        <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
-                          <div title={invoice.invoiceNumber}>{invoice.invoiceNumber}</div>
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer">
+                        <td className="px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
+                          <div title={invoice.invoiceNumber} onClick={() => router.push(`/invoices/${invoice.id}`)}>{invoice.invoiceNumber}</div>
                         </td>
-                        <td className="px-3 py-2 truncate">
+                        <td className="px-3 py-2 text-gray-600 dark:text-gray-400 truncate">
                           <StatusBadge status={invoice.status} />
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm font-medium">
-                            {invoice.salesOrderId ? (
-                              <Link
-                                href={`/orders/${invoice.salesOrderId}`}
-                                className="text-primary hover:underline font-bold"
-                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                              >
-                                {invoice.salesOrderNumber || 'N/A'}
-                              </Link>
-                            ) : (
-                              invoice.salesOrderNumber || 'N/A'
-                            )}
-                          </div>
+                          <div className="text-sm font-medium">{invoice.salesOrderNumber || ''}</div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm font-medium">
+                          <div>
                             {invoice.purchaseOrderId ? (
                               <Link
                                 href={`/purchase-orders/${invoice.purchaseOrderId}`}
-                                className="text-primary hover:underline font-bold"
+                                className="text-primary font-medium hover:underline"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
                                 {invoice.purchaseOrderNumber || 'N/A'}
@@ -544,11 +530,11 @@ export default function InvoicesPage() {
                           </div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm font-medium">
+                          <div>
                             {invoice.proposalId ? (
                               <Link
                                 href={`/proposals/${invoice.proposalId}`}
-                                className="text-primary hover:underline font-bold"
+                                className="text-primary hover:underline font-medium"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
                                 {invoice.proposalName || 'N/A'}
@@ -559,11 +545,11 @@ export default function InvoicesPage() {
                           </div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm font-medium">
+                          <div>
                             {invoice.customerOrderId ? (
                               <Link
                                 href={`/orders/${invoice.customerOrderId}`}
-                                className="text-primary hover:underline font-bold"
+                                className="text-primary hover:underline font-medium"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
                                 {invoice.customerOrder || 'N/A'}
@@ -579,14 +565,14 @@ export default function InvoicesPage() {
                         <td className="px-3 py-2 truncate">
                           <div className="text-sm font-medium">{invoice.accountName}</div>
                         </td>
-                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{invoice.lineItemCount}</td>
-                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(invoice.totalAmount)}</td>
+                        <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{invoice.lineItemCount}</td>
+                        <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(invoice.totalAmount)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(invoice.invoiceDate, 'numeric-dash')}</td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.paymentTerms}>{invoice.paymentTerms || 'N/A'}</div>
+                          <div className="text-sm text-gray-600 dark:text-white font-medium" title={invoice.paymentTerms}>{invoice.paymentTerms || 'N/A'}</div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.collectionStatus}>{invoice.collectionStatus || 'N/A'}</div>
+                          <div className="text-sm text-gray-600 dark:text-white font-medium" title={invoice.collectionStatus}>{invoice.collectionStatus || 'N/A'}</div>
                         </td>
                         <td className="px-3 py-2 text-sm text-left truncate">
                           <span className={`font-semibold ${invoice.amountDue > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
@@ -597,7 +583,7 @@ export default function InvoicesPage() {
                           <div className="flex gap-2">
                             <Link
                               href={`/invoices/${invoice.id}`}
-                              className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors truncate"
+                              className="p-1.5 text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors truncate"
                               title="View invoice"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -658,7 +644,7 @@ function StatusBadge({ status }: { status: InvoiceStatus }) {
   };
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
+    <span className={`inline-flex items-center px-2.5 py-1.0 rounded-full text-sm ${getStyles()}`}>
       {status}
     </span>
   );

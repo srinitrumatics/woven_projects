@@ -494,7 +494,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{debit.debitToAccountName}</td>
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{debit.debitToContactName}</td>
                                                         <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[110px] truncate">
-                                                            <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
+                                                            <span className="inline-flex items-center justify-center min-w-[32px] px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
                                                                 {(debit.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                             </span>
                                                         </td>

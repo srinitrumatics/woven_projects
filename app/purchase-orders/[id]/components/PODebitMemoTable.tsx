@@ -127,28 +127,28 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Supplier_Bill_Name || '-'}>
                                     {d.Supplier_Bill__c ? (
-                                        <Link href={`/supplier-bills/${d.Supplier_Bill__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/supplier-bills/${d.Supplier_Bill__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {d.Supplier_Bill_Name || 'View Bill'}
                                         </Link>
                                     ) : d.Supplier_Bill_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Purchase_Order_Name || '-'}>
                                     {d.Purchase_Order__c ? (
-                                        <Link href={`/purchase-orders/${d.Purchase_Order__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/purchase-orders/${d.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {d.Purchase_Order_Name || 'View PO'}
                                         </Link>
                                     ) : d.Purchase_Order_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Quote_Name || '-'}>
                                     {d.Customer_Quote__c ? (
-                                        <Link href={`/quotes/${d.Customer_Quote__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/quotes/${d.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {d.Customer_Quote_Name || 'View Quote'}
                                         </Link>
                                     ) : d.Customer_Quote_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Order_Name || '-'}>
                                     {d.Customer_Order__c ? (
-                                        <Link href={`/orders/${d.Customer_Order__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/orders/${d.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {d.Customer_Order_Name || 'View Order'}
                                         </Link>
                                     ) : d.Customer_Order_Name || '-'}

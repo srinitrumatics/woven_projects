@@ -198,16 +198,16 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                             ) : (
                                 paginatedPositions.map((item, idx) => (
                                     <tr key={item.Id || idx} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                        <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">{item.Name}</td>
+                                        <td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">{item.Name}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{item.Received_Date__c ? formatDate(item.Received_Date__c, "numeric-dash") : 'N/A'}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Days_in_Inventory__c)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{item.Purchase_Order_Name || 'N/A'}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{item.Supplier_Name__c || 'N/A'}</td>
                                         <td className="px-3 py-2 text-sm  truncate">{formatNumber(item.Qty_On_Hand__c)}</td>
-                                        <td className={`px-3 py-2 text-sm font-bold ${item.Qty_Available__c < 1 ? 'text-red-600' : 'text-green-600'}`}>
+                                        <td className={`px-3 py-2 text-sm font-semibold ${item.Qty_Available__c < 1 ? 'text-red-600' : 'text-green-600'}`}>
                                             {formatNumber(item.Qty_Available__c)}
                                         </td>
-                                        <td className="px-3 py-2 text-sm  truncate">{item.On_Hold__c ? 'Yes' : '-'}</td>
+                                        <td className="px-3 py-2 text-sm  text-gray-600 dark:text-gray-400 truncate">{item.On_Hold__c ? 'Yes' : '-'}</td>
                                         <td className="px-3 py-2 text-sm  text-gray-600 dark:text-gray-400  truncate">{formatCurrency(item.Unit_Price__c)}</td>
                                         <td className="px-3 py-2 text-sm  text-gray-600 dark:text-gray-400 font-bold truncate">{formatCurrency(item.Total_Price__c)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{item.Location || 'N/A'}</td>
@@ -217,7 +217,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{item.Sales_Order_Name || 'N/A'}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{item.Shipping_Manifest_Name || 'N/A'}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{item.Condition__c || 'N/A'}</td>
-                                        <td className="px-3 py-2 text-sm  truncate">{item.Invoiced__c ? '✓' : '-'}</td>
+                                        <td className="px-3 py-2 text-sm  truncate">{item.Invoiced__c ? 'Yes' : 'No'}</td>
                                     </tr>
                                 ))
                             )}

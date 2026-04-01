@@ -299,7 +299,7 @@ export default function PurchaseOrdersPage() {
                                             <td className="px-2 py-2 truncate" title={po.status}><StatusBadge status={po.status} /></td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.proposalName || '-'}>
                                                 {po.proposalId ? (
-                                                    <Link href={`/proposals/${po.proposalId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/proposals/${po.proposalId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
                                                         {po.proposalName || 'View Proposal'}
                                                     </Link>
                                                 ) : (
@@ -308,7 +308,7 @@ export default function PurchaseOrdersPage() {
                                             </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerOrderName || '-'}>
                                                 {po.customerOrderId ? (
-                                                    <Link href={`/orders/${po.customerOrderId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                                         {po.customerOrderName || 'View Order'}
                                                     </Link>
                                                 ) : (
@@ -317,7 +317,7 @@ export default function PurchaseOrdersPage() {
                                             </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerPO || '-'}>
                                                 {po.customerOrderId ? (
-                                                    <Link href={`/orders/${po.customerOrderId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                                         {po.customerPO || po.customerOrderName || 'View Order'}
                                                     </Link>
                                                 ) : (
@@ -326,7 +326,7 @@ export default function PurchaseOrdersPage() {
                                             </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerQuoteName || '-'}>
                                                 {po.customerQuoteId ? (
-                                                    <Link href={`/quotes/${po.customerQuoteId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                                         {po.customerQuoteName || 'View Quote'}
                                                     </Link>
                                                 ) : (

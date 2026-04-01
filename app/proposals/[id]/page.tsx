@@ -124,24 +124,24 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   const { widths: orderWidths, handleResize: handleOrderResize } = useResizableColumns({
     name: 180,
-    status: 120,
-    customerPO: 150,
-    customerPODate: 150,
+    status: 150,
+    customerPO: 180,
+    customerPODate: 190,
     billToAccountName: 180,
     billToLocationName: 180,
     billToContactName: 180,
     shipToAccountName: 180,
     shipToLocationName: 180,
     shipToContactName: 180,
-    dropShip: 100,
-    totalLines: 100,
-    totalPrice: 120,
-    totalShippingCharges: 120,
-    totalTaxesAmount: 120,
+    dropShip: 160,
+    totalLines: 160,
+    totalPrice: 160,
+    totalShippingCharges: 180,
+    totalTaxesAmount: 180,
     grandTotal: 150,
     requestDate: 150,
-    shipDate: 150,
-    deliveredDate: 150
+    shipDate: 180,
+    deliveredDate: 180
   });
 
   const { widths: purchaseWidths, handleResize: handlePurchaseResize } = useResizableColumns({
@@ -203,14 +203,14 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   const [fulfillmentWidths, setFulfillmentWidths] = useState({
     invoices: {
-      name: 180, status: 120, salesOrderName: 200, customerQuoteName: 200, customerPO: 150,
+      name: 180, status: 180, salesOrderName: 200, customerQuoteName: 200, customerPO: 150,
       billToAccountName: 180, billToLocationName: 180, billToContactName: 180, totalLines: 100,
       totalPrice: 120, totalShippingCharges: 120, totalTaxesAmount: 120, grandTotal: 150,
       issuedDate: 150, paymentTerms: 150, dueDate: 150, collectionStatus: 150, openBalance: 120,
       daysOutstanding: 150, settledDate: 150
     },
     shipping: {
-      name: 180, status: 120, salesOrderName: 180, customerQuoteName: 180, customerOrderName: 180,
+      name: 180, status: 180, salesOrderName: 180, customerQuoteName: 180, customerOrderName: 180,
       customerPO: 150, shipToAccountName: 180, shipToLocationName: 180, shipToContactName: 180,
       dropShip: 100, boxCount: 100, boxNetWeight: 120, boxGrossWeight: 120, totalLines: 100,
       totalPrice: 120, requestDate: 150, shipDate: 150, deliveredDate: 150, shippingMethod: 150,
@@ -218,14 +218,14 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       estimatedDeliveryDate: 150, trackingStatus: 150, actualDeliveryDate: 150
     },
     sales: {
-      name: 180, status: 120, customerQuoteName: 180, customerOrderName: 180, customerPO: 150,
+      name: 180, status: 180, customerQuoteName: 180, customerOrderName: 180, customerPO: 150,
       billToAccountName: 180, billToLocationName: 180, billToContactName: 180, shipToAccountName: 180,
       shipToLocationName: 180, shipToContactName: 180, dropShip: 100, totalLines: 100, totalPrice: 120,
       totalShippingCharges: 120, totalTaxesAmount: 120, grandTotal: 150, requestDate: 150,
       pickDate: 150, pickCompleteDate: 150, shipDate: 150, deliveredDate: 150
     },
     quotes: {
-      name: 180, status: 120, customerOrderName: 180, customerPO: 150, billToAccountName: 180,
+      name: 180, status: 180, customerOrderName: 180, customerPO: 150, billToAccountName: 180,
       billToLocationName: 180, billToContactName: 180, shipToAccountName: 180, shipToLocationName: 180,
       shipToContactName: 180, dropShip: 100, totalLines: 100, totalPrice: 120, totalShippingCharges: 120,
       totalTaxesAmount: 120, grandTotal: 150, issuedDate: 150, expirationDate: 150, requestDate: 150,
@@ -267,9 +267,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     },
     debit: {
       supplierBillName: 180, purchaseOrderName: 180, customerOrderName: 180, supplierCreditMemoName: 180,
-      debitToAccountName: 180, debitToContactName: 180, totalLines: 100, totalCost: 120,
-      totalShippingCharges: 120, totalDebitAmount: 150, issuedDate: 150, approvalDate: 150,
-      availableDebitBalance: 150, settledDate: 150, name: 180, status: 120,
+      debitToAccountName: 180, debitToContactName: 180, totalLines: 180, totalCost: 160,
+      totalShippingCharges: 180, totalDebitAmount: 180, issuedDate: 150, approvalDate: 190,
+      availableDebitBalance: 190, settledDate: 150, name: 180, status: 150,
       customerQuoteName: 180, salesOrderName: 180, shipmentName: 180
     }
   });
@@ -753,9 +753,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               type: 'Debit Memo',
               reason: '',
               totalAmount: d.Total_Debit_Amount__c || 0,
-              supplierBillId: d.gtherp__Supplier_Bill__c || '',
-              purchaseOrderId: d.gtherp__Purchase_Order__c || '',
-              customerOrderId: d.gtherp__Customer_Order__c || '',
+              supplierBillId: d.Supplier_Bill__c || '',
+              purchaseOrderId: d.Purchase_Order__c || '',
+              customerOrderId: d.Customer_Order__c || '',
               salesOrderId: d.Sales_Order__c || '',
               customerQuoteId: d.Customer_Quote__c || '',
               shipmentId: d.Shipment__c || ''

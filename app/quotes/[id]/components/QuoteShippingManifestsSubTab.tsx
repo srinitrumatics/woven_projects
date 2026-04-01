@@ -90,7 +90,7 @@ export default function QuoteShippingManifestsSubTab({
                                 {paginatedManifests.map((manifest) => (
                                     <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                         <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.manifestNumber }} title={manifest.manifestNumber}>
-                                            <Link href={`/shipments/${manifest.id}`} className="text-primary hover:underline font-bold">
+                                            <Link href={`/shipments/${manifest.id}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {manifest.manifestNumber}
                                             </Link>
                                         </td>
@@ -105,21 +105,21 @@ export default function QuoteShippingManifestsSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>
                                             {manifest.salesOrderId ? (
-                                                <Link href={`/orders/${manifest.salesOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/orders/${manifest.salesOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {manifest.salesOrder}
                                                 </Link>
                                             ) : manifest.salesOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {manifest.customerQuoteId ? (
-                                                <Link href={`/quotes/${manifest.customerQuoteId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/quotes/${manifest.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {manifest.customerQuote}
                                                 </Link>
                                             ) : manifest.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {manifest.customerOrderId ? (
-                                                <Link href={`/orders/${manifest.customerOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/orders/${manifest.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {manifest.customerOrder}
                                                 </Link>
                                             ) : manifest.customerOrder}

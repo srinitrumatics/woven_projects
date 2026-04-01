@@ -509,7 +509,8 @@ export default function ShipmentsPage() {
                           {shipment.salesOrderId ? (
                             <Link
                               href={`/orders/${shipment.salesOrderId}`}
-                              className="text-primary hover:underline font-bold"
+                              target="_blank"
+                              className="text-primary hover:underline font-medium"
                               onClick={(e: React.MouseEvent) => e.stopPropagation()}
                             >
                               {shipment.salesOrder || "View Sales Order"}
@@ -522,7 +523,8 @@ export default function ShipmentsPage() {
                           {shipment.customerQuoteId ? (
                             <Link
                               href={`/quotes/${shipment.customerQuoteId}`}
-                              className="text-primary hover:underline font-bold"
+                              target="_blank"
+                              className="text-primary hover:underline font-medium"
                               onClick={(e: React.MouseEvent) => e.stopPropagation()}
                             >
                               {shipment.customerQuote || "View Quote"}
@@ -535,7 +537,8 @@ export default function ShipmentsPage() {
                           {shipment.proposalId ? (
                             <Link
                               href={`/proposals/${shipment.proposalId}`}
-                              className="text-primary hover:underline font-bold"
+                              target="_blank"
+                              className="text-primary hover:underline font-medium"
                               onClick={(e: React.MouseEvent) => e.stopPropagation()}
                             >
                               {shipment.proposal || "View Proposal"}
@@ -548,7 +551,8 @@ export default function ShipmentsPage() {
                           {shipment.customerOrderId ? (
                             <Link
                               href={`/orders/${shipment.customerOrderId}`}
-                              className="text-primary hover:underline font-bold"
+                              target="_blank"
+                              className="text-primary hover:underline font-medium"
                               onClick={(e: React.MouseEvent) => e.stopPropagation()}
                             >
                               {shipment.customerOrder || "View Order"}

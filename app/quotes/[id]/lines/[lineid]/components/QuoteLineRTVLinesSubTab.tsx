@@ -103,18 +103,10 @@ export default function QuoteLineRTVLinesSubTab({
                                         </span>
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.rtvName }}>
-                                        {item.rtvId ? (
-                                            <Link href={`/returns/rtvs/${item.rtvId}`} className="text-primary hover:underline font-bold">
-                                                {item.rtvName}
-                                            </Link>
-                                        ) : item.rtvName}
+                                        {item.rtvName}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrderLine }}>
-                                        {item.purchaseOrderLineId ? (
-                                            <Link href={`/purchases/orders/lines/${item.purchaseOrderLineId}`} className="text-primary hover:underline font-bold">
-                                                {item.purchaseOrderLine}
-                                            </Link>
-                                        ) : item.purchaseOrderLine}
+                                        {item.purchaseOrderLine}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuoteLine }}>
                                         {item.customerQuoteLineId ? (

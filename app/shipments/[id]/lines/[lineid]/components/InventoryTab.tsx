@@ -155,7 +155,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.supplierName}>{pos.supplierName}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.purchaseOrderName}>
                                 {pos.purchaseOrderId ? (
-                                    <Link href={`/purchase-orders/${pos.purchaseOrderId}`} className="text-primary hover:underline font-bold" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                    <Link href={`/purchase-orders/${pos.purchaseOrderId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
                                         {pos.purchaseOrderName || "View PO"}
                                     </Link>
                                 ) : (
@@ -171,7 +171,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.levelPosition}>{pos.levelPosition}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.salesOrderName}>
                                 {pos.salesOrderId ? (
-                                    <Link href={`/orders/${pos.salesOrderId}`} className="text-primary hover:underline font-bold" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                    <Link href={`/orders/${pos.salesOrderId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
                                         {pos.salesOrderName || "View SO"}
                                     </Link>
                                 ) : (
@@ -180,7 +180,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.shippingManifestName}>
                                 {pos.shippingManifestId ? (
-                                    <Link href={`/shipments/${pos.shippingManifestId}`} className="text-primary hover:underline font-bold" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                    <Link href={`/shipments/${pos.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
                                         {pos.shippingManifestName || "View Manifest"}
                                     </Link>
                                 ) : (

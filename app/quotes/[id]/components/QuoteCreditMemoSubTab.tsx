@@ -98,21 +98,21 @@ export default function QuoteCreditMemoSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.invoice }}>
                                             {memo.invoiceId ? (
-                                                <Link href={`/invoices/${memo.invoiceId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/invoices/${memo.invoiceId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {memo.invoice}
                                                 </Link>
                                             ) : memo.invoice}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {memo.customerQuoteId ? (
-                                                <Link href={`/quotes/${memo.customerQuoteId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {memo.customerQuote}
                                                 </Link>
                                             ) : memo.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {memo.customerOrderId ? (
-                                                <Link href={`/orders/${memo.customerOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {memo.customerOrder}
                                                 </Link>
                                             ) : memo.customerOrder}
@@ -126,14 +126,14 @@ export default function QuoteCreditMemoSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
                                             {memo.purchaseOrderId ? (
-                                                <Link href={`/purchase-orders/${memo.purchaseOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/purchase-orders/${memo.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {memo.purchaseOrder}
                                                 </Link>
                                             ) : memo.purchaseOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>
                                             {memo.salesOrderId ? (
-                                                <Link href={`/orders/${memo.salesOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/orders/${memo.salesOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {memo.salesOrder}
                                                 </Link>
                                             ) : memo.salesOrder}

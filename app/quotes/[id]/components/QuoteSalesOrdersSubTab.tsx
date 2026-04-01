@@ -88,7 +88,7 @@ export default function QuoteSalesOrdersSubTab({
                                 {paginatedOrders.map((order) => (
                                     <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                         <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.salesOrderNumber }} title={order.salesOrderNumber}>
-                                            <Link href={`/orders/${order.id}`} className="text-primary hover:underline font-bold">
+                                            <Link href={`/orders/${order.id}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {order.salesOrderNumber}
                                             </Link>
                                         </td>
@@ -102,14 +102,14 @@ export default function QuoteSalesOrdersSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {order.customerQuoteId ? (
-                                                <Link href={`/quotes/${order.customerQuoteId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/quotes/${order.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {order.customerQuote}
                                                 </Link>
                                             ) : order.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {order.customerOrderId ? (
-                                                <Link href={`/orders/${order.customerOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/orders/${order.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {order.customerOrder}
                                                 </Link>
                                             ) : order.customerOrder}

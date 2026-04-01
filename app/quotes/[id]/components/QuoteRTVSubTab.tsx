@@ -97,35 +97,35 @@ export default function QuoteRTVSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
                                             {rtv.purchaseOrderId ? (
-                                                <Link href={`/purchase-orders/${rtv.purchaseOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/purchase-orders/${rtv.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {rtv.purchaseOrder}
                                                 </Link>
                                             ) : rtv.purchaseOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {rtv.customerQuoteId ? (
-                                                <Link href={`/quotes/${rtv.customerQuoteId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/quotes/${rtv.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {rtv.customerQuote}
                                                 </Link>
                                             ) : rtv.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {rtv.customerOrderId ? (
-                                                <Link href={`/orders/${rtv.customerOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/orders/${rtv.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {rtv.customerOrder}
                                                 </Link>
                                             ) : rtv.customerOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.supplierBill }}>
                                             {rtv.supplierBillId ? (
-                                                <Link href={`/supplier-bills/${rtv.supplierBillId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/supplier-bills/${rtv.supplierBillId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {rtv.supplierBill}
                                                 </Link>
                                             ) : rtv.supplierBill}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>
                                             {rtv.salesOrderId ? (
-                                                <Link href={`/orders/${rtv.salesOrderId}`} className="text-primary hover:underline font-bold">
+                                                <Link href={`/orders/${rtv.salesOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                     {rtv.salesOrder}
                                                 </Link>
                                             ) : rtv.salesOrder}

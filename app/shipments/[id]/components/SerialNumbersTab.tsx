@@ -186,15 +186,15 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                             <TextCell v={log.productSerialNumber} w={widths.productSerialNumber} />
                             <TextCell v={log.productName} w={widths.productName} />
                             <TextCell v={log.productDescription} w={widths.productDescription} />
-                            <TextCell 
+                            <TextCell
                                 v={log.shippingManifestId ? (
-                                    <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-bold" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                    <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
                                         {log.shippingManifest || "View Manifest"}
                                     </Link>
                                 ) : (
                                     log.shippingManifest || " "
-                                )} 
-                                w={widths.shippingManifest} 
+                                )}
+                                w={widths.shippingManifest}
                             />
                             <TextCell v={log.shippingManifestLine} w={widths.shippingManifestLine} />
                             <TextCell v={formatDate(log.shipDate, "numeric-dash")} w={widths.shipDate} />

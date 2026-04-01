@@ -282,7 +282,7 @@ export default function SupplierBillsPage() {
                                             <td className="px-2 py-2 text-sm truncate" title={bill.status}><StatusBadge status={bill.status} /></td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.purchaseOrderName}>
                                                 {bill.purchaseOrderId && bill.purchaseOrderId !== 'N/A' && bill.purchaseOrderId !== '' ? (
-                                                    <Link href={`/purchase-orders/${bill.purchaseOrderId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/purchase-orders/${bill.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                                         {bill.purchaseOrderName || bill.purchaseOrderId}
                                                     </Link>
                                                 ) : (
@@ -291,7 +291,7 @@ export default function SupplierBillsPage() {
                                             </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerQuoteName}>
                                                 {bill.customerQuoteId && bill.customerQuoteId !== 'N/A' && bill.customerQuoteId !== '' ? (
-                                                    <Link href={`/quotes/${bill.customerQuoteId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/quotes/${bill.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                                         {bill.customerQuoteName || bill.customerQuoteId}
                                                     </Link>
                                                 ) : (
@@ -300,7 +300,7 @@ export default function SupplierBillsPage() {
                                             </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[180px]" title={bill.proposalName}>
                                                 {bill.proposalId && bill.proposalId !== 'N/A' && bill.proposalId !== '' ? (
-                                                    <Link href={`/proposals/${bill.proposalId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/proposals/${bill.proposalId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                                         {bill.proposalName || bill.proposalId}
                                                     </Link>
                                                 ) : (
@@ -309,7 +309,7 @@ export default function SupplierBillsPage() {
                                             </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerOrderName}>
                                                 {bill.customerOrderId && bill.customerOrderId !== 'N/A' && bill.customerOrderId !== '' ? (
-                                                    <Link href={`/orders/${bill.customerOrderId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/orders/${bill.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                                         {bill.customerOrderName || bill.customerOrderId}
                                                     </Link>
                                                 ) : (

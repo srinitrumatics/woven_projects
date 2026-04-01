@@ -55,8 +55,11 @@ export default function QuotesPage() {
           quoteNumber: item.Quote_Number__c || item.Name || 'N/A',
           status: (item.Status__c || item.Status || 'Draft') as QuoteStatus,
           proposalName: item.Proposal_Name || 'N/A',
-          customerPO: item.Customer_PO__c || 'N/A',
+          proposalId: item.Proposal__c || '',
+          customerPO: item.Customer_PO_Name || 'N/A',
+          purchaseOrderId: item.Customer_PO__c || '',
           customerOrder: item.Customer_Order_Name || 'N/A',
+          customerOrderId: item.Customer_Order__c || '',
           shipToAccountName: item.Ship_to_Account_Name || 'N/A',
           billToAccountName: item.Bill_to_Account_Name || 'N/A',
           totalLines: item.LineItemCount || item.Total_Lines__c || 0,
@@ -479,14 +482,53 @@ export default function QuotesPage() {
                       <td className="px-3 py-2 truncate">
                         <StatusBadge status={quote.status} />
                       </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{quote.proposalName}</div>
+                      <td className="px-3 py-2 truncate text-left">
+                        {quote.proposalId && quote.proposalName !== 'N/A' ? (
+                          <Link
+                            href={`/proposals/${quote.proposalId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm font-medium text-primary hover:underline truncate"
+                            title={quote.proposalName}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {quote.proposalName}
+                          </Link>
+                        ) : (
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{quote.proposalName}</div>
+                        )}
                       </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerOrder}>{quote.customerOrder}</div>
+                      <td className="px-3 py-2 truncate text-left">
+                        {quote.customerOrderId && quote.customerOrder !== 'N/A' ? (
+                          <Link
+                            href={`/orders/${quote.customerOrderId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm font-medium text-primary hover:underline truncate"
+                            title={quote.customerOrder}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {quote.customerOrder}
+                          </Link>
+                        ) : (
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerOrder}>{quote.customerOrder}</div>
+                        )}
                       </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerPO}>{quote.customerPO}</div>
+                      <td className="px-3 py-2 truncate text-left">
+                        {quote.purchaseOrderId && quote.customerPO !== 'N/A' ? (
+                          <Link
+                            href={`/purchase-orders/${quote.purchaseOrderId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm font-medium text-primary hover:underline truncate"
+                            title={quote.customerPO}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {quote.customerPO}
+                          </Link>
+                        ) : (
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerPO}>{quote.customerPO}</div>
+                        )}
                       </td>
                       <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={quote.billToAccountName}>{quote.billToAccountName}</div>

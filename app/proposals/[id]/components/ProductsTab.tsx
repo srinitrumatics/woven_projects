@@ -83,7 +83,7 @@ export default function ProductsTab({
                         {paginatedProducts.map((product) => (
                             <tr key={product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" style={{ width: widths.Name }}>
-                                    <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary rounded font-bold hover:underline truncate" title={product.Name}>
+                                    <Link href={`/proposals/${proposalId}/lines/${product.id}`} target="_blank" className="text-primary rounded font-bold hover:underline truncate" title={product.Name}>
                                         {product.Name}
                                     </Link>
                                 </td>
@@ -108,7 +108,7 @@ export default function ProductsTab({
                                     ${product.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                                 <td className="px-3 py-2 text-left truncate" style={{ width: widths.actions }}>
-                                    <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary hover:text-primary-dark transition-colors inline-block">
+                                    <Link href={`/proposals/${proposalId}/lines/${product.id}`} target="_blank" className="text-primary hover:text-primary-dark transition-colors inline-block">
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />

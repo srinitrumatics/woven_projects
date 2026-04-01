@@ -112,40 +112,16 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
 
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
-                                    {line.Debit_Memo__c ? (
-                                        <Link href={`#`} className="text-primary hover:underline font-bold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                            {line.Debit_Memo_Name || "View Debit Memo"}
-                                        </Link>
-                                    ) : (
-                                        line.Debit_Memo_Name || " "
-                                    )}
+                                    {line.Debit_Memo_Name || " "}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
-                                    {line.Supplier_Bill_Line__c ? (
-                                        <Link href={`/supplier-bills/${id}/lines/${line.Supplier_Bill_Line__c}`} className="text-primary hover:underline font-bold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                            {line.Supplier_Bill_Line_Name || "View SBL"}
-                                        </Link>
-                                    ) : (
-                                        line.Supplier_Bill_Line_Name || " "
-                                    )}
+                                    {line.Supplier_Bill_Line_Name || " "}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
-                                    {line.Customer_Quote__c && line.Customer_Quote_Line__c ? (
-                                        <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} className="text-primary hover:underline font-bold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                            {line.Customer_Quote_Line_Name || "View Quote Line"}
-                                        </Link>
-                                    ) : (
-                                        line.Customer_Quote_Line_Name || " "
-                                    )}
+                                    {line.Customer_Quote_Line_Name || " "}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
-                                    {line.Purchase_Order__c && line.Purchase_Order_Line__c ? (
-                                        <Link href={`/purchase-orders/${line.Purchase_Order__c}/lines/${line.Purchase_Order_Line__c}`} className="text-primary hover:underline font-bold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                            {line.Purchase_Order_Line_Name || "View PO Line"}
-                                        </Link>
-                                    ) : (
-                                        line.Purchase_Order_Line_Name || " "
-                                    )}
+                                    {line.Purchase_Order_Line_Name || " "}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{line.Product_Name || " "}</td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate" title={line.Product_Description__c}>{line.Product_Description__c || " "}</td>
