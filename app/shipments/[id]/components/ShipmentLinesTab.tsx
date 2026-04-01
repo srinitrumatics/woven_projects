@@ -13,8 +13,13 @@ interface ShipmentLine {
     name: string;
     status: string;
     shippingManifestName: string;
+    shippingManifestId?: string;
     salesOrderLineName: string;
+    salesOrderId?: string;
+    salesOrderLineId?: string;
     customerQuoteLineName: string;
+    customerQuoteId?: string;
+    customerQuoteLineId?: string;
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
@@ -71,8 +76,13 @@ function mapLine(raw: any): ShipmentLine {
         name: raw.Name || "",
         status: raw.Status__c || "",
         shippingManifestName: raw.Shipping_Manifest_Name || "",
+        shippingManifestId: raw.Shipping_Manifest__c || "",
         salesOrderLineName: raw.Sales_Order_Line_Name || "",
+        salesOrderId: raw.Sales_Order_Line__c || "",
+        salesOrderLineId: raw.Sales_Order_Line__c || "",
         customerQuoteLineName: raw.Customer_Quote_Line_Name || "",
+        customerQuoteId: raw.Customer_Quote_Line__c || "",
+        customerQuoteLineId: raw.Customer_Quote_Line__c || "",
         productName: raw.Product_Name || "",
         productDescription: raw.Product_Description__c || "",
         manufacturerDBA: raw.Manufacturer_DBA__c || "",
@@ -239,9 +249,29 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                     title={line.name}>{line.name}</Link>
                             </td>
                             <TextCell v={<StatusBadge status={line.status} />} w={widths.status} title={line.status} />
-                            <TextCell v={line.shippingManifestName} w={widths.shippingManifestName} />
-                            <TextCell v={line.salesOrderLineName} w={widths.salesOrderLineName} />
-                            <TextCell v={line.customerQuoteLineName} w={widths.customerQuoteLineName} />
+                            <TextCell
+                                v={line.shippingManifestId ? (
+                                    <Link
+                                        href={`/shipments/${line.shippingManifestId}`}
+                                        className="text-primary hover:underline font-bold"
+                                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                                        target="_blank"
+                                    >
+                                        {line.shippingManifestName || "View Manifest"}
+                                    </Link>
+                                ) : (
+                                    line.shippingManifestName || " "
+                                )}
+                                w={widths.shippingManifestName}
+                            />
+                            <TextCell
+                                v={line.salesOrderLineName || " "}
+                                w={widths.salesOrderLineName}
+                            />
+                            <TextCell
+                                v={line.customerQuoteLineName || " "}
+                                w={widths.customerQuoteLineName}
+                            />
                             <TextCell v={line.productName} w={widths.productName} />
                             <TextCell v={line.productDescription} w={widths.productDescription} />
                             <TextCell v={line.manufacturerDBA} w={widths.manufacturerDBA} />

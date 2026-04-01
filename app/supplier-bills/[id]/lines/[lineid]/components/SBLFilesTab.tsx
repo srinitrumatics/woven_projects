@@ -138,12 +138,9 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
     }
 
     return (
-        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 min-w-0">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate" title={`Files (${files.length})`}>Files ({files.length})</h3>
-            </div>
+        <div className="flex flex-col  bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full">
+                <table className="w-full table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
                             <SortableHeader
@@ -209,7 +206,7 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
                                     {file.uploadedBy}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? formatDate(file.uploadedDate) : '-'}>
-                                    {file.uploadedDate ? formatDate(file.uploadedDate) : '-'}
+                                    {file.uploadedDate ? formatDate(file.uploadedDate, 'numeric-dash') : '-'}
                                 </td>
                                 <td className="px-3 py-2 truncate">
                                     <div className="flex items-center gap-3 min-w-0">

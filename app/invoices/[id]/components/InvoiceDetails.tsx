@@ -40,6 +40,15 @@ interface InvoiceDetailsProps {
     appliedCredits?: number;
     productCount?: number;
     serviceCount?: number;
+    // Navigation IDs
+    accountId?: string;
+    proposalId?: string;
+    customerOrderId?: string;
+    salesOrderId?: string;
+    purchaseOrderId?: string;
+    billToLocationId?: string;
+    shipToLocationId?: string;
+    siteId?: string;
 }
 
 export default function InvoiceDetails(props: InvoiceDetailsProps) {
@@ -70,7 +79,15 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
         servicesSubtotal,
         appliedCredits,
         productCount,
-        serviceCount
+        serviceCount,
+        accountId,
+        proposalId,
+        customerOrderId,
+        salesOrderId,
+        purchaseOrderId,
+        billToLocationId,
+        shipToLocationId,
+        siteId
     } = props;
 
     // Handlers for summary buttons
@@ -89,9 +106,13 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
                 <InvoiceKeyDates
                     arRep={arRep}
                     proposalName={proposalName}
+                    proposalId={proposalId}
                     customerOrder={customerOrder}
+                    customerOrderId={customerOrderId}
                     salesOrderNumber={props.salesOrderNumber}
+                    salesOrderId={salesOrderId}
                     purchaseOrderNumber={purchaseOrderNumber}
+                    purchaseOrderId={purchaseOrderId}
                     invoiceDate={invoiceDate}
                     className="h-full"
                 />
@@ -107,8 +128,10 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
                 <div className="flex flex-col gap-6 min-w-0">
                     <InvoiceBillingInfo
                         accountName={accountName}
+                        accountId={accountId}
                         billingAddress={billingAddress}
                         billToLocation={billToLocation}
+                        billToLocationId={billToLocationId}
                         paymentTerms={paymentTerms}
                         customerPO={customerPO}
                         dueDate={dueDate}
@@ -116,10 +139,13 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
 
                     <InvoiceShippingInfo
                         accountName={accountName}
+                        accountId={accountId}
                         shippingAddress={shippingAddress}
                         shipToLocation={shipToLocation}
+                        shipToLocationId={shipToLocationId}
                         shipConfirmedDate={shipConfirmedDate}
                         siteName={siteName}
+                        siteId={siteId}
                     />
                 </div>
             </div>

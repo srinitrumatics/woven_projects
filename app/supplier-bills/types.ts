@@ -6,10 +6,15 @@ export interface SupplierBill {
   status: string;
   apRep: string;
   purchaseOrderName: string;
+  purchaseOrderId?: string;
   customerQuoteName: string;
+  customerQuoteId?: string;
   customerOrderName: string;
+  customerOrderId?: string;
   proposalName: string;
+  proposalId?: string;
   supplierName: string;
+  supplierId?: string;
   supplierDBA: string;
   supplierContact: string;
   totalLines: number;
@@ -45,8 +50,13 @@ export interface SupplierBillLine {
   name: string; // Supplier Bill Line Name
   status: string;
   supplierBillName: string; // Parent Supplier Bill
+  supplierBillId?: string;
   customerQuoteLineName?: string;
+  customerQuoteId?: string;
+  customerQuoteLineId?: string;
   purchaseOrderLineName: string;
+  purchaseOrderId?: string;
+  purchaseOrderLineId?: string;
   productName: string;
   productDescription: string;
   manufacturerDBA: string;
@@ -59,7 +69,12 @@ export interface SupplierBillLine {
   supplierBillLineNotes?: string;
   proposedProduct?: string;
   site?: string;
+  siteId?: string;
   inventoryAccount?: string;
+  customerOrderName?: string;
+  customerOrderId?: string;
+  shipmentId?: string;
+  shipmentName?: string;
 }
 
 export interface BillPayment {
@@ -74,6 +89,7 @@ export interface BillPayment {
   failedDate: string;
   postedDate: string;
   supplierBillName: string;
+  supplierBillId?: string;
 }
 
 export interface AppliedDebitMemo {
@@ -81,7 +97,9 @@ export interface AppliedDebitMemo {
   name: string;
   status: string;
   debitMemoName: string;
+  debitMemoId?: string;
   supplierBillName: string;
+  supplierBillId?: string;
   appliedAmount: number;
   availableDebitBalance: number;
   appliedDate: string;
@@ -94,9 +112,13 @@ export interface DebitMemo {
   name: string;
   status: string;
   supplierBillName?: string;
+  supplierBillId?: string;
   purchaseOrderName?: string;
+  purchaseOrderId?: string;
   customerQuoteName?: string;
+  customerQuoteId?: string;
   customerOrderName?: string;
+  customerOrderId?: string;
   supplierCreditMemo?: string;
   debitToAccountName?: string;
   debitToContactName?: string;

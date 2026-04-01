@@ -64,9 +64,13 @@ export default function ShipmentsPage() {
       name: s.Name || "N/A",
       status: (s.Status__c || "Draft") as ShipmentStatus,
       salesOrder: s.Sales_Order_Name || "",
+      salesOrderId: s.Sales_Order__c || "",
       customerQuote: s.Customer_Quote_Name || "",
+      customerQuoteId: s.Customer_Quote__c || "",
       proposal: s.Proposal_Name || "",
+      proposalId: s.Proposal__c || "",
       customerOrder: s.Customer_Order_Name || "",
+      customerOrderId: s.Customer_Order__c || "",
       customerPO: s.Customer_PO__c || "",
       shipToAccount: s.Ship_to_Account_Name || "",
       shipToLocation: s.Authorized_Ship_To_Location_Name || "",
@@ -501,10 +505,58 @@ export default function ShipmentsPage() {
                         <td className="px-3 py-2 truncate">
                           <StatusBadge status={shipment.status} />
                         </td>
-                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 truncate">{shipment.salesOrder}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.customerQuote}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.proposal}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.customerOrder}</td>
+                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 truncate">
+                          {shipment.salesOrderId ? (
+                            <Link
+                              href={`/sales-orders/${shipment.salesOrderId}`}
+                              className="text-primary hover:underline font-bold"
+                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                            >
+                              {shipment.salesOrder || "View Sales Order"}
+                            </Link>
+                          ) : (
+                            shipment.salesOrder || " "
+                          )}
+                        </td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
+                          {shipment.customerQuoteId ? (
+                            <Link
+                              href={`/quotes/${shipment.customerQuoteId}`}
+                              className="text-primary hover:underline font-bold"
+                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                            >
+                              {shipment.customerQuote || "View Quote"}
+                            </Link>
+                          ) : (
+                            shipment.customerQuote || " "
+                          )}
+                        </td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
+                          {shipment.proposalId ? (
+                            <Link
+                              href={`/proposals/${shipment.proposalId}`}
+                              className="text-primary hover:underline font-bold"
+                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                            >
+                              {shipment.proposal || "View Proposal"}
+                            </Link>
+                          ) : (
+                            shipment.proposal || " "
+                          )}
+                        </td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
+                          {shipment.customerOrderId ? (
+                            <Link
+                              href={`/orders/${shipment.customerOrderId}`}
+                              className="text-primary hover:underline font-bold"
+                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                            >
+                              {shipment.customerOrder || "View Order"}
+                            </Link>
+                          ) : (
+                            shipment.customerOrder || " "
+                          )}
+                        </td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.customerPO}</td>
                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 truncate">{shipment.shipToAccount}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.shipToLocation}</td>
@@ -555,6 +607,7 @@ function StatusBadge({ status }: { status: string }) {
     switch (status) {
       case "Shipped":
       case "Delivered":
+      case "Approved":
         return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
       case "In Transit":
       case "Inprogress":

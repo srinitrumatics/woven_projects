@@ -38,7 +38,7 @@ export function StatusBadge({ status }: { status: string }) {
     };
 
     return (
-        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border truncate ${getStyles()}`} title={status}>
+        <span className={`inline-flex items-center px-2.5 py-1.0 rounded-full text-[12px] font-bold border truncate ${getStyles()}`} title={status}>
             {status}
         </span>
     );
@@ -64,7 +64,7 @@ export function RemittanceBadge({ status }: { status: string }) {
     };
 
     return (
-        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border truncate ${getStyles()}`} title={status}>
+        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-bold border truncate ${getStyles()}`} title={status}>
             {status}
         </span>
     );

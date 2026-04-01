@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ReceivePayment, AppliedCreditMemo } from "../../types";
 import { formatCurrency, formatDate } from "@/lib/utils/formatting";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
+import Pagination from "@/components/ui/Pagination";
+import Link from "next/link";
+
+const ITEMS_PER_PAGE = 10;
 
 interface InvoicePaymentsProps {
     receivePayments: ReceivePayment[];
@@ -15,8 +19,23 @@ type SubTabType = "receive" | "applied";
 export default function InvoicePayments({ receivePayments, creditMemos }: InvoicePaymentsProps) {
     const [activeSubTab, setActiveSubTab] = useState<SubTabType>("receive");
 
+    const [currentPagePayments, setCurrentPagePayments] = useState(1);
+    const [currentPageMemos, setCurrentPageMemos] = useState(1);
+
     const { items: sortedPayments, requestSort: requestSortPayments, sortConfig: sortConfigPayments } = useSortableData<ReceivePayment>(receivePayments);
     const { items: sortedMemos, requestSort: requestSortMemos, sortConfig: sortConfigMemos } = useSortableData<AppliedCreditMemo>(creditMemos);
+
+    const paginatedPayments = useMemo(() => {
+        const startIndex = (currentPagePayments - 1) * ITEMS_PER_PAGE;
+        return sortedPayments.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [sortedPayments, currentPagePayments]);
+    const totalPagesPayments = Math.ceil(receivePayments.length / ITEMS_PER_PAGE);
+
+    const paginatedMemos = useMemo(() => {
+        const startIndex = (currentPageMemos - 1) * ITEMS_PER_PAGE;
+        return sortedMemos.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [sortedMemos, currentPageMemos]);
+    const totalPagesMemos = Math.ceil(creditMemos.length / ITEMS_PER_PAGE);
 
     const { widths: receiveWidths, handleResize: handleReceiveResize } = useResizableColumns({
         name: 180,
@@ -24,6 +43,10 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
         amount: 140,
         method: 150,
         reference: 160,
+        customerQuote: 160,
+        customerOrder: 160,
+        invoice: 160,
+        proposal: 160,
         transactionDate: 150,
         scheduledDate: 150,
         failedDate: 150,
@@ -34,8 +57,11 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
         acpName: 220,
         status: 120,
         appliedAmount: 160,
+        customerQuote: 160,
+        customerOrder: 160,
         creditMemo: 160,
         invoice: 160,
+        proposal: 160,
         appliedDate: 150,
         postedDate: 150,
         balance: 200,
@@ -68,39 +94,51 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
         }
 
         return (
-            <div className="overflow-x-auto">
-                <table className="w-full table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                        <tr>
-                            <SortableHeader label="Receive Payment" field="name" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.name} onResize={handleReceiveResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                            <SortableHeader label="Status" field="status" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.status} onResize={handleReceiveResize} />
-                            <SortableHeader label="Amount" field="amount" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.amount} onResize={handleReceiveResize} />
-                            <SortableHeader label="Payment Method" field="paymentMethod" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.method} onResize={handleReceiveResize} />
-                            <SortableHeader label="Reference No" field="referenceNo" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.reference} onResize={handleReceiveResize} />
-                            <SortableHeader label="Transaction Date" field="transactionDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.transactionDate} onResize={handleReceiveResize} />
-                            <SortableHeader label="Scheduled Date" field="scheduledDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.scheduledDate} onResize={handleReceiveResize} />
-                            <SortableHeader label="Failed Date" field="failedDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.failedDate} onResize={handleReceiveResize} />
-                            <SortableHeader label="Posted Date" field="postedDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.postedDate} onResize={handleReceiveResize} />
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {sortedPayments.map((payment) => (
-                            <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white text-gray-900 dark:text-white truncate" title={payment.name}>{payment.name}</td>
-                                <td className="px-3 py-2 truncate">
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(payment.status)}`} title={payment.status}>{payment.status}</span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(payment.amount)}>{formatCurrency(payment.amount)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={payment.paymentMethod}>{payment.paymentMethod}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={payment.referenceNo}>{payment.referenceNo}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.transactionDate, 'numeric-dash')}>{formatDate(payment.transactionDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.scheduledDate, 'numeric-dash')}>{formatDate(payment.scheduledDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.failedDate, 'numeric-dash')}>{formatDate(payment.failedDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.postedDate, 'numeric-dash')}>{formatDate(payment.postedDate, 'numeric-dash')}</td>
+            <div className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
+                <div className="overflow-x-auto">
+                    <table className="w-full table-fixed">
+                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                            <tr>
+                                <SortableHeader label="Receive Payment" field="name" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.name} onResize={handleReceiveResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                <SortableHeader label="Status" field="status" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.status} onResize={handleReceiveResize} />
+                                <SortableHeader label="Amount" field="amount" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.amount} onResize={handleReceiveResize} />
+                                <SortableHeader label="Payment Method" field="paymentMethod" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.method} onResize={handleReceiveResize} />
+                                <SortableHeader label="Reference No" field="referenceNo" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.reference} onResize={handleReceiveResize} />
+                                <SortableHeader label="Transaction Date" field="transactionDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.transactionDate} onResize={handleReceiveResize} />
+                                <SortableHeader label="Scheduled Date" field="scheduledDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.scheduledDate} onResize={handleReceiveResize} />
+                                <SortableHeader label="Failed Date" field="failedDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.failedDate} onResize={handleReceiveResize} />
+                                <SortableHeader label="Posted Date" field="postedDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.postedDate} onResize={handleReceiveResize} />
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            {paginatedPayments.map((payment) => (
+                                <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                    <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white text-gray-900 dark:text-white truncate" title={payment.name}>{payment.name}</td>
+                                    <td className="px-3 py-2 truncate">
+                                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(payment.status)}`} title={payment.status}>{payment.status}</span>
+                                    </td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(payment.amount)}>{formatCurrency(payment.amount)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={payment.paymentMethod}>{payment.paymentMethod}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={payment.referenceNo}>{payment.referenceNo}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.transactionDate, 'numeric-dash')}>{formatDate(payment.transactionDate, 'numeric-dash')}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.scheduledDate, 'numeric-dash')}>{formatDate(payment.scheduledDate, 'numeric-dash')}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.failedDate, 'numeric-dash')}>{formatDate(payment.failedDate, 'numeric-dash')}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.postedDate, 'numeric-dash')}>{formatDate(payment.postedDate, 'numeric-dash')}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="px-3 py-2">
+                    <Pagination
+                        currentPage={currentPagePayments}
+                        totalPages={totalPagesPayments}
+                        onPageChange={setCurrentPagePayments}
+                        totalItems={receivePayments.length}
+                        itemsPerPage={ITEMS_PER_PAGE}
+                        itemName=""
+                    />
+                </div>
             </div>
         );
     };
@@ -116,41 +154,51 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
         }
 
         return (
-            <div className="overflow-x-auto">
-                <table className="w-full table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                        <tr>
-                            <SortableHeader label="Applied Credit Payment" field="name" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.acpName} onResize={handleAppliedResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10 min-w-[200px]" />
-                            <SortableHeader label="Status" field="status" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.status} onResize={handleAppliedResize} />
-                            <SortableHeader label="Applied Amount" field="appliedAmount" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.appliedAmount} onResize={handleAppliedResize} />
-                            <SortableHeader label="Credit Memo" field="creditMemoName" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.creditMemo} onResize={handleAppliedResize} />
-                            <SortableHeader label="Invoice" field="invoiceName" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.invoice} onResize={handleAppliedResize} />
-                            <SortableHeader label="Applied Date" field="appliedDate" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.appliedDate} onResize={handleAppliedResize} />
-                            <SortableHeader label="Posted Date" field="postedDate" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.postedDate} onResize={handleAppliedResize} />
-                            <SortableHeader label="Available Credit Balance" field="availableCreditBalance" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.balance} onResize={handleAppliedResize} />
-                            <SortableHeader label="Applied Credit Notes" field="notes" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.notes} onResize={handleAppliedResize} />
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {sortedMemos.map((memo) => (
-                            <tr key={memo.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white text-gray-900 dark:text-white truncate" title={memo.name}>{memo.name}</td>
-                                <td className="px-3 py-2 truncate">
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(memo.status)}`}>{memo.status}</span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(memo.appliedAmount)}>{formatCurrency(memo.appliedAmount)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={memo.creditMemoName}>{memo.creditMemoName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={memo.invoiceName}>{memo.invoiceName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.appliedDate, 'numeric-dash')}>{formatDate(memo.appliedDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.postedDate, 'numeric-dash')}>{formatDate(memo.postedDate, 'numeric-dash')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(memo.availableCreditBalance)}>{formatCurrency(memo.availableCreditBalance)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
-                                    <div className="truncate" title={memo.notes}>{memo.notes}</div>
-                                </td>
+            <div className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
+                <div className="overflow-x-auto">
+                    <table className="w-full table-fixed">
+                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                            <tr>
+                                <SortableHeader label="Applied Credit Payment" field="name" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.acpName} onResize={handleAppliedResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10 min-w-[200px]" />
+                                <SortableHeader label="Status" field="status" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.status} onResize={handleAppliedResize} />
+                                <SortableHeader label="Applied Amount" field="appliedAmount" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.appliedAmount} onResize={handleAppliedResize} />
+                                <SortableHeader label="Credit Memo" field="creditMemoName" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.creditMemo} onResize={handleAppliedResize} />
+                                <SortableHeader label="Proposal" field="proposalName" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.proposal} onResize={handleAppliedResize} />
+                                <SortableHeader label="Posted Date" field="postedDate" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.postedDate} onResize={handleAppliedResize} />
+                                <SortableHeader label="Available Credit Balance" field="availableCreditBalance" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.balance} onResize={handleAppliedResize} />
+                                <SortableHeader label="Applied Credit Notes" field="notes" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.notes} onResize={handleAppliedResize} />
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            {paginatedMemos.map((memo) => (
+                                <tr key={memo.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                    <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white text-gray-900 dark:text-white truncate" title={memo.name}>{memo.name}</td>
+                                    <td className="px-3 py-2 truncate">
+                                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(memo.status)}`}>{memo.status}</span>
+                                    </td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(memo.appliedAmount)}>{formatCurrency(memo.appliedAmount)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={memo.creditMemoName}>{memo.creditMemoName}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.appliedDate, 'numeric-dash')}>{formatDate(memo.appliedDate, 'numeric-dash')}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.postedDate, 'numeric-dash')}>{formatDate(memo.postedDate, 'numeric-dash')}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(memo.availableCreditBalance)}>{formatCurrency(memo.availableCreditBalance)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
+                                        <div className="truncate" title={memo.notes}>{memo.notes}</div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="px-3 py-2 ">
+                    <Pagination
+                        currentPage={currentPageMemos}
+                        totalPages={totalPagesMemos}
+                        onPageChange={setCurrentPageMemos}
+                        totalItems={creditMemos.length}
+                        itemsPerPage={ITEMS_PER_PAGE}
+                        itemName=""
+                    />
+                </div>
             </div>
         );
     };

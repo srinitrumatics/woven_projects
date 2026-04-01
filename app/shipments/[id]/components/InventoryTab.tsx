@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/utils/formatting";
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface InventoryPosition {
@@ -16,15 +18,19 @@ interface InventoryPosition {
     manufacturerDBA: string;
     supplierName: string;
     purchaseOrderName: string;
+    purchaseOrderId?: string;
     qtyOnHand: number;
     qtyAvailable: number;
     unitCost: number;
     inventoryLocation: string;
+    inventoryLocationId?: string;
     rack: string;
     bay: string;   // Bin_Name
     levelPosition: string;   // Rack_Level_Name
     salesOrderName: string;
+    salesOrderId?: string;
     shippingManifestName: string;
+    shippingManifestId?: string;
     shipConfirmed: string | null;  // Shipped_Date__c
 }
 
@@ -65,15 +71,19 @@ function mapItem(raw: any): InventoryPosition {
         manufacturerDBA: raw.Manufacturer_DBA__c || "",
         supplierName: raw.Supplier_Name__c || "",
         purchaseOrderName: raw.Purchase_Order_Name || "",
+        purchaseOrderId: raw.Purchase_Order__c || "",
         qtyOnHand: raw.Qty_On_Hand__c ?? 0,
         qtyAvailable: raw.Qty_Available__c ?? 0,
         unitCost: raw.Unit_Cost__c ?? 0,
         inventoryLocation: raw.Inventory_Location_Name || "",
+        inventoryLocationId: raw.Inventory_Location__c || "",
         rack: raw.Rack_Name || "",
         bay: raw.Bin_Name || "",
         levelPosition: raw.Rack_Level_Name || "",
         salesOrderName: raw.Sales_Order_Name || "",
+        salesOrderId: raw.Sales_Order__c || "",
         shippingManifestName: raw.Shipping_Manifest_Name || "",
+        shippingManifestId: raw.Shipping_Manifest__c || "",
         shipConfirmed: raw.Shipped_Date__c ?? null,
     };
 }
@@ -227,16 +237,52 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                             <TC v={item.productDescription} w={widths.productDescription} />
                             <TC v={item.manufacturerDBA} w={widths.manufacturerDBA} />
                             <TC v={item.supplierName} w={widths.supplierName} />
-                            <TC v={item.purchaseOrderName} w={widths.purchaseOrderName} />
+                            <TC
+                                v={item.purchaseOrderId ? (
+                                    <Link href={`/purchase-orders/${item.purchaseOrderId}`} className="text-primary hover:underline font-bold" target="_blank">
+                                        {item.purchaseOrderName || "View PO"}
+                                    </Link>
+                                ) : (
+                                    item.purchaseOrderName || " "
+                                )}
+                                w={widths.purchaseOrderName}
+                            />
                             <TC v={formatNumber(item.qtyOnHand, 2)} w={widths.qtyOnHand} />
                             <TC v={formatNumber(item.qtyAvailable, 2)} w={widths.qtyAvailable} />
                             <TC v={formatCurrency(item.unitCost)} w={widths.unitCost} />
-                            <TC v={item.inventoryLocation} w={widths.inventoryLocation} />
+                            <TC
+                                v={item.inventoryLocationId ? (
+                                    <Link href={`/locations/${item.inventoryLocationId}`} className="text-primary hover:underline font-bold" target="_blank">
+                                        {item.inventoryLocation || "View Location"}
+                                    </Link>
+                                ) : (
+                                    item.inventoryLocation || " "
+                                )}
+                                w={widths.inventoryLocation}
+                            />
                             <TC v={item.rack} w={widths.rack} />
                             <TC v={item.bay} w={widths.bay} />
                             <TC v={item.levelPosition} w={widths.levelPosition} />
-                            <TC v={item.salesOrderName} w={widths.salesOrderName} />
-                            <TC v={item.shippingManifestName} w={widths.shippingManifestName} />
+                            <TC
+                                v={item.salesOrderId ? (
+                                    <Link href={`/sales-orders/${item.salesOrderId}`} className="text-primary hover:underline font-bold" target="_blank">
+                                        {item.salesOrderName || "View SO"}
+                                    </Link>
+                                ) : (
+                                    item.salesOrderName || " "
+                                )}
+                                w={widths.salesOrderName}
+                            />
+                            <TC
+                                v={item.shippingManifestId ? (
+                                    <Link href={`/shipments/${item.shippingManifestId}`} className="text-primary hover:underline font-bold" target="_blank">
+                                        {item.shippingManifestName || "View Manifest"}
+                                    </Link>
+                                ) : (
+                                    item.shippingManifestName || " "
+                                )}
+                                w={widths.shippingManifestName}
+                            />
                             <TC v={fmtDate(item.shipConfirmed)} w={widths.shipConfirmed} />
                         </tr>
                     ))}
@@ -247,9 +293,9 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
 }
 
 // ─── Cell helper ──────────────────────────────────────────────────────────────
-function TC({ v, w }: { v: string; w: number }) {
+function TC({ v, w }: { v: React.ReactNode; w: number }) {
     return (
-        <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={v}>
+        <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={typeof v === 'string' ? v : undefined}>
             {v}
         </td>
     );

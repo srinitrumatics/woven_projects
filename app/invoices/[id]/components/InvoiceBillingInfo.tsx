@@ -1,8 +1,11 @@
 import { formatDate } from "@/lib/utils/formatting";
+import DetailInput from "./DetailInput";
 
 interface InvoiceBillingInfoProps {
     accountName: string;
+    accountId?: string;
     billToLocation?: string;
+    billToLocationId?: string;
     billingAddress: string;
     paymentTerms: string;
     customerPO?: string;
@@ -11,7 +14,9 @@ interface InvoiceBillingInfoProps {
 
 export default function InvoiceBillingInfo({
     accountName,
+    accountId,
     billToLocation,
+    billToLocationId,
     billingAddress,
     paymentTerms,
     customerPO,
@@ -33,30 +38,12 @@ export default function InvoiceBillingInfo({
 
             <div className="text-sm">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Bill to Account">Bill to Account</label>
-                        <input type="text" readOnly value={accountName} title={accountName} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Bill to Location">Bill to Location</label>
-                        <input type="text" readOnly value={billToLocation || ""} title={billToLocation || ""} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Billing Address">Billing Address</label>
-                        <input type="text" readOnly value={billingAddress} title={billingAddress} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Payment Terms">Payment Terms</label>
-                        <input type="text" readOnly value={paymentTerms} title={paymentTerms} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Customer PO">Customer PO</label>
-                        <input type="text" readOnly value={customerPO || ""} title={customerPO || ""} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Due Date">Due Date</label>
-                        <input type="text" readOnly value={formatDate(dueDate, 'numeric-dash')} title={formatDate(dueDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" />
-                    </div>
+                    <DetailInput label="Bill to Account" value={accountName} href={accountId ? `/accounts/${accountId}` : undefined} />
+                    <DetailInput label="Bill to Location" value={billToLocation} href={billToLocationId ? `/locations/${billToLocationId}` : undefined} />
+                    <DetailInput label="Billing Address" value={billingAddress} />
+                    <DetailInput label="Payment Terms" value={paymentTerms} />
+                    <DetailInput label="Customer PO" value={customerPO} />
+                    <DetailInput label="Due Date" value={formatDate(dueDate, 'numeric-dash')} />
                 </div>
             </div>
         </div>

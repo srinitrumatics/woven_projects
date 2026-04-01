@@ -92,9 +92,33 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                                 <td className="px-3 py-2 text-sm truncate">
                                     <StatusBadge status={line.status} />
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{line.supplierBillName || '-'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{line.customerQuoteLineName || '-'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{line.purchaseOrderLineName || '-'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.supplierBillName}>
+                                    {line.supplierBillId ? (
+                                        <Link href={`/supplier-bills/${line.supplierBillId}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.supplierBillName || 'View Bill'}
+                                        </Link>
+                                    ) : (
+                                        line.supplierBillName || '-'
+                                    )}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.customerQuoteLineName}>
+                                    {line.customerQuoteLineId && line.customerQuoteId ? (
+                                        <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.customerQuoteLineName || 'View Quote Line'}
+                                        </Link>
+                                    ) : (
+                                        line.customerQuoteLineName || '-'
+                                    )}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.purchaseOrderLineName}>
+                                    {line.purchaseOrderLineId && line.purchaseOrderId ? (
+                                        <Link href={`/purchase-orders/${line.purchaseOrderId}/lines/${line.purchaseOrderLineId}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.purchaseOrderLineName || 'View PO Line'}
+                                        </Link>
+                                    ) : (
+                                        line.purchaseOrderLineName || '-'
+                                    )}
+                                </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{line.productName}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{line.productDescription}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{line.manufacturerDBA || '-'}</td>

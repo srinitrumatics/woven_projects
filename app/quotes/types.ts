@@ -1,4 +1,4 @@
-export type QuoteStatus = "Draft" | "Pending" | "Approved" | "Rejected" | "Expired" | "Converted" | "Partial Shipment" | "Shipped" | "Canceled";
+export type QuoteStatus = "Draft" | "Pending" | "Approved" | "Rejected" | "Expired" | "Converted" | "Partial Shipment" | "Partial Rejected" | "Shipped" | "Canceled";
 
 export interface QuoteCreditMemo {
   id: string;

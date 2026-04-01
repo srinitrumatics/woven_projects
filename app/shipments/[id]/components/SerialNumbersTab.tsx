@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { formatDate } from "@/lib/utils/formatting";
+import Link from "next/link";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface SerialNumberLog {
@@ -14,6 +15,7 @@ interface SerialNumberLog {
     productName: string;
     productDescription: string;
     shippingManifest: string;
+    shippingManifestId?: string;
     shippingManifestLine: string;
     shipDate: string | null;
     shipToAccount: string | null;
@@ -46,7 +48,8 @@ function mapLog(raw: any): SerialNumberLog {
         productSerialNumber: raw.Product_Serial_Number__c || "",
         productName: raw.Product_Name || "",
         productDescription: raw.Product_Description__c || "",
-        shippingManifest: raw.Shipping_Manifest_Name || raw.Shipping_Manifest__c || "",
+        shippingManifest: raw.Shipping_Manifest_Name || raw.Shipping_Manifest__r?.Name || "",
+        shippingManifestId: raw.Shipping_Manifest__c || "",
         shippingManifestLine: raw.Shipping_Manifest_Line_Name || raw.Shipping_Manifest_Line__c || "",
         shipDate: raw.Ship_Date__c || null,
         shipToAccount: raw.Ship_to_Account_Name || raw.Ship_to_Account__c || "",
@@ -183,7 +186,16 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                             <TextCell v={log.productSerialNumber} w={widths.productSerialNumber} />
                             <TextCell v={log.productName} w={widths.productName} />
                             <TextCell v={log.productDescription} w={widths.productDescription} />
-                            <TextCell v={log.shippingManifest} w={widths.shippingManifest} />
+                            <TextCell 
+                                v={log.shippingManifestId ? (
+                                    <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-bold" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                        {log.shippingManifest || "View Manifest"}
+                                    </Link>
+                                ) : (
+                                    log.shippingManifest || " "
+                                )} 
+                                w={widths.shippingManifest} 
+                            />
                             <TextCell v={log.shippingManifestLine} w={widths.shippingManifestLine} />
                             <TextCell v={formatDate(log.shipDate, "numeric-dash")} w={widths.shipDate} />
                             <TextCell v={log.shipToAccount || ""} w={widths.shipToAccount} />
@@ -209,9 +221,9 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
 }
 
 // ─── Cell helpers ─────────────────────────────────────────────────────────────
-function TextCell({ v, w }: { v: string; w: number }) {
+function TextCell({ v, w }: { v: React.ReactNode; w: number }) {
     return (
-        <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={v}>
+        <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={typeof v === 'string' ? v : undefined}>
             {v}
         </td>
     );

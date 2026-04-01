@@ -26,7 +26,7 @@ export default function QuotesPage() {
   // Initialize resizable columns
   const { widths, handleResize } = useResizableColumns({
     quoteNumber: 160,
-    status: 120,
+    status: 180,
     proposalName: 200,
     customerOrder: 180,
     customerPO: 180,
@@ -544,6 +544,7 @@ function StatusBadge({ status }: { status: QuoteStatus }) {
       case "Draft":
         return "bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
       case "Rejected":
+      case "Partial Rejected":
         return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
       case "Expired":
         return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";

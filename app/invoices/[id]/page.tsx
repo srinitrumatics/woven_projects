@@ -55,6 +55,10 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           subtotal: line.Total_Price__c || 0,
           total: line.Line_Grand_Total__c || 0,
           lineGrandTotal: line.Line_Grand_Total__c || 0,
+          salesOrderLineId: line.Sales_Order_Line__c || '',
+          salesOrderId: line.Sales_Order__c || line.Sales_Order_Line__r?.Sales_Order__c || '',
+          customerQuoteLineId: line.Customer_Quote_Line__c || '',
+          customerQuoteId: line.Customer_Quote__c || line.Customer_Quote_Line__r?.Customer_Quote__c || ''
         }));
 
         // Fetch Payments separately
@@ -72,6 +76,14 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           scheduledDate: pay.Scheduled_Date__c || '',
           failedDate: pay.Failed_Date__c || '',
           postedDate: pay.Posted_Date__c || '',
+          customerQuoteName: pay.Customer_Quote_Name || pay.Customer_Quote__r?.Name || '',
+          customerQuoteId: pay.Customer_Quote__c || '',
+          customerOrderName: pay.Customer_Order_Name || pay.Customer_Order__r?.Name || '',
+          customerOrderId: pay.Customer_Order__c || '',
+          invoiceName: pay.Invoice_Name || pay.Invoice__r?.Name || pay.Invoice_Number__c || '',
+          invoiceId: pay.Invoice__c || '',
+          proposalName: pay.Proposal_Name || pay.Proposal__r?.Name || '',
+          proposalId: pay.Proposal__c || '',
         }));
 
         const creditMemos = (paymentsData?.Applied_Credit_Memo__c || []).map((cm: any) => ({
@@ -85,6 +97,13 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           invoiceName: cm.Invoice_Name || 'N/A',
           availableCreditBalance: cm.Available_Credit_Balance__c || 0,
           notes: cm.Applied_Credit_Memo_Notes__c || '',
+          customerQuoteName: cm.Customer_Quote_Name || cm.Customer_Quote__r?.Name || '',
+          customerQuoteId: cm.Customer_Quote__c || '',
+          customerOrderName: cm.Customer_Order_Name || cm.Customer_Order__r?.Name || '',
+          customerOrderId: cm.Customer_Order__c || '',
+          invoiceId: cm.Invoice__c || '',
+          proposalName: cm.Proposal_Name || cm.Proposal__r?.Name || '',
+          proposalId: cm.Proposal__c || '',
         }));
 
         // Fetch Credits separately (Full Credit Memo records)
@@ -95,9 +114,11 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           id: cm.Id,
           name: cm.Name || 'N/A',
           status: cm.Status__c || 'N/A',
-          invoiceName: cm.Invoice_Name || 'N/A',
-          customerQuoteName: cm.Customer_Quote_Name || 'N/A',
-          customerOrderName: cm.Customer_Order_Name || 'N/A',
+          invoiceName: cm.Invoice_Name || cm.Invoice__r?.Name || 'N/A',
+          customerQuoteName: cm.Customer_Quote_Name || cm.Customer_Quote__r?.Name || 'N/A',
+          customerQuoteId: cm.Customer_Quote__c || '',
+          customerOrderName: cm.Customer_Order_Name || cm.Customer_Order__r?.Name || 'N/A',
+          customerOrderId: cm.Customer_Order__c || '',
           creditToAccountName: cm.Credit_to_Account_Name || 'N/A',
           creditToContactName: cm.Credit_to_Contact_Name || 'N/A',
           totalLines: cm.Total_Lines__c || 0,
@@ -203,7 +224,15 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           receivePayments,
           creditMemos,
           credits,
-          files
+          files,
+          salesOrderId: rawInvoice.Sales_Order__c || '',
+          purchaseOrderId: rawInvoice.Purchase_Order__c || '',
+          proposalId: rawInvoice.Proposal__c || '',
+          customerOrderId: rawInvoice.Customer_Order__c || '',
+          accountId: rawInvoice.Bill_to_Account__c || '',
+          billToLocationId: rawInvoice.Authorized_Bill_To_Location__c || '',
+          shipToLocationId: rawInvoice.Authorized_Ship_To_Location__c || '',
+          siteId: rawInvoice.Site__c || ''
         };
 
         setInvoice(mappedInvoice);

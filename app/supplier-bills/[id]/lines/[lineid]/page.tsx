@@ -43,15 +43,25 @@ export default function SupplierBillLineDetailPage({
                         name: item.Name,
                         status: item.Status__c,
                         supplierBillName: item.Supplier_Bill_Name,
+                        supplierBillId: item.Supplier_Bill__c,
                         customerQuoteLineName: item.Customer_Quote_Line_Name,
+                        customerQuoteId: item.Customer_Quote__c || item.Customer_Quote_Line__r?.Customer_Quote__c,
+                        customerQuoteLineId: item.Customer_Quote_Line__c,
                         purchaseOrderLineName: item.Purchase_Order_Line_Name,
+                        purchaseOrderId: item.Purchase_Order__c || item.Purchase_Order_Line__r?.Purchase_Order__c,
+                        purchaseOrderLineId: item.Purchase_Order_Line__c,
+                        customerOrderName: item.Customer_Order_Name,
+                        customerOrderId: item.Customer_Order__c,
                         productName: item.Product_Name,
                         productDescription: item.Product_Description__c,
                         manufacturerDBA: item.Manufacturer_DBA__c,
                         proposedProduct: item.Proposed_Product_Name,
                         site: item.Site_Name,
+                        siteId: item.Site__c,
                         inventoryAccount: item.Inventory_Account_Name,
                         goodsReceiptDate: item.Goods_Receipt_Date__c,
+                        shipmentId: item.Shipping_Manifest__c,
+                        shipmentName: item.Shipping_Manifest_Name,
                         supplierBillLineNotes: item.Supplier_Bill_Line_Notes__c,
                         unitCost: item.Unit_Cost__c,
                         billedQty: item.Billed_Qty__c,
@@ -94,8 +104,8 @@ export default function SupplierBillLineDetailPage({
                         id: f.ContentVersionId || f.Id,
                         fileName: f.Title || f.Name || '',
                         fileType: (f.FileExtension || f.FileType || '').toUpperCase(),
-                        sizeInBytes: f.ContentSize || 0,
-                        uploadedBy: f.OwnerName || f.CreatedByName || '',
+                        sizeInBytes: f.FileSize || 0,
+                        uploadedBy: f.CreatedBy || f.CreatedByName || '',
                         uploadedDate: f.CreatedDate || ''
                     }));
                     setFiles(mappedFiles);
@@ -312,12 +322,34 @@ export default function SupplierBillLineDetailPage({
                             {/* Column 2 */}
                             <div className="space-y-3">
                                 <InfoField label="Proposed Product" value={line.proposedProduct} />
-                                <InfoField label="Customer Quote Line" value={line.customerQuoteLineName} />
-                                <InfoField label="Purchase Order Lines" value={line.purchaseOrderLineName} />
+                                <InfoField
+                                    label="Customer Quote Line"
+                                    value={line.customerQuoteLineName}
+                                    href={line.customerQuoteId && line.customerQuoteLineId ? `/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}` : undefined}
+                                />
+                                <InfoField
+                                    label="Purchase Order Lines"
+                                    value={line.purchaseOrderLineName}
+                                    href={line.purchaseOrderId && line.purchaseOrderLineId ? `/purchase-orders/${line.purchaseOrderId}/lines/${line.purchaseOrderLineId}` : undefined}
+                                />
                             </div>
                             {/* Column 3 */}
                             <div className="space-y-3">
-                                <InfoField label="Site" value={line.site} />
+                                <InfoField
+                                    label="Site"
+                                    value={line.site}
+                                    href={line.siteId ? `/locations/${line.siteId}` : undefined}
+                                />
+                                <InfoField
+                                    label="Customer Order"
+                                    value={line.customerOrderName}
+                                    href={line.customerOrderId ? `/orders/${line.customerOrderId}` : undefined}
+                                />
+                                <InfoField
+                                    label="Shipment"
+                                    value={line.shipmentName}
+                                    href={line.shipmentId ? `/shipments/${line.shipmentId}` : undefined}
+                                />
                                 <InfoField label="Inventory Account" value={line.inventoryAccount} />
                                 <InfoField label="Goods Receipt Date" value={formatDate(line.goodsReceiptDate, 'numeric-dash')} />
                             </div>
@@ -372,7 +404,7 @@ export default function SupplierBillLineDetailPage({
                         ))}
                     </div>
 
-                    <div className="p-6">
+                    <div className="p-4">
                         {subTabLoading ? (
                             <div className="flex justify-center items-center py-20 min-w-0">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -381,7 +413,7 @@ export default function SupplierBillLineDetailPage({
                             <>
                                 {activeTab === "debitMemos" && (
                                     <div className="space-y-4">
-                                        <SBLDebitMemoLinesTab debitMemos={debitMemoLines} />
+                                        <SBLDebitMemoLinesTab debitMemos={debitMemoLines} id={id} />
                                     </div>
                                 )}
                                 {activeTab === "files" && (
@@ -431,19 +463,32 @@ export default function SupplierBillLineDetailPage({
     );
 }
 
-function InfoField({ label, value, highlight = false }: { label: string, value: any, highlight?: boolean }) {
+function InfoField({ label, value, highlight = false, href }: { label: string, value: any, highlight?: boolean, href?: string }) {
+    const isLink = !!href;
+    const commonClasses = `w-full px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded text-sm focus:outline-none cursor-default truncate ${highlight ? "text-primary font-bold border-primary/20 bg-primary/5" : "text-gray-900 dark:text-white"}`;
+
     return (
         <div>
             <label className="block text-xs font-bold text-gray-700 dark:text-gray-500 mb-1.5 truncate" title={label}>
                 {label}
             </label>
-            <input
-                type="text"
-                readOnly
-                value={value || "-"}
-                className={`w-full px-3 py-1.5 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded text-sm focus:outline-none cursor-default truncate ${highlight ? "text-primary font-bold border-primary/20 bg-primary/5" : "text-gray-900 dark:text-white"}`}
-                title={String(value || "")}
-            />
+            {isLink ? (
+                <Link
+                    href={href}
+                    className={`${commonClasses} flex items-center bg-gray-50/50 dark:bg-gray-900/50 text-primary hover:underline font-bold transition-all shadow-sm active:scale-[0.98]`}
+                    title={String(value || "")}
+                >
+                    {value || "-"}
+                </Link>
+            ) : (
+                <input
+                    type="text"
+                    readOnly
+                    value={value || "-"}
+                    className={`${commonClasses} bg-gray-50/50 dark:bg-gray-900/50`}
+                    title={String(value || "")}
+                />
+            )}
         </div>
     );
 }

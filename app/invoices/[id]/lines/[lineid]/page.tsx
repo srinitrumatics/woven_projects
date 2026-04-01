@@ -19,12 +19,20 @@ interface InvoiceLineData {
     manufacturerDBA: string;
     productFamily: string;
     site: string;
+    siteId?: string;
     inventoryAccount: string;
+    inventoryAccountId?: string;
     isTaxable: string;
     proposedProduct: string;
     customerQuoteLine: string;
+    customerQuoteLineId?: string;
+    customerQuoteId?: string;
     salesOrderLine: string;
+    salesOrderLineId?: string;
+    salesOrderId?: string;
     purchaseOrderLine: string;
+    purchaseOrderLineId?: string;
+    purchaseOrderId?: string;
     unitPrice: number;
     orderQty: number;
     moq: number;
@@ -90,12 +98,20 @@ export default function InvoiceLineDetailPage({
                         manufacturerDBA: item.Manufacturer_DBA__c || "",
                         productFamily: item.Product_Family__c || "",
                         site: item.Site_Name || item.Site__c || "",
+                        siteId: item.Site__c || "",
                         inventoryAccount: item.Inventory_Account_Name || item.Inventory_Account__c || "",
+                        inventoryAccountId: item.Inventory_Account__c || "",
                         isTaxable: item.IsTaxable__c ? "Yes" : "No",
                         proposedProduct: item.Proposed_Product_Name || "",
                         customerQuoteLine: item.Customer_Quote_Line_Name || item.Customer_Quote_Line__c || "",
+                        customerQuoteLineId: item.Customer_Quote_Line__c || "",
+                        customerQuoteId: item.Customer_Quote__c || item.Customer_Quote_Line_r?.Customer_Quote__c || "",
                         salesOrderLine: item.Sales_Order_Line_Name || item.Sales_Order_Line__c || "",
+                        salesOrderLineId: item.Sales_Order_Line__c || "",
+                        salesOrderId: item.Sales_Order__c || item.Sales_Order_Line_r?.Sales_Order__c || "",
                         purchaseOrderLine: item.Purchase_Order_Line_Name || item.Purchase_Order_Line__c || "",
+                        purchaseOrderLineId: item.Purchase_Order_Line__c || "",
+                        purchaseOrderId: item.Purchase_Order__c || item.Purchase_Order_Line_r?.Purchase_Order__c || "",
                         unitPrice: item.Unit_Price__c || 0,
                         orderQty: item.Total_Order_Qty__c || 0,
                         moq: item.MOQ__c || 1,
@@ -115,9 +131,9 @@ export default function InvoiceLineDetailPage({
                         grtRate: item.Gross_Receipts_Tax_Rate__c || 0,
                         grtAmount: item.Gross_Receipts_Tax_Amount__c || 0,
                         gstRate: item.GST_Rate__c || 0,
-                        gstAmount: item.GST_Amount__c || 0,
+                        gstAmount: item.Total_GST_Amount__c || 0,
                         vatRate: item.VAT_Rate__c || 0,
-                        vatAmount: item.VAT_Amount__c || 0,
+                        vatAmount: item.Total_VAT_Amount__c || 0,
                         inventoryLineNotes: item.Invoice_Line_Notes__c || "",
                     }));
 

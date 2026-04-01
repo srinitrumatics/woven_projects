@@ -76,7 +76,9 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                                 </span>
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">
-                                <div className="truncate" title={line.productName}>{line.productName}</div>
+                                <div className="truncate">
+                                    <span title={line.productName}>{line.productName}</span>
+                                </div>
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">
                                 <div className="truncate" title={line.description}>{line.description}</div>

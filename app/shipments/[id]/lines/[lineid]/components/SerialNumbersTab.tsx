@@ -3,6 +3,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatDate } from "@/lib/utils/formatting";
+import Link from "next/link";
 
 interface SerialNumbersTabProps {
     accountId: string;
@@ -43,7 +44,8 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                             productSerialNumber: item.gtherp__Product_Serial_Number__c || item.Product_Serial_Number__c || "",
                             productName: item.gtherp__Product_Name__c || item.Product_Name || item.Product_Name__c || "",
                             productDescription: item.gtherp__Product_Description__c || item.Product_Description__c || "",
-                            shippingManifest: item.gtherp__Shipping_Manifest__c || item.Shipping_Manifest_Name || item.Shipping_Manifest__c || "",
+                            shippingManifestName: item.Shipping_Manifest_Name || item.gtherp__Shipping_Manifest__r?.Name || item.Shipping_Manifest__r?.Name || "",
+                            shippingManifestId: item.gtherp__Shipping_Manifest__c || item.Shipping_Manifest__c || "",
                             shippingManifestLine: item.gtherp__Shipping_Manifest_Line__c || item.Shipping_Manifest_Line_Name || item.Shipping_Manifest_Line__c || "",
                             shipDate: item.gtherp__Ship_Date__c || item.Ship_Date__c || "",
                             shipToAccount: item.gtherp__Ship_to_Account__c || item.Ship_to_Account_Name || item.Ship_to_Account__c || "",
@@ -72,7 +74,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
         productSerialNumber: 200,
         productName: 180,
         productDescription: 250,
-        shippingManifest: 180,
+        shippingManifestName: 180,
         shippingManifestLine: 200,
         shipDate: 150,
         shipToAccount: 180,
@@ -106,7 +108,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                         <SortableHeader label="Product Serial Number" field="productSerialNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.productSerialNumber} onResize={handleResize} />
                         <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
                         <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.productDescription} onResize={handleResize} />
-                        <SortableHeader label="Shipping Manifest" field="shippingManifest" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifest} onResize={handleResize} />
+                        <SortableHeader label="Shipping Manifest" field="shippingManifestName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifestName} onResize={handleResize} />
                         <SortableHeader label="Shipping Manifest Line" field="shippingManifestLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifestLine} onResize={handleResize} />
                         <SortableHeader label="Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipDate} onResize={handleResize} />
                         <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
@@ -123,7 +125,15 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productSerialNumber}>{log.productSerialNumber}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productName}>{log.productName}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productDescription}>{log.productDescription}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shippingManifest}>{log.shippingManifest}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={log.shippingManifestName}>
+                                {log.shippingManifestId ? (
+                                    <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-bold" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                        {log.shippingManifestName || "View Manifest"}
+                                    </Link>
+                                ) : (
+                                    log.shippingManifestName || " "
+                                )}
+                            </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shippingManifestLine}>{log.shippingManifestLine}</td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={log.shipDate ? formatDate(log.shipDate, "numeric-dash") : ""}>{log.shipDate ? formatDate(log.shipDate, "numeric-dash") : ""}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shipToAccount}>{log.shipToAccount}</td>

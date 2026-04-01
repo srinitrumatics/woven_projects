@@ -1,11 +1,16 @@
 import { formatDate } from "@/lib/utils/formatting";
+import DetailInput from "./DetailInput";
 
 interface InvoiceKeyDatesProps {
     arRep?: string;
     proposalName?: string;
+    proposalId?: string;
     customerOrder?: string;
+    customerOrderId?: string;
     salesOrderNumber?: string;
+    salesOrderId?: string;
     purchaseOrderNumber?: string;
+    purchaseOrderId?: string;
     invoiceDate: string;
     className?: string;
 }
@@ -13,9 +18,13 @@ interface InvoiceKeyDatesProps {
 export default function InvoiceKeyDates({
     arRep,
     proposalName,
+    proposalId,
     customerOrder,
+    customerOrderId,
     salesOrderNumber,
+    salesOrderId,
     purchaseOrderNumber,
+    purchaseOrderId,
     invoiceDate,
     className = ""
 }: InvoiceKeyDatesProps) {
@@ -34,30 +43,12 @@ export default function InvoiceKeyDates({
             </div>
             <div className="text-sm">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w1025:grid-cols-6 gap-4">
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Account Rep">Account Rep</label>
-                        <input type="text" readOnly value={arRep || ""} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={arRep || ""} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Proposal Name">Proposal Name</label>
-                        <input type="text" readOnly value={proposalName || ""} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={proposalName || ""} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Customer Order">Customer Order</label>
-                        <input type="text" readOnly value={customerOrder || ""} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={customerOrder || ""} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Sales Order">Sales Order</label>
-                        <input type="text" readOnly value={salesOrderNumber || ""} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={salesOrderNumber || ""} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Purchase Order">Purchase Order</label>
-                        <input type="text" readOnly value={purchaseOrderNumber || ""} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={purchaseOrderNumber || ""} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Issued Date">Issued Date</label>
-                        <input type="text" readOnly value={formatDate(invoiceDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={formatDate(invoiceDate, 'numeric-dash')} />
-                    </div>
+                    <DetailInput label="Account Rep" value={arRep} />
+                    <DetailInput label="Proposal Name" value={proposalName} href={proposalId ? `/proposals/${proposalId}` : undefined} />
+                    <DetailInput label="Customer Order" value={customerOrder} href={customerOrderId ? `/orders/${customerOrderId}` : undefined} />
+                    <DetailInput label="Sales Order" value={salesOrderNumber} href={salesOrderId ? `/sales-orders/${salesOrderId}` : undefined} />
+                    <DetailInput label="Purchase Order" value={purchaseOrderNumber} href={purchaseOrderId ? `/purchase-orders/${purchaseOrderId}` : undefined} />
+                    <DetailInput label="Issued Date" value={formatDate(invoiceDate, 'numeric-dash')} />
                 </div>
             </div>
         </div>

@@ -57,9 +57,13 @@ export default function SupplierBillsPage() {
                     name: b.Name || '',
                     status: b.Status__c || '',
                     purchaseOrderName: b.Purchase_Order_Name || b.Purchase_Order__r?.Name || '',
+                    purchaseOrderId: b.Purchase_Order__c || '',
                     customerQuoteName: b.Customer_Quote_Name || '',
+                    customerQuoteId: b.Customer_Quote__c || '',
                     customerOrderName: b.Customer_Order_Name || '',
+                    customerOrderId: b.Customer_Order__c || '',
                     proposalName: b.Proposal_Name || '',
+                    proposalId: b.Proposal__c || '',
                     supplierName: b.Supplier_Name || b.Supplier__r?.Name || '',
                     supplierDBA: b.Supplier_DBA__c || '',
                     supplierContact: b.Supplier_Contact_Name || '',
@@ -276,10 +280,42 @@ export default function SupplierBillsPage() {
                                         <tr key={bill.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onClick={() => router.push(`/supplier-bills/${bill.id}`)}>
                                             <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate" title={bill.name}>{bill.name}</td>
                                             <td className="px-2 py-2 text-sm truncate" title={bill.status}><StatusBadge status={bill.status} /></td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.purchaseOrderName}>{bill.purchaseOrderName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerQuoteName}>{bill.customerQuoteName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[180px]" title={bill.proposalName}>{bill.proposalName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerOrderName}>{bill.customerOrderName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.purchaseOrderName}>
+                                                {bill.purchaseOrderId && bill.purchaseOrderId !== 'N/A' && bill.purchaseOrderId !== '' ? (
+                                                    <Link href={`/purchase-orders/${bill.purchaseOrderId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        {bill.purchaseOrderName || bill.purchaseOrderId}
+                                                    </Link>
+                                                ) : (
+                                                    bill.purchaseOrderName || '-'
+                                                )}
+                                            </td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerQuoteName}>
+                                                {bill.customerQuoteId && bill.customerQuoteId !== 'N/A' && bill.customerQuoteId !== '' ? (
+                                                    <Link href={`/quotes/${bill.customerQuoteId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        {bill.customerQuoteName || bill.customerQuoteId}
+                                                    </Link>
+                                                ) : (
+                                                    bill.customerQuoteName || '-'
+                                                )}
+                                            </td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[180px]" title={bill.proposalName}>
+                                                {bill.proposalId && bill.proposalId !== 'N/A' && bill.proposalId !== '' ? (
+                                                    <Link href={`/proposals/${bill.proposalId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        {bill.proposalName || bill.proposalId}
+                                                    </Link>
+                                                ) : (
+                                                    bill.proposalName || '-'
+                                                )}
+                                            </td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerOrderName}>
+                                                {bill.customerOrderId && bill.customerOrderId !== 'N/A' && bill.customerOrderId !== '' ? (
+                                                    <Link href={`/orders/${bill.customerOrderId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        {bill.customerOrderName || bill.customerOrderId}
+                                                    </Link>
+                                                ) : (
+                                                    bill.customerOrderName || '-'
+                                                )}
+                                            </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.supplierName}>{bill.supplierName || '-'}</td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 font-medium truncate" >{bill.totalLines}</td>
                                             <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(bill.totalAmount)}</td>

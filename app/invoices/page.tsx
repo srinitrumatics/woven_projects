@@ -76,7 +76,12 @@ export default function InvoicesPage() {
           paymentTerms: item.Payment_Terms__c || 'N/A',
           collectionStatus: item.Collection_Status__c || 'N/A',
           description: item.Invoice_Notes__c || '',
-          contactName: item.Bill_to_Contact_Name || 'N/A'
+          contactName: item.Bill_to_Contact_Name || 'N/A',
+          salesOrderId: item.Sales_Order__c || '',
+          purchaseOrderId: item.Purchase_Order__c || '',
+          proposalId: item.Proposal__c || '',
+          customerOrderId: item.Customer_Order__c || '',
+          accountId: item.Bill_to_Account__c || ''
         }));
 
         setInvoices(mappedInvoices);
@@ -509,22 +514,83 @@ export default function InvoicesPage() {
                           <StatusBadge status={invoice.status} />
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.salesOrderNumber}>{invoice.salesOrderNumber || 'N/A'}</div>
+                          <div className="text-sm font-medium">
+                            {invoice.salesOrderId ? (
+                              <Link
+                                href={`/sales-orders/${invoice.salesOrderId}`}
+                                className="text-primary hover:underline font-bold"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {invoice.salesOrderNumber || 'N/A'}
+                              </Link>
+                            ) : (
+                              invoice.salesOrderNumber || 'N/A'
+                            )}
+                          </div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.purchaseOrderNumber}>{invoice.purchaseOrderNumber || 'N/A'}</div>
+                          <div className="text-sm font-medium">
+                            {invoice.purchaseOrderId ? (
+                              <Link
+                                href={`/purchase-orders/${invoice.purchaseOrderId}`}
+                                className="text-primary hover:underline font-bold"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {invoice.purchaseOrderNumber || 'N/A'}
+                              </Link>
+                            ) : (
+                              invoice.purchaseOrderNumber || 'N/A'
+                            )}
+                          </div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.proposalName}>{invoice.proposalName || 'N/A'}</div>
+                          <div className="text-sm font-medium">
+                            {invoice.proposalId ? (
+                              <Link
+                                href={`/proposals/${invoice.proposalId}`}
+                                className="text-primary hover:underline font-bold"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {invoice.proposalName || 'N/A'}
+                              </Link>
+                            ) : (
+                              invoice.proposalName || 'N/A'
+                            )}
+                          </div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerOrder}>{invoice.customerOrder || 'N/A'}</div>
+                          <div className="text-sm font-medium">
+                            {invoice.customerOrderId ? (
+                              <Link
+                                href={`/orders/${invoice.customerOrderId}`}
+                                className="text-primary hover:underline font-bold"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {invoice.customerOrder || 'N/A'}
+                              </Link>
+                            ) : (
+                              invoice.customerOrder || 'N/A'
+                            )}
+                          </div>
                         </td>
                         <td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerPO}>{invoice.customerPO || 'N/A'}</div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.accountName}>{invoice.accountName}</div>
+                          <div className="text-sm font-medium">
+                            {invoice.accountId ? (
+                              <Link
+                                href={`/accounts/${invoice.accountId}`}
+                                target="_blank"
+                                className="text-primary hover:underline font-bold"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {invoice.accountName}
+                              </Link>
+                            ) : (
+                              invoice.accountName
+                            )}
+                          </div>
                         </td>
                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{invoice.lineItemCount}</td>
                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(invoice.totalAmount)}</td>

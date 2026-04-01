@@ -61,7 +61,7 @@ export default function QuoteLinesTab({
     return (
         <div>
             <div className="overflow-x-auto py-2">
-                <table className="w-full">
+                <table className="w-full table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
                             <SortableHeader label="Customer Quote Line" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.Name} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
@@ -69,11 +69,6 @@ export default function QuoteLinesTab({
                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={onResize} align="left" />
                             <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={onResize} align="left" />
                             <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={onResize} align="left" />
-                            <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" />
-                            <SortableHeader label="Supplier Bill" field="supplierBill" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierBill} onResize={onResize} align="left" />
-                            <SortableHeader label="Purchase Order" field="purchaseOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={onResize} align="left" />
-                            <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" />
-                            <SortableHeader label="Sales Order" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={onResize} align="left" />
                             <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} align="left" />
                             <SortableHeader label="Total Qty" field="quantity" sortConfig={sortConfig} requestSort={requestSort} width={widths.quantity} onResize={onResize} align="left" />
                             <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left" />
@@ -106,41 +101,6 @@ export default function QuoteLinesTab({
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.manufacturerDBA }} title={line.manufacturerDBA}>
                                     {line.manufacturerDBA}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
-                                    {line.customerQuoteId ? (
-                                        <Link href={`/quotes/${line.customerQuoteId}`} className="text-primary hover:underline font-bold">
-                                            {line.customerQuote}
-                                        </Link>
-                                    ) : line.customerQuote}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierBill }}>
-                                    {line.supplierBillId ? (
-                                        <Link href={`/supplier-bills/${line.supplierBillId}`} className="text-primary hover:underline font-bold">
-                                            {line.supplierBill}
-                                        </Link>
-                                    ) : line.supplierBill}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
-                                    {line.purchaseOrderId ? (
-                                        <Link href={`/purchase-orders/${line.purchaseOrderId}`} className="text-primary hover:underline font-bold">
-                                            {line.purchaseOrder}
-                                        </Link>
-                                    ) : line.purchaseOrder}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
-                                    {line.customerOrderId ? (
-                                        <Link href={`/orders/${line.customerOrderId}`} className="text-primary hover:underline font-bold">
-                                            {line.customerOrder}
-                                        </Link>
-                                    ) : line.customerOrder}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>
-                                    {line.salesOrderId ? (
-                                        <Link href={`/orders/${line.salesOrderId}`} className="text-primary hover:underline font-bold">
-                                            {line.salesOrder}
-                                        </Link>
-                                    ) : line.salesOrder}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.unitPrice }} title={formatCurrency(line.unitPrice)}>
                                     {formatCurrency(line.unitPrice)}

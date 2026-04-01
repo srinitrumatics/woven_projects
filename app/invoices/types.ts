@@ -23,6 +23,11 @@ export interface Invoice {
   customerPO?: string;
   paymentTerms?: string;
   collectionStatus?: string;
+  salesOrderId?: string;
+  purchaseOrderId?: string;
+  proposalId?: string;
+  customerOrderId?: string;
+  accountId?: string;
 }
 
 export interface InvoiceStats {
@@ -50,6 +55,10 @@ export interface InvoiceLine {
   subtotal: number; // Total_Price__c
   total: number; // Line_Grand_Total__c
   lineGrandTotal: number;
+  salesOrderLineId?: string;
+  salesOrderId?: string;
+  customerQuoteLineId?: string;
+  customerQuoteId?: string;
 }
 
 export interface ReceivePayment {
@@ -63,6 +72,14 @@ export interface ReceivePayment {
   scheduledDate: string; // Scheduled_Date__c
   failedDate: string; // Failed_Date__c
   postedDate: string; // Posted_Date__c
+  customerQuoteName?: string;
+  customerQuoteId?: string;
+  customerOrderName?: string;
+  customerOrderId?: string;
+  invoiceName?: string;
+  invoiceId?: string;
+  proposalName?: string;
+  proposalId?: string;
 }
 
 export interface CreditMemo {
@@ -70,8 +87,11 @@ export interface CreditMemo {
   name: string; // Credit Memo (Name)
   status: string; // Status__c
   invoiceName: string; // Invoice_Name
+  invoiceId?: string;
   customerQuoteName: string; // Customer_Quote_Name
+  customerQuoteId?: string;
   customerOrderName: string; // Customer_Order_Name
+  customerOrderId?: string;
   creditToAccountName: string; // Credit_to_Account_Name
   creditToContactName: string; // Credit_to_Contact_Name
   totalLines: number; // Total_Lines__c
@@ -83,6 +103,8 @@ export interface CreditMemo {
   expirationDate: string; // Expiration_Date__c
   availableCreditBalance: number; // Available_Credit_Balance__c
   settledDate: string; // Settled_Date__c
+  proposalName?: string;
+  proposalId?: string;
 }
 
 export interface AppliedCreditMemo {
@@ -96,6 +118,13 @@ export interface AppliedCreditMemo {
   invoiceName: string; // Invoice_Name
   availableCreditBalance: number; // Available_Credit_Balance__c
   notes: string; // Applied_Credit_Memo_Notes__c
+  customerQuoteName?: string;
+  customerQuoteId?: string;
+  customerOrderName?: string;
+  customerOrderId?: string;
+  invoiceId?: string;
+  proposalName?: string;
+  proposalId?: string;
 }
 
 export interface Payment {
@@ -142,6 +171,9 @@ export interface InvoiceDetails extends Invoice {
   shipToLocation?: string;
   shipConfirmedDate?: string;
   siteName?: string;
+  billToLocationId?: string;
+  shipToLocationId?: string;
+  siteId?: string;
   productsSubtotal?: number;
   servicesSubtotal?: number;
   appliedCredits?: number;

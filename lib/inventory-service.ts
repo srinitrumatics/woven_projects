@@ -19,13 +19,16 @@ export async function getInventoryFromSalesforce(
 
         const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/inventory`;
         let url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`;
-        
+
         if (productId) {
             url += `&productId=${encodeURIComponent(productId)}`;
         }
-        
+
         if (isInventory) {
-            url += `&isInventory=true`;
+            url += `&isInventory=true&isSupplier=false`;
+        }
+        else {
+            url += `&isInventory=true&isSupplier=true`;
         }
 
         console.log('Fetching inventory data from Salesforce with URL:', url);

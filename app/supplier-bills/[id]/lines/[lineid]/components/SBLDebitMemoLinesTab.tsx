@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { formatCurrency } from "@/lib/utils/formatting";
+import Link from 'next/link';
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -11,9 +12,15 @@ interface DebitMemoLine {
     Id: string;
     Name: string;
     Status__c: string;
+    Debit_Memo__c?: string;
     Debit_Memo_Name?: string;
+    Supplier_Bill_Line__c?: string;
     Supplier_Bill_Line_Name?: string;
+    Customer_Quote__c?: string;
+    Customer_Quote_Line__c?: string;
     Customer_Quote_Line_Name?: string;
+    Purchase_Order__c?: string;
+    Purchase_Order_Line__c?: string;
     Purchase_Order_Line_Name?: string;
     Product_Name?: string;
     Product_Description__c?: string;
@@ -34,7 +41,7 @@ interface DebitMemoLine {
 
 const ITEMS_PER_PAGE = 10;
 
-export default function SBLDebitMemoLinesTab({ debitMemos }: { debitMemos: DebitMemoLine[] }) {
+export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: DebitMemoLine[], id?: string }) {
     const [currentPage, setCurrentPage] = useState(1);
     const { items: sortedData, requestSort, sortConfig } = useSortableData<DebitMemoLine>(debitMemos);
     console.log("sortedData", sortedData);
@@ -104,10 +111,42 @@ export default function SBLDebitMemoLinesTab({ debitMemos }: { debitMemos: Debit
                                     <StatusBadge status={line.Status__c || "-"} />
 
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{line.Debit_Memo_Name || " "}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{line.Supplier_Bill_Line_Name || " "}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{line.Customer_Quote_Line_Name || " "}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{line.Purchase_Order_Line_Name || " "}</td>
+                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
+                                    {line.Debit_Memo__c ? (
+                                        <Link href={`#`} className="text-primary hover:underline font-bold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.Debit_Memo_Name || "View Debit Memo"}
+                                        </Link>
+                                    ) : (
+                                        line.Debit_Memo_Name || " "
+                                    )}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
+                                    {line.Supplier_Bill_Line__c ? (
+                                        <Link href={`/supplier-bills/${id}/lines/${line.Supplier_Bill_Line__c}`} className="text-primary hover:underline font-bold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.Supplier_Bill_Line_Name || "View SBL"}
+                                        </Link>
+                                    ) : (
+                                        line.Supplier_Bill_Line_Name || " "
+                                    )}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
+                                    {line.Customer_Quote__c && line.Customer_Quote_Line__c ? (
+                                        <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} className="text-primary hover:underline font-bold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.Customer_Quote_Line_Name || "View Quote Line"}
+                                        </Link>
+                                    ) : (
+                                        line.Customer_Quote_Line_Name || " "
+                                    )}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
+                                    {line.Purchase_Order__c && line.Purchase_Order_Line__c ? (
+                                        <Link href={`/purchase-orders/${line.Purchase_Order__c}/lines/${line.Purchase_Order_Line__c}`} className="text-primary hover:underline font-bold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.Purchase_Order_Line_Name || "View PO Line"}
+                                        </Link>
+                                    ) : (
+                                        line.Purchase_Order_Line_Name || " "
+                                    )}
+                                </td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{line.Product_Name || " "}</td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate" title={line.Product_Description__c}>{line.Product_Description__c || " "}</td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{line.Manufacturer_DBA__c || " "}</td>
