@@ -265,7 +265,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                             <TC v={item.levelPosition} w={widths.levelPosition} />
                             <TC
                                 v={item.salesOrderId ? (
-                                    <Link href={`/sales-orders/${item.salesOrderId}`} className="text-primary hover:underline font-bold" target="_blank">
+                                    <Link href={`/orders/${item.salesOrderId}`} className="text-primary hover:underline font-bold" target="_blank">
                                         {item.salesOrderName || "View SO"}
                                     </Link>
                                 ) : (

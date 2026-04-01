@@ -139,7 +139,7 @@ export default function PurchasesTab({
                                         {paginatedPurchases.map((purchase) => (
                                             <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={purchase.name}>
-                                                    <Link 
+                                                    <Link
                                                         href={`/purchase-orders/${purchase.id}`}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
@@ -159,7 +159,7 @@ export default function PurchasesTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {purchase.customerQuoteName && purchase.customerQuoteId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/quotes/${purchase.customerQuoteId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -174,7 +174,7 @@ export default function PurchasesTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {purchase.customerOrderName && purchase.customerOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/orders/${purchase.customerOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -189,8 +189,8 @@ export default function PurchasesTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {purchase.salesOrderName && purchase.salesOrderId ? (
-                                                        <Link 
-                                                            href={`/sales-orders/${purchase.salesOrderId}`}
+                                                        <Link
+                                                            href={`/orders/${purchase.salesOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-sm font-semibold text-primary hover:underline truncate"
@@ -204,7 +204,7 @@ export default function PurchasesTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {purchase.shipmentName && purchase.shipmentId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/shipments/${purchase.shipmentId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -219,7 +219,7 @@ export default function PurchasesTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {purchase.customerPO && purchase.purchaseOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/purchase-orders/${purchase.purchaseOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -328,7 +328,7 @@ export default function PurchasesTab({
                                         {paginatedBills.map((bill) => (
                                             <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={bill.name}>
-                                                    <Link 
+                                                    <Link
                                                         href={`/supplier-bills/${bill.id}`}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
@@ -346,7 +346,7 @@ export default function PurchasesTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {bill.purchaseOrderName && bill.purchaseOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/purchase-orders/${bill.purchaseOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -361,7 +361,7 @@ export default function PurchasesTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {bill.customerQuoteName && bill.customerQuoteId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/quotes/${bill.customerQuoteId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -376,7 +376,7 @@ export default function PurchasesTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {bill.customerOrderName && bill.customerOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/orders/${bill.customerOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -391,8 +391,8 @@ export default function PurchasesTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {bill.salesOrderName && bill.salesOrderId ? (
-                                                        <Link 
-                                                            href={`/sales-orders/${bill.salesOrderId}`}
+                                                        <Link
+                                                            href={`/orders/${bill.salesOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-sm font-semibold text-primary hover:underline truncate"
@@ -406,7 +406,7 @@ export default function PurchasesTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {bill.shipmentName && bill.shipmentId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/shipments/${bill.shipmentId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"

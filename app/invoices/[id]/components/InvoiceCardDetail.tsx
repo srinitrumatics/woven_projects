@@ -46,7 +46,7 @@ export default function InvoiceKeyDates({
                     <DetailInput label="Account Rep" value={arRep} />
                     <DetailInput label="Proposal Name" value={proposalName} href={proposalId ? `/proposals/${proposalId}` : undefined} />
                     <DetailInput label="Customer Order" value={customerOrder} href={customerOrderId ? `/orders/${customerOrderId}` : undefined} />
-                    <DetailInput label="Sales Order" value={salesOrderNumber} href={salesOrderId ? `/sales-orders/${salesOrderId}` : undefined} />
+                    <DetailInput label="Sales Order" value={salesOrderNumber} href={salesOrderId ? `/orders/${salesOrderId}` : undefined} />
                     <DetailInput label="Purchase Order" value={purchaseOrderNumber} href={purchaseOrderId ? `/purchase-orders/${purchaseOrderId}` : undefined} />
                     <DetailInput label="Issued Date" value={formatDate(invoiceDate, 'numeric-dash')} />
                 </div>

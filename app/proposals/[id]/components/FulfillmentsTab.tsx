@@ -158,7 +158,7 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {quote.customerOrderName && quote.customerOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/orders/${quote.customerOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -173,7 +173,7 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {quote.customerPO && quote.purchaseOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/purchase-orders/${quote.purchaseOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -291,7 +291,7 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {order.customerQuoteName && order.customerQuoteId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/quotes/${order.customerQuoteId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -306,7 +306,7 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {order.customerOrderName && order.customerOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/orders/${order.customerOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -321,7 +321,7 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {order.customerPO && order.purchaseOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/purchase-orders/${order.purchaseOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -438,8 +438,8 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {invoice.salesOrderName && invoice.salesOrderId ? (
-                                                        <Link 
-                                                            href={`/sales-orders/${invoice.salesOrderId}`}
+                                                        <Link
+                                                            href={`/orders/${invoice.salesOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-sm font-semibold text-primary hover:underline truncate"
@@ -453,7 +453,7 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {invoice.customerQuoteName && invoice.customerQuoteId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/quotes/${invoice.customerQuoteId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -468,7 +468,7 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {invoice.customerOrderName && invoice.customerOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/orders/${invoice.customerOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -483,7 +483,7 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {invoice.customerPO && invoice.purchaseOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/purchase-orders/${invoice.purchaseOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -596,8 +596,8 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.salesOrderName && manifest.salesOrderId ? (
-                                                        <Link 
-                                                            href={`/sales-orders/${manifest.salesOrderId}`}
+                                                        <Link
+                                                            href={`/orders/${manifest.salesOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-sm font-semibold text-primary hover:underline truncate"
@@ -611,7 +611,7 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.customerQuoteName && manifest.customerQuoteId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/quotes/${manifest.customerQuoteId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -626,7 +626,7 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.customerOrderName && manifest.customerOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/orders/${manifest.customerOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
@@ -641,7 +641,7 @@ export default function FulfillmentsTab({
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.customerPO && manifest.purchaseOrderId ? (
-                                                        <Link 
+                                                        <Link
                                                             href={`/purchase-orders/${manifest.purchaseOrderId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"

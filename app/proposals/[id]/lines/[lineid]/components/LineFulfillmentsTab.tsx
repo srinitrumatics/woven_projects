@@ -306,7 +306,7 @@ export default function LineFulfillmentsTab({
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                         {order.salesOrderName && order.salesOrderId ? (
-                                                            <Link href={`/sales-orders/${order.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={order.salesOrderName}>
+                                                            <Link href={`/orders/${order.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={order.salesOrderName}>
                                                                 {order.salesOrderName}
                                                             </Link>
                                                         ) : (

@@ -517,7 +517,7 @@ export default function InvoicesPage() {
                           <div className="text-sm font-medium">
                             {invoice.salesOrderId ? (
                               <Link
-                                href={`/sales-orders/${invoice.salesOrderId}`}
+                                href={`/orders/${invoice.salesOrderId}`}
                                 className="text-primary hover:underline font-bold"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
@@ -577,20 +577,7 @@ export default function InvoicesPage() {
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerPO}>{invoice.customerPO || 'N/A'}</div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm font-medium">
-                            {invoice.accountId ? (
-                              <Link
-                                href={`/accounts/${invoice.accountId}`}
-                                target="_blank"
-                                className="text-primary hover:underline font-bold"
-                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                              >
-                                {invoice.accountName}
-                              </Link>
-                            ) : (
-                              invoice.accountName
-                            )}
-                          </div>
+                          <div className="text-sm font-medium">{invoice.accountName}</div>
                         </td>
                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{invoice.lineItemCount}</td>
                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(invoice.totalAmount)}</td>

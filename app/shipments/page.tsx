@@ -508,7 +508,7 @@ export default function ShipmentsPage() {
                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 truncate">
                           {shipment.salesOrderId ? (
                             <Link
-                              href={`/sales-orders/${shipment.salesOrderId}`}
+                              href={`/orders/${shipment.salesOrderId}`}
                               className="text-primary hover:underline font-bold"
                               onClick={(e: React.MouseEvent) => e.stopPropagation()}
                             >

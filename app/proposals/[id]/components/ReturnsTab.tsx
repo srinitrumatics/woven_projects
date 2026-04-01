@@ -217,7 +217,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                 return (
                                     <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate z-10" title={item.name}>
-                                            <Link 
+                                            <Link
                                                 href={`/${activeTab === 'rma' ? 'rmas' : activeTab === 'rtv' ? 'rtvs' : activeTab === 'credit' ? 'credit-memos' : 'debit-memos'}/${item.id}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
@@ -239,7 +239,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                             <>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {rma.salesOrderName && rma.salesOrderId ? (
-                                                        <Link href={`/sales-orders/${rma.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.salesOrderName}>{rma.salesOrderName}</Link>
+                                                        <Link href={`/orders/${rma.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.salesOrderName}>{rma.salesOrderName}</Link>
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.salesOrderName}>{rma.salesOrderName}</div>
                                                     )}
@@ -330,7 +330,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {rtv.salesOrderName && rtv.salesOrderId ? (
-                                                        <Link href={`/sales-orders/${rtv.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.salesOrderName}>{rtv.salesOrderName}</Link>
+                                                        <Link href={`/orders/${rtv.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.salesOrderName}>{rtv.salesOrderName}</Link>
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={rtv.salesOrderName}>{rtv.salesOrderName}</div>
                                                     )}
@@ -392,7 +392,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {credit.salesOrderName && credit.salesOrderId ? (
-                                                        <Link href={`/sales-orders/${credit.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.salesOrderName}>{credit.salesOrderName}</Link>
+                                                        <Link href={`/orders/${credit.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.salesOrderName}>{credit.salesOrderName}</Link>
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.salesOrderName}>{credit.salesOrderName}</div>
                                                     )}
@@ -478,7 +478,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                         </td>
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                             {debit.salesOrderName && debit.salesOrderId ? (
-                                                                <Link href={`/sales-orders/${debit.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.salesOrderName}>{debit.salesOrderName}</Link>
+                                                                <Link href={`/orders/${debit.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.salesOrderName}>{debit.salesOrderName}</Link>
                                                             ) : (
                                                                 <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.salesOrderName}>{debit.salesOrderName}</div>
                                                             )}
