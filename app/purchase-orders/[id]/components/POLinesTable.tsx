@@ -39,7 +39,12 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
             trackingStatus: line.Tracking_Status__c || '',
             actualDeliveryDate: line.Actual_Delivery_Date__c || '',
             goodsReceiptDate: line.Goods_Receipt_Date__c || '',
-            invoiceStatus: line.Invoice_Status__c || ''
+            invoiceStatus: line.Invoice_Status__c || '',
+            purchaseOrderId: line.Purchase_Order__c || '',
+            customerQuoteId: line.Customer_Quote__c || '',
+            customerQuoteLineId: line.Customer_Quote_Line__c || '',
+            shipmentId: line.Shipping_Manifest__c || '',
+            shipmentName: line.Shipping_Manifest_Name || line.Shipping_Manifest__r?.Name || ''
         }));
     }, [lines]);
 
@@ -119,8 +124,24 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                     <StatusBadge status={line.status} />
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.purchaseOrder}>{line.purchaseOrder}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.customerQuoteLine}>{line.customerQuoteLine}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.purchaseOrder}>
+                                    {line.purchaseOrderId ? (
+                                        <Link href={`/purchase-orders/${line.purchaseOrderId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                            {line.purchaseOrder || 'View PO'}
+                                        </Link>
+                                    ) : (
+                                        line.purchaseOrder || '-'
+                                    )}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.customerQuoteLine}>
+                                    {line.customerQuoteLineId && line.customerQuoteId ? (
+                                        <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.customerQuoteLine || 'View Quote Line'}
+                                        </Link>
+                                    ) : (
+                                        line.customerQuoteLine || '-'
+                                    )}
+                                </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productName}>{line.productName}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{line.productDescription}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.manufacturerDBA}>{line.manufacturerDBA}</td>

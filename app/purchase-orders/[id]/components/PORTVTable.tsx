@@ -8,14 +8,18 @@ import Pagination from "@/components/ui/Pagination";
 import { formatDate } from "@/lib/utils/formatting";
 
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import Link from 'next/link';
 
 interface RTV {
     Id: string;
     Name: string;
     Status__c: string;
     Purchase_Order_Name?: string;
+    Purchase_Order__c?: string;
     Customer_Quote_Name?: string;
+    Customer_Quote__c?: string;
     Customer_Order_Name?: string;
+    Customer_Order__c?: string;
     RTV_Type__c?: string;
     Supplier_RMA_Number__c?: string;
     Ship_from_Account_Name?: string;
@@ -118,13 +122,25 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                     <StatusBadge status={r.Status__c} />
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Purchase_Order_Name || '-'}>
-                                    {r.Purchase_Order_Name || '-'}
+                                    {r.Purchase_Order__c ? (
+                                        <Link href={`/purchase-orders/${r.Purchase_Order__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {r.Purchase_Order_Name || 'View PO'}
+                                        </Link>
+                                    ) : r.Purchase_Order_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Customer_Quote_Name || '-'}>
-                                    {r.Customer_Quote_Name || '-'}
+                                    {r.Customer_Quote__c ? (
+                                        <Link href={`/quotes/${r.Customer_Quote__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {r.Customer_Quote_Name || 'View Quote'}
+                                        </Link>
+                                    ) : r.Customer_Quote_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Customer_Order_Name || '-'}>
-                                    {r.Customer_Order_Name || '-'}
+                                    {r.Customer_Order__c ? (
+                                        <Link href={`/orders/${r.Customer_Order__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {r.Customer_Order_Name || 'View Order'}
+                                        </Link>
+                                    ) : r.Customer_Order_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.RTV_Type__c || '-'}>
                                     {r.RTV_Type__c || '-'}

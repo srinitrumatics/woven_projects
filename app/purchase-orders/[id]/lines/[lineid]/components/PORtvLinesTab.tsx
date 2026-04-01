@@ -6,6 +6,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import Link from 'next/link';
 
 interface RtvLine {
     Id: string;
@@ -15,8 +16,11 @@ interface RtvLine {
     RTV_Name: string;
     Purchase_Order_Line__c: string;
     Purchase_Order_Line_Name: string;
+    Purchase_Order__c?: string;
     Customer_Order_Line__c: string;
     Customer_Quote_Line_Name: string;
+    Customer_Quote__c?: string;
+    Customer_Order__c?: string;
     Reason_Code__c: string;
     Product_Name__c: string;
     Product_Name: string;
@@ -124,9 +128,27 @@ export default function PORtvLinesTab({ lines }: PORtvLinesTabProps) {
                                     {line.Name}
                                 </td>
                                 <td className="px-4 py-3 truncate"><StatusBadge status={line.Status__c} /></td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.RTV_Name || ' '}>{line.RTV_Name || ' '}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Purchase_Order_Line_Name || ' '}>{line.Purchase_Order_Line_Name || ' '}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || ' '}>{line.Customer_Quote_Line_Name || ' '}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.RTV_Name || ' '}>
+                                    {line.RTV__c ? (
+                                        <Link href={`/returns/${line.RTV__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.RTV_Name || 'View RTV'}
+                                        </Link>
+                                    ) : line.RTV_Name || ' '}
+                                </td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Purchase_Order_Line_Name || ' '}>
+                                    {line.Purchase_Order_Line__c && line.Purchase_Order__c ? (
+                                        <Link href={`/purchase-orders/${line.Purchase_Order__c}/lines/${line.Purchase_Order_Line__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.Purchase_Order_Line_Name || 'View PO Line'}
+                                        </Link>
+                                    ) : line.Purchase_Order_Line_Name || ' '}
+                                </td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || ' '}>
+                                    {line.Customer_Order_Line__c && line.Customer_Quote__c ? (
+                                        <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Order_Line__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.Customer_Quote_Line_Name || 'View Quote Line'}
+                                        </Link>
+                                    ) : line.Customer_Quote_Line_Name || ' '}
+                                </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Reason_Code__c || ' '}>{line.Reason_Code__c || ' '}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || ' '}>{line.Product_Name || ' '}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || ' '}>{line.Product_Description__c || ' '}</td>

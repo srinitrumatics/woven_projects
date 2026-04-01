@@ -76,6 +76,12 @@ export default function POLineDetailPage({
                         poLineNotes: item.Purchase_Order_Line_Notes__c,
                         customerQuoteLineName: item.Customer_Quote_Line_Name,
                         customerQuoteLine: item.Customer_Quote_Line__c,
+                        customerQuoteId: item.Customer_Quote__c,
+                        customerOrderId: item.Customer_Order__c,
+                        customerOrderName: item.Customer_Order_Name,
+                        customerPO: item.Customer_PO__c,
+                        shipmentId: item.Shipping_Manifest__c,
+                        shipmentName: item.Shipping_Manifest_Name || item.Shipping_Manifest__r?.Name,
                     }));
 
                     setLines(mappedLines);

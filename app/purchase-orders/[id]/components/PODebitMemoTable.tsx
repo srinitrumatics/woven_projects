@@ -8,15 +8,20 @@ import Pagination from "@/components/ui/Pagination";
 import { formatDate } from "@/lib/utils/formatting";
 
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import Link from 'next/link';
 
 interface DebitMemo {
     Id: string;
     Name: string;
     Status__c: string;
     Supplier_Bill_Name?: string;
+    Supplier_Bill__c?: string;
     Purchase_Order_Name?: string;
+    Purchase_Order__c?: string;
     Customer_Quote_Name?: string;
+    Customer_Quote__c?: string;
     Customer_Order_Name?: string;
+    Customer_Order__c?: string;
     Supplier_Credit_Memo__c?: string;
     Debit_to_Account_Name?: string;
     Debit_to_Contact_Name?: string;
@@ -121,16 +126,32 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                     <StatusBadge status={d.Status__c} />
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Supplier_Bill_Name || '-'}>
-                                    {d.Supplier_Bill_Name || '-'}
+                                    {d.Supplier_Bill__c ? (
+                                        <Link href={`/supplier-bills/${d.Supplier_Bill__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {d.Supplier_Bill_Name || 'View Bill'}
+                                        </Link>
+                                    ) : d.Supplier_Bill_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Purchase_Order_Name || '-'}>
-                                    {d.Purchase_Order_Name || '-'}
+                                    {d.Purchase_Order__c ? (
+                                        <Link href={`/purchase-orders/${d.Purchase_Order__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {d.Purchase_Order_Name || 'View PO'}
+                                        </Link>
+                                    ) : d.Purchase_Order_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Quote_Name || '-'}>
-                                    {d.Customer_Quote_Name || '-'}
+                                    {d.Customer_Quote__c ? (
+                                        <Link href={`/quotes/${d.Customer_Quote__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {d.Customer_Quote_Name || 'View Quote'}
+                                        </Link>
+                                    ) : d.Customer_Quote_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Order_Name || '-'}>
-                                    {d.Customer_Order_Name || '-'}
+                                    {d.Customer_Order__c ? (
+                                        <Link href={`/orders/${d.Customer_Order__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {d.Customer_Order_Name || 'View Order'}
+                                        </Link>
+                                    ) : d.Customer_Order_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Supplier_Credit_Memo__c || '-'}>
                                     {d.Supplier_Credit_Memo__c || '-'}

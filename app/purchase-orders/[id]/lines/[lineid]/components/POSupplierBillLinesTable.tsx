@@ -6,6 +6,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import Link from 'next/link';
 
 interface SupplierBillLine {
     Id: string;
@@ -23,6 +24,11 @@ interface SupplierBillLine {
     Shipping_Charges__c: number;
     Total_Bill_Amount__c: number;
     Goods_Receipt_Date__c: string;
+    Supplier_Bill__c?: string;
+    Customer_Quote_Line__c?: string;
+    Customer_Quote__c?: string;
+    Purchase_Order_Line__c?: string;
+    Purchase_Order__c?: string;
 }
 
 interface POSupplierBillLinesTableProps {
@@ -127,13 +133,25 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                 </td>
                                 <td className="px-4 py-3 truncate"><StatusBadge status={line.Status__c} /></td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Supplier_Bill_Name || '-'}>
-                                    {line.Supplier_Bill_Name || '-'}
+                                    {line.Supplier_Bill__c ? (
+                                        <Link href={`/supplier-bills/${line.Supplier_Bill__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.Supplier_Bill_Name || 'View Bill'}
+                                        </Link>
+                                    ) : line.Supplier_Bill_Name || '-'}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || '-'}>
-                                    {line.Customer_Quote_Line_Name || '-'}
+                                    {line.Customer_Quote_Line__c && line.Customer_Quote__c ? (
+                                        <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.Customer_Quote_Line_Name || 'View Quote Line'}
+                                        </Link>
+                                    ) : line.Customer_Quote_Line_Name || '-'}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Purchase_Order_Line_Name || '-'}>
-                                    {line.Purchase_Order_Line_Name || '-'}
+                                    {line.Purchase_Order_Line__c && line.Purchase_Order__c ? (
+                                        <Link href={`/purchase-orders/${line.Purchase_Order__c}/lines/${line.Purchase_Order_Line__c}`} className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {line.Purchase_Order_Line_Name || 'View PO Line'}
+                                        </Link>
+                                    ) : line.Purchase_Order_Line_Name || '-'}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>
                                     {line.Product_Name || '-'}

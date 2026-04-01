@@ -1,21 +1,20 @@
 // lib/api-auth.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateUser } from './auth-service';
-import { getUserPermissions } from './auth-service';
+import { authenticateUser, getUserPermissions } from './auth-service';
 import { getUserRoles } from './auth-service';
 
 // Wrapper function for API route protection
 export async function withAuth(
   handler: (req: NextRequest, user: any) => Promise<Response>,
-  options?: { 
-    roles?: string[]; 
-    permissions?: string[] 
+  options?: {
+    roles?: string[];
+    permissions?: string[]
   }
 ) {
   return async (req: NextRequest) => {
     // Extract user ID from headers (this would come from the session validation)
     const userIdHeader = req.headers.get('user-id');
-    
+
     if (!userIdHeader) {
       return NextResponse.json(
         { error: 'Unauthorized - no user ID provided' },
@@ -48,14 +47,14 @@ export async function withAuth(
 
       // Check roles if specified
       if (options?.roles) {
-        const hasRequiredRole = options.roles.some(requiredRole => 
+        const hasRequiredRole = options.roles.some(requiredRole =>
           user.roles.some((role: any) => role.name === requiredRole)
         );
 
         if (!hasRequiredRole) {
           // Check if user is a super admin (they can access everything)
-          const isSuperAdmin = user.roles.some((role: any) => 
-            role.name?.toLowerCase() === 'super admin' || 
+          const isSuperAdmin = user.roles.some((role: any) =>
+            role.name?.toLowerCase() === 'super admin' ||
             role.name?.toLowerCase() === 'super_admin'
           );
 
@@ -71,13 +70,13 @@ export async function withAuth(
       // Check permissions if specified
       if (options?.permissions) {
         // Super admin has all permissions
-        const isSuperAdmin = user.roles.some((role: any) => 
-          role.name?.toLowerCase() === 'super admin' || 
+        const isSuperAdmin = user.roles.some((role: any) =>
+          role.name?.toLowerCase() === 'super admin' ||
           role.name?.toLowerCase() === 'super_admin'
         );
-        
+
         if (!isSuperAdmin) {
-          const hasPermission = options.permissions.some(perm => 
+          const hasPermission = options.permissions.some(perm =>
             user.permissions.includes(perm)
           );
 

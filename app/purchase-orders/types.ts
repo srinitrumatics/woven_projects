@@ -54,6 +54,11 @@ export interface PurchaseOrder {
     siteName?: string;
     buyerName?: string;
     // Salesforce IDs
+    proposalId?: string;
+    customerOrderId?: string;
+    customerQuoteId?: string;
+    shipmentId?: string;
+    shipmentName?: string;
     accountId?: string;
     contactId?: string;
 }
@@ -99,4 +104,10 @@ export interface PurchaseOrderLine {
     poLineNotes: string;
     customerQuoteLineName: string;
     customerQuoteLine: string;
+    customerQuoteId?: string;
+    customerOrderId?: string;
+    customerOrderName?: string;
+    customerPO?: string;
+    shipmentId?: string;
+    shipmentName?: string;
 }

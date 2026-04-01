@@ -28,8 +28,10 @@ export default function PurchaseOrdersPage() {
         proposalName: 180,
         customerOrderName: 180,
         customerQuoteName: 180,
+        customerPO: 180,
         shipToAccountName: 180,
         shipToLocationName: 180,
+        shipmentName: 180,
         totalLines: 120,
         totalCost: 150,
         issuedDate: 150,
@@ -81,7 +83,12 @@ export default function PurchaseOrdersPage() {
                     estimatedDeliveryDate: p.Estimated_Delivery_Date__c || '',
                     trackingStatus: p.Tracking_Status__c || '',
                     actualDeliveryDate: p.Actual_Delivery_Date__c || '',
-                    goodsReceiptsDate: p.Goods_Receipt_Date__c || ''
+                    goodsReceiptsDate: p.Goods_Receipt_Date__c || '',
+                    proposalId: p.Proposal__c || '',
+                    customerOrderId: p.Customer_Order__c || '',
+                    customerQuoteId: p.Customer_Quote__c || '',
+                    shipmentId: p.Shipping_Manifest__c || '',
+                    shipmentName: p.Shipping_Manifest_Name || p.Shipping_Manifest__r?.Name || ''
                 }));
 
                 setPurchaseOrders(mappedPOs);
@@ -268,7 +275,9 @@ export default function PurchaseOrdersPage() {
                                     <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                                     <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
                                     <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrderName} onResize={handleResize} />
+                                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
                                     <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteName} onResize={handleResize} />
+                                    <SortableHeader label="Shipment" field="shipmentName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipmentName} onResize={handleResize} />
                                     <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccountName} onResize={handleResize} />
                                     <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocationName} onResize={handleResize} />
                                     <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
@@ -288,9 +297,51 @@ export default function PurchaseOrdersPage() {
                                         <tr key={po.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onClick={() => router.push(`/purchase-orders/${po.id}`)}>
                                             <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate max-w-[200px]" title={po.name}>{po.name}</td>
                                             <td className="px-2 py-2 truncate" title={po.status}><StatusBadge status={po.status} /></td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.proposalName || '-'}>{po.proposalName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerOrderName || '-'}>{po.customerOrderName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerQuoteName || '-'}>{po.customerQuoteName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.proposalName || '-'}>
+                                                {po.proposalId ? (
+                                                    <Link href={`/proposals/${po.proposalId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        {po.proposalName || 'View Proposal'}
+                                                    </Link>
+                                                ) : (
+                                                    po.proposalName || '-'
+                                                )}
+                                            </td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerOrderName || '-'}>
+                                                {po.customerOrderId ? (
+                                                    <Link href={`/orders/${po.customerOrderId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        {po.customerOrderName || 'View Order'}
+                                                    </Link>
+                                                ) : (
+                                                    po.customerOrderName || '-'
+                                                )}
+                                            </td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerPO || '-'}>
+                                                {po.customerOrderId ? (
+                                                    <Link href={`/orders/${po.customerOrderId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        {po.customerPO || po.customerOrderName || 'View Order'}
+                                                    </Link>
+                                                ) : (
+                                                    po.customerPO || '-'
+                                                )}
+                                            </td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerQuoteName || '-'}>
+                                                {po.customerQuoteId ? (
+                                                    <Link href={`/quotes/${po.customerQuoteId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        {po.customerQuoteName || 'View Quote'}
+                                                    </Link>
+                                                ) : (
+                                                    po.customerQuoteName || '-'
+                                                )}
+                                            </td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.shipmentName || '-'}>
+                                                {po.shipmentId ? (
+                                                    <Link href={`/shipments/${po.shipmentId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        {po.shipmentName || 'View Shipment'}
+                                                    </Link>
+                                                ) : (
+                                                    po.shipmentName || '-'
+                                                )}
+                                            </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.shipToAccountName || '-'}>{po.shipToAccountName || '-'}</td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.shipToLocationName || '-'}>{po.shipToLocationName || '-'}</td>
                                             <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-medium truncate" title={String(po.totalLines || 0)}>{po.totalLines || 0}</td>
