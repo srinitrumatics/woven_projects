@@ -6,6 +6,7 @@ import { createSession, getUserById } from '@/lib/session';
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
+    console.log(`[API] Login request received for email: ${email}`);
 
     if (!email || !password) {
       return new Response(
