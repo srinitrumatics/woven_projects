@@ -107,6 +107,7 @@ export interface Invoice {
     taxes: number;
     lineGrandTotal: number;
     // Related IDs
+    invoiceId?: string;
     salesOrderId?: string;
     salesOrderLineId?: string;
     customerQuoteId?: string;

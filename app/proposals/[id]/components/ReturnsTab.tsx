@@ -309,7 +309,11 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                         ) : activeTab === 'credit' ? (
                                             <>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.invoiceName}>{credit.invoiceName}</div>
+                                                    {credit.invoiceName && credit.invoiceId ? (
+                                                        <Link href={`/invoices/${credit.invoiceId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.invoiceName}>{credit.invoiceName}</Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.invoiceName}>{credit.invoiceName}</div>
+                                                    )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {credit.customerQuoteName && credit.customerQuoteId ? (
@@ -356,7 +360,11 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 {activeTab === 'debit' && (
                                                     <>
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                            <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.supplierBillName}>{debit.supplierBillName}</div>
+                                                            {debit.supplierBillName && debit.supplierBillId ? (
+                                                                <Link href={`/supplier-bills/${debit.supplierBillId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.supplierBillName}>{debit.supplierBillName}</Link>
+                                                            ) : (
+                                                                <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.supplierBillName}>{debit.supplierBillName}</div>
+                                                            )}
                                                         </td>
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                             {debit.purchaseOrderName && debit.purchaseOrderId ? (

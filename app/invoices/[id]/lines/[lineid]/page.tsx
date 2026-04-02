@@ -295,14 +295,14 @@ export default function InvoiceLineDetailPage({
                 {/* Invoice Line Notes - 3/12 cols */}
                 <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm  p-6 ">
                     <div className="flex items-center gap-3 mb-6 min-w-0">
-                        <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-200">
+                        <div className="w-10 h-10 rounded  bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center ">
                             <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
                         <h2 className="text-lg font-bold text-gray-800 tracking-tight truncate">Invoice Line Notes</h2>
                     </div>
-                    <div className="w-full min-h-[240px] p-4 bg-gray-50/50 -lg text-sm text-gray-700 overflow-y-auto">
+                    <div className="bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-800 dark:text-white min-h-[300px]">
                         {product.inventoryLineNotes || ""}
                     </div>
                 </div>
@@ -310,7 +310,7 @@ export default function InvoiceLineDetailPage({
                 {/* Product Information - 6/12 cols */}
                 <div className="w1025:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
                     <div className="flex items-center gap-3 mb-6 min-w-0">
-                        <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-200">
+                        <div className="w-10 h-10 rounded  bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center ">
                             <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -326,49 +326,49 @@ export default function InvoiceLineDetailPage({
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-4">
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Product Name">Product Name</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.productName} value={product.productName} />
+                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.productName} value={product.productName} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Proposed Product">Proposed Product</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.proposedProduct} value={product.proposedProduct} />
+                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.proposedProduct} value={product.proposedProduct} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Site">Site</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.site} value={product.site} />
+                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.site} value={product.site} />
                         </div>
 
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Description">Description</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.description} value={product.description} />
+                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.description} value={product.description} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Customer Quote Line">Customer Quote Line</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.customerQuoteLine} value={product.customerQuoteLine} />
+                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.customerQuoteLine} value={product.customerQuoteLine} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Inventory Account">Inventory Account</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.inventoryAccount} value={product.inventoryAccount} />
+                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.inventoryAccount} value={product.inventoryAccount} />
                         </div>
 
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Manufacturer DBA">Manufacturer DBA</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.manufacturerDBA} value={product.manufacturerDBA} />
+                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.manufacturerDBA} value={product.manufacturerDBA} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Sales Order Line">Sales Order Line</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.salesOrderLine} value={product.salesOrderLine} />
+                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.salesOrderLine} value={product.salesOrderLine} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Purchase Order Line">Purchase Order Line</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.purchaseOrderLine} value={product.purchaseOrderLine} />
+                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.purchaseOrderLine} value={product.purchaseOrderLine} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Product Family">Product Family</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.productFamily} value={product.productFamily} />
+                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.productFamily} value={product.productFamily} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Is Taxable">Is Taxable</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.isTaxable} value={product.isTaxable} />
+                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.isTaxable} value={product.isTaxable} />
                         </div>
                     </div>
                 </div>

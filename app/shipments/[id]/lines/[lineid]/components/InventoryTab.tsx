@@ -170,13 +170,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.bay}>{pos.bay}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.levelPosition}>{pos.levelPosition}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.salesOrderName}>
-                                {pos.salesOrderId ? (
-                                    <Link href={`/orders/${pos.salesOrderId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
-                                        {pos.salesOrderName || "View SO"}
-                                    </Link>
-                                ) : (
-                                    pos.salesOrderName || " "
-                                )}
+                                {pos.salesOrderName || " "}
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.shippingManifestName}>
                                 {pos.shippingManifestId ? (

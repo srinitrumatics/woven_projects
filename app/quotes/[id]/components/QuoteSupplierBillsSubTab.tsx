@@ -148,6 +148,8 @@ function StatusBadge({ status }: { status: QuoteStatus }) {
                 return "bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
             case "Rejected":
             case "Canceled":
+            case "Closed":
+
                 return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
             case "Expired":
                 return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";

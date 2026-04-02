@@ -107,8 +107,6 @@ export default function PurchasesTab({
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.status} onResize={onPurchaseResize} />
                                             <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.customerQuoteName} onResize={onPurchaseResize} />
                                             <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.customerOrderName} onResize={onPurchaseResize} />
-                                            <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.salesOrderName} onResize={onPurchaseResize} />
-                                            <SortableHeader label="Shipping" field="shipmentName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.shipmentName} onResize={onPurchaseResize} />
                                             <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.customerPO} onResize={onPurchaseResize} />
                                             <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.supplierName} onResize={onPurchaseResize} />
                                             <SortableHeader label="Supplier DBA" field="supplierDBA" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.supplierDBA} onResize={onPurchaseResize} />
@@ -179,36 +177,6 @@ export default function PurchasesTab({
                                                         </Link>
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.customerOrderName}>{purchase.customerOrderName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {purchase.salesOrderName && purchase.salesOrderId ? (
-                                                        <Link
-                                                            href={`/orders/${purchase.salesOrderId}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={purchase.salesOrderName}
-                                                        >
-                                                            {purchase.salesOrderName}
-                                                        </Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.salesOrderName}>{purchase.salesOrderName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {purchase.shipmentName && purchase.shipmentId ? (
-                                                        <Link
-                                                            href={`/shipments/${purchase.shipmentId}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={purchase.shipmentName}
-                                                        >
-                                                            {purchase.shipmentName}
-                                                        </Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.shipmentName}>{purchase.shipmentName}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
@@ -300,8 +268,6 @@ export default function PurchasesTab({
                                             <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.purchaseOrderName} onResize={onBillResize} />
                                             <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.customerQuoteName} onResize={onBillResize} />
                                             <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.customerOrderName} onResize={onBillResize} />
-                                            <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.salesOrderName} onResize={onBillResize} />
-                                            <SortableHeader label="Shipping" field="shipmentName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.shipmentName} onResize={onBillResize} />
                                             <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.supplierName} onResize={onBillResize} />
                                             <SortableHeader label="Supplier DBA" field="supplierDBA" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.supplierDBA} onResize={onBillResize} />
                                             <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.supplierContact} onResize={onBillResize} />
@@ -377,36 +343,6 @@ export default function PurchasesTab({
                                                         </Link>
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.customerOrderName}>{bill.customerOrderName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {bill.salesOrderName && bill.salesOrderId ? (
-                                                        <Link
-                                                            href={`/orders/${bill.salesOrderId}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={bill.salesOrderName}
-                                                        >
-                                                            {bill.salesOrderName}
-                                                        </Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.salesOrderName}>{bill.salesOrderName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {bill.shipmentName && bill.shipmentId ? (
-                                                        <Link
-                                                            href={`/shipments/${bill.shipmentId}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={bill.shipmentName}
-                                                        >
-                                                            {bill.shipmentName}
-                                                        </Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.shipmentName}>{bill.shipmentName}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={bill.supplierName}>{bill.supplierName}</td>

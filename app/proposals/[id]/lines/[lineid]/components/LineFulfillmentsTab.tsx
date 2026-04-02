@@ -417,7 +417,12 @@ export default function LineFulfillmentsTab({
                                                         </span>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        <div className="truncate" title={invoice.invoiceName}>{invoice.invoiceName}</div>
+
+                                                        {invoice.invoiceName && invoice.invoiceId ? (
+                                                            <Link href={`/invoices/${invoice.invoiceId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.invoiceName}>{invoice.invoiceName}</Link>
+                                                        ) : (
+                                                            <div className="truncate" title={invoice.invoiceName}>{invoice.invoiceName}</div>
+                                                        )}
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                         {invoice.salesOrderLineName && invoice.salesOrderLineId ? (

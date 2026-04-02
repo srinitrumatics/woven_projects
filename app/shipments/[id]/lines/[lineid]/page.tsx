@@ -256,7 +256,7 @@ export default function ShipmentLineDetailPage({
                         </div>
                     </div>
                     <div>
-                        <div className="w-full min-h-[340px] p-4 bg-gray-50/50 rounded-lg text-sm text-gray-700 overflow-y-auto">
+                        <div className="w-full min-h-[340px] p-4 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-700 overflow-y-auto">
                             {product.Shipping_Manifest_Line_Notes__c || "No notes available."}
                         </div>
                     </div>

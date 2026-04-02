@@ -160,6 +160,7 @@ function StatusBadge({ status }: { status: string }) {
             case "Open":
             case "Shipped":
             case "Converted":
+            case "Allocated":
                 return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
             case "Pending":
             case "Partial Shipment":

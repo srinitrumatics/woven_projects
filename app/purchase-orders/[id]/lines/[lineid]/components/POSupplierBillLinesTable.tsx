@@ -133,7 +133,11 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                 </td>
                                 <td className="px-4 py-3 truncate"><StatusBadge status={line.Status__c} /></td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Supplier_Bill_Name || '-'}>
-                                    {line.Supplier_Bill_Name || ''}
+                                    {line.Supplier_Bill__c ? (
+                                        <Link href={`/supplier-bills/${line.Supplier_Bill__c}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            {line.Supplier_Bill_Name || ''}
+                                        </Link>
+                                    ) : (line.Supplier_Bill_Name || '-')}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || '-'}>
                                     {line.Customer_Quote_Line_Name || ''}

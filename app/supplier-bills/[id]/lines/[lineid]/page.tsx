@@ -325,12 +325,10 @@ export default function SupplierBillLineDetailPage({
                                 <InfoField
                                     label="Customer Quote Line"
                                     value={line.customerQuoteLineName}
-                                    href={line.customerQuoteId && line.customerQuoteLineId ? `/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}` : undefined}
                                 />
                                 <InfoField
                                     label="Purchase Order Lines"
                                     value={line.purchaseOrderLineName}
-                                    href={line.purchaseOrderId && line.purchaseOrderLineId ? `/purchase-orders/${line.purchaseOrderId}/lines/${line.purchaseOrderLineId}` : undefined}
                                 />
                             </div>
                             {/* Column 3 */}
@@ -338,17 +336,6 @@ export default function SupplierBillLineDetailPage({
                                 <InfoField
                                     label="Site"
                                     value={line.site}
-                                    href={line.siteId ? `/locations/${line.siteId}` : undefined}
-                                />
-                                <InfoField
-                                    label="Customer Order"
-                                    value={line.customerOrderName}
-                                    href={line.customerOrderId ? `/orders/${line.customerOrderId}` : undefined}
-                                />
-                                <InfoField
-                                    label="Shipment"
-                                    value={line.shipmentName}
-                                    href={line.shipmentId ? `/shipments/${line.shipmentId}` : undefined}
                                 />
                                 <InfoField label="Inventory Account" value={line.inventoryAccount} />
                                 <InfoField label="Goods Receipt Date" value={formatDate(line.goodsReceiptDate, 'numeric-dash')} />
