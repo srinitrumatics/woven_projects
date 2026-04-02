@@ -534,6 +534,7 @@ export default function InvoicesPage() {
                             {invoice.proposalId ? (
                               <Link
                                 href={`/proposals/${invoice.proposalId}`}
+                                target="_blank"
                                 className="text-primary hover:underline font-medium"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
@@ -549,6 +550,7 @@ export default function InvoicesPage() {
                             {invoice.customerOrderId ? (
                               <Link
                                 href={`/orders/${invoice.customerOrderId}`}
+                                target="_blank"
                                 className="text-primary hover:underline font-medium"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >

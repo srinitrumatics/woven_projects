@@ -105,6 +105,7 @@ export default function OrdersPage() {
       name: o.Name,
       status: o.Status__c ?? "N/A",
       proposal_name: o.Proposal_Name ?? "",
+      proposal_id: o.Proposal__c ?? "",
       customerPO: o.Customer_PO__c ?? "",
       shipTo: o.Authorized_Ship_To_Location_Name ?? "",
       billTo: o.Authorized_Bill_To_Location_Name ?? "",
@@ -799,8 +800,14 @@ export default function OrdersPage() {
                       <td className="px-3 py-3 truncate">
                         <StatusBadge status={order.status as OrderStatus} />
                       </td>
-                      <td className="px-3 py-3 truncate">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium" title={order.proposal_name}>{order.proposal_name}</div>
+                      <td className="px-3 py-3 truncate text-gray-600 dark:text-white font-medium ">
+                        {order.proposal_id && order.proposal_id !== '' ? (
+                          <Link href={`/proposals/${order.proposal_id}`} target="_blank" className="text-sm font-semibold text-primary hover:underline truncate">
+                            {order.proposal_name}
+                          </Link>
+                        ) : (
+                          <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{order.proposal_name}</div>
+                        )}
                       </td>
                       <td className="px-3 py-3 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={order.customerPO}>{order.customerPO}</div>
@@ -811,8 +818,8 @@ export default function OrdersPage() {
                       <td className="px-3 py-3 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipTo}>{order.shipTo}</div>
                       </td>
-                      <td className="px-3 py-3 text-sm text-gray-900 dark:text-white truncate">{formatNumber(order.items, 0)}</td>
-                      <td className="px-3 py-3 text-sm text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(order.total)}</td>
+                      <td className="px-3 py-3 text-sm text-gray-600 dark:text-white truncate">{formatNumber(order.items, 0)}</td>
+                      <td className="px-3 py-3 text-sm text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(order.total)}</td>
                       <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(order.requestedDate, 'numeric-dash')}</td>
                       <td className="px-3 py-3 truncate">
                         <div className="flex gap-2">

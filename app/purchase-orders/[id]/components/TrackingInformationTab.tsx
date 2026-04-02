@@ -97,11 +97,7 @@ export default function TrackingInformationTab({ data }: TrackingInformationTabP
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Shipping_Method__c || '-'}>{item.Shipping_Method__c || '-'}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Service_Level__c || '-'}>{item.Service_Level__c || '-'}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Tracking_URL__c || '-'}>
-                                    {item.Tracking_URL__c ? (
-                                        <a href={item.Tracking_URL__c} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline block truncate" title={item.Tracking_URL__c}>
-                                            {item.Tracking_URL__c}
-                                        </a>
-                                    ) : '-'}
+                                    {item.Tracking_URL__c || ''}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Tracking_Number__c || '-'}>{item.Tracking_Number__c || '-'}</td>
                                 <td className="px-3 py-2 text-sm truncate">

@@ -66,8 +66,6 @@ export default function QuoteRMASubTab({
                                     <SortableHeader label="Sales Order" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={onResize} align="left" />
                                     <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" />
                                     <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" />
-                                    <SortableHeader label="Supplier Bill" field="supplierBill" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierBill} onResize={onResize} align="left" />
-                                    <SortableHeader label="Purchase Order" field="purchaseOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={onResize} align="left" />
                                     <SortableHeader label="RMA Type" field="rmaType" sortConfig={sortConfig} requestSort={requestSort} width={widths.rmaType} onResize={onResize} align="left" />
                                     <SortableHeader label="Ship from Account" field="shipFromAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipFromAccount} onResize={onResize} align="left" />
                                     <SortableHeader label="Ship from Contact" field="shipFromContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipFromContact} onResize={onResize} align="left" />
@@ -96,19 +94,10 @@ export default function QuoteRMASubTab({
                                             {rma.rmaNumber}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
-                                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${rma.status === 'Approved' ? 'bg-green-100 text-green-800' :
-                                                rma.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                    'bg-gray-100 text-gray-800'
-                                                }`}>
-                                                {rma.status}
-                                            </span>
+                                            <StatusBadge status={rma.status} />
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }} title={rma.salesOrder}>
-                                            {rma.salesOrderId ? (
-                                                <Link href={`/orders/${rma.salesOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
-                                                    {rma.salesOrder}
-                                                </Link>
-                                            ) : rma.salesOrder}
+                                            {rma.salesOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }} title={rma.customerQuote}>
                                             {rma.customerQuoteId ? (
@@ -123,20 +112,6 @@ export default function QuoteRMASubTab({
                                                     {rma.customerOrder}
                                                 </Link>
                                             ) : rma.customerOrder}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierBill }} title={rma.supplierBill}>
-                                            {rma.supplierBillId ? (
-                                                <Link href={`/supplier-bills/${rma.supplierBillId}`} target="_blank" className="text-primary hover:underline font-medium">
-                                                    {rma.supplierBill}
-                                                </Link>
-                                            ) : rma.supplierBill}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }} title={rma.purchaseOrder}>
-                                            {rma.purchaseOrderId ? (
-                                                <Link href={`/purchase-orders/${rma.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
-                                                    {rma.purchaseOrder}
-                                                </Link>
-                                            ) : rma.purchaseOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.rmaType }} title={rma.rmaType}>{rma.rmaType}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipFromAccount }} title={rma.shipFromAccount}>{rma.shipFromAccount}</td>
@@ -175,5 +150,45 @@ export default function QuoteRMASubTab({
                 />
             </div>
         </div>
+    );
+}
+
+function StatusBadge({ status }: { status: string }) {
+    const getStyles = () => {
+        switch (status) {
+            case "Approved":
+            case "Paid":
+            case "Posted":
+            case "Delivered":
+            case "Completed":
+            case "Applied":
+                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+            case "Open":
+            case "Shipped":
+            case "Converted":
+                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+            case "Pending":
+            case "Partial Shipment":
+                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+            case "Draft":
+                return "bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
+            case "Rejected":
+            case "Partial Rejected":
+            case "Cancelled":
+            case "Canceled":
+                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+            case "Expired":
+                return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
+            case "Closed":
+                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+            default:
+                return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+        }
+    };
+
+    return (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
+            {status}
+        </span>
     );
 }

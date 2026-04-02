@@ -171,7 +171,11 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                                         </span>
                                                     </td>
                                                     <td className="px-3 py-2 truncate">
-                                                        <div className="text-sm truncate" title={p.purchaseOrderName}>{p.purchaseOrderName}</div>
+                                                        {p.purchaseOrderName && p.purchaseOrderId ? (
+                                                            <Link href={`/purchase-orders/${p.purchaseOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{p.purchaseOrderName}</Link>
+                                                        ) : (
+                                                            <div className="text-sm truncate" title={p.purchaseOrderName}>{p.purchaseOrderName}</div>
+                                                        )}
                                                     </td>
                                                     <td className="px-3 py-2 truncate">
                                                         <div className="text-sm truncate" title={p.customerQuoteLineName}>{p.customerQuoteLineName}</div>
@@ -263,7 +267,12 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                                         </span>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        <div className="text-sm truncate" title={b.supplierBillName}>{b.supplierBillName}</div>
+                                                        {b.supplierBillName && b.supplierBillId ? (
+                                                            <Link href={`/supplier-bills/${b.supplierBillId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{b.supplierBillName}</Link>
+                                                        ) : (
+                                                            <div className="text-sm truncate" title={b.supplierBillName}>{b.supplierBillName}</div>
+                                                        )}
+
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                         {b.purchaseOrderLineName && b.purchaseOrderLineId ? (

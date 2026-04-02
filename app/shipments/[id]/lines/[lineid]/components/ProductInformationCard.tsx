@@ -20,54 +20,54 @@ export default function ProductInformationCard({ product }: { product: any }) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-4">
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Product Name">Product Name</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Product_Name || product.Product_Name__c || ""} value={product.Product_Name || product.Product_Name__c || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Product_Name || product.Product_Name__c || ""} value={product.Product_Name || product.Product_Name__c || ""} />
                 </div>
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="HTS Code">HTS Code</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.HTS_Code__c || ""} value={product.HTS_Code__c || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.HTS_Code__c || ""} value={product.HTS_Code__c || ""} />
                 </div>
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Tracking URL">Tracking URL</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Tracking_URL__c || ""} value={product.Tracking_URL__c || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Tracking_URL__c || ""} value={product.Tracking_URL__c || ""} />
                 </div>
 
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Description">Description</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Product_Description__c || ""} value={product.Product_Description__c || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Product_Description__c || ""} value={product.Product_Description__c || ""} />
                 </div>
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Proposed Product">Proposed Product</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Proposed_Product_Name || ""} value={product.Proposed_Product_Name || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Proposed_Product_Name || ""} value={product.Proposed_Product_Name || ""} />
                 </div>
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Tracking Number">Tracking Number</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Tracking_Number__c || ""} value={product.Tracking_Number__c || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Tracking_Number__c || ""} value={product.Tracking_Number__c || ""} />
                 </div>
 
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Manufacturer DBA">Manufacturer DBA</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Manufacturer_DBA__c || ""} value={product.Manufacturer_DBA__c || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Manufacturer_DBA__c || ""} value={product.Manufacturer_DBA__c || ""} />
                 </div>
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Customer Quote Line">Customer Quote Line</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Customer_Quote_Line_Name || ""} value={product.Customer_Quote_Line_Name || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Customer_Quote_Line_Name || ""} value={product.Customer_Quote_Line_Name || ""} />
                 </div>
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Tracking Status">Tracking Status</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Tracking_Status__c || ""} value={product.Tracking_Status__c || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Tracking_Status__c || ""} value={product.Tracking_Status__c || ""} />
                 </div>
 
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Product Family">Product Family</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Product_Family__c || ""} value={product.Product_Family__c || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Product_Family__c || ""} value={product.Product_Family__c || ""} />
                 </div>
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Sales Order Line">Sales Order Line</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Sales_Order_Line_Name || ""} value={product.Sales_Order_Line_Name || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.Sales_Order_Line_Name || ""} value={product.Sales_Order_Line_Name || ""} />
                 </div>
                 <div className="md:col-span-1">
                     <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Estimated Delivery Date">Est Delivery Date</label>
-                    <input readOnly type="text" className="w-full bg-gray-50/50 border border-gray-100 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={formatDate(product.Estimated_Delivery_Date__c, 'numeric-dash') || ""} value={formatDate(product.Estimated_Delivery_Date__c, 'numeric-dash') || ""} />
+                    <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={formatDate(product.Estimated_Delivery_Date__c, 'numeric-dash') || ""} value={formatDate(product.Estimated_Delivery_Date__c, 'numeric-dash') || ""} />
                 </div>
             </div>
         </div>

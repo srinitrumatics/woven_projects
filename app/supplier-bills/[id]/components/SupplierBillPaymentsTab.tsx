@@ -121,9 +121,7 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                                         {paginatedPayments.map((payment) => (
                                             <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                                                 <td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 border-r border-gray-100 dark:border-gray-700">
-                                                    <Link href={`#`} className="text-primary hover:underline font-bold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                                        {payment.name}
-                                                    </Link>
+                                                    {payment.name}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm truncate">
                                                     <StatusBadge status={payment.status} />

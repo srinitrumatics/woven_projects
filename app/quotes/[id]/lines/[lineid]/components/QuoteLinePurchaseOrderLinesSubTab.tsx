@@ -108,7 +108,11 @@ export default function QuoteLinePurchaseOrderLinesSubTab({
                                         </span>
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
-                                        {item.purchaseOrder}
+                                        {item.purchaseOrderId ? (
+                                            <Link href={`/purchase-orders/${item.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                {item.purchaseOrder}
+                                            </Link>
+                                        ) : item.purchaseOrder || ""}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuoteLine }}>
                                         {item.customerQuoteLine}

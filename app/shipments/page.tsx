@@ -506,18 +506,7 @@ export default function ShipmentsPage() {
                           <StatusBadge status={shipment.status} />
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 truncate">
-                          {shipment.salesOrderId ? (
-                            <Link
-                              href={`/orders/${shipment.salesOrderId}`}
-                              target="_blank"
-                              className="text-primary hover:underline font-medium"
-                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                            >
-                              {shipment.salesOrder || "View Sales Order"}
-                            </Link>
-                          ) : (
-                            shipment.salesOrder || " "
-                          )}
+                          {shipment.salesOrder || " "}
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                           {shipment.customerQuoteId ? (

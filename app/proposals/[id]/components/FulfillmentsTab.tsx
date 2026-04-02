@@ -149,7 +149,19 @@ export default function FulfillmentsTab({
                                         {(paginatedData as CustomerQuote[]).map((quote) => (
                                             <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={quote.name}>
-                                                    {quote.name}
+                                                    {quote.name && quote.id ? (
+                                                        <Link
+                                                            href={`/quotes/${quote.id}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-sm font-semibold text-primary hover:underline truncate"
+                                                            title={quote.name}
+                                                        >{quote.name}</Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.name}>{quote.name}</div>
+
+                                                    )}
+
                                                 </td>
                                                 <td className="px-3 py-2 truncate">
                                                     <StatusBadge status={quote.status as any} />
@@ -280,7 +292,19 @@ export default function FulfillmentsTab({
                                         {(paginatedData as SalesOrder[]).map((order) => (
                                             <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={order.name}>
-                                                    {order.name}
+                                                    {order.name && order.salesOrderId ? (
+                                                        <Link
+                                                            href={`/orders/${order.salesOrderId}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-sm font-semibold text-primary hover:underline truncate"
+                                                            title={order.name}
+                                                        >
+                                                            {order.name}
+                                                        </Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.name}>{order.name}</div>
+                                                    )}
                                                 </td>
                                                 <td className="px-3 py-2 truncate">
                                                     <StatusBadge status={order.status as any} />
@@ -402,7 +426,7 @@ export default function FulfillmentsTab({
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.status} onResize={(f, w) => onResize('invoices', f, w)} />
                                             <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.salesOrderName} onResize={(f, w) => onResize('invoices', f, w)} />
                                             <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerQuoteName} onResize={(f, w) => onResize('invoices', f, w)} />
-                                            <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerOrderName} onResize={(f, w) => onResize('invoices', f, w)} />
+                                            <SortableHeader label="Customer Orders" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerOrderName} onResize={(f, w) => onResize('invoices', f, w)} />
                                             <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerPO} onResize={(f, w) => onResize('invoices', f, w)} />
                                             <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.billToAccountName} onResize={(f, w) => onResize('invoices', f, w)} />
                                             <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.billToLocationName} onResize={(f, w) => onResize('invoices', f, w)} />
@@ -425,25 +449,26 @@ export default function FulfillmentsTab({
                                         {(paginatedData as Invoice[]).map((invoice) => (
                                             <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={invoice.name}>
-                                                    {invoice.name}
+
+                                                    {invoice.name && invoice.id ? (
+                                                        <Link
+                                                            href={`/invoices/${invoice.id}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-sm font-semibold text-primary hover:underline truncate"
+                                                            title={invoice.name}
+                                                        >
+                                                            {invoice.name}
+                                                        </Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.name}>{invoice.name}</div>
+                                                    )}
                                                 </td>
                                                 <td className="px-3 py-2 truncate">
                                                     <StatusBadge status={invoice.status as any} />
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {invoice.salesOrderName && invoice.salesOrderId ? (
-                                                        <Link
-                                                            href={`/orders/${invoice.salesOrderId}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={invoice.salesOrderName}
-                                                        >
-                                                            {invoice.salesOrderName}
-                                                        </Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.salesOrderName}>{invoice.salesOrderName}</div>
-                                                    )}
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.salesOrderName}>{invoice.salesOrderName}</div>
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {invoice.customerQuoteName && invoice.customerQuoteId ? (
@@ -476,19 +501,7 @@ export default function FulfillmentsTab({
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {invoice.customerPO && invoice.purchaseOrderId ? (
-                                                        <Link
-                                                            href={`/purchase-orders/${invoice.purchaseOrderId}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={invoice.customerPO}
-                                                        >
-                                                            {invoice.customerPO}
-                                                        </Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerPO}>{invoice.customerPO}</div>
-                                                    )}
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerPO}>{invoice.customerPO}</div>
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.billToAccountName}>{invoice.billToAccountName}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.billToLocationName}>{invoice.billToLocationName}</td>
@@ -513,7 +526,8 @@ export default function FulfillmentsTab({
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{invoice.issuedDate}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{invoice.paymentTerms}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{invoice.dueDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{invoice.collectionStatus}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                    <StatusBadge status={invoice.collectionStatus as any} /></td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
                                                     ${invoice.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
@@ -581,25 +595,26 @@ export default function FulfillmentsTab({
                                         {(paginatedData as ShippingManifest[]).map((manifest) => (
                                             <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={manifest.name}>
-                                                    {manifest.name}
+                                                    {manifest.name && manifest.id ? (
+                                                        <Link
+                                                            href={`/shipments/${manifest.id}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-sm font-semibold text-primary hover:underline truncate"
+                                                            title={manifest.name}
+                                                        >
+                                                            {manifest.name}
+                                                        </Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.name}>{manifest.name}</div>
+                                                    )}
+
                                                 </td>
                                                 <td className="px-3 py-2 truncate">
                                                     <StatusBadge status={manifest.status as any} />
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {manifest.salesOrderName && manifest.salesOrderId ? (
-                                                        <Link
-                                                            href={`/orders/${manifest.salesOrderId}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={manifest.salesOrderName}
-                                                        >
-                                                            {manifest.salesOrderName}
-                                                        </Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.salesOrderName}>{manifest.salesOrderName}</div>
-                                                    )}
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.salesOrderName}>{manifest.salesOrderName}</div>
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.customerQuoteName && manifest.customerQuoteId ? (
@@ -703,22 +718,21 @@ function StatusBadge({ status }: { status: string }) {
     const getStyles = () => {
         switch (status) {
             case "Approved":
+            case "Shipped":
                 return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
             case "Accepted":
+            case "Draft":
                 return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
             case "Pending Review":
+            case "Pending":
                 return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
             case "Under Review":
                 return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
-            case "Draft":
-                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
             case "Rejected":
             case "Partial Rejected":
                 return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
             case "Expired":
                 return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-            case "Lead":
-                return "bg-green-200 text-green-800 dark:bg-green-900/30 dark:text-green-400";
             case "Quote Requested":
                 return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400";
             case "Quote Ready":

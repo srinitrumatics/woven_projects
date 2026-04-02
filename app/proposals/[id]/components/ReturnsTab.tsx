@@ -110,9 +110,6 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                         <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].salesOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerPO} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierBillName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Shipping" field="shipmentName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipmentName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="RMA Type" field="rmaType" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rmaType} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Ship from Account" field="shipFromAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromAccountName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Ship from Contact" field="shipFromContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromContactName} onResize={(f, w) => onResize(activeTab, f, w)} />
@@ -139,9 +136,6 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                         <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].purchaseOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].salesOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierBillName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Shipping" field="shipmentName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipmentName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="RTV Type" field="rtvType" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rtvType} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="RMA Number" field="rmaNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rmaNumber} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Ship from Account" field="shipFromAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromAccountName} onResize={(f, w) => onResize(activeTab, f, w)} />
@@ -161,10 +155,6 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                         <SortableHeader label="Invoice" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].invoiceName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].salesOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].purchaseOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierBillName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Shipping" field="shipmentName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipmentName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Credit to Account" field="creditToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].creditToAccountName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Credit to Contact" field="creditToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].creditToContactName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} />
@@ -186,9 +176,6 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierBillName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                                 <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].purchaseOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                                 <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].salesOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Shipping" field="shipmentName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipmentName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                                 <SortableHeader label="Supplier Credit Memo" field="supplierCreditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierCreditMemoName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                                 <SortableHeader label="Debit to Account" field="debitToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].debitToAccountName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                                 <SortableHeader label="Debit to Contact" field="debitToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].debitToContactName} onResize={(f, w) => onResize(activeTab, f, w)} />
@@ -217,22 +204,10 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                 return (
                                     <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate z-10" title={item.name}>
-                                            <Link
-                                                href={`/${activeTab === 'rma' ? 'rmas' : activeTab === 'rtv' ? 'rtvs' : activeTab === 'credit' ? 'credit-memos' : 'debit-memos'}/${item.id}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-sm font-semibold text-primary hover:underline truncate"
-                                            >
-                                                {item.name}
-                                            </Link>
+                                            {item.name}
                                         </td>
                                         <td className="px-3 py-2 truncate">
-                                            <span className={`inline-block text-sm font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
-                                                item.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                                    'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                                }`}>
-                                                {item.status}
-                                            </span>
+                                            <StatusBadge status={item.status} />
                                         </td>
 
                                         {activeTab === 'rma' ? (
@@ -256,21 +231,6 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                         <Link href={`/orders/${rma.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.customerOrderName}>{rma.customerOrderName}</Link>
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.customerOrderName}>{rma.customerOrderName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.customerPO}>{rma.customerPO}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {rma.supplierBillName && rma.supplierBillId ? (
-                                                        <Link href={`/supplier-bills/${rma.supplierBillId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.supplierBillName}>{rma.supplierBillName}</Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.supplierBillName}>{rma.supplierBillName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {rma.shipmentName && rma.shipmentId ? (
-                                                        <Link href={`/shipments/${rma.shipmentId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.shipmentName}>{rma.shipmentName}</Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.shipmentName}>{rma.shipmentName}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.rmaType}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.rmaType}</div></td>
@@ -328,27 +288,6 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={rtv.customerOrderName}>{rtv.customerOrderName}</div>
                                                     )}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {rtv.salesOrderName && rtv.salesOrderId ? (
-                                                        <Link href={`/orders/${rtv.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.salesOrderName}>{rtv.salesOrderName}</Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rtv.salesOrderName}>{rtv.salesOrderName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {rtv.supplierBillName && rtv.supplierBillId ? (
-                                                        <Link href={`/supplier-bills/${rtv.supplierBillId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.supplierBillName}>{rtv.supplierBillName}</Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rtv.supplierBillName}>{rtv.supplierBillName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {rtv.shipmentName && rtv.shipmentId ? (
-                                                        <Link href={`/shipments/${rtv.shipmentId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.shipmentName}>{rtv.shipmentName}</Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rtv.shipmentName}>{rtv.shipmentName}</div>
-                                                    )}
-                                                </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.rtvType}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.rmaNumber}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.shipFromAccountName}</td>
@@ -370,11 +309,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                         ) : activeTab === 'credit' ? (
                                             <>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {credit.invoiceName && credit.invoiceId ? (
-                                                        <Link href={`/invoices/${credit.invoiceId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.invoiceName}>{credit.invoiceName}</Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.invoiceName}>{credit.invoiceName}</div>
-                                                    )}
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.invoiceName}>{credit.invoiceName}</div>
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {credit.customerQuoteName && credit.customerQuoteId ? (
@@ -388,34 +323,6 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                         <Link href={`/orders/${credit.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.customerOrderName}>{credit.customerOrderName}</Link>
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.customerOrderName}>{credit.customerOrderName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {credit.salesOrderName && credit.salesOrderId ? (
-                                                        <Link href={`/orders/${credit.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.salesOrderName}>{credit.salesOrderName}</Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.salesOrderName}>{credit.salesOrderName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {credit.purchaseOrderName && credit.purchaseOrderId ? (
-                                                        <Link href={`/purchase-orders/${credit.purchaseOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.purchaseOrderName}>{credit.purchaseOrderName}</Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.purchaseOrderName}>{credit.purchaseOrderName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {credit.supplierBillName && credit.supplierBillId ? (
-                                                        <Link href={`/supplier-bills/${credit.supplierBillId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.supplierBillName}>{credit.supplierBillName}</Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.supplierBillName}>{credit.supplierBillName}</div>
-                                                    )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {credit.shipmentName && credit.shipmentId ? (
-                                                        <Link href={`/shipments/${credit.shipmentId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.shipmentName}>{credit.shipmentName}</Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.shipmentName}>{credit.shipmentName}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{credit.creditToAccountName}</td>
@@ -449,11 +356,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 {activeTab === 'debit' && (
                                                     <>
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                            {debit.supplierBillName && debit.supplierBillId ? (
-                                                                <Link href={`/supplier-bills/${debit.supplierBillId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.supplierBillName}>{debit.supplierBillName}</Link>
-                                                            ) : (
-                                                                <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.supplierBillName}>{debit.supplierBillName}</div>
-                                                            )}
+                                                            <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.supplierBillName}>{debit.supplierBillName}</div>
                                                         </td>
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                             {debit.purchaseOrderName && debit.purchaseOrderId ? (
@@ -469,27 +372,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                                 <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.customerOrderName}>{debit.customerOrderName}</div>
                                                             )}
                                                         </td>
-                                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                            {debit.customerQuoteName && debit.customerQuoteId ? (
-                                                                <Link href={`/quotes/${debit.customerQuoteId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.customerQuoteName}>{debit.customerQuoteName}</Link>
-                                                            ) : (
-                                                                <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.customerQuoteName}>{debit.customerQuoteName}</div>
-                                                            )}
-                                                        </td>
-                                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                            {debit.salesOrderName && debit.salesOrderId ? (
-                                                                <Link href={`/orders/${debit.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.salesOrderName}>{debit.salesOrderName}</Link>
-                                                            ) : (
-                                                                <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.salesOrderName}>{debit.salesOrderName}</div>
-                                                            )}
-                                                        </td>
-                                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                            {debit.shipmentName && debit.shipmentId ? (
-                                                                <Link href={`/shipments/${debit.shipmentId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.shipmentName}>{debit.shipmentName}</Link>
-                                                            ) : (
-                                                                <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.shipmentName}>{debit.shipmentName}</div>
-                                                            )}
-                                                        </td>
+
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[190px] truncate">{debit.supplierCreditMemoName}</td>
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{debit.debitToAccountName}</td>
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{debit.debitToContactName}</td>
@@ -536,5 +419,44 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                 />
             </div>
         </div>
+    );
+}
+function StatusBadge({ status }: { status: string }) {
+    const getStyles = () => {
+        switch (status) {
+            case "Approved":
+            case "Shipped":
+                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+            case "Accepted":
+            case "Draft":
+                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+            case "Pending Review":
+                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+            case "Under Review":
+                return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
+            case "Rejected":
+            case "Partial Rejected":
+                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+            case "Expired":
+                return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
+            case "Quote Requested":
+                return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400";
+            case "Quote Ready":
+                return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400";
+            case "Proposal Sent":
+                return "bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400";
+            case "Negotiation":
+                return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400";
+            case "Awarded":
+                return "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400";
+            default:
+                return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+        }
+    };
+
+    return (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
+            {status}
+        </span>
     );
 }

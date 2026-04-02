@@ -170,6 +170,7 @@ export interface ShippingManifest {
     logisticsContactName?: string;
     requestDate?: string;
     // Related IDs
+    shippingManifestId?: string;
     salesOrderId?: string;
     salesOrderLineId?: string;
     customerQuoteId?: string;
@@ -425,6 +426,7 @@ export interface SupplierBillLine {
     customerQuoteId?: string;
     customerQuoteLineId?: string;
     customerOrderId?: string;
+    supplierBillId?: string;
     salesOrderId?: string;
     shipmentId?: string;
 }

@@ -110,7 +110,7 @@ export default function QuoteLineShippingManifestLinesSubTab({
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manifestName }}>
                                         {item.manifestId ? (
-                                            <Link href={`/shipments/manifests/${item.manifestId}`} className="text-primary hover:underline font-bold">
+                                            <Link href={`/shipments/${item.manifestId}`} target="_blank" className="text-primary hover:underline font-bold">
                                                 {item.manifestName}
                                             </Link>
                                         ) : item.manifestName}

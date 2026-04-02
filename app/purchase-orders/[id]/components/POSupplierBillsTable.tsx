@@ -128,7 +128,12 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                         {paginatedData.map((b) => (
                             <tr key={b.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={b.Name}>
-                                    {b.Name}
+                                    {b.Id ? (
+                                        <Link href={`/supplier-bills/${b.Id}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {b.Name || 'View suppiler bill'}
+                                        </Link>
+                                    ) : b.Name || '-'}
+
                                 </td>
                                 <td className="px-3 py-2 truncate">
                                     <StatusBadge status={b.Status__c} />

@@ -199,12 +199,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             <SortableHeader label="RMA" field="rmaName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.rmaName} onResize={handleRmaResize} />
                                             <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.salesOrderLineName} onResize={handleRmaResize} />
                                             <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.customerQuoteLineName} onResize={handleRmaResize} />
-                                            <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.customerOrderName} onResize={handleRmaResize} />
-                                            <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.customerQuoteName} onResize={handleRmaResize} />
-                                            <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.customerPO} onResize={handleRmaResize} />
-                                            <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.salesOrderName} onResize={handleRmaResize} />
-                                            <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.supplierBillName} onResize={handleRmaResize} />
-                                            <SortableHeader label="Shipping" field="shipmentName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.shipmentName} onResize={handleRmaResize} />
                                             <SortableHeader label="Reason Code" field="reason" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.reason} onResize={handleRmaResize} />
                                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.productName} onResize={handleRmaResize} />
                                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.productDescription} onResize={handleRmaResize} />
@@ -225,7 +219,9 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             const rma = item as RMA;
                                             return (
                                                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                    <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={rma.name}><div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate" title={rma.name}>{rma.name}</div></td>
+                                                    <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={rma.name}>
+                                                        <div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate" title={rma.name}>{rma.name}</div>
+                                                    </td>
                                                     <td className="px-3 py-2 text-left truncate">
                                                         <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${rma.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                             rma.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
@@ -238,46 +234,10 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                         <div className="text-sm truncate" title={rma.rmaName}>{rma.rmaName}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rma.salesOrderLineName && rma.salesOrderLineId ? (
-                                                            <Link href={`/orders/${rma.salesOrderLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.salesOrderLineName}>{rma.salesOrderLineName}</Link>
-                                                        ) : <span className="text-sm truncate">{rma.salesOrderLineName}</span>}
+                                                        {rma.salesOrderLineName}
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rma.customerQuoteLineName && rma.customerQuoteLineId ? (
-                                                            <Link href={`/quotes/${rma.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.customerQuoteLineName}>{rma.customerQuoteLineName}</Link>
-                                                        ) : <span className="text-sm truncate" title={rma.customerQuoteLineName}>{rma.customerQuoteLineName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rma.customerOrderName && rma.customerOrderId ? (
-                                                            <Link href={`/orders/${rma.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.customerOrderName}>{rma.customerOrderName}</Link>
-                                                        ) : <span className="text-sm truncate">{rma.customerOrderName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rma.customerQuoteName && rma.customerQuoteId ? (
-                                                            <Link href={`/quotes/${rma.customerQuoteId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.customerQuoteName}>{rma.customerQuoteName}</Link>
-                                                        ) : <span className="text-sm truncate">{rma.customerQuoteName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rma.customerPO && rma.purchaseOrderId ? (
-                                                            <Link href={`/purchase-orders/${rma.purchaseOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.customerPO}>{rma.customerPO}</Link>
-                                                        ) : (
-                                                            <span className="text-sm truncate" title={rma.customerPO}>{rma.customerPO}</span>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rma.salesOrderName && rma.salesOrderId ? (
-                                                            <Link href={`/orders/${rma.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.salesOrderName}>{rma.salesOrderName}</Link>
-                                                        ) : <span className="text-sm truncate">{rma.salesOrderName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rma.supplierBillName && rma.supplierBillId ? (
-                                                            <Link href={`/supplier-bills/${rma.supplierBillId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.supplierBillName}>{rma.supplierBillName}</Link>
-                                                        ) : <span className="text-sm truncate">{rma.supplierBillName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rma.shipmentName && rma.shipmentId ? (
-                                                            <Link href={`/shipments/${rma.shipmentId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.shipmentName}>{rma.shipmentName}</Link>
-                                                        ) : <span className="text-sm truncate">{rma.shipmentName}</span>}
+                                                        {rma.customerQuoteLineName}
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                         <div className="text-sm truncate" title={rma.reason}>{rma.reason}</div>
@@ -336,11 +296,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             <SortableHeader label="RTV" field="rtvName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.rtvName} onResize={handleRtvResize} />
                                             <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.purchaseOrderLineName} onResize={handleRtvResize} />
                                             <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.customerQuoteLineName} onResize={handleRtvResize} />
-                                            <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.customerOrderName} onResize={handleRtvResize} />
-                                            <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.customerQuoteName} onResize={handleRtvResize} />
-                                            <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.salesOrderName} onResize={handleRtvResize} />
-                                            <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.supplierBillName} onResize={handleRtvResize} />
-                                            <SortableHeader label="Shipping" field="shipmentName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.shipmentName} onResize={handleRtvResize} />
                                             <SortableHeader label="Reason Code" field="reason" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.reason} onResize={handleRtvResize} />
                                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.productName} onResize={handleRtvResize} />
                                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.productDescription} onResize={handleRtvResize} />
@@ -367,31 +322,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.rtvName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.rtvName}</div></td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.purchaseOrderLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.purchaseOrderLineName}</div></td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.customerQuoteLineName}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rtv.customerOrderName && rtv.customerOrderId ? (
-                                                            <Link href={`/orders/${rtv.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.customerOrderName}>{rtv.customerOrderName}</Link>
-                                                        ) : <span className="text-sm truncate">{rtv.customerOrderName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rtv.customerQuoteName && rtv.customerQuoteId ? (
-                                                            <Link href={`/quotes/${rtv.customerQuoteId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.customerQuoteName}>{rtv.customerQuoteName}</Link>
-                                                        ) : <span className="text-sm truncate">{rtv.customerQuoteName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rtv.salesOrderName && rtv.salesOrderId ? (
-                                                            <Link href={`/orders/${rtv.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.salesOrderName}>{rtv.salesOrderName}</Link>
-                                                        ) : <span className="text-sm truncate">{rtv.salesOrderName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rtv.supplierBillName && rtv.supplierBillId ? (
-                                                            <Link href={`/supplier-bills/${rtv.supplierBillId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.supplierBillName}>{rtv.supplierBillName}</Link>
-                                                        ) : <span className="text-sm truncate">{rtv.supplierBillName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rtv.shipmentName && rtv.shipmentId ? (
-                                                            <Link href={`/shipments/${rtv.shipmentId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.shipmentName}>{rtv.shipmentName}</Link>
-                                                        ) : <span className="text-sm truncate">{rtv.shipmentName}</span>}
-                                                    </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.reason}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.reason}</div></td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.productName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.productName}</div></td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={rtv.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{rtv.productDescription}</div></td>
@@ -438,11 +368,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             <SortableHeader label="Credit Memo" field="creditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.creditMemoName} onResize={handleCreditResize} />
                                             <SortableHeader label="Invoice Line" field="invoiceLineName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.invoiceLineName} onResize={handleCreditResize} />
                                             <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.salesOrderLineName} onResize={handleCreditResize} />
-                                            <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.customerOrderName} onResize={handleCreditResize} />
-                                            <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.customerQuoteName} onResize={handleCreditResize} />
-                                            <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.salesOrderName} onResize={handleCreditResize} />
-                                            <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.supplierBillName} onResize={handleCreditResize} />
-                                            <SortableHeader label="Shipment" field="shipmentName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.shipmentName} onResize={handleCreditResize} />
                                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.productName} onResize={handleCreditResize} />
                                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.productDescription} onResize={handleCreditResize} />
                                             <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.manufacturerDBA} onResize={handleCreditResize} />
@@ -470,31 +395,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.creditMemoName}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.invoiceLineName}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.salesOrderLineName}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {credit.customerOrderName && credit.customerOrderId ? (
-                                                            <Link href={`/orders/${credit.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.customerOrderName}>{credit.customerOrderName}</Link>
-                                                        ) : <span className="text-sm truncate">{credit.customerOrderName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {credit.customerQuoteName && credit.customerQuoteId ? (
-                                                            <Link href={`/quotes/${credit.customerQuoteId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.customerQuoteName}>{credit.customerQuoteName}</Link>
-                                                        ) : <span className="text-sm truncate">{credit.customerQuoteName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {credit.salesOrderName && credit.salesOrderId ? (
-                                                            <Link href={`/orders/${credit.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.salesOrderName}>{credit.salesOrderName}</Link>
-                                                        ) : <span className="text-sm truncate">{credit.salesOrderName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {credit.supplierBillName && credit.supplierBillId ? (
-                                                            <Link href={`/supplier-bills/${credit.supplierBillId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.supplierBillName}>{credit.supplierBillName}</Link>
-                                                        ) : <span className="text-sm truncate">{credit.supplierBillName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {credit.shipmentName && credit.shipmentId ? (
-                                                            <Link href={`/shipments/${credit.shipmentId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.shipmentName}>{credit.shipmentName}</Link>
-                                                        ) : <span className="text-sm truncate">{credit.shipmentName}</span>}
-                                                    </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.productName}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={credit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{credit.productDescription}</div></td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[161px] truncate">{credit.manufacturerDBA}</td>
@@ -546,11 +446,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             <SortableHeader label="Debit Memo" field="debitMemoName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.debitMemoName} onResize={handleDebitResize} />
                                             <SortableHeader label="Supplier Bill Line" field="supplierBillLineName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.supplierBillLineName} onResize={handleDebitResize} />
                                             <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.purchaseOrderLineName} onResize={handleDebitResize} />
-                                            <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.customerOrderName} onResize={handleDebitResize} />
-                                            <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.customerQuoteName} onResize={handleDebitResize} />
-                                            <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.salesOrderName} onResize={handleDebitResize} />
-                                            <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.supplierBillName} onResize={handleDebitResize} />
-                                            <SortableHeader label="Shipment" field="shipmentName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.shipmentName} onResize={handleDebitResize} />
                                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.productName} onResize={handleDebitResize} />
                                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.productDescription} onResize={handleDebitResize} />
                                             <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.manufacturerDBA} onResize={handleDebitResize} />
@@ -577,31 +472,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.debitMemoName}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.supplierBillLineName}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.purchaseOrderLineName}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {debit.customerOrderName && debit.customerOrderId ? (
-                                                            <Link href={`/orders/${debit.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.customerOrderName}>{debit.customerOrderName}</Link>
-                                                        ) : <span className="text-sm truncate">{debit.customerOrderName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {debit.customerQuoteName && debit.customerQuoteId ? (
-                                                            <Link href={`/quotes/${debit.customerQuoteId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.customerQuoteName}>{debit.customerQuoteName}</Link>
-                                                        ) : <span className="text-sm truncate">{debit.customerQuoteName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {debit.salesOrderName && debit.salesOrderId ? (
-                                                            <Link href={`/orders/${debit.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.salesOrderName}>{debit.salesOrderName}</Link>
-                                                        ) : <span className="text-sm truncate">{debit.salesOrderName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {debit.supplierBillName && debit.supplierBillId ? (
-                                                            <Link href={`/supplier-bills/${debit.supplierBillId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.supplierBillName}>{debit.supplierBillName}</Link>
-                                                        ) : <span className="text-sm truncate">{debit.supplierBillName}</span>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {debit.shipmentName && debit.shipmentId ? (
-                                                            <Link href={`/shipments/${debit.shipmentId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.shipmentName}>{debit.shipmentName}</Link>
-                                                        ) : <span className="text-sm truncate">{debit.shipmentName}</span>}
-                                                    </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.productName}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={debit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{debit.productDescription}</div></td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate">{debit.manufacturerDBA}</td>
