@@ -83,7 +83,7 @@ export default function QuoteLinesTab({
                             <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" style={{ width: widths.Name }}>
                                     <Link
-                                        href={`/quotes/${quoteId}/lines/${line.id}`} target="_blank"
+                                        href={`/quotes/${quoteId}/lines/${line.id}`}
                                         className="text-primary font-medium hover:underline truncate"
                                         title={line.Name}
                                     >

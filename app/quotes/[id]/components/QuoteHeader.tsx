@@ -17,7 +17,7 @@ export default function QuoteHeader({ quoteNumber, status, description, onBack }
                 <span>&gt;</span>
                 <span className="text-gray-900 dark:text-white truncate" title={quoteNumber}>{quoteNumber}</span>
             </div>
-            <div className="w-full dark:bg-gray-800 rounded-lg p-4">
+            <div className="w-full p-4">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 min-w-0">
                     <div className="flex items-center gap-4 w-full sm:w-auto min-w-0">
                         <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center shrink-0">

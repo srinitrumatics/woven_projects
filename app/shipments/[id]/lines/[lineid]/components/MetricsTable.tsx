@@ -5,7 +5,7 @@ export default function MetricsTable({ product }: { product: any }) {
 
     return (
         <div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4 mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden p-4 mb-4">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900">

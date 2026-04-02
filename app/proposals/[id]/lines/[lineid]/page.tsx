@@ -939,7 +939,7 @@ export default function ProposalProductDetailPage({
 
 
                 {/* Details Card - Full width */}
-                < div className="w1025:col-span-5 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4" >
+                < div className="w1025:col-span-5 bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden p-4" >
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm table-fixed">
                             <thead className="bg-primary-light dark:bg-gray-900">

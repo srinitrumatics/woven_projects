@@ -46,8 +46,8 @@ export default function LineTaxesTab({ taxData, loading }: LineTaxesTabProps) {
     }
 
     return (
-        <div className="overflow-x-auto">
-            <table className="w-full table-fixed">
+        <div className="overflow-x-auto bg-white dark:bg-gray-800">
+            <table className="w-full table-fixed ">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
                         <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={null} requestSort={() => { }} width={widths.salesTaxRate} onResize={handleResize} />

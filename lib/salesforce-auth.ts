@@ -32,7 +32,7 @@ export async function salesforceForgotPassword(email: string): Promise<Salesforc
     },
     body: JSON.stringify(payload),
   });
-
+  console.log('[SF Auth Service email ] Reset Password Response:', sfResponse);
   if (!sfResponse.ok) {
     let errorMessage = 'Failed to initiate password reset.';
     try {
@@ -61,7 +61,7 @@ export async function salesforceForgotPassword(email: string): Promise<Salesforc
  * @param code Verification code
  * @param newPassword New password
  */
-export async function salesforceResetPassword(email: string, code: string | number, newPassword: string): Promise<SalesforceAuthResponse> {
+export async function salesforceResetPassword(email: string, code: number, newPassword: string): Promise<SalesforceAuthResponse> {
   const session = await getSalesforceSession();
   if (!session || !session.accessToken) {
     throw new Error('No Salesforce session available');
@@ -71,7 +71,7 @@ export async function salesforceResetPassword(email: string, code: string | numb
   const payload = {
     username: email,
     password: newPassword,
-    verificationCode: typeof code === 'string' ? code : code || ""
+    verificationCode: code
   };
 
   console.log('[SF Auth Service] Reset Password Payload:', JSON.stringify(payload, null, 2));
@@ -84,7 +84,7 @@ export async function salesforceResetPassword(email: string, code: string | numb
     },
     body: JSON.stringify(payload),
   });
-
+  console.log('[SF Auth Service] Reset Password Response:', sfResponse);
   if (!sfResponse.ok) {
     let errorMessage = 'Invalid code or reset failed. Please try again.';
     try {

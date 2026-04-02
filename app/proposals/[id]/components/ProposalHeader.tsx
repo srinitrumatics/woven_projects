@@ -22,7 +22,7 @@ export default function ProposalHeader({ proposalNumber, status, description, on
             </div>
 
             {/* Proposal header card (full width) */}
-            <div className="w-full dark:bg-gray-800 rounded-lg p-4">
+            <div className="w-full p-4">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 min-w-0">
                     <div className="flex items-center gap-4 w-full sm:w-auto min-w-0">
                         <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0">

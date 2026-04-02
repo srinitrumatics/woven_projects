@@ -20,7 +20,7 @@ export default function POHeader({ poNumber, status, supplierName, onBack }: POH
                 <span className="text-gray-900 dark:text-white truncate" title={poNumber}>{poNumber}</span>
             </div>
 
-            <div className="w-full rounded-lg px-2">
+            <div className="w-full px-2">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 min-w-0">
                     <div className="flex items-center gap-4 w-full sm:w-auto min-w-0">
                         <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0">

@@ -26,7 +26,7 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
             </div>
 
             {/* Order header card (full width) */}
-            <div className="w-full dark:bg-gray-800 rounded-lg p-4">
+            <div className="w-full rounded-lg p-4">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 min-w-0">
                     <div className="flex items-center gap-4 w-full sm:w-auto min-w-0">
                         <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center shrink-0">

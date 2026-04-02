@@ -763,7 +763,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           onClick={() => router.push("/quotes")}
           className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         >
-          Back to Quotes
+          Cancel
         </button>
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto min-w-0">
         </div>

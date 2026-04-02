@@ -246,23 +246,11 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 <Link
                                     href={`/shipments/${shipmentId}/lines/${line.id}`}
                                     className="text-primary font-medium hover:underline truncate"
-                                    target="_blank"
                                     title={line.name}>{line.name}</Link>
                             </td>
                             <TextCell v={<StatusBadge status={line.status} />} w={widths.status} title={line.status} />
                             <TextCell
-                                v={line.shippingManifestId ? (
-                                    <Link
-                                        href={`/shipments/${line.shippingManifestId}`}
-                                        className="text-primary hover:underline font-medium truncate"
-                                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                                        target="_blank"
-                                    >
-                                        {line.shippingManifestName || "View Manifest"}
-                                    </Link>
-                                ) : (
-                                    line.shippingManifestName || " "
-                                )}
+                                v={line.shippingManifestName || " "}
                                 w={widths.shippingManifestName}
                             />
                             <TextCell

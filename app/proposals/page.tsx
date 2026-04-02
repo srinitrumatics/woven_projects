@@ -530,7 +530,7 @@ export default function ProposalsPage() {
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {paginatedProposals.length === 0 ? (
-                  <tr>
+                  <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <td colSpan={9} className="px-6 py-12 text-center truncate">
                       <div className="flex flex-col items-center justify-center min-w-0">
                         <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -548,7 +548,7 @@ export default function ProposalsPage() {
                 ) : (
                   paginatedProposals.map((proposal, index) => (
                     <tr key={proposal.id || index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white text-gray-600 dark:bg-gray-400 text-left truncate">
+                      <td className="px-3 py-3 text-sm text-primary font-semibold sticky left-0 z-10 bg-white dark:bg-gray-800 text-left truncate">
                         <Link href={`/proposals/${proposal.id}`} className="text-primary hover:underline truncate">
                           <div title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
                         </Link>

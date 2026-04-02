@@ -208,7 +208,7 @@ export default function ShipmentLineDetailPage({
             {/* Row 1: Main Image + Notes + Product Information */}
             <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
                 {/* Main Image with Carousel - 25% width (3 of 12 cols) */}
-                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm  p-4 h-full flex flex-col">
                     <div className="relative flex-1 flex flex-col">
                         {/* Main Image Display */}
                         <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[180px]">
@@ -244,7 +244,7 @@ export default function ShipmentLineDetailPage({
                 </div>
 
                 {/* Notes - 25% width (3 of 12 cols) */}
-                <div className="w1025:col-span-3 bg-white rounded-lg shadow-sm border border-gray-100 p-6 min-h-[380px]">
+                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 ">
                     <div className="flex items-center gap-3 mb-6 min-w-0">
                         <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
                             <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
