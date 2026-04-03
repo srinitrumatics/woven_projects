@@ -323,52 +323,52 @@ export default function InvoiceLineDetailPage({
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-4">
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Product Name">Product Name</label>
-                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.productName} value={product.productName} />
+                            <input readOnly type="text" className="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.productName} value={product.productName} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Proposed Product">Proposed Product</label>
-                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.proposedProduct} value={product.proposedProduct} />
+                            <input readOnly type="text" className="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.proposedProduct} value={product.proposedProduct} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Site">Site</label>
-                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.site} value={product.site} />
+                            <input readOnly type="text" className="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.site} value={product.site} />
                         </div>
 
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Description">Description</label>
-                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.description} value={product.description} />
+                            <input readOnly type="text" className="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.description} value={product.description} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Customer Quote Line">Customer Quote Line</label>
-                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.customerQuoteLine} value={product.customerQuoteLine} />
+                            <input readOnly type="text" className="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.customerQuoteLine} value={product.customerQuoteLine} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Inventory Account">Inventory Account</label>
-                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.inventoryAccount} value={product.inventoryAccount} />
+                            <input readOnly type="text" className="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.inventoryAccount} value={product.inventoryAccount} />
                         </div>
 
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Manufacturer DBA">Manufacturer DBA</label>
-                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.manufacturerDBA} value={product.manufacturerDBA} />
+                            <input readOnly type="text" className="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.manufacturerDBA} value={product.manufacturerDBA} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Sales Order Line">Sales Order Line</label>
-                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.salesOrderLine} value={product.salesOrderLine} />
+                            <input readOnly type="text" className="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.salesOrderLine} value={product.salesOrderLine} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Purchase Order Line">Purchase Order Line</label>
-                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.purchaseOrderLine} value={product.purchaseOrderLine} />
+                            <input readOnly type="text" className="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.purchaseOrderLine} value={product.purchaseOrderLine} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Product Family">Product Family</label>
-                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.productFamily} value={product.productFamily} />
+                            <input readOnly type="text" className="w-full  bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded  px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.productFamily} value={product.productFamily} />
                         </div>
                         <div>
                             <label className="text-sm font-bold text-gray-700 block mb-1 truncate" title="Is Taxable">Is Taxable</label>
-                            <input readOnly type="text" className="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.isTaxable} value={product.isTaxable} />
+                            <input readOnly type="text" className="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm text-gray-700 outline-none truncate cursor-default" title={product.isTaxable} value={product.isTaxable} />
                         </div>
                     </div>
                 </div>
