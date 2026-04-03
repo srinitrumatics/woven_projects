@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      const result = await salesforceResetPassword(email, code, newPassword);
+      const result = await salesforceResetPassword(email, Number(code), newPassword);
       return NextResponse.json({
         success: true,
         message: result.message
