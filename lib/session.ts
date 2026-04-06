@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { db } from '../db';
 import { users, userRoles, roles, rolePermissions, permissions, userOrganizations, organizations, userSalesforceProfiles } from '../db/schema';
-import { eq, and, inArray } from 'drizzle-orm';
+import { eq, and, inArray, sql } from 'drizzle-orm';
 
 // Interface for current user with permissions
 export interface CurrentUser {
@@ -47,21 +47,29 @@ export async function getCurrentUser(organizationId?: string): Promise<CurrentUs
 
     const userId = decryptedSession.userId;
 
-    // Get user from database
-    const [user] = await db
-      .select({
-        id: users.id,
-        name: users.name,
-        email: users.email
-      })
-      .from(users)
-      .where(eq(users.id, userId));
+    // Validate UUID format before querying the database to avoid syntax errors
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const isLocalUser = userId && uuidRegex.test(userId);
+
+    let user = null;
+    if (isLocalUser) {
+      // Get user from database if they have a valid local UUID
+      const [dbUser] = await db
+        .select({
+          id: users.id,
+          name: users.name,
+          email: users.email
+        })
+        .from(users)
+        .where(eq(users.id, userId));
+      user = dbUser;
+    }
 
     // Get Salesforce profile if it exists (for contactId mapping)
     const [sfProfile] = await db
       .select({ contactId: userSalesforceProfiles.contactId })
       .from(userSalesforceProfiles)
-      .where(eq(userSalesforceProfiles.userId, userId));
+      .where(isLocalUser ? eq(userSalesforceProfiles.userId, userId) : sql`1=0`);
 
     const contactId = sfProfile?.contactId || decryptedSession.Id || decryptedSession.contact?.Id;
     const accountId = decryptedSession.accountId || decryptedSession.accounts?.[0]?.Id || decryptedSession.accounts?.[0]?.id || orgId;
@@ -70,7 +78,7 @@ export async function getCurrentUser(organizationId?: string): Promise<CurrentUs
       // If user not in DB, but has SF session, return fallback CurrentUser from SF data
       if (decryptedSession.email) {
         return {
-          id: decryptedSession.contact?.Id || decryptedSession.userId || 'sf-user',
+          id: decryptedSession.Id || decryptedSession.contact?.Id || decryptedSession.userId || 'sf-user',
           name: decryptedSession.contact?.Name || decryptedSession.email,
           email: decryptedSession.email,
           role: 'USER',
@@ -88,11 +96,11 @@ export async function getCurrentUser(organizationId?: string): Promise<CurrentUs
             'location-list', 'location-read', 'location-create', 'location-update'
           ],
           roles: [],
-          organizations: decryptedSession.accounts?.map((a: any) => ({
+          organizations: Array.isArray(decryptedSession.accounts) ? decryptedSession.accounts.map((a: any) => ({
             id: a.Id || a.id,
             name: a.Name || 'Account',
             description: null
-          })) || []
+          })) : []
         };
       }
       return null;
@@ -217,8 +225,28 @@ export async function requireAuth() {
 // Create a new Salesforce session
 export async function createSFSession(payload: any) {
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-  const sessionData = { ...payload, expires };
-  const session = await encrypt(sessionData);
+  
+  // Minimize payload to stay within 4KB cookie limit
+  const minimizedPayload = {
+    email: payload.email,
+    userId: payload.userId || payload.contact?.Id || payload.Id,
+    accountId: payload.accountId,
+    Id: payload.Id || payload.contact?.Id,
+    expires,
+    contact: payload.contact ? {
+      Id: payload.contact.Id,
+      Name: payload.contact.Name,
+      Email: payload.contact.Email
+    } : null,
+    // Only store minimal account data
+    accounts: Array.isArray(payload.accounts) ? payload.accounts.map((a: any) => ({
+      Id: a.Id || a.id,
+      Name: a.Name || a.name,
+      Account_Record_Type__c: a.Account_Record_Type__c
+    })) : []
+  };
+
+  const session = await encrypt(minimizedPayload);
   const cookieStore = await cookies();
 
   cookieStore.set('session', session, {
@@ -242,7 +270,8 @@ export async function getSFSession(sessionCookie: string) {
 // Encrypt the session
 export async function encrypt(payload: any) {
   // In a real app, use a robust encryption library like iron-session or jose
-  return JSON.stringify(payload);
+  // We use URL encoding to ensure special JSON characters don't break cookie storage
+  return encodeURIComponent(JSON.stringify(payload));
 }
 
 // Get user data by ID (used during login to get complete user info)
@@ -370,9 +399,10 @@ export async function deleteSession() {
 
 // Decrypt the session
 export async function decrypt(session: string) {
-  // In a real app, use a robust decryption library that matches the encryption
   try {
-    const parsed = JSON.parse(session);
+    if (!session) return null;
+    const decoded = session.includes('%') ? decodeURIComponent(session) : session;
+    const parsed = JSON.parse(decoded);
     // Ensure backward compatibility with old session format
     if (parsed.hasOwnProperty('userId') && !parsed.hasOwnProperty('organizationId')) {
       // Old format: { userId, expires } - set organizationId to undefined
