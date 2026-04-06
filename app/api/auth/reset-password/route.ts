@@ -15,9 +15,9 @@ export async function POST(request: NextRequest) {
     try {
       const result = await salesforceResetPassword(email, Number(code), newPassword);
       return NextResponse.json({
-        success: true,
+        success: result.success,
         message: result.message
-      }, { status: 200 });
+      }, { status: result.success ? 200 : 400 });
     } catch (apiError: any) {
       console.error('[Reset Password] Salesforce API error:', apiError);
       return NextResponse.json(

@@ -23,6 +23,7 @@ import MyOrderTable from "./components/MyOrderTable";
 import PDFTemplate from "./components/PDFTemplate";
 import TaxesTab from "./components/TaxesTab";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { useUserSession } from "@/components/UserSessionContext";
 // import { mockProducts } from "@/app/products/mockData"; // Removed in favor of API data
 
 interface Address {
@@ -140,8 +141,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const searchParams = useSearchParams();
   const isNew = searchParams.get("new") === "true";
 
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "" //TODO: Get this from session / auth context
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
   // header order status
   const [orderStatus, setOrderStatus] = useState<string>("Draft");

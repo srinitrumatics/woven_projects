@@ -7,6 +7,7 @@ import { roleApi, permissionApi, permissionGroupApi, organizationApi } from '../
 import { Plus, Shield, Sparkles } from 'lucide-react';
 import RoleList from '../../../components/RoleManagement/RoleList';
 import RoleForm from '../../../components/RoleManagement/RoleForm';
+import ProtectedRoute from '../../../components/ProtectedRoute';
 
 interface RolePermission {
   permissionId: string;
@@ -174,7 +175,8 @@ const RoleManagement: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 p-8">
+    <ProtectedRoute requiredPermissions={['list_user']}>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -286,6 +288,7 @@ const RoleManagement: React.FC = () => {
         )}
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 

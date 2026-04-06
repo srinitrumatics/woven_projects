@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const accountId = searchParams.get("accountId");
     const orderId = searchParams.get("orderId");
-    const contactId = searchParams.get("contactId") ?? "abc";
+    const contactId = searchParams.get("contactId");
     const contentVersionId = searchParams.get("contentVersionId");
     const objectName = searchParams.get("objectName") || "Customer_Order__c";
 
@@ -20,8 +20,8 @@ export async function GET(req: Request) {
     console.log("contactId:", contactId);
     console.log("action:", rawAction);
 
-    if (!accountId) {
-      return NextResponse.json({ error: "Missing accountId" }, { status: 400 });
+    if (!accountId || !contactId) {
+      return NextResponse.json({ error: "Missing accountId or contactId" }, { status: 400 });
     }
 
     // compose Salesforce REST URL

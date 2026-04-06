@@ -7,6 +7,7 @@ import { userApi, roleApi, organizationApi } from '../../../lib/api/rbac-api';
 import { Plus, Users, Sparkles } from 'lucide-react';
 import UserList from '../../../components/UserManagement/UserList';
 import UserForm from '../../../components/UserManagement/UserForm';
+import ProtectedRoute from '../../../components/ProtectedRoute';
 
 interface UserRole {
   roleId: string;
@@ -304,7 +305,8 @@ const UserManagement: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-teal-50/20 to-cyan-50/20 p-8">
+    <ProtectedRoute requiredPermissions={['list_user']}>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-teal-50/20 to-cyan-50/20 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -423,6 +425,7 @@ const UserManagement: React.FC = () => {
         )}
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 

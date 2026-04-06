@@ -16,6 +16,7 @@ import SupplierBillPaymentsTab from './components/SupplierBillPaymentsTab';
 import SupplierBillDebitsTab from './components/SupplierBillDebitsTab';
 import { SupplierBill, SupplierBillLine, BillPayment, AppliedDebitMemo, DebitMemo } from '../types';
 import { StatusBadge, RemittanceBadge } from "@/components/ui/StatusBadge";
+import { useUserSession } from "@/components/UserSessionContext";
 
 export default function SupplierBillDetailPage() {
     const params = useParams();
@@ -31,8 +32,9 @@ export default function SupplierBillDetailPage() {
     const [activeTab, setActiveTab] = useState('lines');
     const [isLoading, setIsLoading] = useState(true);
 
-    const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-    const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     useEffect(() => {
         if (!id || !SF_ACCOUNT_ID || !SF_CONTACT_ID) return;

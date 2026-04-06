@@ -10,6 +10,7 @@ import { Invoice, InvoiceStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useSortableData } from "@/hooks/useSortableData";
+import { useUserSession } from "@/components/UserSessionContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -41,8 +42,9 @@ export default function InvoicesPage() {
     actions: 100
   });
 
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
+  const SF_CONTACT_ID = user?.Id || "";
 
   useEffect(() => {
     async function fetchInvoices() {
@@ -51,10 +53,12 @@ export default function InvoicesPage() {
         const res = await fetch(`/api/salesforce/invoices?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&action=list`);
         if (!res.ok) throw new Error('Failed to fetch invoices');
         const data = await res.json();
+        console.log("Fetched invoices data:", data);
 
-        // Based on API: { data: [{ Status__c: [...], Invoice__c: [...] }] }
-        const rawItems = data?.Invoice__c || [];
-        const statuses = data?.Status__c || [];
+        // API might return standard list or object with metadata
+        const responseData = Array.isArray(data) ? (data[0] || {}) : data;
+        const rawItems = responseData?.Invoice__c || (Array.isArray(data) ? data : []);
+        const statuses = responseData?.Status__c || [];
         setAvailableStatuses(statuses);
 
         const mappedInvoices: Invoice[] = rawItems.map((item: any) => ({
@@ -92,7 +96,9 @@ export default function InvoicesPage() {
       }
     }
 
-    fetchInvoices();
+    if (SF_ACCOUNT_ID && SF_CONTACT_ID) {
+      fetchInvoices();
+    }
   }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
   // Calculate stats from fetched data

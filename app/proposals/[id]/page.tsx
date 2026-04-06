@@ -43,6 +43,7 @@ import PurchasesTab from "./components/PurchasesTab";
 import ReturnsTab from "./components/ReturnsTab";
 import TaxesTab from "./components/TaxesTab";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { useUserSession } from "@/components/UserSessionContext";
 
 export default function ProposalDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -81,8 +82,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
 
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "" //TODO: Get this from session / auth context
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
+  const SF_CONTACT_ID = user?.Id || "";
 
   // Resizable Columns hooks
   const { widths: productWidths, handleResize: handleProductResize } = useResizableColumns({
@@ -383,8 +385,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       }
     }
 
-    fetchProposal();
-  }, [id]);
+    if (id && SF_ACCOUNT_ID && SF_CONTACT_ID) {
+      fetchProposal();
+    }
+  }, [id, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
   // Fetch data function
   const fetchTabData = useCallback(async (tab: string, isBackground: boolean = false) => {

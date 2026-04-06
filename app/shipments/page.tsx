@@ -10,6 +10,7 @@ import { formatDate, formatCurrency } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useSortableData } from "@/hooks/useSortableData";
+import { useUserSession } from "@/components/UserSessionContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -22,8 +23,9 @@ export default function ShipmentsPage() {
   const [activeTab, setActiveTab] = useState<ShipmentStatus | "All" | "Total">("Total");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "001RL000027IBziYAG";
-  const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "003RL00001RXISHYA5";
+  const { user, selectedAccount } = useUserSession();
+  const accountId = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
+  const contactId = user?.Id || "";
 
   useEffect(() => {
     const fetchShipments = async () => {
@@ -54,7 +56,9 @@ export default function ShipmentsPage() {
       }
     };
 
-    fetchShipments();
+    if (accountId && contactId) {
+      fetchShipments();
+    }
   }, [accountId, contactId]);
 
   // Map SF records to UI shape

@@ -10,6 +10,7 @@ import { Quote, QuoteStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type TabFilter = QuoteStatus | "All";
 
@@ -39,8 +40,9 @@ export default function QuotesPage() {
     actions: 100
   });
 
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
+  const SF_CONTACT_ID = user?.Id || "";
 
   useEffect(() => {
     async function fetchQuotes() {
@@ -50,7 +52,11 @@ export default function QuotesPage() {
         const data = await res.json();
         console.log("Fetched quotes data:", data);
 
-        const mappedQuotes: Quote[] = data.map((item: any) => ({
+        // API might return standard list or object with metadata
+        const responseData = Array.isArray(data) ? (data[0] || {}) : data;
+        const rawItems = responseData?.Customer_Quote__c || (Array.isArray(data) ? data : []);
+
+        const mappedQuotes: Quote[] = rawItems.map((item: any) => ({
           id: item.Id,
           quoteNumber: item.Quote_Number__c || item.Name || 'N/A',
           status: (item.Status__c || item.Status || 'Draft') as QuoteStatus,
@@ -77,7 +83,9 @@ export default function QuotesPage() {
       }
     }
 
-    fetchQuotes();
+    if (SF_ACCOUNT_ID && SF_CONTACT_ID) {
+      fetchQuotes();
+    }
   }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
   // Calculate stats from all quotes

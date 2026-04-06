@@ -1,4 +1,4 @@
-import { getSalesforceSession } from './salesforce-service';
+import { getSalesforceSession, fetchWithLogging } from './salesforce-service';
 
 export interface SalesforceAuthResponse {
   success: boolean;
@@ -24,7 +24,7 @@ export async function salesforceForgotPassword(email: string): Promise<Salesforc
 
   console.log('[SF Auth Service] Forgot Password Payload:', JSON.stringify(payload, null, 2));
 
-  const sfResponse = await fetch(url, {
+  const sfResponse = await fetchWithLogging(url, {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
@@ -32,7 +32,6 @@ export async function salesforceForgotPassword(email: string): Promise<Salesforc
     },
     body: JSON.stringify(payload),
   });
-  console.log('[SF Auth Service email ] Reset Password Response:', sfResponse);
   if (!sfResponse.ok) {
     let errorMessage = 'Failed to initiate password reset.';
     try {
@@ -45,12 +44,11 @@ export async function salesforceForgotPassword(email: string): Promise<Salesforc
   let sfData;
   try {
     sfData = await sfResponse.json();
-    console.log('[SF Auth Service] Forgot Password Output:', JSON.stringify(sfData, null, 2));
   } catch (e) { }
 
   return {
-    success: true,
-    message: sfData?.message || 'A verification code has been sent to your email',
+    success: sfData?.success === true,
+    message: sfData?.message || (sfData?.success ? 'A verification code has been sent to your email' : 'Failed to send verification code'),
     data: sfData?.data
   };
 }
@@ -76,7 +74,7 @@ export async function salesforceResetPassword(email: string, code: number, newPa
 
   console.log('[SF Auth Service] Reset Password Payload:', JSON.stringify(payload, null, 2));
 
-  const sfResponse = await fetch(url, {
+  const sfResponse = await fetchWithLogging(url, {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
@@ -84,7 +82,6 @@ export async function salesforceResetPassword(email: string, code: number, newPa
     },
     body: JSON.stringify(payload),
   });
-  console.log('[SF Auth Service] Reset Password Response:', sfResponse);
   if (!sfResponse.ok) {
     let errorMessage = 'Invalid code or reset failed. Please try again.';
     try {
@@ -97,19 +94,21 @@ export async function salesforceResetPassword(email: string, code: number, newPa
   let sfData;
   try {
     sfData = await sfResponse.json();
-    console.log('[SF Auth Service] Reset Password Output:', JSON.stringify(sfData, null, 2));
   } catch (e) { }
 
   return {
-    success: true,
-    message: sfData?.message || 'Password is updated successfully',
+    success: sfData?.success === true,
+    message: sfData?.message || (sfData?.success ? 'Password is updated successfully' : 'Failed to update password'),
     data: sfData?.data
   };
 }
 
+import * as https from 'https';
+import { URL } from 'url';
+
 /**
  * Salesforce Login
- * Note: Requires exact endpoint configuration for logging in through apexrest API
+ * Uses native Node https to support GET requests with JSON bodies
  */
 export async function salesforceLogin(email: string, password: string): Promise<SalesforceAuthResponse> {
   const session = await getSalesforceSession();
@@ -117,32 +116,69 @@ export async function salesforceLogin(email: string, password: string): Promise<
     throw new Error('No Salesforce session available');
   }
 
-  // Assuming POST is used to login, but endpoint needs to be verified
-  const url = `${session.instanceUrl}/services/apexrest/gtherp/auth`;
-  const payload = {
+  const payloadString = JSON.stringify({
     username: email,
     password: password
-  };
-
-  const sfResponse = await fetch(url, {
-    method: 'POST', // Typical for login, switch to GET or PATCH if instructed otherwise
-    headers: {
-      Authorization: `Bearer ${session.accessToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
   });
 
-  if (!sfResponse.ok) {
-    throw new Error('Invalid email or password');
-  }
+  const requestUrl = new URL(`${session.instanceUrl}/services/apexrest/gtherp/auth`);
 
-  const sfData = await sfResponse.json();
-  return {
-    success: true,
-    message: sfData?.message || 'Logged in successfully',
-    data: sfData?.data
-  };
+  return new Promise((resolve, reject) => {
+    const options = {
+      method: 'GET',
+      hostname: requestUrl.hostname,
+      path: requestUrl.pathname + requestUrl.search,
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payloadString)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      const correlationId = Math.random().toString(36).substring(7);
+      const start = Date.now();
+      
+      console.log(`[SF API Request][${correlationId}] GET ${requestUrl.toString()}`);
+      console.log(`[SF API Request Body][${correlationId}]:`, payloadString);
+
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      res.on('end', () => {
+        const duration = Date.now() - start;
+        console.log(`[SF API Response][${correlationId}] ${res.statusCode} ${res.statusMessage} (${duration}ms)`);
+        
+        if (!res.statusCode || res.statusCode < 200 || res.statusCode >= 300) {
+          console.error(`[SF API Response Error][${correlationId}]:`, data);
+          reject(new Error('Invalid email or password'));
+          return;
+        }
+
+        try {
+          console.log(`[SF API Response Body Data][${correlationId}]:`, data.substring(0, 1000));
+          const sfData = JSON.parse(data);
+          resolve({
+            success: sfData?.success === true,
+            message: sfData?.message || 'Logged in successfully',
+            data: sfData?.data
+          });
+        } catch (e) {
+          reject(new Error('Failed to parse Salesforce response'));
+        }
+      });
+    });
+
+    req.on('error', (error) => {
+      reject(new Error('Network error during Salesforce login'));
+    });
+
+    // Write the JSON body
+    req.write(payloadString);
+    req.end();
+  });
 }
 
 /**
@@ -158,7 +194,7 @@ export async function salesforceUpdateProfile(userId: string, profileData: any):
   // Assuming a PUT/PATCH to a specific target endpoint
   const url = `${session.instanceUrl}/services/apexrest/gtherp/profile`;
 
-  const sfResponse = await fetch(url, {
+  const sfResponse = await fetchWithLogging(url, {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
@@ -176,8 +212,8 @@ export async function salesforceUpdateProfile(userId: string, profileData: any):
 
   const sfData = await sfResponse.json();
   return {
-    success: true,
-    message: sfData?.message || 'Profile updated successfully',
+    success: sfData?.success === true,
+    message: sfData?.message || (sfData?.success ? 'Profile updated successfully' : 'Failed to update profile'),
     data: sfData?.data
   };
 }

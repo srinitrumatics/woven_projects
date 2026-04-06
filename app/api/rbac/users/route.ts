@@ -4,8 +4,7 @@ import { createUser, getAllUsers, getUserById, updateUser, deleteUser } from '@/
 import { requireAuth } from "@/lib/session";
 
 export async function GET(request: NextRequest) {
-
-    await requireAuth(['list_user']);
+    await requireAuth();
   try {
     const users = await getAllUsers();
     return new Response(JSON.stringify(users), {

@@ -17,6 +17,7 @@ import InventoryTab from "./components/InventoryTab";
 import ShipmentFilesTab from "./components/ShipmentFilesTab";
 import { TrackingTimelineTab } from "./components/PlaceholderTabs";
 import SerialNumbersTab from "./components/SerialNumbersTab";
+import { useUserSession } from "@/components/UserSessionContext";
 
 interface ShipmentDetailPageProps {
   params: Promise<{ id: string }>;
@@ -43,8 +44,9 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
   const [trackingData, setTrackingData] = useState<any>(null);
   const [isLoadingTracking, setIsLoadingTracking] = useState(false);
 
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
   useEffect(() => {
     async function fetchShipmentDetails() {

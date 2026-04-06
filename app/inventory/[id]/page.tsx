@@ -8,6 +8,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
+import { useUserSession } from "@/components/UserSessionContext";
 
 
 const ITEMS_PER_PAGE = 10;
@@ -24,8 +25,9 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
         const fetchInventory = async () => {
             try {
                 setLoading(true);
-                const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-                const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const accountId = selectedAccount?.Id || selectedAccount?.id || "";
+  const contactId = user?.contact?.Id || user?.contact?.id || "";
 
                 const response = await fetch(`/api/salesforce/inventory?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&productId=${encodeURIComponent(productId)}`);
 

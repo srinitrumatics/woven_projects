@@ -8,6 +8,7 @@ import { formatDate, formatCurrency } from "@/lib/utils/formatting";
 import { SupplierBillLine } from "../../../types";
 import SBLFilesTab from "./components/SBLFilesTab";
 import SBLDebitMemoLinesTab from "./components/SBLDebitMemoLinesTab";
+import { useUserSession } from "@/components/UserSessionContext";
 
 export default function SupplierBillLineDetailPage({
     params,
@@ -26,8 +27,9 @@ export default function SupplierBillLineDetailPage({
     const [files, setFiles] = useState<any[]>([]);
     const [subTabLoading, setSubTabLoading] = useState(false);
 
-    const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-    const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     useEffect(() => {
         async function fetchLines() {

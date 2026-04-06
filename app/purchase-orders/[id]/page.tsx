@@ -19,6 +19,7 @@ import POSupplierBillsTable from "./components/POSupplierBillsTable";
 import POSerialNumbersTable from "./components/POSerialNumbersTable";
 import POReturnsTab from "./components/POReturnsTab";
 import TrackingInformationTab from "./components/TrackingInformationTab";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type POTabType = "lines" | "bills" | "serialNumbers" | "returns" | "tracking" | "files";
 
@@ -39,8 +40,9 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
     const [isUploading, setIsUploading] = useState(false);
     const [activeTab, setActiveTab] = useState<POTabType>("lines");
 
-    const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-    const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     const fetchPOData = useCallback(async () => {
         try {

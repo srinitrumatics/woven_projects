@@ -13,6 +13,7 @@ import InvoiceFiles from "@/app/invoices/[id]/components/InvoiceFilesTab";
 import InvoiceTaxes from "@/app/invoices/[id]/components/InvoiceTaxes";
 import { getMockInvoiceDetails } from "@/app/invoices/mockData";
 import { InvoiceDetails as InvoiceDetailsType } from "@/app/invoices/types";
+import { useUserSession } from "@/components/UserSessionContext";
 
 export default function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -22,8 +23,9 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
   const [invoice, setInvoice] = useState<InvoiceDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
   useEffect(() => {
     async function fetchInvoiceDetails() {

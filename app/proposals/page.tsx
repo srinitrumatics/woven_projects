@@ -10,6 +10,7 @@ import { Proposal, ProposalStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type TabFilter = "Pipeline" | "Draft" | "Client Review" | "Won" | string;
 
@@ -40,8 +41,9 @@ export default function ProposalsPage() {
     actions: 100
   });
 
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "" //TODO: Get this from session / auth context
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
+  const SF_CONTACT_ID = user?.Id || "";
 
   useEffect(() => {
     async function fetchProposals() {
@@ -93,8 +95,10 @@ export default function ProposalsPage() {
       }
     }
 
-    fetchProposals();
-  }, []);
+    if (SF_ACCOUNT_ID && SF_CONTACT_ID) {
+      fetchProposals();
+    }
+  }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
   const [availableStatuses, setAvailableStatuses] = useState<string[]>([]);
 

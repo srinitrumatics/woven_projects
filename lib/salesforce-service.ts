@@ -24,21 +24,69 @@ const SALESFORCE_CONFIG = {
   securityToken: process.env.SALESFORCE_SECURITY_TOKEN || '',
 };
 // Get Salesforce session info (this would normally come from your session management)
+
+// Helper to perform fetch with logging
+export async function fetchWithLogging(url: string | URL | Request, options: RequestInit = {}): Promise<Response> {
+  const method = options.method || 'GET';
+  const urlStr = typeof url === 'string' ? url : url.toString();
+  
+  // Create a correlation ID for matching requests and responses
+  const correlationId = Math.random().toString(36).substring(7);
+  
+  console.log(`[SF API Request][${correlationId}] ${method} ${urlStr}`);
+  
+  if (options.body) {
+    try {
+      if (typeof options.body === 'string') {
+        console.log(`[SF API Request Body][${correlationId}]:`, options.body.substring(0, 1000));
+      } else if (Buffer.isBuffer(options.body)) {
+        console.log(`[SF API Request Body][${correlationId}]: (Buffer, size: ${options.body.length} bytes)`);
+      } else {
+        console.log(`[SF API Request Body][${correlationId}]: (Unknown type)`);
+      }
+    } catch (e) {}
+  }
+
+  const start = Date.now();
+  const response = await fetch(url, options);
+  const duration = Date.now() - start;
+  
+  console.log(`[SF API Response][${correlationId}] ${response.status} ${response.statusText} (${duration}ms)`);
+  
+  try {
+    const clone = response.clone();
+    const text = await clone.text();
+    try {
+      const json = JSON.parse(text);
+      console.log(`[SF API Response Body Data][${correlationId}]:`, JSON.stringify(json).substring(0, 1000));
+    } catch {
+      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+        console.log(`[SF API Response Body HTML][${correlationId}]: (HTML content, length: ${text.length})`);
+      } else {
+        console.log(`[SF API Response Body Text][${correlationId}]:`, text.substring(0, 1000));
+      }
+    }
+  } catch (error) {
+    console.log(`[SF API Response][${correlationId}] (Could not read body)`);
+  }
+  
+  return response;
+}
+
 export async function getSalesforceSession() {
   // obtain or reuse token
-  const tokenUrl = process.env.SF_AUTH_URL || "https://test.salesforce.com/services/oauth2/token";
+  const tokenUrl = process.env.SF_AUTH_URL || "";
   const body = new URLSearchParams({
     grant_type: "client_credentials",
     client_id: process.env.SF_CLIENT_ID || "",
     client_secret: process.env.SF_CLIENT_SECRET || "",
   });
 
-  const res = await fetch(tokenUrl, {
+  const res = await fetchWithLogging(tokenUrl, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString(),
   });
-
   const rawText = await res.text();
   const contentType = res.headers.get("content-type") || "";
 
@@ -80,9 +128,7 @@ export async function getOrderslistFromSalesforce(accountId?: string, contactId?
     const separator = orderUrl?.includes('?') ? '&' : '?';
     const Url = orderUrl + `${separator}accountId=${encodeURIComponent(accountId ?? '')}&contactId=${encodeURIComponent(contactId ?? '')}`;
 
-    console.log('Fetching orders from Salesforce with URL:', Url);
-
-    const response = await fetch(Url, {
+    const response = await fetchWithLogging(Url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -95,7 +141,6 @@ export async function getOrderslistFromSalesforce(accountId?: string, contactId?
     }
 
     const resultdata = await response.json();
-    console.log('getOrderslistFromSalesforce raw response:', JSON.stringify(resultdata)?.slice(0, 300));
 
     // New API shape: [{ Customer_Order__c: [...], Status__c: [...] }]
     // Return the full response so the caller can extract Customer_Order__c / Status__c
@@ -130,7 +175,7 @@ export async function getOrderFromSalesforce(accountId?: string, contactId?: str
     console.log('Fetching orders from Salesforce with URL:', Url);
     // Make API call to Salesforce
 
-    const response = await fetch(Url, {
+    const response = await fetchWithLogging(Url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -143,9 +188,6 @@ export async function getOrderFromSalesforce(accountId?: string, contactId?: str
     }
 
     const resultdata = await response.json();
-    console.log('order details resultdata', resultdata);
-    //console.log(resultdata);
-
     // Return the records from the response
     return resultdata.data || [];
   } catch (error) {
@@ -168,7 +210,7 @@ export async function getOrderslocationsFromSalesforce(accountId?: string, conta
     //console.log('Fetching authorized locations from Salesforce with URL:', Url);
     // Make API call to Salesforce
 
-    const response = await fetch(Url, {
+    const response = await fetchWithLogging(Url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -204,7 +246,7 @@ export async function getAuthorizedLocationsFromSalesforce(accountId: string, co
 
     console.log('Fetching authorized locations with URL:', url);
 
-    const response = await fetch(url, {
+    const response = await fetchWithLogging(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -240,7 +282,7 @@ export async function getOrderLinesFromSalesforce(accountId: string, contactId: 
 
     console.log('Fetching order lines from Salesforce with URL:', url);
 
-    const response = await fetch(url, {
+    const response = await fetchWithLogging(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -253,7 +295,6 @@ export async function getOrderLinesFromSalesforce(accountId: string, contactId: 
     }
 
     const resultdata = await response.json();
-    console.log('Order lines resultdata:', resultdata);
 
     return resultdata.data || [];
   } catch (error) {
@@ -276,7 +317,7 @@ export async function getContactsFromSalesforce(accountId?: string, contactId?: 
     let Url = (contactUrl ?? '') + `${separator}accountId=${encodeURIComponent(accountId ?? '')}&contactId=${encodeURIComponent(contactId ?? '')}`;
     //console.log('Fetching contacts from Salesforce with URL:', Url);
 
-    const response = await fetch(Url, {
+    const response = await fetchWithLogging(Url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -314,7 +355,7 @@ export async function getAccountFromSalesforce(accountId?: string): Promise<any[
 
     console.log('Fetching account from Salesforce with URL:', url);
 
-    const response = await fetch(url, {
+    const response = await fetchWithLogging(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -328,7 +369,6 @@ export async function getAccountFromSalesforce(accountId?: string): Promise<any[
     }
 
     const resultdata = await response.json();
-    console.log('Account resultdata:', resultdata);
 
     return resultdata.data || [];
   } catch (error) {
@@ -350,7 +390,7 @@ export async function createOrderFromSalesforce(orderData: any): Promise<Salesfo
     console.log('createOrderFromSalesforce URL:', Url);
     console.log('createOrderFromSalesforce Payload:', JSON.stringify(orderData, null, 2));
 
-    const response = await fetch(Url, {
+    const response = await fetchWithLogging(Url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
@@ -366,7 +406,6 @@ export async function createOrderFromSalesforce(orderData: any): Promise<Salesfo
     }
 
     const result = await response.json();
-    console.log('createOrderFromSalesforce Response:', JSON.stringify(result, null, 2));
     return result;
   } catch (error) {
     console.error('Error creating order in Salesforce:', error);
@@ -389,7 +428,7 @@ export async function updateOrderFromSalesforce(orderId: string, orderData: any)
     console.log('updateOrderFromSalesforce URL:', url);
     console.log('updateOrderFromSalesforce orderData:', JSON.stringify(orderData, null, 2));
 
-    const response = await fetch(url, {
+    const response = await fetchWithLogging(url, {
       method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
@@ -407,7 +446,6 @@ export async function updateOrderFromSalesforce(orderId: string, orderData: any)
     }
 
     const result = await response.json();
-    console.log('updateOrderFromSalesforce Result:', result);
     return true;
   } catch (error) {
     console.error('Error updating order in Salesforce:', error);
@@ -429,7 +467,7 @@ export async function cloneOrderFromSalesforce(orderData: any): Promise<any> {
     console.log('cloneOrderFromSalesforce URL:', url);
     console.log('cloneOrderFromSalesforce orderData:', JSON.stringify(orderData, null, 2));
 
-    const response = await fetch(url, {
+    const response = await fetchWithLogging(url, {
       method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
@@ -474,7 +512,7 @@ export async function getProductsFromSalesforce(accountId?: string, contactId?: 
 
     console.log('DEBUG: Fetching products from Salesforce with URL:', url);
 
-    const response = await fetch(url, {
+    const response = await fetchWithLogging(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -542,7 +580,7 @@ export async function deleteOrderFromSalesforce(accountId: string, contactId: st
 
     console.log('Deleting order line from Salesforce with URL:', url);
 
-    const response = await fetch(url, {
+    const response = await fetchWithLogging(url, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
@@ -557,7 +595,6 @@ export async function deleteOrderFromSalesforce(accountId: string, contactId: st
     }
 
     const result = await response.json();
-    console.log('Order line deleted successfully:', result);
     return true;
   } catch (error) {
     console.error('Error deleting order line from Salesforce:', error);
@@ -581,7 +618,7 @@ export async function deleteFullOrderFromSalesforce(accountId: string, contactId
 
     console.log('Deleting full order from Salesforce with URL:', url);
 
-    const response = await fetch(url, {
+    const response = await fetchWithLogging(url, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
@@ -620,7 +657,7 @@ export async function getFilesFromSalesforce(accountId: string, contactId: strin
 
     console.log('Fetching files from Salesforce with URL:', url);
 
-    const response = await fetch(url, {
+    const response = await fetchWithLogging(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -668,7 +705,7 @@ export async function downloadFileFromSalesforce(
 
     console.log('Downloading file from Salesforce with URL:', url);
 
-    const response = await fetch(url, {
+    const response = await fetchWithLogging(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -717,7 +754,7 @@ export async function deleteFileFromSalesforce(
 
     console.log('Deleting file from Salesforce with URL:', url);
 
-    const response = await fetch(url, {
+    const response = await fetchWithLogging(url, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
@@ -880,7 +917,7 @@ async function createContentVersion(
     // Combine all parts
     const body = Buffer.concat([part1, part2, footer]);
 
-    const response = await fetch(
+    const response = await fetchWithLogging(
       `${instanceUrl}/services/data/v60.0/sobjects/ContentVersion`,
       {
         method: 'POST',
@@ -915,7 +952,7 @@ async function getContentDocumentId(
 ): Promise<string | null> {
   try {
     const query = `SELECT ContentDocumentId FROM ContentVersion WHERE Id = '${contentVersionId}'`;
-    const response = await fetch(
+    const response = await fetchWithLogging(
       `${instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`,
       {
         method: 'GET',
@@ -961,7 +998,7 @@ async function createContentDocumentLink(
       Visibility: 'AllUsers' // Or 'InternalUsers', 'SharedUsers'
     };
 
-    const response = await fetch(
+    const response = await fetchWithLogging(
       `${instanceUrl}/services/data/v60.0/sobjects/ContentDocumentLink`,
       {
         method: 'POST',
@@ -1013,7 +1050,7 @@ export async function createContentDistribution(
       PreferencesAllowPDFDownload: true
     };
 
-    const response = await fetch(
+    const response = await fetchWithLogging(
       `${session.instanceUrl}/services/data/v60.0/sobjects/ContentDistribution`,
       {
         method: 'POST',
@@ -1042,8 +1079,8 @@ export async function createContentDistribution(
 
 // Helper to decode HTML entities in URLs (e.g. &amp; -> &)
 function decodeSalesforceUrl(url: string): string {
-    if (!url) return url;
-    return url.replace(/&amp;/g, '&');
+  if (!url) return url;
+  return url.replace(/&amp;/g, '&');
 }
 
 
@@ -1059,7 +1096,7 @@ export async function getPublicDistributionUrl(
       return null;
     }
 
-    const response = await fetch(
+    const response = await fetchWithLogging(
       `${session.instanceUrl}/services/data/v60.0/sobjects/ContentDistribution/${distributionId}`,
       {
         method: 'GET',
@@ -1077,7 +1114,7 @@ export async function getPublicDistributionUrl(
 
     const result = await response.json();
     console.log('ContentDistribution URLs - Preview:', result.DistributionPublicUrl, 'Download:', result.ContentDownloadUrl);
-    
+
     return {
       previewUrl: decodeSalesforceUrl(result.DistributionPublicUrl),
       downloadUrl: decodeSalesforceUrl(result.ContentDownloadUrl)
@@ -1101,7 +1138,7 @@ export async function getFileUrl(
     // Check if the ID is a ContentDocumentLink ID (starts with 06A)
     if (id.startsWith('06A')) {
       const query = `SELECT ContentDocumentId FROM ContentDocumentLink WHERE Id = '${id}'`;
-      const response = await fetch(
+      const response = await fetchWithLogging(
         `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`,
         {
           headers: { 'Authorization': `Bearer ${session.accessToken}` }
@@ -1119,7 +1156,7 @@ export async function getFileUrl(
     // Check if the ID is a ContentDocument ID (starts with 069)
     if (id.startsWith('069')) {
       const query = `SELECT LatestPublishedVersionId FROM ContentDocument WHERE Id = '${id}'`;
-      const response = await fetch(
+      const response = await fetchWithLogging(
         `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`,
         {
           headers: { 'Authorization': `Bearer ${session.accessToken}` }
@@ -1134,16 +1171,16 @@ export async function getFileUrl(
     }
 
     console.log('getFileUrl for ID:', id, 'resolved to ContentVersionId:', contentVersionId);
-    
+
     // Step 1: Check if an active ContentDistribution already exists
     const existingDistQuery = `SELECT Id, DistributionPublicUrl, ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = '${contentVersionId}' AND IsDeleted = false LIMIT 1`;
-    const distResponse = await fetch(
+    const distResponse = await fetchWithLogging(
       `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(existingDistQuery)}`,
       {
         headers: { 'Authorization': `Bearer ${session.accessToken}` }
       }
     );
-    
+
     if (distResponse.ok) {
       const distResult = await distResponse.json();
       if (distResult.records && distResult.records.length > 0) {

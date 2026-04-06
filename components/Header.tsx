@@ -16,50 +16,11 @@ interface HeaderProps {
 
 export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: HeaderProps) {
   const pathname = usePathname();
-  const { user, logout } = useUserSession();
-  const { permissions: userPermissions, isSuperAdmin } = usePermissions();
+  const { user, selectedAccount, setSelectedAccountId, logout } = useUserSession();
+  const { isSuperAdmin } = usePermissions();
   const { theme, toggleTheme } = useTheme();
   const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [selectedOrganization, setSelectedOrganization] = useState<string | null>(null);
-
-  // Get the login function to update user context when organization changes
-  const { login } = useUserSession();
-
-  // Set selected organization from URL query params, localStorage, or default when user loads
-  useEffect(() => {
-    if (user && user.organizations && user.organizations.length > 0) {
-      // First try to get organization ID from URL query parameters
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlOrgId = urlParams.get('organizationId');
-
-      if (urlOrgId) {
-        // Verify that the URL organization ID exists in user's organizations
-        const orgExists = user.organizations.some(org => org.id === urlOrgId);
-        if (orgExists && urlOrgId !== selectedOrganization) {
-          setSelectedOrganization(urlOrgId);
-          localStorage.setItem('selectedOrganization', urlOrgId);
-          return; // Only set from URL if valid and different from current
-        }
-      }
-
-      // If no URL param or org doesn't exist, try to get selected organization from localStorage
-      const storedOrgId = localStorage.getItem('selectedOrganization');
-      if (storedOrgId && !urlOrgId) {
-        // Verify that the stored organization ID exists in user's organizations
-        const orgExists = user.organizations.some(org => org.id === storedOrgId);
-        if (orgExists && storedOrgId !== selectedOrganization) {
-          setSelectedOrganization(storedOrgId);
-          return; // Only set from localStorage if valid and different from current
-        }
-      }
-
-      // Only set default if no organization is currently selected
-      if (!selectedOrganization) {
-        setSelectedOrganization(user.organizations[0].id);
-      }
-    }
-  }, [user, selectedOrganization]); // Include selectedOrganization in dependency to recheck
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -101,7 +62,8 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
 
         <div className="flex items-center space-x-4 min-w-0">
           {/* Organization selector dropdown */}
-          {user?.organizations && user.organizations.length > 0 && (
+          {/* Account selector dropdown */}
+          {user && (
             <div className="relative org-dropdown">
               <button
                 onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
@@ -111,14 +73,14 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300 max-w-[100px] truncate">
-                  {user.organizations.find(org => org.id === selectedOrganization)?.name || user.organizations[0].name}
+                  {selectedAccount?.Name || selectedAccount?.name || user.accounts?.[0]?.Name || user.accounts?.[0]?.name || 'Accounts Missing'}
                 </span>
                 <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
 
-              {/* Organization dropdown menu */}
+              {/* Account dropdown menu */}
               {isOrgDropdownOpen && (
                 <div
                   className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50"
@@ -126,58 +88,40 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                 >
                   <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 max-h-48 overflow-y-auto">
                     <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-                      Organizations
+                      Accounts
                     </p>
                     <div className="space-y-1">
-                      {user.organizations.map((org) => (
-                        <button
-                          key={org.id}
-                          className={`block w-full text-left px-2 py-1 text-sm rounded ${selectedOrganization === org.id
-                            ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
-                            }`}
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            setIsOrgDropdownOpen(false); // Close dropdown after selection
-
-                            try {
-                              console.log('Attempting to update session for organization:', org.id);
-
-                              // First, update the session cookie with the selected organization
-                              const sessionUpdateResponse = await fetch('/api/auth/update-session', {
-                                method: 'POST',
-                                headers: {
-                                  'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({ organizationId: org.id }),
-                              });
-
-                              console.log('Session update response status:', sessionUpdateResponse.status);
-
-                              if (!sessionUpdateResponse.ok) {
-                                const errorText = await sessionUpdateResponse.text();
-                                console.error('Failed to update session with new organization:', errorText);
-                              } else {
-                                const responseData = await sessionUpdateResponse.json();
-                                console.log('Session updated successfully with organization:', org.id, responseData);
-                              }
-
-                              // Set the organization in localStorage for persistence
-                              localStorage.setItem('selectedOrganization', org.id);
-
-                              // Redirect to the current page with organization parameter to refresh context
-                              // Properly handle existing query parameters
-                              const currentUrl = new URL(window.location.href);
-                              currentUrl.searchParams.set('organizationId', org.id.toString());
-                              window.location.href = '/program360';
-                            } catch (error) {
-                              console.error('Error switching organization:', error);
-                            }
-                          }}
-                        >
-                          {org.name}
-                        </button>
-                      ))}
+                      {(!user.accounts || user.accounts.length === 0) ? (
+                        <p className="text-sm text-gray-500 p-2">No accounts found</p>
+                      ) : (
+                        user.accounts.map((account) => {
+                          const accId = account.Id || account.id;
+                          const isCurrent = accId === (selectedAccount?.Id || selectedAccount?.id);
+                          return (
+                            <button
+                              key={accId}
+                              className={`block w-full text-left px-2 py-1 text-sm rounded ${isCurrent
+                                ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
+                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+                                }`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsOrgDropdownOpen(false); // Close dropdown after selection
+                                setSelectedAccountId(accId);
+                                
+                                // Clear url query params so old organization logic doesnt trigger
+                                const currentUrl = new URL(window.location.href);
+                                currentUrl.searchParams.delete('organizationId');
+                                
+                                // Redirect to dashboard to reset the working interface cleanly.
+                                window.location.href = currentUrl.pathname === '/program360' ? '/program360' : '/program360';
+                              }}
+                            >
+                              {account.Name || account.name || 'Unnamed Account'}
+                            </button>
+                          );
+                        })
+                      )}
                     </div>
                   </div>
                 </div>
@@ -214,7 +158,7 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
               className="flex items-center space-x-2 focus:outline-none"
             >
               <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
-                {user ? user.name.charAt(0).toUpperCase() : 'U'}
+                {user ? (user.name ? user.name.charAt(0).toUpperCase() : 'U') : 'U'}
               </div>
             </button>
 

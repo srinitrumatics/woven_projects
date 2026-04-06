@@ -11,6 +11,7 @@ import QuoteLineTaxesTab from "./components/QuoteLineTaxesTab";
 import QuoteLinePurchasesTab from "./components/QuoteLinePurchasesTab";
 import QuoteLineReturnsTab from "./components/QuoteLineReturnsTab";
 import QuoteLineFilesTab from "./components/QuoteLineFilesTab";
+import { useUserSession } from "@/components/UserSessionContext";
 
 // Interface for quote line item from Salesforce
 interface QuoteLineItem {
@@ -150,8 +151,9 @@ export default function QuoteLineDetailPage({
     const [quoteFiles, setQuoteFiles] = useState<QuoteLineFile[]>([]);
     const [filesLoading, setFilesLoading] = useState(false);
 
-    const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-    const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     useEffect(() => {
         async function fetchQuoteLineData() {

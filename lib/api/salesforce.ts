@@ -6,6 +6,7 @@
  */
 
 import { Order, OrderStats, Product } from "@/app/orders/types";
+import { fetchWithLogging } from "../salesforce-service";
 
 // API Configuration
 const SALESFORCE_CONFIG = {
@@ -40,7 +41,7 @@ async function authenticate(): Promise<string> {
   });
 
   try {
-    const response = await fetch(
+    const response = await fetchWithLogging(
       `${SALESFORCE_CONFIG.instanceUrl}/services/oauth2/token`,
       {
         method: 'POST',
@@ -82,7 +83,7 @@ async function executeQuery<T>(query: string): Promise<T[]> {
   const encodedQuery = encodeURIComponent(query);
 
   try {
-    const response = await fetch(
+    const response = await fetchWithLogging(
       `${SALESFORCE_CONFIG.instanceUrl}/services/data/v58.0/query?q=${encodedQuery}`,
       {
         method: 'GET',
@@ -286,7 +287,7 @@ export async function createOrder(orderData: any): Promise<string> {
   const token = await authenticate();
 
   try {
-    const response = await fetch(
+    const response = await fetchWithLogging(
       `${SALESFORCE_CONFIG.instanceUrl}/services/data/v58.0/sobjects/Order`,
       {
         method: 'POST',
@@ -319,7 +320,7 @@ export async function updateOrder(orderId: string, orderData: any): Promise<void
   const token = await authenticate();
 
   try {
-    const response = await fetch(
+    const response = await fetchWithLogging(
       `${SALESFORCE_CONFIG.instanceUrl}/services/data/v58.0/sobjects/Order/${orderId}`,
       {
         method: 'PATCH',
@@ -348,7 +349,7 @@ export async function deleteOrder(orderId: string): Promise<void> {
   const token = await authenticate();
 
   try {
-    const response = await fetch(
+    const response = await fetchWithLogging(
       `${SALESFORCE_CONFIG.instanceUrl}/services/data/v58.0/sobjects/Order/${orderId}`,
       {
         method: 'DELETE',

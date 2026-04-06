@@ -15,6 +15,7 @@ import QuoteReturnsTab from "./components/QuoteReturnsTab";
 import QuoteFilesTab from "./components/QuoteFilesTab";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatCurrency, formatNumber, formatDate } from "@/lib/utils/formatting";
+import { useUserSession } from "@/components/UserSessionContext";
 
 const formatAddress = (addressConfig: any): string => {
   if (!addressConfig) return '';
@@ -64,8 +65,9 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -166,9 +168,12 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
       const res = await fetch(`/api/salesforce/quotes?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&quoteId=${id}&action=view`);
       if (!res.ok) throw new Error('Failed to fetch quote details');
       const data = await res.json();
+      
+      const responseData = Array.isArray(data) ? (data[0] || {}) : data;
+      const quoteData = responseData?.Customer_Quote__c ? responseData.Customer_Quote__c[0] : (Array.isArray(data) ? data[0] : responseData);
 
-      if (data && data.length > 0) {
-        const item = data[0];
+      if (quoteData && quoteData.Id) {
+        const item = quoteData;
         const mappedQuote: QuoteDetails = {
           id: item.Id,
           quoteNumber: item.Name || 'N/A',
@@ -250,7 +255,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
       const json = await res.json();
 
       if (tab === 'quotelines') {
-        const mappedLines: QuoteLine[] = (json || []).map((item: any) => ({
+        const rawLines = Array.isArray(json) ? json : (json?.Quote_Line__c || json?.LineItemCount || []);
+        const mappedLines: QuoteLine[] = (Array.isArray(rawLines) ? rawLines : []).map((item: any) => ({
           id: item.Id,
           Name: item.Name || 'N/A',
           status: item.Status__c || '',
@@ -541,7 +547,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           }))
         });
       } else if (tab === 'files') {
-        const mappedFiles = (json || []).map((f: any) => ({
+        const rawFiles = Array.isArray(json) ? json : (json?.data || []);
+        const mappedFiles = (Array.isArray(rawFiles) ? rawFiles : []).map((f: any) => ({
           id: f.Id,
           fileName: f.Title,
           fileType: f.FileExtension,

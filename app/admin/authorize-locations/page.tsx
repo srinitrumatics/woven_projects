@@ -10,6 +10,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { AuthorizeLocation, LocationStatus } from "./types";
 import LocationModal from "./components/LocationModal";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type TabFilter = "Active" | "Inactive" | "Pending" | "All";
 
@@ -37,6 +38,11 @@ export default function AuthorizeLocationsPage() {
     const [selectedLocation, setSelectedLocation] = useState<AuthorizeLocation | null>(null);
     const [locationTypes, setLocationTypes] = useState<string[]>([]);
     const [addressTypes, setAddressTypes] = useState<string[]>([]);
+    
+    // User session for SF API queries
+    const { user, selectedAccount } = useUserSession();
+    const accountId = selectedAccount?.Id || selectedAccount?.id || "";
+    const contactId = user?.contact?.Id || user?.contact?.id || "";
 
     // Initialize resizable columns
     const { widths, handleResize } = useResizableColumns({
@@ -60,9 +66,7 @@ export default function AuthorizeLocationsPage() {
     const fetchLocations = async () => {
         try {
             setLoading(true);
-            // Use default ids from env, same pattern as other pages
-            const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-            const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+            // Use user session ids
             const response = await fetch(`/api/salesforce/authorizedlocations?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`);
 
             if (!response.ok) {
@@ -178,8 +182,6 @@ export default function AuthorizeLocationsPage() {
     const handleSaveLocation = async (data: Partial<AuthorizeLocation>) => {
         try {
             setLoading(true);
-            const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-            const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
 
             const payload = {
                 authorizedLocations: [{

@@ -9,6 +9,7 @@ import { formatDate } from "@/lib/utils/formatting";
 import ProductInformationCard from "./components/ProductInformationCard";
 import MetricsTable from "./components/MetricsTable";
 import BottomTabs from "./components/BottomTabs";
+import { useUserSession } from "@/components/UserSessionContext";
 
 // Interface for shipping manifest line item from Salesforce
 interface ManifestLineItem {
@@ -62,8 +63,9 @@ export default function ShipmentLineDetailPage({
     const [serialCount, setSerialCount] = useState<number | undefined>(undefined);
     const [filesCount, setFilesCount] = useState<number | undefined>(undefined);
 
-    const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-    const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     useEffect(() => {
         async function fetchLineData() {

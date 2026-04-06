@@ -11,6 +11,7 @@ import { formatDate } from "@/lib/utils/formatting";
 
 import LineTaxesTab from "./components/LineTaxesTab";
 import { FulfillmentTabType, FulfillmentData, ReturnsData, SalesOrder, CustomerQuote, PurchaseOrderLine, SupplierBillLine, PurchasesData, TaxDetail } from "../../types";
+import { useUserSession } from "@/components/UserSessionContext";
 
 // Interface for proposal product item from Salesforce (matching what we saw in proposal list logic)
 interface ProposalProductItem {
@@ -95,8 +96,9 @@ export default function ProposalProductDetailPage({
     const [currentLineIndex, setCurrentLineIndex] = useState(0);
 
     // Salesforce credentials
-    const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
-    const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "" //TODO: Get this from session / auth context
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
 
     // Fetch fulfillment, purchases, and returns data

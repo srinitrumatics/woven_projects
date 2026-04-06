@@ -16,6 +16,7 @@ type TabFilter = "Active" | "Inactive" | "All";
 const ITEMS_PER_PAGE = 10;
 
 import DeliveryWindowModal from "./components/DeliveryWindowModal";
+import { useUserSession } from "@/components/UserSessionContext";
 
 export default function DeliveryWindowsPage() {
     const router = useRouter();
@@ -30,11 +31,13 @@ export default function DeliveryWindowsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingWindow, setEditingWindow] = useState<any>(null);
 
+    const { user, selectedAccount } = useUserSession();
+    const accountId = selectedAccount?.Id || selectedAccount?.id || "";
+    const contactId = user?.contact?.Id || user?.contact?.id || "";
+
     const fetchDeliveryWindows = async () => {
         try {
             setLoading(true);
-            const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-            const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
 
             const response = await fetch(`/api/salesforce/deliverywindows?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&locationId=${encodeURIComponent(locationId)}`);
 
@@ -75,8 +78,6 @@ export default function DeliveryWindowsPage() {
 
     const handleSaveWindow = async (formData: any) => {
         try {
-            const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-            const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
 
             // If we are editing, we need to include the ID in the payload item
             const windowData = { ...formData };
@@ -116,8 +117,6 @@ export default function DeliveryWindowsPage() {
         }
 
         try {
-            const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-            const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
 
             const response = await fetch(`/api/salesforce/deliverywindows?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&deliveryWindowId=${encodeURIComponent(id)}`, {
                 method: 'DELETE',

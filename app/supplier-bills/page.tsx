@@ -10,6 +10,7 @@ import { SupplierBill } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { useUserSession } from "@/components/UserSessionContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -40,8 +41,9 @@ export default function SupplierBillsPage() {
         actions: 100
     });
 
-    const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-    const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.Id || user?.contact?.Id || "";
 
     useEffect(() => {
         async function fetchSupplierBills() {
@@ -88,7 +90,9 @@ export default function SupplierBillsPage() {
             }
         }
 
-        fetchSupplierBills();
+        if (SF_ACCOUNT_ID && SF_CONTACT_ID) {
+            fetchSupplierBills();
+        }
     }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
     // Stats calculation

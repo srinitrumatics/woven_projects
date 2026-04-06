@@ -7,6 +7,7 @@ import { permissionApi, permissionGroupApi } from '@/lib/api/rbac-api';
 import { Plus, Key, Sparkles } from 'lucide-react';
 import PermissionList from '../../../components/PermissionManagement/PermissionList';
 import PermissionForm from '../../../components/PermissionManagement/PermissionForm';
+import ProtectedRoute from '../../../components/ProtectedRoute';
 
 interface GroupedPermission {
   id: string | null;
@@ -157,7 +158,8 @@ const PermissionManagement: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/20 p-8">
+    <ProtectedRoute requiredPermissions={['list_user']}>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/20 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -263,6 +265,7 @@ const PermissionManagement: React.FC = () => {
         )}
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 

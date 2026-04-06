@@ -16,7 +16,7 @@ interface NavigationItem {
   name: string;
   href: string;
   icon: React.ReactNode;
-  permissions: string[];
+  visibleFor?: string[]; // e.g. ['Customer', 'Partner', 'Hybrid']. If omitted, visible to all
 }
 
 const navigation: NavigationItem[] = [
@@ -25,70 +25,70 @@ const navigation: NavigationItem[] = [
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
       </svg>
-    ), permissions: []
+    )
   },
   {
     name: "Products", href: "/products", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
       </svg>
-    ), permissions: ["product-list"]
+    )
   },
   {
     name: "Inventory", href: "/inventory", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
       </svg>
-    ), permissions: ["inventory-list"]
+    )
   },
   {
     name: "Orders", href: "/orders", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
       </svg>
-    ), permissions: ["order-list"]
+    ), visibleFor: ["Customer", "Hybrid"]
   },
   {
     name: "Proposals", href: "/proposals", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
-    ), permissions: ["proposal-list"]
+    ), visibleFor: ["Customer", "Hybrid"]
   },
   {
     name: "Quotes", href: "/quotes", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
       </svg>
-    ), permissions: ["quote-list"]
+    ), visibleFor: ["Customer", "Hybrid"]
   },
   {
     name: "Purchase Orders", href: "/purchase-orders", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
       </svg>
-    ), permissions: ["purchase-order-list"]
+    ), visibleFor: ["Partner", "Hybrid"]
   },
   {
     name: "Supplier Bills", href: "/supplier-bills", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
       </svg>
-    ), permissions: ["supplier-bill-list"]
+    ), visibleFor: ["Partner", "Hybrid"]
   },
   {
     name: "Shipments", href: "/shipments", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
       </svg>
-    ), permissions: ["shipment-list"]
+    ), visibleFor: ["Customer", "Hybrid"]
   },
   {
     name: "Invoices", href: "/invoices", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
       </svg>
-    ), permissions: ["invoices"]
+    ), visibleFor: ["Customer", "Hybrid"]
   },
   {
     name: "Locations", href: "/admin/authorize-locations", icon: (
@@ -96,14 +96,14 @@ const navigation: NavigationItem[] = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
-    ), permissions: ["organization-management"]
+    )
   },
   {
     name: "Reports", href: "/reports", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
       </svg>
-    ), permissions: ["report-list"]
+    )
   },
   {
     name: "Admin", href: "/admin", icon: (
@@ -111,35 +111,36 @@ const navigation: NavigationItem[] = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
-    ), permissions: ["user-management", "role-management", "permission-management"]
+    ), visibleFor: ["Partner", "Hybrid"]
   },
   {
     name: "Users", href: "/admin/users", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
       </svg>
-    ), permissions: ["user-management"]
+    ), visibleFor: ["Partner", "Hybrid"]
   },
   {
     name: "Roles", href: "/admin/roles", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
       </svg>
-    ), permissions: ["role-management"]
+    ), visibleFor: ["Partner", "Hybrid"]
   },
   {
     name: "Permissions", href: "/admin/permissions", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
       </svg>
-    ), permissions: ["permission-management"]
-  },
+    ), visibleFor: ["Partner", "Hybrid"]
+  }
 ];
+
 
 export default function Sidebar({ children }: SidebarProps) {
   const pathname = usePathname();
-  const { user, logout } = useUserSession();
-  const { permissions: userPermissions, isSuperAdmin } = usePermissions();
+  const { user, selectedAccount, logout } = useUserSession();
+  const { isSuperAdmin } = usePermissions();
   const [isCollapsed, setIsCollapsed] = useState(false); // desktop collapse
   const [mobileOpen, setMobileOpen] = useState(false); // mobile drawer
   // close mobile drawer on route change
@@ -200,10 +201,11 @@ export default function Sidebar({ children }: SidebarProps) {
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
             {navigation.map((item) => {
-              // If user is super admin, show all items; otherwise check individual permissions
-              const hasPermission = item.permissions.length === 0 ||
-                isSuperAdmin || // Super admins can access everything
-                item.permissions.some(perm => userPermissions.includes(perm));
+              const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
+              const typeCategory = (accountType === 'Customer' || accountType === 'NSO') ? 'Customer' : 
+                                   (accountType === 'Hybrid') ? 'Hybrid' : 'Partner';
+
+              const hasPermission = !item.visibleFor || item.visibleFor.includes(typeCategory);
 
               if (!hasPermission) {
                 return null; // Don't render this item if user doesn't have permission
@@ -238,9 +240,9 @@ export default function Sidebar({ children }: SidebarProps) {
             <div className="flex items-center justify-between min-w-0">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
-                  {user.name.charAt(0).toUpperCase()}
+                  {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                 </div>
-                {!isCollapsed && <div className="text-sm">{user.name}</div>}
+                {!isCollapsed && <div className="text-sm">{user.name || 'User'}</div>}
               </div>
               {!isCollapsed && (
                 <button
@@ -280,10 +282,11 @@ export default function Sidebar({ children }: SidebarProps) {
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
             {navigation.map((item) => {
-              // If user is super admin, show all items; otherwise check individual permissions
-              const hasPermission = item.permissions.length === 0 ||
-                isSuperAdmin || // Super admins can access everything
-                item.permissions.some(perm => userPermissions.includes(perm));
+              const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
+              const typeCategory = (accountType === 'Customer' || accountType === 'NSO') ? 'Customer' : 
+                                   (accountType === 'Hybrid') ? 'Hybrid' : 'Partner';
+
+              const hasPermission = !item.visibleFor || item.visibleFor.includes(typeCategory);
 
               if (!hasPermission) {
                 return null; // Don't render this item if user doesn't have permission

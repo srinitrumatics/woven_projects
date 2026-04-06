@@ -2,7 +2,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { db } from '../db';
-import { users, userRoles, roles, rolePermissions, permissions, userOrganizations, organizations } from '../db/schema';
+import { users, userRoles, roles, rolePermissions, permissions, userOrganizations, organizations, userSalesforceProfiles } from '../db/schema';
 import { eq, and, inArray } from 'drizzle-orm';
 
 // Interface for current user with permissions
@@ -12,6 +12,8 @@ export interface CurrentUser {
   email: string;
   role: string;
   permissions: string[];
+  accountId?: string;
+  Id?: string; // Contact Id
   roles: {
     id: string; // UUID as string
     name: string;
@@ -36,7 +38,7 @@ export async function getCurrentUser(organizationId?: string): Promise<CurrentUs
   try {
     const decryptedSession = await decrypt(sessionCookie);
 
-    if (!decryptedSession?.userId) {
+    if (!decryptedSession?.userId && !decryptedSession?.email) {
       return null;
     }
 
@@ -55,7 +57,44 @@ export async function getCurrentUser(organizationId?: string): Promise<CurrentUs
       .from(users)
       .where(eq(users.id, userId));
 
+    // Get Salesforce profile if it exists (for contactId mapping)
+    const [sfProfile] = await db
+      .select({ contactId: userSalesforceProfiles.contactId })
+      .from(userSalesforceProfiles)
+      .where(eq(userSalesforceProfiles.userId, userId));
+
+    const contactId = sfProfile?.contactId || decryptedSession.Id || decryptedSession.contact?.Id;
+    const accountId = decryptedSession.accountId || decryptedSession.accounts?.[0]?.Id || decryptedSession.accounts?.[0]?.id || orgId;
+
     if (!user) {
+      // If user not in DB, but has SF session, return fallback CurrentUser from SF data
+      if (decryptedSession.email) {
+        return {
+          id: decryptedSession.contact?.Id || decryptedSession.userId || 'sf-user',
+          name: decryptedSession.contact?.Name || decryptedSession.email,
+          email: decryptedSession.email,
+          role: 'USER',
+          accountId: decryptedSession.accountId || decryptedSession.accounts?.[0]?.Id || decryptedSession.accounts?.[0]?.id,
+          Id: decryptedSession.Id || decryptedSession.contact?.Id,
+          permissions: [
+            'product-list', 'product-read', 
+            'inventory-list', 'inventory-read',
+            'order-list', 'order-read', 'order-create', 'order-update',
+            'proposal-list', 'proposal-read',
+            'quote-list', 'quote-read',
+            'shipment-list', 'shipment-read',
+            'invoice-list', 'invoice-read',
+            'report-list', 'report-read',
+            'location-list', 'location-read', 'location-create', 'location-update'
+          ],
+          roles: [],
+          organizations: decryptedSession.accounts?.map((a: any) => ({
+            id: a.Id || a.id,
+            name: a.Name || 'Account',
+            description: null
+          })) || []
+        };
+      }
       return null;
     }
 
@@ -92,6 +131,8 @@ export async function getCurrentUser(organizationId?: string): Promise<CurrentUs
         email: user.email,
         role: 'USER', // Default role
         permissions: [],
+        accountId,
+        Id: contactId,
         roles: [],
         organizations: []
       };
@@ -140,6 +181,8 @@ export async function getCurrentUser(organizationId?: string): Promise<CurrentUs
       email: user.email,
       role: primaryRole,
       permissions: userPermissions,
+      accountId,
+      Id: contactId,
       roles: rolesData.map(role => ({
         id: role.id,
         name: role.name,
@@ -154,57 +197,27 @@ export async function getCurrentUser(organizationId?: string): Promise<CurrentUs
 }
 
 // Require authentication
-export async function requireAuth(allowedPermissions?: string[], organizationId?: string) {
-  // If no organization ID is provided, try to get it from the session cookie
-  
-    const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get('session')?.value;
- console.log('called  requireAuth:', sessionCookie);
-    if (sessionCookie) {
-      console.log('Session Cookie in requireAuth:', sessionCookie);
-      try {
-        const decryptedSession = await decrypt(sessionCookie);
-        if (decryptedSession?.organizationId) {
-          organizationId = decryptedSession.organizationId;
-        }
-      } catch (error) {
-        console.error('Error getting organization ID from session:', error);
-      }
-    }
-  const user = await getCurrentUser(organizationId);
-  if (!user) {
+export async function requireAuth() {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get('session')?.value;
+  console.log('called requireAuth, session cookie exists:', !!sessionCookie);
+
+  if (!sessionCookie) {
     redirect('/auth');
   }
 
-  // If specific permissions are required, check if user has any of them
-  if (allowedPermissions && allowedPermissions.length > 0) {
-    // Super admin check
-    const isSuperAdmin = user.role?.toLowerCase().includes('super') ||
-                         user.permissions.includes('ALL_ACCESS') ||
-                         user.permissions.some((perm: string) =>
-                           perm.toLowerCase().includes('super_admin') ||
-                           perm.toLowerCase().includes('superadmin')
-                         );
-
-    if (!isSuperAdmin) {
-      // Check if user has any of the required permissions
-      const hasRequiredPermission = allowedPermissions.some(perm =>
-        user.permissions.includes(perm)
-      );
-
-      if (!hasRequiredPermission) {
-        redirect('/unauthorized');
-      }
-    }
+  const user = await getSFSession(sessionCookie);
+  if (!user || !user.email) {
+    redirect('/auth');
   }
 
   return user;
 }
 
-// Create a new session for the user
-export async function createSession(userId: string, organizationId?: string) {
+// Create a new Salesforce session
+export async function createSFSession(payload: any) {
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-  const sessionData = { userId, organizationId, expires };
+  const sessionData = { ...payload, expires };
   const session = await encrypt(sessionData);
   const cookieStore = await cookies();
 
@@ -215,6 +228,16 @@ export async function createSession(userId: string, organizationId?: string) {
     path: '/',
   });
 }
+
+// Get the Salesforce session payload
+export async function getSFSession(sessionCookie: string) {
+  try {
+    return await decrypt(sessionCookie);
+  } catch (error) {
+    return null;
+  }
+}
+
 
 // Encrypt the session
 export async function encrypt(payload: any) {
@@ -313,12 +336,23 @@ export async function getUserById(userId: string, organizationId?: string): Prom
   // Get the primary role (first role, or highest priority role if defined)
   const primaryRole = rolesData[0]?.name || 'USER';
 
+  // Get Salesforce profile if it exists (for contactId mapping)
+  const [sfProfile] = await db
+    .select({ contactId: userSalesforceProfiles.contactId })
+    .from(userSalesforceProfiles)
+    .where(eq(userSalesforceProfiles.userId, userId));
+
+  const contactId = sfProfile?.contactId || '';
+  const accountId = organizationId || '';
+
   return {
     id: user.id,
     name: user.name,
     email: user.email,
     role: primaryRole,
     permissions: userPermissions,
+    accountId,
+    Id: contactId,
     roles: rolesData.map(role => ({
       id: role.id,
       name: role.name,

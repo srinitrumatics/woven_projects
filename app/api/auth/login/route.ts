@@ -1,73 +1,68 @@
 // app/api/auth/login/route.ts
-import { NextRequest } from 'next/server';
-import { authenticateUser } from '@/lib/auth-service';
-import { createSession, getUserById } from '@/lib/session';
+import { NextRequest, NextResponse } from 'next/server';
+import { salesforceLogin } from '@/lib/salesforce-auth';
+import { createSFSession } from '@/lib/session';
 
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
-    console.log(`[API] Login request received for email: ${email}`);
+    console.log(`[API] SF Login request received for email: ${email}`);
 
     if (!email || !password) {
-      return new Response(
-        JSON.stringify({ error: 'Email and password are required' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      return NextResponse.json(
+        { error: 'Email and password are required' },
+        { status: 400 }
       );
     }
 
-    const userWithPermissions = await authenticateUser(email, password);
+    // Authenticate via Salesforce
+    const sfResult = await salesforceLogin(email, password);
 
-    if (!userWithPermissions) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid email or password' }),
-        { status: 401, headers: { 'Content-Type': 'application/json' } }
+    if (!sfResult.success) {
+      return NextResponse.json(
+        { error: sfResult.message || 'Invalid email or password' },
+        { status: 401 }
       );
     }
 
-    // Get complete user data including organizations
-    const completeUser = await getUserById(userWithPermissions.id);
+    const sfDataArray = sfResult.data;
+    // Expected SF response shape: { data: [ { Account__c: [...], Contact__c: {...} } ] }
+    const firstData = Array.isArray(sfDataArray) && sfDataArray.length > 0 ? sfDataArray[0] : null;
 
-    if (!completeUser) {
-      return new Response(
-        JSON.stringify({ error: 'Error fetching user data' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
+    const contact = firstData?.Contact__c ?? null;
+    const accounts = firstData?.Account__c ?? [];
 
-    // Create session cookies with user's first organization by default
-    let defaultOrgId: string | undefined;
-    if (completeUser.organizations && completeUser.organizations.length > 0) {
-      defaultOrgId = completeUser.organizations[0].id;
-    }
+    console.log('[API] SF Login success - contact:', contact?.Id, 'accounts:', accounts.length);
 
-    await createSession(userWithPermissions.id, defaultOrgId);
+    // Store SF data in session cookie (no DB needed)
+    await createSFSession({ 
+      email, 
+      contact, 
+      accounts,
+      accountId: accounts?.[0]?.Id || accounts?.[0]?.id || '',
+      Id: contact?.Id || '',
+    });
 
-    // Create response with user data
-    const response = new Response(
-      JSON.stringify({
-        user: {
-          id: completeUser.id,
-          name: completeUser.name,
-          email: completeUser.email,
-          organizations: completeUser.organizations,
-          roles: completeUser.roles,
-        },
-        permissions: completeUser.permissions
-      }),
+    return NextResponse.json(
       {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      }
+        success: true,
+        user: {
+          id: contact?.Id || '',
+          name: contact?.Name || email,
+          email,
+          contact,
+          accounts,
+          accountId: accounts?.[0]?.Id || accounts?.[0]?.id || '',
+          Id: contact?.Id || '',
+        },
+      },
+      { status: 200 }
     );
-
-    return response;
-  } catch (error) {
-    console.error('Login error:', error);
-    return new Response(
-      JSON.stringify({ error: 'An error occurred during login' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+  } catch (error: any) {
+    console.error('[Login] Error:', error);
+    return NextResponse.json(
+      { error: error.message || 'An error occurred during login' },
+      { status: 500 }
     );
   }
 }

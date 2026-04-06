@@ -11,6 +11,7 @@ import { OrderStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type TabFilter = string;
 
@@ -44,8 +45,9 @@ export default function OrdersPage() {
     actions: 100
   });
 
-  const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
-  const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? ""; //TODO: Get this from session / auth context
+  const { user, selectedAccount } = useUserSession();
+  const accountId = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
+  const contactId = user?.Id || "";
 
 
   // Fetch from backend API (backend should handle Salesforce auth)
@@ -94,8 +96,10 @@ export default function OrdersPage() {
       }
     };
 
-    fetchOrders();
-  }, []);
+    if (accountId && contactId) {
+      fetchOrders();
+    }
+  }, [accountId, contactId]);
 
   // Map Salesforce records to UI-friendly order shape
   const uiOrders = useMemo(() => {

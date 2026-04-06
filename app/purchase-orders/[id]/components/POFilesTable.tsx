@@ -6,6 +6,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { formatFileSize, formatDate } from "@/lib/utils/formatting";
+import { useUserSession } from "@/components/UserSessionContext";
 
 interface POFile {
     id: string;
@@ -40,8 +41,9 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
 
     const { items: sortedData, requestSort, sortConfig } = useSortableData<POFile>(filteredData);
 
-    const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-    const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     const initialWidths = {
         fileName: 300,

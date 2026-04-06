@@ -14,6 +14,7 @@ import OrderLineNotes from "./components/OrderLineNotes";
 import ProductInfo from "./components/ProductInfo";
 import OrderDetailsTable from "./components/OrderDetailsTable";
 import LineNavigation from "./components/LineNavigation";
+import { useUserSession } from "@/components/UserSessionContext";
 
 // Interface for order line item from Salesforce
 interface OrderLineItem {
@@ -124,8 +125,9 @@ export default function OrderLineDetailPage({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Salesforce credentials
-  const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? ""; // override with real value
-  const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "" //TODO: Get this from session / auth context
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
 
   // Fetch order data from Salesforce

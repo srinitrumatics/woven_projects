@@ -9,6 +9,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatDate, formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { InventoryPosition, InventoryStatus } from "./types";
 import Link from "next/link";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type TabFilter = "All" | "On Hold" | "Put-Away" | "Average Aged";
 
@@ -21,12 +22,16 @@ export default function InventoryPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [inventoryData, setInventoryData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    
+    // Top-level session hook
+    const { user, selectedAccount } = useUserSession();
+    const accountId = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
+    const contactId = user?.Id || "";
 
     const fetchInventory = async () => {
+        if (!accountId) return; // Wait for accountId
         try {
             setLoading(true);
-            const accountId = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-            const contactId = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
 
             const response = await fetch(`/api/salesforce/inventory?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&isInventory=true`);
 
@@ -47,8 +52,10 @@ export default function InventoryPage() {
     };
 
     useEffect(() => {
-        fetchInventory();
-    }, []);
+        if (accountId && contactId) {
+           fetchInventory();
+        }
+    }, [accountId, contactId]);
 
     // Map raw data from API to InventoryPosition objects
     const mappedInventory = useMemo((): InventoryPosition[] => {
@@ -60,7 +67,9 @@ export default function InventoryPage() {
         else if (activeTab === "Put-Away") rawRecords = inventoryData["Put-Away"] || [];
         else if (activeTab === "Average Aged") rawRecords = inventoryData["Average Aged"] || [];
 
-        return rawRecords.map((item: any, idx: number) => ({
+        const recordsToMap = Array.isArray(rawRecords) ? rawRecords : [];
+
+        return recordsToMap.map((item: any, idx: number) => ({
             id: item.Product_Name__c || `inv-${idx}`,
             productId: item.Product_Name__c || "",
             name: item.Product_Name || "",

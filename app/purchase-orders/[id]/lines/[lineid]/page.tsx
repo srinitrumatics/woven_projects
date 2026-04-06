@@ -10,6 +10,7 @@ import POSupplierBillLinesTable from "./components/POSupplierBillLinesTable";
 import POSerialNumberLogLinesTab from "./components/poserialnumberloglinestab";
 import POReturnsTab from "./components/POReturnsTab";
 import FileTabsLines from "./components/FileTabsLines";
+import { useUserSession } from "@/components/UserSessionContext";
 
 export default function POLineDetailPage({
     params,
@@ -31,8 +32,9 @@ export default function POLineDetailPage({
     const [files, setFiles] = useState<any[]>([]);
     const [subTabLoading, setSubTabLoading] = useState(false);
 
-    const SF_ACCOUNT_ID = process.env.NEXT_PUBLIC_SALESFORCE_ACCOUNT_ID ?? "";
-    const SF_CONTACT_ID = process.env.NEXT_PUBLIC_SALESFORCE_CONTACT_ID ?? "";
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     useEffect(() => {
         async function fetchLines() {
