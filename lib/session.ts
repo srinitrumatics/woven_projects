@@ -208,7 +208,6 @@ export async function getCurrentUser(organizationId?: string): Promise<CurrentUs
 export async function requireAuth() {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('session')?.value;
-  console.log('called requireAuth, session cookie exists:', !!sessionCookie);
 
   if (!sessionCookie) {
     redirect('/auth');
@@ -401,8 +400,13 @@ export async function deleteSession() {
 export async function decrypt(session: string) {
   try {
     if (!session) return null;
-    const decoded = session.includes('%') ? decodeURIComponent(session) : session;
-    const parsed = JSON.parse(decoded);
+    let parsed;
+    try {
+      parsed = JSON.parse(session);
+    } catch (e) {
+      const decoded = session.includes('%') ? decodeURIComponent(session) : session;
+      parsed = JSON.parse(decoded);
+    }
     // Ensure backward compatibility with old session format
     if (parsed.hasOwnProperty('userId') && !parsed.hasOwnProperty('organizationId')) {
       // Old format: { userId, expires } - set organizationId to undefined
