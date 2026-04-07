@@ -42,18 +42,28 @@ export default function ForgotPasswordForm() {
     }
   };
 
-  const handleResetSubmit = async (e: React.FormEvent) => {
+    const handleResetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
+    // 1. Validation for Reset Code (exactly 6 digits)
+    if (!/^\d{6}$/.test(resetCode)) {
+      setError("Verification code must be exactly 6 digits.");
+      return;
+    }
+
+    // 2. Validation for Password Matching
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    // 3. Validation for Password Strength
+    // Minimum 8 characters, one uppercase, one number, one special character
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError("Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character.");
       return;
     }
 

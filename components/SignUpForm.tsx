@@ -14,9 +14,11 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
     surname: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
   const { login } = useUserSession();
 
@@ -26,8 +28,24 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
     if (!agreedToTerms) {
-      alert("Please agree to the Terms & Conditions");
+      setError("Please agree to the Terms & Conditions");
+      return;
+    }
+
+    // Validation for Password Matching
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    // Validation for Password Strength
+    // Minimum 8 characters, one uppercase, one number, one special character
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      setError("Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character.");
       return;
     }
 
@@ -38,7 +56,12 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          surname: formData.surname,
+          email: formData.email,
+          password: formData.password
+        }),
       });
 
       if (registerResponse.ok) {
@@ -67,17 +90,18 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
             router.push("/program360");
             router.refresh(); // Refresh to update any UI that depends on auth state
           } else {
-            alert("Session verification failed. Please try again.");
+            setError("Session verification failed. Please try again.");
           }
         } else {
-          alert("Registration successful, but login failed. Please try logging in manually.");
+          setError("Registration successful, but login failed. Please try logging in manually.");
         }
       } else {
-        alert("Registration failed. Please try again.");
+        const errorData = await registerResponse.json().catch(() => ({}));
+        setError(errorData.error || "Registration failed. Please try again.");
       }
     } catch (error) {
       console.error("Registration error:", error);
-      alert("An error occurred during registration. Please try again.");
+      setError("An error occurred during registration. Please try again.");
     }
   };
 
@@ -176,6 +200,11 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm border border-red-100 animate-in fade-in slide-in-from-top-1">
+                {error}
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <label htmlFor="signup-name" className="sr-only">
@@ -229,30 +258,49 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
               />
             </div>
 
-            <div>
-              <label htmlFor="signup-password" className="sr-only">
-                Password
-              </label>
-              <div className="relative">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label htmlFor="signup-password" title="Password" className="sr-only">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="signup-password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    required
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Password"
+                    className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.password ?? '')}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((s) => !s)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="signup-confirm-password" title="Confirm Password" className="sr-only">
+                  Confirm Password
+                </label>
                 <input
-                  id="signup-password"
-                  name="password"
+                  id="signup-confirm-password"
+                  name="confirmPassword"
                   type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   required
-                  value={formData.password}
+                  value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="Password"
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.password ?? '')}
+                  placeholder="Confirm Password"
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.confirmPassword ?? '')}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((s) => !s)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
               </div>
             </div>
 
