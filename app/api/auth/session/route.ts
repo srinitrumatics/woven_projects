@@ -1,6 +1,7 @@
 // app/api/auth/session/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getSFSession } from '@/lib/session';
+import { getCategoryFromAccountType, PERMISSIONS_BY_CATEGORY } from '@/lib/permissions';
 
 // Validates the session cookie and returns the Salesforce user data (contact + accounts)
 export async function GET(request: NextRequest) {
@@ -23,17 +24,25 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const accounts = sfSession.accounts || [];
+    const currentAccount = accounts.find((a: any) => a.Id === sfSession.accountId) || accounts[0];
+    const accountType = currentAccount?.Account_Record_Type__c || 'Customer';
+    const category = getCategoryFromAccountType(accountType);
+    const userPermissions = PERMISSIONS_BY_CATEGORY[category] || [];
+
     return NextResponse.json(
       {
         authenticated: true,
         user: {
-          id: sfSession.contact?.Id || '',
+          id: sfSession.contact?.Id || sfSession.userId || 'sf-user',
           name: sfSession.contact?.Name || sfSession.email,
           email: sfSession.email,
           contact: sfSession.contact ?? null,
           accounts: sfSession.accounts ?? [],
-          accountId: sfSession.accounts?.[0]?.Id || sfSession.accounts?.[0]?.id || '',
+          accountId: currentAccount?.Id || sfSession.accountId || '',
           Id: sfSession.contact?.Id || '',
+          role: category.toUpperCase(),
+          permissions: userPermissions,
         },
       },
       { status: 200 }
