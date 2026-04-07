@@ -116,8 +116,10 @@ export default function AuthorizeLocationsPage() {
     };
 
     useEffect(() => {
-        fetchLocations();
-    }, []);
+        if (accountId && contactId) {
+            fetchLocations();
+        }
+    }, [accountId, contactId]);
 
     // Calculate stats
     const stats = useMemo(() => {

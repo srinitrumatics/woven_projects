@@ -40,9 +40,21 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
     return allAccounts.find(a => (a.Id || a.id) === selectedAccountId) || allAccounts[0] || null;
   }, [user, selectedAccountId]);
 
-  const setSelectedAccountId = (id: string) => {
+  const setSelectedAccountId = async (id: string) => {
     setSelectedAccountStateId(id);
     localStorage.setItem('selectedAccount', id);
+
+    // Persist to server session
+    try {
+      await fetch('/api/auth/update-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accountId: id, contactId: user?.Id || user?.contact?.Id })
+      });
+      console.log('[UserSessionContext] Server session updated to account:', id);
+    } catch (error) {
+      console.error('[UserSessionContext] Failed to update server session:', error);
+    }
   };
 
   useEffect(() => {

@@ -1,18 +1,14 @@
-// app/api/auth/update-session/route.ts
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { decrypt, encrypt } from '@/lib/session';
-import { db } from '@/db';
-import { userOrganizations, organizations } from '@/db/schema';
-import { eq } from 'drizzle-orm';
 
 export async function POST(request: NextRequest) {
   try {
-    const { organizationId } = await request.json();
+    const { accountId, contactId } = await request.json();
 
-    if (!organizationId) {
+    if (!accountId) {
       return new Response(
-        JSON.stringify({ error: 'Organization ID is required' }),
+        JSON.stringify({ error: 'Account ID is required' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -28,66 +24,42 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if session cookie exists
-    if (!sessionCookie) {
-      return new Response(
-        JSON.stringify({ error: 'Session cookie not found' }),
-        { status: 401, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Decrypt the current session to get user ID
+    // Decrypt the current session
     const currentSession = await decrypt(sessionCookie);
-    if (!currentSession || !currentSession.userId) {
+    if (!currentSession || !currentSession.email) {
       return new Response(
-        JSON.stringify({ error: 'Invalid session or missing user ID' }),
+        JSON.stringify({ error: 'Invalid session' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Verify that the user has access to the requested organization
-    // We can't use getCurrentUser() here because it relies on organization from session
-    // Instead, get the user's organizations directly using the user ID from the session
-    const userOrgs = await db
-      .select({
-        id: organizations.id,
-      })
-      .from(userOrganizations)
-      .innerJoin(organizations, eq(userOrganizations.organizationId, organizations.id))
-      .where(eq(userOrganizations.userId, currentSession.userId));
-
-    const hasAccess = userOrgs.some(org => org.id === organizationId);
+    // Verify that the user has access to the requested account
+    const accounts = currentSession.accounts || [];
+    const hasAccess = accounts.some((acc: any) => (acc.Id || acc.id) === accountId);
 
     if (!hasAccess) {
       return new Response(
-        JSON.stringify({ error: 'User does not have access to the requested organization' }),
+        JSON.stringify({ error: 'User does not have access to the requested account' }),
         { status: 403, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Update the session with the new organization ID
+    // Update the session with the new account ID and potentially contact ID
     const updatedSession = {
       ...currentSession,
-      organizationId: organizationId
+      accountId: accountId,
+      Id: contactId || currentSession.Id || currentSession.userId
     };
 
     const encryptedSession = await encrypt(updatedSession);
 
     // Update the session cookie
-    // Convert the expires string back to a Date object if it's a string
     let expiresDate: Date;
     if (typeof currentSession.expires === 'string') {
       expiresDate = new Date(currentSession.expires);
     } else {
-      expiresDate = currentSession.expires;
+      expiresDate = currentSession.expires || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     }
-
-    // Debug: Check what we're about to store
-    console.log('Updating session with:', {
-      userId: updatedSession.userId,
-      organizationId: updatedSession.organizationId,
-      expires: expiresDate
-    });
 
     cookieStore.set('session', encryptedSession, {
       httpOnly: true,
@@ -96,14 +68,13 @@ export async function POST(request: NextRequest) {
       path: '/',
     });
 
-    // Debug: Check the cookie that was set
-    console.log('Session cookie updated successfully');
+    console.log('[UpdateSession] Session cookie updated successfully to account:', accountId);
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Session updated with new organization',
-        organizationId: organizationId
+        message: 'Session updated with new account',
+        accountId
       }),
       {
         status: 200,
