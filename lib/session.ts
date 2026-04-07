@@ -64,7 +64,8 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       organizations: accounts.map((a: any) => ({
         id: a.Id || a.id,
         name: a.Name || 'Account',
-        description: a.Account_Record_Type__c || null
+        description: a.Account_Record_Type__c || null,
+        isdirect: a.isdirect || false
       }))
     };
   } catch (error) {
@@ -110,7 +111,8 @@ export async function createSFSession(payload: any) {
     accounts: Array.isArray(payload.accounts) ? payload.accounts.map((a: any) => ({
       Id: a.Id || a.id,
       Name: a.Name || a.name,
-      Account_Record_Type__c: a.Account_Record_Type__c
+      Account_Record_Type__c: a.Account_Record_Type__c,
+      isdirect: a.isdirect || false
     })) : []
   };
 

@@ -22,7 +22,7 @@ export default function InventoryPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [inventoryData, setInventoryData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    
+
     // Top-level session hook
     const { user, selectedAccount } = useUserSession();
     const accountId = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
@@ -57,7 +57,7 @@ export default function InventoryPage() {
 
     useEffect(() => {
         if (accountId && contactId) {
-           fetchInventory();
+            fetchInventory();
         }
     }, [accountId, contactId]);
 
@@ -465,7 +465,7 @@ export default function InventoryPage() {
                                 ) : (
                                     paginatedInventory.map((item) => (
                                         <tr key={item.id} className="hover:bg-primary-light/20 dark:hover:bg-primary/5 transition-colors group">
-                                            <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" style={{ width: widths.productName, maxWidth: widths.productName }}>
+                                            <td className="px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky left-0 bg-white dark:bg-gray-800 text-left truncate" style={{ width: widths.productName, maxWidth: widths.productName }}>
                                                 <button onClick={() => router.push(`/inventory/${item.productId || item.id}`)} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
                                                     {item.productName}
                                                 </button>

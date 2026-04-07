@@ -32,14 +32,18 @@ export async function POST(request: NextRequest) {
     const contact = firstData?.Contact__c ?? null;
     const accounts = firstData?.Account__c ?? [];
 
-    console.log('[API] SF Login success - contact:', contact?.Id, 'accounts:', accounts.length);
+    // Identify the direct account if it exists
+    const directAccount = accounts.find((a: any) => a.isdirect === true || a.isdirect === 'true');
+    const defaultAccountId = directAccount?.Id || directAccount?.id || accounts?.[0]?.Id || accounts?.[0]?.id || '';
+
+    console.log('[API] SF Login success - contact:', contact?.Id, 'accounts:', accounts.length, 'defaultAccountId:', defaultAccountId);
 
     // Store SF data in session cookie (no DB needed)
     await createSFSession({ 
       email, 
       contact, 
       accounts,
-      accountId: accounts?.[0]?.Id || accounts?.[0]?.id || '',
+      accountId: defaultAccountId,
       Id: contact?.Id || '',
     });
 
@@ -52,7 +56,7 @@ export async function POST(request: NextRequest) {
           email,
           contact,
           accounts,
-          accountId: accounts?.[0]?.Id || accounts?.[0]?.id || '',
+          accountId: defaultAccountId,
           Id: contact?.Id || '',
         },
       },

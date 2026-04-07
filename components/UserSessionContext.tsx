@@ -60,8 +60,9 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
           if (storedAccountId) {
             setSelectedAccountStateId(storedAccountId);
           } else if (data.user.accounts && data.user.accounts.length > 0) {
-            const firstId = data.user.accounts[0].Id || data.user.accounts[0].id || '';
-            setSelectedAccountId(firstId);
+            const directAccount = data.user.accounts.find((a: any) => a.isdirect === true || a.isdirect === 'true');
+            const defaultId = directAccount?.Id || directAccount?.id || data.user.accounts[0].Id || data.user.accounts[0].id || '';
+            setSelectedAccountId(defaultId);
           }
         } else {
           localStorage.removeItem('user');
@@ -95,10 +96,11 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
 
-    // Store the first account as the selected one if available
+    // Store the direct account as the selected one if available, otherwise the first one
     if (userData.accounts && userData.accounts.length > 0) {
-      const firstId = userData.accounts[0].Id || userData.accounts[0].id || '';
-      setSelectedAccountId(firstId);
+      const directAccount = userData.accounts.find((a: any) => a.isdirect === true || a.isdirect === 'true');
+      const defaultId = directAccount?.Id || directAccount?.id || userData.accounts[0].Id || userData.accounts[0].id || '';
+      setSelectedAccountId(defaultId);
     }
   };
 
