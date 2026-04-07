@@ -15,7 +15,11 @@ const ITEMS_PER_PAGE = 10;
 
 export default function InventoryDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id: productId } = use(params);
+    const { user, selectedAccount } = useUserSession();
     const router = useRouter();
+    const accountId = selectedAccount?.Id || selectedAccount?.id || "";
+    const contactId = user?.Id || user?.contact?.Id || "";
+
     const [positions, setPositions] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -23,13 +27,15 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
 
     useEffect(() => {
         const fetchInventory = async () => {
+            if (!accountId || !productId) return;
             try {
                 setLoading(true);
-  const { user, selectedAccount } = useUserSession();
-  const accountId = selectedAccount?.Id || selectedAccount?.id || "";
-  const contactId = user?.contact?.Id || user?.contact?.id || "";
 
-                const response = await fetch(`/api/salesforce/inventory?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&productId=${encodeURIComponent(productId)}`);
+                // Determine isSupplier based on account record type
+                const accountType = selectedAccount?.Account_Record_Type__c || '';
+                const isSupplier = accountType === 'Manufacturer' ? 'true' : 'false';
+
+                const response = await fetch(`/api/salesforce/inventory?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&productId=${encodeURIComponent(productId)}&isInventory=true&isSupplier=${isSupplier}`);
 
                 if (response.ok) {
                     const responseData = await response.json();

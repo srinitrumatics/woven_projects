@@ -33,7 +33,11 @@ export default function InventoryPage() {
         try {
             setLoading(true);
 
-            const response = await fetch(`/api/salesforce/inventory?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&isInventory=true`);
+            // Determine isSupplier based on account record type
+            const accountType = selectedAccount?.Account_Record_Type__c || '';
+            const isSupplier = accountType === 'Manufacturer' ? 'true' : 'false';
+
+            const response = await fetch(`/api/salesforce/inventory?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&isInventory=true&isSupplier=${isSupplier}`);
 
             if (response.ok) {
                 const responseData = await response.json();
