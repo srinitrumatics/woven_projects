@@ -1217,3 +1217,38 @@ export async function getFileUrl(
     return null;
   }
 }
+
+// Fetch single product details from Salesforce
+export async function getProductDetailsFromSalesforce(accountId: string, contactId: string, productId: string, tabName: string = "product"): Promise<any> {
+  try {
+    const session = await getSalesforceSession();
+    if (!session.accessToken) {
+      console.error('No Salesforce access token available');
+      return null;
+    }
+
+    const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/product/details`;
+    const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&productId=${encodeURIComponent(productId)}&tabName=${encodeURIComponent(tabName)}`;
+
+    console.log('Fetching product details from Salesforce with URL:', url);
+
+    const response = await fetchWithLogging(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+    }
+
+    const resultdata = await response.json();
+    return resultdata;
+  } catch (error) {
+    console.error('Error fetching product details from Salesforce:', error);
+    return null;
+  }
+}
+
