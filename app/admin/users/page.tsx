@@ -44,8 +44,8 @@ const UserManagement: React.FC = () => {
 
   const { user, selectedAccount } = useUserSession();
   const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
-  const typeCategory = (accountType === 'Customer' || accountType === 'NSO') ? 'Customer' : 
-                       (accountType === 'Hybrid') ? 'Hybrid' : 'Partner';
+  const typeCategory = (accountType === 'Customer' || accountType === 'NSO') ? 'Customer' :
+    (accountType === 'Hybrid') ? 'Hybrid' : 'Partner';
   const isCustomer = typeCategory === 'Customer';
 
   useEffect(() => {
@@ -294,29 +294,105 @@ const UserManagement: React.FC = () => {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-teal-50/20 to-cyan-50/20 p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
-            <div className="flex items-center justify-between min-w-0">
-              <div className="flex items-center gap-4 min-w-0">
-                <div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <Users className="w-7 h-7 text-white" />
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
+              <div className="flex items-center justify-between min-w-0">
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <Users className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent truncate">
+                      User Management
+                    </h1>
+                    <p className="text-gray-500 text-sm mt-1 truncate" title="View contacts assigned to your company account">
+                      View contacts assigned to your company account
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent truncate">
-                    Company Contacts
-                  </h1>
-                  <p className="text-gray-500 text-sm mt-1 truncate" title="View contacts assigned to your company account">
-                    View contacts assigned to your company account
-                  </p>
-                </div>
+                {!showForm && false && (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      setFormData({ name: '', email: '', password: '' });
+                      setOrganizationAssignments([]);
+                      setSelectedUserRoles({});
+                      setEditingUser(null);
+                      setShowForm(true);
+                    }}
+                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Add New User
+                  </motion.button>
+                )}
               </div>
-              {!showForm && false && (
+            </div>
+          </motion.div>
+
+          {/* Form */}
+          {showForm ? (
+            <UserForm
+              editingUser={editingUser}
+              formData={formData}
+              organizationAssignments={organizationAssignments}
+              selectedUserRoles={selectedUserRoles}
+              roles={roles}
+              organizations={organizations}
+              handleInputChange={handleInputChange}
+              handleOrganizationChange={handleOrganizationChange}
+              handleSubmit={handleSubmit}
+              setShowForm={setShowForm}
+              setFormData={setFormData}
+              setOrganizationAssignments={setOrganizationAssignments}
+              setSelectedUserRoles={setSelectedUserRoles}
+              setEditingUser={setEditingUser}
+            />
+          ) : null}
+
+          {/* User List */}
+          {!showForm && users.length > 0 && (
+            <UserList
+              users={users}
+              roles={roles}
+              organizations={organizations}
+              loading={loading}
+              error={error}
+              allUserOrganizations={allUserOrganizations}
+              allUserRoles={allUserRoles}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+              isCustomer={true}
+            />
+          )}
+
+          {/* Empty State */}
+          {users.length === 0 && !showForm && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-gradient-to-br from-white to-gray-50 rounded-2xl border-2 border-dashed border-gray-300 p-16 text-center"
+            >
+              <div className="max-w-md mx-auto">
+                <div className="relative inline-block mb-6">
+                  <div className="w-24 h-24 bg-gradient-to-br from-teal-500/20 to-cyan-600/20 rounded-2xl flex items-center justify-center">
+                    <Users className="w-12 h-12 text-teal-600" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-teal-400 to-cyan-600 rounded-full flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 truncate">No Users Yet</h3>
+                <p className="text-gray-500 mb-8 truncate" title="Get started by creating your first user account to manage access and permissions.">
+                  Get started by creating your first user account to manage access and permissions.
+                </p>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -327,92 +403,16 @@ const UserManagement: React.FC = () => {
                     setEditingUser(null);
                     setShowForm(true);
                   }}
-                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-semibold text-lg"
                 >
-                  <Plus className="w-5 h-5" />
-                  Add New User
+                  <Plus className="w-6 h-6" />
+                  Create Your First User
                 </motion.button>
-              )}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Form */}
-        {showForm ? (
-          <UserForm
-            editingUser={editingUser}
-            formData={formData}
-            organizationAssignments={organizationAssignments}
-            selectedUserRoles={selectedUserRoles}
-            roles={roles}
-            organizations={organizations}
-            handleInputChange={handleInputChange}
-            handleOrganizationChange={handleOrganizationChange}
-            handleSubmit={handleSubmit}
-            setShowForm={setShowForm}
-            setFormData={setFormData}
-            setOrganizationAssignments={setOrganizationAssignments}
-            setSelectedUserRoles={setSelectedUserRoles}
-            setEditingUser={setEditingUser}
-          />
-        ) : null}
-
-        {/* User List */}
-        {!showForm && users.length > 0 && (
-          <UserList
-            users={users}
-            roles={roles}
-            organizations={organizations}
-            loading={loading}
-            error={error}
-            allUserOrganizations={allUserOrganizations}
-            allUserRoles={allUserRoles}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-            isCustomer={true}
-          />
-        )}
-
-        {/* Empty State */}
-        {users.length === 0 && !showForm && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-white to-gray-50 rounded-2xl border-2 border-dashed border-gray-300 p-16 text-center"
-          >
-            <div className="max-w-md mx-auto">
-              <div className="relative inline-block mb-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-teal-500/20 to-cyan-600/20 rounded-2xl flex items-center justify-center">
-                  <Users className="w-12 h-12 text-teal-600" />
-                </div>
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-teal-400 to-cyan-600 rounded-full flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-white" />
-                </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2 truncate">No Users Yet</h3>
-              <p className="text-gray-500 mb-8 truncate" title="Get started by creating your first user account to manage access and permissions.">
-                Get started by creating your first user account to manage access and permissions.
-              </p>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  setFormData({ name: '', email: '', password: '' });
-                  setOrganizationAssignments([]);
-                  setSelectedUserRoles({});
-                  setEditingUser(null);
-                  setShowForm(true);
-                }}
-                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-semibold text-lg"
-              >
-                <Plus className="w-6 h-6" />
-                Create Your First User
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
+        </div>
       </div>
-    </div>
     </ProtectedRoute>
   );
 };
