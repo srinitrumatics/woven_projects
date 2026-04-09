@@ -58,96 +58,47 @@ const UserManagement: React.FC = () => {
     try {
       setLoading(true);
 
-      if (isCustomer) {
-        const url = `/api/salesforce/orders?action=contacts&accountId=${encodeURIComponent(selectedAccount?.Id || '')}&contactId=${encodeURIComponent(user?.Id || '')}`;
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Failed to fetch Salesforce contacts');
-        }
-        const data = await response.json();
-        const sfData = Array.isArray(data) ? data : (data.data || []);
-        
-        const sfUsers = sfData.map((contact: any) => ({
-          id: contact.Id,
-          name: contact.Name || 'Unknown',
-          email: contact.Email || '',
-          phone: contact.Phone || '',
-        }));
+      const accountId = selectedAccount?.Id || selectedAccount?.id;
+      const contactId = user?.Id || user?.contact?.Id;
 
-        setUsers(sfUsers);
-        setRoles([]);
-        setOrganizations([]);
-        setAllUserRoles({});
-        setAllUserOrganizations({});
-        setSelectedUserRoles({});
-        setSelectedUserOrganizations({});
+      if (!accountId || !contactId) {
+        setUsers([]);
         setLoading(false);
         return;
       }
-      const [usersData, rolesData, organizationsData] = await Promise.all([
-        userApi.getUsers(),
-        roleApi.getRoles(),
-        organizationApi.getOrganizations(),
-      ]);
 
-      setUsers(usersData);
-      setRoles(rolesData);
-      setOrganizations(organizationsData);
+      const url = `/api/salesforce/orders?action=contacts&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Failed to fetch Salesforce contacts');
+      }
+      const data = await response.json();
+      const sfData = Array.isArray(data) ? data : (data.data || []);
 
-      const userOrgRolesMap: { [key: string]: UserRole[] } = {};
-      const userOrganizationsMap: { [key: string]: UserOrganization[] } = {};
-
-      for (const user of usersData) {
-        try {
-          const userOrgs = await userApi.getUserOrganizations(user.id);
-          userOrganizationsMap[user.id] = userOrgs.map(ug => {
-            const org = organizationsData.find(o => o.id === ug.organizationId);
-            return {
-              organizationId: ug.organizationId,
-              organizationName: org?.name || 'Unknown Organization',
-              organizationDescription: org?.description || null
-            };
+      const uniqueUsersMap = new Map();
+      sfData.forEach((contact: any) => {
+        if (contact.Id && !uniqueUsersMap.has(contact.Id)) {
+          uniqueUsersMap.set(contact.Id, {
+            id: contact.Id,
+            name: contact.Name || 'Unknown',
+            email: contact.Email || '',
+            phone: contact.Phone || '',
           });
-
-          for (const userOrg of userOrgs) {
-            const userOrgKey = `${user.id}-${userOrg.organizationId}`;
-            const rolesForOrg = await userApi.getUserRoles(user.id, userOrg.organizationId);
-            userOrgRolesMap[userOrgKey] = rolesForOrg.map(ur => {
-              const role = rolesData.find(r => r.id === ur.roleId);
-              return {
-                roleId: ur.roleId,
-                roleName: role?.name || 'Unknown Role',
-                roleDescription: role?.description || null
-              };
-            });
-          }
-        } catch (err) {
-          console.error(`Error loading roles/organizations for user ${user.id}:`, err);
-          userOrgRolesMap[user.id] = [];
-          userOrganizationsMap[user.id] = [];
         }
-      }
+      });
 
-      setAllUserRoles(userOrgRolesMap);
-      setAllUserOrganizations(userOrganizationsMap);
+      const sfUsers = Array.from(uniqueUsersMap.values());
 
-      const selectedRolesMap: { [key: string]: string[] } = {};
-      const selectedOrgsMap: { [key: string]: string[] } = {};
-
-      for (const user of usersData) {
-        for (const userOrg of userOrganizationsMap[user.id] || []) {
-          const userOrgKey = `${user.id}-${userOrg.organizationId}`;
-          selectedRolesMap[userOrgKey] = userOrgRolesMap[userOrgKey]?.map(ur => ur.roleId) || [];
-        }
-
-        selectedOrgsMap[user.id] = userOrganizationsMap[user.id].map(ug => ug.organizationId);
-      }
-
-      setSelectedUserRoles(selectedRolesMap);
-      setSelectedUserOrganizations(selectedOrgsMap);
+      setUsers(sfUsers);
+      setRoles([]);
+      setOrganizations([]);
+      setAllUserRoles({});
+      setAllUserOrganizations({});
+      setSelectedUserRoles({});
+      setSelectedUserOrganizations({});
 
     } catch (err) {
-      setError('Failed to load users, roles, and organizations');
+      setError('Failed to load users from Salesforce');
       console.error(err);
     } finally {
       setLoading(false);
@@ -358,14 +309,14 @@ const UserManagement: React.FC = () => {
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent truncate">
-                    {isCustomer ? 'Company Contacts' : 'User Management'}
+                    Company Contacts
                   </h1>
-                  <p className="text-gray-500 text-sm mt-1 truncate" title="Manage users, roles, and organization assignments">
-                    {isCustomer ? 'View contacts assigned to your company account' : 'Manage users, roles, and organization assignments'}
+                  <p className="text-gray-500 text-sm mt-1 truncate" title="View contacts assigned to your company account">
+                    View contacts assigned to your company account
                   </p>
                 </div>
               </div>
-              {!showForm && !isCustomer && (
+              {!showForm && false && (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -418,7 +369,7 @@ const UserManagement: React.FC = () => {
             allUserRoles={allUserRoles}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
-            isCustomer={isCustomer}
+            isCustomer={true}
           />
         )}
 

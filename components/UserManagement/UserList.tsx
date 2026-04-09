@@ -125,23 +125,33 @@ const UserList: React.FC<UserListProps> = ({
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                User
-              </th>
-              {!isCustomer && (
+              {isCustomer ? (
                 <>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Phone
+                  </th>
+                </>
+              ) : (
+                <>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    User
+                  </th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
                     Organizations
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
                     Roles
                   </th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </>
-              )}
-              {!isCustomer && (
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                  Actions
-                </th>
               )}
             </tr>
           </thead>
@@ -165,33 +175,57 @@ const UserList: React.FC<UserListProps> = ({
                   transition={{ delay: index * 0.02 }}
                   className="hover:bg-teal-50/50 transition-colors duration-150"
                 >
-                  {/* User Info */}
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center flex-shrink-0">
-                        <Users className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-sm font-semibold text-gray-900 truncate">
-                          {user.name}
+                  {isCustomer ? (
+                    <>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center flex-shrink-0">
+                            <Users className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="text-sm font-semibold text-gray-900 truncate">
+                            {user.name}
+                          </div>
                         </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-1 text-sm text-gray-500 truncate min-w-0">
-                          <Mail className="w-3 h-3 flex-shrink-0" />
+                          <Mail className="w-4 h-4 flex-shrink-0 text-gray-400" />
                           <span className="truncate">{user.email}</span>
                         </div>
-                        {(user as any).phone && (
-                          <div className="flex items-center gap-1 text-sm text-gray-400 truncate min-w-0">
-                            <Phone className="w-3 h-3 flex-shrink-0" />
-                            <span className="truncate">{(user as any).phone}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </td>
-
-                  {/* Organizations and Roles */}
-                  {!isCustomer && (
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-1 text-sm text-gray-500 truncate min-w-0">
+                          <Phone className="w-4 h-4 flex-shrink-0 text-gray-400" />
+                          <span className="truncate">{(user as any).phone || 'N/A'}</span>
+                        </div>
+                      </td>
+                    </>
+                  ) : (
                     <>
+                      {/* User Info */}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center flex-shrink-0">
+                            <Users className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="text-sm font-semibold text-gray-900 truncate">
+                              {user.name}
+                            </div>
+                            <div className="flex items-center gap-1 text-sm text-gray-500 truncate min-w-0">
+                              <Mail className="w-3 h-3 flex-shrink-0" />
+                              <span className="truncate">{user.email}</span>
+                            </div>
+                            {(user as any).phone && (
+                              <div className="flex items-center gap-1 text-sm text-gray-400 truncate min-w-0">
+                                <Phone className="w-3 h-3 flex-shrink-0" />
+                                <span className="truncate">{(user as any).phone}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2 min-w-0">
                           {orgCount > 0 ? (
@@ -227,29 +261,26 @@ const UserList: React.FC<UserListProps> = ({
                           )}
                         </div>
                       </td>
-                    </>
-                  )}
 
-                  {/* Actions */}
-                  {!isCustomer && (
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <div className="flex items-center justify-end gap-2 min-w-0">
-                        <button
-                          onClick={() => handleEdit(user)}
-                          className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
-                          title="Edit User"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(user.id)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Delete User"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="flex items-center justify-end gap-2 min-w-0">
+                          <button
+                            onClick={() => handleEdit(user)}
+                            className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
+                            title="Edit User"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(user.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Delete User"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </>
                   )}
                 </motion.tr>
               );
