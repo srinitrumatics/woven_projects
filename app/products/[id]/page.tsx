@@ -145,7 +145,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
           <span className="hover:text-primary cursor-pointer">Home</span>
           <span>&gt;</span>
-          <span className="hover:text-primary cursor-pointer">Products</span>
+          <span className="hover:text-primary cursor-pointer"><button onClick={() => window.history.back()} className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Products</button></span>
           <span>&gt;</span>
           <span className="text-gray-900 dark:text-white font-medium">{product.name}</span>
         </nav>
