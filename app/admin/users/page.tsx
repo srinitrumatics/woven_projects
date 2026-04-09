@@ -8,6 +8,7 @@ import { Plus, Users, Sparkles } from 'lucide-react';
 import UserList from '../../../components/UserManagement/UserList';
 import UserForm from '../../../components/UserManagement/UserForm';
 import ProtectedRoute from '../../../components/ProtectedRoute';
+import { useUserSession } from '../../../components/UserSessionContext';
 
 interface UserRole {
   roleId: string;
@@ -41,13 +42,48 @@ const UserManagement: React.FC = () => {
   });
   const [organizationAssignments, setOrganizationAssignments] = useState<string[]>([]);
 
+  const { user, selectedAccount } = useUserSession();
+  const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
+  const typeCategory = (accountType === 'Customer' || accountType === 'NSO') ? 'Customer' : 
+                       (accountType === 'Hybrid') ? 'Hybrid' : 'Partner';
+  const isCustomer = typeCategory === 'Customer';
+
   useEffect(() => {
-    loadUsersRolesAndOrganizations();
-  }, []);
+    if (selectedAccount !== undefined) {
+      loadUsersRolesAndOrganizations();
+    }
+  }, [selectedAccount, isCustomer]);
 
   const loadUsersRolesAndOrganizations = async () => {
     try {
       setLoading(true);
+
+      if (isCustomer) {
+        const url = `/api/salesforce/orders?action=contacts&accountId=${encodeURIComponent(selectedAccount?.Id || '')}&contactId=${encodeURIComponent(user?.Id || '')}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Failed to fetch Salesforce contacts');
+        }
+        const data = await response.json();
+        const sfData = Array.isArray(data) ? data : (data.data || []);
+        
+        const sfUsers = sfData.map((contact: any) => ({
+          id: contact.Id,
+          name: contact.Name || 'Unknown',
+          email: contact.Email || '',
+          phone: contact.Phone || '',
+        }));
+
+        setUsers(sfUsers);
+        setRoles([]);
+        setOrganizations([]);
+        setAllUserRoles({});
+        setAllUserOrganizations({});
+        setSelectedUserRoles({});
+        setSelectedUserOrganizations({});
+        setLoading(false);
+        return;
+      }
       const [usersData, rolesData, organizationsData] = await Promise.all([
         userApi.getUsers(),
         roleApi.getRoles(),
@@ -305,7 +341,7 @@ const UserManagement: React.FC = () => {
   }
 
   return (
-    <ProtectedRoute requiredPermissions={['list_user']}>
+    <ProtectedRoute>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-teal-50/20 to-cyan-50/20 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -322,14 +358,14 @@ const UserManagement: React.FC = () => {
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent truncate">
-                    User Management
+                    {isCustomer ? 'Company Contacts' : 'User Management'}
                   </h1>
                   <p className="text-gray-500 text-sm mt-1 truncate" title="Manage users, roles, and organization assignments">
-                    Manage users, roles, and organization assignments
+                    {isCustomer ? 'View contacts assigned to your company account' : 'Manage users, roles, and organization assignments'}
                   </p>
                 </div>
               </div>
-              {!showForm && (
+              {!showForm && !isCustomer && (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -382,6 +418,7 @@ const UserManagement: React.FC = () => {
             allUserRoles={allUserRoles}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
+            isCustomer={isCustomer}
           />
         )}
 

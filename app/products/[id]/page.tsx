@@ -168,12 +168,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <ProductTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            tabs={["Overview", "Specifications & DIMs", "Datasheets", "Authorized Suppliers", "Compliance & Certs"]}
+            tabs={["Overview", "Specifications & Dims", "Datasheets", "Authorized Suppliers", "Compliance & Certs"]}
           />
 
           <div className="p-8">
             {activeTab === "Overview" && <ProductOverviewTab product={product} />}
-            {activeTab === "Specifications & DIMs" && <SpecificationsTab specifications={product.specifications} />}
+            {activeTab === "Specifications & Dims" && <SpecificationsTab specifications={product.specifications} />}
             {activeTab === "Datasheets" && <DatasheetsTab datasheets={datasheets} isLoading={datasheetsLoading} />}
             {activeTab === "Authorized Suppliers" && <AuthorizedSuppliersTab suppliers={product.suppliers} />}
             {activeTab === "Compliance & Certs" && <ComplianceCertsTab certifications={certifications} isLoading={certificationsLoading} />}

@@ -79,11 +79,12 @@ function Content() {
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 truncate">Category</h3>
             <RefinementList
               attribute="category"
-              limit={50}
+              limit={5}
               showMore={true}
               showMoreLimit={200}
               classNames={{
                 root: "",
+                noRefinementRoot: "hidden",
                 list: "space-y-2",
                 item: "flex items-center",
                 selectedItem: "font-medium",
@@ -91,7 +92,8 @@ function Content() {
                 checkbox: "w-4 h-4 text-primary border-gray-300 dark:border-gray-600 rounded focus:ring-primary dark:focus:ring-primary cursor-pointer",
                 labelText: "ml-2 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white flex-1",
                 count: "ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full",
-                showMore: "mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer"
+                showMore: "mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer w-full text-left",
+                disabledShowMore: "hidden"
               }}
               translations={{
                 showMoreButtonText({ isShowingMore }) {
@@ -106,11 +108,12 @@ function Content() {
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 truncate">Type</h3>
             <RefinementList
               attribute="genre"
-              limit={50}
+              limit={5}
               showMore={true}
               showMoreLimit={200}
               classNames={{
                 root: "",
+                noRefinementRoot: "hidden",
                 list: "space-y-2",
                 item: "flex items-center",
                 selectedItem: "font-medium",
@@ -118,7 +121,13 @@ function Content() {
                 checkbox: "w-4 h-4 text-primary border-gray-300 dark:border-gray-600 rounded focus:ring-primary dark:focus:ring-primary cursor-pointer",
                 labelText: "ml-2 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white flex-1",
                 count: "ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full",
-                showMore: "mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer"
+                showMore: "mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer w-full text-left",
+                disabledShowMore: "hidden"
+              }}
+              translations={{
+                showMoreButtonText({ isShowingMore }) {
+                  return isShowingMore ? 'Show less' : 'Show more';
+                }
               }}
             />
           </div>
@@ -245,7 +254,7 @@ export default function ProductClientPage() {
       <Configure
         hitsPerPage={9}
         facets={['category', 'genre']}
-        maxValuesPerFacet={50}
+        maxValuesPerFacet={200}
       />
       <Content />
     </InstantSearch>

@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { User, Role, Organization } from '../../db/schema';
 import { userApi, roleApi, organizationApi } from '@/lib/api/rbac-api';
-import { Edit, Trash2, Users, Mail, Building2, Shield, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Edit, Trash2, Users, Mail, Building2, Shield, Search, ChevronLeft, ChevronRight, Phone } from 'lucide-react';
 
 interface UserOrganization {
   organizationId: string;
@@ -28,6 +28,7 @@ interface UserListProps {
   allUserRoles: { [key: string]: UserRole[] };
   handleEdit: (user: Omit<User, 'password'>) => void;
   handleDelete: (id: string) => void;
+  isCustomer?: boolean;
 }
 
 const ITEMS_PER_PAGE = 20;
@@ -41,7 +42,8 @@ const UserList: React.FC<UserListProps> = ({
   allUserOrganizations,
   allUserRoles,
   handleEdit,
-  handleDelete
+  handleDelete,
+  isCustomer
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -106,7 +108,7 @@ const UserList: React.FC<UserListProps> = ({
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search by name, email, or organization..."
+              placeholder={isCustomer ? "Search by name or email..." : "Search by name, email, or organization..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
@@ -126,15 +128,21 @@ const UserList: React.FC<UserListProps> = ({
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
                 User
               </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                Organizations
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                Roles
-              </th>
-              <th className="px-6 py-4 text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                Actions
-              </th>
+              {!isCustomer && (
+                <>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Organizations
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Roles
+                  </th>
+                </>
+              )}
+              {!isCustomer && (
+                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-100">
@@ -171,67 +179,78 @@ const UserList: React.FC<UserListProps> = ({
                           <Mail className="w-3 h-3 flex-shrink-0" />
                           <span className="truncate">{user.email}</span>
                         </div>
+                        {(user as any).phone && (
+                          <div className="flex items-center gap-1 text-sm text-gray-400 truncate min-w-0">
+                            <Phone className="w-3 h-3 flex-shrink-0" />
+                            <span className="truncate">{(user as any).phone}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </td>
 
-                  {/* Organizations */}
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 min-w-0">
-                      {orgCount > 0 ? (
-                        <>
-                          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-100 border border-blue-200 min-w-0">
-                            <Building2 className="w-3.5 h-3.5 text-blue-700" />
-                            <span className="text-sm font-medium text-blue-700">
-                              {orgCount}
-                            </span>
-                          </div>
-                          <div className="text-sm text-gray-600 truncate max-w-[200px]">
-                            {userOrganizations[0].organizationName}
-                            {orgCount > 1 && ` +${orgCount - 1}`}
-                          </div>
-                        </>
-                      ) : (
-                        <span className="text-sm text-gray-400 italic">No organizations</span>
-                      )}
-                    </div>
-                  </td>
-
-                  {/* Roles */}
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 min-w-0">
-                      {totalRoles > 0 ? (
-                        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-100 border border-purple-200 min-w-0">
-                          <Shield className="w-3.5 h-3.5 text-purple-700" />
-                          <span className="text-sm font-medium text-purple-700">
-                            {totalRoles} {totalRoles === 1 ? 'role' : 'roles'}
-                          </span>
+                  {/* Organizations and Roles */}
+                  {!isCustomer && (
+                    <>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 min-w-0">
+                          {orgCount > 0 ? (
+                            <>
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-100 border border-blue-200 min-w-0">
+                                <Building2 className="w-3.5 h-3.5 text-blue-700" />
+                                <span className="text-sm font-medium text-blue-700">
+                                  {orgCount}
+                                </span>
+                              </div>
+                              <div className="text-sm text-gray-600 truncate max-w-[200px]">
+                                {userOrganizations[0].organizationName}
+                                {orgCount > 1 && ` +${orgCount - 1}`}
+                              </div>
+                            </>
+                          ) : (
+                            <span className="text-sm text-gray-400 italic">No organizations</span>
+                          )}
                         </div>
-                      ) : (
-                        <span className="text-sm text-gray-400 italic">No roles</span>
-                      )}
-                    </div>
-                  </td>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 min-w-0">
+                          {totalRoles > 0 ? (
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-100 border border-purple-200 min-w-0">
+                              <Shield className="w-3.5 h-3.5 text-purple-700" />
+                              <span className="text-sm font-medium text-purple-700">
+                                {totalRoles} {totalRoles === 1 ? 'role' : 'roles'}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-sm text-gray-400 italic">No roles</span>
+                          )}
+                        </div>
+                      </td>
+                    </>
+                  )}
 
                   {/* Actions */}
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="flex items-center justify-end gap-2 min-w-0">
-                      <button
-                        onClick={() => handleEdit(user)}
-                        className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
-                        title="Edit User"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(user.id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Delete User"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
+                  {!isCustomer && (
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <div className="flex items-center justify-end gap-2 min-w-0">
+                        <button
+                          onClick={() => handleEdit(user)}
+                          className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
+                          title="Edit User"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(user.id)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete User"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  )}
                 </motion.tr>
               );
             })}

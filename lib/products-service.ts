@@ -49,41 +49,60 @@ export function mapSalesforceProductToLocal(sfProduct: any): Product {
     subDescription: "",
     features: [],
     quickSpecs: [
+      { label: "Cubic Volume (in)", value: sfProduct.gtherp__Unit_CV_Inches__c || sfProduct.Unit_CV_Inches__c || "N/A" },
+      { label: "Length (in)", value: sfProduct.gtherp__Unit_Length__c || sfProduct.Unit_Length__c || "N/A" },
+      { label: "Width (in)", value: sfProduct.gtherp__Unit_Width__c || sfProduct.Unit_Width__c || "N/A" },
+      { label: "Height (in)", value: sfProduct.gtherp__Unit_Height__c || sfProduct.Unit_Height__c || "N/A" },
+      { label: "Net Weight (lbs)", value: sfProduct.gtherp__Unit_Net_Weight__c || sfProduct.Unit_Net_Weight__c || "N/A" },
+      { label: "Gross Weight (lbs)", value: sfProduct.gtherp__Unit_Gross_Weight__c || sfProduct.Unit_Gross_Weight__c || "N/A" },
       { label: "Voltage", value: sfProduct.Voltage__c || "N/A" },
-      { label: "Amperage", value: sfProduct.Amperage__c ? `${sfProduct.Amperage__c}A` : "N/A" },
+      { label: "Amperage (A)", value: sfProduct.Amperage__c || "N/A" },
       { label: "Refrigerant", value: sfProduct.Refrigerant__c || "N/A" },
-      { label: "Compressor", value: sfProduct.Compressor_Type__c || "N/A" },
+      { label: "Compressor Type", value: sfProduct.Compressor_Type__c || "N/A" },
       { label: "Noise Level", value: sfProduct.Noise_Level__c || "N/A" },
     ],
     images: ["/assets/product-placeholder.png"],
     specifications: {
-      Dimensions: [
-        { label: "Unit Height", value: sfProduct.Unit_Height__c ? `${sfProduct.Unit_Height__c} in` : "N/A" },
-        { label: "Unit Width", value: sfProduct.Unit_Width__c ? `${sfProduct.Unit_Width__c} in` : "N/A" },
-        { label: "Unit Length", value: sfProduct.Unit_Length__c ? `${sfProduct.Unit_Length__c} in` : "N/A" },
-        { label: "Unit Net Weight", value: sfProduct.Unit_Net_Weight__c ? `${sfProduct.Unit_Net_Weight__c} lbs` : "N/A" },
-        { label: "Unit Gross Weight", value: sfProduct.Unit_Gross_Weight__c ? `${sfProduct.Unit_Gross_Weight__c} lbs` : "N/A" },
-        { label: "Unit CV", value: sfProduct.Unit_CV_Inches__c ? `${sfProduct.Unit_CV_Inches__c} cu in` : "N/A" },
+      "Physical Dimensions": [
+        { label: "Case Cubic Volume (in)", value: sfProduct.gtherp__Case_CV_Inches__c || "N/A" },
+        { label: "Case Length (in)", value: sfProduct.gtherp__Case_Length__c || "N/A" },
+        { label: "Case Width (in)", value: sfProduct.gtherp__Case_Width__c || "N/A" },
+        { label: "Case Height (in)", value: sfProduct.gtherp__Case_Height__c || "N/A" },
+        { label: "Case Net Weight (lbs)", value: sfProduct.gtherp__Case_Net_Weight__c || "N/A" },
+        { label: "Case Gross Weight (lbs)", value: sfProduct.gtherp__Case_Gross_Weight__c || "N/A" },
+        { label: "Shipping Weight DW 139 (lbs)", value: sfProduct.gtherp__Case_DW_139__c || "N/A" },
+        { label: "Shipping Weight DW 166 (lbs)", value: sfProduct.gtherp__Case_DW_166__c || "N/A" },
+        { label: "Shipping Dimensions (L x W x H)", value: sfProduct.Shipping_Dimensions__c || "N/A" },
+        { label: "ECCN", value: sfProduct.gtherp__ECCN__c || "N/A" },
+        { label: "HTS Code", value: sfProduct.gtherp__HTS_Code__c || "N/A" },
+        { label: "GTIN", value: sfProduct.gtherp__GTIN__c || "N/A" },
+        { label: "UPC", value: sfProduct.gtherp__UPC__c || "N/A" },
       ],
-      "Features & Tech": [
-        { label: "Alarm Outputs", value: sfProduct.Alarm_Outputs__c || "N/A" },
-        { label: "Display Type", value: sfProduct.Display_Type__c || "N/A" },
-        { label: "Wireless", value: sfProduct.Wireless__c || "N/A" },
-        { label: "Network Interface", value: sfProduct.Network_Interface__c || "N/A" },
-        { label: "BMS Protocol", value: sfProduct.BMS_Protocol__c || "N/A" },
-        { label: "Data Logging", value: sfProduct.Data_Logging__c || "N/A" },
-        { label: "Noise Level", value: sfProduct.Noise_Level__c || "N/A" },
-        { label: "Compressor Type", value: sfProduct.Compressor_Type__c || "N/A" },
-        { label: "Refrigerant", value: sfProduct.Refrigerant__c || "N/A" },
+      "Electrical & Power": [
+        { label: "Voltage Rating", value: sfProduct.Voltage_Rating__c || "N/A" },
+        { label: "Running Amperage (A)", value: sfProduct.Running_Amperage__c || "N/A" },
+        { label: "Connected Load (kW)", value: sfProduct.Connected_Load_kW__c || "N/A" },
+        { label: "Annual Energy Consumption (kWh/yr)", value: sfProduct.Annual_Energy_kWh__c || "N/A" },
+        { label: "Plug Type", value: sfProduct.Plug_Type__c || "N/A" },
+        { label: "Cord Length", value: sfProduct.Cord_Length__c || "N/A" },
       ],
       "Sustainability": [
-        { label: "Water Usage", value: sfProduct.Water_Usage__c || "N/A" },
-        { label: "Product Use Emissions", value: sfProduct.product_Use_Emissions__c || "N/A" },
-        { label: "Product Longevity", value: sfProduct.product_Longevity__c || "N/A" },
-        { label: "Packaging Materials", value: sfProduct.Packaging_Materials__c || "N/A" },
-        { label: "Manufacturing Process", value: sfProduct.Manufacturing_Process__c || "N/A" },
-        { label: "End of Life Management", value: sfProduct.End_of_Life_Management__c || "N/A" },
-        { label: "Energy Consumption", value: sfProduct.Energy_Consumption__c || "N/A" },
+        { label: "Product Availability", value: sfProduct.gtherp__Product_Availability__c || "N/A" },
+        { label: "Energy Consumption", value: sfProduct.gtherp__Energy_Consumption__c || "N/A" },
+        { label: "End-of-Life Management", value: sfProduct.gtherp__End_of_Life_Management__c || "N/A" },
+        { label: "Manufacturing Process", value: sfProduct.gtherp__Manufacturing_Process__c || "N/A" },
+        { label: "Packaging Materials", value: sfProduct.gtherp__Packaging_Materials__c || "N/A" },
+        { label: "Product Longevity", value: sfProduct.gtherp__Product_Longevity__c || "N/A" },
+        { label: "Product Use Emissions", value: sfProduct.gtherp__Product_Use_Emissions__c || "N/A" },
+        { label: "Water Usage", value: sfProduct.gtherp__Water_Usage__c || "N/A" },
+      ],
+      "Connectivity": [
+        { label: "BMS Protocol", value: sfProduct.BMS_Protocol__c || "N/A" },
+        { label: "Network Interface", value: sfProduct.Network_Interface__c || "N/A" },
+        { label: "Wireless", value: sfProduct.Wireless__c || "N/A" },
+        { label: "Display Type", value: sfProduct.Display_Type__c || "N/A" },
+        { label: "Alarm Outputs", value: sfProduct.Alarm_Outputs__c || "N/A" },
+        { label: "Data Logging", value: sfProduct.Data_Logging__c || "N/A" },
       ],
     },
     suppliers: [],
@@ -97,7 +116,7 @@ export function mapSalesforceProductToLocal(sfProduct: any): Product {
     const items = Array.from(tempDiv.querySelectorAll('li, p'))
       .map(el => el.textContent?.trim())
       .filter(Boolean) as string[];
-    
+
     mappedProduct.features = items.length > 0 ? items : [tempDiv.textContent?.trim() || ""];
   }
 
@@ -108,9 +127,9 @@ export function mapSalesforceProductToLocal(sfProduct: any): Product {
  * Client-side function to fetch product details via the API proxy.
  */
 export async function getProductDetails(accountId: string, contactId: string, productId: string, tabName: string = "product"): Promise<any> {
-    const response = await fetch(`/api/salesforce/product-details?accountId=${accountId}&contactId=${contactId}&productId=${productId}&tabName=${tabName}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch product details for tab: ${tabName}`);
-    }
-    return response.json();
+  const response = await fetch(`/api/salesforce/product-details?accountId=${accountId}&contactId=${contactId}&productId=${productId}&tabName=${tabName}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch product details for tab: ${tabName}`);
+  }
+  return response.json();
 }

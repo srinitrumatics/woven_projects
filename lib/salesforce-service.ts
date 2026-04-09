@@ -332,7 +332,7 @@ export async function getContactsFromSalesforce(accountId?: string, contactId?: 
     const resultdata = await response.json();
     //console.log('Contacts resultdata:', resultdata);
     // Return the records from the response
-    return resultdata.data || [];
+    return Array.isArray(resultdata) ? resultdata : (resultdata.data || []);
   } catch (error) {
     console.error('Error fetching contacts from Salesforce:', error);
     return []; // Return empty array on error

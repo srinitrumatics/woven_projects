@@ -26,19 +26,20 @@ export async function GET(req: Request) {
 
     // compose Salesforce REST URL
 
+    const baseUrl = (process.env.SF_DATA_URL || "").replace(/\/+$/, "");
     let orderUrl = "";
     let locationUrl = "";
     let contactUrl = "";
     let result: any = [];
 
     if (rawAction === "list") {
-      orderUrl = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
+      orderUrl = `${baseUrl}/services/apexrest/gtherp/orders`;
       result = await getOrderslistFromSalesforce(accountId, contactId, orderUrl);
     } else if (rawAction === "locations" || rawAction === "location") {
-      locationUrl = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/authorizedlocations`;
+      locationUrl = `${baseUrl}/services/apexrest/gtherp/authorizedlocations`;
       result = await getOrderslocationsFromSalesforce(accountId, contactId, locationUrl);
     } else if (rawAction === "contacts" || rawAction === "contact") {
-      contactUrl = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/contacts`;
+      contactUrl = `${baseUrl}/services/apexrest/gtherp/contacts`;
       result = await getContactsFromSalesforce(accountId, contactId, contactUrl);
     } else if (rawAction === "products" || rawAction === "product") {
       result = await getProductsFromSalesforce(accountId, contactId);

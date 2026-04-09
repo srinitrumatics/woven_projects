@@ -13,17 +13,15 @@ export default function ProductTabs({ activeTab, setActiveTab, tabs }: ProductTa
         <button
           key={tab}
           onClick={() => setActiveTab(tab)}
-          className={`px-8 py-5 text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all relative group ${
-            activeTab === tab
-              ? "text-blue-500"
-              : "text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-          }`}
-        >
-          {tab}
-          <div
-            className={`absolute bottom-0 left-0 w-full h-[3px] bg-blue-500 transition-transform duration-300 origin-left ${
-              activeTab === tab ? "scale-x-100" : "scale-x-0 group-hover:scale-x-50 opacity-20"
+          className={`px-8 py-5 text-sm font-bold whitespace-nowrap transition-all relative group ${activeTab === tab
+            ? "text-blue-500"
+            : "text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
             }`}
+        >
+          <span dangerouslySetInnerHTML={{ __html: tab }} />
+          <div
+            className={`absolute bottom-0 left-0 w-full h-[3px] bg-blue-500 transition-transform duration-300 origin-left ${activeTab === tab ? "scale-x-100" : "scale-x-0 group-hover:scale-x-50 opacity-20"
+              }`}
           ></div>
         </button>
       ))}
