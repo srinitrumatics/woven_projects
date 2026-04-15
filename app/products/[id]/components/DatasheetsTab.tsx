@@ -8,7 +8,7 @@ interface DatasheetsTabProps {
 export const DatasheetsTab: React.FC<DatasheetsTabProps> = ({ datasheets, isLoading }) => {
   return (
     <div className="space-y-6">
-      <h3 className="text-[11px] font-bold text-gray-400 mb-6 uppercase tracking-widest px-2">Available Documents</h3>
+      <h3 className="text-[11px] font-bold text-gray-400 mb-6 px-2">Available Documents</h3>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
         {isLoading ? (
@@ -34,7 +34,7 @@ export const DatasheetsTab: React.FC<DatasheetsTabProps> = ({ datasheets, isLoad
 
               {/* Text Content */}
               <div className="flex-1 min-w-0">
-                <h4 className="text-[13px] font-bold text-gray-900 dark:text-white truncate mb-1" title={doc.Name}>
+                <h4 className="text-[13px] font-bold text-gray-900 dark:text-white  mb-1" title={doc.Name}>
                   {doc.Name}
                 </h4>
                 <div className="flex flex-wrap items-center gap-x-2 text-[11px] text-gray-400 font-medium">
@@ -44,7 +44,7 @@ export const DatasheetsTab: React.FC<DatasheetsTabProps> = ({ datasheets, isLoad
                   {doc.isEOL__c && (
                     <>
                       <span>•</span>
-                      <span className="text-red-500 font-bold uppercase text-[9px]">EOL</span>
+                      <span className="text-red-500 font-bold  text-[9px]">EOL</span>
                     </>
                   )}
                 </div>

@@ -52,7 +52,7 @@ export default function LineHeader({
 
             <div className="flex items-center justify-between min-w-0">
                 <div className="flex items-center gap-4 min-w-0">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={productSku || `Order Line #${lineId}`}>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white " title={productSku || `Order Line #${lineId}`}>
                         {productSku || `Order Line #${lineId}`}
                     </h1>
 

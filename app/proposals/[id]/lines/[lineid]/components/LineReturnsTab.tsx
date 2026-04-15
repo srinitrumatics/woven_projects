@@ -501,7 +501,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                             <table className="w-full table-fixed">
                                 <thead className="bg-gray-50 dark:bg-gray-800/50">
                                     <tr>
-                                        <th className="px-3 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white truncate">Amount</th>
+                                        <th className="px-3 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white ">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">

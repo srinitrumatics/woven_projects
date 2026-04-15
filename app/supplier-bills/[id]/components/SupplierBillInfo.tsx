@@ -14,7 +14,7 @@ export default function SupplierBillInfo({ bill }: SupplierBillInfoProps) {
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Supplier Information">Supplier Information</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Supplier Information">Supplier Information</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Vendor Details">Vendor Details</p>
                 </div>
             </div>

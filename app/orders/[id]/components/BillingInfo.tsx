@@ -21,7 +21,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                     </svg>
                 </div>
                 <div className="min-w-0">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">Billing Information</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">Billing Information</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Invoice Destination">Invoice Destination</p>
                 </div>
             </div>
@@ -105,7 +105,16 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                             className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 ' : 'bg-white dark:bg-gray-700'}`}
                         />
                     </div>
-
+                    <div className="w1025:col-span-2">
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Payment Terms">Payment Terms</label>
+                        <input
+                            type="text"
+                            value={formData.paymentTerms || ''}
+                            readOnly
+                            title={formData.paymentTerms || ''}
+                            className="w-full h-11 px-2 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400  truncate"
+                        />
+                    </div>
                     <div className="w1025:col-span-2">
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Customer PO">
                             Customer PO <span className="text-red-500 truncate">*</span>
@@ -121,16 +130,7 @@ export default function BillingInfo({ formData, setFormData, shipLocations, hand
                         />
                     </div>
 
-                    <div className="w1025:col-span-2">
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Payment Terms">Payment Terms</label>
-                        <input
-                            type="text"
-                            value={formData.paymentTerms || ''}
-                            readOnly
-                            title={formData.paymentTerms || ''}
-                            className="w-full h-11 px-2 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400  truncate"
-                        />
-                    </div>
+
 
                     <div className="w1025:col-span-2">
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Price Book">Price Book</label>

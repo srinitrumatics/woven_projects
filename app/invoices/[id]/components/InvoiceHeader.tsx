@@ -32,7 +32,7 @@ export default function InvoiceHeader({ invoiceNumber, status, accountName, onBa
                             </svg>
                         </div>
                         <div className="min-w-0">
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={invoiceNumber}>{invoiceNumber}</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white " title={invoiceNumber}>{invoiceNumber}</h2>
                             <div className="text-sm text-gray-500 dark:text-gray-400">{accountName} • Invoice Details</div>
                         </div>
                     </div>

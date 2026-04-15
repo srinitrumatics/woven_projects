@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { decrypt, encrypt } from '@/lib/session';
+import { getCategoryFromAccountType } from '@/lib/permissions';
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,10 +46,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Update the session with the new account ID and potentially contact ID
+    const newAccount = accounts.find((acc: any) => (acc.Id || acc.id) === accountId);
+    const newRole = newAccount?.Account_Record_Type__c || 'Customer';
+
+    console.log('[UpdateSession] New Account Found:', newAccount?.Name, 'Type:', newAccount?.Account_Record_Type__c);
+    console.log('[UpdateSession] Assigned Role:', newRole);
+
     const updatedSession = {
       ...currentSession,
       accountId: accountId,
-      Id: contactId || currentSession.Id || currentSession.userId
+      Id: contactId || currentSession.Id || currentSession.userId,
+      role: newRole
     };
 
     const encryptedSession = await encrypt(updatedSession);

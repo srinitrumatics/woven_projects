@@ -4,7 +4,7 @@ export default function UnauthorizedPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md text-center">
         <div className="text-5xl font-bold text-red-500 mb-4">403</div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-2 truncate">Access Denied</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2 ">Access Denied</h1>
         <p className="text-gray-600 mb-6 truncate" title="You don't have permission to access this resource.">
           You don't have permission to access this resource.
         </p>

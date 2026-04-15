@@ -32,8 +32,8 @@ export default function ShipToContact({
                     </svg>
                 </div>
                 <div className="min-w-0">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">Ship to Contact</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Who Should We Contact About This Delivery?">Who Should We Contact About This Delivery?</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">Ship to Contact</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Who Should We Contact About This Delivery?">Select Contact for Delivery</p>
                 </div>
             </div>
             <div className="text-sm">

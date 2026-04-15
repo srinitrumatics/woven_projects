@@ -21,8 +21,8 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                     </svg>
                 </div>
                 <div className="min-w-0">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">Delivery Options</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Previously Stored Location Delivery Details">Previously Stored Location Delivery Details</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">Delivery Options</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Previously Stored Location Delivery Details">Select Delivery Preferences</p>
                 </div>
             </div>
             <div className="text-sm">
@@ -62,7 +62,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 truncate" title="Incoterms">Incoterms</label>
+                        <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 truncate" title="Incoterms">Service Level</label>
                         <select
                             value={formData.incoterms || ''}
                             onChange={(e) => setFormData({ ...formData, incoterms: e.target.value })}

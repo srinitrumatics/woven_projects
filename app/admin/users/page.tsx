@@ -261,19 +261,8 @@ const UserManagement: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="h-16 bg-gray-200 rounded-2xl mb-8 animate-pulse"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 animate-pulse">
-                <div className="h-12 w-12 bg-gray-200 rounded-xl mb-4"></div>
-                <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-full"></div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -308,7 +297,7 @@ const UserManagement: React.FC = () => {
                     <Users className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent truncate">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent ">
                       User Management
                     </h1>
                     <p className="text-gray-500 text-sm mt-1 truncate" title="View contacts assigned to your company account">
@@ -389,7 +378,7 @@ const UserManagement: React.FC = () => {
                     <Sparkles className="w-4 h-4 text-white" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 truncate">No Users Yet</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 ">No Users Yet</h3>
                 <p className="text-gray-500 mb-8 truncate" title="Get started by creating your first user account to manage access and permissions.">
                   Get started by creating your first user account to manage access and permissions.
                 </p>

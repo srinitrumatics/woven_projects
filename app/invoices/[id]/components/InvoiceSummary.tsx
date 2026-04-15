@@ -11,7 +11,7 @@ function SectionTitle({ title, subtitle }: { title: string; subtitle: string }) 
                 </svg>
             </div>
             <div className="min-w-0">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title={title}>{title}</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white " title={title}>{title}</h2>
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400 tracking-wide truncate" title={subtitle}>{subtitle}</p>
             </div>
         </div>

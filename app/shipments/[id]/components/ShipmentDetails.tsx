@@ -15,7 +15,7 @@ export default function ShipmentDetails({ shipment }: ShipmentDetailsProps) {
                     </svg>
                 </div>
                 <div className="min-w-0">
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Shipping Manifest Details">Shipping Manifest Details</h2>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white " title="Shipping Manifest Details">Shipping Manifest Details</h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Shipping Manifest Information">Shipping Manifest Information</p>
                 </div>
             </div>

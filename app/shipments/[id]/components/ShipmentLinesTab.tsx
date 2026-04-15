@@ -233,7 +233,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                         <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={handleSort} width={widths.estimatedDeliveryDate} onResize={handleResize} align="left" />
                         <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={handleSort} width={widths.actualDeliveryDate} onResize={handleResize} align="left" />
                         {/* Action – non-sortable */}
-                        <th className="px-3 py-2 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap truncate" style={{ width: widths.action }}>
+                        <th className="px-3 py-2 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap " style={{ width: widths.action }}>
                             Action
                         </th>
                     </tr>

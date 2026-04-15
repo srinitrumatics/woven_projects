@@ -183,7 +183,7 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
                         <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} width={widths.size} onResize={handleResize} />
                         <SortableHeader label="Uploaded By" field="CreatedBy" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedBy} onResize={handleResize} />
                         <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.date} onResize={handleResize} />
-                        <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: widths.action }}>
+                        <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.action }}>
                             Action
                         </th>
                     </tr>

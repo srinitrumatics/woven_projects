@@ -340,7 +340,7 @@ export default function QuoteLineDetailPage({
                             <span className="text-gray-900 font-medium truncate">Quote Line</span>
                         </div>
                         <div className="flex flex-col min-w-0">
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={product.lineName}>{product.lineName}</h1>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white " title={product.lineName}>{product.lineName}</h1>
                         </div>
                     </div>
                     <button
@@ -442,7 +442,7 @@ export default function QuoteLineDetailPage({
                             </svg>
                         </div>
                         <div className="min-w-0">
-                            <h2 className="text-base font-bold text-gray-800 dark:text-white tracking-tight truncate" title="Quote Lines Note">Quote Lines Note</h2>
+                            <h2 className="text-base font-bold text-gray-800 dark:text-white tracking-tight " title="Quote Lines Note">Quote Lines Note</h2>
                         </div>
                     </div>
                     <div>
@@ -462,7 +462,7 @@ export default function QuoteLineDetailPage({
                         </div>
                         <div className="min-w-0">
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">
                                     Product Information
                                 </h3>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
@@ -533,15 +533,15 @@ export default function QuoteLineDetailPage({
                         <table className="w-full text-sm text-left">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white truncate">Unit Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white truncate">Order Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white truncate">MOQ</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white truncate">Total Order Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white truncate">Total Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white truncate">Shipping</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white truncate">Taxes</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white truncate">Grand Total</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white truncate">Qty Shipped</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white ">Unit Price</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white ">Order Qty</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white ">MOQ</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white ">Total Order Qty</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white ">Total Price</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white ">Shipping</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white ">Taxes</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white ">Grand Total</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white ">Qty Shipped</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">

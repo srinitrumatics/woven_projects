@@ -31,7 +31,7 @@ export default function PDFTemplate({
             {/* Header */}
             <div className="flex justify-between items-start mb-10">
                 <div>
-                    <h1 className="text-4xl font-bold mb-2 text-primary truncate" style={{ color: 'rgb(150, 194, 219)', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>WOVN</h1>
+                    <h1 className="text-4xl font-bold mb-2 text-primary " style={{ color: 'rgb(150, 194, 219)', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>WOVN</h1>
                     <div className="text-sm text-gray-600">
                         <p>123 Business Street</p>
                         <p>Business City, ST 12345</p>
@@ -39,7 +39,7 @@ export default function PDFTemplate({
                     </div>
                 </div>
                 <div className="text-right">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2 truncate">Purchase Order</h2>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-2 ">Purchase Order</h2>
                     <div className="text-sm">
                         <p><span className="font-semibold truncate">PO No:</span> {formData.purchaseOrder || "N/A"}</p>
                         <p><span className="font-semibold truncate">Date:</span> {formatDate(new Date(), 'numeric-dash')}</p>
@@ -114,11 +114,11 @@ export default function PDFTemplate({
                 <table className="w-full mb-8">
                     <thead>
                         <tr className="bg-primary-light dark:bg-gray-900 text-black text-sm uppercase font-semibold" style={{ backgroundColor: 'rgb(229, 237, 241)', color: '#000000', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact', verticalAlign: 'middle', height: '35px' }}>
-                            <th className="px-4 py-2 text-left truncate">Item name</th>
-                            <th className="px-4 py-2 text-left truncate">SKU</th>
-                            <th className="px-4 py-2 text-left truncate">Qty</th>
-                            <th className="px-4 py-2 text-left truncate">Unit Price</th>
-                            <th className="px-4 py-2 text-left truncate">Total</th>
+                            <th className="px-4 py-2 text-left ">Item name</th>
+                            <th className="px-4 py-2 text-left ">SKU</th>
+                            <th className="px-4 py-2 text-left ">Qty</th>
+                            <th className="px-4 py-2 text-left ">Unit Price</th>
+                            <th className="px-4 py-2 text-left ">Total</th>
                         </tr>
                     </thead>
                     <tbody className="text-xs text-gray-700">

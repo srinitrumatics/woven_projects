@@ -305,7 +305,7 @@ export default function ShipmentFilesTab({ shipmentId, accountId, contactId, isE
                         <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
                             <tr>
                                 {isEditing && (
-                                    <th className="px-2 py-3 text-left w-10 truncate">
+                                    <th className="px-2 py-3 text-left w-10 ">
                                         <input
                                             type="checkbox"
                                             onChange={handleSelectAll}
@@ -319,7 +319,7 @@ export default function ShipmentFilesTab({ shipmentId, accountId, contactId, isE
                                 <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} />
                                 <SortableHeader label="Uploaded By" field="CreatedBy" sortConfig={sortConfig} requestSort={requestSort} />
                                 <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} />
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Actions</th>
+                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

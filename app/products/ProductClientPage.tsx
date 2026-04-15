@@ -61,7 +61,7 @@ function Content() {
       <aside className="lg:w-64 flex-shrink-0">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sticky top-6">
           <div className="flex items-center justify-between mb-4 min-w-0">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">Filters</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white ">Filters</h2>
             <ClearRefinements
               classNames={{
                 root: "",
@@ -76,7 +76,7 @@ function Content() {
 
           {/* Category Filter */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 truncate">Category</h3>
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 ">Category</h3>
             <RefinementList
               attribute="category"
               limit={5}
@@ -105,7 +105,7 @@ function Content() {
 
           {/* Type Filter */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 truncate">Type</h3>
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 ">Type</h3>
             <RefinementList
               attribute="genre"
               limit={5}
@@ -239,7 +239,7 @@ export default function ProductClientPage() {
   if (!process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || !process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY) {
     return (
       <div className="p-8 text-center text-red-600 bg-white dark:bg-gray-800 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-2 truncate">Search Configuration Missing</h2>
+        <h2 className="text-xl font-bold mb-2 ">Search Configuration Missing</h2>
         <p>Please check your environment variables.</p>
       </div>
     );
@@ -283,9 +283,9 @@ const CardView = ({ products }: ViewProps) => (
         const category = p.category || product.productFamily || product.manufacturer || "Product";
 
         return (
-          <Link 
+          <Link
             href={`/products/${p.objectID || product.id}`}
-            key={p.objectID || product.id} 
+            key={p.objectID || product.id}
             className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer"
           >
             <div className="relative aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden">
@@ -309,11 +309,11 @@ const CardView = ({ products }: ViewProps) => (
 
             <div className="p-4 flex flex-col flex-grow">
               <div className="mb-2">
-                <span className="text-xs font-medium text-primary uppercase tracking-wider truncate">
+                <span className="text-xs font-medium text-primary  truncate">
                   {category}
                 </span>
               </div>
-              <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-primary transition-colors truncate">
+              <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-primary transition-colors ">
                 {product.name}
               </h3>
 
@@ -332,8 +332,14 @@ const CardView = ({ products }: ViewProps) => (
                     {formatCurrency(sellingPrice)}
                   </span>
                 </div>
-                <button className="w-full mt-2 px-3 py-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-medium rounded-lg transition-colors truncate">
-                  Add to Order
+                <button
+                  disabled={product.availableQty <= 0}
+                  className={`w-full mt-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors truncate ${product.availableQty <= 0
+                    ? "bg-gray-400 cursor-not-allowed text-white opacity-70"
+                    : "bg-primary hover:bg-primary-dark text-white"
+                    }`}
+                >
+                  {product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
                 </button>
               </div>
             </div>
@@ -349,13 +355,13 @@ const ListView = ({ products }: ViewProps) => (
     <table className="w-full">
       <thead className="bg-primary-light dark:bg-gray-900">
         <tr>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">&nbsp;</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Product Name</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Category</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Description</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">List Price</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Selling Price</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Action</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">&nbsp;</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Product Name</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Category</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Description</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">List Price</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Selling Price</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Action</th>
         </tr>
       </thead>
       <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -399,7 +405,17 @@ const ListView = ({ products }: ViewProps) => (
                 <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ maxWidth: '300px' }}><div className="line-clamp-2">{product.description}</div></td>
                 <td className="px-4 py-3 text-sm text-right text-gray-500 dark:text-gray-400 line-through truncate">{formatCurrency(listPrice)}</td>
                 <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(sellingPrice)}</td>
-                <td className="px-4 py-3 text-left truncate"><button className="px-4 py-1.5 bg-primary text-white rounded hover:bg-primary-dark transition-colors text-sm font-medium whitespace-nowrap truncate">Add to Order</button></td>
+                <td className="px-4 py-3 text-left truncate">
+                  <button
+                    disabled={product.availableQty <= 0}
+                    className={`px-4 py-1.5 rounded transition-colors text-sm font-medium whitespace-nowrap truncate ${product.availableQty <= 0
+                      ? "bg-gray-300 cursor-not-allowed text-gray-500"
+                      : "bg-primary text-white hover:bg-primary-dark"
+                      }`}
+                  >
+                    {product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
+                  </button>
+                </td>
               </tr>
             );
           })

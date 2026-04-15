@@ -14,6 +14,8 @@ export interface User {
   accounts: any[];
   accountId?: string;
   Id?: string; // Contact Id
+  user_details?: any;
+  role?: string;
 }
 
 interface UserSessionContextType {
@@ -40,7 +42,7 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
     return allAccounts.find(a => (a.Id || a.id) === selectedAccountId) || allAccounts[0] || null;
   }, [user, selectedAccountId]);
 
-  const setSelectedAccountId = async (id: string) => {
+  const setSelectedAccountId = async (id: string): Promise<void> => {
     setSelectedAccountStateId(id);
     localStorage.setItem('selectedAccount', id);
 
@@ -64,6 +66,7 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
         const data = await response.json();
 
         if (data.authenticated) {
+          console.log('[UserSessionContext] Session loaded successfully:', data.user);
           setUser(data.user);
           localStorage.setItem('user', JSON.stringify(data.user));
 

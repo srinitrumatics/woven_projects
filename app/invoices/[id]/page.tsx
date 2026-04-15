@@ -266,7 +266,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
     return (
       <Sidebar>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white truncate">Invoice not found</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white ">Invoice not found</h2>
           <button
             onClick={handleBack}
             className="mt-4 text-primary hover:underline truncate"

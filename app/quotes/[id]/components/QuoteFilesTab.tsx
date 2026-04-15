@@ -220,7 +220,7 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
                             <SortableHeader label="Size" field="fileSize" sortConfig={sortConfig} requestSort={requestSort} width={widths.fileSize} onResize={handleResize} />
                             <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedBy} onResize={handleResize} />
                             <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedDate} onResize={handleResize} />
-                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: widths.action, minWidth: widths.action, maxWidth: widths.action }}>
+                            <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.action, minWidth: widths.action, maxWidth: widths.action }}>
                                 Action
                             </th>
                         </tr>

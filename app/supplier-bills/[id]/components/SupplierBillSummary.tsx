@@ -24,7 +24,7 @@ export default function SupplierBillSummary({
                         </svg>
                     </div>
                     <div className="overflow-hidden">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white truncate" title="Supplier Bill Summary">Supplier Bill Summary</h3>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white " title="Supplier Bill Summary">Supplier Bill Summary</h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Your Supplier Bill Summary">Review Your Supplier Bill Summary</p>
                     </div>
                 </div>

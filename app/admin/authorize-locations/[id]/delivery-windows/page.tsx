@@ -208,7 +208,7 @@ export default function DeliveryWindowsPage() {
                         <span>/</span>
                         <span className="text-gray-900 dark:text-white font-medium truncate">Delivery Windows</span>
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Delivery Windows</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Delivery Windows</h1>
                     <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and track delivery windows for this location">Manage and track delivery windows for this location</p>
                 </div>
             </div>
@@ -297,7 +297,7 @@ export default function DeliveryWindowsPage() {
                                     <SortableHeader label="Closed for Deliveries" field="closedForDeliveries" sortConfig={sortConfig} requestSort={requestSort} width={widths.closedForDeliveries} onResize={handleResize} />
                                     <SortableHeader label="Delivery Notes" field="deliveryNotes" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveryNotes} onResize={handleResize} />
                                     <SortableHeader label="Active" field="active" sortConfig={sortConfig} requestSort={requestSort} width={widths.active} onResize={handleResize} />
-                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 " style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                         Action
                                     </th>
                                 </tr>

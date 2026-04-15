@@ -30,6 +30,8 @@ export async function GET(request: NextRequest) {
     const category = getCategoryFromAccountType(accountType);
     const userPermissions = PERMISSIONS_BY_CATEGORY[category] || [];
 
+    console.log('[API/Session] Returning session for:', sfSession.email, 'Role:', sfSession.role || category.toUpperCase());
+
     return NextResponse.json(
       {
         authenticated: true,
@@ -41,7 +43,8 @@ export async function GET(request: NextRequest) {
           accounts: sfSession.accounts ?? [],
           accountId: currentAccount?.Id || sfSession.accountId || '',
           Id: sfSession.contact?.Id || '',
-          role: category.toUpperCase(),
+          user_details: sfSession.user_details ?? null,
+          role: sfSession.role || category.toUpperCase(),
           permissions: userPermissions,
         },
       },

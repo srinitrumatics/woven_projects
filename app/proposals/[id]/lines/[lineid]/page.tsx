@@ -619,7 +619,7 @@ export default function ProposalProductDetailPage({
                 </div>
                 <div className="flex items-center justify-between min-w-0">
                     <div className="flex items-center gap-4 min-w-0">
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate">
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">
                             {product.sku}
                         </h1>
                     </div>
@@ -742,7 +742,7 @@ export default function ProposalProductDetailPage({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
-                        <h2 className="text-base font-semibold text-gray-900 dark:text-white truncate">
+                        <h2 className="text-base font-semibold text-gray-900 dark:text-white ">
                             Proposal Line Note
                         </h2>
                     </div>
@@ -762,7 +762,7 @@ export default function ProposalProductDetailPage({
                             </svg>
                         </div>
                         <div>
-                            <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate" title="Product Information">
+                            <h3 className="text-base font-semibold text-gray-900 dark:text-white " title="Product Information">
                                 Product Information
                             </h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
@@ -950,15 +950,15 @@ export default function ProposalProductDetailPage({
                         <table className="w-full text-left text-sm table-fixed">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Unit Price</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Order Qty</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">MOQ</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Total Order Qty</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Total Price</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Shipping</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Taxes</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Grand Total</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 truncate">Qty Shipped</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Unit Price</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Order Qty</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 ">MOQ</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Total Order Qty</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Total Price</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Shipping</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Taxes</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Grand Total</th>
+                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Qty Shipped</th>
                                 </tr>
                             </thead>
                             <tbody>

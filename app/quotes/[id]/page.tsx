@@ -653,7 +653,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
     return (
       <Sidebar>
         <div className="p-8 text-center bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <h2 className="text-xl font-semibold text-red-700 dark:text-red-400 mb-2 truncate">Error</h2>
+          <h2 className="text-xl font-semibold text-red-700 dark:text-red-400 mb-2 ">Error</h2>
           <p className="text-red-600 dark:text-red-300 truncate">{error || 'Quote not found'}</p>
           <button
             onClick={() => router.push("/quotes")}

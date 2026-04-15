@@ -11,7 +11,7 @@ import { InventoryPosition, InventoryStatus } from "./types";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
 
-type TabFilter = "All" | "On Hold" | "Put-Away" | "Average Aged";
+type TabFilter = "All" | "On Hold" | "Put-Away";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -69,7 +69,6 @@ export default function InventoryPage() {
         if (activeTab === "All") rawRecords = inventoryData["Total Inventory Value"] || [];
         else if (activeTab === "On Hold") rawRecords = inventoryData["Products On Hold"] || [];
         else if (activeTab === "Put-Away") rawRecords = inventoryData["Put-Away"] || [];
-        else if (activeTab === "Average Aged") rawRecords = inventoryData["Average Aged"] || [];
 
         const recordsToMap = Array.isArray(rawRecords) ? rawRecords : [];
 
@@ -146,7 +145,8 @@ export default function InventoryPage() {
 
     // Summary stats
     const stats = useMemo(() => {
-        if (!inventoryData) return { total: 0, totalValue: 0, uniqueProducts: 0, agedUniqueProducts: 0, agedTotalValue: 0, putAwayCount: 0, putAwayUniqueProducts: 0, putAwayTotalValue: 0, onHoldCount: 0, onHoldUniqueProducts: 0, onHoldTotalValue: 0 };
+        if (!inventoryData) return { total: 0, totalValue: 0, uniqueProducts: 0, agedUniqueProducts: 0, agedTotalValue: 0, avgDaysAged: 0, putAwayCount: 0, putAwayUniqueProducts: 0, putAwayTotalValue: 0, onHoldCount: 0, onHoldUniqueProducts: 0, onHoldTotalValue: 0 };
+
 
         // Card 1: Total Inventory Value - from API "Total Inventory Value" array
         const totalInvItems = inventoryData["Total Inventory Value"] || [];
@@ -165,17 +165,21 @@ export default function InventoryPage() {
         const agedUniqueProducts = new Set(agedItemsToUse.map((item: any) => item.Product_Name || item.Name)).size;
         const agedTotalValue = agedItemsToUse.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
 
-        // Card 3: Put-Away - from API "Put-Away" array
-        const putAwayItems = inventoryData["Put-Away"] || [];
+        // Card 3: Put-Away - Calculated from totalInvItems in "Receiving" location
+        const putAwayItems = totalInvItems.filter((item: any) => (item.Inventory_Location__c || item.Inventory_Location || "").toLowerCase() === "receiving");
         const putAwayCount = putAwayItems.length;
         const putAwayUniqueProducts = new Set(putAwayItems.map((item: any) => item.Product_Name || item.Name)).size;
         const putAwayTotalValue = putAwayItems.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
 
-        // Card 4: Products On Hold - from API "Products On Hold" array
-        const onHoldItems = inventoryData["Products On Hold"] || [];
+        // Card 4: Products On Hold - Calculated from totalInvItems in "On Hold" location
+        const onHoldItems = totalInvItems.filter((item: any) => (item.Inventory_Location__c || item.Inventory_Location || "").toLowerCase() === "on hold");
         const onHoldCount = onHoldItems.length;
         const onHoldUniqueProducts = new Set(onHoldItems.map((item: any) => item.Product_Name || item.Name)).size;
         const onHoldTotalValue = onHoldItems.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
+
+        // Calculate Average Days Aged across all unique IPs
+        const totalAge = itemsToUse.reduce((sum: number, item: any) => sum + (item.Avg_Inventory_Age__c || 0), 0);
+        const avgDaysAged = itemsToUse.length > 0 ? (totalAge / itemsToUse.length) : 0;
 
         return {
             total: totalInvItems.length,
@@ -183,6 +187,7 @@ export default function InventoryPage() {
             uniqueProducts,
             agedUniqueProducts,
             agedTotalValue,
+            avgDaysAged,
             putAwayCount,
             putAwayUniqueProducts,
             putAwayTotalValue,
@@ -190,6 +195,7 @@ export default function InventoryPage() {
             onHoldUniqueProducts,
             onHoldTotalValue
         };
+
     }, [inventoryData]);
 
     const handleCardClick = (filter: TabFilter) => {
@@ -200,7 +206,7 @@ export default function InventoryPage() {
     return (
         <div className="flex flex-col gap-6 p-1 min-w-0">
             <div className="flex flex-col min-w-0">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Inventory</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Inventory</h1>
                 <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and track your product inventory across all locations.">Manage and track your product inventory across all locations.</p>
             </div>
 
@@ -221,23 +227,23 @@ export default function InventoryPage() {
                                     href="#"
                                     onClick={() => handleCardClick("All")}
                                     className="hover:underline block">
-                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Total Inventory Value">Total Inventory Value</p>
+                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1" title="Total Inventory Value">Total Inventory Value</p>
                                 </Link>
                                 <div className="flex items-baseline gap-2 group/count">
                                     <Link
                                         href="#"
                                         onClick={() => handleCardClick("All")}
                                         className="hover:underline block">
-                                        <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4 truncate">{stats.uniqueProducts}</span>
+                                        <span className="text-3xl font-bold text-gray-900 dark:text-white ">{stats.uniqueProducts}</span>
                                     </Link>
                                     <Link
                                         href="#"
                                         onClick={() => handleCardClick("All")}
                                         className="hover:underline block">
-                                        <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Products</span>
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">Products</span>
                                     </Link>
                                 </div>
-                                <p className="text-lg font-semibold text-primary mt-1 truncate">{formatCurrency(stats.totalValue)}</p>
+                                <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
                             </div>
                             <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "All" ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                                 } transition-colors`}>
@@ -251,7 +257,7 @@ export default function InventoryPage() {
                                 href="#"
                                 onClick={() => handleCardClick("All")}
                                 className="hover:underline block">
-                                <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-blue-500 truncate">
+                                <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-blue-500">
                                     View all inventory
                                     <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -263,48 +269,37 @@ export default function InventoryPage() {
                 </button>
 
                 {/* Card 2: Average Aged */}
-                <button
-                    onClick={() => handleCardClick("Average Aged")}
-                    className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Average Aged"
-                        ? "border-slate-500 ring-2 ring-slate-500/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-slate-500/50"
-                        }`}
+                <div
+                    className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg flex flex-col h-full transition-all duration-200"
                 >
+
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-slate-500 to-slate-300"></div>
                     <div className="p-4 flex flex-col h-full">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
-                                <Link
-                                    href="#"
-                                    onClick={() => handleCardClick("Average Aged")}
-                                    className="hover:underline block">
-                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Average Aged">Average Aged</p>
+                                <Link href="#" className="hover:underline block">
+                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1" title="All IPs average days aged">Average Days Aged</p>
                                 </Link>
                                 <div className="flex items-baseline gap-2 group/count">
-                                    <Link
-                                        href="#"
-                                        onClick={() => handleCardClick("Average Aged")}
-                                        className="hover:underline block">
-                                        <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4 truncate">{stats.agedUniqueProducts}</span>
+                                    <Link href="#" className="hover:underline block">
+                                        <span className="text-3xl font-bold text-gray-900 dark:text-white ">{stats.avgDaysAged.toFixed(2)}</span>
                                     </Link>
-                                    <Link
-                                        href="#"
-                                        onClick={() => handleCardClick("Average Aged")}
-                                        className="hover:underline block">
-                                        <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Products</span>
+                                    <Link href="#" className="hover:underline block">
+                                        <span className="text-sm text-gray-500 dark:text-gray-400 ">Days</span>
                                     </Link>
                                 </div>
-                                <p className="text-lg font-semibold text-slate-500 mt-1 truncate">{formatCurrency(stats.agedTotalValue)}</p>
+                                <p className="text-lg font-semibold text-slate-500 mt-1">{formatCurrency(stats.agedTotalValue)}</p>
+
                             </div>
-                            <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Average Aged" ? "bg-slate-500 text-white" : "bg-slate-50 dark:bg-slate-900/20 text-slate-500 group-hover:bg-slate-500 group-hover:text-white"
-                                } transition-colors`}>
+                            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-900/20 text-slate-500 flex items-center justify-center transition-colors group-hover:bg-slate-500 group-hover:text-white">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002 2h2m-4-2H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
+
                         </div>
                         <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700">
-                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-slate-500 truncate">
+                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-slate-500">
                                 View aged inventory
                                 <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -312,9 +307,10 @@ export default function InventoryPage() {
                             </span>
                         </div>
                     </div>
-                </button>
+                </div>
 
                 {/* Card 3: Put-Away */}
+
                 <button
                     onClick={() => handleCardClick("Put-Away")}
                     className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Put-Away"
@@ -326,21 +322,28 @@ export default function InventoryPage() {
                     <div className="p-4 flex flex-col h-full">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1 truncate" title="Put-Away">Put-Away</p>
+                                <Link href="#" onClick={() => handleCardClick("Put-Away")} className="hover:underline block">
+                                    <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1" title="Put-Away">Put-Away</p>
+                                </Link>
                                 <div className="flex items-baseline gap-2 group/count">
-                                    <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4 truncate">{stats.putAwayCount}</span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Items</span>
+                                    <Link href="#" onClick={() => handleCardClick("Put-Away")} className="hover:underline block">
+                                        <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4">{stats.putAwayCount}</span>
+                                    </Link>
+                                    <Link href="#" onClick={() => handleCardClick("Put-Away")} className="hover:underline block">
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">Inventory Positions</span>
+                                    </Link>
                                 </div>
-                                <p className="text-xl font-bold text-amber-500 mt-2 truncate">{formatCurrency(stats.putAwayTotalValue)}</p>
+
+                                <p className="text-xl font-bold text-amber-500 mt-2">{formatCurrency(stats.putAwayTotalValue)}</p>
                             </div>
-                            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-500 flex items-center justify-center min-w-0">
+                            <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeTab === "Put-Away" ? "bg-amber-500 text-white" : "bg-amber-50 dark:bg-amber-900/20 text-amber-500 group-hover:bg-amber-500 group-hover:text-white"}`}>
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
                         </div>
                         <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700">
-                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-amber-500 truncate">
+                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-amber-500">
                                 View put-away items
                                 <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -362,12 +365,20 @@ export default function InventoryPage() {
                     <div className="p-4 flex flex-col h-full">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1 truncate" title="Products On Hold">Products On Hold</p>
+                                <Link href="#" onClick={() => handleCardClick("On Hold")} className="hover:underline block">
+                                    <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1" title="Products On Hold">Products On Hold</p>
+                                </Link>
                                 <div className="flex items-baseline gap-2 group/count">
-                                    <span className="text-3xl font-bold text-gray-900 dark:text-white group-hover/count:underline transition-all decoration-2 underline-offset-4 truncate">{stats.onHoldCount}</span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Items</span>
+                                    <Link href="#" onClick={() => handleCardClick("On Hold")} className="hover:underline block">
+
+                                        <span className="text-3xl font-bold text-gray-900 dark:text-white">{stats.onHoldCount}</span>
+                                    </Link>
+                                    <Link href="#" onClick={() => handleCardClick("On Hold")} className="hover:underline block">
+
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">Inventory Positions</span>
+                                    </Link>
                                 </div>
-                                <p className="text-xl font-bold text-red-500 mt-2 truncate">{formatCurrency(stats.onHoldTotalValue)}</p>
+                                <p className="text-xl font-bold text-red-500 mt-2">{formatCurrency(stats.onHoldTotalValue)}</p>
                             </div>
                             <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "On Hold" ? "bg-red-500 text-white" : "bg-red-50 dark:bg-red-900/20 text-red-500 group-hover:bg-red-500 group-hover:text-white"
                                 } transition-colors`}>
@@ -377,7 +388,7 @@ export default function InventoryPage() {
                             </div>
                         </div>
                         <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700">
-                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-red-500 truncate">
+                            <span className="inline-flex items-center text-xs font-medium text-gray-400 group-hover:text-red-500">
                                 View items on hold
                                 <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -386,10 +397,10 @@ export default function InventoryPage() {
                         </div>
                     </div>
                 </button>
-            </div>
+            </div >
 
             {/* Filters & Table Section */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden p-4">
+            < div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden p-4" >
                 <div className="pb-4 border-b border-gray-100 dark:border-gray-700 mb-4">
                     <div className="flex flex-wrap items-center gap-3 px-2 pb-4">
                         <div className="relative min-w-[280px] max-w-xs flex-shrink-0">
@@ -405,7 +416,7 @@ export default function InventoryPage() {
                             </svg>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                            {(["All", "Average Aged", "On Hold", "Put-Away"] as TabFilter[]).map((tab) => (
+                            {(["All", "On Hold", "Put-Away"] as TabFilter[]).map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => handleCardClick(tab)}
@@ -433,20 +444,20 @@ export default function InventoryPage() {
                         <table className="w-full text-sm">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                    <SortableHeader label="Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                    <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} />
-                                    <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.family} onResize={handleResize} />
-                                    <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} />
-                                    <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} />
-                                    <SortableHeader label="Avg Unit Price" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
-                                    <SortableHeader label="Total OH Value" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalValue} onResize={handleResize} />
-                                    <SortableHeader label="Total CV (IN)" field="totalUnitCVInches" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvIn} onResize={handleResize} />
-                                    <SortableHeader label="Total CV (SQFT)" field="totalUnitCVSQFT" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvSqft} onResize={handleResize} />
-                                    <SortableHeader label="Avg Inventory Age" field="avgInventoryAge" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} />
-                                    <SortableHeader label="Total Positions" field="totalPositions" sortConfig={sortConfig} requestSort={requestSort} width={widths.positions} onResize={handleResize} />
-                                    <SortableHeader label="Count Sites" field="countSites" sortConfig={sortConfig} requestSort={requestSort} width={widths.sites} onResize={handleResize} />
-                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: widths.actions }}>Action</th>
+                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} truncate={false} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                    <SortableHeader label="Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.family} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Avg Unit Price" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Total OH Value" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalValue} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Total CV (IN)" field="totalUnitCVInches" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvIn} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Total CV (SQFT)" field="totalUnitCVSQFT" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvSqft} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Avg Inventory Age" field="avgInventoryAge" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Total Positions" field="totalPositions" sortConfig={sortConfig} requestSort={requestSort} width={widths.positions} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Count Sites" field="countSites" sortConfig={sortConfig} requestSort={requestSort} width={widths.sites} onResize={handleResize} truncate={false} />
+                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.actions }}>Action</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
@@ -467,8 +478,10 @@ export default function InventoryPage() {
                                         <tr key={item.id} className="hover:bg-primary-light/20 dark:hover:bg-primary/5 transition-colors group">
                                             <td className="px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky left-0 bg-white dark:bg-gray-800 text-left truncate" style={{ width: widths.productName, maxWidth: widths.productName }}>
                                                 <button onClick={() => router.push(`/inventory/${item.productId || item.id}`)} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
+
                                                     {item.productName}
                                                 </button>
+
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.description, maxWidth: widths.description }}>
                                                 <div className="truncate" title={item.productDescription}>{item.productDescription}</div>
@@ -520,7 +533,7 @@ export default function InventoryPage() {
                         itemName="inventory items"
                     />
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

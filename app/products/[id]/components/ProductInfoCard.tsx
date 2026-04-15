@@ -8,7 +8,9 @@ interface ProductInfoCardProps {
 }
 
 export default function ProductInfoCard({ product }: ProductInfoCardProps) {
-  const [quantity, setQuantity] = useState(1);
+  const moqValue = parseInt(product.moq) || 1;
+  const [quantity, setQuantity] = useState(moqValue);
+
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-[2rem] shadow-xl border border-gray-100 dark:border-gray-700 p-8 h-full flex flex-col transition-all duration-300 hover:shadow-2xl">
@@ -25,10 +27,8 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
         <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white leading-tight mb-3">
           {product.name}
         </h1>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] font-bold tracking-widest text-gray-400 ">
           <span>SKU: {product.sku}</span>
-          <span className="text-gray-200">|</span>
-          <span>MPN: {product.mpn}</span>
         </div>
       </div>
 
@@ -39,7 +39,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
           <span className="text-xs font-bold text-green-600">{product.status}</span>
         </div>
         <div className="text-[10px] whitespace-nowrap font-bold text-gray-400 ">
-          {product.onHand} units on hand • {product.warehouses} warehouses
+          {product.onHand} Available to Sell • {product.warehouses} warehouses
         </div>
       </div>
 
@@ -60,30 +60,30 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
               </span>
             )}
           </div>
-          <p className="text-[10px] font-bold text-gray-400">
-            Volume pricing available. <span className="text-blue-500 cursor-pointer hover:underline">Qty 10+ unlocks -5% tier.</span>
-          </p>
+
         </div>
       </div>
 
       {/* Order Controls */}
       <div className="space-y-4 mb-10">
         <div className="flex flex-col gap-2">
-          <label className="text-[10px] font-bold text-gray-400 ">Quantity</label>
+          <label className="text-[10px] font-bold text-gray-400 ">Order Qty</label>
           <div className="flex items-center gap-4">
             <div className="inline-flex items-center gap-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-2 rounded-xl shadow-sm">
               <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-primary transition-colors text-xl font-medium"
+                onClick={() => setQuantity(Math.max(moqValue, quantity - moqValue))}
+                disabled={product.onHand <= 0}
+                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors text-xl font-medium ${product.onHand <= 0 ? 'text-gray-200 dark:text-gray-700 cursor-not-allowed' : 'text-gray-400 hover:text-primary'}`}
               >
                 -
               </button>
               <span className="w-12 text-center text-base font-bold text-gray-900 dark:text-white tabular-nums">
-                {quantity}
+                {product.onHand <= 0 ? 0 : quantity}
               </span>
               <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-primary transition-colors text-xl font-medium"
+                onClick={() => setQuantity(quantity + moqValue)}
+                disabled={product.onHand <= 0}
+                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors text-xl font-medium ${product.onHand <= 0 ? 'text-gray-200 dark:text-gray-700 cursor-not-allowed' : 'text-gray-400 hover:text-primary'}`}
               >
                 +
               </button>
@@ -91,16 +91,18 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
           </div>
         </div>
 
-        <button className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg transform active:scale-[0.98] transition-all duration-200">
-          Add to Order
+        <button 
+          disabled={product.onHand <= 0}
+          className={`w-full py-4 font-bold rounded-2xl shadow-lg transform transition-all duration-200 ${
+            product.onHand <= 0 
+              ? "bg-gray-400 cursor-not-allowed text-white opacity-70" 
+              : "bg-blue-600 hover:bg-blue-700 text-white active:scale-[0.98]"
+          }`}
+        >
+          {product.onHand <= 0 ? "Out of Stock" : "Add to Order"}
         </button>
 
-        <button className="w-full py-4 bg-white hover:bg-gray-50 text-gray-700 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 font-bold rounded-2xl flex items-center justify-center gap-2 transition-all">
-          <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-          Add to Quote
-        </button>
+
       </div>
 
       {/* Grid Stats */}

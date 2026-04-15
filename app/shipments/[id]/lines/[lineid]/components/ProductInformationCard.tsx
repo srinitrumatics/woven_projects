@@ -12,7 +12,7 @@ export default function ProductInformationCard({ product }: { product: any }) {
                     </svg>
                 </div>
                 <div className="min-w-0">
-                    <h2 className="text-base font-bold text-gray-800 tracking-tight truncate" title="Product Information">Product Information</h2>
+                    <h2 className="text-base font-bold text-gray-800 tracking-tight " title="Product Information">Product Information</h2>
                     <p className="text-sm text-gray-500 truncate" title="Detailed Specifications">Detailed Specifications</p>
                 </div>
             </div>

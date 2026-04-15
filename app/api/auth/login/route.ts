@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { salesforceLogin } from '@/lib/salesforce-auth';
 import { createSFSession } from '@/lib/session';
+import { getCategoryFromAccountType } from '@/lib/permissions';
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,7 +37,11 @@ export async function POST(request: NextRequest) {
     const directAccount = accounts.find((a: any) => a.isdirect === true || a.isdirect === 'true');
     const defaultAccountId = directAccount?.Id || directAccount?.id || accounts?.[0]?.Id || accounts?.[0]?.id || '';
 
-    console.log('[API] SF Login success - contact:', contact?.Id, 'accounts:', accounts.length, 'defaultAccountId:', defaultAccountId);
+    // Determine initial role
+    const defaultAccount = accounts.find((a: any) => (a.Id || a.id) === defaultAccountId);
+    const initialRole = defaultAccount?.Account_Record_Type__c || 'Customer';
+
+    console.log('[API] SF Login success - contact:', contact?.Id, 'role:', initialRole, 'defaultAccountId:', defaultAccountId);
 
     // Store SF data in session cookie (no DB needed)
     await createSFSession({ 
@@ -45,6 +50,7 @@ export async function POST(request: NextRequest) {
       accounts,
       accountId: defaultAccountId,
       Id: contact?.Id || '',
+      role: initialRole
     });
 
     return NextResponse.json(

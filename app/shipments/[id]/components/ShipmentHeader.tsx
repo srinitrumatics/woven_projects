@@ -48,7 +48,7 @@ export default function ShipmentHeader({ name, status, onBack }: ShipmentHeaderP
                             </svg>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={name}>{name}</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white " title={name}>{name}</h2>
                             <div className="text-sm text-gray-500 dark:text-gray-400" title="Shipping Manifest Details and Summary">Shipping Manifest Details and Summary</div>
                         </div>
                     </div>

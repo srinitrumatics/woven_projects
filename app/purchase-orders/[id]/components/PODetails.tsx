@@ -14,7 +14,7 @@ export default function PODetails({ po }: PODetailsProps) {
                     <div className="p-2 rounded-lg bg-primary text-white">
                         <svg className="w-5 h-5 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate" title="Purchase Summary">Purchase Summary</h2>
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white " title="Purchase Summary">Purchase Summary</h2>
                 </div>
                 <div className="p-6 space-y-5">
                     <DetailRow label="Customer Order" value={po.customerOrderName || 'N/A'} isBold />
@@ -37,7 +37,7 @@ export default function PODetails({ po }: PODetailsProps) {
                     <div className="p-2 rounded-lg bg-orange-500 text-white">
                         <svg className="w-5 h-5 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" /></svg>
                     </div>
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate" title="Supplier Information">Supplier Information</h2>
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white " title="Supplier Information">Supplier Information</h2>
                 </div>
                 <div className="p-6 space-y-4">
                     <div>
@@ -56,7 +56,7 @@ export default function PODetails({ po }: PODetailsProps) {
                     <div className="p-2 rounded-lg bg-emerald-500 text-white">
                         <svg className="w-5 h-5 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                     </div>
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate" title="Shipping To">Shipping To</h2>
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white " title="Shipping To">Shipping To</h2>
                 </div>
                 <div className="p-6 space-y-4">
                     <div>

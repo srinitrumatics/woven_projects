@@ -83,7 +83,7 @@ function InfiniteHits() {
                   {Array.isArray(hit.genre) ? hit.genre[0] : (hit.genre || hit.category || "Product")}
                 </span>
               </div>
-              <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+              <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors ">
                 {hit.title || hit.name || hit.original_title || "Untitled"}
               </h3>
 
@@ -179,10 +179,10 @@ export default function SearchPage() {
     return (
       <Sidebar>
         <div className="p-8 text-center text-red-600">
-          <h2 className="text-2xl font-bold mb-2 truncate">Configuration Missing</h2>
+          <h2 className="text-2xl font-bold mb-2 ">Configuration Missing</h2>
           <p className="mb-4 truncate" title="Please add NEXT_PUBLIC_ALGOLIA_APP_ID and NEXT_PUBLIC_ALGOLIA_SEARCH_KEY to your .env.local file.">Please add NEXT_PUBLIC_ALGOLIA_APP_ID and NEXT_PUBLIC_ALGOLIA_SEARCH_KEY to your .env.local file.</p>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-left max-w-3xl mx-auto">
-            <h3 className="font-bold mb-2 text-gray-900 dark:text-white truncate">To fix this:</h3>
+            <h3 className="font-bold mb-2 text-gray-900 dark:text-white ">To fix this:</h3>
             <ol className="list-decimal list-inside mb-2 text-gray-700 dark:text-gray-300">
               <li>Copy the .env_example.env file to .env.local</li>
               <li>Add your Algolia credentials to .env.local</li>
@@ -258,7 +258,7 @@ export default function SearchPage() {
               <aside className="lg:w-64 flex-shrink-0">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sticky top-6">
                   <div className="flex items-center justify-between mb-4 min-w-0">
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">Filters</h2>
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white ">Filters</h2>
                     <ClearRefinements
                       classNames={{
                         root: "",
@@ -273,7 +273,7 @@ export default function SearchPage() {
 
                   {/* Category Filter */}
                   <div className="mb-6">
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 truncate">Category</h3>
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 ">Category</h3>
                     <RefinementList
                       attribute="category"
                       limit={50}
@@ -301,7 +301,7 @@ export default function SearchPage() {
 
                   {/* Genre/Type Filter (if available) */}
                   <div className="mb-6">
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 truncate">Type</h3>
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 ">Type</h3>
                     <RefinementList
                       attribute="genre"
                       limit={50}

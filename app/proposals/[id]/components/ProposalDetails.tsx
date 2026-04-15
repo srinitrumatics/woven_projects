@@ -61,7 +61,7 @@ export default function ProposalDetails({
                             </svg>
                         </div>
                         <div className="min-w-0">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Proposal Notes">Proposal Notes</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Proposal Notes">Proposal Notes</h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Special Instructions or Notes">Special Instructions or Notes</p>
                         </div>
                     </div>
@@ -93,7 +93,7 @@ export default function ProposalDetails({
                             </svg>
                         </div>
                         <div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Scope Summary">Scope Summary</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Scope Summary">Scope Summary</h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Proposal Scope and Deliverables Overview">Proposal Scope and Deliverables Overview</p>
                         </div>
                     </div>

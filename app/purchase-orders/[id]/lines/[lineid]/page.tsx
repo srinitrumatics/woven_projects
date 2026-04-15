@@ -233,7 +233,7 @@ export default function POLineDetailPage({
 
                     <div className="flex items-center justify-between min-w-0">
                         <div className="flex items-center gap-4 min-w-0">
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={line.name}>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white " title={line.name}>
                                 {line.name}
                             </h1>
                         </div>
@@ -320,7 +320,7 @@ export default function POLineDetailPage({
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                             </div>
                             <div className="min-w-0">
-                                <h2 className="text-base font-semibold text-gray-900 dark:text-white truncate" title="Purchase Order Line Notes">Purchase Order Line Notes</h2>
+                                <h2 className="text-base font-semibold text-gray-900 dark:text-white " title="Purchase Order Line Notes">Purchase Order Line Notes</h2>
                             </div>
                         </div>
                         <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-gray-700 min-h-[200px] overflow-y-auto">
@@ -335,7 +335,7 @@ export default function POLineDetailPage({
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                             </div>
                             <div className="min-w-0">
-                                <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate" title="Product Information">Product Information</h3>
+                                <h3 className="text-base font-semibold text-gray-900 dark:text-white " title="Product Information">Product Information</h3>
                                 <p className="text-xs text-gray-500 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
                             </div>
                         </div>
@@ -370,16 +370,16 @@ export default function POLineDetailPage({
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-primary-light dark:bg-gray-900">
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Unit Cost">Unit Cost</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Order Qty">Order Qty</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="MOQ">MOQ</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Total Order Qty">Total Order Qty</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Total Product Cost">Total Product Cost</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Shipping">Shipping</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Total Cost">Total Cost</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="LT (Wks)">LT (Wks)</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Transit LT (Days)">Transit LT (Days)</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 truncate" title="Open Balance Qty">Open Balance Qty</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Unit Cost">Unit Cost</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Order Qty">Order Qty</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="MOQ">MOQ</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Total Order Qty">Total Order Qty</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Total Product Cost">Total Product Cost</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Shipping">Shipping</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Total Cost">Total Cost</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="LT (Wks)">LT (Wks)</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Transit LT (Days)">Transit LT (Days)</th>
+                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Open Balance Qty">Open Balance Qty</th>
                             </tr>
                         </thead>
                         <tbody>

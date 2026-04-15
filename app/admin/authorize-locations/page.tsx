@@ -233,7 +233,7 @@ export default function AuthorizeLocationsPage() {
     return (
         <>
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Authorize Locations</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Authorize Locations</h1>
                 <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Authorized Locations">Manage and Track Authorized Locations</p>
             </div>
 
@@ -320,7 +320,7 @@ export default function AuthorizeLocationsPage() {
                                         <div className="p-5 flex flex-col flex-grow cursor-pointer" onClick={() => openModal("view", loc)}>
                                             <div className="flex justify-between items-start mb-3">
                                                 <div className="pr-2 min-w-0">
-                                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate" title={loc.name}>
+                                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors " title={loc.name}>
                                                         {loc.name}
                                                     </h3>
                                                     <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mt-1 truncate" title={loc.accountName}>
@@ -401,7 +401,7 @@ export default function AuthorizeLocationsPage() {
                                     <SortableHeader label="Inside Delivery" field="insideDelivery" sortConfig={sortConfig} requestSort={requestSort} width={widths.insideDelivery} onResize={handleResize} />
                                     <SortableHeader label="Delivery Notes" field="deliveryNotes" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveryNotes} onResize={handleResize} />
                                     <SortableHeader label="Active" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                         Action
                                     </th>
                                 </tr>

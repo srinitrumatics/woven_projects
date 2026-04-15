@@ -11,6 +11,7 @@ export interface CurrentUser {
   permissions: string[];
   accountId?: string;
   Id?: string; // Contact Id
+  user_details?: any;
   roles: {
     id: string; // UUID as string
     name: string;
@@ -56,6 +57,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       permissions: userPermissions,
       accountId: currentAccount?.Id || decryptedSession.accountId,
       Id: decryptedSession.Id || decryptedSession.contact?.Id,
+      user_details: decryptedSession.user_details,
       roles: [{
         id: category,
         name: category,
@@ -107,13 +109,15 @@ export async function createSFSession(payload: any) {
       Name: payload.contact.Name,
       Email: payload.contact.Email
     } : null,
+    user_details: payload.contact || null,
     // Only store minimal account data
     accounts: Array.isArray(payload.accounts) ? payload.accounts.map((a: any) => ({
       Id: a.Id || a.id,
       Name: a.Name || a.name,
       Account_Record_Type__c: a.Account_Record_Type__c,
       isdirect: a.isdirect || false
-    })) : []
+    })) : [],
+    role: payload.role || null
   };
 
   const session = await encrypt(minimizedPayload);

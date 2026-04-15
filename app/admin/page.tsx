@@ -17,7 +17,7 @@ export default function AdminPage() {
     <ProtectedRoute>
       <>
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Admin Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Admin Dashboard</h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400 truncate" title="Manage users, roles, permissions, and system settings">
             Manage users, roles, permissions, and system settings
           </p>
@@ -32,7 +32,7 @@ export default function AdminPage() {
                 </svg>
               </div>
               <div className="ml-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">Users</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">Users</h3>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 truncate" title="Manage user accounts and assign roles">Manage user accounts and assign roles</p>
               </div>
             </div>
@@ -48,7 +48,7 @@ export default function AdminPage() {
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">Roles</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">Roles</h3>
                     <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 truncate" title="Create and manage roles with permissions">Create and manage roles with permissions</p>
                   </div>
                 </div>
@@ -62,7 +62,7 @@ export default function AdminPage() {
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">Permissions</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">Permissions</h3>
                     <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 truncate" title="Define system permissions">Define system permissions</p>
                   </div>
                 </div>
@@ -72,7 +72,7 @@ export default function AdminPage() {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 truncate">Role-Based Access Control (RBAC)</h2>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 ">Role-Based Access Control (RBAC)</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-4 truncate" title="Our RBAC system allows you to control access to system resources through a three-tiered approach:">
             Our RBAC system allows you to control access to system resources through a three-tiered approach:
           </p>

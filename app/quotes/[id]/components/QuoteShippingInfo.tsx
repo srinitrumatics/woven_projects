@@ -16,7 +16,7 @@ export default function QuoteShippingInfo({ quote }: QuoteShippingInfoProps) {
                     </svg>
                 </div>
                 <div>
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate">Shipping Information</h2>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white ">Shipping Information</h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Delivery Destination">Delivery Destination</p>
                 </div>
             </div>

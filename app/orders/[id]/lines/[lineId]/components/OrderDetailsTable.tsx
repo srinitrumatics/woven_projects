@@ -76,9 +76,21 @@ export default function OrderDetailsTable({
                         {isEditing ? (
                             <div className="flex flex-col gap-1 min-w-0">
                                 <div className="flex items-center gap-2 min-w-0">
-                                    <button onClick={decrementQty} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-600 rounded border border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 shadow-sm transition-colors text-lg truncate">-</button>
+                                    <button
+                                        onClick={decrementQty}
+                                        disabled={available <= 0}
+                                        className={`w-8 h-8 flex items-center justify-center rounded border shadow-sm transition-colors text-lg truncate ${available <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-600 border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 text-gray-900 dark:text-white'}`}
+                                    >
+                                        -
+                                    </button>
                                     <input type="text" value={editedQty} onChange={(e) => handleManualQtyChange(e.target.value)} className={`w-16 h-8 px-1 border rounded text-center bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent ${qtyWarning ? 'border-amber-500 focus:ring-amber-400' : 'border-gray-300 dark:border-gray-600 focus:ring-primary'}`} />
-                                    <button onClick={incrementQty} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-600 rounded border border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 shadow-sm transition-colors text-lg truncate">+</button>
+                                    <button
+                                        onClick={incrementQty}
+                                        disabled={available <= 0}
+                                        className={`w-8 h-8 flex items-center justify-center rounded border shadow-sm transition-colors text-lg truncate ${available <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-600 border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 text-gray-900 dark:text-white'}`}
+                                    >
+                                        +
+                                    </button>
                                 </div>
                                 {qtyWarning ? (
                                     <div className="flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-1 min-w-0">
@@ -125,14 +137,14 @@ export default function OrderDetailsTable({
                 <table className="w-full">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Unit Price">Unit Price</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Order Qty">Order Qty</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="MOQ">MOQ</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Total Order Qty">Total Order Qty</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Total Price">Total Price</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Shipping">Shipping</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Taxes">Taxes</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 truncate" title="Grand Total">Grand Total</th>
+                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Unit Price">Unit Price</th>
+                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Order Qty">Order Qty</th>
+                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="MOQ">MOQ</th>
+                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Total Order Qty">Total Order Qty</th>
+                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Total Price">Total Price</th>
+                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Shipping">Shipping</th>
+                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Taxes">Taxes</th>
+                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Grand Total">Grand Total</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -142,9 +154,21 @@ export default function OrderDetailsTable({
                                 {isEditing ? (
                                     <div className="flex flex-col gap-1 min-w-0">
                                         <div className="flex items-center gap-2 min-w-0">
-                                            <button onClick={decrementQty} className="w-6 h-6 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 shadow-sm truncate">-</button>
+                                            <button
+                                                onClick={decrementQty}
+                                                disabled={available <= 0}
+                                                className={`w-6 h-6 flex items-center justify-center rounded border shadow-sm truncate ${available <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700 cursor-not-allowed' : 'bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'}`}
+                                            >
+                                                -
+                                            </button>
                                             <input type="text" value={editedQty} onChange={(e) => handleManualQtyChange(e.target.value)} className={`w-16 px-1 py-0.5 border rounded text-center bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent ${qtyWarning ? 'border-amber-500 focus:ring-amber-400' : 'border-gray-300 dark:border-gray-600 focus:ring-primary'}`} />
-                                            <button onClick={incrementQty} className="w-6 h-6 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 shadow-sm truncate">+</button>
+                                            <button
+                                                onClick={incrementQty}
+                                                disabled={available <= 0}
+                                                className={`w-6 h-6 flex items-center justify-center rounded border shadow-sm truncate ${available <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700 cursor-not-allowed' : 'bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'}`}
+                                            >
+                                                +
+                                            </button>
                                         </div>
                                         {qtyWarning ? (
                                             <div className="flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium min-w-0">

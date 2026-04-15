@@ -28,7 +28,7 @@ export default function QuoteHeader({ quoteNumber, status, description, onBack }
                             </svg>
                         </div>
                         <div className="min-w-0">
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={quoteNumber}>{quoteNumber}</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white " title={quoteNumber}>{quoteNumber}</h2>
                             <div className="text-sm text-gray-500 dark:text-gray-400 truncate">Quote Details and Summary</div>
                         </div>
                     </div>

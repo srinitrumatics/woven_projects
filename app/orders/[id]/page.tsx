@@ -143,7 +143,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   const { user, selectedAccount } = useUserSession();
   const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+  const SF_CONTACT_ID = user?.Id || user?.contact?.Id || user?.contact?.id || "";
 
   // header order status
   const [orderStatus, setOrderStatus] = useState<string>("Draft");
@@ -165,14 +165,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   // Initialize resizable columns for My Order Table
   const myOrderColumns = useResizableColumns({
     image: 60,
-    sku: 100,
-    name: 250,
+    sku: 200,
+    name: 200,
     manufacturer: 120,
     productFamily: 120,
     listPrice: 100,
-    unitPrice: 100,
-    orderQty: 100,
-    subtotal: 100,
+    unitPrice: 120,
+    orderQty: 180,
+    subtotal: 180,
     actions: 80
   });
 
@@ -188,6 +188,24 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     unitPrice: 100,
     orderQty: 120,
     actions: 80
+  });
+
+  // Initialize resizable columns for Taxes Tab
+  const taxesColumns = useResizableColumns({
+    salesRate: 130,
+    salesAmount: 130,
+    useRate: 130,
+    useAmount: 130,
+    localRate: 130,
+    localAmount: 130,
+    exciseRate: 130,
+    exciseAmount: 130,
+    grtRate: 130,
+    grtAmount: 130,
+    gstRate: 130,
+    gstAmount: 130,
+    vatRate: 130,
+    vatAmount: 130
   });
 
   // Store contact ID for order submission
@@ -348,6 +366,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [productsLoading, setProductsLoading] = useState(false);
 
   useEffect(() => {
+    if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
     let mounted = true;
     async function loadLocations() {
       try {
@@ -398,23 +417,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             priceBook = data.Assigned_Price_Book_Name || '';
           }
 
-          // Extract Shipping Methods
-          if (Array.isArray(data) && data.length > 0 && data[0].Shipping_Method__c) {
-            setShippingMethods(data[0].Shipping_Method__c);
-          } else if (data.data && Array.isArray(data.data) && data.data.length > 0 && data.data[0].Shipping_Method__c) {
-            setShippingMethods(data.data[0].Shipping_Method__c);
-          } else if (data.Shipping_Method__c) {
-            setShippingMethods(data.Shipping_Method__c);
-          }
-
-          // Extract Incoterms
-          if (Array.isArray(data) && data.length > 0 && data[0].Incoterms__c) {
-            setIncotermsOptions(data[0].Incoterms__c);
-          } else if (data.data && Array.isArray(data.data) && data.data.length > 0 && data.data[0].Incoterms__c) {
-            setIncotermsOptions(data.data[0].Incoterms__c);
-          } else if (data.Incoterms__c) {
-            setIncotermsOptions(data.Incoterms__c);
-          }
+          // Fetch Account Name
 
           // Fetch Account Name
           try {
@@ -486,10 +489,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     return () => {
       mounted = false;
     };
-  }, [SF_ACCOUNT_ID]); // run once on mount
+  }, [SF_ACCOUNT_ID, SF_CONTACT_ID]); // run when IDs are available
 
   // Load contacts from Salesforce
   useEffect(() => {
+    if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
     let mounted = true;
     async function loadContacts() {
       try {
@@ -540,10 +544,38 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     return () => {
       mounted = false;
     };
-  }, [SF_ACCOUNT_ID]); // run once on mount
+  }, [SF_ACCOUNT_ID, SF_CONTACT_ID]); // run when IDs are available
+
+  // Load picklists for dropdown fields
+  useEffect(() => {
+    if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
+
+    async function loadPicklists() {
+      try {
+        const res = await fetch(`/api/salesforce/picklists?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}`);
+        if (res.ok) {
+          const result = await res.json();
+          if (result.success && result.data && result.data.length > 0) {
+            const picklistData = result.data[0];
+            if (picklistData.Shipping_Method__c) {
+              setShippingMethods(picklistData.Shipping_Method__c);
+            }
+            if (picklistData.Incoterms__c) {
+              setIncotermsOptions(picklistData.Incoterms__c);
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Error loading picklists:", e);
+      }
+    }
+    loadPicklists();
+  }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
   // Load products from Salesforce
   useEffect(() => {
+    if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
+
     async function loadProducts() {
       try {
         const currentAccountId = orderData?.AccountId || SF_ACCOUNT_ID;
@@ -723,6 +755,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   // Fetch Order Details
   useEffect(() => {
     if (!id || id === "new") return;
+    if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
 
     async function fetchOrder() {
       try {
@@ -915,7 +948,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     if (id) {
       fetchOrder();
     }
-  }, [id, SF_ACCOUNT_ID]);
+  }, [id, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
   // Fetch files count for tab header
   useEffect(() => {
@@ -1628,7 +1661,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             )}
 
             {viewMode === "taxes" && (
-              <TaxesTab order={orderData} loading={loadingOrder} />
+              <TaxesTab order={orderData} loading={loadingOrder} widths={taxesColumns.widths} onResize={taxesColumns.handleResize} />
             )}
           </div>
         </div>

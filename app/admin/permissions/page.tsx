@@ -174,7 +174,7 @@ const PermissionManagement: React.FC = () => {
                   <Key className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent truncate">
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent ">
                     Permission Management
                   </h1>
                   <p className="text-gray-500 text-sm mt-1 truncate" title="Define and manage system permissions">
@@ -243,7 +243,7 @@ const PermissionManagement: React.FC = () => {
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2 truncate">No Permissions Yet</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2 ">No Permissions Yet</h3>
               <p className="text-gray-500 mb-8 truncate" title="Get started by creating your first permission to control access to specific features and actions.">
                 Get started by creating your first permission to control access to specific features and actions.
               </p>

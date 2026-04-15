@@ -4,12 +4,13 @@ import { SortConfig } from '../../hooks/useSortableData';
 interface SortableHeaderProps {
     label: string;
     field: string;
-    sortConfig: SortConfig<any> | null;
-    requestSort: (key: any) => void;
+    sortConfig?: SortConfig<any> | null;
+    requestSort?: (key: any) => void;
     className?: string;
     align?: 'left' | 'right' | 'center';
     width?: string | number;
     onResize?: (field: string, newWidth: number) => void;
+    truncate?: boolean;
 }
 
 export function SortableHeader({
@@ -20,7 +21,8 @@ export function SortableHeader({
     className = "",
     align = "left",
     width,
-    onResize
+    onResize,
+    truncate = true
 }: SortableHeaderProps) {
     const isSorted = sortConfig?.key === field;
     const thRef = useRef<HTMLTableHeaderCellElement>(null);
@@ -56,7 +58,7 @@ export function SortableHeader({
         <th
             ref={thRef}
             className={`p-0 text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none relative ${className}`}
-            onClick={() => requestSort(field)}
+            onClick={() => requestSort && requestSort(field)}
             style={displayWidth ? { width: displayWidth, minWidth: displayWidth, maxWidth: displayWidth } : {}}
         >
             <div
@@ -65,7 +67,7 @@ export function SortableHeader({
             >
                 <div className="flex-1 min-w-0">
                     <span
-                        className={`text-${align} block w-full truncate`}
+                        className={`text-${align} block w-full ${truncate ? 'truncate' : ''}`}
                         title={label}
                     >
                         {label}

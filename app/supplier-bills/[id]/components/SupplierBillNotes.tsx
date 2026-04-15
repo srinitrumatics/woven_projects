@@ -17,7 +17,7 @@ export default function SupplierBillNotes({ bill }: SupplierBillNotesProps) {
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Supplier Bill Notes">Supplier Bill Notes</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Supplier Bill Notes">Supplier Bill Notes</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Special Instructions or Notes">Special Instructions or Notes</p>
                 </div>
             </div>

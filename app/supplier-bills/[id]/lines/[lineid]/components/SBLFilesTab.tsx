@@ -186,7 +186,7 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
                                 width={columnWidths.uploadedDate}
                                 onResize={handleResize}
                             />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: columnWidths.action }}>Action</th>
+                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: columnWidths.action }}>Action</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

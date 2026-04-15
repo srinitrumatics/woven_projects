@@ -1,12 +1,15 @@
 import React from 'react';
 import { formatCurrency } from '@/lib/utils/formatting';
+import { SortableHeader } from '@/components/ui/SortableHeader';
 
 interface TaxesTabProps {
     order: any;
     loading?: boolean;
+    widths: Record<string, number>;
+    onResize: (field: string, width: number) => void;
 }
 
-export default function TaxesTab({ order, loading }: TaxesTabProps) {
+export default function TaxesTab({ order, loading, widths, onResize }: TaxesTabProps) {
     if (loading) {
         return (
             <div className="flex items-center justify-center py-10 min-w-0">
@@ -15,15 +18,25 @@ export default function TaxesTab({ order, loading }: TaxesTabProps) {
         );
     }
 
-    if (!order || (
-        !order.Sales_Tax_Rate__c && !order.Total_Sales_Tax_Amount__c &&
-        !order.Use_Tax_Rate__c && !order.Total_Use_Tax_Amount__c &&
-        !order.Local_Tax_Rate__c && !order.Total_Local_Tax_Amount__c &&
-        !order.Excise_Tax_Rate__c && !order.Total_Excise_Tax_Amount__c &&
-        !order.Gross_Receipts_Tax_Rate__c && !order.Total_Gross_Receipts_Tax_Amount__c &&
-        !order.GST_Rate__c && !order.Total_GST_Amount__c &&
-        !order.VAT_Rate__c && !order.Total_VAT_Amount__c
-    )) {
+    // Check if order exists and if at least one tax field is present (not null/undefined)
+    const hasTaxData = order && (
+        (order.Sales_Tax_Rate__c !== undefined && order.Sales_Tax_Rate__c !== null) ||
+        (order.Total_Sales_Tax_Amount__c !== undefined && order.Total_Sales_Tax_Amount__c !== null) ||
+        (order.Use_Tax_Rate__c !== undefined && order.Use_Tax_Rate__c !== null) ||
+        (order.Total_Use_Tax_Amount__c !== undefined && order.Total_Use_Tax_Amount__c !== null) ||
+        (order.Local_Tax_Rate__c !== undefined && order.Local_Tax_Rate__c !== null) ||
+        (order.Total_Local_Tax_Amount__c !== undefined && order.Total_Local_Tax_Amount__c !== null) ||
+        (order.Excise_Tax_Rate__c !== undefined && order.Excise_Tax_Rate__c !== null) ||
+        (order.Total_Excise_Tax_Amount__c !== undefined && order.Total_Excise_Tax_Amount__c !== null) ||
+        (order.Gross_Receipts_Tax_Rate__c !== undefined && order.Gross_Receipts_Tax_Rate__c !== null) ||
+        (order.Total_Gross_Receipts_Tax_Amount__c !== undefined && order.Total_Gross_Receipts_Tax_Amount__c !== null) ||
+        (order.GST_Rate__c !== undefined && order.GST_Rate__c !== null) ||
+        (order.Total_GST_Amount__c !== undefined && order.Total_GST_Amount__c !== null) ||
+        (order.VAT_Rate__c !== undefined && order.VAT_Rate__c !== null) ||
+        (order.Total_VAT_Amount__c !== undefined && order.Total_VAT_Amount__c !== null)
+    );
+
+    if (!hasTaxData) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
                 <p className="text-lg font-medium truncate" title="No records found">No records found</p>
@@ -52,20 +65,20 @@ export default function TaxesTab({ order, loading }: TaxesTabProps) {
                 <table className="w-full table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
                         <tr>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Sales Tax Rate</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Sales Tax Amount</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Use Tax Rate</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Use Tax Amount</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Local Tax Rate</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Local Tax Amount</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Excise Tax Rate</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Excise Tax Amount</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">GRT Rate</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">GRT Amount</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">GST Rate</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">GST Amount</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">VAT Rate</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">VAT Amount</th>
+                            <SortableHeader label="Sales Tax Rate" field="salesRate" width={widths.salesRate} onResize={onResize} />
+                            <SortableHeader label="Sales Tax Amount" field="salesAmount" width={widths.salesAmount} onResize={onResize} />
+                            <SortableHeader label="Use Tax Rate" field="useRate" width={widths.useRate} onResize={onResize} />
+                            <SortableHeader label="Use Tax Amount" field="useAmount" width={widths.useAmount} onResize={onResize} />
+                            <SortableHeader label="Local Tax Rate" field="localRate" width={widths.localRate} onResize={onResize} />
+                            <SortableHeader label="Local Tax Amount" field="localAmount" width={widths.localAmount} onResize={onResize} />
+                            <SortableHeader label="Excise Tax Rate" field="exciseRate" width={widths.exciseRate} onResize={onResize} />
+                            <SortableHeader label="Excise Tax Amount" field="exciseAmount" width={widths.exciseAmount} onResize={onResize} />
+                            <SortableHeader label="GRT Rate" field="grtRate" width={widths.grtRate} onResize={onResize} />
+                            <SortableHeader label="GRT Amount" field="grtAmount" width={widths.grtAmount} onResize={onResize} />
+                            <SortableHeader label="GST Rate" field="gstRate" width={widths.gstRate} onResize={onResize} />
+                            <SortableHeader label="GST Amount" field="gstAmount" width={widths.gstAmount} onResize={onResize} />
+                            <SortableHeader label="VAT Rate" field="vatRate" width={widths.vatRate} onResize={onResize} />
+                            <SortableHeader label="VAT Amount" field="vatAmount" width={widths.vatAmount} onResize={onResize} />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

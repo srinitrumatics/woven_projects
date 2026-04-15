@@ -52,7 +52,7 @@ export default function TrackingTimelineModal({ isOpen, onClose, trackingData }:
             >
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white truncate">Tracking Timeline</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white ">Tracking Timeline</h2>
                     <button
                         onClick={onClose}
                         className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors truncate"
@@ -92,7 +92,7 @@ export default function TrackingTimelineModal({ isOpen, onClose, trackingData }:
                                     {/* Text Details */}
                                     <div className="flex-1 min-w-0 flex justify-between gap-4">
                                         <div className="min-w-0">
-                                            <h3 className="text-base font-bold text-gray-900 dark:text-white truncate">
+                                            <h3 className="text-base font-bold text-gray-900 dark:text-white ">
                                                 {item.status}
                                             </h3>
                                             <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5 truncate">

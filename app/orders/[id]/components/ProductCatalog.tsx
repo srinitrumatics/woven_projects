@@ -211,7 +211,8 @@ export default function ProductCatalog({
                                                                 handleCatalogQuantityChange(product.id, newQty, moq);
                                                                 setWarning(product.id, false);
                                                             }}
-                                                            className="w-6 h-6 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                                            disabled={product.availableQty <= 0}
+                                                            className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${product.availableQty <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed' : 'bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'}`}
                                                         >
                                                             -
                                                         </button>
@@ -243,7 +244,8 @@ export default function ProductCatalog({
                                                                 handleCatalogQuantityChange(product.id, newQty, moq);
                                                                 setWarning(product.id, false);
                                                             }}
-                                                            className="w-6 h-6 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                                            disabled={product.availableQty <= 0}
+                                                            className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${product.availableQty <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed' : 'bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'}`}
                                                         >
                                                             +
                                                         </button>
@@ -314,7 +316,7 @@ export default function ProductCatalog({
                                     </svg>
                                 </div>
 
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 text-center truncate" title={popupProduct.name}>{popupProduct.name}</h3>
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 text-center " title={popupProduct.name}>{popupProduct.name}</h3>
                                 <p className="text-sm font-mono text-gray-500 dark:text-gray-400 mb-4 truncate">{popupProduct.sku}</p>
 
                                 <div className="w-full grid grid-cols-2 gap-4 mb-6">

@@ -193,7 +193,7 @@ export default function ShipmentsPage() {
   return (
     <Sidebar>
       <div className="mb-6 min-w-0">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Shipments</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Shipments</h1>
         <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Track and manage your shipping manifests">Track and manage your shipping manifests</p>
       </div>
 

@@ -29,7 +29,7 @@ export default function SupplierBillHeader({ billNumber, status, supplierName, o
                             </svg>
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title={billNumber}>{billNumber}</h1>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight " title={billNumber}>{billNumber}</h1>
                             <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1" title={supplierName} >
                                 {supplierName} • Supplier Bill Details
                             </div>

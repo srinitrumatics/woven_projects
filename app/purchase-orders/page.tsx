@@ -189,7 +189,7 @@ export default function PurchaseOrdersPage() {
     return (
         <Sidebar>
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Purchase Orders</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Purchase Orders</h1>
                 <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Supplier Purchase Orders">Manage and Track Supplier Purchase Orders</p>
             </div>
 
@@ -292,7 +292,7 @@ export default function PurchaseOrdersPage() {
                                     <SortableHeader label="Acknowledged Date" field="acknowledgedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.acknowledgedDate} onResize={handleResize} />
                                     <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestDate} onResize={handleResize} />
                                     <SortableHeader label="Promised Date" field="promiseDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.promiseDate} onResize={handleResize} />
-                                    <th className="text-sm px-2 py-2 text-left font-bold text-gray-700 dark:text-gray-200  truncate">Action</th>
+                                    <th className="text-sm px-2 py-2 text-left font-bold text-gray-700 dark:text-gray-200  ">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

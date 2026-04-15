@@ -20,9 +20,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   const [product, setProduct] = useState<Product | null>(null);
   const [datasheets, setDatasheets] = useState<any[]>([]);
   const [certifications, setCertifications] = useState<any[]>([]);
+  const [suppliers, setSuppliers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [datasheetsLoading, setDatasheetsLoading] = useState(false);
   const [certificationsLoading, setCertificationsLoading] = useState(false);
+  const [suppliersLoading, setSuppliersLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,14 +43,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         if (result.success && result.data && result.data.length > 0) {
           const sfProduct = result.data[0].Product[0];
           const mappedProduct = mapSalesforceProductToLocal(sfProduct);
-
-          // Add mock suppliers for now - we'll refactor this later
-          mappedProduct.suppliers = [
-            { name: "Global Thermic Systems", code: "GTS-001", type: "OEM", tier: 1, status: "Preferred", price: 12450.00, moq: "1 unit", leadTime: "14 days", region: "North America", audit: "Jan 2024" },
-            { name: "Precision Heat Corp", code: "PHC-982", type: "Licensed", tier: 2, status: "Approved", price: 13100.00, moq: "5 units", leadTime: "21 days", region: "Europe", audit: "Mar 2024" },
-            { name: "EcoThermal Solutions", code: "ETS-441", type: "Third Party", tier: 2, status: "Conditional", price: 11800.00, moq: "10 units", leadTime: "38 days", region: "Asia Pacific", audit: "Oct 2023" },
-            { name: "Legacy Components", code: "LC-221", type: "Wholesale", tier: 3, status: "Exception Only", price: 14500.00, moq: "1 unit", leadTime: "28 days", region: "North America", audit: "Dec 2023" },
-          ];
 
           setProduct(mappedProduct);
         } else {
@@ -113,6 +107,30 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     fetchCertifications();
   }, [activeTab, id, selectedAccount, user, certifications.length]);
 
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      if (activeTab !== "Authorized Suppliers" || !id || !selectedAccount || !user || suppliers.length > 0) return;
+
+      try {
+        setSuppliersLoading(true);
+        const accountId = selectedAccount.Id || selectedAccount.id;
+        const contactId = user.Id || user.contact?.Id;
+
+        const result = await getProductDetails(accountId, contactId, id, "suppliers");
+        if (result.success && result.data && result.data.length > 0) {
+          const sfSuppliers = result.data[0].Authorized_Suppliers__c || [];
+          setSuppliers(sfSuppliers);
+        }
+      } catch (err) {
+        console.error("Error fetching suppliers:", err);
+      } finally {
+        setSuppliersLoading(false);
+      }
+    };
+
+    fetchSuppliers();
+  }, [activeTab, id, selectedAccount, user, suppliers.length]);
+
 
 
   if (loading) {
@@ -175,7 +193,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             {activeTab === "Overview" && <ProductOverviewTab product={product} />}
             {activeTab === "Specifications & Dims" && <SpecificationsTab specifications={product.specifications} />}
             {activeTab === "Datasheets" && <DatasheetsTab datasheets={datasheets} isLoading={datasheetsLoading} />}
-            {activeTab === "Authorized Suppliers" && <AuthorizedSuppliersTab suppliers={product.suppliers} />}
+            {activeTab === "Authorized Suppliers" && <AuthorizedSuppliersTab suppliers={suppliers} isLoading={suppliersLoading} />}
             {activeTab === "Compliance & Certs" && <ComplianceCertsTab certifications={certifications} isLoading={certificationsLoading} />}
           </div>
         </div>

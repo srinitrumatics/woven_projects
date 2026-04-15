@@ -10,18 +10,18 @@ export default function MetricsTable({ product }: { product: any }) {
                     <table className="w-full text-sm text-left table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900">
                             <tr>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">Unit Price</th>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">Total Qty</th>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">Total Price</th>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">Qty Shipped</th>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">Box Count</th>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">DIM Length</th>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">DIM Width</th>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">DIM Height</th>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">Net Weight</th>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">Gross Weight</th>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">DW 139</th>
-                                <th className="px-3 py-2 font-bold text-gray-900 truncate">DW 166</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">Unit Price</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">Total Qty</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">Total Price</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">Qty Shipped</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">Box Count</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">DIM Length</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">DIM Width</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">DIM Height</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">Net Weight</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">Gross Weight</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">DW 139</th>
+                                <th className="px-3 py-2 font-bold text-gray-900 ">DW 166</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">

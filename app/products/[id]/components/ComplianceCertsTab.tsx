@@ -8,7 +8,7 @@ interface ComplianceCertsTabProps {
 export const ComplianceCertsTab: React.FC<ComplianceCertsTabProps> = ({ certifications, isLoading }) => {
   return (
     <div className="space-y-8">
-      <h3 className="text-[11px] font-bold text-gray-400 mb-8 uppercase tracking-widest px-2">Certifications & Standards</h3>
+      <h3 className="text-[11px] font-bold text-gray-400 mb-8  px-2">Certifications & Standards</h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {isLoading ? (
@@ -27,19 +27,19 @@ export const ComplianceCertsTab: React.FC<ComplianceCertsTabProps> = ({ certific
               {/* Centered Icon Circle */}
               <div className="w-14 h-14 bg-[#F2FAF9] dark:bg-teal-900/10 rounded-full flex items-center justify-center mb-5">
                 <span className="text-xl text-[#111827]">
-                  {cert.Name.toUpperCase().includes("UL") ? "●" :
-                    cert.Name.toUpperCase().includes("ENERGY") ? "★" :
-                      cert.Name.toUpperCase().includes("CE") ? "⊥" :
-                        cert.Name.toUpperCase().includes("ROHS") ? "◆" :
-                          cert.Name.toUpperCase().includes("NSF") ? "◁" :
-                            cert.Name.toUpperCase().includes("ISO") ? "✒" :
-                              cert.Name.toUpperCase().includes("REACH") ? "♡" :
-                                cert.Name.toUpperCase().includes("FCC") ? "■" : ""}
+                  {cert.Name.to().includes("UL") ? "●" :
+                    cert.Name.to().includes("ENERGY") ? "★" :
+                      cert.Name.to().includes("CE") ? "⊥" :
+                        cert.Name.to().includes("ROHS") ? "◆" :
+                          cert.Name.to().includes("NSF") ? "◁" :
+                            cert.Name.to().includes("ISO") ? "✒" :
+                              cert.Name.to().includes("REACH") ? "♡" :
+                                cert.Name.to().includes("FCC") ? "■" : ""}
                 </span>
               </div>
 
               {/* Title */}
-              <h4 className="text-[14px] font-black text-[#111827] dark:text-white mb-1 uppercase tracking-tight leading-tight">
+              <h4 className="text-[14px] font-black text-[#111827] dark:text-white mb-1  tracking-tight leading-tight">
                 {cert.Name}
               </h4>
 
@@ -57,7 +57,7 @@ export const ComplianceCertsTab: React.FC<ComplianceCertsTabProps> = ({ certific
               </div>
 
               {/* Status Badge at bottom */}
-              <div className={`mt-auto px-5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-tight ${cert.Certification_Status__c === 'Valid' ? 'bg-[#ECFDF5] text-[#10B981]' :
+              <div className={`mt-auto px-5 py-0.5 rounded-md text-[10px] font-bold  ${cert.Certification_Status__c === 'Valid' ? 'bg-[#ECFDF5] text-[#10B981]' :
                 cert.Certification_Status__c === 'Pending' ? 'bg-yellow-50 text-yellow-600' :
                   'bg-red-50 text-red-600'
                 }`}>

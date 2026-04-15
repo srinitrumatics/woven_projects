@@ -93,57 +93,58 @@ export default function MyOrderTable({
                     <table className="w-full text-sm table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
                             <tr>
-                                <SortableHeader label="Order Line " field="sku" sortConfig={sortConfig} requestSort={requestSort} width={widths.sku} onResize={onResize} />
+                                <SortableHeader label="Order Line " field="sku" sortConfig={sortConfig} requestSort={requestSort} width={widths.sku} onResize={onResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-20" />
                                 <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
                                 <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
                                 <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
                                 <SortableHeader label="Unit Price" field="unitPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
                                 <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
-                                <SortableHeader label="Sub Total" field="subtotal" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} />
-                                {isEditing && (
-                                    <th
-                                        className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate"
-                                        style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
-                                    >
-                                        Action
-                                    </th>
-                                )}
+                                <SortableHeader label="Total Price" field="subtotal" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} />
+                                <th
+                                    className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                                    style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                                >
+                                    Action
+                                </th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 text-sm">
                             {paginatedProducts.map((product) => (
                                 <tr key={product.lineItemKey || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                    <td className="px-2 py-3 text-left min-w-[100px] truncate">
+                                    <td className="px-2 py-3 text-left min-w-[100px] sticky left-0 z-10 bg-white dark:bg-gray-800 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                                         <Link
                                             href={`/orders/${orderId}/lines/${product.orderLineId || product.id}`}
-                                            className="text-sm font-semibold text-primary hover:underline truncate block"
+                                            className="text-sm font-semibold text-primary hover:underline block"
                                             title={product.sku}
                                         >
                                             {product.sku}
                                         </Link>
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white font-medium text-left w-[100px] truncate">
+                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white font-medium text-left">
                                         {/* Product name with hover tooltip showing full details */}
                                         <span
                                             className="underline cursor-help block truncate"
                                             onMouseEnter={(e) => handleTooltipEnter(e, product)}
                                             onMouseLeave={handleTooltipLeave}
                                         >
-                                            {truncateText(product.name, 50)}
+                                            {product.name}
                                         </span>
                                         {product.description && (
-                                            <div className="text-xs text-gray-500 dark:text-gray-400 truncate break-words" title={product.description}>
-                                                {truncateText(product.description, 50)}
+                                            <div className="text-xs text-gray-500 dark:text-gray-400 truncate" title={product.description}>
+                                                {product.description}
                                             </div>
                                         )}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left w-[100px] truncate" title={product.manufacturer}><div className="text-sm text-gray-900 dark:text-white truncate">{product.manufacturer}</div></td>
-                                    <td className="px-2 py-3 w-[150px] text-left truncate" title={product.productFamily}>
-                                        <div className="truncate"><span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">
+                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left" title={product.manufacturer}>
+                                        <div className="text-sm text-gray-900 dark:text-white">{product.manufacturer}</div>
+                                    </td>
+                                    <td className="px-2 py-3 text-left" title={product.productFamily}>
+                                        <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
                                             {product.productFamily}
-                                        </span></div></td>
-                                    <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white w-[100px] truncate">{formatCurrency(product.unitPrice)}</td>
-                                    <td className="px-2 py-3 text-left w-[150px] truncate">
+                                        </span>
+                                    </td>
+                                    <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">{formatCurrency(product.unitPrice)}</td>
+                                    <td className="px-2 py-3 text-left w-[150px]">
                                         {isEditing ? (
                                             <div className="flex flex-col gap-1 min-w-0">
                                                 <div className="flex gap-2">
@@ -154,7 +155,8 @@ export default function MyOrderTable({
                                                             handleQuantityChange(product.lineItemKey!, newQty);
                                                             setWarning(product.lineItemKey!, false);
                                                         }}
-                                                        className="w-6 h-6 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                                        disabled={product.availableQty <= 0}
+                                                        className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${product.availableQty <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed' : 'bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'}`}
                                                     >
                                                         -
                                                     </button>
@@ -184,7 +186,8 @@ export default function MyOrderTable({
                                                             handleQuantityChange(product.lineItemKey!, newQty);
                                                             setWarning(product.lineItemKey!, false);
                                                         }}
-                                                        className="w-6 h-6 flex items-center justify-center bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                                        disabled={product.availableQty <= 0}
+                                                        className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${product.availableQty <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed' : 'bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'}`}
                                                     >
                                                         +
                                                     </button>
@@ -206,20 +209,32 @@ export default function MyOrderTable({
                                             </div>
                                         )}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold w-[100px] truncate">{formatCurrency(product.subtotal)}</td>
-                                    {isEditing && (
-                                        <td className="px-2 py-3 text-left truncate">
-                                            <button
-                                                onClick={() => handleRemoveProduct(product.lineItemKey!)}
-                                                title="Remove from order"
-                                                className="text-red-500 hover:text-red-700 p-1"
+                                    <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold">{formatCurrency(product.subtotal)}</td>
+                                    <td className="px-2 py-3 text-left">
+                                        <div className="flex items-center gap-2">
+                                            <Link
+                                                href={`/orders/${orderId}/lines/${product.orderLineId || product.id}`}
+                                                className="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors p-1"
+                                                title="View Line Details"
                                             >
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                                 </svg>
-                                            </button>
-                                        </td>
-                                    )}
+                                            </Link>
+                                            {isEditing && (
+                                                <button
+                                                    onClick={() => handleRemoveProduct(product.lineItemKey!)}
+                                                    title="Remove from order"
+                                                    className="text-red-500 hover:text-red-700 p-1"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            )}
+                                        </div>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

@@ -9,7 +9,7 @@ export default async function ProductsPage() {
   return (
     <Sidebar>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Products</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Products</h1>
         <p className="mt-2 text-gray-600 dark:text-gray-400 truncate" title="Browse our complete product catalog with pricing and availability">
           Browse our complete product catalog with pricing and availability
         </p>

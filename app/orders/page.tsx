@@ -33,7 +33,7 @@ export default function OrdersPage() {
 
   // Initialize resizable columns
   const { widths, handleResize } = useResizableColumns({
-    name: 150,
+    name: 200,
     status: 120,
     proposal_name: 180,
     customerPO: 150,
@@ -42,7 +42,7 @@ export default function OrdersPage() {
     items: 120,
     total: 140,
     requestedDate: 170,
-    actions: 100
+    actions: 150
   });
 
   const { user, selectedAccount } = useUserSession();
@@ -446,7 +446,7 @@ export default function OrdersPage() {
     <>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Orders</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Orders</h1>
           <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Sales Orders">Manage and Track Sales Orders</p>
         </div>
         <div className="flex items-center gap-3 min-w-0">
@@ -825,7 +825,7 @@ export default function OrdersPage() {
                       <td className="px-3 py-3 text-sm text-gray-600 dark:text-white truncate">{formatNumber(order.items, 0)}</td>
                       <td className="px-3 py-3 text-sm text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(order.total)}</td>
                       <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(order.requestedDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-3 truncate">
+                      <td className="px-3 py-3">
                         <div className="flex gap-2">
                           {order.status !== "Canceled" && order.status !== "Cancelled" && (
                             <>

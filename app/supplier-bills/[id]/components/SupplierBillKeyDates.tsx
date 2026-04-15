@@ -15,7 +15,7 @@ export default function SupplierBillKeyDates({ bill }: SupplierBillKeyDatesProps
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Key Dates">Key Dates</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Key Dates">Key Dates</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Important Timeline Information">Important Timeline Information</p>
                 </div>
             </div>

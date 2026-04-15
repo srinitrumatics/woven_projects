@@ -29,7 +29,7 @@ export default function POHeader({ poNumber, status, supplierName, onBack }: POH
                             </svg>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title={poNumber}>{poNumber}</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight " title={poNumber}>{poNumber}</h2>
                             <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1 truncate" title={`${supplierName} • Purchase Order Details`} >
                                 {supplierName} • Purchase Order Details
                             </div>

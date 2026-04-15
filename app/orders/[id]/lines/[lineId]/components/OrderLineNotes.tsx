@@ -22,7 +22,7 @@ export default function OrderLineNotes({
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">
                         Order Line Notes
                     </h3>
                 </div>

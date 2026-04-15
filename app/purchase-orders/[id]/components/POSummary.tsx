@@ -41,7 +41,7 @@ export default function POSummary({
                     </svg>
                 </div>
                 <div className="min-w-0">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Purchase Order Summary">Purchase Order Summary</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Purchase Order Summary">Purchase Order Summary</h3>
                     <p className="text-sm text-gray-900 dark:text-gray-700 truncate" title="Review your Purchase Summary">Review your Purchase Summary</p>
                 </div>
             </div>

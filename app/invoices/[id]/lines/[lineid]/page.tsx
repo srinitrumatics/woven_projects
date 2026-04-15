@@ -222,7 +222,7 @@ export default function InvoiceLineDetailPage({
                             <span className="text-gray-900 font-medium truncate">{product.lineName}</span>
                         </div>
                         <div className="flex flex-col min-w-0">
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={product.lineName}>{product.lineName}</h1>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white " title={product.lineName}>{product.lineName}</h1>
                         </div>
                     </div>
                     <div className="flex flex-col items-end gap-2 min-w-0">
@@ -302,7 +302,7 @@ export default function InvoiceLineDetailPage({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
-                        <h2 className="text-lg font-bold text-gray-800 tracking-tight truncate">Invoice Line Notes</h2>
+                        <h2 className="text-lg font-bold text-gray-800 tracking-tight ">Invoice Line Notes</h2>
                     </div>
                     <div className="bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-800 dark:text-white min-h-[300px]">
                         {product.inventoryLineNotes || ""}
@@ -318,7 +318,7 @@ export default function InvoiceLineDetailPage({
                             </svg>
                         </div>
                         <div className="min-w-0">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">
                                 Product Information
                             </h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
@@ -383,14 +383,14 @@ export default function InvoiceLineDetailPage({
                         <table className="w-full text-sm text-left table-fixed">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Unit Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Order Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">MOQ</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Total Order Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Total Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Shipping</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Taxes</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 truncate">Grand Total</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 ">Unit Price</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 ">Order Qty</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 ">MOQ</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 ">Total Order Qty</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 ">Total Price</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 ">Shipping</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 ">Taxes</th>
+                                    <th className="px-3 py-2 font-bold text-gray-900 ">Grand Total</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">

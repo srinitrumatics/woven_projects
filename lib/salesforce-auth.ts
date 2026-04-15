@@ -185,14 +185,13 @@ export async function salesforceLogin(email: string, password: string): Promise<
  * Salesforce Profile Update
  * Note: Requires exact endpoint configuration detailing required profile fields
  */
-export async function salesforceUpdateProfile(userId: string, profileData: any): Promise<SalesforceAuthResponse> {
+export async function salesforceUpdateProfile(contactId: string, profileData: any): Promise<SalesforceAuthResponse> {
   const session = await getSalesforceSession();
   if (!session || !session.accessToken) {
     throw new Error('No Salesforce session available');
   }
 
-  // Assuming a PUT/PATCH to a specific target endpoint
-  const url = `${session.instanceUrl}/services/apexrest/gtherp/profile`;
+  const url = `${session.instanceUrl}/services/apexrest/gtherp/contacts`;
 
   const sfResponse = await fetchWithLogging(url, {
     method: 'PATCH',
@@ -201,7 +200,7 @@ export async function salesforceUpdateProfile(userId: string, profileData: any):
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      userId,
+      Id: contactId,
       ...profileData
     }),
   });
@@ -214,6 +213,34 @@ export async function salesforceUpdateProfile(userId: string, profileData: any):
   return {
     success: sfData?.success === true,
     message: sfData?.message || (sfData?.success ? 'Profile updated successfully' : 'Failed to update profile'),
+    data: sfData?.data
+  };
+}
+
+export async function salesforceGetPicklists(accountId: string, contactId: string): Promise<SalesforceAuthResponse> {
+  const session = await getSalesforceSession();
+  if (!session || !session.accessToken) {
+    throw new Error('No Salesforce session available');
+  }
+
+  const url = `${session.instanceUrl}/services/apexrest/gtherp/picklists?accountId=${accountId}&contactId=${contactId}`;
+
+  const sfResponse = await fetchWithLogging(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!sfResponse.ok) {
+    throw new Error('Failed to fetch picklists');
+  }
+
+  const sfData = await sfResponse.json();
+  return {
+    success: sfData?.success === true,
+    message: sfData?.message || 'Picklists fetched successfully',
     data: sfData?.data
   };
 }

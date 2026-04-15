@@ -17,15 +17,34 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
     const { id: productId } = use(params);
     const { user, selectedAccount } = useUserSession();
     const router = useRouter();
-    const accountId = selectedAccount?.Id || selectedAccount?.id || "";
+    const accountId = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
     const contactId = user?.Id || user?.contact?.Id || "";
 
+
     const [positions, setPositions] = useState<any[]>([]);
+    const [productInfo, setProductInfo] = useState<any>(null);
+    const [product, setProduct] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
+        const fetchProductDetails = async () => {
+            if (!accountId || !productId || !contactId) return;
+            try {
+                const response = await fetch(`/api/salesforce/product-details?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&productId=${encodeURIComponent(productId)}&tabName=product`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data?.data?.[0]?.Product?.[0]) {
+                        setProduct(data.data[0].Product[0]);
+                    }
+                }
+
+            } catch (error) {
+                console.error("Error fetching product details:", error);
+            }
+        };
+
         const fetchInventory = async () => {
             if (!accountId || !productId) return;
             try {
@@ -39,11 +58,11 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
 
                 if (response.ok) {
                     const responseData = await response.json();
-                    let records: any[] = [];
                     if (responseData?.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
-                        records = responseData.data[0].Inventory_Position__c || [];
+                        const info = responseData.data[0];
+                        setProductInfo(info);
+                        setPositions(info.Inventory_Position__c || []);
                     }
-                    setPositions(records);
                 } else {
                     console.error("Failed to fetch inventory for product:", productId);
                 }
@@ -54,8 +73,11 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
             }
         };
 
+        fetchProductDetails();
         fetchInventory();
-    }, [productId]);
+    }, [productId, accountId, contactId]);
+
+
 
     const stats = useMemo(() => {
         const totalQty = positions.reduce((sum, p) => sum + (Number(p.Qty_On_Hand__c) || 0), 0);
@@ -119,8 +141,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
             </div>
         );
     }
-
-    const productName = positions.length > 0 ? (positions[0].Product_Name || "Inventory Details") : "Inventory Details";
+    const productName = product?.Name || "";
 
     return (
         <div className="p-6">
@@ -128,11 +149,14 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                 <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
                     <button onClick={() => router.push('/inventory')} className="hover:text-primary transition-colors">Inventory</button>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                    <span className="truncate max-w-[200px]" title={productName}>{productName}</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                     <span className="text-gray-900 dark:text-white font-medium truncate">Inventory Details</span>
                 </nav>
+
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 min-w-0">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate" title={productName}>{productName}</h1>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white " title={productName}>{productName}</h1>
                         <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Detailed inventory positions and tracking history">Detailed inventory positions and tracking history</p>
                     </div>
                     <Link
@@ -180,24 +204,25 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                     <table className="w-full border-collapse text-sm">
                         <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200">
                             <tr>
-                                <SortableHeader label="Inventory Position ID" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                <SortableHeader label="Received" field="Received_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.receivedDate} onResize={handleResize} />
-                                <SortableHeader label="Age" field="Days_in_Inventory__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} />
-                                <SortableHeader label="PO | RMA" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.po} onResize={handleResize} />
-                                <SortableHeader label="Supplier Name" field="Supplier_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplier} onResize={handleResize} />
-                                <SortableHeader label="Qty On Hand" field="Qty_On_Hand__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} />
-                                <SortableHeader label="Qty Available" field="Qty_Available__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} />
-                                <SortableHeader label="On Hold" field="On_Hold__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.onHold} onResize={handleResize} />
-                                <SortableHeader label="Unit Price" field="Unit_Price__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
-                                <SortableHeader label="Total Price" field="Total_Price__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                                <SortableHeader label="Location" field="Location" sortConfig={sortConfig} requestSort={requestSort} width={widths.location} onResize={handleResize} />
-                                <SortableHeader label="Site" field="Site_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.site} onResize={handleResize} />
-                                <SortableHeader label="Total CV (IN)" field="Total_Unit_CV_Inches__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvIn} onResize={handleResize} />
-                                <SortableHeader label="Total CV (SQFT)" field="Total_Unit_CV_SQFT__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvSqft} onResize={handleResize} />
-                                <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
-                                <SortableHeader label="ShippingManifest" field="Shipping_Manifest_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifest} onResize={handleResize} />
-                                <SortableHeader label="Condition" field="Condition__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.condition} onResize={handleResize} />
-                                <SortableHeader label="Invoiced" field="Invoiced__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiced} onResize={handleResize} />
+                                <SortableHeader label="Inventory Position ID" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} truncate={false} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                <SortableHeader label="Received" field="Received_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.receivedDate} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Age" field="Days_in_Inventory__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="PO | RMA" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.po} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Supplier Name" field="Supplier_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplier} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Qty On Hand" field="Qty_On_Hand__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Qty Available" field="Qty_Available__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="On Hold" field="On_Hold__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.onHold} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Unit Price" field="Unit_Price__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Total Price" field="Total_Price__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Location" field="Location" sortConfig={sortConfig} requestSort={requestSort} width={widths.location} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Site" field="Site_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.site} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Total CV (IN)" field="Total_Unit_CV_Inches__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvIn} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Total CV (SQFT)" field="Total_Unit_CV_SQFT__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvSqft} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="ShippingManifest" field="Shipping_Manifest_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifest} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Condition" field="Condition__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.condition} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Invoiced" field="Invoiced__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiced} onResize={handleResize} truncate={false} />
+
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -208,7 +233,8 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                                     <tr key={item.Id || idx} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                         <td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">{item.Name}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{item.Received_Date__c ? formatDate(item.Received_Date__c, "numeric-dash") : 'N/A'}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Days_in_Inventory__c)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Days_in_Inventory__c, 2)}</td>
+
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{item.Purchase_Order_Name || 'N/A'}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{item.Supplier_Name__c || 'N/A'}</td>
                                         <td className="px-3 py-2 text-sm  truncate">{formatNumber(item.Qty_On_Hand__c)}</td>

@@ -200,7 +200,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
         return (
             <Sidebar>
                 <div className="p-8 text-center bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 truncate">Purchase Order Not Found</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 ">Purchase Order Not Found</h2>
                     <p className="text-gray-500 dark:text-gray-400 mb-6 truncate" title="The purchase order you're looking for doesn't exist or you don't have access.">The purchase order you're looking for doesn't exist or you don't have access.</p>
                     <button onClick={() => router.push("/purchase-orders")} className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">Back to List</button>
                 </div>
@@ -233,7 +233,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                                 </svg>
                             </div>
                             <div className="min-w-0">
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title="Purchase Order Notes">Purchase Order Notes</h3>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Purchase Order Notes">Purchase Order Notes</h3>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Special Instructions or Notes">Special Instructions or Notes</p>
                             </div>
                         </div>

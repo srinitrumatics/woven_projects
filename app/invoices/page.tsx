@@ -176,7 +176,7 @@ export default function InvoicesPage() {
   return (
     <Sidebar>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white truncate">Invoices</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Invoices</h1>
         <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage Invoices and Track Payments">Manage Invoices and Track Payments</p>
       </div>
 
@@ -486,7 +486,7 @@ export default function InvoicesPage() {
                     <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
                     <SortableHeader label="Collection Status" field="collectionStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.collectionStatus} onResize={handleResize} />
                     <SortableHeader label="Open Balance" field="amountDue" sortConfig={sortConfig} requestSort={requestSort} width={widths.amountDue} onResize={handleResize} />
-                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                       Action
                     </th>
                   </tr>

@@ -28,10 +28,9 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                     </svg>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">
                         Product Information
                     </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
                 </div>
             </div>
 
@@ -157,7 +156,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                         type="text"
                         readOnly
                         value={formatNumber(product.availableToSell, 0)}
-                        className={`w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate ${product.availableToSell > 0 ? 'text-green-600 font-bold' : 'text-gray-900 dark:text-white'}`}
+                        className={`w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate font-bold ${product.availableToSell > 0 ? 'text-green-600' : 'text-red-500'}`}
                         title={formatNumber(product.availableToSell, 0)}
                     />
                 </div>

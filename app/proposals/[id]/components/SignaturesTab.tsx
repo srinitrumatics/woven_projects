@@ -24,9 +24,9 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
                 <table className="w-full table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">&nbsp;</th>
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Client</th>
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white truncate">Company</th>
+                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white ">&nbsp;</th>
+                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white ">Client</th>
+                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white ">Company</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

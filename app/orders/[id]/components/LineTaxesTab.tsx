@@ -63,7 +63,7 @@ export default function LineTaxesTab({ product, loading }: LineTaxesTabProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
             <div className="flex items-center gap-2 mb-2 min-w-0">
-                <h2 className="text-base font-semibold text-gray-900 dark:text-white truncate">
+                <h2 className="text-base font-semibold text-gray-900 dark:text-white ">
                     Taxes
                 </h2>
             </div>

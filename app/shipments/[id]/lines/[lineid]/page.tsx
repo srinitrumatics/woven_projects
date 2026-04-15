@@ -180,7 +180,7 @@ export default function ShipmentLineDetailPage({
                             <span className="text-gray-900 dark:text-white font-medium truncate">Shipment Line</span>
                         </div>
                         <div className="flex flex-col min-w-0">
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate" title={product.Name}>{product.Name}</h1>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white " title={product.Name}>{product.Name}</h1>
                         </div>
                     </div>
 
@@ -254,7 +254,7 @@ export default function ShipmentLineDetailPage({
                             </svg>
                         </div>
                         <div className="min-w-0">
-                            <h2 className="text-base font-bold text-gray-800 tracking-tight truncate" title="Shipping Manifest Line Notes">Shipping Manifest Line Notes</h2>
+                            <h2 className="text-base font-bold text-gray-800 tracking-tight " title="Shipping Manifest Line Notes">Shipping Manifest Line Notes</h2>
                         </div>
                     </div>
                     <div>
