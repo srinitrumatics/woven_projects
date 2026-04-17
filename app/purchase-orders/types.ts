@@ -53,6 +53,7 @@ export interface PurchaseOrder {
     paymentTerms?: string;
     siteName?: string;
     buyerName?: string;
+    allowSplitShipment: boolean;
     // Salesforce IDs
     proposalId?: string;
     customerOrderId?: string;

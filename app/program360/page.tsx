@@ -133,7 +133,7 @@ export default function Program360Page() {
     { label: "New Order", icon: ShoppingBag, bgColor: "bg-blue-50", textColor: "text-blue-700", borderColor: "border-blue-100" },
     { label: "View Proposals", icon: FileText, bgColor: "bg-green-50", textColor: "text-green-700", borderColor: "border-green-100" },
     { label: "View Quotes", icon: ClipboardList, bgColor: "bg-purple-50", textColor: "text-purple-700", borderColor: "border-purple-100" },
-    { label: "View Shipments", icon: Truck, bgColor: "bg-orange-50", textColor: "text-orange-700", borderColor: "border-orange-100" },
+    { label: "Track Shipments", icon: Truck, bgColor: "bg-orange-50", textColor: "text-orange-700", borderColor: "border-orange-100" },
     { label: "View Invoices", icon: FileText, bgColor: "bg-red-50", textColor: "text-red-700", borderColor: "border-red-100" },
     { label: "View Reports", icon: BarChart3, bgColor: "bg-gray-50", textColor: "text-gray-700", borderColor: "border-gray-200" },
   ];

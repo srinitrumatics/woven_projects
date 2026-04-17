@@ -42,9 +42,9 @@ export default function PurchaseOrdersPage() {
         actions: 100
     });
 
-  const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.Id || user?.contact?.Id || "";
+    const { user, selectedAccount } = useUserSession();
+    const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+    const SF_CONTACT_ID = user?.Id || user?.contact?.Id || "";
 
     useEffect(() => {
         async function fetchPurchaseOrders() {
@@ -277,22 +277,22 @@ export default function PurchaseOrdersPage() {
                         <table className="w-full">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
-                                    <SortableHeader label="Purchase Order Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
-                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                    <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
-                                    <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrderName} onResize={handleResize} />
-                                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
-                                    <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteName} onResize={handleResize} />
-                                    <SortableHeader label="Shipment" field="shipmentName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipmentName} onResize={handleResize} />
-                                    <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccountName} onResize={handleResize} />
-                                    <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocationName} onResize={handleResize} />
-                                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
-                                    <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCost} onResize={handleResize} />
-                                    <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={handleResize} />
-                                    <SortableHeader label="Acknowledged Date" field="acknowledgedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.acknowledgedDate} onResize={handleResize} />
-                                    <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestDate} onResize={handleResize} />
-                                    <SortableHeader label="Promised Date" field="promiseDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.promiseDate} onResize={handleResize} />
-                                    <th className="text-sm px-2 py-2 text-left font-bold text-gray-700 dark:text-gray-200  ">Action</th>
+                                    <SortableHeader truncate={false} label="Purchase Order Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                    <SortableHeader truncate={false} label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrderName} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteName} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Shipment" field="shipmentName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipmentName} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccountName} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocationName} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCost} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Acknowledged Date" field="acknowledgedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.acknowledgedDate} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestDate} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Promised Date" field="promiseDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.promiseDate} onResize={handleResize} />
+                                    <th className="text-sm px-2 py-2 text-left font-bold text-gray-700 dark:text-gray-200 ">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -301,7 +301,7 @@ export default function PurchaseOrdersPage() {
                                 ) : (
                                     paginatedPOs.map(po => (
                                         <tr key={po.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onClick={() => router.push(`/purchase-orders/${po.id}`)}>
-                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate max-w-[200px]" title={po.name}>{po.name}</td>
+                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate max-w-[200px] sticky left-0 bg-white dark:bg-gray-800 z-10 " title={po.name}>{po.name}</td>
                                             <td className="px-2 py-2 truncate" title={po.status}><StatusBadge status={po.status} /></td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.proposalName || '-'}>
                                                 {po.proposalId ? (

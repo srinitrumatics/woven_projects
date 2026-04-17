@@ -21,7 +21,7 @@ import POReturnsTab from "./components/POReturnsTab";
 import TrackingInformationTab from "./components/TrackingInformationTab";
 import { useUserSession } from "@/components/UserSessionContext";
 
-type POTabType = "lines" | "bills" | "serialNumbers" | "returns" | "tracking" | "files";
+type POTabType = "lines"| "bills"| "serialNumbers"| "returns"| "tracking"| "files";
 
 export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -40,9 +40,9 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
     const [isUploading, setIsUploading] = useState(false);
     const [activeTab, setActiveTab] = useState<POTabType>("lines");
 
-  const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+    const { user, selectedAccount } = useUserSession();
+    const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+    const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     const fetchPOData = useCallback(async () => {
         try {
@@ -92,7 +92,8 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                     shippingAddress: p.Authorized_Ship_To_Location_Address || null,
                     paymentTerms: p.Payment_Terms__c || '',
                     siteName: p.Site_Name || '',
-                    buyerName: p.Owner_Name || ''
+                    buyerName: p.Owner_Name || '',
+                    allowSplitShipment: p.Allow_Split_Shipment__c || false
                 });
             }
 
@@ -179,9 +180,6 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
         setTimeout(() => setIsUploading(false), 2000);
     };
 
-    const handleDownloadPDF = () => {
-        alert("Downloading Purchase Order PDF...");
-    };
 
     if (loading) {
         return (
@@ -229,12 +227,12 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                         <div className="flex items-center gap-3 mb-6 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                 </svg>
                             </div>
                             <div className="min-w-0">
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Purchase Order Notes">Purchase Order Notes</h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Special Instructions or Notes">Special Instructions or Notes</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Delivery Instructions">Delivery Instructions</p>
                             </div>
                         </div>
                         <div className="flex-1">
@@ -252,7 +250,6 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                         poLines={poLines}
                         isUploading={isUploading}
                         handleFileUpload={handleFileUpload}
-                        handleDownloadPDF={handleDownloadPDF}
                         className="flex-1"
                     />
                 </div>
@@ -278,12 +275,12 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                 </div>
 
                 <div className="p-4">
-                    {activeTab === "lines" && <POLinesTable lines={poLines} poId={id} />}
-                    {activeTab === "bills" && <POSupplierBillsTable bills={bills} />}
-                    {activeTab === "serialNumbers" && <POSerialNumbersTable serialNumbers={serialNumbers} />}
-                    {activeTab === "returns" && <POReturnsTab debitMemos={debitMemos} rtv={rtv} />}
-                    {activeTab === "tracking" && <TrackingInformationTab data={tracking} />}
-                    {activeTab === "files" && <POFilesTable files={files} poId={id} />}
+                    {activeTab === "lines"&& <POLinesTable lines={poLines} poId={id} />}
+                    {activeTab === "bills"&& <POSupplierBillsTable bills={bills} />}
+                    {activeTab === "serialNumbers"&& <POSerialNumbersTable serialNumbers={serialNumbers} />}
+                    {activeTab === "returns"&& <POReturnsTab debitMemos={debitMemos} rtv={rtv} />}
+                    {activeTab === "tracking"&& <TrackingInformationTab data={tracking} />}
+                    {activeTab === "files"&& <POFilesTable files={files} poId={id} />}
                 </div>
             </div>
 
@@ -297,7 +294,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                 </button>
             </div>
 
-            <div className="h-20" />
+            <div className="h-20"/>
         </Sidebar>
     );
 }

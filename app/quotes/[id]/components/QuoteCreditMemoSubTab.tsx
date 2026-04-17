@@ -1,9 +1,9 @@
-import { QuoteCreditMemo } from "@/app/quotes/types";
-import { SortableHeader } from "@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
-import Link from "next/link";
-import Pagination from "@/components/ui/Pagination";
-import { useState, useMemo } from "react";
+import { QuoteCreditMemo } from"@/app/quotes/types";
+import { SortableHeader } from"@/components/ui/SortableHeader";
+import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import Link from"next/link";
+import Pagination from"@/components/ui/Pagination";
+import { useState, useMemo } from"react";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -52,30 +52,30 @@ export default function QuoteCreditMemoSubTab({
             <div className="overflow-x-auto py-2">
                 {memos.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                        <p className="text-sm truncate" title="There are no credit memos associated with this quote.">There are no credit memos associated with this quote.</p>
+                        <p className="text-lg font-medium"title="No records found">No records found</p>
+                        <p className="text-sm"title="There are no credit memos associated with this quote.">There are no credit memos associated with this quote.</p>
                     </div>
                 ) : (
                     <>
                         <table className="w-full table-fixed">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
-                                    <SortableHeader label="Credit Memo" field="memoNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.memoNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
-                                    <SortableHeader label="Invoice" field="invoice" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoice} onResize={onResize} align="left" />
-                                    <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" />
-                                    <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" />
-                                    <SortableHeader label="Credit to Account" field="creditToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditToAccount} onResize={onResize} align="left" />
-                                    <SortableHeader label="Credit to Contact" field="creditToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditToContact} onResize={onResize} align="left" />
-                                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" />
-                                    <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left" />
-                                    <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={onResize} align="left" />
-                                    <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={onResize} align="left" />
-                                    <SortableHeader label="Total Credit Amount" field="totalCreditAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCreditAmount} onResize={onResize} align="left" />
-                                    <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={onResize} align="left" />
-                                    <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={onResize} align="left" />
-                                    <SortableHeader label="Available Credit Balance" field="availableCreditBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.availableCreditBalance} onResize={onResize} align="left" />
-                                    <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={onResize} align="left" />
+                                    <SortableHeader label="Credit Memo"field="memoNumber"sortConfig={sortConfig} requestSort={requestSort} width={widths.memoNumber} onResize={onResize} align="left"className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"truncate={false} />
+                                    <SortableHeader label="Status"field="status"sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Invoice"field="invoice"sortConfig={sortConfig} requestSort={requestSort} width={widths.invoice} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Customer Quote"field="customerQuote"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Customer Order"field="customerOrder"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Credit to Account"field="creditToAccount"sortConfig={sortConfig} requestSort={requestSort} width={widths.creditToAccount} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Credit to Contact"field="creditToContact"sortConfig={sortConfig} requestSort={requestSort} width={widths.creditToContact} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Total Lines"field="totalLines"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Total Price"field="totalPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Shipping"field="shipping"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Taxes"field="taxes"sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Total Credit Amount"field="totalCreditAmount"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCreditAmount} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Issued Date"field="issuedDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Expiration Date"field="expirationDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Available Credit Balance"field="availableCreditBalance"sortConfig={sortConfig} requestSort={requestSort} width={widths.availableCreditBalance} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Settled Date"field="settledDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={onResize} align="left"truncate={false} />
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -90,21 +90,21 @@ export default function QuoteCreditMemoSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.invoice }}>
                                             {memo.invoiceId ? (
-                                                <Link href={`/invoices/${memo.invoiceId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                <Link href={`/invoices/${memo.invoiceId}`} target="_blank"className="text-primary hover:underline font-medium">
                                                     {memo.invoice}
                                                 </Link>
                                             ) : memo.invoice}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {memo.customerQuoteId ? (
-                                                <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank"className="text-primary hover:underline font-medium">
                                                     {memo.customerQuote}
                                                 </Link>
                                             ) : memo.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {memo.customerOrderId ? (
-                                                <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                <Link href={`/orders/${memo.customerOrderId}`} target="_blank"className="text-primary hover:underline font-medium">
                                                     {memo.customerOrder}
                                                 </Link>
                                             ) : memo.customerOrder}
@@ -145,33 +145,33 @@ export default function QuoteCreditMemoSubTab({
 function StatusBadge({ status }: { status: string }) {
     const getStyles = () => {
         switch (status) {
-            case "Approved":
-            case "Paid":
-            case "Posted":
-            case "Delivered":
-            case "Completed":
-            case "Applied":
-                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-            case "Open":
-            case "Shipped":
-            case "Converted":
-                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-            case "Pending":
-            case "Partial Shipment":
-                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-            case "Draft":
-                return "bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
-            case "Rejected":
-            case "Partial Rejected":
-            case "Cancelled":
-            case "Canceled":
-                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-            case "Expired":
-                return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-            case "Closed":
-                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+            case"Approved":
+            case"Paid":
+            case"Posted":
+            case"Delivered":
+            case"Completed":
+            case"Applied":
+                return"bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+            case"Open":
+            case"Shipped":
+            case"Converted":
+                return"bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+            case"Pending":
+            case"Partial Shipment":
+                return"bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+            case"Draft":
+                return"bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
+            case"Rejected":
+            case"Partial Rejected":
+            case"Cancelled":
+            case"Canceled":
+                return"bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+            case"Expired":
+                return"bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
+            case"Closed":
+                return"bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
             default:
-                return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+                return"bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
         }
     };
 

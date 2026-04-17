@@ -305,7 +305,7 @@ export default function SupplierBillDetailPage() {
 
                 {/* Row 2 — Billing + Shipping (7) + Summary (3) */}
                 <div className="w1025:col-span-7">
-                    <div className="flex flex-col gap-6 min-w-0">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 min-w-0 h-full">
                         <BillingInformation bill={bill} />
                         <ShippingInformation bill={bill} />
                     </div>

@@ -113,20 +113,20 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                 <table className="w-full border-separate border-spacing-0">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="Debit Memo Line" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-[#e9f1f7] dark:bg-gray-900 z-30" />
-                            <SortableHeader label="Status" field="Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
-                            <SortableHeader label="Debit Memo" field="Debit_Memo__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.debitMemo} onResize={handleResize} />
-                            <SortableHeader label="Supplier Bill Line" field="Supplier_Bill_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billLine} onResize={handleResize} />
-                            <SortableHeader label="Customer Quote Line" field="Customer_Order_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.quoteLine} onResize={handleResize} />
-                            <SortableHeader label="Purchase Order Line" field="Purchase_Order_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.poLine} onResize={handleResize} />
-                            <SortableHeader label="Product Name" field="Product_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
-                            <SortableHeader label="Product Description" field="Product_Description__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.description} onResize={handleResize} />
-                            <SortableHeader label="Manufacturer DBA" field="Manufacturer_DBA__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.manufacturer} onResize={handleResize} />
-                            <SortableHeader label="Unit Cost" field="Unit_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.unitCost} onResize={handleResize} />
-                            <SortableHeader label="Debit Qty" field="Debit_Qty__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.qty} onResize={handleResize} />
-                            <SortableHeader label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.total} onResize={handleResize} />
-                            <SortableHeader label="Shipping" field="Shipping_Charges__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipping} onResize={handleResize} />
-                            <SortableHeader label="Line Grand Total" field="Line_Grand_Total__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.grandTotal} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Debit Memo Line" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-[#e9f1f7] dark:bg-gray-900 z-30"/>
+                            <SortableHeader truncate={false} label="Status" field="Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Debit Memo" field="Debit_Memo__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.debitMemo} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Supplier Bill Line" field="Supplier_Bill_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billLine} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Customer Quote Line" field="Customer_Order_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.quoteLine} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Purchase Order Line" field="Purchase_Order_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.poLine} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Product Name" field="Product_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Product Description" field="Product_Description__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.description} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Manufacturer DBA" field="Manufacturer_DBA__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.manufacturer} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Unit Cost" field="Unit_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.unitCost} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Debit Qty" field="Debit_Qty__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.qty} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.total} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Shipping" field="Shipping_Charges__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipping} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Line Grand Total" field="Line_Grand_Total__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.grandTotal} onResize={handleResize} />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

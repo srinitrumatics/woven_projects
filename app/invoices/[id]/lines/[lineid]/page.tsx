@@ -74,12 +74,13 @@ export default function InvoiceLineDetailPage({
     const [creditMemoCount, setCreditMemoCount] = useState(0);
     const [filesCount, setFilesCount] = useState(0);
 
-  const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+    const { user, selectedAccount } = useUserSession();
+    const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+    const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || user?.Id || "";
 
     useEffect(() => {
         async function fetchInvoiceLineData() {
+            if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
             try {
                 setLoading(true);
                 const res = await fetch(
@@ -321,7 +322,6 @@ export default function InvoiceLineDetailPage({
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white ">
                                 Product Information
                             </h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
                         </div>
                     </div>
 

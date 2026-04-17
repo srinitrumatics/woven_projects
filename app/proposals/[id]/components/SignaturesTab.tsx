@@ -12,8 +12,8 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
     if (!hasAnySignature) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no signatures associated with this proposal.">There are no signatures associated with this proposal.</p>
+                <p className="text-lg font-medium" title="No records found">No records found</p>
+                <p className="text-sm" title="There are no signatures associated with this proposal.">There are no signatures associated with this proposal.</p>
             </div>
         );
     }

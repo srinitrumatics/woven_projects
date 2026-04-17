@@ -1,9 +1,9 @@
-import { QuoteShippingManifest } from "@/app/quotes/types";
-import { SortableHeader } from "@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
-import Link from "next/link";
-import Pagination from "@/components/ui/Pagination";
-import { useState, useMemo } from "react";
+import { QuoteShippingManifest } from"@/app/quotes/types";
+import { SortableHeader } from"@/components/ui/SortableHeader";
+import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import Link from"next/link";
+import Pagination from"@/components/ui/Pagination";
+import { useState, useMemo } from"react";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -52,45 +52,45 @@ export default function QuoteShippingManifestsSubTab({
             <div className="overflow-x-auto py-2">
                 {manifests.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                        <p className="text-sm truncate" title="There are no shipping manifests associated with this quote.">There are no shipping manifests associated with this quote.</p>
+                        <p className="text-lg font-medium"title="No records found">No records found</p>
+                        <p className="text-sm"title="There are no shipping manifests associated with this quote.">There are no shipping manifests associated with this quote.</p>
                     </div>
                 ) : (
                     <>
-                        <table className="w-full truncate">
+                        <table className="w-full">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
-                                    <SortableHeader label="Shipping Manifest" field="manifestNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.manifestNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
-                                    <SortableHeader label="Sales Order" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={onResize} align="left" />
-                                    <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" />
-                                    <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" />
-                                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={onResize} align="left" />
-                                    <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={onResize} align="left" />
-                                    <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={onResize} align="left" />
-                                    <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={onResize} align="left" />
-                                    <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={onResize} align="left" />
-                                    <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxCount} onResize={onResize} align="left" />
-                                    <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxNetWeight} onResize={onResize} align="left" />
-                                    <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxGrossWeight} onResize={onResize} align="left" />
-                                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" />
-                                    <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left" />
-                                    <SortableHeader label="Planned Ship Date" field="plannedShipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.plannedShipDate} onResize={onResize} align="left" />
-                                    <SortableHeader label="Ship Confirmed Date" field="shipConfirmedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipConfirmedDate} onResize={onResize} align="left" />
-                                    <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingMethod} onResize={onResize} align="left" />
-                                    <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={widths.logisticsPartner} onResize={onResize} align="left" />
-                                    <SortableHeader label="Logistics Contact" field="logisticsContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.logisticsContact} onResize={onResize} align="left" />
-                                    <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={onResize} align="left" />
-                                    <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={onResize} align="left" />
-                                    <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={onResize} align="left" />
-                                    <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={onResize} align="left" />
+                                    <SortableHeader label="Shipping Manifest"field="manifestNumber"sortConfig={sortConfig} requestSort={requestSort} width={widths.manifestNumber} onResize={onResize} align="left"className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"truncate={false} />
+                                    <SortableHeader label="Status"field="status"sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Sales Order"field="salesOrder"sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Customer Quote"field="customerQuote"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Customer Order"field="customerOrder"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Customer PO"field="customerPO"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Ship to Account"field="shipToAccount"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Ship to Location"field="shipToLocation"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Ship to Contact"field="shipToContact"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Drop Ship"field="dropShip"sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Box Count"field="boxCount"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxCount} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Box Net Weight"field="boxNetWeight"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxNetWeight} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Box Gross Weight"field="boxGrossWeight"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxGrossWeight} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Total Lines"field="totalLines"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Total Price"field="totalPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Planned Ship Date"field="plannedShipDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.plannedShipDate} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Ship Confirmed Date"field="shipConfirmedDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipConfirmedDate} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Shipping Method"field="shippingMethod"sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingMethod} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Logistics Partner"field="logisticsPartner"sortConfig={sortConfig} requestSort={requestSort} width={widths.logisticsPartner} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Logistics Contact"field="logisticsContact"sortConfig={sortConfig} requestSort={requestSort} width={widths.logisticsContact} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Tracking Number"field="trackingNumber"sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Estimated Delivery Date"field="estimatedDeliveryDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Tracking Status"field="trackingStatus"sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Actual Delivery Date"field="actualDeliveryDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={onResize} align="left"truncate={false} />
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 {paginatedManifests.map((manifest) => (
                                     <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                         <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.manifestNumber }} title={manifest.manifestNumber}>
-                                            <Link href={`/shipments/${manifest.id}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/shipments/${manifest.id}`} target="_blank"className="text-primary hover:underline font-medium">
                                                 {manifest.manifestNumber}
                                             </Link>
                                         </td>
@@ -102,14 +102,14 @@ export default function QuoteShippingManifestsSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {manifest.customerQuoteId ? (
-                                                <Link href={`/quotes/${manifest.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                <Link href={`/quotes/${manifest.customerQuoteId}`} target="_blank"className="text-primary hover:underline font-medium">
                                                     {manifest.customerQuote}
                                                 </Link>
                                             ) : manifest.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {manifest.customerOrderId ? (
-                                                <Link href={`/orders/${manifest.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                <Link href={`/orders/${manifest.customerOrderId}`} target="_blank"className="text-primary hover:underline font-medium">
                                                     {manifest.customerOrder}
                                                 </Link>
                                             ) : manifest.customerOrder}
@@ -163,33 +163,33 @@ export default function QuoteShippingManifestsSubTab({
 function StatusBadge({ status }: { status: string }) {
     const getStyles = () => {
         switch (status) {
-            case "Approved":
-            case "Paid":
-            case "Posted":
-            case "Delivered":
-            case "Completed":
-            case "Applied":
-                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-            case "Open":
-            case "Shipped":
-            case "Converted":
-                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-            case "Pending":
-            case "Partial Shipment":
-                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-            case "Draft":
-                return "bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
-            case "Rejected":
-            case "Partial Rejected":
-            case "Cancelled":
-            case "Canceled":
-                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-            case "Expired":
-                return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-            case "Closed":
-                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+            case"Approved":
+            case"Paid":
+            case"Posted":
+            case"Delivered":
+            case"Completed":
+            case"Applied":
+                return"bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+            case"Open":
+            case"Shipped":
+            case"Converted":
+                return"bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+            case"Pending":
+            case"Partial Shipment":
+                return"bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+            case"Draft":
+                return"bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
+            case"Rejected":
+            case"Partial Rejected":
+            case"Cancelled":
+            case"Canceled":
+                return"bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+            case"Expired":
+                return"bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
+            case"Closed":
+                return"bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
             default:
-                return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+                return"bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
         }
     };
 

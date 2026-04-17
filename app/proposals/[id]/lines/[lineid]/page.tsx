@@ -7,7 +7,7 @@ import Sidebar from "@/components/layouts/Sidebar";
 import LineFulfillmentsTab from "./components/LineFulfillmentsTab";
 import LinePurchasesTab from "./components/LinePurchasesTab";
 import LineReturnsTab from "./components/LineReturnsTab";
-import { formatDate } from "@/lib/utils/formatting";
+import { formatNumber, formatDate } from "@/lib/utils/formatting";
 
 import LineTaxesTab from "./components/LineTaxesTab";
 import { FulfillmentTabType, FulfillmentData, ReturnsData, SalesOrder, CustomerQuote, PurchaseOrderLine, SupplierBillLine, PurchasesData, TaxDetail } from "../../types";
@@ -96,9 +96,9 @@ export default function ProposalProductDetailPage({
     const [currentLineIndex, setCurrentLineIndex] = useState(0);
 
     // Salesforce credentials
-  const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+    const { user, selectedAccount } = useUserSession();
+    const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+    const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
 
     // Fetch fulfillment, purchases, and returns data
@@ -875,29 +875,15 @@ export default function ProposalProductDetailPage({
                             <input
                                 type="text"
                                 readOnly
-                                value={product.availableToSell?.toLocaleString() || "0"}
-                                className={`w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm focus:outline-none cursor-default truncate ${product.availableToSell > 0 ? 'text-green-600 font-bold' : 'text-gray-900 dark:text-white'}`}
-                                title={product.availableToSell?.toLocaleString() || "0"}
+                                value={formatNumber(product.availableToSell, 0)}
+                                className={`w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm focus:outline-none cursor-default truncate ${product.availableToSell > 0 ? 'text-green-600 font-bold' : product.availableToSell < 0 ? 'text-red-600 font-bold' : 'text-gray-900 dark:text-white'}`}
+                                title={formatNumber(product.availableToSell, 0)}
                             />
                         </div>
 
                         {/* Site */}
                         <div>
                             <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Site">
-                                Site
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.site}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.site}
-                            />
-                        </div>
-
-                        {/* Inventory Account */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Inventory Account">
                                 Inventory Account
                             </label>
                             <input
@@ -909,33 +895,6 @@ export default function ProposalProductDetailPage({
                             />
                         </div>
 
-                        {/* Unit Cost */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Unit Cost">
-                                Unit Cost
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.unitCost}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.unitCost}
-                            />
-                        </div>
-
-                        {/* Total Cost */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Total Cost">
-                                Total Cost
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.totalCost}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.totalCost}
-                            />
-                        </div>
                     </div>
                 </div>
             </div>
@@ -999,7 +958,12 @@ export default function ProposalProductDetailPage({
                             { id: "fulfillment", label: "Fulfillment", count: (fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length) },
                             { id: "purchases", label: "Purchases", count: (purchasesData.purchaseOrders.length + purchasesData.supplierBills.length) },
                             { id: "returns", label: "Returns", count: (returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length) }
-                        ].map((tab) => (
+                        ].filter(tab => {
+                            const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type || selectedAccount?.type;
+                            const isRestricted = accountType === 'Customer' || accountType === 'NSO';
+                            if (isRestricted && tab.id === 'purchases') return false;
+                            return true;
+                        }).map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as any)}

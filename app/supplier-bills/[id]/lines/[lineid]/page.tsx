@@ -27,9 +27,9 @@ export default function SupplierBillLineDetailPage({
     const [files, setFiles] = useState<any[]>([]);
     const [subTabLoading, setSubTabLoading] = useState(false);
 
-  const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+    const { user, selectedAccount } = useUserSession();
+    const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+    const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     useEffect(() => {
         async function fetchLines() {
@@ -311,7 +311,6 @@ export default function SupplierBillLineDetailPage({
                             </div>
                             <div className="min-w-0">
                                 <h3 className="text-base font-semibold text-gray-900 dark:text-white " title="Product Information">Product Information</h3>
-                                <p className="text-xs text-gray-500 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
                             </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

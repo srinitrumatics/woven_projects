@@ -97,23 +97,23 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                 <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="Debit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
-                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
-                            <SortableHeader label="Supplier Bill" field="Supplier_Bill_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierBill} onResize={handleResize} />
-                            <SortableHeader label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
-                            <SortableHeader label="Customer Quote" field="Customer_Quote_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuote} onResize={handleResize} />
-                            <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerOrder} onResize={handleResize} />
-                            <SortableHeader label="Supplier Credit Memo" field="Supplier_Credit_Memo__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierCreditMemo} onResize={handleResize} />
-                            <SortableHeader label="Debit to Account" field="Debit_to_Account_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.debitToAccount} onResize={handleResize} />
-                            <SortableHeader label="Debit to Contact" field="Debit_to_Contact_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.debitToContact} onResize={handleResize} />
-                            <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalLines} onResize={handleResize} />
-                            <SortableHeader label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalCost} onResize={handleResize} />
-                            <SortableHeader label="Shipping" field="Total_Shipping_Charges__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipping} onResize={handleResize} />
-                            <SortableHeader label="Total Debit Amount" field="Total_Debit_Amount__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalDebitAmount} onResize={handleResize} />
-                            <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.issuedDate} onResize={handleResize} />
-                            <SortableHeader label="Approval Date" field="Approval_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.approvalDate} onResize={handleResize} />
-                            <SortableHeader label="Available Debit Balance" field="Available_Debit_Balance__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.availableDebitBalance} onResize={handleResize} />
-                            <SortableHeader label="Settled Date" field="Settled_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.settledDate} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Debit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30"/>
+                            <SortableHeader truncate={false} label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Supplier Bill" field="Supplier_Bill_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierBill} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Customer Quote" field="Customer_Quote_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuote} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerOrder} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Supplier Credit Memo" field="Supplier_Credit_Memo__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierCreditMemo} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Debit to Account" field="Debit_to_Account_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.debitToAccount} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Debit to Contact" field="Debit_to_Contact_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.debitToContact} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Total Lines" field="Total_Lines__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalLines} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalCost} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Shipping" field="Total_Shipping_Charges__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipping} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Total Debit Amount" field="Total_Debit_Amount__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalDebitAmount} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Issued Date" field="Issued_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.issuedDate} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Approval Date" field="Approval_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.approvalDate} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Available Debit Balance" field="Available_Debit_Balance__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.availableDebitBalance} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Settled Date" field="Settled_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.settledDate} onResize={handleResize} />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -163,7 +163,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                     {d.Debit_to_Contact_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(d.Total_Lines__c || 0)}>
-                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium truncate" >
+                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium truncate">
                                         {d.Total_Lines__c || 0}
                                     </span>
                                 </td>

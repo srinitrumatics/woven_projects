@@ -259,7 +259,7 @@ export default function SupplierBillsPage() {
                         <table className="w-full border-collapse">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <SortableHeader label="Supplier Bill" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
+                                    <SortableHeader label="Supplier Bill" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                     <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                                     <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderName} onResize={handleResize} />
                                     <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteName} onResize={handleResize} />
@@ -282,7 +282,7 @@ export default function SupplierBillsPage() {
                                 ) : (
                                     paginatedBills.map(bill => (
                                         <tr key={bill.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onClick={() => router.push(`/supplier-bills/${bill.id}`)}>
-                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate" title={bill.name}>{bill.name}</td>
+                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate sticky left-0 bg-white dark:bg-gray-800 z-10" title={bill.name}>{bill.name}</td>
                                             <td className="px-2 py-2 text-sm truncate" title={bill.status}><StatusBadge status={bill.status} /></td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.purchaseOrderName}>
                                                 {bill.purchaseOrderId && bill.purchaseOrderId !== 'N/A' && bill.purchaseOrderId !== '' ? (

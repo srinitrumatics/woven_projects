@@ -207,4 +207,6 @@ export interface InvoiceDetails extends Invoice {
   grossWeight?: number;
   dw139?: number;
   dw166?: number;
+  issuedDate?: string;
+  daysOutstanding?: number;
 }

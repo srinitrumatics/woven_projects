@@ -10,7 +10,7 @@ interface POReturnsTabProps {
 }
 
 export default function POReturnsTab({ debitMemos, rtv }: POReturnsTabProps) {
-    const [activeSubTab, setActiveSubTab] = useState<"debitMemo" | "rtv">("debitMemo");
+    const [activeSubTab, setActiveSubTab] = useState<"debitMemo"| "rtv">("debitMemo");
 
     return (
         <div className="flex flex-col h-full min-w-0">
@@ -38,10 +38,10 @@ export default function POReturnsTab({ debitMemos, rtv }: POReturnsTabProps) {
 
             {/* Sub-tab Content */}
             <div className="flex-1 min-h-0">
-                {activeSubTab === "debitMemo" && (
+                {activeSubTab === "debitMemo"&& (
                     <PODebitMemoLinesTab lines={debitMemos} />
                 )}
-                {activeSubTab === "rtv" && (
+                {activeSubTab === "rtv"&& (
                     <PORtvLinesTab lines={rtv} />
                 )}
             </div>

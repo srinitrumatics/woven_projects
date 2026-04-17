@@ -4,6 +4,7 @@ import { ReturnsData, ReturnsTabType, Return, RMA, RTV, CreditMemo, DebitMemo } 
 import { useSortableData } from "../../../../hooks/useSortableData";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import Pagination from "../../../../components/ui/Pagination";
+import { useUserSession } from "@/components/UserSessionContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -15,15 +16,22 @@ interface ReturnsTabProps {
 }
 
 export default function ReturnsTab({ returnsData, loading, widths, onResize }: ReturnsTabProps) {
+    const { selectedAccount } = useUserSession();
+    const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
+    const isRestricted = accountType === 'Customer' || accountType === 'NSO';
+
     const [activeTab, setActiveTab] = useState<ReturnsTabType>("rma");
     const [currentPage, setCurrentPage] = useState(1);
 
-    const tabs: { id: ReturnsTabType; label: string; count: number }[] = [
+    const tabs = ([
         { id: "rma", label: "RMAs", count: returnsData.rma.length },
         { id: "credit", label: "Credit Memos", count: returnsData.creditMemos.length },
         { id: "rtv", label: "RTVs", count: returnsData.rtv.length },
         { id: "debit", label: "Debit Memos", count: returnsData.debitMemos.length },
-    ];
+    ] as { id: ReturnsTabType; label: string; count: number }[]).filter(tab => {
+        if (isRestricted && (tab.id === 'rtv' || tab.id === 'debit')) return false;
+        return true;
+    });
 
     const getActiveData = () => {
         switch (activeTab) {
@@ -90,8 +98,8 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
             <div className="overflow-x-auto">
                 {sortedData.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                        <p className="text-sm truncate">
+                        <p className="text-lg font-medium" title="No records found">No records found</p>
+                        <p className="text-sm">
                             There are no {activeTab === 'rma' ? 'RMAs' :
                                 activeTab === 'credit' ? 'Credit Memos' :
                                     activeTab === 'rtv' ? 'RTVs' :
@@ -105,88 +113,88 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
 
                                 {activeTab === 'rma' ? (
                                     <>
-                                        <SortableHeader label="RMA" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].salesOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="RMA Type" field="rmaType" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rmaType} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Ship from Account" field="shipFromAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromAccountName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Ship from Contact" field="shipFromContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromContactName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Return to Account" field="returnToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].returnToAccountName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Return to Contact" field="returnToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].returnToContactName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].dropShip} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalPrice} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].issuedDate} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Return by Date" field="returnByDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].returnByDate} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shippingMethod} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].logisticsPartner} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Logistics Contact" field="logisticsContact" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].logisticsContact} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].trackingNumber} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].estimatedDeliveryDate} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].trackingStatus} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].actualDeliveryDate} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Goods Receipts Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].goodsReceiptDate} onResize={(f, w) => onResize(activeTab, f, w)} />
+                                        <SortableHeader label="RMA" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].salesOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="RMA Type" field="rmaType" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rmaType} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Ship from Account" field="shipFromAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromAccountName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Ship from Contact" field="shipFromContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromContactName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Return to Account" field="returnToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].returnToAccountName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Return to Contact" field="returnToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].returnToContactName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].dropShip} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalPrice} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].issuedDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Return by Date" field="returnByDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].returnByDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shippingMethod} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].logisticsPartner} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Logistics Contact" field="logisticsContact" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].logisticsContact} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].trackingNumber} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].estimatedDeliveryDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].trackingStatus} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].actualDeliveryDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Goods Receipts Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].goodsReceiptDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                     </>
                                 ) : activeTab === 'rtv' ? (
                                     <>
-                                        <SortableHeader label="RTV" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].purchaseOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="RTV Type" field="rtvType" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rtvType} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="RMA Number" field="rmaNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rmaNumber} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Ship from Account" field="shipFromAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromAccountName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Ship from Contact" field="shipFromContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromContactName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierContact} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalCost} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].issuedDate} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Approval Date" field="approvalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].approvalDate} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Return by Date" field="returnByDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].returnByDate} onResize={(f, w) => onResize(activeTab, f, w)} />
+                                        <SortableHeader label="RTV" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].purchaseOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="RTV Type" field="rtvType" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rtvType} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="RMA Number" field="rmaNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rmaNumber} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Ship from Account" field="shipFromAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromAccountName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Ship from Contact" field="shipFromContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromContactName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Supplier Contact" field="supplierContact" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierContact} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalCost} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].issuedDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Approval Date" field="approvalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].approvalDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Return by Date" field="returnByDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].returnByDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                     </>
                                 ) : activeTab === 'credit' ? (
                                     <>
-                                        <SortableHeader label="Credit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Invoice" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].invoiceName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Credit to Account" field="creditToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].creditToAccountName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Credit to Contact" field="creditToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].creditToContactName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalPrice} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalShippingCharges} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalTaxesAmount} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Total Credit Amount" field="totalCreditAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalCreditAmount} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].issuedDate} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].expirationDate} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Available Credit Balance" field="availableCreditBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].availableCreditBalance} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].settledDate} onResize={(f, w) => onResize(activeTab, f, w)} />
+                                        <SortableHeader label="Credit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Invoice" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].invoiceName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Credit to Account" field="creditToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].creditToAccountName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Credit to Contact" field="creditToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].creditToContactName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalPrice} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalShippingCharges} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalTaxesAmount} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Total Credit Amount" field="totalCreditAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalCreditAmount} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].issuedDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].expirationDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Available Credit Balance" field="availableCreditBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].availableCreditBalance} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].settledDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                     </>
                                 ) : (
                                     <>
                                         {activeTab === 'debit' && (
                                             <>
-                                                <SortableHeader label="Debit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierBillName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].purchaseOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Supplier Credit Memo" field="supplierCreditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierCreditMemoName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Debit to Account" field="debitToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].debitToAccountName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Debit to Contact" field="debitToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].debitToContactName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalCost} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalShippingCharges} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Total Debit Amount" field="totalDebitAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalDebitAmount} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].issuedDate} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Approval Date" field="approvalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].approvalDate} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Available Debit Balance" field="availableDebitBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].availableDebitBalance} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                                <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].settledDate} onResize={(f, w) => onResize(activeTab, f, w)} />
+                                                <SortableHeader label="Debit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierBillName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].purchaseOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Supplier Credit Memo" field="supplierCreditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].supplierCreditMemoName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Debit to Account" field="debitToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].debitToAccountName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Debit to Contact" field="debitToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].debitToContactName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalCost} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalShippingCharges} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Total Debit Amount" field="totalDebitAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalDebitAmount} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].issuedDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Approval Date" field="approvalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].approvalDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Available Debit Balance" field="availableDebitBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].availableDebitBalance} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                                <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].settledDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                             </>
                                         )}
                                     </>

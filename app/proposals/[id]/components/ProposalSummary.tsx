@@ -48,7 +48,7 @@ export default function ProposalSummary({
                 </div>
                 <div className="min-w-0">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Proposal Summary">Proposal Summary</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Your Proposal Summary">Review Your Proposal Summary</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Your Proposal Summary">Review Proposal Summary</p>
                 </div>
             </div>
 
@@ -109,12 +109,12 @@ export default function ProposalSummary({
 
                     {/* Upload Attachments */}
                     <div className="border-t border-gray-300 dark:border-gray-600 pt-3min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 truncate">Upload Files (Max 10MB)</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 truncate">Upload Files</label>
                         <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 cursor-pointer hover:border-primary dark:hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all truncate">
                             <svg className="w-4 h-4 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                             </svg>
-                            <span className="text-xs text-gray-500 dark:text-gray-400 text-center truncate"> PDF · JPEG · PNG · CSV · XLS · XLSX · DOC · TXT </span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400 text-center truncate"> Max 10MB </span>
                             <input
                                 type="file"
                                 accept=".pdf,.jpg,.jpeg,.png,.csv,.xls,.xlsx,.doc,.docx,.txt"

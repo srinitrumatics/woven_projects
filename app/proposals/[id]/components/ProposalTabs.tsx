@@ -1,3 +1,4 @@
+import { useUserSession } from "@/components/UserSessionContext";
 import { ProposalTabType } from "../types";
 
 interface ProposalTabsProps {
@@ -17,7 +18,11 @@ interface ProposalTabsProps {
 }
 
 export default function ProposalTabs({ activeTab, onTabChange, counts = {} }: ProposalTabsProps) {
-    const tabs: { id: ProposalTabType; label: string; count?: number }[] = [
+    const { selectedAccount } = useUserSession();
+    const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
+    const isRestricted = accountType === 'Customer' || accountType === 'NSO';
+
+    const tabs = ([
         { id: "products", label: "Products", count: counts.products },
         { id: "elements", label: "Elements", count: counts.elements },
         { id: "taxes", label: "Taxes", count: counts.taxes },
@@ -28,8 +33,10 @@ export default function ProposalTabs({ activeTab, onTabChange, counts = {} }: Pr
         { id: "purchases", label: "Purchases", count: counts.purchases },
         { id: "returns", label: "Returns", count: counts.returns },
         { id: "files", label: "Files", count: counts.files },
-
-    ];
+    ] as { id: ProposalTabType; label: string; count?: number }[]).filter(tab => {
+        if (isRestricted && tab.id === 'purchases') return false;
+        return true;
+    });
 
     return (
         <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 w-full">

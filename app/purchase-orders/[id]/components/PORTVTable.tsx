@@ -94,22 +94,22 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                 <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="RTV" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
-                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
-                            <SortableHeader label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
-                            <SortableHeader label="Customer Quote" field="Customer_Quote_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuote} onResize={handleResize} />
-                            <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerOrder} onResize={handleResize} />
-                            <SortableHeader label="RTV Type" field="RTV_Type__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rtvType} onResize={handleResize} />
-                            <SortableHeader label="RMA Number" field="Supplier_RMA_Number__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rmaNumber} onResize={handleResize} />
-                            <SortableHeader label="Ship from Account" field="Ship_from_Account_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipFromAccount} onResize={handleResize} />
-                            <SortableHeader label="Ship from Contact" field="Ship_from_Contact_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipFromContact} onResize={handleResize} />
-                            <SortableHeader label="Supplier Name" field="Supplier_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierName} onResize={handleResize} />
-                            <SortableHeader label="Supplier Contact" field="Supplier_Contact_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierContact} onResize={handleResize} />
-                            <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalLines} onResize={handleResize} />
-                            <SortableHeader label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalCost} onResize={handleResize} />
-                            <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.issuedDate} onResize={handleResize} />
-                            <SortableHeader label="Approval Date" field="Approval_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.approvalDate} onResize={handleResize} />
-                            <SortableHeader label="Return by Date" field="Return_by_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.returnByDate} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="RTV" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30"/>
+                            <SortableHeader truncate={false} label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Customer Quote" field="Customer_Quote_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuote} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerOrder} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="RTV Type" field="RTV_Type__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rtvType} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="RMA Number" field="Supplier_RMA_Number__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rmaNumber} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Ship from Account" field="Ship_from_Account_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipFromAccount} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Ship from Contact" field="Ship_from_Contact_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipFromContact} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Supplier Name" field="Supplier_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierName} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Supplier Contact" field="Supplier_Contact_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierContact} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Total Lines" field="Total_Lines__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalLines} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalCost} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Issued Date" field="Issued_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.issuedDate} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Approval Date" field="Approval_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.approvalDate} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Return by Date" field="Return_by_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.returnByDate} onResize={handleResize} />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -161,7 +161,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                     {r.Supplier_Contact_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(r.Total_Lines__c || 0)}>
-                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium truncate" >
+                                    <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium truncate">
                                         {r.Total_Lines__c || 0}
                                     </span>
                                 </td>

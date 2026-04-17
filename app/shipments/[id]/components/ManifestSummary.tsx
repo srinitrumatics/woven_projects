@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
+import { formatCurrency, formatNumber, formatDate } from "@/lib/utils/formatting";
 import TrackingTimelineModal from "./TrackingTimelineModal";
 
 interface ManifestSummaryProps {
@@ -50,7 +50,7 @@ export default function ManifestSummary({
                 </div>
                 <div className="min-w-0">
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white " title="Manifest Summary">Manifest Summary</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Your Shipping Manifest Summary">Review Your Shipping Manifest Summary</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Shipping Manifest Summary">Review Shipping Manifest Summary</p>
                 </div>
             </div>
 
@@ -70,9 +70,22 @@ export default function ManifestSummary({
                     <SummaryItem label="DW 139 (lbs)" value={formatNumber(shipment.Case_DW_139__c || 0, 2)} />
                     <SummaryItem label="DW 166 (lbs)" value={formatNumber(shipment.Case_DW_166__c || 0, 2)} />
                 </div>
+
+                <div className="pt-2 px-3 py-3 border border-gray-200 dark:border-gray-700 space-y-3">
+                    <SummaryItem label="Shipping Method" value={shipment.Shipping_Method__c || 'N/A'} />
+                    <SummaryItem label="Service Level" value={shipment.Service_Level__c || 'N/A'} />
+                    <SummaryItem
+                        label="Ship Confirmed Date"
+                        value={shipment.Delivered_Date__c ? formatDate(shipment.Delivered_Date__c, 'numeric-dash') : ''}
+                    />
+                    <SummaryItem
+                        label="Estimated Delivery Date"
+                        value={shipment.Ship_Date__c ? formatDate(shipment.Ship_Date__c, 'numeric-dash') : ''}
+                    />
+                </div>
             </div>
 
-            <div className="mt-8 flex gap-3">
+            <div className="mt-4 flex gap-3">
                 <button
                     onClick={handleTrackClick}
                     disabled={isLoadingTracking || !hasTracking}

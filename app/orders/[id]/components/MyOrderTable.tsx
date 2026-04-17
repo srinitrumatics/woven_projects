@@ -44,9 +44,6 @@ export default function MyOrderTable({
     const { items: sortedProducts, requestSort, sortConfig } = useSortableData<Product>(filteredOrderProducts);
     const [currentPage, setCurrentPage] = useState(1);
 
-    // Track per-product qty warnings
-    const [qtyWarnings, setQtyWarnings] = useState<Record<string, boolean>>({});
-
     // Reset pagination when search or products change
     useEffect(() => {
         setCurrentPage(1);
@@ -58,10 +55,6 @@ export default function MyOrderTable({
         const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
         return sortedProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
     }, [sortedProducts, currentPage]);
-
-    const setWarning = (key: string, warn: boolean) => {
-        setQtyWarnings(prev => ({ ...prev, [key]: warn }));
-    };
 
     const handleTooltipEnter = (e: React.MouseEvent<HTMLElement>, product: Product) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -151,12 +144,10 @@ export default function MyOrderTable({
                                                     <button
                                                         onClick={() => {
                                                             const moq = product.moq || 1;
-                                                            const newQty = Math.max(product.orderQty - moq, moq);
+                                                            const newQty = Math.max(product.orderQty - moq, 0);
                                                             handleQuantityChange(product.lineItemKey!, newQty);
-                                                            setWarning(product.lineItemKey!, false);
                                                         }}
-                                                        disabled={product.availableQty <= 0}
-                                                        className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${product.availableQty <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed' : 'bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'}`}
+                                                        className="w-6 h-6 flex items-center justify-center rounded transition-colors bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
                                                     >
                                                         -
                                                     </button>
@@ -167,41 +158,24 @@ export default function MyOrderTable({
                                                             const val = e.target.value;
                                                             if (val === '' || /^[0-9]+$/.test(val)) {
                                                                 const numVal = val === '' ? 0 : parseInt(val);
-                                                                const exceeded = numVal > product.availableQty;
-                                                                setWarning(product.lineItemKey!, exceeded);
-                                                                // Let the value be set but show warning (no silent clamping)
                                                                 handleQuantityChange(product.lineItemKey!, numVal);
                                                             }
                                                         }}
-                                                        className={`w-16 px-1 py-0.5 border rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent ${qtyWarnings[product.lineItemKey!]
-                                                            ? 'border-amber-500 focus:ring-amber-400'
-                                                            : 'border-gray-300 dark:border-gray-600'
-                                                            }`}
-                                                        min={product.moq || 1}
+                                                        className="w-16 px-1 py-0.5 border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
+                                                        min={0}
                                                     />
                                                     <button
                                                         onClick={() => {
                                                             const moq = product.moq || 1;
-                                                            const newQty = Math.min(product.orderQty + moq, product.availableQty);
+                                                            const newQty = product.orderQty + moq;
                                                             handleQuantityChange(product.lineItemKey!, newQty);
-                                                            setWarning(product.lineItemKey!, false);
                                                         }}
-                                                        disabled={product.availableQty <= 0}
-                                                        className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${product.availableQty <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed' : 'bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'}`}
+                                                        className="w-6 h-6 flex items-center justify-center rounded transition-colors bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
                                                     >
                                                         +
                                                     </button>
                                                 </div>
-                                                {qtyWarnings[product.lineItemKey!] ? (
-                                                    <div className="flex gap-1 text-xs text-amber-600 dark:text-amber-400 font-medium">
-                                                        <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                                                        </svg>
-                                                        Exceeds available ({product.availableQty})
-                                                    </div>
-                                                ) : (
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
-                                                )}
+                                                <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
                                             </div>
                                         ) : (
                                             <div className="text-left text-sm text-gray-900 dark:text-white font-medium">

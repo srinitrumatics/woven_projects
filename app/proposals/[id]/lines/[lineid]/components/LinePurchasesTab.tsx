@@ -122,8 +122,8 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                     {activeTab === "purchases" && (
                         sortedPurchases.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                                <p className="text-sm truncate" title="There are no purchases associated with this proposal line.">There are no purchases associated with this proposal line.</p>
+                                <p className="text-lg font-medium" title="No records found">No records found</p>
+                                <p className="text-sm" title="There are no purchases associated with this proposal line.">There are no purchases associated with this proposal line.</p>
                             </div>
                         ) : (
                             <>
@@ -138,25 +138,26 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                                 width={purchaseWidths.name}
                                                 onResize={handlePurchaseResize}
                                                 className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
+                                                truncate={false}
                                             />
-                                            <SortableHeader label="Status" field="status" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.status} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.purchaseOrderName} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.customerQuoteLineName} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.productName} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.productDescription} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.manufacturerDBA} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.unitCost} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.totalOrderQty} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.totalCost} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.shipping} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Line Total Cost" field="lineTotalCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.lineTotalCost} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Open Balance Qty" field="openBalanceQty" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.openBalanceQty} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.trackingNumber} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.estimatedDeliveryDate} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.trackingStatus} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.actualDeliveryDate} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Goods Receipt Date" field="goodsReceiptDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.goodsReceiptDate} onResize={handlePurchaseResize} />
-                                            <SortableHeader label="Invoice Status" field="invoiceStatus" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.invoiceStatus} onResize={handlePurchaseResize} />
+                                            <SortableHeader label="Status" field="status" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.status} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.purchaseOrderName} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.customerQuoteLineName} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.productName} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.productDescription} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.manufacturerDBA} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.unitCost} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.totalOrderQty} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.totalCost} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.shipping} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Line Total Cost" field="lineTotalCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.lineTotalCost} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Open Balance Qty" field="openBalanceQty" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.openBalanceQty} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.trackingNumber} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.estimatedDeliveryDate} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.trackingStatus} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.actualDeliveryDate} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Goods Receipt Date" field="goodsReceiptDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.goodsReceiptDate} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Invoice Status" field="invoiceStatus" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.invoiceStatus} onResize={handlePurchaseResize} truncate={false} />
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -222,8 +223,8 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                     {activeTab === "supplier_bills" && (
                         sortedBills.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                                <p className="text-sm truncate" title="There are no supplier bills associated with this proposal line.">There are no supplier bills associated with this proposal line.</p>
+                                <p className="text-lg font-medium" title="No records found">No records found</p>
+                                <p className="text-sm" title="There are no supplier bills associated with this proposal line.">There are no supplier bills associated with this proposal line.</p>
                             </div>
                         ) : (
                             <>
@@ -238,19 +239,20 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                                 width={billWidths.name}
                                                 onResize={handleBillResize}
                                                 className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
+                                                truncate={false}
                                             />
-                                            <SortableHeader label="Status" field="status" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.status} onResize={handleBillResize} />
-                                            <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.supplierBillName} onResize={handleBillResize} />
-                                            <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.purchaseOrderLineName} onResize={handleBillResize} />
-                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.productName} onResize={handleBillResize} />
-                                            <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.productDescription} onResize={handleBillResize} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.manufacturerDBA} onResize={handleBillResize} />
-                                            <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.unitCost} onResize={handleBillResize} />
-                                            <SortableHeader label="Billed Qty" field="billedQty" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.billedQty} onResize={handleBillResize} />
-                                            <SortableHeader label="Bill Amount" field="billAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.billAmount} onResize={handleBillResize} />
-                                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.shipping} onResize={handleBillResize} />
-                                            <SortableHeader label="Total Bill Amount" field="totalBillAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.totalBillAmount} onResize={handleBillResize} />
-                                            <SortableHeader label="Goods Receipt Date" field="goodsReceiptDate" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.goodsReceiptDate} onResize={handleBillResize} />
+                                            <SortableHeader label="Status" field="status" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.status} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.supplierBillName} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.purchaseOrderLineName} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.productName} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.productDescription} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.manufacturerDBA} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.unitCost} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Billed Qty" field="billedQty" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.billedQty} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Bill Amount" field="billAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.billAmount} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.shipping} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Total Bill Amount" field="totalBillAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.totalBillAmount} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Goods Receipt Date" field="goodsReceiptDate" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.goodsReceiptDate} onResize={handleBillResize} truncate={false} />
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

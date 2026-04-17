@@ -121,7 +121,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     totalTasks: 120,
     percentCompleted: 140,
     estimatedStartDate: 190,
-    estimatedEndDate: 150
+    estimatedEndDate: 180
   });
 
   const { widths: orderWidths, handleResize: handleOrderResize } = useResizableColumns({
@@ -135,15 +135,15 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     shipToAccountName: 180,
     shipToLocationName: 180,
     shipToContactName: 180,
-    dropShip: 160,
-    totalLines: 160,
+    dropShip: 180,
+    totalLines: 180,
     totalPrice: 160,
     totalShippingCharges: 180,
     totalTaxesAmount: 180,
     grandTotal: 150,
     requestDate: 150,
-    shipDate: 180,
-    deliveredDate: 180
+    shipDate: 200,
+    deliveredDate: 200
   });
 
   const { widths: purchaseWidths, handleResize: handlePurchaseResize } = useResizableColumns({
@@ -206,32 +206,32 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const [fulfillmentWidths, setFulfillmentWidths] = useState({
     invoices: {
       name: 180, status: 180, salesOrderName: 200, customerQuoteName: 200, customerOrderName: 200, customerPO: 150,
-      billToAccountName: 180, billToLocationName: 180, billToContactName: 180, totalLines: 100,
-      totalPrice: 120, totalShippingCharges: 120, totalTaxesAmount: 120, grandTotal: 150,
-      issuedDate: 150, paymentTerms: 150, dueDate: 150, collectionStatus: 150, openBalance: 120,
-      daysOutstanding: 150, settledDate: 150
+      billToAccountName: 180, billToLocationName: 180, billToContactName: 180, totalLines: 160,
+      totalPrice: 160, totalShippingCharges: 120, totalTaxesAmount: 120, grandTotal: 150,
+      issuedDate: 160, paymentTerms: 150, dueDate: 150, collectionStatus: 180, openBalance: 180,
+      daysOutstanding: 180, settledDate: 180
     },
     shipping: {
       name: 180, status: 180, salesOrderName: 180, customerQuoteName: 180, customerOrderName: 180,
       customerPO: 150, shipToAccountName: 180, shipToLocationName: 180, shipToContactName: 180,
-      dropShip: 100, boxCount: 100, boxNetWeight: 120, boxGrossWeight: 120, totalLines: 100,
-      totalPrice: 120, requestDate: 150, shipDate: 150, deliveredDate: 150, shippingMethod: 150,
+      dropShip: 160, boxCount: 160, boxNetWeight: 160, boxGrossWeight: 160, totalLines: 160,
+      totalPrice: 120, requestDate: 150, shipDate: 190, deliveredDate: 190, shippingMethod: 150,
       logisticsPartnerName: 180, logisticsContactName: 180, trackingNumber: 180,
-      estimatedDeliveryDate: 150, trackingStatus: 150, actualDeliveryDate: 150
+      estimatedDeliveryDate: 200, trackingStatus: 150, actualDeliveryDate: 190
     },
     sales: {
       name: 180, status: 180, customerQuoteName: 180, customerOrderName: 180, customerPO: 150,
       billToAccountName: 180, billToLocationName: 180, billToContactName: 180, shipToAccountName: 180,
-      shipToLocationName: 180, shipToContactName: 180, dropShip: 100, totalLines: 100, totalPrice: 120,
-      totalShippingCharges: 120, totalTaxesAmount: 120, grandTotal: 150, requestDate: 150,
-      pickDate: 150, pickCompleteDate: 150, shipDate: 150, deliveredDate: 150
+      shipToLocationName: 180, shipToContactName: 180, dropShip: 160, totalLines: 160, totalPrice: 120,
+      totalShippingCharges: 120, totalTaxesAmount: 120, grandTotal: 150, requestDate: 190,
+      pickDate: 190, pickCompleteDate: 190, shipDate: 180, deliveredDate: 180
     },
     quotes: {
       name: 180, status: 180, customerOrderName: 180, customerPO: 150, billToAccountName: 180,
       billToLocationName: 180, billToContactName: 180, shipToAccountName: 180, shipToLocationName: 180,
-      shipToContactName: 180, dropShip: 100, totalLines: 100, totalPrice: 120, totalShippingCharges: 120,
-      totalTaxesAmount: 120, grandTotal: 150, issuedDate: 150, expirationDate: 150, requestDate: 150,
-      shipDate: 150, deliveredDate: 150
+      shipToContactName: 180, dropShip: 150, totalLines: 150, totalPrice: 120, totalShippingCharges: 120,
+      totalTaxesAmount: 120, grandTotal: 150, issuedDate: 150, expirationDate: 180, requestDate: 150,
+      shipDate: 180, deliveredDate: 180
     }
   });
 

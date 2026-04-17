@@ -66,8 +66,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   const [error, setError] = useState<string | null>(null);
 
   const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
+  const SF_CONTACT_ID = user?.Id || user?.contact?.Id || user?.id || "";
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -146,7 +146,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
     Name: 190,
     status: 120,
     productName: 180,
-    manufacturerDBA: 150,
+    manufacturerDBA: 190,
     description: 200,
     customerQuote: 150,
     supplierBill: 150,
@@ -163,12 +163,14 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   });
 
   const fetchQuote = useCallback(async () => {
+    if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
     try {
       setLoading(true);
+      setError(null);
       const res = await fetch(`/api/salesforce/quotes?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&quoteId=${id}&action=view`);
       if (!res.ok) throw new Error('Failed to fetch quote details');
       const data = await res.json();
-      
+
       const responseData = Array.isArray(data) ? (data[0] || {}) : data;
       const quoteData = responseData?.Customer_Quote__c ? responseData.Customer_Quote__c[0] : (Array.isArray(data) ? data[0] : responseData);
 
@@ -643,7 +645,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
       <Sidebar>
         <div className="flex flex-col items-center justify-center min-h-[400px] min-w-0">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-          <p className="text-gray-500 dark:text-gray-400 truncate" title="Loading quote details...">Loading quote details...</p>
+          <p className="text-gray-500 dark:text-gray-400" title="Loading quote details...">Loading quote details...</p>
         </div>
       </Sidebar>
     );
@@ -653,8 +655,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
     return (
       <Sidebar>
         <div className="p-8 text-center bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <h2 className="text-xl font-semibold text-red-700 dark:text-red-400 mb-2 ">Error</h2>
-          <p className="text-red-600 dark:text-red-300 truncate">{error || 'Quote not found'}</p>
+          <h2 className="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Error</h2>
+          <p className="text-red-600 dark:text-red-300">{error || 'Quote not found'}</p>
           <button
             onClick={() => router.push("/quotes")}
             className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
@@ -689,6 +691,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             <div className="w-full lg:flex-1 min-w-0">
               <QuoteTabs
                 activeTab={activeTab}
+                accountType={selectedAccount?.Account_Type__c}
                 onTabChange={(tab) => {
                   setActiveTab(tab);
                   if (['fulfillment', 'purchases', 'returns', 'files'].includes(tab)) {
@@ -737,7 +740,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
                 loading={tabLoading}
               />
             )}
-            {activeTab === 'purchases' && (
+            {activeTab === 'purchases' && selectedAccount?.Account_Type__c !== 'Customer' && selectedAccount?.Account_Type__c !== 'NSO' && (
               <QuotePurchasesTab
                 quoteId={id}
                 data={purchasesData}
@@ -747,6 +750,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             {activeTab === 'returns' && (
               <QuoteReturnsTab
                 quoteId={id}
+                accountType={selectedAccount?.Account_Type__c}
                 data={returnsData}
                 loading={tabLoading}
               />

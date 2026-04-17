@@ -177,8 +177,8 @@ export default function DeliveryWindowModal({
             return start1 < end2 && start2 < end1;
         };
 
-        const hasOverlap = existingWindows.some(dw => 
-            dw.dayOfWeek === formData.Day_of_Week__c && 
+        const hasOverlap = existingWindows.some(dw =>
+            dw.dayOfWeek === formData.Day_of_Week__c &&
             (initialData ? dw.id !== initialData.id : true) &&
             isOverlapping(formData.WindowStart__c, formData.WindowEnd__c, dw.windowStart, dw.windowEnd)
         );
@@ -239,14 +239,14 @@ export default function DeliveryWindowModal({
 
                         {/* Window Start */}
                         <TimePicker
-                            label="Window Start"
+                            label="Window Start Time"
                             value={formData.WindowStart__c}
                             onChange={(val) => handleTimeChange('WindowStart__c', val)}
                         />
 
                         {/* Window End */}
                         <TimePicker
-                            label="Window End"
+                            label="Window End Time"
                             value={formData.WindowEnd__c}
                             onChange={(val) => handleTimeChange('WindowEnd__c', val)}
                         />

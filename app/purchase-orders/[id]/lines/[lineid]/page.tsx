@@ -24,7 +24,7 @@ export default function POLineDetailPage({
     const [lines, setLines] = useState<PurchaseOrderLine[]>([]);
     const [currentLineIndex, setCurrentLineIndex] = useState(0);
 
-    const [activeTab, setActiveTab] = useState<"bills" | "returns" | "serialNumbers" | "files">("bills");
+    const [activeTab, setActiveTab] = useState<"bills"| "returns"| "serialNumbers"| "files">("bills");
     const [bills, setBills] = useState<any[]>([]);
     const [debitMemos, setDebitMemos] = useState<any[]>([]);
     const [rtv, setRtv] = useState<any[]>([]);
@@ -168,9 +168,9 @@ export default function POLineDetailPage({
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const productImages = [
-        { id: 1, label: "Image 1" },
-        { id: 2, label: "Image 2" },
-        { id: 3, label: "Image 3" },
+        { id: 1, label: "Image 1"},
+        { id: 2, label: "Image 2"},
+        { id: 3, label: "Image 3"},
     ];
 
     const handlePrevImage = () => {
@@ -239,7 +239,7 @@ export default function POLineDetailPage({
                         </div>
                         <div className="flex items-center gap-2 min-w-0">
                             <Link href={`/purchase-orders/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2 font-bold truncate">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                                 Back to Purchase Order
                             </Link>
                         </div>
@@ -248,7 +248,7 @@ export default function POLineDetailPage({
                         <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded truncate">
                             Line {lineNumber} of {totalLines}
                         </span>
-                        <StatusBadge status={line.status === "Approved" ? "Awarded" : line.status} />
+                        <StatusBadge status={line.status === "Approved"? "Awarded": line.status} />
                     </div>
                 </div>
 
@@ -285,7 +285,7 @@ export default function POLineDetailPage({
                                 className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors truncate"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/>
                                 </svg>
                             </button>
                             <button
@@ -293,7 +293,7 @@ export default function POLineDetailPage({
                                 className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors truncate"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
                                 </svg>
                             </button>
 
@@ -317,7 +317,7 @@ export default function POLineDetailPage({
                     <div className="xl:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                         <div className="flex items-center gap-2 mb-3 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-                                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                             </div>
                             <div className="min-w-0">
                                 <h2 className="text-base font-semibold text-gray-900 dark:text-white " title="Purchase Order Line Notes">Purchase Order Line Notes</h2>
@@ -332,7 +332,7 @@ export default function POLineDetailPage({
                     <div className="xl:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
                         <div className="flex items-center gap-2 mb-4 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-                                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                             </div>
                             <div className="min-w-0">
                                 <h3 className="text-base font-semibold text-gray-900 dark:text-white " title="Product Information">Product Information</h3>
@@ -433,23 +433,23 @@ export default function POLineDetailPage({
                             </div>
                         ) : (
                             <>
-                                {activeTab === "bills" && (
+                                {activeTab === "bills"&& (
                                     <div className="space-y-4">
 
                                         <POSupplierBillLinesTable lines={bills} />
                                     </div>
                                 )}
-                                {activeTab === "serialNumbers" && (
+                                {activeTab === "serialNumbers"&& (
                                     <div className="space-y-4">
                                         <POSerialNumberLogLinesTab serialNumbers={serialNumbers} />
                                     </div>
                                 )}
-                                {activeTab === "returns" && (
+                                {activeTab === "returns"&& (
                                     <div className="space-y-4">
                                         <POReturnsTab debitMemos={debitMemos} rtv={rtv} />
                                     </div>
                                 )}
-                                {activeTab === "files" && (
+                                {activeTab === "files"&& (
                                     <div className="space-y-4">
                                         <FileTabsLines files={files} poLineId={lineid} />
                                     </div>
@@ -471,7 +471,7 @@ export default function POLineDetailPage({
                             }`}
                         title="Previous Line"
                     >
-                        <svg className="w-4 h-4 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                        <svg className="w-4 h-4 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
                         Prev
                     </button>
 
@@ -491,7 +491,7 @@ export default function POLineDetailPage({
                         title="Next Line"
                     >
                         Next
-                        <svg className="w-4 h-4 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                        <svg className="w-4 h-4 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg>
                     </button>
                 </div>
             </div>
@@ -502,14 +502,14 @@ export default function POLineDetailPage({
 function InfoField({ label, value, highlight = false }: { label: string, value: any, highlight?: boolean }) {
     return (
         <div>
-            <label className="block text-xs font-bold text-gray-700 dark:text-gray-500 mb-1.5 truncate" title={label}>
+            <label className="block text-xs font-bold text-gray-700 dark:text-gray-500 mb-1.5 " title={label}>
                 {label}
             </label>
             <input
                 type="text"
                 readOnly
                 value={value || "-"}
-                className={`w-full px-3 py-1.5 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded text-sm focus:outline-none cursor-default truncate ${highlight ? "text-primary font-bold border-primary/20 bg-primary/5" : "text-gray-900 dark:text-white"}`}
+                className={`w-full px-3 py-1.5 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded text-sm focus:outline-none cursor-default truncate ${highlight ? "text-primary font-bold border-primary/20 bg-primary/5": "text-gray-900 dark:text-white"}`}
                 title={String(value || "")}
             />
         </div>

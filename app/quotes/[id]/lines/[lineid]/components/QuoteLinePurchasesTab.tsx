@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import { useSortableData } from "@/hooks/useSortableData";
-import { useResizableColumns } from "@/hooks/useResizableColumns";
-import QuoteLinePurchaseOrderLinesSubTab from "./QuoteLinePurchaseOrderLinesSubTab";
-import QuoteLineSupplierBillLinesSubTab from "./QuoteLineSupplierBillLinesSubTab";
+import { useEffect, useMemo, useState } from"react";
+import { useSortableData } from"@/hooks/useSortableData";
+import { useResizableColumns } from"@/hooks/useResizableColumns";
+import QuoteLinePurchaseOrderLinesSubTab from"./QuoteLinePurchaseOrderLinesSubTab";
+import QuoteLineSupplierBillLinesSubTab from"./QuoteLineSupplierBillLinesSubTab";
 
 interface POLI {
     id: string;
@@ -63,7 +63,7 @@ export default function QuoteLinePurchasesTab({
     accountId,
     contactId
 }: QuoteLinePurchasesTabProps) {
-    const [activeSubTab, setActiveSubTab] = useState<"Orders" | "Bills">("Orders");
+    const [activeSubTab, setActiveSubTab] = useState<"Orders"|"Bills">("Orders");
     const [loading, setLoading] = useState(initialLoading);
     const [poliData, setPoliData] = useState<POLI[]>([]);
     const [sbliData, setSbliData] = useState<SBLI[]>([]);
@@ -145,7 +145,7 @@ export default function QuoteLinePurchasesTab({
     }, [lineId, accountId, contactId]);
 
     const activeData = useMemo(() => {
-        return activeSubTab === "Orders" ? poliData : sbliData;
+        return activeSubTab ==="Orders"? poliData : sbliData;
     }, [activeSubTab, poliData, sbliData]);
 
     const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(activeData);
@@ -189,15 +189,15 @@ export default function QuoteLinePurchasesTab({
             {/* Sub Tabs */}
             <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-6">
                 {[
-                    { key: "Orders", label: "Purchase Order Lines", count: poliData.length },
-                    { key: "Bills", label: "Supplier Bill Lines", count: sbliData.length }
+                    { key:"Orders", label:"Purchase Order Lines", count: poliData.length },
+                    { key:"Bills", label:"Supplier Bill Lines", count: sbliData.length }
                 ].map((tab) => (
                     <button
                         key={tab.key}
                         onClick={() => setActiveSubTab(tab.key as any)}
                         className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeSubTab === tab.key
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                            ?"border-primary text-primary"
+                            :"border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                             }`}
                     >
                         {tab.label} {tab.count > 0 && `(${tab.count})`}
@@ -207,7 +207,7 @@ export default function QuoteLinePurchasesTab({
 
             {/* Table Area */}
             <div className="bg-white dark:bg-gray-800">
-                {activeSubTab === "Orders" && (
+                {activeSubTab ==="Orders"&& (
                     <QuoteLinePurchaseOrderLinesSubTab
                         data={poliData}
                         loading={loading}
@@ -217,7 +217,7 @@ export default function QuoteLinePurchasesTab({
                         handleResize={handleResize}
                     />
                 )}
-                {activeSubTab === "Bills" && (
+                {activeSubTab ==="Bills"&& (
                     <QuoteLineSupplierBillLinesSubTab
                         data={sbliData}
                         loading={loading}

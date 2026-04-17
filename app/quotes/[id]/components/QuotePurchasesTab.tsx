@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { QuotePurchase, QuoteSupplierBill } from "../../types";
-import { useResizableColumns } from "@/hooks/useResizableColumns";
-import QuotePurchasesSubTab from "./QuotePurchasesSubTab";
-import QuoteSupplierBillsSubTab from "./QuoteSupplierBillsSubTab";
-import Pagination from "@/components/ui/Pagination";
+import { useState } from"react";
+import { QuotePurchase, QuoteSupplierBill } from"../../types";
+import { useResizableColumns } from"@/hooks/useResizableColumns";
+import QuotePurchasesSubTab from"./QuotePurchasesSubTab";
+import QuoteSupplierBillsSubTab from"./QuoteSupplierBillsSubTab";
+import Pagination from"@/components/ui/Pagination";
 
-type PurchasesSubTab = "purchases" | "supplierBills";
+type PurchasesSubTab ="purchases"|"supplierBills";
 
 interface QuotePurchasesTabProps {
     quoteId: string;
@@ -147,15 +147,15 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
     const totalPagesBills = Math.ceil(supplierBills.length / ITEMS_PER_PAGE);
 
     const tabs: { id: PurchasesSubTab; label: string }[] = [
-        { id: "purchases", label: "Purchases Order" },
-        { id: "supplierBills", label: "Supplier Bills" },
+        { id:"purchases", label:"Purchases Order"},
+        { id:"supplierBills", label:"Supplier Bills"},
     ];
 
     return (
         <div className="flex flex-col h-full min-w-0">
             {/* Sub-tabs Navigation */}
             <div className="border-b border-gray-200 dark:border-gray-700">
-                <nav className="-mb-px flex space-x-8 px-4" aria-label="Tabs">
+                <nav className="-mb-px flex space-x-8 px-4"aria-label="Tabs">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
@@ -163,16 +163,16 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
                                 setActiveSubTab(tab.id);
                             }}
                             className={`
-                                truncate py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                                 py-4 px-1 border-b-2 font-medium text-sm transition-colors
                                 ${activeSubTab === tab.id
-                                    ? "border-primary text-primary"
-                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+                                    ?"border-primary text-primary"
+                                    :"border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
                                 }
                             `}
                         >
                             {tab.label}
-                            {tab.id === "purchases" && purchases.length > 0 && ` (${purchases.length})`}
-                            {tab.id === "supplierBills" && supplierBills.length > 0 && ` (${supplierBills.length})`}
+                            {tab.id ==="purchases"&& purchases.length > 0 && ` (${purchases.length})`}
+                            {tab.id ==="supplierBills"&& supplierBills.length > 0 && ` (${supplierBills.length})`}
                         </button>
                     ))}
                 </nav>
@@ -180,7 +180,7 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
 
             {/* Tab Content */}
             <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2">
-                {activeSubTab === "purchases" && (
+                {activeSubTab ==="purchases"&& (
                     <div className="flex flex-col">
                         <QuotePurchasesSubTab
                             purchases={paginatedPurchases}
@@ -203,7 +203,7 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
                         </div>
                     </div>
                 )}
-                {activeSubTab === "supplierBills" && (
+                {activeSubTab ==="supplierBills"&& (
                     <div className="flex flex-col">
                         <QuoteSupplierBillsSubTab
                             bills={paginatedBills}
@@ -214,7 +214,7 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
                             widths={billWidths}
                             onResize={handleBillResize}
                         />
-                        <div className="px-4 py-3 ">
+                        <div className="px-4 py-3">
                             <Pagination
                                 currentPage={currentPageBills}
                                 totalPages={totalPagesBills}

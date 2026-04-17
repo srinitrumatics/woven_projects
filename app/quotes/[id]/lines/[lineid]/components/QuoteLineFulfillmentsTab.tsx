@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { useSortableData } from "@/hooks/useSortableData";
-import { useResizableColumns } from "@/hooks/useResizableColumns";
-import QuoteLineSalesOrderLinesSubTab from "./QuoteLineSalesOrderLinesSubTab";
-import QuoteLineInvoiceLinesSubTab from "./QuoteLineInvoiceLinesSubTab";
-import QuoteLineShippingManifestLinesSubTab from "./QuoteLineShippingManifestLinesSubTab";
+import { useEffect, useMemo, useState } from"react";
+import { useSortableData } from"@/hooks/useSortableData";
+import { useResizableColumns } from"@/hooks/useResizableColumns";
+import QuoteLineSalesOrderLinesSubTab from"./QuoteLineSalesOrderLinesSubTab";
+import QuoteLineInvoiceLinesSubTab from"./QuoteLineInvoiceLinesSubTab";
+import QuoteLineShippingManifestLinesSubTab from"./QuoteLineShippingManifestLinesSubTab";
 
 interface SOLI {
     id: string;
@@ -91,7 +91,7 @@ export default function QuoteLineFulfillmentsTab({
     contactId,
     currentProduct
 }: QuoteLineFulfillmentTabProps) {
-    const [activeSubTab, setActiveSubTab] = useState<"Orders" | "Invoices" | "Manifests">("Orders");
+    const [activeSubTab, setActiveSubTab] = useState<"Orders"|"Invoices"|"Manifests">("Orders");
     const [loading, setLoading] = useState(initialLoading);
     const [soliData, setSoliData] = useState<SOLI[]>([]);
     const [inliData, setInliData] = useState<INLI[]>([]);
@@ -202,8 +202,8 @@ export default function QuoteLineFulfillmentsTab({
     }, [lineId, accountId, contactId]);
 
     const activeData = useMemo(() => {
-        if (activeSubTab === "Orders") return soliData;
-        if (activeSubTab === "Invoices") return inliData;
+        if (activeSubTab ==="Orders") return soliData;
+        if (activeSubTab ==="Invoices") return inliData;
         return smliData;
     }, [activeSubTab, soliData, inliData, smliData]);
 
@@ -253,16 +253,16 @@ export default function QuoteLineFulfillmentsTab({
             {/* Sub Tabs */}
             <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-6">
                 {[
-                    { key: "Orders", label: "Sales Orders Lines", count: soliData.length },
-                    { key: "Invoices", label: "Invoices Lines", count: inliData.length },
-                    { key: "Manifests", label: "Shipping Manifests Lines", count: smliData.length }
+                    { key:"Orders", label:"Sales Orders Lines", count: soliData.length },
+                    { key:"Invoices", label:"Invoices Lines", count: inliData.length },
+                    { key:"Manifests", label:"Shipping Manifests Lines", count: smliData.length }
                 ].map((tab) => (
                     <button
                         key={tab.key}
                         onClick={() => setActiveSubTab(tab.key as any)}
                         className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeSubTab === tab.key
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                            ?"border-primary text-primary"
+                            :"border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                             }`}
                     >
                         {tab.label} {tab.count > 0 && `(${tab.count})`}
@@ -272,7 +272,7 @@ export default function QuoteLineFulfillmentsTab({
 
             {/* Table Area */}
             <div className="bg-white dark:bg-gray-800">
-                {activeSubTab === "Orders" && (
+                {activeSubTab ==="Orders"&& (
                     <QuoteLineSalesOrderLinesSubTab
                         data={soliData}
                         loading={loading}
@@ -282,7 +282,7 @@ export default function QuoteLineFulfillmentsTab({
                         handleResize={handleResize}
                     />
                 )}
-                {activeSubTab === "Invoices" && (
+                {activeSubTab ==="Invoices"&& (
                     <QuoteLineInvoiceLinesSubTab
                         data={inliData}
                         loading={loading}
@@ -292,7 +292,7 @@ export default function QuoteLineFulfillmentsTab({
                         handleResize={handleResize}
                     />
                 )}
-                {activeSubTab === "Manifests" && (
+                {activeSubTab ==="Manifests"&& (
                     <QuoteLineShippingManifestLinesSubTab
                         data={smliData}
                         loading={loading}

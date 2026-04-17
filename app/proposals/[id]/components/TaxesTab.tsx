@@ -40,8 +40,8 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
     if (taxes.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no taxes associated with this proposal.">There are no taxes associated with this proposal.</p>
+                <p className="text-lg font-medium" title="No records found">No records found</p>
+                <p className="text-sm" title="There are no taxes associated with this proposal.">There are no taxes associated with this proposal.</p>
             </div>
         );
     }
@@ -52,20 +52,20 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
                 <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="Sales Tax Amount" field="salesTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="Use Tax Rate" field="useTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.useTaxRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="Use Tax Amount" field="useTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.useTaxAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="Local Tax Rate" field="localTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.localTaxRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="Local Tax Amount" field="localTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.localTaxAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="Excise Tax Rate" field="exciseTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseTaxRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="Excise Tax Amount" field="exciseTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseTaxAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="GRT Rate" field="grossReceiptsTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.grossReceiptsTaxRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="GRT Amount" field="grossReceiptsTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.grossReceiptsTaxAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="GST Rate" field="gstRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="GST Amount" field="gstAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="VAT Rate" field="vatRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
-                            <SortableHeader label="VAT Amount" field="vatAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
+                            <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="Sales Tax Amount" field="salesTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="Use Tax Rate" field="useTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.useTaxRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="Use Tax Amount" field="useTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.useTaxAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="Local Tax Rate" field="localTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.localTaxRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="Local Tax Amount" field="localTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.localTaxAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="Excise Tax Rate" field="exciseTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseTaxRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="Excise Tax Amount" field="exciseTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseTaxAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="GRT Rate" field="grossReceiptsTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.grossReceiptsTaxRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="GRT Amount" field="grossReceiptsTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.grossReceiptsTaxAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="GST Rate" field="gstRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="GST Amount" field="gstAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="VAT Rate" field="vatRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
+                            <SortableHeader label="VAT Amount" field="vatAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" truncate={false} />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

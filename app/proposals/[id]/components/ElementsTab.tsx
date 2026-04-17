@@ -42,8 +42,8 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
     if (elements.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no Elements associated with this proposal.">
+                <p className="text-lg font-medium" title="No records found">No records found</p>
+                <p className="text-sm" title="There are no Elements associated with this proposal.">
                     There are no Elements associated with this proposal.
                 </p>
             </div>
@@ -56,9 +56,9 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
                 <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="WBS" field="wbs" sortConfig={sortConfig} requestSort={requestSort} width={widths.wbs} onResize={onResize} className="bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Proposal Element" field="proposalElement" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalElement} onResize={onResize} />
-                            <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={onResize} />
+                            <SortableHeader label="WBS" field="wbs" sortConfig={sortConfig} requestSort={requestSort} width={widths.wbs} onResize={onResize} className="bg-primary-light dark:bg-gray-900" truncate={false} />
+                            <SortableHeader label="Proposal Element" field="proposalElement" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalElement} onResize={onResize} truncate={false} />
+                            <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={onResize} truncate={false} />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

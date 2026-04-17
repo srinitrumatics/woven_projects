@@ -30,7 +30,7 @@ export default function AuthorizeLocationsPage() {
     const [activeTab, setActiveTab] = useState<TabFilter>("All");
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [viewMode, setViewMode] = useState<'list' | 'card'>('list');
+    const [viewMode, setViewMode] = useState<'list' | 'card'>('card');
     const [locations, setLocations] = useState<AuthorizeLocation[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +38,7 @@ export default function AuthorizeLocationsPage() {
     const [selectedLocation, setSelectedLocation] = useState<AuthorizeLocation | null>(null);
     const [locationTypes, setLocationTypes] = useState<string[]>([]);
     const [addressTypes, setAddressTypes] = useState<string[]>([]);
-    
+
     // User session for SF API queries
     const { user, selectedAccount } = useUserSession();
     const accountId = selectedAccount?.Id || selectedAccount?.id || "";
@@ -233,7 +233,7 @@ export default function AuthorizeLocationsPage() {
     return (
         <>
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Authorize Locations</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Authorized Locations</h1>
                 <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Authorized Locations">Manage and Track Authorized Locations</p>
             </div>
 
@@ -395,7 +395,7 @@ export default function AuthorizeLocationsPage() {
                                     <SortableHeader label="Street" field="street" sortConfig={sortConfig} requestSort={requestSort} width={widths.street} onResize={handleResize} />
                                     <SortableHeader label="City" field="city" sortConfig={sortConfig} requestSort={requestSort} width={widths.city} onResize={handleResize} />
                                     <SortableHeader label="State" field="state" sortConfig={sortConfig} requestSort={requestSort} width={widths.state} onResize={handleResize} />
-                                    <SortableHeader label="ZIP Code" field="zipCode" sortConfig={sortConfig} requestSort={requestSort} width={widths.zipCode} onResize={handleResize} />
+                                    <SortableHeader label="Zip Code" field="zipCode" sortConfig={sortConfig} requestSort={requestSort} width={widths.zipCode} onResize={handleResize} />
                                     <SortableHeader label="Country" field="country" sortConfig={sortConfig} requestSort={requestSort} width={widths.country} onResize={handleResize} />
                                     <SortableHeader label="Life Gate" field="liftGate" sortConfig={sortConfig} requestSort={requestSort} width={widths.liftGate} onResize={handleResize} />
                                     <SortableHeader label="Inside Delivery" field="insideDelivery" sortConfig={sortConfig} requestSort={requestSort} width={widths.insideDelivery} onResize={handleResize} />

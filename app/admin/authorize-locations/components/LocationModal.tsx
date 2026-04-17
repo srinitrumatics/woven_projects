@@ -143,7 +143,7 @@ export default function LocationModal({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="md:col-span-2">
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
-                                    Authorize Location Name <span className="text-red-500 truncate">*</span>
+                                    Authorized Location Name <span className="text-red-500 truncate">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -279,7 +279,7 @@ export default function LocationModal({
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
-                                    Zipcode <span className="text-red-500 truncate">*</span>
+                                    Zip Code <span className="text-red-500 truncate">*</span>
                                 </label>
                                 <input
                                     type="text"

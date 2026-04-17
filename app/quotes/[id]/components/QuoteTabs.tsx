@@ -1,10 +1,11 @@
-import { QuoteStatus } from "@/app/quotes/types";
+import { QuoteStatus } from"@/app/quotes/types";
 
-export type QuoteTabType = "quotelines" | "taxes" | "fulfillment" | "purchases" | "returns" | "files";
+export type QuoteTabType ="quotelines"|"taxes"|"fulfillment"|"purchases"|"returns"|"files";
 
 interface QuoteTabsProps {
     activeTab: QuoteTabType;
     onTabChange: (tab: QuoteTabType) => void;
+    accountType?: string;
     counts?: {
         quotelines?: number;
         taxes?: number;
@@ -15,15 +16,20 @@ interface QuoteTabsProps {
     };
 }
 
-export default function QuoteTabs({ activeTab, onTabChange, counts = {} }: QuoteTabsProps) {
-    const tabs: { id: QuoteTabType; label: string; count?: number }[] = [
+export default function QuoteTabs({ activeTab, onTabChange, accountType, counts = {} }: QuoteTabsProps) {
+    const isCustomerOrNSO = accountType === 'Customer' || accountType === 'NSO';
+
+    const tabs: { id: QuoteTabType; label: string; count?: number }[] = (([
         { id: "quotelines", label: "Quote Lines", count: counts.quotelines },
         { id: "taxes", label: "Taxes", count: counts.taxes },
         { id: "fulfillment", label: "Fulfillment", count: counts.fulfillment },
         { id: "purchases", label: "Purchases", count: counts.purchases },
         { id: "returns", label: "Returns", count: counts.returns },
         { id: "files", label: "Files", count: counts.files },
-    ];
+    ] as { id: QuoteTabType; label: string; count?: number }[]).filter(tab => {
+        if (isCustomerOrNSO && tab.id === 'purchases') return false;
+        return true;
+    }));
 
     return (
         <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 w-full">
@@ -31,14 +37,14 @@ export default function QuoteTabs({ activeTab, onTabChange, counts = {} }: Quote
                 <button
                     key={tab.id}
                     onClick={() => onTabChange(tab.id)}
-                    className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${activeTab === tab.id
-                        ? "bg-primary text-white"
-                        : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    className={`px-4 py-2 rounded-lg transition-colors  flex-shrink-0 ${activeTab === tab.id
+                        ?"bg-primary text-white"
+                        :"bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                         }`}
                 >
                     {tab.label}
                     {tab.count !== undefined && tab.count > 0 && (
-                        " (" + tab.count + ")"
+"("+ tab.count +")"
                     )}
                 </button>
             ))}

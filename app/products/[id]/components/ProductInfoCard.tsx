@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { formatCurrency } from "@/lib/utils/formatting";
+import { useUserSession } from "@/components/UserSessionContext";
+import AddToOrderModal from "./AddToOrderModal";
 
 interface ProductInfoCardProps {
   product: any;
@@ -10,6 +12,11 @@ interface ProductInfoCardProps {
 export default function ProductInfoCard({ product }: ProductInfoCardProps) {
   const moqValue = parseInt(product.moq) || 1;
   const [quantity, setQuantity] = useState(moqValue);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const { user, selectedAccount } = useUserSession();
+  const accountId = selectedAccount?.Id || selectedAccount?.id || "";
+  const contactId = user?.contact?.Id || user?.contact?.id || "";
 
 
   return (
@@ -71,19 +78,17 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
           <div className="flex items-center gap-4">
             <div className="inline-flex items-center gap-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-2 rounded-xl shadow-sm">
               <button
-                onClick={() => setQuantity(Math.max(moqValue, quantity - moqValue))}
-                disabled={product.onHand <= 0}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors text-xl font-medium ${product.onHand <= 0 ? 'text-gray-200 dark:text-gray-700 cursor-not-allowed' : 'text-gray-400 hover:text-primary'}`}
+                onClick={() => setQuantity(Math.max(0, quantity - moqValue))}
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors text-xl font-medium text-gray-400 hover:text-primary"
               >
                 -
               </button>
               <span className="w-12 text-center text-base font-bold text-gray-900 dark:text-white tabular-nums">
-                {product.onHand <= 0 ? 0 : quantity}
+                {quantity}
               </span>
               <button
                 onClick={() => setQuantity(quantity + moqValue)}
-                disabled={product.onHand <= 0}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors text-xl font-medium ${product.onHand <= 0 ? 'text-gray-200 dark:text-gray-700 cursor-not-allowed' : 'text-gray-400 hover:text-primary'}`}
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors text-xl font-medium text-gray-400 hover:text-primary"
               >
                 +
               </button>
@@ -92,14 +97,10 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
         </div>
 
         <button 
-          disabled={product.onHand <= 0}
-          className={`w-full py-4 font-bold rounded-2xl shadow-lg transform transition-all duration-200 ${
-            product.onHand <= 0 
-              ? "bg-gray-400 cursor-not-allowed text-white opacity-70" 
-              : "bg-blue-600 hover:bg-blue-700 text-white active:scale-[0.98]"
-          }`}
+          onClick={() => setIsModalOpen(true)}
+          className="w-full py-4 font-bold rounded-2xl shadow-lg transform transition-all duration-200 bg-blue-600 hover:bg-blue-700 text-white active:scale-[0.98]"
         >
-          {product.onHand <= 0 ? "Out of Stock" : "Add to Order"}
+          Add to Order
         </button>
 
 
@@ -124,6 +125,15 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
           <div className="text-sm font-bold text-gray-900 dark:text-white line-clamp-1">{product.warranty}</div>
         </div>
       </div>
+
+      <AddToOrderModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        product={product}
+        quantity={quantity}
+        accountId={accountId}
+        contactId={contactId}
+      />
     </div>
   );
 }

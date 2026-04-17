@@ -11,7 +11,7 @@ export default function POKeyDates({ po }: POKeyDatesProps) {
             <div className="flex items-center gap-3 mb-6 min-w-0">
                 <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                     <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                 </div>
                 <div className="min-w-0">
@@ -20,31 +20,28 @@ export default function POKeyDates({ po }: POKeyDatesProps) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div className="min-w-0">
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Buyer Name">Buyer Name</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.buyerName || ''} placeholder="N/A" title={po.buyerName} />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 " title="Buyer Name">Buyer Name</label>
+                    <input type="text"readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.buyerName || ''} placeholder="N/A" title={po.buyerName} />
                 </div>
                 <div className="min-w-0">
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Proposal Name">Proposal Name</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.proposalName || ''} placeholder="N/A" title={po.proposalName} />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 " title="Proposal Name">Proposal Name</label>
+                    <input type="text"readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.proposalName || ''} placeholder="N/A" title={po.proposalName} />
                 </div>
                 <div className="min-w-0">
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Customer Order">Customer Order</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.customerOrderName || ''} placeholder="N/A" title={po.customerOrderName} />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 " title="Customer Order">Customer Order</label>
+                    <input type="text"readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.customerOrderName || ''} placeholder="N/A" title={po.customerOrderName} />
                 </div>
                 <div className="min-w-0">
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Customer Quote">Customer Quote</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.customerQuoteName || ''} placeholder="N/A" title={po.customerQuoteName} />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 " title="Customer Quote">Customer Quote</label>
+                    <input type="text"readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.customerQuoteName || ''} placeholder="N/A" title={po.customerQuoteName} />
                 </div>
                 <div className="min-w-0">
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Issued Date">Issued Date</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : ''} placeholder="N/A" title={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : undefined} />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 " title="Issued Date">Issued Date</label>
+                    <input type="text"readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : ''} placeholder="N/A" title={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : undefined} />
                 </div>
-                <div className="min-w-0">
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Request Date">Request Date</label>
-                    <input type="text" readOnly className="w-full h-11 px-3 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 truncate" value={po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : ''} placeholder="N/A" title={po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : undefined} />
-                </div>
+
             </div>
         </div>
     );

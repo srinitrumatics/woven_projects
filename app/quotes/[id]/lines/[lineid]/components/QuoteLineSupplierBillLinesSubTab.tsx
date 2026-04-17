@@ -1,8 +1,8 @@
-import { SortableHeader } from "@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
-import Pagination from "@/components/ui/Pagination";
-import { useState, useMemo } from "react";
-import Link from "next/link";
+import { SortableHeader } from"@/components/ui/SortableHeader";
+import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import Pagination from"@/components/ui/Pagination";
+import { useState, useMemo } from"react";
+import Link from"next/link";
 
 interface SBLI {
     id: string;
@@ -66,41 +66,41 @@ export default function QuoteLineSupplierBillLinesSubTab({
             <div className="overflow-x-auto">
                 {data.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                        <p className="text-sm truncate">There are no supplier bill lines associated with this quote line.</p>
+                        <p className="text-lg font-medium"title="No records found">No records found</p>
+                        <p className="text-sm">There are no supplier bill lines associated with this quote line.</p>
                     </div>
                 ) : (
                     <table className="w-full text-sm table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                             <tr>
-                                <SortableHeader label="Supplier Bill Line" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                <SortableHeader label="Supplier Bill" field="supplierBill" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierBill} onResize={handleResize} />
-                                <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
-                                <SortableHeader label="Purchase Order Line" field="purchaseOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderLine} onResize={handleResize} />
-                                <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
-                                <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
-                                <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitCost} onResize={handleResize} />
-                                <SortableHeader label="Billed Qty" field="billedQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.billedQty} onResize={handleResize} />
-                                <SortableHeader label="Bill Amount" field="billAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.billAmount} onResize={handleResize} />
-                                <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
-                                <SortableHeader label="Total Bill Amount" field="totalBillAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalBillAmount} onResize={handleResize} />
-                                <SortableHeader label="Goods Receipt Date" field="receiptDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.receiptDate} onResize={handleResize} />
+                                <SortableHeader label="Supplier Bill Line"field="name"sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"/>
+                                <SortableHeader label="Status"field="status"sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                                <SortableHeader label="Supplier Bill"field="supplierBill"sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierBill} onResize={handleResize} />
+                                <SortableHeader label="Customer Quote Line"field="customerQuoteLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
+                                <SortableHeader label="Purchase Order Line"field="purchaseOrderLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderLine} onResize={handleResize} />
+                                <SortableHeader label="Product Name"field="productName"sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
+                                <SortableHeader label="Product Description"field="description"sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
+                                <SortableHeader label="Manufacturer DBA"field="manufacturerDBA"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
+                                <SortableHeader label="Unit Cost"field="unitCost"sortConfig={sortConfig} requestSort={requestSort} width={widths.unitCost} onResize={handleResize} />
+                                <SortableHeader label="Billed Qty"field="billedQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.billedQty} onResize={handleResize} />
+                                <SortableHeader label="Bill Amount"field="billAmount"sortConfig={sortConfig} requestSort={requestSort} width={widths.billAmount} onResize={handleResize} />
+                                <SortableHeader label="Shipping"field="shipping"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
+                                <SortableHeader label="Total Bill Amount"field="totalBillAmount"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalBillAmount} onResize={handleResize} />
+                                <SortableHeader label="Goods Receipt Date"field="receiptDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.receiptDate} onResize={handleResize} />
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800">
                             {paginatedData.map((item) => (
                                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 font-bold" style={{ width: widths.name }}>{item.name}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.name }}>{item.name}</td>
                                     <td className="px-3 py-2 text-sm truncate" style={{ width: widths.status }}>
-                                        <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
+                                        <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                             {item.status}
                                         </span>
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierBill }}>
                                         {item.supplierBillId ? (
-                                            <Link href={`/supplier-bills/${item.supplierBillId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/supplier-bills/${item.supplierBillId}`} target="_blank"className="text-primary hover:underline font-medium">
                                                 {item.supplierBill}
                                             </Link>
                                         ) : item.supplierBill}

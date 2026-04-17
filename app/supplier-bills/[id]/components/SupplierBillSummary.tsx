@@ -25,7 +25,7 @@ export default function SupplierBillSummary({
                     </div>
                     <div className="overflow-hidden">
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white " title="Supplier Bill Summary">Supplier Bill Summary</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Your Supplier Bill Summary">Review Your Supplier Bill Summary</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Your Supplier Bill Summary">Review Supplier Bill Summary</p>
                     </div>
                 </div>
 
@@ -46,7 +46,7 @@ export default function SupplierBillSummary({
                             <span className="text-gray-900 dark:text-white font-medium truncate">{formatCurrency(bill.totalShippingCharges || 0)}</span>
                         </div>
 
-                        <div className="pt-2 mt-2 border-t border-gray-300 dark:border-white-900/40">
+                        <div className="pt-1 mt-1 border-t border-gray-300 dark:border-white-900/40">
                             <div className="flex justify-between items-center text-lg font-bold min-w-0">
                                 <span className="text-gray-900 dark:text-white truncate">Total Amount</span>
                                 <span className="text-primary dark:text-primary truncate">{formatCurrency(bill.totalAmount || 0)}</span>
@@ -55,7 +55,7 @@ export default function SupplierBillSummary({
                     </div>
 
                     {/* Remittance Section */}
-                    <div className="space-y-3 pt-4 border-t border-gray-300 dark:border-white-900/40">
+                    <div className="space-y-2 pt-2 border-t border-gray-300 dark:border-white-900/40">
                         <div className="flex justify-between text-sm items-center">
                             <span className="text-gray-600 dark:text-gray-400 truncate">Remittance Status</span>
                             <span className="text-gray-900 dark:text-white font-medium truncate">
@@ -71,7 +71,7 @@ export default function SupplierBillSummary({
                             <span className="text-green-600 dark:text-green-400 font-bold truncate">{formatCurrency(bill.appliedDebits || 0)}</span>
                         </div>
 
-                        <div className="pt-3 mt-3 border-t border-gray-100 dark:border-gray-700">
+                        <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
                             <div className="flex justify-between items-center text-sm  min-w-0">
                                 <span className="text-gray-900 dark:text-white truncate">Open Balance</span>
                                 <span className="text-red-500 dark:text-red-400 truncate font-semibold">{formatCurrency(bill.openBalance || 0)}</span>
@@ -80,18 +80,6 @@ export default function SupplierBillSummary({
                     </div>
                 </div>
 
-                {/* PDF Button - Proposal Summary Style */}
-                <div className="mt-8 pt-4 border-t border-gray-300 dark:border-white-900/40">
-                    <button
-                        onClick={() => { }}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:text-white dark:hover:border-primary transition-all duration-200 cursor-pointer shadow-sm active:scale-[0.98] group"
-                    >
-                        <svg className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Download PDF
-                    </button>
-                </div>
             </div>
         </div>
     );

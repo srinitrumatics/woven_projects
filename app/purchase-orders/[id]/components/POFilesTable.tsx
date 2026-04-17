@@ -68,25 +68,25 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
         if (type === "PDF") {
             return (
                 <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zm-2.5 9.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z" />
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zm-2.5 9.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/>
                 </svg>
             );
         } else if (["XLSX", "XLS", "CSV"].includes(type)) {
             return (
                 <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8 13h8v2H8v-2zm0 4h8v2H8v-2z" />
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/>
                 </svg>
             );
         } else if (["JPG", "JPEG", "PNG", "GIF"].includes(type)) {
             return (
                 <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M21 19V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                    <path d="M21 19V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
                 </svg>
             );
         }
         return (
             <svg className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4z" />
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4z"/>
             </svg>
         );
     };
@@ -158,7 +158,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                 <table className="w-full">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
-                            <SortableHeader
+                            <SortableHeader truncate={false}
                                 label="File Name"
                                 field="fileName"
                                 sortConfig={sortConfig}
@@ -166,7 +166,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.fileName}
                                 onResize={handleResize}
                             />
-                            <SortableHeader
+                            <SortableHeader truncate={false}
                                 label="Type"
                                 field="fileType"
                                 sortConfig={sortConfig}
@@ -174,7 +174,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.fileType}
                                 onResize={handleResize}
                             />
-                            <SortableHeader
+                            <SortableHeader truncate={false}
                                 label="Size"
                                 field="sizeInBytes"
                                 sortConfig={sortConfig}
@@ -182,7 +182,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.sizeInBytes}
                                 onResize={handleResize}
                             />
-                            <SortableHeader
+                            <SortableHeader truncate={false}
                                 label="Uploaded By"
                                 field="uploadedBy"
                                 sortConfig={sortConfig}
@@ -190,7 +190,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.uploadedBy}
                                 onResize={handleResize}
                             />
-                            <SortableHeader
+                            <SortableHeader truncate={false}
                                 label="Date"
                                 field="uploadedDate"
                                 sortConfig={sortConfig}
@@ -198,7 +198,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.uploadedDate}
                                 onResize={handleResize}
                             />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white  ">Actions</th>
+                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white ">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -227,8 +227,8 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                             title="Preview"
                                         >
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                             </svg>
                                         </button>
                                         <button
@@ -244,7 +244,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                                 </svg>
                                             ) : (
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                                 </svg>
                                             )}
                                         </button>

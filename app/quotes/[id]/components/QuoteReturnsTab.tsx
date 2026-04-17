@@ -1,15 +1,16 @@
-import { useState } from "react";
-import { QuoteRMA, QuoteCreditMemo, QuoteRTV, QuoteDebitMemo } from "@/app/quotes/types";
-import { useResizableColumns } from "@/hooks/useResizableColumns";
-import QuoteRMASubTab from "./QuoteRMASubTab";
-import QuoteCreditMemoSubTab from "./QuoteCreditMemoSubTab";
-import QuoteRTVSubTab from "./QuoteRTVSubTab";
-import QuoteDebitMemoSubTab from "./QuoteDebitMemoSubTab";
+import { useState } from"react";
+import { QuoteRMA, QuoteCreditMemo, QuoteRTV, QuoteDebitMemo } from"@/app/quotes/types";
+import { useResizableColumns } from"@/hooks/useResizableColumns";
+import QuoteRMASubTab from"./QuoteRMASubTab";
+import QuoteCreditMemoSubTab from"./QuoteCreditMemoSubTab";
+import QuoteRTVSubTab from"./QuoteRTVSubTab";
+import QuoteDebitMemoSubTab from"./QuoteDebitMemoSubTab";
 
-type ReturnsSubTab = "rmas" | "creditMemo" | "rtvs" | "debitMemo";
+type ReturnsSubTab ="rmas"|"creditMemo"|"rtvs"|"debitMemo";
 
 interface QuoteReturnsTabProps {
     quoteId: string;
+    accountType?: string;
     data: {
         rma: QuoteRMA[];
         creditMemos: QuoteCreditMemo[];
@@ -19,9 +20,21 @@ interface QuoteReturnsTabProps {
     loading: boolean;
 }
 
-export default function QuoteReturnsTab({ quoteId, data, loading }: QuoteReturnsTabProps) {
+export default function QuoteReturnsTab({ quoteId, accountType, data, loading }: QuoteReturnsTabProps) {
     const [activeSubTab, setActiveSubTab] = useState<ReturnsSubTab>("rmas");
     const { rma = [], creditMemos = [], rtv = [], debitMemos = [] } = data;
+
+    const isCustomerOrNSO = accountType === 'Customer' || accountType === 'NSO';
+
+    const tabs: { id: ReturnsSubTab; label: string }[] = (([
+        { id: "rmas", label: "RMAs" },
+        { id: "creditMemo", label: "Credit Memos" },
+        { id: "rtvs", label: "RTVs" },
+        { id: "debitMemo", label: "Debit Memos" },
+    ] as { id: ReturnsSubTab; label: string }[]).filter(tab => {
+        if (isCustomerOrNSO && (tab.id === 'rtvs' || tab.id === 'debitMemo')) return false;
+        return true;
+    }));
 
     // RMA State
     const [rmaSortField, setRmaSortField] = useState<keyof QuoteRMA>("rmaNumber");
@@ -178,41 +191,35 @@ export default function QuoteReturnsTab({ quoteId, data, loading }: QuoteReturns
         return 0;
     });
 
-    const tabs: { id: ReturnsSubTab; label: string }[] = [
-        { id: "rmas", label: "RMAs" },
-        { id: "creditMemo", label: "Credit Memos" },
-        { id: "rtvs", label: "RTVs" },
-        { id: "debitMemo", label: "Debit Memos" },
-    ];
 
     return (
         <div className="flex flex-col h-full min-w-0">
             <div className="border-b border-gray-200 dark:border-gray-700">
-                <nav className="-mb-px flex space-x-8 px-4" aria-label="Tabs">
+                <nav className="-mb-px flex space-x-8 px-4"aria-label="Tabs">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveSubTab(tab.id)}
                             className={`
-                                truncate py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                                 py-4 px-1 border-b-2 font-medium text-sm transition-colors
                                 ${activeSubTab === tab.id
-                                    ? "border-primary text-primary"
-                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+                                    ?"border-primary text-primary"
+                                    :"border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
                                 }
                             `}
                         >
                             {tab.label}
-                            {tab.id === "rmas" && rma.length > 0 && ` (${rma.length})`}
-                            {tab.id === "creditMemo" && creditMemos.length > 0 && ` (${creditMemos.length})`}
-                            {tab.id === "rtvs" && rtv.length > 0 && ` (${rtv.length})`}
-                            {tab.id === "debitMemo" && debitMemos.length > 0 && ` (${debitMemos.length})`}
+                            {tab.id ==="rmas"&& rma.length > 0 && ` (${rma.length})`}
+                            {tab.id ==="creditMemo"&& creditMemos.length > 0 && ` (${creditMemos.length})`}
+                            {tab.id ==="rtvs"&& rtv.length > 0 && ` (${rtv.length})`}
+                            {tab.id ==="debitMemo"&& debitMemos.length > 0 && ` (${debitMemos.length})`}
                         </button>
                     ))}
                 </nav>
             </div>
 
             <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2">
-                {activeSubTab === "rmas" && (
+                {activeSubTab ==="rmas"&& (
                     <QuoteRMASubTab
                         rmas={sortedRMAs}
                         loading={false}
@@ -223,7 +230,7 @@ export default function QuoteReturnsTab({ quoteId, data, loading }: QuoteReturns
                         onResize={handleRmaResize}
                     />
                 )}
-                {activeSubTab === "creditMemo" && (
+                {activeSubTab ==="creditMemo"&& (
                     <QuoteCreditMemoSubTab
                         memos={sortedCMs}
                         loading={false}
@@ -234,7 +241,7 @@ export default function QuoteReturnsTab({ quoteId, data, loading }: QuoteReturns
                         onResize={handleCmResize}
                     />
                 )}
-                {activeSubTab === "rtvs" && (
+                {activeSubTab ==="rtvs"&& (
                     <QuoteRTVSubTab
                         rtvs={sortedRTVs}
                         loading={false}
@@ -245,7 +252,7 @@ export default function QuoteReturnsTab({ quoteId, data, loading }: QuoteReturns
                         onResize={handleRtvResize}
                     />
                 )}
-                {activeSubTab === "debitMemo" && (
+                {activeSubTab ==="debitMemo"&& (
                     <QuoteDebitMemoSubTab
                         memos={sortedDMs}
                         loading={false}

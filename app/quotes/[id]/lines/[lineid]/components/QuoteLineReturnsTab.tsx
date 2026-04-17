@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { useSortableData } from "@/hooks/useSortableData";
-import { useResizableColumns } from "@/hooks/useResizableColumns";
-import QuoteLineRMALinesSubTab from "./QuoteLineRMALinesSubTab";
-import QuoteLineCreditMemoLinesSubTab from "./QuoteLineCreditMemoLinesSubTab";
-import QuoteLineRTVLinesSubTab from "./QuoteLineRTVLinesSubTab";
-import QuoteLineDebitMemoLinesSubTab from "./QuoteLineDebitMemoLinesSubTab";
+import { useEffect, useMemo, useState } from"react";
+import { useSortableData } from"@/hooks/useSortableData";
+import { useResizableColumns } from"@/hooks/useResizableColumns";
+import QuoteLineRMALinesSubTab from"./QuoteLineRMALinesSubTab";
+import QuoteLineCreditMemoLinesSubTab from"./QuoteLineCreditMemoLinesSubTab";
+import QuoteLineRTVLinesSubTab from"./QuoteLineRTVLinesSubTab";
+import QuoteLineDebitMemoLinesSubTab from"./QuoteLineDebitMemoLinesSubTab";
 
 interface DebitMemoLine {
     id: string;
@@ -100,15 +100,18 @@ interface QuoteLineReturnsTabProps {
     loading: boolean;
     accountId?: string;
     contactId?: string;
+    accountType?: string;
 }
 
 export default function QuoteLineReturnsTab({
     lineId,
     loading: initialLoading,
     accountId,
-    contactId
+    contactId,
+    accountType
 }: QuoteLineReturnsTabProps) {
-    const [activeSubTab, setActiveSubTab] = useState<"DebitMemos" | "RTVs" | "CreditMemos" | "RMAs">("RMAs");
+    const isCustomerOrNSO = accountType === 'Customer' || accountType === 'NSO';
+    const [activeSubTab, setActiveSubTab] = useState<"DebitMemos"|"RTVs"|"CreditMemos"|"RMAs">("RMAs");
     const [loading, setLoading] = useState(initialLoading);
     const [dmliData, setDmliData] = useState<DebitMemoLine[]>([]);
     const [rtvlData, setRtvlData] = useState<RTVLine[]>([]);
@@ -241,9 +244,9 @@ export default function QuoteLineReturnsTab({
     }, [lineId, accountId, contactId]);
 
     const activeData = useMemo(() => {
-        if (activeSubTab === "DebitMemos") return dmliData;
-        if (activeSubTab === "RTVs") return rtvlData;
-        if (activeSubTab === "CreditMemos") return cmliData;
+        if (activeSubTab ==="DebitMemos") return dmliData;
+        if (activeSubTab ==="RTVs") return rtvlData;
+        if (activeSubTab ==="CreditMemos") return cmliData;
         return rmalData;
     }, [activeSubTab, dmliData, rtvlData, cmliData, rmalData]);
 
@@ -294,18 +297,21 @@ export default function QuoteLineReturnsTab({
         <div className="flex flex-col h-full py-4 min-w-0">
             {/* Sub Tabs */}
             <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-6">
-                {[
+                {(([
                     { key: "RMAs", label: "RMAs Lines", count: rmalData.length },
                     { key: "CreditMemos", label: "Credit Memos Lines", count: cmliData.length },
                     { key: "RTVs", label: "RTVs Lines", count: rtvlData.length },
                     { key: "DebitMemos", label: "Debit Memos Lines", count: dmliData.length },
-                ].map((tab) => (
+                ] as { key: "DebitMemos"|"RTVs"|"CreditMemos"|"RMAs"; label: string; count: number }[]).filter(tab => {
+                    if (isCustomerOrNSO && (tab.key === 'RTVs' || tab.key === 'DebitMemos')) return false;
+                    return true;
+                })).map((tab) => (
                     <button
                         key={tab.key}
-                        onClick={() => setActiveSubTab(tab.key as any)}
+                        onClick={() => setActiveSubTab(tab.key)}
                         className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeSubTab === tab.key
                             ? "border-primary text-primary"
-                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:white"
                             }`}
                     >
                         {tab.label} {tab.count > 0 && `(${tab.count})`}
@@ -315,7 +321,7 @@ export default function QuoteLineReturnsTab({
 
             {/* Table Area */}
             <div className="bg-white dark:bg-gray-800">
-                {activeSubTab === "RMAs" && (
+                {activeSubTab ==="RMAs"&& (
                     <QuoteLineRMALinesSubTab
                         data={rmalData}
                         loading={loading}
@@ -325,7 +331,7 @@ export default function QuoteLineReturnsTab({
                         handleResize={handleResize}
                     />
                 )}
-                {activeSubTab === "CreditMemos" && (
+                {activeSubTab ==="CreditMemos"&& (
                     <QuoteLineCreditMemoLinesSubTab
                         data={cmliData}
                         loading={loading}
@@ -335,7 +341,7 @@ export default function QuoteLineReturnsTab({
                         handleResize={handleResize}
                     />
                 )}
-                {activeSubTab === "RTVs" && (
+                {activeSubTab ==="RTVs"&& (
                     <QuoteLineRTVLinesSubTab
                         data={rtvlData}
                         loading={loading}
@@ -345,7 +351,7 @@ export default function QuoteLineReturnsTab({
                         handleResize={handleResize}
                     />
                 )}
-                {activeSubTab === "DebitMemos" && (
+                {activeSubTab ==="DebitMemos"&& (
                     <QuoteLineDebitMemoLinesSubTab
                         data={dmliData}
                         loading={loading}

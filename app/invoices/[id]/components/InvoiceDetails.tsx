@@ -49,6 +49,8 @@ interface InvoiceDetailsProps {
     billToLocationId?: string;
     shipToLocationId?: string;
     siteId?: string;
+    issuedDate?: string;
+    daysOutstanding?: number;
 }
 
 export default function InvoiceDetails(props: InvoiceDetailsProps) {
@@ -87,7 +89,9 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
         purchaseOrderId,
         billToLocationId,
         shipToLocationId,
-        siteId
+        siteId,
+        issuedDate,
+        daysOutstanding
     } = props;
 
     // Handlers for summary buttons
@@ -125,7 +129,7 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
 
             {/* Row 2 Left - Billing & Shipping (70%) */}
             <div className="w1025:col-span-7">
-                <div className="flex flex-col gap-6 min-w-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 min-w-0 h-full">
                     <InvoiceBillingInfo
                         accountName={accountName}
                         accountId={accountId}
@@ -135,6 +139,7 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
                         paymentTerms={paymentTerms}
                         customerPO={customerPO}
                         dueDate={dueDate}
+                        className=""
                     />
 
                     <InvoiceShippingInfo
@@ -146,6 +151,7 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
                         shipConfirmedDate={shipConfirmedDate}
                         siteName={siteName}
                         siteId={siteId}
+                        className=""
                     />
                 </div>
             </div>
@@ -165,9 +171,10 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
                     servicesSubtotal={servicesSubtotal || 0}
                     appliedCredits={appliedCredits || 0}
                     collectionStatus={collectionStatus}
-                    handleDownloadPDF={handleDownloadPDF}
                     handleMakePayment={handleMakePayment}
                     discountTotal={props.discountTotal}
+                    issuedDate={issuedDate || ""}
+                    daysOutstanding={daysOutstanding || 0}
                 />
             </div>
         </div>

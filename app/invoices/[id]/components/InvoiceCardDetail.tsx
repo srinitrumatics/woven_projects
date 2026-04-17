@@ -38,17 +38,16 @@ export default function InvoiceKeyDates({
                 </div>
                 <div className="min-w-0">
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white " title="Key Dates">Invoice Details</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Invoice Information">Invoice Information</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400" title="Invoice Information">Invoice Information</p>
                 </div>
             </div>
             <div className="text-sm">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w1025:grid-cols-6 gap-4">
-                    <DetailInput label="Account Rep" value={arRep} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w1025:grid-cols-5 gap-4">
+                    <DetailInput label="AR Rep" value={arRep} />
                     <DetailInput label="Proposal Name" value={proposalName} href={proposalId ? `/proposals/${proposalId}` : undefined} />
                     <DetailInput label="Customer Order" value={customerOrder} href={customerOrderId ? `/orders/${customerOrderId}` : undefined} />
                     <DetailInput label="Sales Order" value={salesOrderNumber} href={salesOrderId ? `/orders/${salesOrderId}` : undefined} />
                     <DetailInput label="Purchase Order" value={purchaseOrderNumber} href={purchaseOrderId ? `/purchase-orders/${purchaseOrderId}` : undefined} />
-                    <DetailInput label="Issued Date" value={formatDate(invoiceDate, 'numeric-dash')} />
                 </div>
             </div>
         </div>

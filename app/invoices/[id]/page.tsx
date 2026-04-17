@@ -25,10 +25,11 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
 
   const { user, selectedAccount } = useUserSession();
   const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || user?.Id || "";
 
   useEffect(() => {
     async function fetchInvoiceDetails() {
+      if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
       try {
         setLoading(true);
         // Fetch Primary Invoice Data
@@ -234,7 +235,9 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           accountId: rawInvoice.Bill_to_Account__c || '',
           billToLocationId: rawInvoice.Authorized_Bill_To_Location__c || '',
           shipToLocationId: rawInvoice.Authorized_Ship_To_Location__c || '',
-          siteId: rawInvoice.Site__c || ''
+          siteId: rawInvoice.Site__c || '',
+          issuedDate: rawInvoice.Issued_Date__c || '',
+          daysOutstanding: rawInvoice.Days_Outstanding__c || rawInvoice.gtherp__Days_Outstanding__c || 0
         };
 
         setInvoice(mappedInvoice);
@@ -355,6 +358,16 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
         appliedCredits={invoice.appliedCredits}
         productCount={invoice.lines.length}
         serviceCount={0}
+        issuedDate={invoice.issuedDate}
+        daysOutstanding={invoice.daysOutstanding}
+        proposalId={invoice.proposalId}
+        customerOrderId={invoice.customerOrderId}
+        salesOrderId={invoice.salesOrderId}
+        purchaseOrderId={invoice.purchaseOrderId}
+        billToLocationId={invoice.billToLocationId}
+        shipToLocationId={invoice.shipToLocationId}
+        siteId={invoice.siteId}
+        accountId={invoice.accountId}
       />
 
       {/* Tabs Section Section Below Details */}

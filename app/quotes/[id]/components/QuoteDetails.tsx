@@ -1,9 +1,9 @@
-import { QuoteDetails, QuoteLine } from "../../types";
-import QuoteSummary from "./QuoteSummary";
-import QuoteKeyDates from "./QuoteKeyDates";
-import QuoteBillingInfo from "./QuoteBillingInfo";
-import QuoteShippingInfo from "./QuoteShippingInfo";
-import QuoteNotes from "./QuoteNotes";
+import { QuoteDetails, QuoteLine } from"../../types";
+import QuoteSummary from"./QuoteSummary";
+import QuoteKeyDates from"./QuoteKeyDates";
+import QuoteBillingInfo from"./QuoteBillingInfo";
+import QuoteShippingInfo from"./QuoteShippingInfo";
+import QuoteNotes from"./QuoteNotes";
 
 interface QuoteDetailsProps {
     quote: QuoteDetails;
@@ -22,12 +22,12 @@ export default function QuoteDetailsSection({ quote, lines, isUploading, handleF
         <div className="grid grid-cols-1 w1025:grid-cols-10 gap-6 items-stretch">
             {/* Row 1 Left - Key Dates (70%) */}
             <div className="w1025:col-span-7">
-                <QuoteKeyDates quote={quote} className="h-full" />
+                <QuoteKeyDates quote={quote} className="h-full"/>
             </div>
 
             {/* Row 1 Right - Quote Notes (30%) */}
             <div className="w1025:col-span-3">
-                <QuoteNotes notes={quote.notes || ""} className="h-full" />
+                <QuoteNotes notes={quote.notes ||""} className="h-full"/>
             </div>
 
             {/* Row 2 Left - Billing & Shipping (70%) */}

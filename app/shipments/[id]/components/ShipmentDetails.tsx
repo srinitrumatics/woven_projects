@@ -19,13 +19,12 @@ export default function ShipmentDetails({ shipment }: ShipmentDetailsProps) {
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Shipping Manifest Information">Shipping Manifest Information</p>
                 </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w1025:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w1025:grid-cols-5 gap-4">
                 <DetailInput label="Proposal Name" value={shipment.Proposal_Name} />
                 <DetailInput label="Customer Order" value={shipment.Customer_Order_Name} />
                 <DetailInput label="Customer PO" value={shipment.Customer_PO__c} />
                 <DetailInput label="Customer Quote" value={shipment.Customer_Quote_Name} />
                 <DetailInput label="Sales Order" value={shipment.Sales_Order_Name} />
-                <DetailInput label="Ship Confirmed Date" value={formatDate(shipment.Delivered_Date__c, 'numeric-dash')} />
             </div>
         </div>
     );

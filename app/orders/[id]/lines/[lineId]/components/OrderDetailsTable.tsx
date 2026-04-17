@@ -36,28 +36,20 @@ export default function OrderDetailsTable({
     const moq = product.moq || 1;
     const available = product.availableToSell || 0;
 
-    // Track whether the entered qty exceeds available stock
-    const [qtyWarning, setQtyWarning] = useState(false);
-
     const handleManualQtyChange = (val: string) => {
         if (val === "" || /^[0-9]+$/.test(val)) {
             const numVal = val === "" ? 0 : parseInt(val);
-            const exceeded = numVal > available;
-            setQtyWarning(exceeded);
-            // Allow the value but show a warning (no silent clamping)
             onQtyChange(numVal);
         }
     };
 
     const incrementQty = () => {
-        const newQty = Math.min(available, editedQty + moq);
-        setQtyWarning(false);
+        const newQty = editedQty + moq;
         onQtyChange(newQty);
     };
 
     const decrementQty = () => {
-        const newQty = Math.max(moq, editedQty - moq);
-        setQtyWarning(false);
+        const newQty = Math.max(0, editedQty - moq);
         onQtyChange(newQty);
     };
 
@@ -78,28 +70,19 @@ export default function OrderDetailsTable({
                                 <div className="flex items-center gap-2 min-w-0">
                                     <button
                                         onClick={decrementQty}
-                                        disabled={available <= 0}
-                                        className={`w-8 h-8 flex items-center justify-center rounded border shadow-sm transition-colors text-lg truncate ${available <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-600 border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 text-gray-900 dark:text-white'}`}
+                                        className="w-8 h-8 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-600 border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 text-gray-900 dark:text-white"
                                     >
                                         -
                                     </button>
-                                    <input type="text" value={editedQty} onChange={(e) => handleManualQtyChange(e.target.value)} className={`w-16 h-8 px-1 border rounded text-center bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent ${qtyWarning ? 'border-amber-500 focus:ring-amber-400' : 'border-gray-300 dark:border-gray-600 focus:ring-primary'}`} />
+                                    <input type="text" value={editedQty} onChange={(e) => handleManualQtyChange(e.target.value)} className="w-16 h-8 px-1 border border-gray-300 dark:border-gray-600 rounded text-center bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" />
                                     <button
                                         onClick={incrementQty}
-                                        disabled={available <= 0}
-                                        className={`w-8 h-8 flex items-center justify-center rounded border shadow-sm transition-colors text-lg truncate ${available <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-600 border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 text-gray-900 dark:text-white'}`}
+                                        className="w-8 h-8 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-600 border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 text-gray-900 dark:text-white"
                                     >
                                         +
                                     </button>
                                 </div>
-                                {qtyWarning ? (
-                                    <div className="flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-1 min-w-0">
-                                        <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg>
-                                        Exceeds available ({available})
-                                    </div>
-                                ) : (
-                                    <div className="text-xs text-gray-700 dark:text-gray-400 mt-1">MOQ: {moq} / Avail: {available}</div>
-                                )}
+                                <div className="text-xs text-gray-700 dark:text-gray-400 mt-1">MOQ: {moq} / Avail: {available}</div>
                             </div>
                         ) : (
                             formatNumber(displayQty)
@@ -156,28 +139,19 @@ export default function OrderDetailsTable({
                                         <div className="flex items-center gap-2 min-w-0">
                                             <button
                                                 onClick={decrementQty}
-                                                disabled={available <= 0}
-                                                className={`w-6 h-6 flex items-center justify-center rounded border shadow-sm truncate ${available <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700 cursor-not-allowed' : 'bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'}`}
+                                                className="w-6 h-6 flex items-center justify-center rounded border shadow-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600"
                                             >
                                                 -
                                             </button>
-                                            <input type="text" value={editedQty} onChange={(e) => handleManualQtyChange(e.target.value)} className={`w-16 px-1 py-0.5 border rounded text-center bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent ${qtyWarning ? 'border-amber-500 focus:ring-amber-400' : 'border-gray-300 dark:border-gray-600 focus:ring-primary'}`} />
+                                            <input type="text" value={editedQty} onChange={(e) => handleManualQtyChange(e.target.value)} className="w-16 px-1 py-0.5 border border-gray-300 dark:border-gray-600 rounded text-center bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" />
                                             <button
                                                 onClick={incrementQty}
-                                                disabled={available <= 0}
-                                                className={`w-6 h-6 flex items-center justify-center rounded border shadow-sm truncate ${available <= 0 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700 cursor-not-allowed' : 'bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'}`}
+                                                className="w-6 h-6 flex items-center justify-center rounded border shadow-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600"
                                             >
                                                 +
                                             </button>
                                         </div>
-                                        {qtyWarning ? (
-                                            <div className="flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium min-w-0">
-                                                <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg>
-                                                Exceeds available ({available})
-                                            </div>
-                                        ) : (
-                                            <div className="text-[10px] text-gray-700 dark:text-gray-400">MOQ: {moq} / Avail: {available}</div>
-                                        )}
+                                        <div className="text-[10px] text-gray-700 dark:text-gray-400">MOQ: {moq} / Avail: {available}</div>
                                     </div>
                                 ) : (
                                     formatNumber(displayQty)

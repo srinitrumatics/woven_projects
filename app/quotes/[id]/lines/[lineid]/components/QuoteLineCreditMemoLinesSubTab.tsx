@@ -1,8 +1,8 @@
-import { SortableHeader } from "@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
-import Pagination from "@/components/ui/Pagination";
-import { useState, useMemo } from "react";
-import Link from "next/link";
+import { SortableHeader } from"@/components/ui/SortableHeader";
+import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import Pagination from"@/components/ui/Pagination";
+import { useState, useMemo } from"react";
+import Link from"next/link";
 
 interface CreditMemoLine {
     id: string;
@@ -68,8 +68,8 @@ export default function QuoteLineCreditMemoLinesSubTab({
             <div className="overflow-x-auto">
                 {data.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                        <p className="text-sm truncate">There are no credit memos associated with this quote line.</p>
+                        <p className="text-lg font-medium"title="No records found">No records found</p>
+                        <p className="text-sm">There are no credit memos associated with this quote line.</p>
                     </div>
                 ) : (
                     <table className="w-full text-sm">
@@ -84,28 +84,28 @@ export default function QuoteLineCreditMemoLinesSubTab({
                                     onResize={handleResize}
                                     className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
                                 />
-                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                <SortableHeader label="Credit Memo" field="creditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditMemoName} onResize={handleResize} />
-                                <SortableHeader label="Sales Order Line" field="salesOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} />
-                                <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
-                                <SortableHeader label="Invoice Line" field="invoiceLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceLine} onResize={handleResize} />
-                                <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
-                                <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
-                                <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
-                                <SortableHeader label="Credit Qty" field="creditQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditQty} onResize={handleResize} />
-                                <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                                <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
-                                <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
-                                <SortableHeader label="Line Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
+                                <SortableHeader label="Status"field="status"sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                                <SortableHeader label="Credit Memo"field="creditMemoName"sortConfig={sortConfig} requestSort={requestSort} width={widths.creditMemoName} onResize={handleResize} />
+                                <SortableHeader label="Sales Order Line"field="salesOrderLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} />
+                                <SortableHeader label="Customer Quote Line"field="customerQuoteLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
+                                <SortableHeader label="Invoice Line"field="invoiceLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceLine} onResize={handleResize} />
+                                <SortableHeader label="Product Name"field="productName"sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
+                                <SortableHeader label="Product Description"field="description"sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
+                                <SortableHeader label="Manufacturer DBA"field="manufacturerDBA"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
+                                <SortableHeader label="Unit Price"field="unitPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
+                                <SortableHeader label="Credit Qty"field="creditQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.creditQty} onResize={handleResize} />
+                                <SortableHeader label="Total Price"field="totalPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
+                                <SortableHeader label="Shipping"field="shipping"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
+                                <SortableHeader label="Taxes"field="taxes"sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
+                                <SortableHeader label="Line Grand Total"field="grandTotal"sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800">
                             {paginatedData.map((item) => (
                                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 font-bold" style={{ width: widths.lineName }}>{item.lineName}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.lineName }}>{item.lineName}</td>
                                     <td className="px-3 py-2 text-sm truncate" style={{ width: widths.status }}>
-                                        <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
+                                        <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                             {item.status}
                                         </span>
                                     </td>

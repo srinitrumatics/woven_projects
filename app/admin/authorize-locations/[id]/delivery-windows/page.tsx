@@ -27,6 +27,7 @@ export default function DeliveryWindowsPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [deliveryWindows, setDeliveryWindows] = useState<DeliveryWindow[]>([]);
+    const [locationName, setLocationName] = useState("");
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingWindow, setEditingWindow] = useState<any>(null);
@@ -51,6 +52,14 @@ export default function DeliveryWindowsPage() {
             if (responseData?.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
                 const dataObj = responseData.data[0];
                 const items = dataObj.Delivery_Window__c || [];
+
+                setTimeout(() => {
+                    if (dataObj.Name) {
+                        setLocationName(dataObj.Name);
+                    } else if (items.length > 0 && items[0].Authorized_Ship_To_Location_Name) {
+                        setLocationName(items[0].Authorized_Ship_To_Location_Name);
+                    }
+                }, 0);
 
                 windows = items.map((item: any) => ({
                     id: item.Id,
@@ -202,14 +211,29 @@ export default function DeliveryWindowsPage() {
     return (
         <div className="p-6">
             <div className="mb-6">
-                <div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-2 min-w-0">
-                        <Link href="/admin/authorize-locations" className="hover:text-primary transition-colors truncate">Authorize Locations</Link>
-                        <span>/</span>
-                        <span className="text-gray-900 dark:text-white font-medium truncate">Delivery Windows</span>
+                <div className="flex items-center justify-between min-w-0">
+                    <div>
+                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-2 min-w-0">
+                            <Link href="/admin/authorize-locations" className="hover:text-primary transition-colors truncate">Authorized Locations</Link>
+                            <span>/</span>
+                            <span className="text-gray-900 dark:text-white font-medium truncate">{locationName || ''}</span>
+                            <span>/</span>
+                            <span className="text-gray-900 dark:text-white font-medium truncate">Delivery Windows</span>
+                        </div>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Delivery Windows</h1>
+                        <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and track delivery windows for this location">Manage and track delivery windows for this location</p>
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Delivery Windows</h1>
-                    <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and track delivery windows for this location">Manage and track delivery windows for this location</p>
+                    <div className="flex flex-col items-end gap-2 min-w-0">
+                        <button
+                            onClick={() => router.push(`/admin/authorize-locations`)}
+                            className="flex items-center gap-2 px-4 py-1.5 bg-[#A7C7E7] text-white rounded shadow-sm hover:bg-[#8FB8DE] transition-colors text-sm font-medium whitespace-nowrap"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Back to Authorized Locations
+                        </button>
+                    </div>
                 </div>
             </div>
 

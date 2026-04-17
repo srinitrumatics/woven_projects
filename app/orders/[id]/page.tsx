@@ -259,8 +259,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const handleAddSelectedProducts = () => {
     const selectedProducts = catalogProducts.filter(p => selectedProductIds.has(p.id));
     const newLineItems = selectedProducts.map(product => {
-      let qty = catalogQuantities[product.id] || product.moq || 1;
-      qty = Math.min(qty, product.availableQty);
+      const qty = catalogQuantities[product.id] ?? product.moq ?? 1;
       return {
         ...product,
         orderQty: qty,
@@ -978,8 +977,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const handleAddProduct = (product: Product, quantity?: number) => {
     // Always add as a new line item, even if the same product exists
     // Generate a unique key by combining product id with timestamp
-    let qty = quantity || catalogQuantities[product.id] || product.moq || 1;
-    qty = Math.min(qty, product.availableQty);
+    const qty = quantity !== undefined ? quantity : (catalogQuantities[product.id] ?? product.moq ?? 1);
     const uniqueLineItem = {
       ...product,
       orderQty: qty,
@@ -1037,8 +1035,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     if (newQuantity < 0) return;
     setOrderProducts(orderProducts.map(p => {
       if (p.lineItemKey === lineItemKey) {
-        const qty = Math.min(newQuantity, p.availableQty);
-        return { ...p, orderQty: qty, subtotal: qty * p.unitPrice };
+        return { ...p, orderQty: newQuantity, subtotal: newQuantity * p.unitPrice };
       }
       return p;
     }));

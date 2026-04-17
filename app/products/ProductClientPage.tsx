@@ -15,6 +15,7 @@ import {
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { Product } from "../orders/types";
 import Link from "next/link";
+import { useUserSession } from "@/components/UserSessionContext";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || "",
@@ -23,6 +24,9 @@ const searchClient = algoliasearch(
 
 function Content() {
   const [viewMode, setViewMode] = useState<'list' | 'card'>('card');
+  const { selectedAccount } = useUserSession();
+  const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
+  const isCustomer = accountType === 'Customer' || accountType === 'NSO';
 
   // Search Box Hook
   const { query, refine: setQuery } = useSearchBox();
@@ -155,6 +159,19 @@ function Content() {
 
             {/* View Mode Toggle */}
             <div className="flex items-center gap-2 min-w-0">
+              {/* Add Product Button – hidden for customer accounts */}
+              {!isCustomer && (
+                <button
+                  className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm whitespace-nowrap"
+                  title="Add Product"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add Product
+                </button>
+              )}
+
               <button
                 onClick={() => setViewMode('card')}
                 className={`p-2 rounded-lg transition-colors ${viewMode === "card"
@@ -356,9 +373,9 @@ const ListView = ({ products }: ViewProps) => (
       <thead className="bg-primary-light dark:bg-gray-900">
         <tr>
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">&nbsp;</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Product Name</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }}>Product Name</th>
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Category</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Description</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }}>Description</th>
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">List Price</th>
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Selling Price</th>
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Action</th>
@@ -391,9 +408,9 @@ const ListView = ({ products }: ViewProps) => (
                     </div>
                   </Link>
                 </td>
-                <td className="px-4 py-3 truncate">
-                  <Link href={`/products/${p.objectID || product.id}`} className="block line-clamp-2" title={product.name}>
-                    <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">{product.name}</div>
+                <td className="px-4 py-3" style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }}>
+                  <Link href={`/products/${p.objectID || product.id}`} className="block overflow-hidden" title={product.name}>
+                    <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">{product.name}</div>
                     <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">{product.sku}</div>
                   </Link>
                 </td>
@@ -402,7 +419,7 @@ const ListView = ({ products }: ViewProps) => (
                     <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">{category}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ maxWidth: '300px' }}><div className="line-clamp-2">{product.description}</div></td>
+                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }} title={product.description}>{product.description}</td>
                 <td className="px-4 py-3 text-sm text-right text-gray-500 dark:text-gray-400 line-through truncate">{formatCurrency(listPrice)}</td>
                 <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(sellingPrice)}</td>
                 <td className="px-4 py-3 text-left truncate">

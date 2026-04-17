@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { QuoteSalesOrder, QuoteShippingManifest, QuoteInvoice } from "../../types";
-import { useResizableColumns } from "@/hooks/useResizableColumns";
-import QuoteSalesOrdersSubTab from "./QuoteSalesOrdersSubTab";
-import QuoteShippingManifestsSubTab from "./QuoteShippingManifestsSubTab";
-import QuoteInvoicesSubTab from "./QuoteInvoicesSubTab";
+import { useState } from"react";
+import { QuoteSalesOrder, QuoteShippingManifest, QuoteInvoice } from"../../types";
+import { useResizableColumns } from"@/hooks/useResizableColumns";
+import QuoteSalesOrdersSubTab from"./QuoteSalesOrdersSubTab";
+import QuoteShippingManifestsSubTab from"./QuoteShippingManifestsSubTab";
+import QuoteInvoicesSubTab from"./QuoteInvoicesSubTab";
 
-type FulfillmentSubTab = "salesOrders" | "shippingManifests" | "invoices";
+type FulfillmentSubTab ="salesOrders"|"shippingManifests"|"invoices";
 
 interface QuoteFulfillmentTabProps {
     quoteId: string;
@@ -179,32 +179,32 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
     });
 
     const tabs: { id: FulfillmentSubTab; label: string }[] = [
-        { id: "salesOrders", label: "Sales Orders" },
-        { id: "shippingManifests", label: "Shipping Manifests" },
-        { id: "invoices", label: "Invoices" },
+        { id:"salesOrders", label:"Sales Orders"},
+        { id:"shippingManifests", label:"Shipping Manifests"},
+        { id:"invoices", label:"Invoices"},
     ];
 
     return (
         <div className="flex flex-col h-full min-w-0">
             {/* Sub-tabs Navigation */}
             <div className="border-b border-gray-200 dark:border-gray-700">
-                <nav className="-mb-px flex space-x-8 px-4" aria-label="Tabs">
+                <nav className="-mb-px flex space-x-8 px-4"aria-label="Tabs">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveSubTab(tab.id)}
                             className={`
-                                truncate py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                                 py-4 px-1 border-b-2 font-medium text-sm transition-colors
                                 ${activeSubTab === tab.id
-                                    ? "border-primary text-primary"
-                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+                                    ?"border-primary text-primary"
+                                    :"border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
                                 }
                             `}
                         >
                             {tab.label}
-                            {tab.id === "salesOrders" && salesOrders.length > 0 && ` (${salesOrders.length})`}
-                            {tab.id === "shippingManifests" && shippingManifests.length > 0 && ` (${shippingManifests.length})`}
-                            {tab.id === "invoices" && invoices.length > 0 && ` (${invoices.length})`}
+                            {tab.id ==="salesOrders"&& salesOrders.length > 0 && ` (${salesOrders.length})`}
+                            {tab.id ==="shippingManifests"&& shippingManifests.length > 0 && ` (${shippingManifests.length})`}
+                            {tab.id ==="invoices"&& invoices.length > 0 && ` (${invoices.length})`}
                         </button>
                     ))}
                 </nav>
@@ -212,7 +212,7 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
 
             {/* Tab Content */}
             <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2">
-                {activeSubTab === "salesOrders" && (
+                {activeSubTab ==="salesOrders"&& (
                     <QuoteSalesOrdersSubTab
                         salesOrders={sortedSalesOrders}
                         loading={false}
@@ -223,7 +223,7 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
                         onResize={handleSalesResize}
                     />
                 )}
-                {activeSubTab === "shippingManifests" && (
+                {activeSubTab ==="shippingManifests"&& (
                     <QuoteShippingManifestsSubTab
                         manifests={sortedManifests}
                         loading={false}
@@ -234,7 +234,7 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
                         onResize={handleManifestResize}
                     />
                 )}
-                {activeSubTab === "invoices" && (
+                {activeSubTab ==="invoices"&& (
                     <QuoteInvoicesSubTab
                         invoices={sortedInvoices}
                         loading={false}
