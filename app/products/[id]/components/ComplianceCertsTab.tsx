@@ -27,14 +27,14 @@ export const ComplianceCertsTab: React.FC<ComplianceCertsTabProps> = ({ certific
               {/* Centered Icon Circle */}
               <div className="w-14 h-14 bg-[#F2FAF9] dark:bg-teal-900/10 rounded-full flex items-center justify-center mb-5">
                 <span className="text-xl text-[#111827]">
-                  {cert.Name.to().includes("UL") ? "●" :
-                    cert.Name.to().includes("ENERGY") ? "★" :
-                      cert.Name.to().includes("CE") ? "⊥" :
-                        cert.Name.to().includes("ROHS") ? "◆" :
-                          cert.Name.to().includes("NSF") ? "◁" :
-                            cert.Name.to().includes("ISO") ? "✒" :
-                              cert.Name.to().includes("REACH") ? "♡" :
-                                cert.Name.to().includes("FCC") ? "■" : ""}
+                  {cert.Name.toUpperCase().includes("UL") ? "●" :
+                    cert.Name.toUpperCase().includes("ENERGY") ? "★" :
+                      cert.Name.toUpperCase().includes("CE") ? "⊥" :
+                        cert.Name.toUpperCase().includes("ROHS") ? "◆" :
+                          cert.Name.toUpperCase().includes("NSF") ? "◁" :
+                            cert.Name.toUpperCase().includes("ISO") ? "✒" :
+                              cert.Name.toUpperCase().includes("REACH") ? "♡" :
+                                cert.Name.toUpperCase().includes("FCC") ? "■" : ""}
                 </span>
               </div>
 

@@ -16,6 +16,7 @@ import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { Product } from "../orders/types";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
+import AddProductModal from "./components/AddProductModal";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || "",
@@ -24,6 +25,7 @@ const searchClient = algoliasearch(
 
 function Content() {
   const [viewMode, setViewMode] = useState<'list' | 'card'>('card');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const { selectedAccount } = useUserSession();
   const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
   const isCustomer = accountType === 'Customer' || accountType === 'NSO';
@@ -162,6 +164,7 @@ function Content() {
               {/* Add Product Button – hidden for customer accounts */}
               {!isCustomer && (
                 <button
+                  onClick={() => setIsAddModalOpen(true)}
                   className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm whitespace-nowrap"
                   title="Add Product"
                 >
@@ -246,6 +249,11 @@ function Content() {
           </div>
         )}
       </div>
+
+      <AddProductModal 
+        isOpen={isAddModalOpen} 
+        onClose={() => setIsAddModalOpen(false)} 
+      />
     </div>
   );
 }

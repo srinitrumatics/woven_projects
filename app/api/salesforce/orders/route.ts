@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { exit } from "process";
-import { getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, getProductsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce, cloneOrderFromSalesforce, deleteOrderFromSalesforce, deleteFullOrderFromSalesforce, getFilesFromSalesforce, deleteFileFromSalesforce, uploadFilesToSalesforce, downloadFileFromSalesforce, getFileUrl, getOrderLinesFromSalesforce, getAccountFromSalesforce } from '@/lib/salesforce-service';
+import { getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce, cloneOrderFromSalesforce, deleteOrderFromSalesforce, deleteFullOrderFromSalesforce, getFilesFromSalesforce, deleteFileFromSalesforce, uploadFilesToSalesforce, downloadFileFromSalesforce, getFileUrl, getOrderLinesFromSalesforce, getAccountFromSalesforce } from '@/lib/salesforce-service';
+import { getProductsFromSalesforce } from '@/lib/product-salesforce-service';
 
 
 export async function GET(req: Request) {

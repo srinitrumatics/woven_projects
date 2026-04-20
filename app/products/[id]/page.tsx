@@ -12,12 +12,16 @@ import { DatasheetsTab } from "./components/DatasheetsTab";
 import { AuthorizedSuppliersTab } from "./components/AuthorizedSuppliersTab";
 import { ComplianceCertsTab } from "./components/ComplianceCertsTab";
 import { getProductDetails, mapSalesforceProductToLocal, Product } from "@/lib/products-service";
+import AddProductModal from "../components/AddProductModal";
+import EditProductTabs from "./components/EditProductTabs";
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { user, selectedAccount } = useUserSession();
   const [activeTab, setActiveTab] = useState("Overview");
   const [product, setProduct] = useState<Product | null>(null);
+  const [rawProduct, setRawProduct] = useState<any>(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [datasheets, setDatasheets] = useState<any[]>([]);
   const [certifications, setCertifications] = useState<any[]>([]);
   const [suppliers, setSuppliers] = useState<any[]>([]);
@@ -45,6 +49,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           const mappedProduct = mapSalesforceProductToLocal(sfProduct);
 
           setProduct(mappedProduct);
+          setRawProduct(sfProduct);
         } else {
           setError("Product not found");
         }
@@ -166,10 +171,40 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <span className="hover:text-primary cursor-pointer"><button onClick={() => window.history.back()} className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Products</button></span>
           <span>&gt;</span>
           <span className="text-gray-900 dark:text-white font-medium">{product.name}</span>
+          <button 
+            onClick={() => setEditModalOpen(!editModalOpen)} 
+            className={`ml-auto text-sm px-4 py-2 rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2 ${editModalOpen ? 'border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' : 'bg-primary hover:bg-primary-dark text-white'}`}
+          >
+            {editModalOpen ? (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                Cancel Edit
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+                Edit Product
+              </>
+            )}
+          </button>
         </nav>
 
-        {/* Top Section: Gallery and Info Card */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+        {editModalOpen ? (
+          <div className="mb-12">
+            <EditProductTabs 
+              onClose={() => {
+                setEditModalOpen(false);
+                window.location.reload(); 
+              }} 
+              productToEdit={rawProduct} 
+            />
+          </div>
+        ) : (
+          <>
+            {/* Top Section: Gallery and Info Card */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
           {/* Gallery - Left Side */}
           <div className="lg:col-span-8 flex flex-col xl:flex-row gap-4">
             <ProductGallery images={product.images} />
@@ -197,6 +232,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             {activeTab === "Compliance & Certs" && <ComplianceCertsTab certifications={certifications} isLoading={certificationsLoading} />}
           </div>
         </div>
+          </>
+        )}
       </div>
     </Sidebar>
   );

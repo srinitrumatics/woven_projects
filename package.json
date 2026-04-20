@@ -32,7 +32,8 @@
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.0.0",
-    "react-instantsearch": "^7.20.0"
+    "react-instantsearch": "^7.20.0",
+    "react-quill-new": "^3.8.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getProductDetailsFromSalesforce } from '@/lib/salesforce-service';
+import { getProductDetailsFromSalesforce, createProductInSalesforce, updateProductTabInSalesforce, patchProductTabInSalesforce } from '@/lib/product-salesforce-service';
 
 export async function GET(req: Request) {
   try {
@@ -23,5 +23,40 @@ export async function GET(req: Request) {
   } catch (err) {
     console.error("Product details API error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+
+    if (body.tabName && body.tabName !== "product") {
+      const result = await updateProductTabInSalesforce(body);
+      return NextResponse.json(result);
+    }
+
+    const { accountId, contactId, productData } = body;
+
+    if (!accountId || !contactId || !productData) {
+      return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
+    }
+
+    const result = await createProductInSalesforce(accountId, contactId, productData);
+    
+    return NextResponse.json(result);
+  } catch (err: any) {
+    console.error("Product creation API error:", err);
+    return NextResponse.json({ error: err.message || "Server error" }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+    const result = await patchProductTabInSalesforce(body);
+    return NextResponse.json(result);
+  } catch (err: any) {
+    console.error("Product details PATCH API error:", err);
+    return NextResponse.json({ error: err.message || "Server error" }, { status: 500 });
   }
 }
