@@ -47,8 +47,17 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
           // Update the user session context with the complete user data
           login(sessionData.user);
 
+          // Determine landing page based on account type
+          const user = sessionData.user;
+          const accounts = user.accounts || [];
+          const directAccount = accounts.find((a: any) => a.isdirect === true || a.isdirect === 'true');
+          const primaryAccount = directAccount || accounts[0];
+          const accType = primaryAccount?.Account_Record_Type__c || 'Customer';
+          const isCustomerType = accType === 'Customer' || accType === 'NSO';
+          const landPage = isCustomerType ? '/program360' : '/products';
+
           // Redirect to dashboard or return URL after successful verification
-          router.push(returnUrl);
+          router.push(searchParams?.get('return') || landPage);
           router.refresh(); // Refresh to update any UI that depends on auth state
         } else {
           setError("Session verification failed. Please try again.");

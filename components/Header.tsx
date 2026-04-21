@@ -104,18 +104,20 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                                 ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
                                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                                 }`}
-                              onClick={async (e) => {
-                                e.stopPropagation();
-                                setIsOrgDropdownOpen(false); // Close dropdown after selection
-                                await setSelectedAccountId(accId);
-                                
-                                // Clear url query params so old organization logic doesnt trigger
-                                const currentUrl = new URL(window.location.href);
-                                currentUrl.searchParams.delete('organizationId');
-                                
-                                // Redirect to dashboard to reset the working interface cleanly.
-                                window.location.href = currentUrl.pathname === '/program360' ? '/program360' : '/program360';
-                              }}
+                                onClick={async (e) => {
+                                  e.stopPropagation();
+                                  setIsOrgDropdownOpen(false); // Close dropdown after selection
+                                  await setSelectedAccountId(accId);
+                                  
+                                  const accType = account.Account_Record_Type__c || 'Customer';
+                                  const isCustomerType = accType === 'Customer' || accType === 'NSO';
+                                  const landPage = isCustomerType ? '/program360' : '/products';
+
+                                  const currentUrl = new URL(window.location.href);
+                                  currentUrl.searchParams.delete('organizationId');
+                                  
+                                  window.location.href = landPage;
+                                }}
                             >
                               {account.Name || account.name || 'Unnamed Account'}
                             </button>

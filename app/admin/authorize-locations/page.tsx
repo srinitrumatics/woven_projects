@@ -63,6 +63,25 @@ export default function AuthorizeLocationsPage() {
         actions: 140
     });
 
+    useEffect(() => {
+        const fetchPicklists = async () => {
+            if (accountId && contactId) {
+                try {
+                    const res = await fetch(`/api/salesforce/picklists?accountId=${accountId}&contactId=${contactId}`);
+                    const data = await res.json();
+                    if (data.success && data.data?.[0]) {
+                        const picks = data.data[0];
+                        if (picks.Location_Type__c) setLocationTypes(picks.Location_Type__c);
+                        if (picks.Address_Type__c) setAddressTypes(picks.Address_Type__c);
+                    }
+                } catch (error) {
+                    console.error("Failed to load picklists:", error);
+                }
+            }
+        };
+        fetchPicklists();
+    }, [accountId, contactId]);
+
     const fetchLocations = async () => {
         try {
             setLoading(true);
@@ -97,13 +116,6 @@ export default function AuthorizeLocationsPage() {
                     deliveryNotes: item.Delivery_Notes__c || "",
                     status: item.Active__c ? "Active" : "Inactive"
                 }));
-
-                if (Array.isArray(dataObj.Location_Type__c)) {
-                    setLocationTypes(dataObj.Location_Type__c);
-                }
-                if (Array.isArray(dataObj.Address_Type__c)) {
-                    setAddressTypes(dataObj.Address_Type__c);
-                }
             }
 
             setLocations(authLocations);

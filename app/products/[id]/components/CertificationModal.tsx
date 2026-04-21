@@ -10,9 +10,10 @@ interface CertificationModalProps {
   onClose: () => void;
   onSuccess: () => void;
   certificationToEdit?: any;
+  picklists?: any;
 }
 
-export default function CertificationModal({ productId, onClose, onSuccess, certificationToEdit }: CertificationModalProps) {
+export default function CertificationModal({ productId, onClose, onSuccess, certificationToEdit, picklists }: CertificationModalProps) {
   const { user, selectedAccount } = useUserSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -118,9 +119,11 @@ export default function CertificationModal({ productId, onClose, onSuccess, cert
               className="w-full px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500"
             >
               <option value="">-- Select Status --</option>
-              {CERTIFICATION_STATUS_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
+              {(picklists?.Certification_Status__c || CERTIFICATION_STATUS_OPTIONS).map((opt: any, idx: number) => {
+                const label = typeof opt === 'object' ? (opt.label || opt.value) : opt;
+                const value = typeof opt === 'object' ? opt.value : opt;
+                return <option key={`${value}-${idx}`} value={value}>{label}</option>;
+              })}
             </select>
           </div>
 

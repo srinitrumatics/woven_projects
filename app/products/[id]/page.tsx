@@ -171,24 +171,26 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <span className="hover:text-primary cursor-pointer"><button onClick={() => window.history.back()} className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Products</button></span>
           <span>&gt;</span>
           <span className="text-gray-900 dark:text-white font-medium">{product.name}</span>
-          <button 
-            onClick={() => setEditModalOpen(!editModalOpen)} 
-            className={`ml-auto text-sm px-4 py-2 rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2 ${editModalOpen ? 'border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' : 'bg-primary hover:bg-primary-dark text-white'}`}
-          >
-            {editModalOpen ? (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                Cancel Edit
-              </>
-            ) : (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
-                Edit Product
-              </>
-            )}
-          </button>
+          {!(selectedAccount?.Account_Record_Type__c === 'Customer' || selectedAccount?.Account_Record_Type__c === 'NSO') && (
+            <button 
+              onClick={() => setEditModalOpen(!editModalOpen)} 
+              className={`ml-auto text-sm px-4 py-2 rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2 ${editModalOpen ? 'border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' : 'bg-primary hover:bg-primary-dark text-white'}`}
+            >
+              {editModalOpen ? (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                  Cancel Edit
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                  Edit Product
+                </>
+              )}
+            </button>
+          )}
         </nav>
 
         {editModalOpen ? (

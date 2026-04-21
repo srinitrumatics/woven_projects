@@ -325,7 +325,6 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
             {renderField("Lead Time (Wks)", "leadTimeWks")}
             {renderField("MOQ", "moq")}
             {renderField("UOM", "uom", "select", picklists?.UOM__c || ["Each", "Case", "Pallet"])}
-            {renderField("Manufacturer", "manufacturer", "select", ["Happy Tech", "Global Solutions", "AMD", "Intel"], false, true)}
           </div>
 
           <SectionHeader title="Overview" />

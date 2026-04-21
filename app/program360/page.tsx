@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Sidebar from "@/components/layouts/Sidebar";
+import Link from "next/link";
 import { Chart, registerables } from "chart.js";
 import {
   ShoppingBag,
@@ -12,8 +13,48 @@ import {
   BarChart3,
 } from "lucide-react";
 
+import { useUserSession } from "@/components/UserSessionContext";
+import { useState } from "react";
+
+interface StatItem {
+  title: string;
+  value: string | number;
+  trend: string;
+  subtext: string;
+  subtextColor?: string;
+  icon: any;
+  color: string;
+  bgColor: string;
+  iconColor: string;
+}
+
 export default function Program360Page() {
   const chartRef = useRef<HTMLCanvasElement>(null);
+  const { selectedAccount, user } = useUserSession();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  const accountId = selectedAccount?.Id || selectedAccount?.id;
+  const contactId = user?.Id || user?.contact?.Id;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!accountId || !contactId) return;
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/salesforce/program-insights?accountId=${accountId}&contactId=${contactId}`);
+        const result = await res.json();
+        if (result.success && result.data?.[0]) {
+          setData(result.data[0]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch dashboard data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [accountId, contactId]);
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -84,12 +125,12 @@ export default function Program360Page() {
     };
   }, []);
 
-  const stats = [
+  const stats: StatItem[] = [
     {
       title: "Open Orders",
-      value: "24",
-      trend: "+12% from last month",
-      subtext: "3 pending approval",
+      value: data?.["Open Orders"]?.["Open Orders Count"] || "0",
+      trend: `$${(data?.["Open Orders"]?.["Total Value"] || 0).toLocaleString()} total`,
+      subtext: "Recently updated",
       icon: ShoppingBag,
       color: "blue",
       bgColor: "bg-blue-50",
@@ -97,10 +138,9 @@ export default function Program360Page() {
     },
     {
       title: "Pending Invoices",
-      value: "8",
-      trend: "$45,230.00 total",
-      subtext: "2 overdue > 30 days",
-      subtextColor: "text-red-500",
+      value: data?.["Pending Invoices"]?.["Pending Invoices Count"] || "0",
+      trend: `$${(data?.["Pending Invoices"]?.["Total Value"] || 0).toLocaleString()} total`,
+      subtext: "Recent invoices",
       icon: FileText,
       color: "yellow",
       bgColor: "bg-yellow-50",
@@ -108,9 +148,9 @@ export default function Program360Page() {
     },
     {
       title: "On Hand Inventory",
-      value: "156",
-      trend: "$284,500 total value",
-      subtext: "Across 12 locations",
+      value: data?.["On Hand Inventory"]?.["Unique Products Count"] || "0",
+      trend: `$${(data?.["On Hand Inventory"]?.["Total Value"] || 0).toLocaleString()} total value`,
+      subtext: "Products in stock",
       icon: Package,
       color: "green",
       bgColor: "bg-green-50",
@@ -118,10 +158,9 @@ export default function Program360Page() {
     },
     {
       title: "Pending Quotes",
-      value: "12",
-      trend: "$128,450.00 pipeline",
-      subtext: "4 expiring in 7 days",
-      subtextColor: "text-orange-500",
+      value: data?.["Pending Quotes"]?.["Pending Quotes Count"] || "0",
+      trend: `$${(data?.["Pending Quotes"]?.["Total Value"] || 0).toLocaleString()} total`,
+      subtext: "Awaiting approval",
       icon: ClipboardList,
       color: "purple",
       bgColor: "bg-purple-50",
@@ -130,73 +169,93 @@ export default function Program360Page() {
   ];
 
   const quickActions = [
-    { label: "New Order", icon: ShoppingBag, bgColor: "bg-blue-50", textColor: "text-blue-700", borderColor: "border-blue-100" },
-    { label: "View Proposals", icon: FileText, bgColor: "bg-green-50", textColor: "text-green-700", borderColor: "border-green-100" },
-    { label: "View Quotes", icon: ClipboardList, bgColor: "bg-purple-50", textColor: "text-purple-700", borderColor: "border-purple-100" },
-    { label: "Track Shipments", icon: Truck, bgColor: "bg-orange-50", textColor: "text-orange-700", borderColor: "border-orange-100" },
-    { label: "View Invoices", icon: FileText, bgColor: "bg-red-50", textColor: "text-red-700", borderColor: "border-red-100" },
-    { label: "View Reports", icon: BarChart3, bgColor: "bg-gray-50", textColor: "text-gray-700", borderColor: "border-gray-200" },
+    { label: "New Order", icon: ShoppingBag, bgColor: "bg-blue-50", textColor: "text-blue-700", borderColor: "border-blue-100", href: "/orders" },
+    { label: "View Proposals", icon: FileText, bgColor: "bg-green-50", textColor: "text-green-700", borderColor: "border-green-100", href: "/proposals" },
+    { label: "View Quotes", icon: ClipboardList, bgColor: "bg-purple-50", textColor: "text-purple-700", borderColor: "border-purple-100", href: "/quotes" },
+    { label: "Track Shipments", icon: Truck, bgColor: "bg-orange-50", textColor: "text-orange-700", borderColor: "border-orange-100", href: "/shipments" },
+    { label: "View Invoices", icon: FileText, bgColor: "bg-red-50", textColor: "text-red-700", borderColor: "border-red-100", href: "/invoices" },
+    { label: "View Reports", icon: BarChart3, bgColor: "bg-gray-50", textColor: "text-gray-700", borderColor: "border-gray-200", href: "/reports" },
   ];
 
   const needsAttention = [
     {
       title: "Orders in Draft",
-      count: 2,
+      count: data?.["Orders in Draft"]?.length || 0,
       badgeStyle: { background: "#dbeafe", color: "#1d4ed8" },
-      items: [
-        { id: "ORD-1009", info: "18 days — no activity", status: "Draft", pillClass: "bg-[#fff7ed] text-[#9a3412]" },
-        { id: "ORD-1012", info: "26 days — incomplete", status: "Draft", pillClass: "bg-[#fff7ed] text-[#9a3412]" },
-        { id: "ORD-1014", info: "7 days — pending items", status: "Draft", pillClass: "bg-[#fff7ed] text-[#9a3412]" },
-      ],
+      href: "/orders",
+      items: (data?.["Orders in Draft"] || []).slice(0, 3).map((item: any) => ({
+        id: item.Name,
+        info: `$${(item.Grand_Total__c || 0).toLocaleString()} — ${item.Status__c}`,
+        status: item.Status__c,
+        pillClass: "bg-[#fff7ed] text-[#9a3412]"
+      })),
       footer: "View all draft orders"
     },
     {
       title: "Proposals",
-      count: 2,
-      badgeStyle: { background: "#dbeafe", color: "#1d4ed8" },
-      items: [
-        { id: "PRO-0047", info: "Sent 9 days — no response", status: "Client Review", pillClass: "bg-[#eff6ff] text-[#1e40af]" },
-        { id: "PRO-0051", info: "Sent 14 days — follow-up due", status: "Client Review", pillClass: "bg-[#eff6ff] text-[#1e40af]" },
-      ],
+      count: data?.["Proposals"]?.length || 0,
+      badgeStyle: { background: "#eff6ff", color: "#1e40af" },
+      href: "/proposals",
+      items: (data?.["Proposals"] || []).slice(0, 3).map((item: any) => ({
+        id: item.Name,
+        info: `$${(item.Grand_Total__c || 0).toLocaleString()} — ${item.Status__c}`,
+        status: item.Status__c,
+        pillClass: "bg-[#eff6ff] text-[#1e40af]"
+      })),
       footer: "View all proposals"
     },
     {
       title: "Quotes",
-      count: 4,
+      count: data?.["Quotes"]?.length || 0,
       badgeStyle: { background: "#fef3c7", color: "#92400e" },
-      items: [
-        { id: "QTE-0089 — $34,000", info: "Expires in 3 days", status: "Expiring", pillClass: "bg-[#fff7ed] text-[#9a3412]" },
-        { id: "QTE-0085 — $18,200", info: "Submitted 11 days ago", status: "Submitted", pillClass: "bg-[#f9fafb] text-[#4b5563]" },
-        { id: "QTE-0081 — $9,750", info: "Submitted 19 days ago", status: "Submitted", pillClass: "bg-[#f9fafb] text-[#4b5563]" },
-      ],
+      href: "/quotes",
+      items: (data?.["Quotes"] || []).slice(0, 3).map((item: any) => ({
+        id: item.Name,
+        info: item.Expiration_Date__c ? `Expires: ${item.Expiration_Date__c}` : `$${(item.Grand_Total__c || 0).toLocaleString()} — ${item.Status__c}`,
+        status: item.Status__c,
+        pillClass: item.Status__c === 'Expiring' ? "bg-[#fff7ed] text-[#9a3412]" : "bg-[#f9fafb] text-[#4b5563]"
+      })),
       footer: "View all submitted quotes"
     },
     {
       title: "Invoices",
-      count: 2,
+      count: data?.["Invoices"]?.length || 0,
       badgeStyle: { background: "#fee2e2", color: "#b91c1c" },
-      items: [
-        { id: "INV-2041 — $12,800", info: "Overdue 32 days", status: "Past Due", pillClass: "bg-[#fef2f2] text-[#991b1b]" },
-        { id: "INV-2038 — $6,420", info: "Overdue 41 days", status: "Past Due", pillClass: "bg-[#fef2f2] text-[#991b1b]" },
-      ],
+      href: "/invoices",
+      items: (data?.["Invoices"] || []).slice(0, 3).map((item: any) => ({
+        id: item.Name,
+        info: item.Days_Outstanding__c ? `${item.Days_Outstanding__c} days outstanding` : `$${(item.Grand_Total__c || 0).toLocaleString()} — ${item.Status__c}`,
+        status: item.Status__c,
+        pillClass: "bg-[#fef2f2] text-[#991b1b]"
+      })),
       footer: "View all past due invoices"
     },
     {
       title: "Shipments",
-      count: 3,
+      count: data?.["Shipments"]?.length || 0,
       badgeStyle: { background: "#dcfce7", color: "#166534" },
-      items: [
-        { id: "SHP-3301 — ORD-1007", info: "4 days past ETA", status: "Delayed", pillClass: "bg-[#fef2f2] text-[#991b1b]" },
-        { id: "SHP-3298 — ORD-1006", info: "Arrives tomorrow", status: "On Track", pillClass: "bg-[#f0fdf4] text-[#166534]" },
-        { id: "SHP-3295 — ORD-1005", info: "In transit — 2 days out", status: "On Track", pillClass: "bg-[#f0fdf4] text-[#166534]" },
-      ],
+      href: "/shipments",
+      items: (data?.["Shipments"] || []).slice(0, 3).map((item: any) => ({
+        id: item.Name,
+        info: item.Estimated_Delivery_Date__c ? `ETA: ${new Date(item.Estimated_Delivery_Date__c).toLocaleDateString()}` : `Total: $${(item.Total_Price__c || 0).toLocaleString()}`,
+        status: item.Status__c,
+        pillClass: item.Status__c === 'Delayed' ? "bg-[#fef2f2] text-[#991b1b]" : "bg-[#f0fdf4] text-[#166534]"
+      })),
       footer: "View all shipments"
     }
   ];
 
   return (
     <Sidebar>
-      <div className="p-8 max-w-[1600px] mx-auto space-y-8 bg-gray-50/50 min-h-screen">
+      <div className="p-8 max-w-[1600px] mx-auto space-y-8 bg-gray-50/50 min-h-screen relative">
+        {loading && (
+          <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] z-50 flex items-center justify-center rounded-2xl">
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-sm font-medium text-gray-500">Updating dashboard...</p>
+            </div>
+          </div>
+        )}
 
         {/* Top Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -222,13 +281,14 @@ export default function Program360Page() {
           <h2 className="text-sm font-bold text-gray-900  pl-1 font-sans">Quick actions</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {quickActions.map((action, idx) => (
-              <button
+              <Link
                 key={idx}
-                className={`${action.bgColor} ${action.textColor} ${action.borderColor} border px-10 py-5 rounded-xl flex items-center justify-center gap-2 font-semibold text-sm transition-all hover:opacity-80 active:scale-95 shadow-sm`}
+                href={action.href}
+                className={`${action.bgColor} ${action.textColor} ${action.borderColor} border px-6 py-5 rounded-xl flex items-center justify-center gap-2 font-semibold text-sm transition-all hover:opacity-80 active:scale-95 shadow-sm`}
               >
                 <action.icon className="w-4 h-4" />
                 {action.label}
-              </button>
+              </Link>
             ))}
           </div>
         </div>
@@ -249,7 +309,7 @@ export default function Program360Page() {
                   </span>
                 </div>
                 <div className="p-5 space-y-5 flex-grow">
-                  {col.items.map((item, i) => (
+                  {col.items.map((item: any, i: number) => (
                     <div key={i} className="group cursor-pointer">
                       <div className="text-[13px] font-bold text-blue-600 hover:underline mb-1 flex items-center gap-1">
                         {item.id}
@@ -261,9 +321,12 @@ export default function Program360Page() {
                     </div>
                   ))}
                 </div>
-                <button className="p-4 border-t border-gray-50 text-[11px] font-bold text-blue-500 hover:text-blue-700 transition-colors text-center bg-gray-50/10">
+                <Link
+                  href={col.href}
+                  className="p-4 border-t border-gray-50 text-[11px] font-bold text-blue-500 hover:text-blue-700 transition-colors text-center bg-gray-50/10"
+                >
                   {col.footer}
-                </button>
+                </Link>
               </div>
             ))}
           </div>

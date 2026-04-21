@@ -21,7 +21,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [picklists, setPicklists] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("Overview");
-  
+
   const [isDatasheetModalOpen, setIsDatasheetModalOpen] = useState(false);
   const [selectedDatasheet, setSelectedDatasheet] = useState<any>(null);
   const [datasheets, setDatasheets] = useState<any[]>([]);
@@ -38,7 +38,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
 
         const res = await fetch(`/api/salesforce/product-details?accountId=${accountId}&contactId=${contactId}&productId=${productToEdit.Id}&tabName=datasheets`);
         const result = await res.json();
-        
+
         if (result.success && result.data && result.data.length > 0) {
           const sfDatasheets = result.data[0].Product_Datasheet__c || [];
           setDatasheets(sfDatasheets);
@@ -299,56 +299,56 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col mb-12">
-        <ProductTabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={["Overview", "Specifications & Dims", "Datasheets", "Authorized Suppliers", "Compliance & Certs"]} />
-        <div className="p-8">
-            {activeTab === "Overview" && (
-              <div className="space-y-6">
-                <div>
-                  <SectionHeader title="Product Header" />
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-                    {renderField("Product Name", "name", "text", [], true)}
-                    {renderField("SKU", "sku", "text", [], true, true)}
-                    {renderField("Product Code", "productCode", "text", [], false, true)}
-                    {renderField("Product Family", "family", "select", picklists?.Family || picklists?.Product_Family__c)}
-                    {renderField("Availability Status", "availabilityStatus", "text", [], false, true)}
-                    {renderField("Available to Sell", "availableToSell")}
+      <ProductTabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={["Overview", "Specifications & Dims", "Datasheets", "Authorized Suppliers", "Compliance & Certs"]} />
+      <div className="p-8">
+        {activeTab === "Overview" && (
+          <div className="space-y-6">
+            <div>
+              <SectionHeader title="Product Header" />
+              <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+                {renderField("Product Name", "name", "text", [], true)}
+                {renderField("SKU", "sku", "text", [], true, true)}
+                {renderField("Product Code", "productCode", "text", [], false, true)}
+                {renderField("Product Family", "family", "select", picklists?.Family || picklists?.Product_Family__c)}
+                {renderField("Availability Status", "availabilityStatus", "text", [], false, true)}
+                {renderField("Available to Sell", "availableToSell")}
+              </div>
+            </div>
+            <div>
+              <SectionHeader title="Pricing & Logic" />
+              <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+                {renderField("List Price", "listPrice")}
+                {renderField("Lead Time (Weeks)", "leadTimeWks")}
+                {renderField("MOQ", "moq")}
+                {renderField("UOM", "uom", "select", picklists?.UOM__c?.length ? picklists.UOM__c : ["Each", "Box", "Carton", "Dozen", "Kilogram", "Meter", "Pack"])}
+              </div>
+            </div>
+            <div>
+              <SectionHeader title="Product Overview" />
+              <div className="grid grid-cols-1 gap-6 px-2">
+                {renderField("Description", "description", "textarea")}
+                <div className="flex flex-col gap-1 w-full">
+                  <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">Key Features</label>
+                  <div className="bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600">
+                    <ReactQuill
+                      theme="snow"
+                      value={formData.keyFeatures}
+                      onChange={(content) => setFormData((prev: any) => ({ ...prev, keyFeatures: content }))}
+                      modules={{
+                        toolbar: [
+                          [{ 'header': [1, 2, false] }],
+                          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                          ['link'],
+                          ['clean']
+                        ],
+                      }}
+                      placeholder="Add key features here..."
+                    />
                   </div>
                 </div>
-                <div>
-                  <SectionHeader title="Pricing & Logic" />
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-                    {renderField("List Price", "listPrice")}
-                    {renderField("Lead Time (Weeks)", "leadTimeWks")}
-                    {renderField("MOQ", "moq")}
-                    {renderField("UOM", "uom", "select", picklists?.UOM__c?.length ? picklists.UOM__c : ["Each", "Box", "Carton", "Dozen", "Kilogram", "Meter", "Pack"])}
-                  </div>
-                </div>
-                <div>
-                  <SectionHeader title="Product Overview" />
-                  <div className="grid grid-cols-1 gap-6 px-2">
-                    {renderField("Description", "description", "textarea")}
-                    <div className="flex flex-col gap-1 w-full">
-                      <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">Key Features</label>
-                      <div className="bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600">
-                        <ReactQuill
-                          theme="snow"
-                          value={formData.keyFeatures}
-                          onChange={(content) => setFormData((prev: any) => ({ ...prev, keyFeatures: content }))}
-                          modules={{
-                            toolbar: [
-                              [{ 'header': [1, 2, false] }],
-                              ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                              [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                              ['link'],
-                              ['clean']
-                            ],
-                          }}
-                          placeholder="Add key features here..."
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <style jsx global>{`
+              </div>
+              <style jsx global>{`
                     .ql-container {
                       min-height: 150px;
                       font-size: 0.9rem;
@@ -381,196 +381,195 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
                       color: #f3f4f6 !important;
                     }
                   `}</style>
-                </div>
+            </div>
+          </div>
+        )}
+        {activeTab === "Specifications & Dims" && (
+          <div className="space-y-6">
+            <div>
+              <SectionHeader title="Physical Dimensions (Unit)" />
+              <div className="grid grid-cols-3 gap-x-6 gap-y-4 px-2">
+                {renderField("Length (in)", "lengthIn")}
+                {renderField("Width (in)", "widthIn")}
+                {renderField("Height (in)", "heightIn")}
+                {renderField("Cubic Volume (in)", "cubicVolumeIn")}
+                {renderField("Net Weight (lbs)", "netWeightLbs")}
+                {renderField("Gross Weight (lbs)", "grossWeightLbs")}
               </div>
-            )}
-            {activeTab === "Specifications & Dims" && (
-              <div className="space-y-6">
-                <div>
-                  <SectionHeader title="Physical Dimensions (Unit)" />
-                  <div className="grid grid-cols-3 gap-x-6 gap-y-4 px-2">
-                    {renderField("Length (in)", "lengthIn")}
-                    {renderField("Width (in)", "widthIn")}
-                    {renderField("Height (in)", "heightIn")}
-                    {renderField("Cubic Volume (in)", "cubicVolumeIn")}
-                    {renderField("Net Weight (lbs)", "netWeightLbs")}
-                    {renderField("Gross Weight (lbs)", "grossWeightLbs")}
-                  </div>
-                </div>
-                <div>
-                  <SectionHeader title="Physical Dimensions (Case)" />
-                  <div className="grid grid-cols-3 gap-x-6 gap-y-4 px-2">
-                    {renderField("Case Length (in)", "caseLengthIn")}
-                    {renderField("Case Width (in)", "caseWidthIn")}
-                    {renderField("Case Height (in)", "caseHeightIn")}
-                    {renderField("Case Net Weight (lbs)", "caseNetWeightLbs")}
-                    {renderField("Case Gross Weight (lbs)", "caseGrossWeightLbs")}
-                  </div>
-                </div>
-                <div>
-                  <SectionHeader title="Compliance & Trade" />
-                  <div className="grid grid-cols-3 gap-x-6 gap-y-4 px-2">
-                    {renderField("ECCN", "eccn")}
-                    {renderField("HTS Code", "htsCode")}
-                    {renderField("GTIN", "gtin")}
-                    {renderField("UPC", "upc")}
-                  </div>
-                </div>
-                <div>
-                  <SectionHeader title="ESG & Sustainability" />
-                  <div className="grid grid-cols-3 gap-x-6 gap-y-4 px-2">
-                    {renderField("Energy Consumption", "energyConsumption")}
-                    {renderField("End of Life Management", "endOfLifeManagement", "select", picklists?.End_of_Life_Management__c)}
-                    {renderField("Manufacturing Process", "manufacturingProcess", "select", picklists?.Manufacturing_Process__c)}
-                    {renderField("Packaging Materials", "packagingMaterials", "select", picklists?.Packaging_Materials__c)}
-                    {renderField("Water Usage", "waterUsage")}
-                  </div>
-                </div>
+            </div>
+            <div>
+              <SectionHeader title="Physical Dimensions (Case)" />
+              <div className="grid grid-cols-3 gap-x-6 gap-y-4 px-2">
+                {renderField("Case Length (in)", "caseLengthIn")}
+                {renderField("Case Width (in)", "caseWidthIn")}
+                {renderField("Case Height (in)", "caseHeightIn")}
+                {renderField("Case Net Weight (lbs)", "caseNetWeightLbs")}
+                {renderField("Case Gross Weight (lbs)", "caseGrossWeightLbs")}
               </div>
-            )}
-            {activeTab === "Datasheets" && (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-md">
-                  <h3 className="text-sm font-bold text-blue-700 dark:text-blue-300">Datasheets</h3>
-                  <button 
-                    onClick={() => { setSelectedDatasheet(null); setIsDatasheetModalOpen(true); }}
-                    className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded flex items-center gap-2"
-                  >
-                    + Add Datasheet
-                  </button>
-                </div>
-                {datasheetsLoading ? (
-                  <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg flex justify-center items-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
-                  </div>
-                ) : datasheets.length === 0 ? (
-                  <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center text-center">
-                    <p className="text-sm text-gray-500 mb-4">No datasheets have been added to this product.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {datasheets.map((ds: any) => (
-                      <div key={ds.Id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm relative">
-                        <button
-                          onClick={() => { setSelectedDatasheet(ds); setIsDatasheetModalOpen(true); }}
-                          className="absolute top-4 right-4 text-gray-400 hover:text-blue-600"
-                          title="Edit Datasheet"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                          </svg>
-                        </button>
-                        <h4 className="font-bold text-gray-800 dark:text-white text-sm">{ds.MPN__c || 'N/A'}</h4>
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-2 space-y-1">
-                          <p><span className="font-semibold">Version:</span> {ds.Version__c || 'N/A'}</p>
-                          <p><span className="font-semibold">LTB Date:</span> {ds.LTB_Date__c ? new Date(ds.LTB_Date__c).toISOString().split('T')[0] : 'N/A'}</p>
-                          <p><span className="font-semibold">EOL Date:</span> {ds.EOL_Date__c ? new Date(ds.EOL_Date__c).toISOString().split('T')[0] : 'N/A'}</p>
-                        </div>
-                        <div className="mt-3 flex gap-2">
-                          {ds.isOBS__c && <span className="px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-red-100 text-red-700 rounded-full">Obsolete</span>}
-                          {ds.isEOL__c && <span className="px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-orange-100 text-orange-700 rounded-full">EOL</span>}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+            </div>
+            <div>
+              <SectionHeader title="Compliance & Trade" />
+              <div className="grid grid-cols-3 gap-x-6 gap-y-4 px-2">
+                {renderField("ECCN", "eccn")}
+                {renderField("HTS Code", "htsCode")}
+                {renderField("GTIN", "gtin")}
+                {renderField("UPC", "upc")}
               </div>
-            )}
-            {activeTab === "Authorized Suppliers" && (
+            </div>
+            <div>
+              <SectionHeader title="ESG & Sustainability" />
+              <div className="grid grid-cols-3 gap-x-6 gap-y-4 px-2">
+                {renderField("Energy Consumption", "energyConsumption")}
+                {renderField("End of Life Management", "endOfLifeManagement", "select", picklists?.End_of_Life_Management__c)}
+                {renderField("Manufacturing Process", "manufacturingProcess", "select", picklists?.Manufacturing_Process__c)}
+                {renderField("Packaging Materials", "packagingMaterials", "select", picklists?.Packaging_Materials__c)}
+                {renderField("Water Usage", "waterUsage")}
+              </div>
+            </div>
+          </div>
+        )}
+        {activeTab === "Datasheets" && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-md">
+              <h3 className="text-sm font-bold text-blue-700 dark:text-blue-300">Datasheets</h3>
+              <button
+                onClick={() => { setSelectedDatasheet(null); setIsDatasheetModalOpen(true); }}
+                className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded flex items-center gap-2"
+              >
+                + Add Datasheet
+              </button>
+            </div>
+            {datasheetsLoading ? (
+              <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg flex justify-center items-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+              </div>
+            ) : datasheets.length === 0 ? (
               <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center text-center">
-                 <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">Manage Suppliers</h3>
-                 <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">Add Supplier Link</button>
+                <p className="text-sm text-gray-500 mb-4">No datasheets have been added to this product.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {datasheets.map((ds: any) => (
+                  <div key={ds.Id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm relative">
+                    <button
+                      onClick={() => { setSelectedDatasheet(ds); setIsDatasheetModalOpen(true); }}
+                      className="absolute top-4 right-4 text-gray-400 hover:text-blue-600"
+                      title="Edit Datasheet"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                    </button>
+                    <h4 className="font-bold text-gray-800 dark:text-white text-sm">{ds.MPN__c || 'N/A'}</h4>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-2 space-y-1">
+                      <p><span className="font-semibold">Version:</span> {ds.Version__c || 'N/A'}</p>
+                      <p><span className="font-semibold">LTB Date:</span> {ds.LTB_Date__c ? new Date(ds.LTB_Date__c).toISOString().split('T')[0] : 'N/A'}</p>
+                      <p><span className="font-semibold">EOL Date:</span> {ds.EOL_Date__c ? new Date(ds.EOL_Date__c).toISOString().split('T')[0] : 'N/A'}</p>
+                    </div>
+                    <div className="mt-3 flex gap-2">
+                      {ds.isOBS__c && <span className="px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-red-100 text-red-700 rounded-full">Obsolete</span>}
+                      {ds.isEOL__c && <span className="px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-orange-100 text-orange-700 rounded-full">EOL</span>}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
-            {activeTab === "Compliance & Certs" && (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-md">
-                  <h3 className="text-sm font-bold text-blue-700 dark:text-blue-300">Compliance & Certifications</h3>
-                  <button
-                    onClick={() => { setSelectedCert(null); setIsCertModalOpen(true); }}
-                    className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded flex items-center gap-2"
-                  >
-                    + Add Certification
-                  </button>
-                </div>
-                {certsLoading ? (
-                  <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg flex justify-center items-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
-                  </div>
-                ) : certifications.length === 0 ? (
-                  <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center text-center">
-                    <p className="text-sm text-gray-500 mb-4">No certifications have been added to this product.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {certifications.map((cert: any) => (
-                      <div key={cert.Id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm relative">
-                        <button
-                          onClick={() => { setSelectedCert(cert); setIsCertModalOpen(true); }}
-                          className="absolute top-4 right-4 text-gray-400 hover:text-blue-600"
-                          title="Edit Certification"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                          </svg>
-                        </button>
-                        <h4 className="font-bold text-gray-800 dark:text-white text-sm pr-6">{cert.Name || 'N/A'}</h4>
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-2 space-y-1">
-                          <p><span className="font-semibold">Status:</span> {cert.Certification_Status__c || 'N/A'}</p>
-                          <p><span className="font-semibold">Issue Date:</span> {cert.Issue_Date__c ? new Date(cert.Issue_Date__c).toISOString().split('T')[0] : 'N/A'}</p>
-                          <p><span className="font-semibold">Expiry Date:</span> {cert.Expiry_Date__c ? new Date(cert.Expiry_Date__c).toISOString().split('T')[0] : 'N/A'}</p>
-                        </div>
-                        {cert.Certification_Status__c && (
-                          <div className="mt-3">
-                            <span className={`px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase rounded-full ${
-                              cert.Certification_Status__c === 'Valid' ? 'bg-green-100 text-green-700' :
-                              cert.Certification_Status__c === 'Expired' ? 'bg-red-100 text-red-700' :
+          </div>
+        )}
+        {activeTab === "Authorized Suppliers" && (
+          <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center text-center">
+            <p className="text-sm font-bold text-gray-800 dark:text-white mb-2">No Authorized Suppliers have been added to this product</p>
+          </div>
+        )}
+        {activeTab === "Compliance & Certs" && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-md">
+              <h3 className="text-sm font-bold text-blue-700 dark:text-blue-300">Compliance & Certifications</h3>
+              <button
+                onClick={() => { setSelectedCert(null); setIsCertModalOpen(true); }}
+                className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded flex items-center gap-2"
+              >
+                + Add Certification
+              </button>
+            </div>
+            {certsLoading ? (
+              <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg flex justify-center items-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+              </div>
+            ) : certifications.length === 0 ? (
+              <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center text-center">
+                <p className="text-sm text-gray-500 mb-4">No certifications have been added to this product.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {certifications.map((cert: any) => (
+                  <div key={cert.Id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm relative">
+                    <button
+                      onClick={() => { setSelectedCert(cert); setIsCertModalOpen(true); }}
+                      className="absolute top-4 right-4 text-gray-400 hover:text-blue-600"
+                      title="Edit Certification"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                    </button>
+                    <h4 className="font-bold text-gray-800 dark:text-white text-sm pr-6">{cert.Name || 'N/A'}</h4>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-2 space-y-1">
+                      <p><span className="font-semibold">Status:</span> {cert.Certification_Status__c || 'N/A'}</p>
+                      <p><span className="font-semibold">Issue Date:</span> {cert.Issue_Date__c ? new Date(cert.Issue_Date__c).toISOString().split('T')[0] : 'N/A'}</p>
+                      <p><span className="font-semibold">Expiry Date:</span> {cert.Expiry_Date__c ? new Date(cert.Expiry_Date__c).toISOString().split('T')[0] : 'N/A'}</p>
+                    </div>
+                    {cert.Certification_Status__c && (
+                      <div className="mt-3">
+                        <span className={`px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase rounded-full ${cert.Certification_Status__c === 'Valid' ? 'bg-green-100 text-green-700' :
+                            cert.Certification_Status__c === 'Expired' ? 'bg-red-100 text-red-700' :
                               cert.Certification_Status__c === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                              'bg-gray-100 text-gray-700'
-                            }`}>{cert.Certification_Status__c}</span>
-                          </div>
-                        )}
+                                'bg-gray-100 text-gray-700'
+                          }`}>{cert.Certification_Status__c}</span>
                       </div>
-                    ))}
+                    )}
                   </div>
-                )}
+                ))}
               </div>
             )}
-        </div>
-        <div className="p-6 rounded-b-xl border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-end items-center gap-3">
-          <button onClick={onClose} disabled={isSubmitting} className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all disabled:opacity-50">Cancel</button>
-          <button onClick={handleSubmit} disabled={isSubmitting} className="px-10 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2">
-            {isSubmitting && <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>}
-            {isSubmitting ? "Saving..." : "Update Details"}
-          </button>
-        </div>
+          </div>
+        )}
+      </div>
+      <div className="p-6 rounded-b-xl border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-end items-center gap-3">
+        <button onClick={onClose} disabled={isSubmitting} className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all disabled:opacity-50">Cancel</button>
+        <button onClick={handleSubmit} disabled={isSubmitting} className="px-10 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2">
+          {isSubmitting && <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>}
+          {isSubmitting ? "Saving..." : "Update Details"}
+        </button>
+      </div>
 
-        {isDatasheetModalOpen && (
-          <DatasheetModal
-            productId={productToEdit?.Id}
-            datasheetToEdit={selectedDatasheet}
-            onClose={() => { setIsDatasheetModalOpen(false); setSelectedDatasheet(null); }}
-            onSuccess={() => {
-              setIsDatasheetModalOpen(false);
-              setSelectedDatasheet(null);
-              alert("Datasheet saved successfully!");
-              window.location.reload();
-            }}
-          />
-        )}
-        {isCertModalOpen && (
-          <CertificationModal
-            productId={productToEdit?.Id}
-            certificationToEdit={selectedCert}
-            onClose={() => { setIsCertModalOpen(false); setSelectedCert(null); }}
-            onSuccess={() => {
-              setIsCertModalOpen(false);
-              setSelectedCert(null);
-              alert("Certification saved successfully!");
-              window.location.reload();
-            }}
-          />
-        )}
+      {isDatasheetModalOpen && (
+        <DatasheetModal
+          productId={productToEdit?.Id}
+          datasheetToEdit={selectedDatasheet}
+          onClose={() => { setIsDatasheetModalOpen(false); setSelectedDatasheet(null); }}
+          onSuccess={() => {
+            setIsDatasheetModalOpen(false);
+            setSelectedDatasheet(null);
+            alert("Datasheet saved successfully!");
+            window.location.reload();
+          }}
+        />
+      )}
+      {isCertModalOpen && (
+        <CertificationModal
+          productId={productToEdit?.Id}
+          certificationToEdit={selectedCert}
+          picklists={picklists}
+          onClose={() => { setIsCertModalOpen(false); setSelectedCert(null); }}
+          onSuccess={() => {
+            setIsCertModalOpen(false);
+            setSelectedCert(null);
+            alert("Certification saved successfully!");
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 }

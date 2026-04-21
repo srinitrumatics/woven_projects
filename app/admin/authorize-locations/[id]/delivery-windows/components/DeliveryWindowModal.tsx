@@ -10,12 +10,9 @@ interface DeliveryWindowModalProps {
     locationId: string;
     initialData?: any;
     existingWindows: DeliveryWindow[];
+    dayOfWeekPicklist?: string[];
     title: string;
 }
-
-const DAYS_OF_WEEK = [
-    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
-];
 
 
 interface TimePickerProps {
@@ -94,6 +91,7 @@ export default function DeliveryWindowModal({
     locationId,
     initialData,
     existingWindows,
+    dayOfWeekPicklist = [],
     title
 }: DeliveryWindowModalProps) {
     const [formData, setFormData] = useState({
@@ -110,6 +108,15 @@ export default function DeliveryWindowModal({
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (error) {
+            const timer = setTimeout(() => {
+                setError(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [error]);
 
     useEffect(() => {
         const cleanTime = (timeStr: string) => {
@@ -216,8 +223,17 @@ export default function DeliveryWindowModal({
                 <form onSubmit={handleSubmit} className="p-6">
                     {/* Error Display */}
                     {error && (
-                        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium animate-in slide-in-from-top-2 duration-300">
-                            {error}
+                        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium animate-in slide-in-from-top-2 duration-300 flex justify-between items-center">
+                            <span>{error}</span>
+                            <button 
+                                type="button" 
+                                onClick={() => setError(null)}
+                                className="p-1 hover:bg-red-100 rounded-full transition-colors"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
                         </div>
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -231,9 +247,14 @@ export default function DeliveryWindowModal({
                                 className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
                                 required
                             >
-                                {DAYS_OF_WEEK.map(day => (
-                                    <option key={day} value={day}>{day}</option>
-                                ))}
+                                {dayOfWeekPicklist.map((day, index) => {
+                                    const val = typeof day === 'object' ? (day as any).value || (day as any).label : day;
+                                    const lab = typeof day === 'object' ? (day as any).label || (day as any).value : day;
+                                    return <option key={val || index} value={val}>{lab}</option>;
+                                })}
+                                {formData.Day_of_Week__c && !dayOfWeekPicklist.some(d => (typeof d === 'object' ? (d as any).value : d) === formData.Day_of_Week__c) && (
+                                    <option value={formData.Day_of_Week__c}>{formData.Day_of_Week__c}</option>
+                                )}
                             </select>
                         </div>
 

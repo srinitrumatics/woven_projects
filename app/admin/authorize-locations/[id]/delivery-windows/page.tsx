@@ -143,6 +143,7 @@ export default function DeliveryWindowsPage() {
         }
     };
     // Initialize resizable columns
+    const [dayOfWeekPicklist, setDayOfWeekPicklist] = useState<string[]>([]);
     const { widths, handleResize } = useResizableColumns({
         name: 180,
         shipToLocation: 180,
@@ -156,6 +157,24 @@ export default function DeliveryWindowsPage() {
         active: 100,
         actions: 100
     });
+
+    useEffect(() => {
+        const fetchPicklists = async () => {
+            if (accountId && contactId) {
+                try {
+                    const res = await fetch(`/api/salesforce/picklists?accountId=${accountId}&contactId=${contactId}`);
+                    const data = await res.json();
+                    if (data.success && data.data?.[0]) {
+                        const picks = data.data[0];
+                        if (picks.Day_of_Week__c) setDayOfWeekPicklist(picks.Day_of_Week__c);
+                    }
+                } catch (error) {
+                    console.error("Failed to load picklists:", error);
+                }
+            }
+        };
+        fetchPicklists();
+    }, [accountId, contactId]);
 
     useEffect(() => {
         if (locationId) {
@@ -390,6 +409,7 @@ export default function DeliveryWindowsPage() {
                 locationId={locationId}
                 initialData={editingWindow}
                 existingWindows={deliveryWindows}
+                dayOfWeekPicklist={dayOfWeekPicklist}
                 title={editingWindow ? "Edit Delivery Window" : "Add Delivery Window"}
             />
         </div>
