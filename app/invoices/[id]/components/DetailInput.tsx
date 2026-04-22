@@ -14,7 +14,7 @@ export default function DetailInput({ label, value, href, className = "" }: Deta
 
     return (
         <div className={className}>
-            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2" title={label}>
+            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate whitespace-nowrap" title={label}>
                 {label}
             </label>
 

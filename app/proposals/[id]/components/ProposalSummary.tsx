@@ -48,7 +48,7 @@ export default function ProposalSummary({
                 </div>
                 <div className="min-w-0">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Proposal Summary">Proposal Summary</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Your Proposal Summary">Review Proposal Summary</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Proposal Summary">Review Proposal Summary</p>
                 </div>
             </div>
 

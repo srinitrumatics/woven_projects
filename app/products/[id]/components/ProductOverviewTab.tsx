@@ -21,21 +21,20 @@ export const ProductOverviewTab: React.FC<ProductOverviewTabProps> = ({ product 
           )}
         </div>
 
-        {product.features && product.features.length > 0 && (
+        {product.features && (
           <div>
             <h3 className="text-xs font-bold text-gray-400 mb-4">Key Features</h3>
-            <ul className="space-y-4">
-              {product.features.map((feature: string, idx: number) => (
-                <li key={idx} className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 leading-relaxed group">
-                  <span className="mt-1 flex-shrink-0">
-                    <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </span>
-                  <span className="break-words min-w-0 w-full">{feature}</span>
-                </li>
-              ))}
-            </ul>
+            <div className="space-y-2">
+              {product.features.filter((f: string) => f && f.trim() !== "").length > 0 ? (
+                product.features.filter((f: string) => f && f.trim() !== "").map((feature: string, idx: number) => (
+                  <p key={idx} className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {feature}
+                  </p>
+                ))
+              ) : (
+                <p className="text-sm text-gray-500 italic">No key features listed.</p>
+              )}
+            </div>
           </div>
         )}
       </div>

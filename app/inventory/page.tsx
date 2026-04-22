@@ -278,7 +278,7 @@ export default function InventoryPage() {
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
                                 <Link href="#" className="hover:underline block">
-                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1" title="All IPs average days aged">Average Days Aged</p>
+                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1" title="Average Days Aged">Average Days Aged</p>
                                 </Link>
                                 <div className="flex items-baseline gap-2 group/count">
                                     <Link href="#" className="hover:underline block">

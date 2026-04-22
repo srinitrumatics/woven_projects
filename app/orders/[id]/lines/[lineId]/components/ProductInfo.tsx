@@ -107,7 +107,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
                 {/* Is Taxable */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Is Taxable">
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="IsTaxable">
                         IsTaxable
                     </label>
                     <input

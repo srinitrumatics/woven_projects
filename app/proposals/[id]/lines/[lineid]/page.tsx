@@ -883,7 +883,7 @@ export default function ProposalProductDetailPage({
 
                         {/* Site */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Site">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Inventory Account">
                                 Inventory Account
                             </label>
                             <input

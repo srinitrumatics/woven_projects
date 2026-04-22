@@ -24,7 +24,7 @@ export default function OrderNotes({
                 </div>
                 <div className="min-w-0">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Order Notes">Order Notes</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Special Instructions or Notes">Add Your Order Instructions</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Add Your Order Instructions">Add Your Order Instructions</p>
                 </div>
             </div>
 

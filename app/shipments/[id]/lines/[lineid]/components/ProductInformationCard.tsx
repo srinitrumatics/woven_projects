@@ -66,7 +66,7 @@ export default function ProductInformationCard({ product }: { product: any }) {
                     <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm text-gray-700 outline-none truncate bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded cursor-default" title={product.Sales_Order_Line_Name || ""} value={product.Sales_Order_Line_Name || ""} />
                 </div>
                 <div className="md:col-span-1">
-                    <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Estimated Delivery Date">Est Delivery Date</label>
+                    <label className="text-gray-700 text-sm font-bold block mb-1 truncate" title="Est Delivery Date">Est Delivery Date</label>
                     <input readOnly type="text" className="w-full bg-gray-50/50  px-3 py-2 text-sm bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-gray-700 outline-none truncate cursor-default" title={formatDate(product.Estimated_Delivery_Date__c, 'numeric-dash') || ""} value={formatDate(product.Estimated_Delivery_Date__c, 'numeric-dash') || ""} />
                 </div>
             </div>

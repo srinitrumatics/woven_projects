@@ -96,7 +96,6 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
     leadTimeWks: productToEdit?.Lead_Time_Wks__c?.toString() || "",
     moq: productToEdit?.MOQ__c?.toString() || "",
     manufacturer: productToEdit?.Manufacturer_Name || "",
-    uom: productToEdit?.UOM__c || "",
     description: productToEdit?.Description || "",
     keyFeatures: productToEdit?.Key_Features__c || "",
     cubicVolumeIn: productToEdit?.Unit_CV_Inches__c?.toString() || "",
@@ -307,20 +306,19 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
               <SectionHeader title="Product Header" />
               <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
                 {renderField("Product Name", "name", "text", [], true)}
-                {renderField("SKU", "sku", "text", [], true, true)}
-                {renderField("Product Code", "productCode", "text", [], false, true)}
+                {renderField("SKU", "sku", "text", [], true, false)}
+                {renderField("Product Code", "productCode", "text", [], false, false)}
                 {renderField("Product Family", "family", "select", picklists?.Family || picklists?.Product_Family__c)}
                 {renderField("Availability Status", "availabilityStatus", "text", [], false, true)}
-                {renderField("Available to Sell", "availableToSell")}
+                {renderField("Available to Sell", "availableToSell", "text", [], false, true)}
               </div>
             </div>
             <div>
               <SectionHeader title="Pricing & Logic" />
               <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-                {renderField("List Price", "listPrice")}
+                {renderField("List Price", "listPrice", "text", [], false, true)}
                 {renderField("Lead Time (Weeks)", "leadTimeWks")}
                 {renderField("MOQ", "moq")}
-                {renderField("UOM", "uom", "select", picklists?.UOM__c?.length ? picklists.UOM__c : ["Each", "Box", "Carton", "Dozen", "Kilogram", "Meter", "Pack"])}
               </div>
             </div>
             <div>

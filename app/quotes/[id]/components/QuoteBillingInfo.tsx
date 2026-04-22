@@ -40,15 +40,15 @@ export default function QuoteBillingInfo({ quote }: QuoteBillingInfoProps) {
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"title="Payment Terms">Payment Terms</label>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate whitespace-nowrap"title="Payment Terms">Payment Terms</label>
                             <input type="text"readOnly value={quote.paymentTerms} title={quote.paymentTerms} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed sm:text-sm"/>
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"title="Customer PO">Customer PO</label>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate whitespace-nowrap"title="Customer PO">Customer PO</label>
                             <input type="text"readOnly value={quote.customerPO} title={quote.customerPO} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed sm:text-sm"/>
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"title="Price Book">Price Book</label>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate whitespace-nowrap"title="Price Book">Price Book</label>
                             <input type="text"readOnly value={quote.priceBook} title={quote.priceBook} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed sm:text-sm"/>
                         </div>
                     </div>

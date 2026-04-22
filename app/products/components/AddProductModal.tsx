@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import dynamic from 'next/dynamic';
+import 'react-quill-new/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -33,10 +37,10 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
     leadTimeWks: productToEdit?.Lead_Time_Wks__c?.toString() || "",
     moq: productToEdit?.MOQ__c?.toString() || "",
     manufacturer: productToEdit?.Manufacturer_Name || "",
-    uom: productToEdit?.UOM__c || "",
 
     // Overview
     description: productToEdit?.Description || "",
+    keyFeatures: productToEdit?.Key_Features__c || "",
 
     // Quick Specifications (Unit)
     cubicVolumeIn: productToEdit?.Unit_CV_Inches__c?.toString() || "",
@@ -145,6 +149,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
         MOQ__c: Number(formData.moq) || 0,
         Manufacturer_Name__c: accountId, // Required to be Logged-In Account Id
         Description: formData.description,
+        Key_Features__c: formData.keyFeatures,
         Unit_Length__c: Number(formData.lengthIn) || 0,
         Unit_Width__c: Number(formData.widthIn) || 0,
         Unit_Height__c: Number(formData.heightIn) || 0,
@@ -169,7 +174,6 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
         Product_Longevity__c: Number(formData.productLongevity) || 0,
         Product_Use_Emissions__c: Number(formData.productUseEmissions) || 0,
         Water_Usage__c: Number(formData.waterUsage) || 0,
-        UOM__c: !formData.uom ? "" : formData.uom,
         UnitPrice: Number(formData.listPrice) || 0 // Maps to List Price in Salesforce
       };
 
@@ -308,28 +312,79 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
           <SectionHeader title="Product Header" />
           <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
             {renderField("Product Name", "name", "text", [], true)}
-            {renderField("SKU", "sku", "text", [], true, isEditingMode)}
-            {renderField("Product Code", "productCode", "text", [], false, isEditingMode)}
+            {renderField("SKU", "sku", "text", [], true, false)}
+            {renderField("Product Code", "productCode", "text", [], false, false)}
             {renderField("Product Family", "family", "select", picklists?.Family || picklists?.Product_Family__c)}
             {renderField("Availability Status", "availabilityStatus", "text", [], false, true)}
-            {renderField("Available to Sell", "availableToSell", "text", [], false, false)}
+            {renderField("Available to Sell", "availableToSell", "text", [], false, isEditingMode)}
           </div>
-
           <SectionHeader title="Pricing" />
           <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-            {renderField("List Price", "listPrice")}
+            {renderField("List Price", "listPrice", "text", [], false, isEditingMode)}
           </div>
 
           <SectionHeader title="Metadata" />
           <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
             {renderField("Lead Time (Wks)", "leadTimeWks")}
             {renderField("MOQ", "moq")}
-            {renderField("UOM", "uom", "select", picklists?.UOM__c || ["Each", "Case", "Pallet"])}
           </div>
 
           <SectionHeader title="Overview" />
           <div className="grid grid-cols-1 gap-y-4 px-2">
             {renderField("Product Description", "description", "textarea")}
+            <div className="flex flex-col gap-1 w-full">
+              <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">Key Features</label>
+              <div className="bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600">
+                <ReactQuill
+                  theme="snow"
+                  value={formData.keyFeatures}
+                  onChange={(content) => setFormData((prev: any) => ({ ...prev, keyFeatures: content }))}
+                  modules={{
+                    toolbar: [
+                      [{ 'header': [1, 2, false] }],
+                      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                      ['link'],
+                      ['clean']
+                    ],
+                  }}
+                  placeholder="Add key features here..."
+                />
+              </div>
+            </div>
+            <style jsx global>{`
+              .ql-container {
+                min-height: 150px;
+                font-size: 0.9rem;
+              }
+              .ql-editor {
+                 min-height: 150px;
+              }
+              .dark .ql-toolbar {
+                background-color: #1f2937;
+                border-color: #374151;
+              }
+              .dark .ql-container {
+                border-color: #374151;
+                background-color: #111827;
+              }
+              .dark .ql-editor {
+                color: #f3f4f6;
+              }
+              .dark .ql-stroke {
+                stroke: #9ca3af !important;
+              }
+              .dark .ql-fill {
+                fill: #9ca3af !important;
+              }
+              .dark .ql-picker {
+                color: #9ca3af !important;
+              }
+              .dark .ql-picker-options {
+                background-color: #1f2937 !important;
+                color: #f3f4f6 !important;
+              }
+            `}</style>
           </div>
 
           <SectionHeader title="Quick Specifications (Unit)" />

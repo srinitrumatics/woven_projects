@@ -97,7 +97,7 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                 {subTab === 'bill-payments' && (
                     billPayments.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                            <p className="text-lg font-medium truncate" title="No Bill Payments">No Bill Payments Recorded</p>
+                            <p className="text-lg font-medium truncate" title="No Bill Payments Recorded">No Bill Payments Recorded</p>
                             <p className="text-sm truncate" title="There are no bill payments associated with this supplier bill.">There are no bill payments associated with this supplier bill.</p>
                         </div>
                     ) : (
@@ -154,7 +154,7 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                 {subTab === 'applied-debits' && (
                     appliedDebits.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                            <p className="text-lg font-medium truncate" title="No Applied Debits">No Applied Debit Memos</p>
+                            <p className="text-lg font-medium truncate" title="No Applied Debit Memos">No Applied Debit Memos</p>
                             <p className="text-sm truncate" title="There are no applied debit memos associated with this supplier bill.">There are no applied debit memos associated with this supplier bill.</p>
                         </div>
                     ) : (

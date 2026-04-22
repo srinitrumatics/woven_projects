@@ -50,7 +50,7 @@ export default function OrderTotal({
                 </div>
                 <div className="min-w-0">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white " title="Order Summary">Order Summary</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Your Order Summary">Review Order Summary</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Review Order Summary">Review Order Summary</p>
                 </div>
             </div>
             {/* Price Breakdown */}
