@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS salesforce.algolia_sync_queue (
     error_message TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     processed_at TIMESTAMP,
-    last_retry_at TIMESTAMP,
-    CONSTRAINT unique_pending_operation UNIQUE (table_name, record_id, operation, status)
+    last_retry_at TIMESTAMP
 );
 
 -- Indexes for efficient queue processing
+CREATE UNIQUE INDEX IF NOT EXISTS unique_pending_operation_idx ON salesforce.algolia_sync_queue (table_name, record_id, operation) WHERE status = 'pending';
 CREATE INDEX IF NOT EXISTS idx_algolia_queue_status ON salesforce.algolia_sync_queue(status, created_at);
 CREATE INDEX IF NOT EXISTS idx_algolia_queue_table_record ON salesforce.algolia_sync_queue(table_name, record_id);
 CREATE INDEX IF NOT EXISTS idx_algolia_queue_cleanup ON salesforce.algolia_sync_queue(status, processed_at) WHERE status = 'completed';
@@ -162,7 +162,7 @@ BEGIN
     -- Insert into queue (ON CONFLICT prevents duplicate pending operations)
     INSERT INTO salesforce.algolia_sync_queue (table_name, record_id, operation, payload, status)
     VALUES (p_table_name, p_record_id, p_operation, p_payload, 'pending')
-    ON CONFLICT ON CONSTRAINT unique_pending_operation
+    ON CONFLICT (table_name, record_id, operation) WHERE status = 'pending'
     DO UPDATE SET 
         payload = EXCLUDED.payload,
         created_at = CURRENT_TIMESTAMP,
@@ -529,6 +529,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS update_algolia_config_timestamp ON salesforce.algolia_index_config;
 CREATE TRIGGER update_algolia_config_timestamp
     BEFORE UPDATE ON salesforce.algolia_index_config
     FOR EACH ROW
