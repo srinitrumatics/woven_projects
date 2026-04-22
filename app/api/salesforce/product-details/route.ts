@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getProductDetailsFromSalesforce, createProductInSalesforce, updateProductTabInSalesforce, patchProductTabInSalesforce } from '@/lib/product-salesforce-service';
+import { syncNewProductToPostgresAndAlgolia } from '@/lib/product-sync-service';
 
 export async function GET(req: Request) {
   try {
@@ -42,7 +43,20 @@ export async function POST(req: Request) {
     }
 
     const result = await createProductInSalesforce(accountId, contactId, productData);
-    
+
+    // After successful Salesforce creation, sync to PostgreSQL and Algolia.
+    // This is non-blocking: a failure here does NOT roll back the Salesforce record.
+    if (result?.success) {
+      const sfProductId = result?.data?.Id || result?.Id || result?.data?.[0]?.Id;
+      if (sfProductId) {
+        syncNewProductToPostgresAndAlgolia(sfProductId, productData, accountId).catch((syncErr) =>
+          console.error('[ProductSync] Background sync error:', syncErr)
+        );
+      } else {
+        console.warn('[ProductSync] Salesforce creation succeeded but no product ID found in response:', JSON.stringify(result));
+      }
+    }
+
     return NextResponse.json(result);
   } catch (err: any) {
     console.error("Product creation API error:", err);
