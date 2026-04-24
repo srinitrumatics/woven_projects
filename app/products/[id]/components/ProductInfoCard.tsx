@@ -20,9 +20,9 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
 
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-[2rem] shadow-xl border border-gray-100 dark:border-gray-700 p-8 h-full flex flex-col transition-all duration-300 hover:shadow-2xl">
+    <div className="bg-white dark:bg-gray-800 rounded-[2rem] shadow-xl border border-gray-100 dark:border-gray-700 p-6 xl:p-8 h-full flex flex-col transition-all duration-300 hover:shadow-2xl">
       {/* Category Tag */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-2">
         <div className="w-2 h-2 rounded-full bg-blue-500"></div>
         <span className="text-[10px] font-bold text-blue-500  leading-none">
           {product.category}
@@ -30,8 +30,8 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       </div>
 
       {/* Title & SKU/MPN */}
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white leading-tight mb-3">
+      <div className="mb-4">
+        <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white leading-tight mb-2">
           {product.name}
         </h1>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] font-bold tracking-widest text-gray-400 ">
@@ -40,7 +40,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       </div>
 
       {/* Inventory Status */}
-      <div className="flex items-center gap-4 mb-10 overflow-x-auto pb-4 scrollbar-hide">
+      <div className="flex items-center gap-4 border-b border-gray-100 dark:border-gray-700 mb-4 pb-3 overflow-x-auto scrollbar-hide">
         <div className="flex items-center gap-2 flex-shrink-0">
           <div className="w-2.5 h-2.5 rounded-full bg-green-500 ring-4 ring-green-50"></div>
           <span className="text-xs font-bold text-green-600">{product.status}</span>
@@ -51,7 +51,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       </div>
 
       {/* Pricing Section */}
-      <div className="p-6 bg-gray-50/50 dark:bg-gray-900/30 rounded-2xl border border-gray-100 dark:border-gray-700 mb-8 relative group overflow-hidden">
+      <div className="p-3 md:p-4 bg-gray-50/50 dark:bg-gray-900/30 rounded-2xl border border-gray-100 dark:border-gray-700 mb-4 relative group overflow-hidden">
         {/* Glow effect on hover */}
         <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
@@ -72,7 +72,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       </div>
 
       {/* Order Controls */}
-      <div className="space-y-4 mb-10">
+      <div className="space-y-3 mb-4">
         <div className="flex flex-col gap-2">
           <label className="text-[10px] font-bold text-gray-400 ">Order Qty</label>
           <div className="flex items-center gap-4">
@@ -98,11 +98,10 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
 
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="w-full py-4 font-bold rounded-2xl shadow-lg transform transition-all duration-200 bg-blue-600 hover:bg-blue-700 text-white active:scale-[0.98]"
+          className="w-full py-3 font-bold rounded-2xl shadow-lg transform transition-all duration-200 bg-blue-600 hover:bg-blue-700 text-white active:scale-[0.98]"
         >
           Add to Order
         </button>
-
 
       </div>
 

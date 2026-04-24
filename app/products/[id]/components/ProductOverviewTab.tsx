@@ -11,11 +11,11 @@ export const ProductOverviewTab: React.FC<ProductOverviewTabProps> = ({ product 
       <div className="lg:col-span-8 min-w-0">
         <div className="mb-10">
           <h3 className="text-sm font-bold text-gray-400 mb-4 ">Product Description</h3>
-          <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4 text-sm whitespace-pre-wrap">
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4 text-sm whitespace-pre-wrap break-words">
             {product.description}
           </p>
           {product.subDescription && (
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-wrap">
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-wrap break-words">
               {product.subDescription}
             </p>
           )}
@@ -27,7 +27,7 @@ export const ProductOverviewTab: React.FC<ProductOverviewTabProps> = ({ product 
             <div className="space-y-2">
               {product.features.filter((f: string) => f && f.trim() !== "").length > 0 ? (
                 product.features.filter((f: string) => f && f.trim() !== "").map((feature: string, idx: number) => (
-                  <p key={idx} className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <p key={idx} className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed break-words">
                     {feature}
                   </p>
                 ))

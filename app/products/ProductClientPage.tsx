@@ -110,7 +110,7 @@ function Content() {
           </div>
 
           {/* Type Filter */}
-          <div className="mb-6">
+          {/*<div className="mb-6">
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 ">Type</h3>
             <RefinementList
               attribute="genre"
@@ -136,7 +136,7 @@ function Content() {
                 }
               }}
             />
-          </div>
+          </div>*/}
         </div>
       </aside>
 
@@ -250,9 +250,9 @@ function Content() {
         )}
       </div>
 
-      <AddProductModal 
-        isOpen={isAddModalOpen} 
-        onClose={() => setIsAddModalOpen(false)} 
+      <AddProductModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
       />
     </div>
   );
@@ -351,12 +351,12 @@ const CardView = ({ products }: ViewProps) => (
                   <span>List Price:</span>
                   <span className="line-through truncate">{formatCurrency(listPrice)}</span>
                 </div>
-                <div className="flex justify-between items-center min-w-0">
+                {/*<div className="flex justify-between items-center min-w-0">
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">Selling Price:</span>
-                  <span className="text-lg font-bold text-gray-900 dark:text-white truncate">
+                   <span className="text-lg font-bold text-gray-900 dark:text-white truncate">
                     {formatCurrency(sellingPrice)}
                   </span>
-                </div>
+                </div>*/}
                 <button
                   disabled={product.availableQty <= 0}
                   className={`w-full mt-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors truncate ${product.availableQty <= 0

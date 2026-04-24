@@ -14,8 +14,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
 
   return (
     <div className="flex flex-col xl:flex-row gap-6 w-full group">
-      {/* Thumbnails Sidebar */}
-      <div className="flex xl:flex-col gap-3 order-2 xl:order-1 overflow-x-auto xl:overflow-y-auto max-h-[100px] xl:max-h-[600px] scrollbar-hide">
+      <div className="flex xl:flex-col gap-3 order-2 xl:order-1 overflow-x-auto xl:overflow-y-auto max-h-[100px] xl:max-h-[450px] scrollbar-hide">
         {displayImages.slice(0, 5).map((img, idx) => (
           <button
             key={idx}
@@ -35,10 +34,10 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
       </div>
 
       {/* Main Display Area */}
-      <div className="relative flex-1 bg-[#E8F1FC] dark:bg-gray-900 border border-blue-50 dark:border-gray-800 rounded-[2rem] flex items-center justify-center p-12 min-h-[400px] md:min-h-[600px] order-1 xl:order-2 overflow-hidden shadow-sm">
+      <div className="relative flex-1 bg-[#E8F1FC] dark:bg-gray-900 border border-blue-50 dark:border-gray-800 rounded-[2rem] flex items-center justify-center p-8 min-h-[300px] md:min-h-[450px] order-1 xl:order-2 overflow-hidden shadow-sm">
         {/* Main Content */}
         <div className="flex flex-col items-center">
-          <div className="w-32 h-32 md:w-48 md:h-48 rounded-[2rem] bg-[#9BB8F4] flex flex-col items-center justify-center mb-8 shadow-inner border border-blue-200">
+          <div className="w-32 h-32 md:w-48 md:h-48 rounded-[2rem] bg-[#9BB8F4] flex flex-col items-center justify-center mb-6 shadow-inner border border-blue-200">
             <div className="flex gap-2 mb-2">
               <div className="w-16 h-10 rounded bg-[#4F7EDE]"></div>
               <div className="w-6 h-10 rounded bg-[#4F7EDE]"></div>
