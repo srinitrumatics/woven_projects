@@ -249,9 +249,8 @@ export async function fetchProducts(): Promise<Product[]> {
       List_Price__c,
       Unit_Price__c
     FROM Product2
-    WHERE IsActive = true
     ORDER BY Name
-    LIMIT 1000
+    LIMIT 2000
   `;
 
   try {

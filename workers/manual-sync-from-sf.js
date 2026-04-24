@@ -30,7 +30,7 @@ async function fetchProductsFromSalesforce(session) {
     LIMIT 50
   `;
   const url = `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`;
-  
+
   const res = await fetch(url, {
     headers: {
       "Authorization": `Bearer ${session.accessToken}`,
@@ -39,32 +39,32 @@ async function fetchProductsFromSalesforce(session) {
   });
 
   if (!res.ok) {
-     const errorBody = await res.text();
-     throw new Error(`Failed to fetch products: ${res.statusText}. ${errorBody}`);
+    const errorBody = await res.text();
+    throw new Error(`Failed to fetch products: ${res.statusText}. ${errorBody}`);
   }
   const data = await res.json();
   return data.records;
 }
 
 async function main() {
-   try {
-       console.log("Connecting to Postgres...");
-       const pool = new Pool({
-           connectionString: process.env.DATABASE_URL,
-           ssl: { rejectUnauthorized: false }
-       });
-       
-       console.log("Authenticating with Salesforce...");
-       const session = await getSalesforceSession();
-       
-       console.log("Fetching products from Salesforce via SOQL...");
-       const products = await fetchProductsFromSalesforce(session);
-       
-       console.log(`Found ${products.length} products. Inserting into local Postgres...`);
-       const client = await pool.connect();
-       
-       for (const p of products) {
-           await client.query(`
+  try {
+    console.log("Connecting to Postgres...");
+    const pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }
+    });
+
+    console.log("Authenticating with Salesforce...");
+    const session = await getSalesforceSession();
+
+    console.log("Fetching products from Salesforce via SOQL...");
+    const products = await fetchProductsFromSalesforce(session);
+
+    console.log(`Found ${products.length} products. Inserting into local Postgres...`);
+    const client = await pool.connect();
+
+    for (const p of products) {
+      await client.query(`
                INSERT INTO salesforce.product2 (
                    sfid, productcode, name, description, isactive, family,
                    gtherp__price__c, gtherp__stock_quantity__c,
@@ -80,25 +80,25 @@ async function main() {
                    gtherp__price__c = EXCLUDED.gtherp__price__c,
                    systemmodstamp = EXCLUDED.systemmodstamp
            `, [
-               p.Id, p.ProductCode, p.Name, p.Description, p.IsActive, p.Family,
-               Math.floor(Math.random() * 500) + 10, // fake price
-               Math.floor(Math.random() * 100), // fake qty
-               Math.floor(Math.random() * 100), // fake qty
-               0,
-               p.Family || 'No Category', 
-               'Sub Category',
-               'Woven', 
-               p.CreatedDate, p.SystemModstamp
-           ]);
-       }
-       console.log(`✅ Inserted/Updated ${products.length} products into salesforce.product2.`);
-       console.log("This will trigger the local algolia_sync_queue! Run 'npm run start:worker' to push them to Algolia.");
-       
-       await client.release();
-       await pool.end();
-   } catch(e) {
-       console.error("Error:", e.message);
-   }
+        p.Id, p.ProductCode, p.Name, p.Description, p.IsActive, p.Family,
+        Math.floor(Math.random() * 500) + 10, // fake price
+        Math.floor(Math.random() * 100), // fake qty
+        Math.floor(Math.random() * 100), // fake qty
+        0,
+        p.Family || 'No Category',
+        'Sub Category',
+        'Woven',
+        p.CreatedDate, p.SystemModstamp
+      ]);
+    }
+    console.log(`✅ Inserted/Updated ${products.length} products into salesforce.product2.`);
+    console.log("This will trigger the local algolia_sync_queue! Run 'npm run start:worker' to push them to Algolia.");
+
+    await client.release();
+    await pool.end();
+  } catch (e) {
+    console.error("Error:", e.message);
+  }
 }
 
 main();

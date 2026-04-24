@@ -31,7 +31,7 @@ CREATE INDEX IF NOT EXISTS idx_algolia_queue_retry ON salesforce.algolia_sync_qu
 
 CREATE TABLE IF NOT EXISTS salesforce.algolia_sync_log (
     id BIGSERIAL PRIMARY KEY,
-    queue_id BIGINT REFERENCES salesforce.algolia_sync_queue(id),
+    queue_id BIGINT REFERENCES salesforce.algolia_sync_queue(id) ON DELETE CASCADE,
     table_name VARCHAR(100) NOT NULL,
     record_id VARCHAR(255) NOT NULL,
     operation VARCHAR(10) NOT NULL,
