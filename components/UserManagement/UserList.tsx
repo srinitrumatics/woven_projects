@@ -100,9 +100,9 @@ const UserList: React.FC<UserListProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+    <div className="bg-white dark:bg-slate-900/50 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-lg overflow-hidden">
       {/* Search Bar */}
-      <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-teal-50 to-cyan-50">
+      <div className="p-6 border-b border-gray-200 dark:border-slate-800 bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-slate-800/50 dark:to-slate-900/50">
         <div className="flex items-center gap-4 min-w-0">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -111,10 +111,10 @@ const UserList: React.FC<UserListProps> = ({
               placeholder={isCustomer ? "Search by name or email..." : "Search by name, email, or organization..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
             />
           </div>
-          <div className="text-sm text-gray-600 font-medium">
+          <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">
             {filteredUsers.length} {filteredUsers.length === 1 ? 'user' : 'users'}
           </div>
         </div>
@@ -122,8 +122,8 @@ const UserList: React.FC<UserListProps> = ({
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-800">
+          <thead className="bg-gray-50 dark:bg-slate-800/50">
             <tr>
               {isCustomer ? (
                 <>
@@ -155,7 +155,7 @@ const UserList: React.FC<UserListProps> = ({
               )}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
+          <tbody className="bg-white dark:bg-transparent divide-y divide-gray-100 dark:divide-slate-800">
             {paginatedUsers.map((user, index) => {
               const userOrganizations = allUserOrganizations[user.id] || [];
               const orgCount = userOrganizations.length;
@@ -173,7 +173,7 @@ const UserList: React.FC<UserListProps> = ({
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.02 }}
-                  className="hover:bg-teal-50/50 transition-colors duration-150"
+                  className="hover:bg-teal-50/50 dark:hover:bg-slate-800/50 transition-colors duration-150"
                 >
                   {isCustomer ? (
                     <>
@@ -182,7 +182,7 @@ const UserList: React.FC<UserListProps> = ({
                           <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center flex-shrink-0">
                             <Users className="w-5 h-5 text-white" />
                           </div>
-                          <div className="text-sm font-semibold text-gray-900 truncate">
+                          <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                             {user.name}
                           </div>
                         </div>
@@ -209,7 +209,7 @@ const UserList: React.FC<UserListProps> = ({
                             <Users className="w-5 h-5 text-white" />
                           </div>
                           <div className="min-w-0">
-                            <div className="text-sm font-semibold text-gray-900 truncate">
+                            <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                               {user.name}
                             </div>
                             <div className="flex items-center gap-1 text-sm text-gray-500 truncate min-w-0">
@@ -230,13 +230,13 @@ const UserList: React.FC<UserListProps> = ({
                         <div className="flex items-center gap-2 min-w-0">
                           {orgCount > 0 ? (
                             <>
-                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-100 border border-blue-200 min-w-0">
-                                <Building2 className="w-3.5 h-3.5 text-blue-700" />
-                                <span className="text-sm font-medium text-blue-700">
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/50 min-w-0">
+                                <Building2 className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
+                                <span className="text-sm font-medium text-blue-700 dark:text-blue-400">
                                   {orgCount}
                                 </span>
                               </div>
-                              <div className="text-sm text-gray-600 truncate max-w-[200px]">
+                              <div className="text-sm text-gray-600 dark:text-gray-400 truncate max-w-[200px]">
                                 {userOrganizations[0].organizationName}
                                 {orgCount > 1 && ` +${orgCount - 1}`}
                               </div>
@@ -250,9 +250,9 @@ const UserList: React.FC<UserListProps> = ({
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2 min-w-0">
                           {totalRoles > 0 ? (
-                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-100 border border-purple-200 min-w-0">
-                              <Shield className="w-3.5 h-3.5 text-purple-700" />
-                              <span className="text-sm font-medium text-purple-700">
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-100 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800/50 min-w-0">
+                              <Shield className="w-3.5 h-3.5 text-purple-700 dark:text-purple-400" />
+                              <span className="text-sm font-medium text-purple-700 dark:text-purple-400">
                                 {totalRoles} {totalRoles === 1 ? 'role' : 'roles'}
                               </span>
                             </div>
@@ -266,14 +266,14 @@ const UserList: React.FC<UserListProps> = ({
                         <div className="flex items-center justify-end gap-2 min-w-0">
                           <button
                             onClick={() => handleEdit(user)}
-                            className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
+                            className="p-2 text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 rounded-lg transition-colors"
                             title="Edit User"
                           >
                             <Edit className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(user.id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                             title="Delete User"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -291,9 +291,9 @@ const UserList: React.FC<UserListProps> = ({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/50">
           <div className="flex items-center justify-between min-w-0">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               Showing {startIndex + 1} to {Math.min(startIndex + ITEMS_PER_PAGE, filteredUsers.length)} of {filteredUsers.length} users
             </div>
             <div className="flex items-center gap-2 min-w-0">
@@ -348,9 +348,9 @@ const UserList: React.FC<UserListProps> = ({
       {/* Empty State */}
       {filteredUsers.length === 0 && (
         <div className="p-12 text-center">
-          <Users className="mx-auto h-12 w-12 text-gray-400 mb-3" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">No users found</h3>
-          <p className="text-sm text-gray-500">
+          <Users className="mx-auto h-12 w-12 text-gray-400 dark:text-slate-600 mb-3" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">No users found</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             {searchTerm ? 'Try adjusting your search terms' : 'No users available'}
           </p>
         </div>

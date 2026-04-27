@@ -47,13 +47,15 @@ export async function POST(req: Request) {
     // After successful Salesforce creation, sync to PostgreSQL and Algolia.
     // This is non-blocking: a failure here does NOT roll back the Salesforce record.
     if (result?.success) {
-      const sfProductId = result?.data?.Id || result?.Id || result?.data?.[0]?.Id;
+      const sfProductId = result?.data?.Id || result?.Id || result?.data?.[0]?.Id || productData?.Id;
       if (sfProductId) {
+        console.log(`[ProductSync] 🟢 GETTING DATA FROM SALESFORCE: Creation successful, sfid: ${sfProductId}`);
+        console.log(`[ProductSync] Triggering sync for ${sfProductId} (POST)`);
         syncNewProductToPostgresAndAlgolia(sfProductId, productData, accountId).catch((syncErr) =>
           console.error('[ProductSync] Background sync error:', syncErr)
         );
       } else {
-        console.warn('[ProductSync] Salesforce creation succeeded but no product ID found in response:', JSON.stringify(result));
+        console.warn('[ProductSync] Salesforce creation succeeded but no product ID found in response or payload:', JSON.stringify(result));
       }
     }
 
@@ -68,6 +70,24 @@ export async function PATCH(req: Request) {
   try {
     const body = await req.json();
     const result = await patchProductTabInSalesforce(body);
+
+    // Sync to PostgreSQL and Algolia on successful update
+    if (result?.success) {
+      const { accountId, product, tabName } = body;
+      // Only sync if this is the main product tab update
+      if (tabName === "product" && product?.[0]) {
+        const productData = product[0];
+        const sfProductId = productData.Id;
+        if (sfProductId && accountId) {
+          console.log(`[ProductSync] 🟢 GETTING DATA FROM SALESFORCE: Update successful, sfid: ${sfProductId}`);
+          console.log(`[ProductSync] Triggering sync for ${sfProductId} (PATCH)`);
+          syncNewProductToPostgresAndAlgolia(sfProductId, productData, accountId).catch((syncErr) =>
+            console.error('[ProductSync] Background PATCH sync error:', syncErr)
+          );
+        }
+      }
+    }
+
     return NextResponse.json(result);
   } catch (err: any) {
     console.error("Product details PATCH API error:", err);

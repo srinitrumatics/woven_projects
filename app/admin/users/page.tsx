@@ -282,7 +282,7 @@ const UserManagement: React.FC = () => {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-teal-50/20 to-cyan-50/20 p-8">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-teal-50/20 to-cyan-50/20 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <motion.div
@@ -290,14 +290,14 @@ const UserManagement: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8"
           >
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
+            <div className="bg-white dark:bg-slate-900/50 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-lg p-6">
               <div className="flex items-center justify-between min-w-0">
                 <div className="flex items-center gap-4 min-w-0">
                   <div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg">
                     <Users className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent ">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent ">
                       User Management
                     </h1>
                     <p className="text-gray-500 text-sm mt-1 truncate" title="View contacts assigned to your company account">
@@ -367,7 +367,7 @@ const UserManagement: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-gradient-to-br from-white to-gray-50 rounded-2xl border-2 border-dashed border-gray-300 p-16 text-center"
+              className="bg-gradient-to-br from-white to-gray-50 dark:from-slate-900/50 dark:to-slate-900/50 rounded-2xl border-2 border-dashed border-gray-300 dark:border-slate-700 p-16 text-center"
             >
               <div className="max-w-md mx-auto">
                 <div className="relative inline-block mb-6">
@@ -378,7 +378,7 @@ const UserManagement: React.FC = () => {
                     <Sparkles className="w-4 h-4 text-white" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 ">No Users Yet</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 ">No Users Yet</h3>
                 <p className="text-gray-500 mb-8 truncate" title="Get started by creating your first user account to manage access and permissions.">
                   Get started by creating your first user account to manage access and permissions.
                 </p>

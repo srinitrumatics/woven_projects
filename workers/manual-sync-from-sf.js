@@ -23,11 +23,12 @@ async function getSalesforceSession() {
 
 async function fetchProductsFromSalesforce(session) {
   // Querying standard fields that definitely exist + some custom fields without gtherp prefix
+  // Added explicit TRUE and checking the query carefully
   const query = `
     SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp
     FROM Product2
     WHERE IsActive = true
-    LIMIT 50
+    LIMIT 100
   `;
   const url = `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`;
 
@@ -60,10 +61,20 @@ async function main() {
     console.log("Fetching products from Salesforce via SOQL...");
     const products = await fetchProductsFromSalesforce(session);
 
-    console.log(`Found ${products.length} products. Inserting into local Postgres...`);
+    console.log(`Found ${products.length} products from Salesforce query.`);
     const client = await pool.connect();
 
+    let processedCount = 0;
+    let inactiveCount = 0;
+
     for (const p of products) {
+      // Explicit check for IsActive in the code to be 100% sure
+      if (p.IsActive !== true && p.IsActive !== 'true') {
+        inactiveCount++;
+        continue;
+      }
+
+      processedCount++;
       await client.query(`
                INSERT INTO salesforce.product2 (
                    sfid, productcode, name, description, isactive, family,
@@ -91,7 +102,11 @@ async function main() {
         p.CreatedDate, p.SystemModstamp
       ]);
     }
-    console.log(`✅ Inserted/Updated ${products.length} products into salesforce.product2.`);
+    
+    console.log(`✅ Processed ${processedCount} active products.`);
+    if (inactiveCount > 0) {
+      console.log(`⚠️  Skipped ${inactiveCount} inactive products returned by Salesforce.`);
+    }
     console.log("This will trigger the local algolia_sync_queue! Run 'npm run start:worker' to push them to Algolia.");
 
     await client.release();

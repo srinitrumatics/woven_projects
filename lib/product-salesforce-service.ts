@@ -47,13 +47,25 @@ export async function getProductsFromSalesforce(accountId?: string, contactId?: 
           const objectKey = Object.keys(firstItem).find(key => key.endsWith('__c') && Array.isArray(firstItem[key]));
           if (objectKey) {
             console.log('DEBUG: found nested array in key:', objectKey);
-            return firstItem[objectKey];
+            const products = firstItem[objectKey];
+            console.log(`DEBUG: getProductsFromSalesforce returning ${products.length} products (nested)`);
+            if (products.length > 0) {
+              console.log('DEBUG: First product sample (nested):', JSON.stringify(products[0], null, 2));
+            }
+            return products;
           }
         }
-        return resultdata.data;
+        const products = resultdata.data;
+        console.log(`DEBUG: getProductsFromSalesforce returning ${products.length} products`);
+        // Log the first few products for inspection
+        if (products.length > 0) {
+          console.log('DEBUG: First product sample:', JSON.stringify(products[0], null, 2));
+        }
+        return products;
       }
     }
 
+    console.log('DEBUG: getProductsFromSalesforce returning empty list');
     return [];
   } catch (error) {
     console.error('DEBUG: Error fetching Products from Salesforce:', error);

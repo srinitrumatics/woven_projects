@@ -193,7 +193,7 @@ export default function ProfilePage() {
 
     return (
         <Sidebar>
-            <div className="p-8 max-w-[1600px] mx-auto space-y-8 bg-gray-50/50 min-h-screen">
+            <div className="p-8 max-w-[1600px] mx-auto space-y-8 min-h-screen">
                 <div className="mb-0">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">My Profile</h1>
                     <p className="text-gray-500 dark:text-gray-400">View and manage your personal information and contact details.</p>
@@ -214,7 +214,7 @@ export default function ProfilePage() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Profile Summary Card */}
                         <div className="lg:col-span-1">
-                            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 flex flex-col items-center text-center sticky top-6">
+                            <div className="bg-white dark:bg-slate-900/50 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-8 flex flex-col items-center text-center sticky top-6">
                                 <div className="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center mb-6 relative group">
                                     <span className="text-4xl font-bold text-primary">
                                         {details.Name?.split(' ').map((n: string) => n[0]).join('') || 'U'}
@@ -228,7 +228,7 @@ export default function ProfilePage() {
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{details.Name}</h2>
                                 <p className="text-primary font-medium mb-4">{details.Title || 'Member'}</p>
                                 
-                                <div className="w-full pt-6 border-t border-gray-100 dark:border-gray-700 mt-2 space-y-4">
+                                <div className="w-full pt-6 border-t border-gray-100 dark:border-slate-800 mt-2 space-y-4">
                                     <div className="flex justify-between items-center text-sm">
                                         <span className="text-gray-500 font-medium">Department</span>
                                         <span className="text-gray-900 dark:text-gray-300">{details.Department || 'N/A'}</span>
@@ -258,7 +258,7 @@ export default function ProfilePage() {
 
                         {/* Personal Information Card */}
                         <div className="lg:col-span-2">
-                            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden text-sm h-full">
+                            <div className="bg-white dark:bg-slate-900/50 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden text-sm h-full">
                                 <div className="p-8">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="md:col-span-2 flex items-center justify-between">
@@ -367,7 +367,7 @@ export default function ProfilePage() {
 
                         {/* Mailing Address Card */}
                         <div className="lg:col-span-3">
-                            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden text-sm">
+                            <div className="bg-white dark:bg-slate-900/50 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden text-sm">
                                 <div className="p-8">
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                                         <div className="md:col-span-2 lg:col-span-4">
@@ -452,7 +452,7 @@ export default function ProfilePage() {
                                 </div>
 
                                 {isEditing && (
-                                    <div className="px-8 py-6 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-3">
+                                    <div className="px-8 py-6 bg-gray-50 dark:bg-slate-900/50 border-t border-gray-100 dark:border-slate-800 flex justify-end gap-3">
                                         <button
                                             type="button"
                                             onClick={() => {

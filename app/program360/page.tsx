@@ -57,28 +57,55 @@ export default function Program360Page() {
   }, [accountId, contactId]);
 
   useEffect(() => {
-    if (!chartRef.current) return;
+    if (!chartRef.current || !data) return;
 
     Chart.register(...registerables);
 
     const ctx = chartRef.current.getContext("2d");
     if (!ctx) return;
 
+    const invoiceSpend = data["Invoice Spend"] || [];
+    
+    // Generate last 12 months labels and keys
+    const months = [];
+    const now = new Date();
+    // Start from 11 months ago to current month
+    for (let i = 11; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.push({
+        label: d.toLocaleString('default', { month: 'short' }),
+        month: d.getMonth() + 1,
+        year: d.getFullYear()
+      });
+    }
+
+    const labels = months.map(m => m.label);
+    const paidData = months.map(m => {
+      return invoiceSpend
+        .filter((item: any) => item.Month === m.month && item.Year === m.year)
+        .reduce((sum: number, item: any) => sum + (item.Paid_Amount__c || 0), 0);
+    });
+    const outstandingData = months.map(m => {
+      return invoiceSpend
+        .filter((item: any) => item.Month === m.month && item.Year === m.year)
+        .reduce((sum: number, item: any) => sum + (item.Open_Balance__c || 0), 0);
+    });
+
     const myChart = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"],
+        labels: labels,
         datasets: [
           {
             label: "Paid",
-            data: [41000, 38000, 44000, 36000, 50000, 42000, 34000, 38000, 25000, 44000, 39000, 11000],
+            data: paidData,
             backgroundColor: "#3b82f6",
             borderRadius: 4,
             stack: "a"
           },
           {
             label: "Outstanding",
-            data: [3000, 2000, 5000, 4000, 6000, 3000, 4000, 4000, 4000, 7000, 6000, 8000],
+            data: outstandingData,
             backgroundColor: "#fbbf24",
             borderRadius: 4,
             stack: "a"
@@ -113,7 +140,7 @@ export default function Program360Page() {
             ticks: {
               color: "#999",
               font: { size: 11 },
-              callback: (v: any) => "$" + (v / 1000).toFixed(0) + "k"
+              callback: (v: any) => "$" + (v >= 1000 ? (v / 1000).toFixed(0) + "k" : v)
             }
           }
         }
@@ -123,7 +150,7 @@ export default function Program360Page() {
     return () => {
       myChart.destroy();
     };
-  }, []);
+  }, [data]);
 
   const stats: StatItem[] = [
     {
@@ -169,12 +196,12 @@ export default function Program360Page() {
   ];
 
   const quickActions = [
-    { label: "New Order", icon: ShoppingBag, bgColor: "bg-blue-50", textColor: "text-blue-700", borderColor: "border-blue-100", href: "/orders" },
-    { label: "View Proposals", icon: FileText, bgColor: "bg-green-50", textColor: "text-green-700", borderColor: "border-green-100", href: "/proposals" },
-    { label: "View Quotes", icon: ClipboardList, bgColor: "bg-purple-50", textColor: "text-purple-700", borderColor: "border-purple-100", href: "/quotes" },
-    { label: "Track Shipments", icon: Truck, bgColor: "bg-orange-50", textColor: "text-orange-700", borderColor: "border-orange-100", href: "/shipments" },
-    { label: "View Invoices", icon: FileText, bgColor: "bg-red-50", textColor: "text-red-700", borderColor: "border-red-100", href: "/invoices" },
-    { label: "View Reports", icon: BarChart3, bgColor: "bg-gray-50", textColor: "text-gray-700", borderColor: "border-gray-200", href: "/reports" },
+    { label: "New Order", icon: ShoppingBag, bgColor: "bg-blue-50 dark:bg-blue-900/20", textColor: "text-blue-700 dark:text-blue-400", borderColor: "border-blue-100 dark:border-blue-800/50", href: "/orders" },
+    { label: "View Proposals", icon: FileText, bgColor: "bg-green-50 dark:bg-green-900/20", textColor: "text-green-700 dark:text-green-400", borderColor: "border-green-100 dark:border-green-800/50", href: "/proposals" },
+    { label: "View Quotes", icon: ClipboardList, bgColor: "bg-purple-50 dark:bg-purple-900/20", textColor: "text-purple-700 dark:text-purple-400", borderColor: "border-purple-100 dark:border-purple-800/50", href: "/quotes" },
+    { label: "Track Shipments", icon: Truck, bgColor: "bg-orange-50 dark:bg-orange-900/20", textColor: "text-orange-700 dark:text-orange-400", borderColor: "border-orange-100 dark:border-orange-800/50", href: "/shipments" },
+    { label: "View Invoices", icon: FileText, bgColor: "bg-red-50 dark:bg-red-900/20", textColor: "text-red-700 dark:text-red-400", borderColor: "border-red-100 dark:border-red-800/50", href: "/invoices" },
+    { label: "View Reports", icon: BarChart3, bgColor: "bg-gray-100 dark:bg-slate-800/50", textColor: "text-gray-700 dark:text-gray-300", borderColor: "border-gray-200 dark:border-slate-700", href: "/reports" },
   ];
 
   const needsAttention = [
@@ -247,12 +274,12 @@ export default function Program360Page() {
 
   return (
     <Sidebar>
-      <div className="p-8 max-w-[1600px] mx-auto space-y-8 bg-gray-50/50 min-h-screen relative">
+      <div className="p-8 max-w-[1600px] mx-auto space-y-8 min-h-screen relative">
         {loading && (
-          <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] z-50 flex items-center justify-center rounded-2xl">
+          <div className="absolute inset-0 bg-white/50 dark:bg-slate-900/50 backdrop-blur-[1px] z-50 flex items-center justify-center rounded-2xl">
             <div className="flex flex-col items-center gap-2">
               <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-sm font-medium text-gray-500">Updating dashboard...</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Updating dashboard...</p>
             </div>
           </div>
         )}
@@ -260,10 +287,10 @@ export default function Program360Page() {
         {/* Top Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, idx) => (
-            <div key={idx} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex justify-between items-start transition-all hover:shadow-md">
+            <div key={idx} className="bg-white dark:bg-slate-900/50 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-800 flex justify-between items-start transition-all hover:shadow-md">
               <div className="space-y-1">
-                <h3 className="text-gray-500 font-medium text-sm">{stat.title}</h3>
-                <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
+                <h3 className="text-gray-500 dark:text-gray-400 font-medium text-sm">{stat.title}</h3>
+                <div className="text-3xl font-bold text-gray-900 dark:text-white">{stat.value}</div>
                 <div className="flex flex-col pt-1">
                   <span className={`text-[13px] font-semibold ${stat.color === 'blue' ? 'text-green-600' : 'text-gray-600'}`}>{stat.trend}</span>
                   <span className={`text-[12px] font-medium ${stat.subtextColor || 'text-gray-400'}`}>{stat.subtext}</span>
@@ -278,7 +305,7 @@ export default function Program360Page() {
 
         {/* Quick Actions Row */}
         <div className="space-y-4">
-          <h2 className="text-sm font-bold text-gray-900  pl-1 font-sans">Quick actions</h2>
+          <h2 className="text-sm font-bold text-gray-900 dark:text-white pl-1 font-sans">Quick actions</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {quickActions.map((action, idx) => (
               <Link
@@ -295,12 +322,12 @@ export default function Program360Page() {
 
         {/* Needs Attention Section */}
         <div className="space-y-4">
-          <h2 className="text-sm font-bold text-gray-900  pl-1 font-sans mb-[10px]">Needs attention</h2>
+          <h2 className="text-sm font-bold text-gray-900 dark:text-white pl-1 font-sans mb-[10px]">Needs attention</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {needsAttention.map((col, idx) => (
-              <div key={idx} className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full overflow-hidden">
-                <div className="p-5 flex justify-between items-center border-b border-gray-50">
-                  <h3 className="text-[15px] font-bold text-gray-800">{col.title}</h3>
+              <div key={idx} className="bg-white dark:bg-slate-900/50 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 flex flex-col h-full overflow-hidden">
+                <div className="p-5 flex justify-between items-center border-b border-gray-50 dark:border-slate-800/50">
+                  <h3 className="text-[15px] font-bold text-gray-800 dark:text-white">{col.title}</h3>
                   <span
                     className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
                     style={col.badgeStyle}
@@ -323,7 +350,7 @@ export default function Program360Page() {
                 </div>
                 <Link
                   href={col.href}
-                  className="p-4 border-t border-gray-50 text-[11px] font-bold text-blue-500 hover:text-blue-700 transition-colors text-center bg-gray-50/10"
+                  className="p-4 border-t border-gray-50 dark:border-slate-800/50 text-[11px] font-bold text-blue-500 hover:text-blue-700 transition-colors text-center bg-gray-50/10 dark:bg-slate-800/20"
                 >
                   {col.footer}
                 </Link>
@@ -333,17 +360,17 @@ export default function Program360Page() {
         </div>
 
         {/* Invoice Spend Section */}
-        <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 space-y-8">
+        <div className="bg-white dark:bg-slate-900/50 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-slate-800 space-y-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <h2 className="text-[14px] font-bold text-gray-900">Invoice spend — rolling 12 months</h2>
+            <h2 className="text-[14px] font-bold text-gray-900 dark:text-white">Invoice spend — rolling 12 months</h2>
             <div className="flex items-center gap-6 text-[13px] font-semibold font-sans">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full" style={{ background: "#3b82f6" }}></div>
-                <span className="text-gray-600">Paid</span>
+                <span className="text-gray-600 dark:text-gray-400">Paid</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full" style={{ background: "#fbbf24" }}></div>
-                <span className="text-gray-600">Outstanding</span>
+                <span className="text-gray-600 dark:text-gray-400">Outstanding</span>
               </div>
               <button className="text-blue-600 hover:underline text-sm font-sans">Full report</button>
             </div>

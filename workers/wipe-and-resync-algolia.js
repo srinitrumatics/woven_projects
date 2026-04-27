@@ -22,14 +22,15 @@ async function wipeAndResync() {
     });
     const pgClient = await pool.connect();
     
-    // Push everything in local salesforce.product2 to the sync queue
-    console.log("Pushing all local database products into the sync queue...");
+    // Push only active products in local salesforce.product2 to the sync queue
+    console.log("Pushing active local database products into the sync queue...");
     await pgClient.query(`
         UPDATE salesforce.product2
-        SET systemmodstamp = CURRENT_TIMESTAMP;
+        SET systemmodstamp = CURRENT_TIMESTAMP
+        WHERE isactive = true;
     `);
 
-    console.log("✅ Success! The syncing worker will now rebuild Algolia perfectly.");
+    console.log("✅ Success! The syncing worker will now rebuild Algolia with only active products.");
     
     pgClient.release();
     await pool.end();
