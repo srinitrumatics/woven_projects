@@ -75,12 +75,12 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
   return (
     <div className="flex flex-col md:flex-row h-screen min-w-0">
       {/* Left Panel - Sign In Form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center bg-white dark:bg-gray-800 px-6 md:px-12 py-10 overflow-auto">
+      <div className="w-full md:w-1/2 flex items-center justify-center bg-white px-6 md:px-12 py-10 overflow-auto">
         <div className="w-full max-w-md">
-          <h2 className="text-3xl md:text-4xl font-bold  text-gray-900 dark:text-white mb-2 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-2 text-center">
             Login to Your Account
           </h2>
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-center text-sm text-gray-600 mb-6">
             Login using social networks
           </p>
 
@@ -226,7 +226,7 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
               <div className="flex justify-center">
                 <Link
                   href="/forgot-password"
-                  className="text-sm font-medium text-[var(--primary)] dark:text-white hover:text-[var(--primary-dark)] transition-colors duration-200"
+                  className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors duration-200"
                 >
                   Forgot Password?
                 </Link>
@@ -238,7 +238,7 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
       </div>
 
       {/* Right Panel - Sign Up CTA */}
-      <div className="w-full md:w-1/2 bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-6 md:px-12 py-10 relative overflow-hidden">
+      <div className="w-full md:w-1/2 bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center px-6 md:px-12 py-10 relative overflow-hidden">
         {/* Decorative circles - hide on small screens */}
         <div className="hidden md:block absolute top-20 right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
         <div className="hidden md:block absolute bottom-20 left-20 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" />

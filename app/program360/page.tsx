@@ -65,7 +65,7 @@ export default function Program360Page() {
     if (!ctx) return;
 
     const invoiceSpend = data["Invoice Spend"] || [];
-    
+
     // Generate last 12 months labels and keys
     const months = [];
     const now = new Date();
@@ -212,7 +212,9 @@ export default function Program360Page() {
       href: "/orders",
       items: (data?.["Orders in Draft"] || []).slice(0, 3).map((item: any) => ({
         id: item.Name,
-        info: `$${(item.Grand_Total__c || 0).toLocaleString()} — ${item.Status__c}`,
+        href: `/orders/${item.Id}`,
+        customerPo: item.Customer_PO__c || "N/A",
+        info: `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
         pillClass: "bg-[#fff7ed] text-[#9a3412]"
       })),
@@ -224,8 +226,10 @@ export default function Program360Page() {
       badgeStyle: { background: "#eff6ff", color: "#1e40af" },
       href: "/proposals",
       items: (data?.["Proposals"] || []).slice(0, 3).map((item: any) => ({
-        id: item.Name,
-        info: `$${(item.Grand_Total__c || 0).toLocaleString()} — ${item.Status__c}`,
+        id: item.Proposal_Number__c || item.Name,
+        href: `/proposals/${item.Id}`,
+        customerPo: item.Customer_PO__c || "N/A",
+        info: `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
         pillClass: "bg-[#eff6ff] text-[#1e40af]"
       })),
@@ -237,8 +241,10 @@ export default function Program360Page() {
       badgeStyle: { background: "#fef3c7", color: "#92400e" },
       href: "/quotes",
       items: (data?.["Quotes"] || []).slice(0, 3).map((item: any) => ({
-        id: item.Name,
-        info: item.Expiration_Date__c ? `Expires: ${item.Expiration_Date__c}` : `$${(item.Grand_Total__c || 0).toLocaleString()} — ${item.Status__c}`,
+        id: item.Quote_Number__c || item.Name,
+        href: `/quotes/${item.Id}`,
+        customerPo: item.Customer_PO__c || "N/A",
+        info: item.Expiration_Date__c ? `Expires: ${item.Expiration_Date__c}` : `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
         pillClass: item.Status__c === 'Expiring' ? "bg-[#fff7ed] text-[#9a3412]" : "bg-[#f9fafb] text-[#4b5563]"
       })),
@@ -250,8 +256,10 @@ export default function Program360Page() {
       badgeStyle: { background: "#fee2e2", color: "#b91c1c" },
       href: "/invoices",
       items: (data?.["Invoices"] || []).slice(0, 3).map((item: any) => ({
-        id: item.Name,
-        info: item.Days_Outstanding__c ? `${item.Days_Outstanding__c} days outstanding` : `$${(item.Grand_Total__c || 0).toLocaleString()} — ${item.Status__c}`,
+        id: item.Invoice_Number__c || item.Name,
+        href: `/invoices/${item.Id}`,
+        customerPo: item.Customer_PO__c || "N/A",
+        info: item.Days_Outstanding__c ? `${item.Days_Outstanding__c} days outstanding` : `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
         pillClass: "bg-[#fef2f2] text-[#991b1b]"
       })),
@@ -263,7 +271,9 @@ export default function Program360Page() {
       badgeStyle: { background: "#dcfce7", color: "#166534" },
       href: "/shipments",
       items: (data?.["Shipments"] || []).slice(0, 3).map((item: any) => ({
-        id: item.Name,
+        id: item.Shipping_Manifest_Number__c || item.Name,
+        href: `/shipments/${item.Id}`,
+        customerPo: item.Customer_PO__c || "N/A",
         info: item.Estimated_Delivery_Date__c ? `ETA: ${new Date(item.Estimated_Delivery_Date__c).toLocaleDateString()}` : `Total: $${(item.Total_Price__c || 0).toLocaleString()}`,
         status: item.Status__c,
         pillClass: item.Status__c === 'Delayed' ? "bg-[#fef2f2] text-[#991b1b]" : "bg-[#f0fdf4] text-[#166534]"
@@ -338,10 +348,13 @@ export default function Program360Page() {
                 <div className="p-5 space-y-5 flex-grow">
                   {col.items.map((item: any, i: number) => (
                     <div key={i} className="group cursor-pointer">
-                      <div className="text-[13px] font-bold text-blue-600 hover:underline mb-1 flex items-center gap-1">
-                        {item.id}
-                      </div>
-                      <div className="text-[11px] text-gray-400 mb-2">{item.info}</div>
+                      <Link href={item.href}>
+                        <div className="text-[13px] font-bold text-blue-600 hover:underline mb-1 flex items-center gap-1">
+                          {item.id}
+                        </div>
+                      </Link>
+                      <div className="text-[11px] text-gray-400 mb-1">{item.info}</div>
+                      <div className="text-[11px] text-gray-500 mb-2">PO: {item.customerPo}</div>
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold  ${item.pillClass}`}>
                         {item.status}
                       </span>
@@ -350,7 +363,7 @@ export default function Program360Page() {
                 </div>
                 <Link
                   href={col.href}
-                  className="p-4 border-t border-gray-50 dark:border-slate-800/50 text-[11px] font-bold text-blue-500 hover:text-blue-700 transition-colors text-center bg-gray-50/10 dark:bg-slate-800/20"
+                  className="py-4 border-t hover:underline border-gray-50 dark:border-slate-800/50 text-[11px] font-bold text-blue-500 hover:text-blue-700 transition-colors text-center bg-gray-50/10 dark:bg-slate-800/20"
                 >
                   {col.footer}
                 </Link>

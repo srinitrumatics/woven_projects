@@ -148,7 +148,7 @@ export default function FulfillmentsTab({
                                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                         {(paginatedData as CustomerQuote[]).map((quote) => (
                                             <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={quote.name}>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={quote.name}>
                                                     {quote.name && quote.id ? (
                                                         <Link
                                                             href={`/quotes/${quote.id}`}
@@ -291,7 +291,7 @@ export default function FulfillmentsTab({
                                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                         {(paginatedData as SalesOrder[]).map((order) => (
                                             <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={order.name}>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={order.name}>
                                                     {order.name && order.salesOrderId ? (
                                                         <Link
                                                             href={`/orders/${order.salesOrderId}`}
@@ -448,7 +448,7 @@ export default function FulfillmentsTab({
                                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                         {(paginatedData as Invoice[]).map((invoice) => (
                                             <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={invoice.name}>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={invoice.name}>
 
                                                     {invoice.name && invoice.id ? (
                                                         <Link
@@ -594,7 +594,7 @@ export default function FulfillmentsTab({
                                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                         {(paginatedData as ShippingManifest[]).map((manifest) => (
                                             <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={manifest.name}>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={manifest.name}>
                                                     {manifest.name && manifest.id ? (
                                                         <Link
                                                             href={`/shipments/${manifest.id}`}

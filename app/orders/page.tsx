@@ -768,7 +768,7 @@ export default function OrdersPage() {
                   <SortableHeader label="Total Price" field="total" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
                   <SortableHeader label="Request Date" field="requestedDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestedDate} onResize={handleResize} />
                   <th
-                    className="px-3 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 truncate"
+                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 truncate"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
                     Actions
@@ -796,15 +796,15 @@ export default function OrdersPage() {
                 ) : (
                   paginatedOrders.map((order) => (
                     <tr key={`order-row-${order.Id ?? order.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-3 text-sm text-primary font-semibold sticky left-0 z-10 bg-white dark:bg-gray-800 text-left truncate">
+                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 z-10 bg-white dark:bg-gray-800 text-left truncate">
                         <Link href={`/orders/${order.id}`} className="text-sm font-semibold text-primary hover:underline truncate">
                           <div title={order.name}>{order.name}</div>
                         </Link>
                       </td>
-                      <td className="px-3 py-3 truncate">
+                      <td className="px-3 py-2 truncate">
                         <StatusBadge status={order.status as OrderStatus} />
                       </td>
-                      <td className="px-3 py-3 truncate text-gray-600 dark:text-white font-medium ">
+                      <td className="px-3 py-2 truncate text-gray-600 dark:text-white font-medium ">
                         {order.proposal_id && order.proposal_id !== '' ? (
                           <Link href={`/proposals/${order.proposal_id}`} target="_blank" className="text-sm font-semibold text-primary hover:underline truncate">
                             {order.proposal_name}
@@ -813,19 +813,19 @@ export default function OrdersPage() {
                           <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{order.proposal_name}</div>
                         )}
                       </td>
-                      <td className="px-3 py-3 truncate">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={order.customerPO}>{order.customerPO}</div>
                       </td>
-                      <td className="px-3 py-3 truncate">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billTo}>{order.billTo}</div>
                       </td>
-                      <td className="px-3 py-3 truncate">
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipTo}>{order.shipTo}</div>
                       </td>
-                      <td className="px-3 py-3 text-sm text-gray-600 dark:text-white truncate">{formatNumber(order.items, 0)}</td>
-                      <td className="px-3 py-3 text-sm text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(order.total)}</td>
-                      <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(order.requestedDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-white truncate">{formatNumber(order.items, 0)}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(order.total)}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(order.requestedDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-2">
                         <div className="flex gap-2">
                           {order.status !== "Canceled" && order.status !== "Cancelled" && (
                             <>

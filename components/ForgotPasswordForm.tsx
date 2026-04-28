@@ -98,7 +98,7 @@ export default function ForgotPasswordForm() {
       {/* Left Panel - Form */}
       <div className="w-full md:w-1/2 flex items-center justify-center bg-white px-6 md:px-12 py-10 overflow-auto">
         <div className="w-full max-w-md">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-2 text-center">
             {step === 1 ? "Forgot Password" : "Reset Password"}
           </h2>
           <p className="text-center text-sm text-gray-600 mb-8">

@@ -136,7 +136,7 @@ export default function PurchasesTab({
                                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                         {paginatedPurchases.map((purchase) => (
                                             <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={purchase.name}>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={purchase.name}>
                                                     <Link
                                                         href={`/purchase-orders/${purchase.id}`}
                                                         target="_blank"
@@ -287,7 +287,7 @@ export default function PurchasesTab({
                                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                         {paginatedBills.map((bill) => (
                                             <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={bill.name}>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={bill.name}>
                                                     <Link
                                                         href={`/supplier-bills/${bill.id}`}
                                                         target="_blank"

@@ -29,9 +29,9 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
     const { items: sortedData, requestSort, sortConfig } = useSortableData<BillFile>(files);
 
-  const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+    const { user, selectedAccount } = useUserSession();
+    const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+    const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     const initialWidths = {
         fileName: 300,
@@ -155,7 +155,7 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((file) => (
                             <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate">
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate">
                                     <div className="flex items-center gap-3 min-w-0">
                                         {getFileIcon(file.fileType)}
                                         <div className="truncate" title={file.fileName}>{file.fileName}</div>
