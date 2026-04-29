@@ -25,9 +25,9 @@ async function fetchProductsFromSalesforce(session) {
   // Querying standard fields that definitely exist + some custom fields without gtherp prefix
   // Added explicit TRUE and checking the query carefully
   const query = `
-    SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp
+    SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp, gtherp__Product_Availability__c
     FROM Product2
-    WHERE IsActive = true
+    WHERE IsActive = true AND gtherp__Product_Availability__c ='Available'
     LIMIT 100
   `;
   const url = `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`;
@@ -62,6 +62,9 @@ async function main() {
     const products = await fetchProductsFromSalesforce(session);
 
     console.log(`Found ${products.length} products from Salesforce query.`);
+    console.log("Records fetched from Salesforce:");
+    console.log(JSON.stringify(products, null, 2));
+
     const client = await pool.connect();
 
     let processedCount = 0;
@@ -81,14 +84,15 @@ async function main() {
                    gtherp__price__c, gtherp__stock_quantity__c,
                    gtherp__available_quantity__c, gtherp__discount__c,
                    gtherp__category__c, gtherp__sub_category__c,
-                   manufacturer_name__c, createddate, systemmodstamp
-               ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+                   manufacturer_name__c, product_availability__c, createddate, systemmodstamp
+               ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
                ON CONFLICT (sfid) DO UPDATE SET
                    productcode = EXCLUDED.productcode,
                    name = EXCLUDED.name,
                    description = EXCLUDED.description,
                    isactive = EXCLUDED.isactive,
                    gtherp__price__c = EXCLUDED.gtherp__price__c,
+                   product_availability__c = EXCLUDED.product_availability__c,
                    systemmodstamp = EXCLUDED.systemmodstamp
            `, [
         p.Id, p.ProductCode, p.Name, p.Description, p.IsActive, p.Family,
@@ -99,10 +103,11 @@ async function main() {
         p.Family || 'No Category',
         'Sub Category',
         'Woven',
+        p.gtherp__Product_Availability__c || '',
         p.CreatedDate, p.SystemModstamp
       ]);
     }
-    
+
     console.log(`✅ Processed ${processedCount} active products.`);
     if (inactiveCount > 0) {
       console.log(`⚠️  Skipped ${inactiveCount} inactive products returned by Salesforce.`);

@@ -119,6 +119,7 @@ BEGIN
         
         'status', CASE WHEN product_row.isactive THEN 'active' ELSE 'inactive' END,
         'is_active', product_row.isactive,
+        'product_availability', product_row.product_availability__c,
         
         'created_at', EXTRACT(EPOCH FROM product_row.createddate)::BIGINT,
         'updated_at', EXTRACT(EPOCH FROM product_row.systemmodstamp)::BIGINT,

@@ -39,10 +39,11 @@ export async function syncNewProductToPostgresAndAlgolia(
         manufacturer_name__c,
         gtherp__price__c,
         gtherp__available_quantity__c,
+        product_availability__c,
         createddate,
         systemmodstamp
       ) VALUES (
-        $1, $2, $3, TRUE, $4, $5, $6, $7, $8, NOW(), NOW()
+        $1, $2, $3, TRUE, $4, $5, $6, $7, $8, $9, NOW(), NOW()
       )
       ON CONFLICT (sfid) DO UPDATE SET
         name                         = EXCLUDED.name,
@@ -52,6 +53,7 @@ export async function syncNewProductToPostgresAndAlgolia(
         manufacturer_name__c         = EXCLUDED.manufacturer_name__c,
         gtherp__price__c             = EXCLUDED.gtherp__price__c,
         gtherp__available_quantity__c = EXCLUDED.gtherp__available_quantity__c,
+        product_availability__c      = EXCLUDED.product_availability__c,
         systemmodstamp               = NOW()
       `,
       [
@@ -63,6 +65,7 @@ export async function syncNewProductToPostgresAndAlgolia(
         accountId,                                      // $6 manufacturer_name__c
         productData.UnitPrice ?? 0,                     // $7 gtherp__price__c
         productData.Available_To_Sell__c ?? 0,          // $8 gtherp__available_quantity__c
+        productData.gtherp__Product_Availability__c ?? null,    // $9 product_availability__c
       ]
     );
 
@@ -128,6 +131,7 @@ export async function syncNewProductToPostgresAndAlgolia(
       manufacturer:       accountId,
       status:             'active',
       is_active:          true,
+      product_availability: productData.gtherp__Product_Availability__c ?? '',
       _tags: [productData.Family].filter(Boolean),
     });
 

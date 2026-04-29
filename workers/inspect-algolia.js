@@ -19,7 +19,7 @@ async function checkAlgolia() {
 
     console.log(`Total hits in Algolia: ${hits.length}`);
     hits.slice(0, 50).forEach(hit => {
-        console.log(`- ID: ${hit.objectID}, Name: ${hit.name}, Category: ${hit.category}, Manufacturer: ${hit.manufacturer}`);
+        console.log(`- ID: ${hit.objectID}, Name: ${hit.name}, Availability: ${hit.product_availability}`);
     });
 }
 

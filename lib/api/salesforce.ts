@@ -247,7 +247,8 @@ export async function fetchProducts(): Promise<Product[]> {
       Available_Quantity__c,
       Minimum_Order_Quantity__c,
       List_Price__c,
-      Unit_Price__c
+      Unit_Price__c,
+      gtherp__Product_Availability__c
     FROM Product2
     ORDER BY Name
     LIMIT 2000
@@ -268,6 +269,7 @@ export async function fetchProducts(): Promise<Product[]> {
       moq: record.Minimum_Order_Quantity__c || 1,
       listPrice: record.List_Price__c || 0,
       unitPrice: record.Unit_Price__c || 0,
+      productAvailability: record.gtherp__Product_Availability__c || '',
       orderQty: 0,
       subtotal: 0,
     }));

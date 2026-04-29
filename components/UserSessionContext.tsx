@@ -120,16 +120,27 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
+    // Clear local state immediately for instant feedback
+    setUser(null);
+    setSelectedAccountStateId(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('selectedAccount');
+    localStorage.removeItem('isSuperAdmin');
+
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+      // Fire and forget the server-side logout, or wait briefly
+      // We redirect anyway to ensure the user is moved
+      fetch('/api/auth/logout', { method: 'POST' }).catch(err => 
+        console.error('Background logout error:', err)
+      );
+      
+      // Use window.location.href for logout to ensure a clean state, 
+      // but we could use router.push if we want it to be even faster.
+      // Given it's a logout, a full refresh is often safer to clear all memory states.
+      window.location.href = '/signin'; 
     } catch (error) {
-      console.error('Error during logout:', error);
-    } finally {
-      setUser(null);
-      setSelectedAccountStateId(null);
-      localStorage.removeItem('user');
-      localStorage.removeItem('selectedAccount');
-      window.location.href = '/auth';
+      console.error('Error during logout redirect:', error);
+      window.location.href = '/signin';
     }
   };
 
