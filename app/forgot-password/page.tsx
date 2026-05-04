@@ -10,14 +10,14 @@ export default function ForgotPasswordPage() {
     document.body.classList.remove("dark");
     document.body.classList.add("light");
     document.body.style.backgroundColor = "#E5EDF1";
-    
+
     return () => {
       document.body.style.backgroundColor = "";
     };
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#E5EDF1] text-[#2c3e50] light forced-light">
+    <div className="min-h-screen  text-primary light forced-light">
       <main className="min-h-screen bg-white overflow-hidden">
         <ForgotPasswordForm />
       </main>
