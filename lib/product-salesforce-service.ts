@@ -37,7 +37,7 @@ export async function getProductsFromSalesforce(accountId?: string, contactId?: 
 
     const resultdata = await response.json();
     console.log('DEBUG: getProductsFromSalesforce resultdata received:', !!resultdata);
-    
+
     // Try to extract data robustly
     if (resultdata?.data) {
       if (Array.isArray(resultdata.data)) {
@@ -116,7 +116,7 @@ export async function createProductInSalesforce(accountId: string, contactId: st
     }
 
     const url = `${session.instanceUrl}/services/apexrest/gtherp/product/details`;
-    
+
     const body = {
       product: [productData],
       accountId: accountId,
@@ -138,9 +138,9 @@ export async function createProductInSalesforce(accountId: string, contactId: st
     });
 
     if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Salesforce API error details:", errorText);
-        throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error("Salesforce API error details:", errorText);
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
     }
 
     return await response.json();
@@ -159,7 +159,7 @@ export async function updateProductTabInSalesforce(payload: any): Promise<any> {
     }
 
     const url = `${session.instanceUrl}/services/apexrest/gtherp/product/details`;
-    
+
     console.log("=== SALESFORCE TAB UPDATE PAYLOAD ===");
     console.log(JSON.stringify(payload, null, 2));
     console.log("===========================================");
@@ -174,9 +174,9 @@ export async function updateProductTabInSalesforce(payload: any): Promise<any> {
     });
 
     if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Salesforce API error details:", errorText);
-        throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error("Salesforce API error details:", errorText);
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
     }
 
     return await response.json();
@@ -195,7 +195,7 @@ export async function patchProductTabInSalesforce(payload: any): Promise<any> {
     }
 
     const url = `${session.instanceUrl}/services/apexrest/gtherp/product/details`;
-    
+
     console.log("=== SALESFORCE TAB PATCH PAYLOAD ===");
     console.log(JSON.stringify(payload, null, 2));
     console.log("===========================================");
@@ -210,9 +210,9 @@ export async function patchProductTabInSalesforce(payload: any): Promise<any> {
     });
 
     if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Salesforce API error details:", errorText);
-        throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error("Salesforce API error details:", errorText);
+      throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
     }
 
     return await response.json();

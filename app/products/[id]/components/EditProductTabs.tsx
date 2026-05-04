@@ -520,9 +520,9 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
                     {cert.Certification_Status__c && (
                       <div className="mt-3">
                         <span className={`px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase rounded-full ${cert.Certification_Status__c === 'Valid' ? 'bg-green-100 text-green-700' :
-                            cert.Certification_Status__c === 'Expired' ? 'bg-red-100 text-red-700' :
-                              cert.Certification_Status__c === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                                'bg-gray-100 text-gray-700'
+                          cert.Certification_Status__c === 'Expired' ? 'bg-red-100 text-red-700' :
+                            cert.Certification_Status__c === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                              'bg-gray-100 text-gray-700'
                           }`}>{cert.Certification_Status__c}</span>
                       </div>
                     )}

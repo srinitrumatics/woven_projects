@@ -24,7 +24,6 @@ export const product2 = salesforceSchema.table('product2', {
     subCategory: varchar('gtherp__sub_category__c', { length: 255 }),
     manufacturerName: varchar('manufacturer_name__c', { length: 255 }),
     productAvailability: varchar('product_availability__c', { length: 255 }),
-
     createdDate: timestamp('createddate'),
     systemModStamp: timestamp('systemmodstamp'),
 });

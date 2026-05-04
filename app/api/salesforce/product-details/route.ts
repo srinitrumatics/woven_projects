@@ -2,6 +2,38 @@ import { NextResponse } from "next/server";
 import { getProductDetailsFromSalesforce, createProductInSalesforce, updateProductTabInSalesforce, patchProductTabInSalesforce } from '@/lib/product-salesforce-service';
 import { syncNewProductToPostgresAndAlgolia } from '@/lib/product-sync-service';
 
+/**
+ * Aggressively searches for a Salesforce ID (starting with '01t' for Products) 
+ * in any object or array.
+ */
+function findSfId(obj: any): string | null {
+  if (!obj) return null;
+  if (typeof obj === 'string' && (obj.startsWith('01t') && (obj.length === 15 || obj.length === 18))) {
+    return obj;
+  }
+  if (Array.isArray(obj)) {
+    for (const item of obj) {
+      const found = findSfId(item);
+      if (found) return found;
+    }
+  }
+  if (typeof obj === 'object') {
+    // Check common ID keys first
+    const commonKeys = ['Id', 'id', 'sfid', 'sfProductId', 'productId', 'recordId'];
+    for (const key of commonKeys) {
+      if (typeof obj[key] === 'string' && obj[key].startsWith('01t')) {
+        return obj[key];
+      }
+    }
+    // Recursive search
+    for (const key in obj) {
+      const found = findSfId(obj[key]);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -29,6 +61,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    console.log('[ProductSync] 🚀 POST request received at /api/salesforce/product-details');
     const body = await req.json();
 
     if (body.tabName && body.tabName !== "product") {
@@ -39,23 +72,32 @@ export async function POST(req: Request) {
     const { accountId, contactId, productData } = body;
 
     if (!accountId || !contactId || !productData) {
+      console.warn('[ProductSync] ⚠️ Missing required parameters in POST body');
       return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
     }
 
     const result = await createProductInSalesforce(accountId, contactId, productData);
+    console.log('[ProductSync] 📥 Salesforce create result:', JSON.stringify(result));
 
     // After successful Salesforce creation, sync to PostgreSQL and Algolia.
-    // This is non-blocking: a failure here does NOT roll back the Salesforce record.
-    if (result?.success) {
-      const sfProductId = result?.data?.Id || result?.Id || result?.data?.[0]?.Id || productData?.Id;
+    // We check for .success OR a success message to match frontend logic
+    if (result?.success || result?.message === "Product created successfully") {
+      // Use the aggressive search helper to find the Salesforce ID in the response
+      const sfProductId = findSfId(result) || findSfId(productData);
+
       if (sfProductId) {
-        console.log(`[ProductSync] 🟢 GETTING DATA FROM SALESFORCE: Creation successful, sfid: ${sfProductId}`);
+        console.log(`[ProductSync] 🟢 Salesforce record handled, sfid: ${sfProductId}`);
         console.log(`[ProductSync] Triggering sync for ${sfProductId} (POST)`);
-        syncNewProductToPostgresAndAlgolia(sfProductId, productData, accountId).catch((syncErr) =>
-          console.error('[ProductSync] Background sync error:', syncErr)
-        );
+        
+        // Await the sync to ensure it completes before the API response returns
+        try {
+          await syncNewProductToPostgresAndAlgolia(sfProductId, productData, accountId, contactId);
+          console.log(`[ProductSync] ✅ Sync completed successfully for ${sfProductId}`);
+        } catch (syncErr) {
+          console.error('[ProductSync] ❌ Sync error:', syncErr);
+        }
       } else {
-        console.warn('[ProductSync] Salesforce creation succeeded but no product ID found in response or payload:', JSON.stringify(result));
+        console.warn('[ProductSync] ⚠️ Salesforce success but no product ID found. Result:', JSON.stringify(result));
       }
     }
 
@@ -68,22 +110,29 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
+    console.log('[ProductSync] 🚀 PATCH request received at /api/salesforce/product-details');
     const body = await req.json();
     const result = await patchProductTabInSalesforce(body);
+    console.log('[ProductSync] 📥 Salesforce patch result:', JSON.stringify(result));
 
     // Sync to PostgreSQL and Algolia on successful update
-    if (result?.success) {
-      const { accountId, product, tabName } = body;
+    if (result?.success || result?.message?.includes("successfully")) {
+      const { accountId, contactId, product, tabName } = body;
       // Only sync if this is the main product tab update
       if (tabName === "product" && product?.[0]) {
         const productData = product[0];
-        const sfProductId = productData.Id;
+        const sfProductId = findSfId(productData) || findSfId(result);
+        
         if (sfProductId && accountId) {
-          console.log(`[ProductSync] 🟢 GETTING DATA FROM SALESFORCE: Update successful, sfid: ${sfProductId}`);
+          console.log(`[ProductSync] 🟢 Salesforce update handled, sfid: ${sfProductId}`);
           console.log(`[ProductSync] Triggering sync for ${sfProductId} (PATCH)`);
-          syncNewProductToPostgresAndAlgolia(sfProductId, productData, accountId).catch((syncErr) =>
-            console.error('[ProductSync] Background PATCH sync error:', syncErr)
-          );
+          
+          try {
+            await syncNewProductToPostgresAndAlgolia(sfProductId, productData, accountId, contactId);
+            console.log(`[ProductSync] ✅ Update sync completed successfully for ${sfProductId}`);
+          } catch (syncErr) {
+            console.error('[ProductSync] ❌ Update sync error:', syncErr);
+          }
         }
       }
     }

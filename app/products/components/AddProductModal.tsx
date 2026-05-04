@@ -79,10 +79,10 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
     productUseEmissions: productToEdit?.product_Use_Emissions__c?.toString() || "",
     waterUsage: productToEdit?.Water_Usage__c?.toString() || "",
   });
-    // Product Header
+  // Product Header
 
 
-    // Metadata
+  // Metadata
 
 
   useEffect(() => {
@@ -142,7 +142,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
         StockKeepingUnit: formData.sku,
         ProductCode: formData.productCode,
         Family: formData.family || "",
-        Product_Availability__c: "Available", // Set to Available as per requirements
+        Product_Availability__c: "Available", // Always Draft as per requirements
         Availability_Status__c: formData.availabilityStatus,
         Available_To_Sell__c: Number(formData.availableToSell) || 0,
         Lead_Time_Wks__c: Number(formData.leadTimeWks) || 0,
@@ -296,63 +296,63 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
   const formContent = (
     <div className={`bg-white dark:bg-gray-800 flex flex-col ${inlineMode ? 'w-full h-full rounded-xl shadow-sm border border-gray-200 dark:border-gray-700' : 'rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700'}`}>
 
-        {/* Header - Hidden in inline mode since page already has header */}
-        {!inlineMode && (
-          <div className="px-6 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
-            <h2 className="text-lg font-bold text-gray-700 dark:text-white">{isEditingMode ? "Edit Product" : "Create Product"}</h2>
-            <button onClick={onClose} className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-400">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
-          </div>
-        )}
+      {/* Header - Hidden in inline mode since page already has header */}
+      {!inlineMode && (
+        <div className="px-6 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
+          <h2 className="text-lg font-bold text-gray-700 dark:text-white">{isEditingMode ? "Edit Product" : "Create Product"}</h2>
+          <button onClick={onClose} className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-400">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+      )}
 
-        {/* Form Body */}
-        <div className={`p-6 ${inlineMode ? '' : 'overflow-y-auto scrollbar-thin'}`}>
+      {/* Form Body */}
+      <div className={`p-6 ${inlineMode ? '' : 'overflow-y-auto scrollbar-thin'}`}>
 
-          <SectionHeader title="Product Header" />
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-            {renderField("Product Name", "name", "text", [], true)}
-            {renderField("SKU", "sku", "text", [], true, false)}
-            {renderField("Product Code", "productCode", "text", [], false, false)}
-            {renderField("Product Family", "family", "select", picklists?.Family || picklists?.Product_Family__c)}
-            {renderField("Availability Status", "availabilityStatus", "text", [], false, true)}
-            {renderField("Available to Sell", "availableToSell", "text", [], false, isEditingMode)}
-          </div>
-          <SectionHeader title="Pricing" />
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-            {renderField("List Price", "listPrice", "text", [], false, isEditingMode)}
-          </div>
+        <SectionHeader title="Product Header" />
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+          {renderField("Product Name", "name", "text", [], true)}
+          {renderField("SKU", "sku", "text", [], true, false)}
+          {renderField("Product Code", "productCode", "text", [], false, false)}
+          {renderField("Product Family", "family", "select", picklists?.Family || picklists?.Product_Family__c)}
+          {renderField("Availability Status", "availabilityStatus", "text", [], false, true)}
+          {renderField("Available to Sell", "availableToSell", "text", [], false, isEditingMode)}
+        </div>
+        <SectionHeader title="Pricing" />
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+          {renderField("List Price", "listPrice", "text", [], false, isEditingMode)}
+        </div>
 
-          <SectionHeader title="Metadata" />
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-            {renderField("Lead Time (Wks)", "leadTimeWks")}
-            {renderField("MOQ", "moq")}
-          </div>
+        <SectionHeader title="Metadata" />
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+          {renderField("Lead Time (Wks)", "leadTimeWks")}
+          {renderField("MOQ", "moq")}
+        </div>
 
-          <SectionHeader title="Overview" />
-          <div className="grid grid-cols-1 gap-y-4 px-2">
-            {renderField("Product Description", "description", "textarea")}
-            <div className="flex flex-col gap-1 w-full">
-              <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">Key Features</label>
-              <div className="bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600">
-                <ReactQuill
-                  theme="snow"
-                  value={formData.keyFeatures}
-                  onChange={(content) => setFormData((prev: any) => ({ ...prev, keyFeatures: content }))}
-                  modules={{
-                    toolbar: [
-                      [{ 'header': [1, 2, false] }],
-                      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                      ['link'],
-                      ['clean']
-                    ],
-                  }}
-                  placeholder="Add key features here..."
-                />
-              </div>
+        <SectionHeader title="Overview" />
+        <div className="grid grid-cols-1 gap-y-4 px-2">
+          {renderField("Product Description", "description", "textarea")}
+          <div className="flex flex-col gap-1 w-full">
+            <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">Key Features</label>
+            <div className="bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600">
+              <ReactQuill
+                theme="snow"
+                value={formData.keyFeatures}
+                onChange={(content) => setFormData((prev: any) => ({ ...prev, keyFeatures: content }))}
+                modules={{
+                  toolbar: [
+                    [{ 'header': [1, 2, false] }],
+                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    ['link'],
+                    ['clean']
+                  ],
+                }}
+                placeholder="Add key features here..."
+              />
             </div>
-            <style jsx global>{`
+          </div>
+          <style jsx global>{`
               .ql-container {
                 min-height: 150px;
                 font-size: 0.9rem;
@@ -385,78 +385,78 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
                 color: #f3f4f6 !important;
               }
             `}</style>
-          </div>
-
-          <SectionHeader title="Quick Specifications (Unit)" />
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-            {renderField("Cubic Volume (in)", "cubicVolumeIn")}
-            {renderField("Length (in)", "lengthIn")}
-            {renderField("Width (in)", "widthIn")}
-            {renderField("Height (in)", "heightIn")}
-            {renderField("Net Weight (lbs)", "netWeightLbs")}
-            {renderField("Gross Weight (lbs)", "grossWeightLbs")}
-          </div>
-
-          <SectionHeader title="Quick Specifications (Case & Compliance)" />
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-            {renderField("Case Cubic Volume (in)", "caseCubicVolumeIn", "text", [], false, true)}
-            {renderField("Case Length (in)", "caseLengthIn")}
-            {renderField("Case Width (in)", "caseWidthIn")}
-            {renderField("Case Height (in)", "caseHeightIn")}
-            {renderField("Case Net Weight (lbs)", "caseNetWeightLbs")}
-            {renderField("Case Gross Weight (lbs)", "caseGrossWeightLbs")}
-            {renderField("Shipping Weight DW 139 (lbs)", "shippingWeightDW139", "text", [], false, true)}
-            {renderField("Shipping Weight DW 166 (lbs)", "shippingWeightDW166", "text", [], false, true)}
-            {renderField("ECCN", "eccn")}
-            {renderField("HTS Code", "htsCode")}
-            {renderField("GTIN", "gtin")}
-            {renderField("UPC", "upc")}
-          </div>
-
-          <SectionHeader title="Electrical" />
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-            {renderField("Voltage Rating", "voltageRating")}
-            {renderField("Plug Type", "plugType")}
-            {renderField("Cord Length", "cordLength")}
-          </div>
-
-          <SectionHeader title="ESG" />
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-            {renderField("Product Availability", "productAvailabilityESG", "text", [], false, true)}
-            {renderField("Energy Consumption", "energyConsumption")}
-            {renderField("End-of-Life Management", "endOfLifeManagement", "select", picklists?.End_of_Life_Management__c || ["Biodegradable", "Recyclable", "Landfill"])}
-            {renderField("Manufacturing Process", "manufacturingProcess", "select", picklists?.Manufacturing_Process__c || ["Additive manufacturing", "Traditional"])}
-            {renderField("Packaging Materials", "packagingMaterials", "select", picklists?.Packaging_Materials__c || ["Biodegradable", "Plastic", "Paper"])}
-            {renderField("Product Longevity", "productLongevity")}
-            {renderField("Product Use Emissions", "productUseEmissions")}
-            {renderField("Water Usage", "waterUsage")}
-          </div>
-
         </div>
 
-        {/* Footer */}
-        <div className={`${inlineMode ? 'p-6 rounded-b-xl' : 'p-4'} border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-end items-center gap-3`}>
-          <button
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={isSubmitting || !selectedAccount || !user}
-            className="px-10 py-2 bg-primary hover:bg-primary-dark text-white text-sm font-bold rounded-lg shadow-sm transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          >
-            {isSubmitting && (
-              <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            )}
-            {isSubmitting ? "Saving..." : (isEditingMode ? "Update" : "Save")}
-          </button>
+        <SectionHeader title="Quick Specifications (Unit)" />
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+          {renderField("Cubic Volume (in)", "cubicVolumeIn")}
+          {renderField("Length (in)", "lengthIn")}
+          {renderField("Width (in)", "widthIn")}
+          {renderField("Height (in)", "heightIn")}
+          {renderField("Net Weight (lbs)", "netWeightLbs")}
+          {renderField("Gross Weight (lbs)", "grossWeightLbs")}
         </div>
+
+        <SectionHeader title="Quick Specifications (Case & Compliance)" />
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+          {renderField("Case Cubic Volume (in)", "caseCubicVolumeIn", "text", [], false, true)}
+          {renderField("Case Length (in)", "caseLengthIn")}
+          {renderField("Case Width (in)", "caseWidthIn")}
+          {renderField("Case Height (in)", "caseHeightIn")}
+          {renderField("Case Net Weight (lbs)", "caseNetWeightLbs")}
+          {renderField("Case Gross Weight (lbs)", "caseGrossWeightLbs")}
+          {renderField("Shipping Weight DW 139 (lbs)", "shippingWeightDW139", "text", [], false, true)}
+          {renderField("Shipping Weight DW 166 (lbs)", "shippingWeightDW166", "text", [], false, true)}
+          {renderField("ECCN", "eccn")}
+          {renderField("HTS Code", "htsCode")}
+          {renderField("GTIN", "gtin")}
+          {renderField("UPC", "upc")}
+        </div>
+
+        <SectionHeader title="Electrical" />
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+          {renderField("Voltage Rating", "voltageRating")}
+          {renderField("Plug Type", "plugType")}
+          {renderField("Cord Length", "cordLength")}
+        </div>
+
+        <SectionHeader title="ESG" />
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+          {renderField("Product Availability", "productAvailabilityESG", "text", [], false, true)}
+          {renderField("Energy Consumption", "energyConsumption")}
+          {renderField("End-of-Life Management", "endOfLifeManagement", "select", picklists?.End_of_Life_Management__c || ["Biodegradable", "Recyclable", "Landfill"])}
+          {renderField("Manufacturing Process", "manufacturingProcess", "select", picklists?.Manufacturing_Process__c || ["Additive manufacturing", "Traditional"])}
+          {renderField("Packaging Materials", "packagingMaterials", "select", picklists?.Packaging_Materials__c || ["Biodegradable", "Plastic", "Paper"])}
+          {renderField("Product Longevity", "productLongevity")}
+          {renderField("Product Use Emissions", "productUseEmissions")}
+          {renderField("Water Usage", "waterUsage")}
+        </div>
+
+      </div>
+
+      {/* Footer */}
+      <div className={`${inlineMode ? 'p-6 rounded-b-xl' : 'p-4'} border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-end items-center gap-3`}>
+        <button
+          onClick={onClose}
+          disabled={isSubmitting}
+          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all disabled:opacity-50"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleSubmit}
+          disabled={isSubmitting || !selectedAccount || !user}
+          className="px-10 py-2 bg-primary hover:bg-primary-dark text-white text-sm font-bold rounded-lg shadow-sm transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+        >
+          {isSubmitting && (
+            <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          )}
+          {isSubmitting ? "Saving..." : (isEditingMode ? "Update" : "Save")}
+        </button>
+      </div>
     </div>
   );
 
