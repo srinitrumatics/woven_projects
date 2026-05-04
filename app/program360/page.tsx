@@ -196,7 +196,7 @@ export default function Program360Page() {
   ];
 
   const quickActions = [
-    { label: "New Order", icon: ShoppingBag, bgColor: "bg-blue-50 dark:bg-blue-900/20", textColor: "text-blue-700 dark:text-blue-400", borderColor: "border-blue-100 dark:border-blue-800/50", href: "/orders" },
+    { label: "view Orders", icon: ShoppingBag, bgColor: "bg-blue-50 dark:bg-blue-900/20", textColor: "text-blue-700 dark:text-blue-400", borderColor: "border-blue-100 dark:border-blue-800/50", href: "/orders" },
     { label: "View Proposals", icon: FileText, bgColor: "bg-green-50 dark:bg-green-900/20", textColor: "text-green-700 dark:text-green-400", borderColor: "border-green-100 dark:border-green-800/50", href: "/proposals" },
     { label: "View Quotes", icon: ClipboardList, bgColor: "bg-purple-50 dark:bg-purple-900/20", textColor: "text-purple-700 dark:text-purple-400", borderColor: "border-purple-100 dark:border-purple-800/50", href: "/quotes" },
     { label: "Track Shipments", icon: Truck, bgColor: "bg-orange-50 dark:bg-orange-900/20", textColor: "text-orange-700 dark:text-orange-400", borderColor: "border-orange-100 dark:border-orange-800/50", href: "/shipments" },

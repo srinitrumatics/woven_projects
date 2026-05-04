@@ -142,7 +142,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
         StockKeepingUnit: formData.sku,
         ProductCode: formData.productCode,
         Family: formData.family || "",
-        Product_Availability__c: "Draft", // Always Draft as per requirements
+        Product_Availability__c: "Available", // Set to Available as per requirements
         Availability_Status__c: formData.availabilityStatus,
         Available_To_Sell__c: Number(formData.availableToSell) || 0,
         Lead_Time_Wks__c: Number(formData.leadTimeWks) || 0,

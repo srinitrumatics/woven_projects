@@ -65,7 +65,7 @@ export async function syncNewProductToPostgresAndAlgolia(
         accountId,                                      // $6 manufacturer_name__c
         productData.UnitPrice ?? 0,                     // $7 gtherp__price__c
         productData.Available_To_Sell__c ?? 0,          // $8 gtherp__available_quantity__c
-        productData.gtherp__Product_Availability__c ?? null,    // $9 product_availability__c
+        productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? null,    // $9 product_availability__c
       ]
     );
 
@@ -131,7 +131,7 @@ export async function syncNewProductToPostgresAndAlgolia(
       manufacturer:       accountId,
       status:             'active',
       is_active:          true,
-      product_availability: productData.gtherp__Product_Availability__c ?? '',
+      product_availability: productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? '',
       _tags: [productData.Family].filter(Boolean),
     });
 

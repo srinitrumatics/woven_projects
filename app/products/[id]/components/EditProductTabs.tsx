@@ -171,7 +171,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
         Name: formData.name,
         StockKeepingUnit: formData.sku,
         Family: formData.family || "",
-        Product_Availability__c: "Draft",
+        Product_Availability__c: "Available",
         Lead_Time_Wks__c: Number(formData.leadTimeWks) || 0,
         MOQ__c: Number(formData.moq) || 0,
         Manufacturer_Name__c: accountId,
