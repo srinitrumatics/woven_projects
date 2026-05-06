@@ -165,6 +165,8 @@ export default function ProposalsPage() {
   // Sorting
   const { items: sortedProposals, requestSort, sortConfig } = useSortableData<Proposal>(filteredAndSearchedProposals, { key: 'proposalNumber', direction: 'desc' });
 
+  const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+
   // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedProposals.length / ITEMS_PER_PAGE));
   const paginatedProposals = useMemo(() => {
@@ -565,30 +567,38 @@ export default function ProposalsPage() {
                       </td>
                       <td className="px-3 py-2 truncate text-left">
                         {proposal.orderId && proposal.customerOrder !== 'N/A' ? (
-                          <Link
-                            href={`/orders/${proposal.orderId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm font-semibold text-primary hover:underline truncate"
-                            title={proposal.customerOrder}
-                          >
-                            {proposal.customerOrder}
-                          </Link>
+                          !isManufacturer ? (
+                            <Link
+                              href={`/orders/${proposal.orderId}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm font-semibold text-primary hover:underline truncate"
+                              title={proposal.customerOrder}
+                            >
+                              {proposal.customerOrder}
+                            </Link>
+                          ) : (
+                            <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerOrder}>{proposal.customerOrder}</div>
+                          )
                         ) : (
                           <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerOrder}>{proposal.customerOrder}</div>
                         )}
                       </td>
                       <td className="px-3 py-2 truncate text-left">
                         {proposal.purchaseOrderId && proposal.customerPO !== 'N/A' ? (
-                          <Link
-                            href={`/purchase-orders/${proposal.purchaseOrderId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm font-semibold text-primary hover:underline truncate"
-                            title={proposal.customerPO}
-                          >
-                            {proposal.customerPO}
-                          </Link>
+                          !isManufacturer ? (
+                            <Link
+                              href={`/purchase-orders/${proposal.purchaseOrderId}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm font-semibold text-primary hover:underline truncate"
+                              title={proposal.customerPO}
+                            >
+                              {proposal.customerPO}
+                            </Link>
+                          ) : (
+                            <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerPO}>{proposal.customerPO}</div>
+                          )
                         ) : (
                           <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerPO}>{proposal.customerPO}</div>
                         )}

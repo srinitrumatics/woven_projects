@@ -3,7 +3,8 @@ import { SortableHeader } from"@/components/ui/SortableHeader";
 import { formatCurrency, formatDate } from"@/lib/utils/formatting";
 import Link from"next/link";
 import Pagination from"@/components/ui/Pagination";
-import { useState, useMemo } from"react";
+import { useState, useMemo } from "react";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -29,6 +30,8 @@ export default function QuoteDebitMemoSubTab({
     onResize
 }: QuoteDebitMemoSubTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const { user, selectedAccount } = useUserSession();
+    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteDebitMemo);
 
@@ -91,30 +94,38 @@ export default function QuoteDebitMemoSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierBill }}>
                                             {memo.supplierBillId ? (
-                                                <Link href={`/supplier-bills/${memo.supplierBillId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {memo.supplierBill}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/supplier-bills/${memo.supplierBillId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {memo.supplierBill}
+                                                    </Link>
+                                                ) : memo.supplierBill
                                             ) : memo.supplierBill}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
                                             {memo.purchaseOrderId ? (
-                                                <Link href={`/purchase-orders/${memo.purchaseOrderId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {memo.purchaseOrder}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/purchase-orders/${memo.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {memo.purchaseOrder}
+                                                    </Link>
+                                                ) : memo.purchaseOrder
                                             ) : memo.purchaseOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {memo.customerQuoteId ? (
-                                                <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {memo.customerQuote}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {memo.customerQuote}
+                                                    </Link>
+                                                ) : memo.customerQuote
                                             ) : memo.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {memo.customerOrderId ? (
-                                                <Link href={`/orders/${memo.customerOrderId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {memo.customerOrder}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {memo.customerOrder}
+                                                    </Link>
+                                                ) : memo.customerOrder
                                             ) : memo.customerOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierCredit }}>{memo.supplierCredit}</td>

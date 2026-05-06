@@ -3,7 +3,8 @@ import { SortableHeader } from"@/components/ui/SortableHeader";
 import { formatCurrency, formatDate } from"@/lib/utils/formatting";
 import Link from"next/link";
 import Pagination from"@/components/ui/Pagination";
-import { useState, useMemo } from"react";
+import { useState, useMemo } from "react";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -29,6 +30,8 @@ export default function QuoteSalesOrdersSubTab({
     onResize
 }: QuoteSalesOrdersSubTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const { user, selectedAccount } = useUserSession();
+    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteSalesOrder);
 
@@ -95,16 +98,20 @@ export default function QuoteSalesOrdersSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {order.customerQuoteId ? (
-                                                <Link href={`/quotes/${order.customerQuoteId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {order.customerQuote}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/quotes/${order.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {order.customerQuote}
+                                                    </Link>
+                                                ) : order.customerQuote
                                             ) : order.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {order.customerOrderId ? (
-                                                <Link href={`/orders/${order.customerOrderId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {order.customerOrder}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/orders/${order.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {order.customerOrder}
+                                                    </Link>
+                                                ) : order.customerOrder
                                             ) : order.customerOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{order.customerPO}</td>

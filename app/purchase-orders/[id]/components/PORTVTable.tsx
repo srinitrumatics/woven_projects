@@ -9,6 +9,7 @@ import { formatDate } from "@/lib/utils/formatting";
 
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import Link from 'next/link';
+import { useUserSession } from "@/components/UserSessionContext";
 
 interface RTV {
     Id: string;
@@ -41,6 +42,8 @@ const ITEMS_PER_PAGE = 10;
 
 export default function PORTVTable({ rtv }: PORTVTableProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const { user, selectedAccount } = useUserSession();
+    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
 
     // Map data for sorting
     const mappedData = useMemo(() => rtv.map(r => ({
@@ -123,23 +126,35 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Purchase_Order_Name || '-'}>
                                     {r.Purchase_Order__c ? (
-                                        <Link href={`/purchase-orders/${r.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                            {r.Purchase_Order_Name || 'View PO'}
-                                        </Link>
+                                        !isManufacturer ? (
+                                            <Link href={`/purchase-orders/${r.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {r.Purchase_Order_Name || 'View PO'}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{r.Purchase_Order_Name || 'View PO'}</span>
+                                        )
                                     ) : r.Purchase_Order_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Customer_Quote_Name || '-'}>
                                     {r.Customer_Quote__c ? (
-                                        <Link href={`/quotes/${r.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                            {r.Customer_Quote_Name || 'View Quote'}
-                                        </Link>
+                                        !isManufacturer ? (
+                                            <Link href={`/quotes/${r.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {r.Customer_Quote_Name || 'View Quote'}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{r.Customer_Quote_Name || 'View Quote'}</span>
+                                        )
                                     ) : r.Customer_Quote_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Customer_Order_Name || '-'}>
                                     {r.Customer_Order__c ? (
-                                        <Link href={`/orders/${r.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                            {r.Customer_Order_Name || 'View Order'}
-                                        </Link>
+                                        !isManufacturer ? (
+                                            <Link href={`/orders/${r.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {r.Customer_Order_Name || 'View Order'}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{r.Customer_Order_Name || 'View Order'}</span>
+                                        )
                                     ) : r.Customer_Order_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.RTV_Type__c || '-'}>

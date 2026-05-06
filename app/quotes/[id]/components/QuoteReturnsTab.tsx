@@ -24,7 +24,7 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
     const [activeSubTab, setActiveSubTab] = useState<ReturnsSubTab>("rmas");
     const { rma = [], creditMemos = [], rtv = [], debitMemos = [] } = data;
 
-    const isCustomerOrNSO = accountType === 'Customer' || accountType === 'NSO';
+    const isCustomerOrNSO = accountType?.toLowerCase() === 'customer' || accountType?.toLowerCase() === 'nso';
 
     const tabs: { id: ReturnsSubTab; label: string }[] = (([
         { id: "rmas", label: "RMAs" },

@@ -583,7 +583,7 @@ export default function QuoteLineDetailPage({
                         { id: "returns", label: "Returns", count: counts.returns },
                         { id: "files", label: "Files", count: counts.files }
                     ] as { id: string; label: string; count: number }[]).filter(tab => {
-                        const isCustomerOrNSO = selectedAccount?.Account_Type__c === 'Customer' || selectedAccount?.Account_Type__c === 'NSO';
+                        const isCustomerOrNSO = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'customer' || selectedAccount?.Account_Type__c?.toLowerCase() === 'customer' || user?.role?.toLowerCase() === 'customer' || selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'nso' || selectedAccount?.Account_Type__c?.toLowerCase() === 'nso' || user?.role?.toLowerCase() === 'nso';
                         if (isCustomerOrNSO && tab.id === 'purchases') return false;
                         return true;
                     })).map((tab) => (
@@ -617,7 +617,9 @@ export default function QuoteLineDetailPage({
                         />
                     )}
 
-                    {activeTab === 'purchases' && selectedAccount?.Account_Type__c !== 'Customer' && selectedAccount?.Account_Type__c !== 'NSO' && (
+                    {activeTab === 'purchases' && 
+                        (selectedAccount?.Account_Record_Type__c?.toLowerCase() !== 'customer' && selectedAccount?.Account_Type__c?.toLowerCase() !== 'customer' && user?.role?.toLowerCase() !== 'customer') && 
+                        (selectedAccount?.Account_Record_Type__c?.toLowerCase() !== 'nso' && selectedAccount?.Account_Type__c?.toLowerCase() !== 'nso' && user?.role?.toLowerCase() !== 'nso') && (
                         <QuoteLinePurchasesTab
                             lineId={lineid}
                             loading={false}
@@ -632,7 +634,7 @@ export default function QuoteLineDetailPage({
                             loading={false}
                             accountId={SF_ACCOUNT_ID}
                             contactId={SF_CONTACT_ID}
-                            accountType={selectedAccount?.Account_Type__c}
+                            accountType={selectedAccount?.Account_Record_Type__c || selectedAccount?.Account_Type__c || user?.role}
                         />
                     )}
 

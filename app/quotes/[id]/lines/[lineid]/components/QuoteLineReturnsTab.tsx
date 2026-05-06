@@ -110,7 +110,7 @@ export default function QuoteLineReturnsTab({
     contactId,
     accountType
 }: QuoteLineReturnsTabProps) {
-    const isCustomerOrNSO = accountType === 'Customer' || accountType === 'NSO';
+    const isCustomerOrNSO = accountType?.toLowerCase() === 'customer' || accountType?.toLowerCase() === 'nso';
     const [activeSubTab, setActiveSubTab] = useState<"DebitMemos"|"RTVs"|"CreditMemos"|"RMAs">("RMAs");
     const [loading, setLoading] = useState(initialLoading);
     const [dmliData, setDmliData] = useState<DebitMemoLine[]>([]);

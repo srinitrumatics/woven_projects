@@ -4,7 +4,8 @@ import { formatCurrency, formatDate } from"@/lib/utils/formatting";
 import Pagination from"@/components/ui/Pagination";
 
 import Link from"next/link";
-import { useState, useMemo } from"react";
+import { useState, useMemo } from "react";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -30,6 +31,8 @@ export default function QuoteRMASubTab({
     onResize
 }: QuoteRMASubTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const { user, selectedAccount } = useUserSession();
+    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteRMA);
 
@@ -101,16 +104,20 @@ export default function QuoteRMASubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }} title={rma.customerQuote}>
                                             {rma.customerQuoteId ? (
-                                                <Link href={`/quotes/${rma.customerQuoteId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {rma.customerQuote}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/quotes/${rma.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {rma.customerQuote}
+                                                    </Link>
+                                                ) : rma.customerQuote
                                             ) : rma.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }} title={rma.customerOrder}>
                                             {rma.customerOrderId ? (
-                                                <Link href={`/orders/${rma.customerOrderId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {rma.customerOrder}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/orders/${rma.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {rma.customerOrder}
+                                                    </Link>
+                                                ) : rma.customerOrder
                                             ) : rma.customerOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.rmaType }} title={rma.rmaType}>{rma.rmaType}</td>

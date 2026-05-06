@@ -9,6 +9,7 @@ import { formatDate } from "@/lib/utils/formatting";
 
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import Link from 'next/link';
+import { useUserSession } from "@/components/UserSessionContext";
 
 interface DebitMemo {
     Id: string;
@@ -43,6 +44,8 @@ const ITEMS_PER_PAGE = 10;
 
 export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const { user, selectedAccount } = useUserSession();
+    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
 
     // Map data for sorting
     const mappedData = useMemo(() => debitMemos.map(d => ({
@@ -127,30 +130,46 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Supplier_Bill_Name || '-'}>
                                     {d.Supplier_Bill__c ? (
-                                        <Link href={`/supplier-bills/${d.Supplier_Bill__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                            {d.Supplier_Bill_Name || 'View Bill'}
-                                        </Link>
+                                        !isManufacturer ? (
+                                            <Link href={`/supplier-bills/${d.Supplier_Bill__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {d.Supplier_Bill_Name || 'View Bill'}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{d.Supplier_Bill_Name || 'View Bill'}</span>
+                                        )
                                     ) : d.Supplier_Bill_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Purchase_Order_Name || '-'}>
                                     {d.Purchase_Order__c ? (
-                                        <Link href={`/purchase-orders/${d.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                            {d.Purchase_Order_Name || 'View PO'}
-                                        </Link>
+                                        !isManufacturer ? (
+                                            <Link href={`/purchase-orders/${d.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {d.Purchase_Order_Name || 'View PO'}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{d.Purchase_Order_Name || 'View PO'}</span>
+                                        )
                                     ) : d.Purchase_Order_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Quote_Name || '-'}>
                                     {d.Customer_Quote__c ? (
-                                        <Link href={`/quotes/${d.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                            {d.Customer_Quote_Name || 'View Quote'}
-                                        </Link>
+                                        !isManufacturer ? (
+                                            <Link href={`/quotes/${d.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {d.Customer_Quote_Name || 'View Quote'}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{d.Customer_Quote_Name || 'View Quote'}</span>
+                                        )
                                     ) : d.Customer_Quote_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Order_Name || '-'}>
                                     {d.Customer_Order__c ? (
-                                        <Link href={`/orders/${d.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                            {d.Customer_Order_Name || 'View Order'}
-                                        </Link>
+                                        !isManufacturer ? (
+                                            <Link href={`/orders/${d.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {d.Customer_Order_Name || 'View Order'}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{d.Customer_Order_Name || 'View Order'}</span>
+                                        )
                                     ) : d.Customer_Order_Name || '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Supplier_Credit_Memo__c || '-'}>

@@ -691,7 +691,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             <div className="w-full lg:flex-1 min-w-0">
               <QuoteTabs
                 activeTab={activeTab}
-                accountType={selectedAccount?.Account_Type__c}
+                accountType={selectedAccount?.Account_Record_Type__c || selectedAccount?.Account_Type__c || user?.role}
                 onTabChange={(tab) => {
                   setActiveTab(tab);
                   if (['fulfillment', 'purchases', 'returns', 'files'].includes(tab)) {
@@ -740,7 +740,9 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
                 loading={tabLoading}
               />
             )}
-            {activeTab === 'purchases' && selectedAccount?.Account_Type__c !== 'Customer' && selectedAccount?.Account_Type__c !== 'NSO' && (
+            {activeTab === 'purchases' && 
+              (selectedAccount?.Account_Record_Type__c?.toLowerCase() !== 'customer' && selectedAccount?.Account_Type__c?.toLowerCase() !== 'customer' && user?.role?.toLowerCase() !== 'customer') && 
+              (selectedAccount?.Account_Record_Type__c?.toLowerCase() !== 'nso' && selectedAccount?.Account_Type__c?.toLowerCase() !== 'nso' && user?.role?.toLowerCase() !== 'nso') && (
               <QuotePurchasesTab
                 quoteId={id}
                 data={purchasesData}
@@ -750,7 +752,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             {activeTab === 'returns' && (
               <QuoteReturnsTab
                 quoteId={id}
-                accountType={selectedAccount?.Account_Type__c}
+                accountType={selectedAccount?.Account_Record_Type__c || selectedAccount?.Account_Type__c || user?.role}
                 data={returnsData}
                 loading={tabLoading}
               />

@@ -186,6 +186,8 @@ export default function OrdersPage() {
   // Sorting
   const { items: sortedOrders, requestSort, sortConfig } = useSortableData(filteredAndSearchedOrders);
 
+  const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+
   // pagination calculations
   const totalPages = Math.max(1, Math.ceil(sortedOrders.length / ITEMS_PER_PAGE));
   const paginatedOrders = useMemo(() => {
@@ -806,9 +808,13 @@ export default function OrdersPage() {
                       </td>
                       <td className="px-3 py-2 truncate text-gray-600 dark:text-white font-medium ">
                         {order.proposal_id && order.proposal_id !== '' ? (
-                          <Link href={`/proposals/${order.proposal_id}`} target="_blank" className="text-sm font-semibold text-primary hover:underline truncate">
-                            {order.proposal_name}
-                          </Link>
+                          !isManufacturer ? (
+                            <Link href={`/proposals/${order.proposal_id}`} target="_blank" className="text-sm font-semibold text-primary hover:underline truncate">
+                              {order.proposal_name}
+                            </Link>
+                          ) : (
+                            <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{order.proposal_name}</div>
+                          )
                         ) : (
                           <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{order.proposal_name}</div>
                         )}

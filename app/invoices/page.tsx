@@ -157,6 +157,8 @@ export default function InvoicesPage() {
   // Sorting
   const { items: sortedInvoices, requestSort, sortConfig } = useSortableData<Invoice>(filteredInvoices, { key: 'invoiceNumber', direction: 'desc' });
 
+  const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+
   // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedInvoices.length / ITEMS_PER_PAGE));
   const paginatedInvoices = useMemo(() => {
@@ -523,13 +525,17 @@ export default function InvoicesPage() {
                         <td className="px-3 py-2 truncate">
                           <div>
                             {invoice.purchaseOrderId ? (
-                              <Link
-                                href={`/purchase-orders/${invoice.purchaseOrderId}`}
-                                className="text-primary font-medium hover:underline"
-                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                              >
-                                {invoice.purchaseOrderNumber || 'N/A'}
-                              </Link>
+                              !isManufacturer ? (
+                                <Link
+                                  href={`/purchase-orders/${invoice.purchaseOrderId}`}
+                                  className="text-primary font-medium hover:underline"
+                                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                                >
+                                  {invoice.purchaseOrderNumber || 'N/A'}
+                                </Link>
+                              ) : (
+                                <span className="font-medium">{invoice.purchaseOrderNumber || 'N/A'}</span>
+                              )
                             ) : (
                               invoice.purchaseOrderNumber || 'N/A'
                             )}
@@ -538,14 +544,18 @@ export default function InvoicesPage() {
                         <td className="px-3 py-2 truncate">
                           <div>
                             {invoice.proposalId ? (
-                              <Link
-                                href={`/proposals/${invoice.proposalId}`}
-                                target="_blank"
-                                className="text-primary hover:underline font-medium"
-                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                              >
-                                {invoice.proposalName || 'N/A'}
-                              </Link>
+                              !isManufacturer ? (
+                                <Link
+                                  href={`/proposals/${invoice.proposalId}`}
+                                  target="_blank"
+                                  className="text-primary hover:underline font-medium"
+                                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                                >
+                                  {invoice.proposalName || 'N/A'}
+                                </Link>
+                              ) : (
+                                <span className="font-medium">{invoice.proposalName || 'N/A'}</span>
+                              )
                             ) : (
                               invoice.proposalName || 'N/A'
                             )}
@@ -554,14 +564,18 @@ export default function InvoicesPage() {
                         <td className="px-3 py-2 truncate">
                           <div>
                             {invoice.customerOrderId ? (
-                              <Link
-                                href={`/orders/${invoice.customerOrderId}`}
-                                target="_blank"
-                                className="text-primary hover:underline font-medium"
-                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                              >
-                                {invoice.customerOrder || 'N/A'}
-                              </Link>
+                              !isManufacturer ? (
+                                <Link
+                                  href={`/orders/${invoice.customerOrderId}`}
+                                  target="_blank"
+                                  className="text-primary hover:underline font-medium"
+                                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                                >
+                                  {invoice.customerOrder || 'N/A'}
+                                </Link>
+                              ) : (
+                                <span className="font-medium">{invoice.customerOrder || 'N/A'}</span>
+                              )
                             ) : (
                               invoice.customerOrder || 'N/A'
                             )}

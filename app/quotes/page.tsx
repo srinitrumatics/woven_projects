@@ -144,6 +144,8 @@ export default function QuotesPage() {
   // Sorting
   const { items: sortedQuotes, requestSort, sortConfig } = useSortableData<Quote>(filteredAndSearchedQuotes, { key: 'quoteNumber', direction: 'desc' });
 
+  const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+
   // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedQuotes.length / ITEMS_PER_PAGE));
   const paginatedQuotes = useMemo(() => {
@@ -492,50 +494,62 @@ export default function QuotesPage() {
                       </td>
                       <td className="px-3 py-2  text-left truncate">
                         {quote.proposalId && quote.proposalName !== 'N/A' ? (
-                          <Link
-                            href={`/proposals/${quote.proposalId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm font-medium text-primary hover:underline"
-                            title={quote.proposalName}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {quote.proposalName}
-                          </Link>
+                          !isManufacturer ? (
+                            <Link
+                              href={`/proposals/${quote.proposalId}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm font-medium text-primary hover:underline"
+                              title={quote.proposalName}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {quote.proposalName}
+                            </Link>
+                          ) : (
+                            <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{quote.proposalName}</div>
+                          )
                         ) : (
-                          <div className="text-sm text-gray-900 dark:text-white font-medium"title={quote.proposalName}>{quote.proposalName}</div>
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{quote.proposalName}</div>
                         )}
                       </td>
                       <td className="px-3 py-2  text-left truncate">
                         {quote.customerOrderId && quote.customerOrder !== 'N/A' ? (
-                          <Link
-                            href={`/orders/${quote.customerOrderId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm font-medium text-primary hover:underline"
-                            title={quote.customerOrder}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {quote.customerOrder}
-                          </Link>
+                          !isManufacturer ? (
+                            <Link
+                              href={`/orders/${quote.customerOrderId}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm font-medium text-primary hover:underline"
+                              title={quote.customerOrder}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {quote.customerOrder}
+                            </Link>
+                          ) : (
+                            <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerOrder}>{quote.customerOrder}</div>
+                          )
                         ) : (
-                          <div className="text-sm text-gray-900 dark:text-white font-medium"title={quote.customerOrder}>{quote.customerOrder}</div>
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerOrder}>{quote.customerOrder}</div>
                         )}
                       </td>
                       <td className="px-3 py-2  text-left truncate">
                         {quote.purchaseOrderId && quote.customerPO !== 'N/A' ? (
-                          <Link
-                            href={`/purchase-orders/${quote.purchaseOrderId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm font-medium text-primary hover:underline"
-                            title={quote.customerPO}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {quote.customerPO}
-                          </Link>
+                          !isManufacturer ? (
+                            <Link
+                              href={`/purchase-orders/${quote.purchaseOrderId}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm font-medium text-primary hover:underline"
+                              title={quote.customerPO}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {quote.customerPO}
+                            </Link>
+                          ) : (
+                            <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerPO}>{quote.customerPO}</div>
+                          )
                         ) : (
-                          <div className="text-sm text-gray-900 dark:text-white font-medium"title={quote.customerPO}>{quote.customerPO}</div>
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerPO}>{quote.customerPO}</div>
                         )}
                       </td>
                       <td className="px-3 py-2 truncate">

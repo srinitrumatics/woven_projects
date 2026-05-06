@@ -3,7 +3,8 @@ import { SortableHeader } from"@/components/ui/SortableHeader";
 import { formatCurrency, formatDate } from"@/lib/utils/formatting";
 import Link from"next/link";
 import Pagination from"@/components/ui/Pagination";
-import { useState, useMemo } from"react";
+import { useState, useMemo } from "react";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -29,6 +30,8 @@ export default function QuoteInvoicesSubTab({
     onResize
 }: QuoteInvoicesSubTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const { user, selectedAccount } = useUserSession();
+    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteInvoice);
 
@@ -99,16 +102,20 @@ export default function QuoteInvoicesSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {invoice.customerQuoteId ? (
-                                                <Link href={`/quotes/${invoice.customerQuoteId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {invoice.customerQuote}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/quotes/${invoice.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {invoice.customerQuote}
+                                                    </Link>
+                                                ) : invoice.customerQuote
                                             ) : invoice.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {invoice.customerOrderId ? (
-                                                <Link href={`/orders/${invoice.customerOrderId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {invoice.customerOrder}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/orders/${invoice.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {invoice.customerOrder}
+                                                    </Link>
+                                                ) : invoice.customerOrder
                                             ) : invoice.customerOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{invoice.customerPO}</td>

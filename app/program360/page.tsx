@@ -31,6 +31,7 @@ interface StatItem {
 export default function Program360Page() {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const { selectedAccount, user } = useUserSession();
+  const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -196,7 +197,7 @@ export default function Program360Page() {
   ];
 
   const quickActions = [
-    { label: "view Orders", icon: ShoppingBag, bgColor: "bg-blue-50 dark:bg-blue-900/20", textColor: "text-blue-700 dark:text-blue-400", borderColor: "border-blue-100 dark:border-blue-800/50", href: "/orders" },
+    { label: "View Orders", icon: ShoppingBag, bgColor: "bg-blue-50 dark:bg-blue-900/20", textColor: "text-blue-700 dark:text-blue-400", borderColor: "border-blue-100 dark:border-blue-800/50", href: "/orders" },
     { label: "View Proposals", icon: FileText, bgColor: "bg-green-50 dark:bg-green-900/20", textColor: "text-green-700 dark:text-green-400", borderColor: "border-green-100 dark:border-green-800/50", href: "/proposals" },
     { label: "View Quotes", icon: ClipboardList, bgColor: "bg-purple-50 dark:bg-purple-900/20", textColor: "text-purple-700 dark:text-purple-400", borderColor: "border-purple-100 dark:border-purple-800/50", href: "/quotes" },
     { label: "Track Shipments", icon: Truck, bgColor: "bg-orange-50 dark:bg-orange-900/20", textColor: "text-orange-700 dark:text-orange-400", borderColor: "border-orange-100 dark:border-orange-800/50", href: "/shipments" },
@@ -246,7 +247,7 @@ export default function Program360Page() {
         customerPo: item.Customer_PO__c || "N/A",
         info: item.Expiration_Date__c ? `Expires: ${item.Expiration_Date__c}` : `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
-        pillClass: item.Status__c === 'Expiring' ? "bg-[#fff7ed] text-[#9a3412]" : "bg-[#f9fafb] text-[#4b5563]"
+        pillClass: item.Status__c === 'Expiring' ? "bg-[#fff7ed] text-[#9a3412]" : "bg-[#edf7ee] text-[#05630b]"
       })),
       footer: "View all submitted quotes"
     },
@@ -348,13 +349,21 @@ export default function Program360Page() {
                 <div className="p-5 space-y-5 flex-grow">
                   {col.items.map((item: any, i: number) => (
                     <div key={i} className="group cursor-pointer">
-                      <Link href={item.href}>
-                        <div className="text-[13px] font-bold text-blue-600 hover:underline mb-1 flex items-center gap-1">
+                      {!isManufacturer ? (
+                        <Link href={item.href}>
+                          <div className="text-[13px] font-bold text-blue-600 hover:underline mb-1 flex items-center gap-1">
+                            {item.id}
+                          </div>
+                        </Link>
+                      ) : (
+                        <div className="text-[13px] font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-1">
                           {item.id}
                         </div>
-                      </Link>
-                      <div className="text-[11px] text-gray-400 mb-1">{item.info}</div>
-                      <div className="text-[11px] text-gray-500 mb-2">PO: {item.customerPo}</div>
+                      )}
+                      <div className="text-[11px] text-gray-400 mb-1">
+                        {['Invoices', 'Shipments'].includes(col.title) ? item.info : `Total Price: ${item.info}`}
+                      </div>
+                      <div className="text-[11px] text-gray-500 mb-2">Customer PO: {item.customerPo}</div>
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold  ${item.pillClass}`}>
                         {item.status}
                       </span>
@@ -375,7 +384,7 @@ export default function Program360Page() {
         {/* Invoice Spend Section */}
         <div className="bg-white dark:bg-slate-900/50 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-slate-800 space-y-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <h2 className="text-[14px] font-bold text-gray-900 dark:text-white">Invoice spend — rolling 12 months</h2>
+            <h2 className="text-[14px] font-bold text-gray-900 dark:text-white">Invoice Spend — Rolling 12 Months</h2>
             <div className="flex items-center gap-6 text-[13px] font-semibold font-sans">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full" style={{ background: "#3b82f6" }}></div>
@@ -385,7 +394,6 @@ export default function Program360Page() {
                 <div className="w-2 h-2 rounded-full" style={{ background: "#fbbf24" }}></div>
                 <span className="text-gray-600 dark:text-gray-400">Outstanding</span>
               </div>
-              <button className="text-blue-600 hover:underline text-sm font-sans">Full report</button>
             </div>
           </div>
 

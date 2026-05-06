@@ -17,7 +17,7 @@ interface QuoteTabsProps {
 }
 
 export default function QuoteTabs({ activeTab, onTabChange, accountType, counts = {} }: QuoteTabsProps) {
-    const isCustomerOrNSO = accountType === 'Customer' || accountType === 'NSO';
+    const isCustomerOrNSO = accountType?.toLowerCase() === 'customer' || accountType?.toLowerCase() === 'nso';
 
     const tabs: { id: QuoteTabType; label: string; count?: number }[] = (([
         { id: "quotelines", label: "Quote Lines", count: counts.quotelines },

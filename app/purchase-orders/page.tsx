@@ -171,6 +171,8 @@ export default function PurchaseOrdersPage() {
 
     const { items: sortedPOs, requestSort, sortConfig } = useSortableData<PurchaseOrder>(filteredPOs, { key: 'name', direction: 'desc' });
 
+    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+
     // Pagination
     const totalPages = Math.max(1, Math.ceil(sortedPOs.length / ITEMS_PER_PAGE));
     const paginatedPOs = useMemo(() => {
@@ -305,45 +307,65 @@ export default function PurchaseOrdersPage() {
                                             <td className="px-2 py-2 truncate" title={po.status}><StatusBadge status={po.status} /></td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.proposalName || '-'}>
                                                 {po.proposalId ? (
-                                                    <Link href={`/proposals/${po.proposalId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
-                                                        {po.proposalName || 'View Proposal'}
-                                                    </Link>
+                                                    !isManufacturer ? (
+                                                        <Link href={`/proposals/${po.proposalId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                                            {po.proposalName || 'View Proposal'}
+                                                        </Link>
+                                                    ) : (
+                                                        <span className="font-medium">{po.proposalName || '-'}</span>
+                                                    )
                                                 ) : (
                                                     po.proposalName || '-'
                                                 )}
                                             </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerOrderName || '-'}>
                                                 {po.customerOrderId ? (
-                                                    <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                                        {po.customerOrderName || 'View Order'}
-                                                    </Link>
+                                                    !isManufacturer ? (
+                                                        <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                            {po.customerOrderName || 'View Order'}
+                                                        </Link>
+                                                    ) : (
+                                                        <span className="font-medium">{po.customerOrderName || '-'}</span>
+                                                    )
                                                 ) : (
                                                     po.customerOrderName || '-'
                                                 )}
                                             </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerPO || '-'}>
                                                 {po.customerOrderId ? (
-                                                    <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                                        {po.customerPO || po.customerOrderName || 'View Order'}
-                                                    </Link>
+                                                    !isManufacturer ? (
+                                                        <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                            {po.customerPO || po.customerOrderName || 'View Order'}
+                                                        </Link>
+                                                    ) : (
+                                                        <span className="font-medium">{po.customerPO || po.customerOrderName || '-'}</span>
+                                                    )
                                                 ) : (
                                                     po.customerPO || '-'
                                                 )}
                                             </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerQuoteName || '-'}>
                                                 {po.customerQuoteId ? (
-                                                    <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                                        {po.customerQuoteName || 'View Quote'}
-                                                    </Link>
+                                                    !isManufacturer ? (
+                                                        <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                            {po.customerQuoteName || 'View Quote'}
+                                                        </Link>
+                                                    ) : (
+                                                        <span className="font-medium">{po.customerQuoteName || '-'}</span>
+                                                    )
                                                 ) : (
                                                     po.customerQuoteName || '-'
                                                 )}
                                             </td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.shipmentName || '-'}>
                                                 {po.shipmentId ? (
-                                                    <Link href={`/shipments/${po.shipmentId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                                        {po.shipmentName || 'View Shipment'}
-                                                    </Link>
+                                                    !isManufacturer ? (
+                                                        <Link href={`/shipments/${po.shipmentId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                            {po.shipmentName || 'View Shipment'}
+                                                        </Link>
+                                                    ) : (
+                                                        <span className="font-medium">{po.shipmentName || '-'}</span>
+                                                    )
                                                 ) : (
                                                     po.shipmentName || '-'
                                                 )}

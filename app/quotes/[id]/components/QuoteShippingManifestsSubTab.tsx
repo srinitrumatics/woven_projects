@@ -3,7 +3,8 @@ import { SortableHeader } from"@/components/ui/SortableHeader";
 import { formatCurrency, formatDate } from"@/lib/utils/formatting";
 import Link from"next/link";
 import Pagination from"@/components/ui/Pagination";
-import { useState, useMemo } from"react";
+import { useState, useMemo } from "react";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -29,6 +30,8 @@ export default function QuoteShippingManifestsSubTab({
     onResize
 }: QuoteShippingManifestsSubTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const { user, selectedAccount } = useUserSession();
+    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteShippingManifest);
 
@@ -102,16 +105,20 @@ export default function QuoteShippingManifestsSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {manifest.customerQuoteId ? (
-                                                <Link href={`/quotes/${manifest.customerQuoteId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {manifest.customerQuote}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/quotes/${manifest.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {manifest.customerQuote}
+                                                    </Link>
+                                                ) : manifest.customerQuote
                                             ) : manifest.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {manifest.customerOrderId ? (
-                                                <Link href={`/orders/${manifest.customerOrderId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {manifest.customerOrder}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/orders/${manifest.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {manifest.customerOrder}
+                                                    </Link>
+                                                ) : manifest.customerOrder
                                             ) : manifest.customerOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{manifest.customerPO}</td>

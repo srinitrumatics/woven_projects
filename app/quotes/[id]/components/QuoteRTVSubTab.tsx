@@ -3,7 +3,8 @@ import { SortableHeader } from"@/components/ui/SortableHeader";
 import { formatCurrency, formatDate } from"@/lib/utils/formatting";
 import Link from"next/link";
 import Pagination from"@/components/ui/Pagination";
-import { useState, useMemo } from"react";
+import { useState, useMemo } from "react";
+import { useUserSession } from "@/components/UserSessionContext";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -29,6 +30,8 @@ export default function QuoteRTVSubTab({
     onResize
 }: QuoteRTVSubTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const { user, selectedAccount } = useUserSession();
+    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteRTV);
 
@@ -90,23 +93,29 @@ export default function QuoteRTVSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
                                             {rtv.purchaseOrderId ? (
-                                                <Link href={`/purchase-orders/${rtv.purchaseOrderId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {rtv.purchaseOrder}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/purchase-orders/${rtv.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {rtv.purchaseOrder}
+                                                    </Link>
+                                                ) : rtv.purchaseOrder
                                             ) : rtv.purchaseOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {rtv.customerQuoteId ? (
-                                                <Link href={`/quotes/${rtv.customerQuoteId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {rtv.customerQuote}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/quotes/${rtv.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {rtv.customerQuote}
+                                                    </Link>
+                                                ) : rtv.customerQuote
                                             ) : rtv.customerQuote}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {rtv.customerOrderId ? (
-                                                <Link href={`/orders/${rtv.customerOrderId}`} target="_blank"className="text-primary hover:underline font-medium">
-                                                    {rtv.customerOrder}
-                                                </Link>
+                                                !isManufacturer ? (
+                                                    <Link href={`/orders/${rtv.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {rtv.customerOrder}
+                                                    </Link>
+                                                ) : rtv.customerOrder
                                             ) : rtv.customerOrder}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.rtvType }}>{rtv.rtvType}</td>

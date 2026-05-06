@@ -8,8 +8,8 @@ import {
   useInfiniteHits,
   useSearchBox,
   useRefinementList,
+  useClearRefinements,
   RefinementList,
-  ClearRefinements,
   CurrentRefinements
 } from "react-instantsearch";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
@@ -24,12 +24,27 @@ const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY || ""
 );
 
+function CustomClearButton({ onClear }: { onClear: () => void }) {
+  const { canRefine, refine } = useClearRefinements();
+  return (
+    <button
+      onClick={() => { refine(); onClear(); }}
+      disabled={!canRefine}
+      className={`text-sm font-medium transition-colors ${canRefine ? 'text-primary hover:text-primary-dark cursor-pointer' : 'text-gray-400 cursor-not-allowed'}`}
+    >
+      Clear all
+    </button>
+  );
+}
+
 function Content() {
   const [viewMode, setViewMode] = useState<'list' | 'card'>('card');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const { selectedAccount } = useUserSession();
   const accountCategory = getCategoryFromAccountType(selectedAccount?.Account_Record_Type__c);
   const isCustomer = accountCategory === 'Customer';
+  const { user } = useUserSession();
+  const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
   const filters = isCustomer ? '_tags:Available' : '';
 
   // Search Box Hook
@@ -67,7 +82,7 @@ function Content() {
     <div className="flex flex-col lg:flex-row gap-6 min-w-0">
       <Configure
         hitsPerPage={9}
-        facets={['category', 'genre', 'Availability_Status__c', 'availability_status']}
+        facets={['category', 'genre', 'product_availability', 'availability_status']}
         maxValuesPerFacet={200}
         filters={filters}
       />
@@ -75,17 +90,8 @@ function Content() {
       <aside className="lg:w-64 flex-shrink-0">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sticky top-6">
           <div className="flex items-center justify-between mb-4 min-w-0">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white ">Filters</h2>
-            <ClearRefinements
-              classNames={{
-                root: "",
-                button: "text-sm text-primary hover:text-primary-dark font-medium",
-                disabledButton: "text-gray-400 cursor-not-allowed"
-              }}
-              translations={{
-                resetButtonText: "Clear all"
-              }}
-            />
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Filters</h2>
+            <CustomClearButton onClear={() => setQuery('')} />
           </div>
 
           {/* Category Filter */}
@@ -93,12 +99,13 @@ function Content() {
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 ">Category</h3>
             <RefinementList
               attribute="category"
+              operator="or"
               limit={5}
               showMore={true}
               showMoreLimit={200}
               classNames={{
                 root: "",
-                noRefinementRoot: "hidden",
+                noRefinementRoot: "",
                 list: "space-y-2",
                 item: "flex items-center",
                 selectedItem: "font-medium",
@@ -117,34 +124,37 @@ function Content() {
             />
           </div>
 
-          {/* Availability Filter */}
-          <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 ">Availability</h3>
-            <RefinementList
-              attribute="Availability_Status__c"
-              limit={5}
-              showMore={true}
-              showMoreLimit={200}
-              classNames={{
-                root: "",
-                noRefinementRoot: "hidden",
-                list: "space-y-2",
-                item: "flex items-center",
-                selectedItem: "font-medium",
-                label: "flex items-center cursor-pointer w-full group",
-                checkbox: "w-4 h-4 text-primary border-gray-300 dark:border-gray-600 rounded focus:ring-primary dark:focus:ring-primary cursor-pointer",
-                labelText: "ml-2 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white flex-1",
-                count: "ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full",
-                showMore: "mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer w-full text-left",
-                disabledShowMore: "hidden"
-              }}
-              translations={{
-                showMoreButtonText({ isShowingMore }) {
-                  return isShowingMore ? 'Show less' : 'Show more';
-                }
-              }}
-            />
-          </div>
+          {/* Availability Filter – only visible to Manufacturer/Hybrid users */}
+          {!isCustomer && (
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Availability</h3>
+              <RefinementList
+                attribute="product_availability"
+                operator="or"
+                limit={5}
+                showMore={true}
+                showMoreLimit={200}
+                classNames={{
+                  root: "",
+                  noRefinementRoot: "",
+                  list: "space-y-2",
+                  item: "flex items-center",
+                  selectedItem: "font-medium",
+                  label: "flex items-center cursor-pointer w-full group",
+                  checkbox: "w-4 h-4 text-primary border-gray-300 dark:border-gray-600 rounded focus:ring-primary dark:focus:ring-primary cursor-pointer",
+                  labelText: "ml-2 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white flex-1",
+                  count: "ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full",
+                  showMore: "mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer w-full text-left",
+                  disabledShowMore: "hidden"
+                }}
+                translations={{
+                  showMoreButtonText({ isShowingMore }) {
+                    return isShowingMore ? 'Show less' : 'Show more';
+                  }
+                }}
+              />
+            </div>
+          )}
 
           {/* Type Filter */}
           {/*<div className="mb-6">
@@ -252,9 +262,9 @@ function Content() {
 
         {/* Render products based on viewMode */}
         {viewMode === 'card' ? (
-          <CardView products={products} />
+          <CardView products={products} isManufacturer={isManufacturer} />
         ) : (
-          <ListView products={products} />
+          <ListView products={products} isManufacturer={isManufacturer} />
         )}
 
         {/* Infinite Scroll Sentinel */}
@@ -320,9 +330,10 @@ export default function ProductClientPage() {
 
 interface ViewProps {
   products: Product[];
+  isManufacturer?: boolean;
 }
 
-const CardView = ({ products }: ViewProps) => (
+const CardView = ({ products, isManufacturer }: ViewProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {products.length === 0 ? (
       <div key="no-matches" className="col-span-full text-center py-12 text-gray-500 dark:text-gray-400">
@@ -339,12 +350,8 @@ const CardView = ({ products }: ViewProps) => (
         const listPrice = product.listPrice || 0;
         const category = p.category || product.productFamily || product.manufacturer || "Product";
 
-        return (
-          <Link
-            href={`/products/${p.objectID || product.id}`}
-            key={p.objectID || product.id}
-            className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer"
-          >
+        const content = (
+          <div className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer">
             <div className="relative aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden">
               {thumbnail ? (
                 <img
@@ -374,12 +381,6 @@ const CardView = ({ products }: ViewProps) => (
                 <h3 className="text-base text-sm font-bold text-gray-900 dark:text-white min-w-200px truncate group-hover:text-primary transition-colors " title={product.name}>
                   {product.name}
                 </h3>
-                {p.product_availability && (
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider whitespace-nowrap ${p.product_availability === 'Available' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                    }`}>
-                    {p.product_availability}
-                  </span>
-                )}
               </div>
 
               <p className="text-sm text-gray-600 dark:text-gray-400 min-w-200px truncate mb-3" title={product.description}>
@@ -399,23 +400,39 @@ const CardView = ({ products }: ViewProps) => (
                 </div>*/}
                 <button
                   disabled={product.availableQty <= 0}
-                  className={`w-full mt-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors truncate ${product.availableQty <= 0
+                  className={`w-full mt-2 px-2 py-1.5 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-1 ${product.availableQty <= 0
                     ? "bg-gray-400 cursor-not-allowed text-white opacity-70"
                     : "bg-primary hover:bg-primary-dark text-white"
                     }`}
                 >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 20 20" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
                   {product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
                 </button>
               </div>
             </div>
+          </div>
+        );
+
+        return !isManufacturer ? (
+          <Link
+            href={`/products/${p.objectID || product.id}`}
+            key={p.objectID || product.id}
+          >
+            {content}
           </Link>
+        ) : (
+          <div key={p.objectID || product.id}>
+            {content}
+          </div>
         );
       })
     )}
   </div>
 );
 
-const ListView = ({ products }: ViewProps) => (
+const ListView = ({ products, isManufacturer }: ViewProps) => (
   <div className="overflow-x-auto">
     <table className="w-full">
       <thead className="bg-primary-light dark:bg-gray-900">
@@ -426,7 +443,6 @@ const ListView = ({ products }: ViewProps) => (
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }}>Description</th>
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">List Price</th>
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Selling Price</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Availability</th>
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Action</th>
         </tr>
       </thead>
@@ -447,21 +463,38 @@ const ListView = ({ products }: ViewProps) => (
             return (
               <tr key={p.objectID || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group">
                 <td className="px-4 py-3 truncate">
-                  <Link href={`/products/${p.objectID || product.id}`} className="block">
+                  {!isManufacturer ? (
+                    <Link href={`/products/${p.objectID || product.id}`} className="block">
+                      <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden">
+                        {thumbnail ? (
+                          <img src={thumbnail} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                        ) : (
+                          <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                        )}
+                      </div>
+                    </Link>
+                  ) : (
                     <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden">
                       {thumbnail ? (
-                        <img src={thumbnail} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                        <img src={thumbnail} alt={product.name} className="w-full h-full object-cover" />
                       ) : (
                         <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                       )}
                     </div>
-                  </Link>
+                  )}
                 </td>
                 <td className="px-4 py-3" style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }}>
-                  <Link href={`/products/${p.objectID || product.id}`} className="block overflow-hidden" title={product.name}>
-                    <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">{product.name}</div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">{product.sku}</div>
-                  </Link>
+                  {!isManufacturer ? (
+                    <Link href={`/products/${p.objectID || product.id}`} className="block overflow-hidden" title={product.name}>
+                      <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">{product.name}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">{product.sku}</div>
+                    </Link>
+                  ) : (
+                    <div className="block overflow-hidden" title={product.name}>
+                      <div className="text-sm font-bold text-gray-900 dark:text-white truncate">{product.name}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">{product.sku}</div>
+                    </div>
+                  )}
                 </td>
                 <td className="px-4 py-3 truncate">
                   <div className="line-clamp-2" title={category}>
@@ -469,25 +502,20 @@ const ListView = ({ products }: ViewProps) => (
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }} title={product.description}>{product.description}</td>
-                <td className="px-4 py-3 text-sm text-right text-gray-500 dark:text-gray-400 line-through truncate">{formatCurrency(listPrice)}</td>
-                <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(sellingPrice)}</td>
-                <td className="px-4 py-3 text-left truncate">
-                  {p.product_availability && (
-                    <span className={`px-2 py-1 text-[10px] font-bold rounded-full uppercase tracking-wide ${p.product_availability === 'Available' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                      }`}>
-                      {p.product_availability}
-                    </span>
-                  )}
-                </td>
+                <td className="px-4 py-3 text-sm  text-gray-500 dark:text-gray-400 line-through truncate">{formatCurrency(listPrice)}</td>
+                <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(sellingPrice)}</td>
                 <td className="px-4 py-3 text-left truncate">
                   <button
                     disabled={product.availableQty <= 0}
-                    className={`px-4 py-1.5 rounded transition-colors text-sm font-medium whitespace-nowrap truncate ${product.availableQty <= 0
-                      ? "bg-gray-300 cursor-not-allowed text-gray-500"
+                    title={product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
+                    className={`p-2 rounded-lg transition-colors ${product.availableQty <= 0
+                      ? "bg-gray-100 dark:bg-gray-700 cursor-not-allowed text-gray-400"
                       : "bg-primary text-white hover:bg-primary-dark"
                       }`}
                   >
-                    {product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
                   </button>
                 </td>
               </tr>

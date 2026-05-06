@@ -179,6 +179,8 @@ export default function ShipmentsPage() {
   // Sorting
   const { items: sortedShipments, requestSort, sortConfig } = useSortableData(filteredShipments);
 
+  const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+
   // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedShipments.length / ITEMS_PER_PAGE));
   const paginatedShipments = useMemo(() => {
@@ -514,42 +516,54 @@ export default function ShipmentsPage() {
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                           {shipment.customerQuoteId ? (
-                            <Link
-                              href={`/quotes/${shipment.customerQuoteId}`}
-                              target="_blank"
-                              className="text-primary hover:underline font-medium"
-                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                            >
-                              {shipment.customerQuote || "View Quote"}
-                            </Link>
+                            !isManufacturer ? (
+                              <Link
+                                href={`/quotes/${shipment.customerQuoteId}`}
+                                target="_blank"
+                                className="text-primary hover:underline font-medium"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {shipment.customerQuote || "View Quote"}
+                              </Link>
+                            ) : (
+                              <span className="font-medium">{shipment.customerQuote || " "}</span>
+                            )
                           ) : (
                             shipment.customerQuote || " "
                           )}
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                           {shipment.proposalId ? (
-                            <Link
-                              href={`/proposals/${shipment.proposalId}`}
-                              target="_blank"
-                              className="text-primary hover:underline font-medium"
-                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                            >
-                              {shipment.proposal || "View Proposal"}
-                            </Link>
+                            !isManufacturer ? (
+                              <Link
+                                href={`/proposals/${shipment.proposalId}`}
+                                target="_blank"
+                                className="text-primary hover:underline font-medium"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {shipment.proposal || "View Proposal"}
+                              </Link>
+                            ) : (
+                              <span className="font-medium">{shipment.proposal || " "}</span>
+                            )
                           ) : (
                             shipment.proposal || " "
                           )}
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                           {shipment.customerOrderId ? (
-                            <Link
-                              href={`/orders/${shipment.customerOrderId}`}
-                              target="_blank"
-                              className="text-primary hover:underline font-medium"
-                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                            >
-                              {shipment.customerOrder || "View Order"}
-                            </Link>
+                            !isManufacturer ? (
+                              <Link
+                                href={`/orders/${shipment.customerOrderId}`}
+                                target="_blank"
+                                className="text-primary hover:underline font-medium"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {shipment.customerOrder || "View Order"}
+                              </Link>
+                            ) : (
+                              <span className="font-medium">{shipment.customerOrder || " "}</span>
+                            )
                           ) : (
                             shipment.customerOrder || " "
                           )}
