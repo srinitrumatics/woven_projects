@@ -21,10 +21,15 @@ export async function syncNewProductToPostgresAndAlgolia(
       console.log(`[ProductSync] 🔍 Fetching latest data from Salesforce for ${sfProductId}...`);
       const sfResult = await getProductDetailsFromSalesforce(accountId, contactId, sfProductId, 'product');
 
-      if (sfResult && sfResult.success && sfResult.data) {
-        // If data is an array, take the first item
-        const fetchedData = Array.isArray(sfResult.data) ? sfResult.data[0] : sfResult.data;
+      if (sfResult && (sfResult.success || sfResult.Id || sfResult.product)) {
+        // Handle various response structures (data, product array, or direct object)
+        const fetchedData = 
+          (Array.isArray(sfResult.data) ? sfResult.data[0] : sfResult.data) ||
+          (Array.isArray(sfResult.product) ? sfResult.product[0] : sfResult.product) ||
+          (sfResult.Id ? sfResult : null);
+
         if (fetchedData) {
+          // Merge fetched data over initial data to ensure we have full record
           productData = { ...productData, ...fetchedData };
           console.log(`[ProductSync] 📥 Successfully fetched latest data from Salesforce for ${sfProductId}`);
         }
@@ -49,10 +54,12 @@ export async function syncNewProductToPostgresAndAlgolia(
         gtherp__price__c,
         gtherp__available_quantity__c,
         product_availability__c,
+        gtherp__category__c,
+        gtherp__sub_category__c,
         createddate,
         systemmodstamp
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, COALESCE($11, NOW()), NOW()
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, COALESCE($13, NOW()), NOW()
       )
       ON CONFLICT (sfid) DO UPDATE SET
         name                         = EXCLUDED.name,
@@ -64,6 +71,8 @@ export async function syncNewProductToPostgresAndAlgolia(
         gtherp__price__c             = EXCLUDED.gtherp__price__c,
         gtherp__available_quantity__c = EXCLUDED.gtherp__available_quantity__c,
         product_availability__c      = EXCLUDED.product_availability__c,
+        gtherp__category__c          = EXCLUDED.gtherp__category__c,
+        gtherp__sub_category__c       = EXCLUDED.gtherp__sub_category__c,
         systemmodstamp               = NOW()
       `,
       [
@@ -77,7 +86,9 @@ export async function syncNewProductToPostgresAndAlgolia(
         productData.UnitPrice ?? productData.UnitPrice__c ?? 0, // $8 gtherp__price__c
         productData.Available_To_Sell__c ?? 0,          // $9 gtherp__available_quantity__c
         productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? null, // $10 product_availability__c
-        productData.CreatedDate ?? null,                // $11 createddate
+        productData.gtherp__category__c ?? productData.Category__c ?? null, // $11 gtherp__category__c
+        productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null, // $12 gtherp__sub_category__c
+        productData.CreatedDate ?? null,                // $13 createddate
       ]
     );
 
@@ -111,14 +122,25 @@ export async function syncNewProductToPostgresAndAlgolia(
       discount: 0,
       image_url: productData.image_url ?? null,
       images: productData.images ?? [],
-      category: productData.gtherp__category__c ?? null,
-      sub_category: productData.gtherp__sub_category__c ?? null,
-      family: productData.Family ?? productData.family ?? '',
+      category: productData.gtherp__category__c ?? productData.Category__c ?? null,
+      sub_category: productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null,
+      family: productData.Product_Family__c ?? productData.product_family__c ?? productData.Family ?? productData.family ?? '',
       manufacturer: accountId,
       status: productData.IsActive === false ? 'inactive' : 'active',
       is_active: productData.IsActive === false ? false : true,
       product_availability: productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? '',
-      _tags: [productData.Family, productData.family].filter(Boolean),
+      _tags: [
+        productData.Product_Family__c,
+        productData.product_family__c,
+        productData.Family, 
+        productData.family,
+        productData.Category__c,
+        productData.gtherp__category__c,
+        productData.Sub_Category__c,
+        productData.gtherp__sub_category__c,
+        accountId,
+        productData.Product_Availability__c ?? productData.product_availability__c
+      ].filter(Boolean),
     });
 
     console.log(`[ProductSync] ✅ Algolia direct push succeeded for ${sfProductId}`);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import algoliasearch from "algoliasearch/lite";
+import algoliasearch from "algoliasearch";
 import {
   InstantSearch,
   Configure,
@@ -17,6 +17,7 @@ import { Product } from "../orders/types";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
 import AddProductModal from "./components/AddProductModal";
+import { getCategoryFromAccountType } from "@/lib/permissions";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || "",
@@ -27,8 +28,9 @@ function Content() {
   const [viewMode, setViewMode] = useState<'list' | 'card'>('card');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const { selectedAccount } = useUserSession();
-  const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
-  const isCustomer = accountType === 'Customer' || accountType === 'NSO';
+  const accountCategory = getCategoryFromAccountType(selectedAccount?.Account_Record_Type__c);
+  const isCustomer = accountCategory === 'Customer';
+  const filters = isCustomer ? '_tags:Available' : '';
 
   // Search Box Hook
   const { query, refine: setQuery } = useSearchBox();
@@ -63,6 +65,12 @@ function Content() {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 min-w-0">
+      <Configure
+        hitsPerPage={9}
+        facets={['category', 'genre', 'Availability_Status__c', 'availability_status']}
+        maxValuesPerFacet={200}
+        filters={filters}
+      />
       {/* Filters Sidebar */}
       <aside className="lg:w-64 flex-shrink-0">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sticky top-6">
@@ -85,6 +93,35 @@ function Content() {
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 ">Category</h3>
             <RefinementList
               attribute="category"
+              limit={5}
+              showMore={true}
+              showMoreLimit={200}
+              classNames={{
+                root: "",
+                noRefinementRoot: "hidden",
+                list: "space-y-2",
+                item: "flex items-center",
+                selectedItem: "font-medium",
+                label: "flex items-center cursor-pointer w-full group",
+                checkbox: "w-4 h-4 text-primary border-gray-300 dark:border-gray-600 rounded focus:ring-primary dark:focus:ring-primary cursor-pointer",
+                labelText: "ml-2 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white flex-1",
+                count: "ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full",
+                showMore: "mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer w-full text-left",
+                disabledShowMore: "hidden"
+              }}
+              translations={{
+                showMoreButtonText({ isShowingMore }) {
+                  return isShowingMore ? 'Show less' : 'Show more';
+                }
+              }}
+            />
+          </div>
+
+          {/* Availability Filter */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 ">Availability</h3>
+            <RefinementList
+              attribute="Availability_Status__c"
               limit={5}
               showMore={true}
               showMoreLimit={200}
@@ -276,11 +313,6 @@ export default function ProductClientPage() {
       indexName={indexName}
       future={{ preserveSharedStateOnUnmount: true }}
     >
-      <Configure
-        hitsPerPage={9}
-        facets={['category', 'genre']}
-        maxValuesPerFacet={200}
-      />
       <Content />
     </InstantSearch>
   );
@@ -338,11 +370,19 @@ const CardView = ({ products }: ViewProps) => (
                   {category}
                 </span>
               </div>
-              <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-primary transition-colors ">
-                {product.name}
-              </h3>
+              <div className="flex justify-between items-start gap-2 mb-2">
+                <h3 className="text-base text-sm font-bold text-gray-900 dark:text-white min-w-200px truncate group-hover:text-primary transition-colors " title={product.name}>
+                  {product.name}
+                </h3>
+                {p.product_availability && (
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider whitespace-nowrap ${p.product_availability === 'Available' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                    }`}>
+                    {p.product_availability}
+                  </span>
+                )}
+              </div>
 
-              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3 truncate">
+              <p className="text-sm text-gray-600 dark:text-gray-400 min-w-200px truncate mb-3" title={product.description}>
                 {product.description}
               </p>
 
@@ -386,6 +426,7 @@ const ListView = ({ products }: ViewProps) => (
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }}>Description</th>
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">List Price</th>
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Selling Price</th>
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Availability</th>
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Action</th>
         </tr>
       </thead>
@@ -430,6 +471,14 @@ const ListView = ({ products }: ViewProps) => (
                 <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }} title={product.description}>{product.description}</td>
                 <td className="px-4 py-3 text-sm text-right text-gray-500 dark:text-gray-400 line-through truncate">{formatCurrency(listPrice)}</td>
                 <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(sellingPrice)}</td>
+                <td className="px-4 py-3 text-left truncate">
+                  {p.product_availability && (
+                    <span className={`px-2 py-1 text-[10px] font-bold rounded-full uppercase tracking-wide ${p.product_availability === 'Available' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                      }`}>
+                      {p.product_availability}
+                    </span>
+                  )}
+                </td>
                 <td className="px-4 py-3 text-left truncate">
                   <button
                     disabled={product.availableQty <= 0}

@@ -24,8 +24,9 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
     // Product Header
     name: productToEdit?.Name || "",
     sku: productToEdit?.StockKeepingUnit || "",
-    productCode: productToEdit?.ProductCode || "",
+    productCode: productToEdit?.ProductCode || productToEdit?.productCode || productToEdit?.productcode || productToEdit?.Product_Code__c || productToEdit?.gtherp__Product_Code__c || productToEdit?.gtherp__product_code__c || "",
     family: productToEdit?.Family || "",
+    productFamilyNo: productToEdit?.Product_Family__c || "",
     availabilityStatus: productToEdit?.Availability_Status__c || "Out of Stock",
     availableToSell: productToEdit?.Available_To_Sell__c?.toString() || "0",
 
@@ -142,6 +143,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
         StockKeepingUnit: formData.sku,
         ProductCode: formData.productCode,
         Family: formData.family || "",
+        Product_Family__c: formData.productFamilyNo || "",
         Product_Availability__c: "Available", // Always Draft as per requirements
         Availability_Status__c: formData.availabilityStatus,
         Available_To_Sell__c: Number(formData.availableToSell) || 0,

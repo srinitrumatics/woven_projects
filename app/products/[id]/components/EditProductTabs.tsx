@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import { getCategoryFromAccountType } from "@/lib/permissions";
 import React from 'react';
 import ProductTabs from './ProductTabs';
 import DatasheetModal from './DatasheetModal';
@@ -21,6 +22,25 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [picklists, setPicklists] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("Overview");
+
+  // Permission Logic
+  const accountCategory = getCategoryFromAccountType(selectedAccount?.Account_Record_Type__c);
+  const isCustomer = accountCategory === 'Customer';
+  const isManufacturerOrHybrid = accountCategory === 'Partner' || accountCategory === 'Hybrid';
+  const availability = (productToEdit?.Product_Availability__c || productToEdit?.product_availability__c || '').trim();
+
+  const canEdit = !isCustomer && availability.toLowerCase() !== 'available' && (!isManufacturerOrHybrid || availability.toLowerCase() === 'draft');
+
+  if (!canEdit) {
+    return (
+      <div className="p-8 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-lg border border-red-200 dark:border-red-800 text-center">
+        <h3 className="text-lg font-bold mb-2">Access Denied</h3>
+        <p>You do not have permission to edit this product in its current status ({availability || 'Unknown'}).</p>
+        <button onClick={onClose} className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg">Close</button>
+      </div>
+    );
+  }
+
 
   const [isDatasheetModalOpen, setIsDatasheetModalOpen] = useState(false);
   const [selectedDatasheet, setSelectedDatasheet] = useState<any>(null);
@@ -87,8 +107,9 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
   const [formData, setFormData] = useState<any>({
     name: productToEdit?.Name || "",
     sku: productToEdit?.StockKeepingUnit || "",
-    productCode: productToEdit?.ProductCode || "",
+    productCode: productToEdit?.ProductCode || productToEdit?.productCode || productToEdit?.productcode || productToEdit?.Product_Code__c || productToEdit?.gtherp__Product_Code__c || productToEdit?.gtherp__product_code__c || "",
     family: productToEdit?.Family || "",
+    productFamilyNo: productToEdit?.Product_Family__c || "",
     availabilityStatus: productToEdit?.Availability_Status__c || "Out of Stock",
     availableToSell: productToEdit?.Available_To_Sell__c?.toString() || "0",
     unitPrice: productToEdit?.Unit_Price__c?.toString() || "",
@@ -110,16 +131,74 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
     caseHeightIn: productToEdit?.Case_Height__c?.toString() || "",
     caseNetWeightLbs: productToEdit?.Case_Net_Weight__c?.toString() || "",
     caseGrossWeightLbs: productToEdit?.Case_Gross_Weight__c?.toString() || "",
+    shippingWeightDW139: productToEdit?.Case_DW_139__c?.toString() || "",
+    shippingWeightDW166: productToEdit?.Case_DW_166__c?.toString() || "",
     eccn: productToEdit?.ECCN__c || "",
     htsCode: productToEdit?.HTS_Code__c || "",
     gtin: productToEdit?.GTIN__c || "",
     upc: productToEdit?.UPC__c || "",
+    voltageRating: productToEdit?.Voltage_Rating__c || "",
+    plugType: productToEdit?.Plug_Type__c || "",
+    cordLength: productToEdit?.Cord_Length__c || "",
+    productAvailabilityESG: productToEdit?.product_Availability__c || "",
     energyConsumption: productToEdit?.Energy_Consumption__c?.toString() || "",
     endOfLifeManagement: productToEdit?.End_of_Life_Management__c || "",
     manufacturingProcess: productToEdit?.Manufacturing_Process__c || "",
     packagingMaterials: productToEdit?.Packaging_Materials__c || "",
-    waterUsage: productToEdit?.Water_Usage__c?.toString() || "",
+    productLongevity: productToEdit?.product_Longevity__c || "",
+    productUseEmissions: productToEdit?.product_Use_Emissions__c || "",
+    waterUsage: productToEdit?.Water_Usage__c || "",
   });
+
+  useEffect(() => {
+    if (productToEdit) {
+      setFormData({
+        name: productToEdit?.Name || "",
+        sku: productToEdit?.StockKeepingUnit || "",
+        productCode: productToEdit?.ProductCode || productToEdit?.productCode || productToEdit?.productcode || productToEdit?.Product_Code__c || productToEdit?.gtherp__Product_Code__c || productToEdit?.gtherp__product_code__c || "",
+        family: productToEdit?.Family || "",
+        productFamilyNo: productToEdit?.Product_Family__c || "",
+        availabilityStatus: productToEdit?.Availability_Status__c || "Out of Stock",
+        availableToSell: productToEdit?.Available_To_Sell__c?.toString() || "0",
+        unitPrice: productToEdit?.Unit_Price__c?.toString() || "",
+        listPrice: productToEdit?.List_Price__c?.toString() || "",
+        leadTimeWks: productToEdit?.Lead_Time_Wks__c?.toString() || "",
+        moq: productToEdit?.MOQ__c?.toString() || "",
+        manufacturer: productToEdit?.Manufacturer_Name || "",
+        description: productToEdit?.Description || "",
+        keyFeatures: productToEdit?.Key_Features__c || "",
+        cubicVolumeIn: productToEdit?.Unit_CV_Inches__c?.toString() || "",
+        lengthIn: productToEdit?.Unit_Length__c?.toString() || "",
+        widthIn: productToEdit?.Unit_Width__c?.toString() || "",
+        heightIn: productToEdit?.Unit_Height__c?.toString() || "",
+        netWeightLbs: productToEdit?.Unit_Net_Weight__c?.toString() || "",
+        grossWeightLbs: productToEdit?.Unit_Gross_Weight__c?.toString() || "",
+        caseCubicVolumeIn: productToEdit?.Case_CV_Inches__c?.toString() || "",
+        caseLengthIn: productToEdit?.Case_Length__c?.toString() || "",
+        caseWidthIn: productToEdit?.Case_Width__c?.toString() || "",
+        caseHeightIn: productToEdit?.Case_Height__c?.toString() || "",
+        caseNetWeightLbs: productToEdit?.Case_Net_Weight__c?.toString() || "",
+        caseGrossWeightLbs: productToEdit?.Case_Gross_Weight__c?.toString() || "",
+        shippingWeightDW139: productToEdit?.Case_DW_139__c?.toString() || "",
+        shippingWeightDW166: productToEdit?.Case_DW_166__c?.toString() || "",
+        eccn: productToEdit?.ECCN__c || "",
+        htsCode: productToEdit?.HTS_Code__c || "",
+        gtin: productToEdit?.GTIN__c || "",
+        upc: productToEdit?.UPC__c || "",
+        voltageRating: productToEdit?.Voltage_Rating__c || "",
+        plugType: productToEdit?.Plug_Type__c || "",
+        cordLength: productToEdit?.Cord_Length__c || "",
+        productAvailabilityESG: productToEdit?.product_Availability__c || "",
+        energyConsumption: productToEdit?.Energy_Consumption__c?.toString() || "",
+        endOfLifeManagement: productToEdit?.End_of_Life_Management__c || "",
+        manufacturingProcess: productToEdit?.Manufacturing_Process__c || "",
+        packagingMaterials: productToEdit?.Packaging_Materials__c || "",
+        productLongevity: productToEdit?.product_Longevity__c || "",
+        productUseEmissions: productToEdit?.product_Use_Emissions__c || "",
+        waterUsage: productToEdit?.Water_Usage__c || "",
+      });
+    }
+  }, [productToEdit]);
 
   useEffect(() => {
     const fetchPicklists = async () => {
@@ -171,6 +250,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
         Name: formData.name,
         StockKeepingUnit: formData.sku,
         Family: formData.family || "",
+        Product_Family__c: formData.productFamilyNo || "",
         Product_Availability__c: "Available",
         Lead_Time_Wks__c: Number(formData.leadTimeWks) || 0,
         MOQ__c: Number(formData.moq) || 0,
@@ -307,7 +387,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
               <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
                 {renderField("Product Name", "name", "text", [], true)}
                 {renderField("SKU", "sku", "text", [], true, false)}
-                {renderField("Product Code", "productCode", "text", [], false, false)}
+                {renderField("Product Code", "productCode", "text", [], false, true)}
                 {renderField("Product Family", "family", "select", picklists?.Family || picklists?.Product_Family__c)}
                 {renderField("Availability Status", "availabilityStatus", "text", [], false, true)}
                 {renderField("Available to Sell", "availableToSell", "text", [], false, true)}

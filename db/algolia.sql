@@ -112,24 +112,27 @@ BEGIN
         END,
         
         -- Categories and Family
-        'category', product_row.gtherp__category__c,
-        'sub_category', product_row.gtherp__sub_category__c,
-        'family', product_row.family,
+        'category', product_row.family,
+        'sub_category', 'sub_category',
         'manufacturer', product_row.manufacturer_name__c,
         
         'status', CASE WHEN product_row.isactive THEN 'active' ELSE 'inactive' END,
         'is_active', product_row.isactive,
         'product_availability', product_row.product_availability__c,
+        'Availability_Status__c', product_row.product_availability__c,
         
         'created_at', EXTRACT(EPOCH FROM product_row.createddate)::BIGINT,
         'updated_at', EXTRACT(EPOCH FROM product_row.systemmodstamp)::BIGINT,
         
         -- Searchable tags (remove NULLs)
         '_tags', ARRAY_REMOVE(ARRAY[
+            product_row.family,
             product_row.family, 
             product_row.gtherp__category__c, 
             product_row.gtherp__sub_category__c,
-            product_row.manufacturer_name__c
+            product_row.gtherp__category__c, 
+            product_row.manufacturer_name__c,
+            product_row.product_availability__c
         ], NULL)
     ));
 END;

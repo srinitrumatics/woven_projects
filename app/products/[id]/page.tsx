@@ -6,13 +6,13 @@ import ProductGallery from "./components/ProductGallery";
 import ProductInfoCard from "./components/ProductInfoCard";
 import ProductTabs from "./components/ProductTabs";
 import { useUserSession } from "@/components/UserSessionContext";
+import { getCategoryFromAccountType } from "@/lib/permissions";
 import { ProductOverviewTab } from "./components/ProductOverviewTab";
 import { SpecificationsTab } from "./components/SpecificationsTab";
 import { DatasheetsTab } from "./components/DatasheetsTab";
 import { AuthorizedSuppliersTab } from "./components/AuthorizedSuppliersTab";
 import { ComplianceCertsTab } from "./components/ComplianceCertsTab";
 import { getProductDetails, mapSalesforceProductToLocal, Product } from "@/lib/products-service";
-import AddProductModal from "../components/AddProductModal";
 import EditProductTabs from "./components/EditProductTabs";
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -163,7 +163,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
   return (
     <Sidebar>
-      <div className="max-w-[1600px] mx-auto p-4 md:p-6">
+      <div className=" mx-auto p-4 md:p-6">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
           <span className="hover:text-primary cursor-pointer">Home</span>
@@ -171,69 +171,87 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <span className="hover:text-primary cursor-pointer"><button onClick={() => window.history.back()} className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Products</button></span>
           <span>&gt;</span>
           <span className="text-gray-900 dark:text-white font-medium">{product.name}</span>
-          {!(selectedAccount?.Account_Record_Type__c === 'Customer' || selectedAccount?.Account_Record_Type__c === 'NSO') && (
-            <button 
-              onClick={() => setEditModalOpen(!editModalOpen)} 
-              className={`ml-auto text-sm px-4 py-2 rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2 ${editModalOpen ? 'border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' : 'bg-primary hover:bg-primary-dark text-white'}`}
-            >
-              {editModalOpen ? (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                  Cancel Edit
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                  </svg>
-                  Edit Product
-                </>
-              )}
-            </button>
-          )}
+          {(() => {
+            const accountCategory = getCategoryFromAccountType(selectedAccount?.Account_Record_Type__c);
+            const isCustomer = accountCategory === 'Customer';
+            const isManufacturerOrHybrid = accountCategory === 'Partner' || accountCategory === 'Hybrid';
+            const status = (product.status || '').trim();
+
+            console.log('DEBUG: Edit check', { accountCategory, status, isCustomer, isManufacturerOrHybrid });
+
+            // Rule 1: If product is in 'Available' status, NO users can edit it
+            if (status.toLowerCase() === 'available') return null;
+
+            // Rule 2: Customer or NSO accounts cannot edit products
+            if (isCustomer) return null;
+
+            // Rule 3: Manufacturer or Hybrid users can ONLY edit if the status is 'Draft'
+            if (isManufacturerOrHybrid && status.toLowerCase() == 'draft') return null;
+
+            return (
+              <button
+                onClick={() => setEditModalOpen(!editModalOpen)}
+                className={`ml-auto text-sm px-4 py-2 rounded-lg font-semibold shadow-sm transition-all flex items-center gap-2 ${editModalOpen ? 'border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' : 'bg-primary hover:bg-primary-dark text-white'}`}
+              >
+                {editModalOpen ? (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                    Cancel Edit
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    Edit Product
+                  </>
+                )}
+              </button>
+            );
+          })()}
         </nav>
 
         {editModalOpen ? (
           <div className="mb-12">
-            <EditProductTabs 
+            <EditProductTabs
               onClose={() => {
                 setEditModalOpen(false);
-                window.location.reload(); 
-              }} 
-              productToEdit={rawProduct} 
+                window.location.reload();
+              }}
+              productToEdit={rawProduct}
             />
           </div>
         ) : (
           <>
             {/* Top Section: Gallery and Info Card */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
-          {/* Gallery - Left Side */}
-          <div className="lg:col-span-8 flex flex-col xl:flex-row gap-4">
-            <ProductGallery images={product.images} />
-          </div>
+              {/* Gallery - Left Side */}
+              <div className="lg:col-span-8 flex flex-col xl:flex-row gap-4">
+                <ProductGallery images={product.images} />
+              </div>
 
-          {/* Info Card - Right Side */}
-          <div className="lg:col-span-4">
-            <ProductInfoCard product={product} />
-          </div>
-        </div>
+              {/* Info Card - Right Side */}
+              <div className="lg:col-span-4">
+                <ProductInfoCard product={product} />
+              </div>
+            </div>
 
-        {/* Bottom Section: Tabs */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <ProductTabs
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            tabs={["Overview", "Specifications & Dims", "Datasheets", "Authorized Suppliers", "Compliance & Certs"]}
-          />
+            {/* Bottom Section: Tabs */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <ProductTabs
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                tabs={["Overview", "Specifications & Dims", "Datasheets", "Authorized Suppliers", "Compliance & Certs"]}
+              />
 
-          <div className="p-8">
-            {activeTab === "Overview" && <ProductOverviewTab product={product} />}
-            {activeTab === "Specifications & Dims" && <SpecificationsTab specifications={product.specifications} />}
-            {activeTab === "Datasheets" && <DatasheetsTab datasheets={datasheets} isLoading={datasheetsLoading} />}
-            {activeTab === "Authorized Suppliers" && <AuthorizedSuppliersTab suppliers={suppliers} isLoading={suppliersLoading} />}
-            {activeTab === "Compliance & Certs" && <ComplianceCertsTab certifications={certifications} isLoading={certificationsLoading} />}
-          </div>
-        </div>
+              <div className="p-8">
+                {activeTab === "Overview" && <ProductOverviewTab product={product} />}
+                {activeTab === "Specifications & Dims" && <SpecificationsTab specifications={product.specifications} />}
+                {activeTab === "Datasheets" && <DatasheetsTab datasheets={datasheets} isLoading={datasheetsLoading} />}
+                {activeTab === "Authorized Suppliers" && <AuthorizedSuppliersTab suppliers={suppliers} isLoading={suppliersLoading} />}
+                {activeTab === "Compliance & Certs" && <ComplianceCertsTab certifications={certifications} isLoading={certificationsLoading} />}
+              </div>
+            </div>
           </>
         )}
       </div>

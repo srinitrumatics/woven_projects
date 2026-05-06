@@ -27,7 +27,7 @@ async function fetchProductsFromSalesforce(session) {
   const query = `
     SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp, gtherp__Product_Availability__c
     FROM Product2
-    WHERE IsActive = true AND gtherp__Product_Availability__c ='Available'
+    WHERE IsActive = true
     LIMIT 100
   `;
   const url = `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`;

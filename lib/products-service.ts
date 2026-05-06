@@ -6,7 +6,8 @@ export interface Product {
   category: string;
   sku: string;
   mpn: string;
-  status: string;
+  status: string; // Inventory status (e.g. In Stock, Out of Stock)
+  productAvailability?: string; // Lifecycle status (e.g. Draft, Available)
   onHand: number;
   warehouses: number;
   price: number;
@@ -37,6 +38,7 @@ export function mapSalesforceProductToLocal(sfProduct: any): Product {
     sku: sfProduct.StockKeepingUnit || "N/A",
     mpn: sfProduct.productCode || "N/A",
     status: sfProduct.Availability_Status__c || "Out of Stock",
+    productAvailability: sfProduct.Product_Availability__c || sfProduct.product_availability__c || "Draft",
     onHand: sfProduct.Available_To_Sell__c || 0,
     warehouses: 1,
     price: sfProduct.Unit_Price__c || 0,
