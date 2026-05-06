@@ -239,7 +239,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (status: string = "Draft") => {
     try {
       setIsSubmitting(true);
       const accountId = selectedAccount?.Id || selectedAccount?.id;
@@ -251,7 +251,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
         StockKeepingUnit: formData.sku,
         Family: formData.family || "",
         Product_Family__c: formData.productFamilyNo || "",
-        Product_Availability__c: "Available",
+        Product_Availability__c: status,
         Lead_Time_Wks__c: Number(formData.leadTimeWks) || 0,
         MOQ__c: Number(formData.moq) || 0,
         Manufacturer_Name__c: accountId,
@@ -299,7 +299,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
 
       const result = await response.json();
       if (result.success) {
-        alert("Product updated successfully!");
+        alert(`Product updated to ${status} successfully!`);
         onClose();
         window.location.reload();
       } else {
@@ -615,9 +615,20 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
       </div>
       <div className="p-6 rounded-b-xl border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-end items-center gap-3">
         <button onClick={onClose} disabled={isSubmitting} className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all disabled:opacity-50">Cancel</button>
-        <button onClick={handleSubmit} disabled={isSubmitting} className="px-10 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2">
-          {isSubmitting && <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>}
+        <button
+          onClick={() => handleSubmit("Draft")}
+          disabled={isSubmitting}
+          className="px-8 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white text-sm font-bold rounded-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           {isSubmitting ? "Saving..." : "Update Details"}
+        </button>
+        <button
+          onClick={() => handleSubmit("Submitted")}
+          disabled={isSubmitting}
+          className="px-8 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2"
+        >
+          {isSubmitting && <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>}
+          {isSubmitting ? "Submitting..." : "Submitted"}
         </button>
       </div>
 

@@ -43,8 +43,6 @@ function Content() {
   const { selectedAccount } = useUserSession();
   const accountCategory = getCategoryFromAccountType(selectedAccount?.Account_Record_Type__c);
   const isCustomer = accountCategory === 'Customer';
-  const { user } = useUserSession();
-  const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
   const filters = isCustomer ? '_tags:Available' : '';
 
   // Search Box Hook
@@ -262,9 +260,9 @@ function Content() {
 
         {/* Render products based on viewMode */}
         {viewMode === 'card' ? (
-          <CardView products={products} isManufacturer={isManufacturer} />
+          <CardView products={products} />
         ) : (
-          <ListView products={products} isManufacturer={isManufacturer} />
+          <ListView products={products} />
         )}
 
         {/* Infinite Scroll Sentinel */}
@@ -330,10 +328,9 @@ export default function ProductClientPage() {
 
 interface ViewProps {
   products: Product[];
-  isManufacturer?: boolean;
 }
 
-const CardView = ({ products, isManufacturer }: ViewProps) => (
+const CardView = ({ products }: ViewProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {products.length === 0 ? (
       <div key="no-matches" className="col-span-full text-center py-12 text-gray-500 dark:text-gray-400">
@@ -350,8 +347,12 @@ const CardView = ({ products, isManufacturer }: ViewProps) => (
         const listPrice = product.listPrice || 0;
         const category = p.category || product.productFamily || product.manufacturer || "Product";
 
-        const content = (
-          <div className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer">
+        return (
+          <Link
+            href={`/products/${p.objectID || product.id}`}
+            key={p.objectID || product.id}
+            className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer"
+          >
             <div className="relative aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden">
               {thumbnail ? (
                 <img
@@ -405,34 +406,21 @@ const CardView = ({ products, isManufacturer }: ViewProps) => (
                     : "bg-primary hover:bg-primary-dark text-white"
                     }`}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 20 20" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 20 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                   {product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
                 </button>
               </div>
             </div>
-          </div>
-        );
-
-        return !isManufacturer ? (
-          <Link
-            href={`/products/${p.objectID || product.id}`}
-            key={p.objectID || product.id}
-          >
-            {content}
           </Link>
-        ) : (
-          <div key={p.objectID || product.id}>
-            {content}
-          </div>
         );
       })
     )}
   </div>
 );
 
-const ListView = ({ products, isManufacturer }: ViewProps) => (
+const ListView = ({ products }: ViewProps) => (
   <div className="overflow-x-auto">
     <table className="w-full">
       <thead className="bg-primary-light dark:bg-gray-900">
@@ -463,38 +451,21 @@ const ListView = ({ products, isManufacturer }: ViewProps) => (
             return (
               <tr key={p.objectID || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group">
                 <td className="px-4 py-3 truncate">
-                  {!isManufacturer ? (
-                    <Link href={`/products/${p.objectID || product.id}`} className="block">
-                      <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden">
-                        {thumbnail ? (
-                          <img src={thumbnail} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                        ) : (
-                          <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-                        )}
-                      </div>
-                    </Link>
-                  ) : (
+                  <Link href={`/products/${p.objectID || product.id}`} className="block">
                     <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden">
                       {thumbnail ? (
-                        <img src={thumbnail} alt={product.name} className="w-full h-full object-cover" />
+                        <img src={thumbnail} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                       ) : (
                         <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                       )}
                     </div>
-                  )}
+                  </Link>
                 </td>
                 <td className="px-4 py-3" style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }}>
-                  {!isManufacturer ? (
-                    <Link href={`/products/${p.objectID || product.id}`} className="block overflow-hidden" title={product.name}>
-                      <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">{product.name}</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">{product.sku}</div>
-                    </Link>
-                  ) : (
-                    <div className="block overflow-hidden" title={product.name}>
-                      <div className="text-sm font-bold text-gray-900 dark:text-white truncate">{product.name}</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">{product.sku}</div>
-                    </div>
-                  )}
+                  <Link href={`/products/${p.objectID || product.id}`} className="block overflow-hidden" title={product.name}>
+                    <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">{product.name}</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">{product.sku}</div>
+                  </Link>
                 </td>
                 <td className="px-4 py-3 truncate">
                   <div className="line-clamp-2" title={category}>
