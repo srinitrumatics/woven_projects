@@ -4,10 +4,10 @@
 -- 3. ALGOLIA SYNC QUEUE TABLE
 -- ============================================
 
-CREATE TABLE IF NOT EXISTS sf_00dgk000007zmr7uam.algolia_sync_queue (
+CREATE TABLE IF NOT EXISTS sf_00dec00000e1fjdmaa.algolia_sync_queue (
     id BIGSERIAL PRIMARY KEY,
     table_name VARCHAR(100) NOT NULL,
-    record_id VARCHAR(255) NOT NULL, -- VARCHAR to support sf_00dgk000007zmr7uam IDs (18 chars)
+    record_id VARCHAR(255) NOT NULL, -- VARCHAR to support sf_00dec00000e1fjdmaa IDs (18 chars)
     operation VARCHAR(10) NOT NULL CHECK (operation IN ('INSERT', 'UPDATE', 'DELETE')),
     payload JSONB,
     status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'failed')),
@@ -19,19 +19,19 @@ CREATE TABLE IF NOT EXISTS sf_00dgk000007zmr7uam.algolia_sync_queue (
 );
 
 -- Indexes for efficient queue processing
-CREATE UNIQUE INDEX IF NOT EXISTS unique_pending_operation_idx ON sf_00dgk000007zmr7uam.algolia_sync_queue (table_name, record_id, operation) WHERE status = 'pending';
-CREATE INDEX IF NOT EXISTS idx_algolia_queue_status ON sf_00dgk000007zmr7uam.algolia_sync_queue(status, created_at);
-CREATE INDEX IF NOT EXISTS idx_algolia_queue_table_record ON sf_00dgk000007zmr7uam.algolia_sync_queue(table_name, record_id);
-CREATE INDEX IF NOT EXISTS idx_algolia_queue_cleanup ON sf_00dgk000007zmr7uam.algolia_sync_queue(status, processed_at) WHERE status = 'completed';
-CREATE INDEX IF NOT EXISTS idx_algolia_queue_retry ON sf_00dgk000007zmr7uam.algolia_sync_queue(status, last_retry_at) WHERE status = 'pending' AND retry_count > 0;
+CREATE UNIQUE INDEX IF NOT EXISTS unique_pending_operation_idx ON sf_00dec00000e1fjdmaa.algolia_sync_queue (table_name, record_id, operation) WHERE status = 'pending';
+CREATE INDEX IF NOT EXISTS idx_algolia_queue_status ON sf_00dec00000e1fjdmaa.algolia_sync_queue(status, created_at);
+CREATE INDEX IF NOT EXISTS idx_algolia_queue_table_record ON sf_00dec00000e1fjdmaa.algolia_sync_queue(table_name, record_id);
+CREATE INDEX IF NOT EXISTS idx_algolia_queue_cleanup ON sf_00dec00000e1fjdmaa.algolia_sync_queue(status, processed_at) WHERE status = 'completed';
+CREATE INDEX IF NOT EXISTS idx_algolia_queue_retry ON sf_00dec00000e1fjdmaa.algolia_sync_queue(status, last_retry_at) WHERE status = 'pending' AND retry_count > 0;
 
 -- ============================================
 -- 4. ALGOLIA SYNC LOG TABLE
 -- ============================================
 
-CREATE TABLE IF NOT EXISTS sf_00dgk000007zmr7uam.algolia_sync_log (
+CREATE TABLE IF NOT EXISTS sf_00dec00000e1fjdmaa.algolia_sync_log (
     id BIGSERIAL PRIMARY KEY,
-    queue_id BIGINT REFERENCES sf_00dgk000007zmr7uam.algolia_sync_queue(id) ON DELETE CASCADE,
+    queue_id BIGINT REFERENCES sf_00dec00000e1fjdmaa.algolia_sync_queue(id) ON DELETE CASCADE,
     table_name VARCHAR(100) NOT NULL,
     record_id VARCHAR(255) NOT NULL,
     operation VARCHAR(10) NOT NULL,
@@ -45,15 +45,15 @@ CREATE TABLE IF NOT EXISTS sf_00dgk000007zmr7uam.algolia_sync_log (
 );
 
 -- Indexes for monitoring and debugging
-CREATE INDEX IF NOT EXISTS idx_sync_log_status ON sf_00dgk000007zmr7uam.algolia_sync_log(status, synced_at);
-CREATE INDEX IF NOT EXISTS idx_sync_log_record ON sf_00dgk000007zmr7uam.algolia_sync_log(table_name, record_id);
-CREATE INDEX IF NOT EXISTS idx_sync_log_queue ON sf_00dgk000007zmr7uam.algolia_sync_log(queue_id);
+CREATE INDEX IF NOT EXISTS idx_sync_log_status ON sf_00dec00000e1fjdmaa.algolia_sync_log(status, synced_at);
+CREATE INDEX IF NOT EXISTS idx_sync_log_record ON sf_00dec00000e1fjdmaa.algolia_sync_log(table_name, record_id);
+CREATE INDEX IF NOT EXISTS idx_sync_log_queue ON sf_00dec00000e1fjdmaa.algolia_sync_log(queue_id);
 
 -- ============================================
 -- 5. ALGOLIA CONFIGURATION TABLE
 -- ============================================
 
-CREATE TABLE IF NOT EXISTS sf_00dgk000007zmr7uam.algolia_index_config (
+CREATE TABLE IF NOT EXISTS sf_00dec00000e1fjdmaa.algolia_index_config (
     id SERIAL PRIMARY KEY,
     table_name VARCHAR(100) UNIQUE NOT NULL,
     index_name VARCHAR(255) NOT NULL,
@@ -68,8 +68,8 @@ CREATE TABLE IF NOT EXISTS sf_00dgk000007zmr7uam.algolia_index_config (
 );
 
 -- Insert default configurations
-INSERT INTO sf_00dgk000007zmr7uam.algolia_index_config (table_name, index_name, transform_function, filter_condition, batch_size) VALUES
-('sf_00dgk000007zmr7uam.product2', 'dev_woven_products', 'transform_sf_product_for_algolia', NULL, 100)
+INSERT INTO sf_00dec00000e1fjdmaa.algolia_index_config (table_name, index_name, transform_function, filter_condition, batch_size) VALUES
+('sf_00dec00000e1fjdmaa.product2', 'dev_woven_products', 'transform_sf_product_for_algolia', NULL, 100)
 ON CONFLICT (table_name) DO UPDATE SET
     index_name = EXCLUDED.index_name,
     transform_function = EXCLUDED.transform_function,
@@ -80,8 +80,8 @@ ON CONFLICT (table_name) DO UPDATE SET
 -- 6. DATA TRANSFORMATION FUNCTIONS
 -- ============================================
 
--- Transform function for sf_00dgk000007zmr7uam Product2 to Algolia format
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.transform_sf_product_for_algolia(product_row sf_00dgk000007zmr7uam.product2)
+-- Transform function for sf_00dec00000e1fjdmaa Product2 to Algolia format
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.transform_sf_product_for_algolia(product_row sf_00dec00000e1fjdmaa.product2)
 RETURNS JSONB AS $$
 BEGIN
     RETURN jsonb_strip_nulls(jsonb_build_object(
@@ -143,7 +143,7 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 -- ============================================
 
 -- Enqueue records for Algolia sync
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.enqueue_algolia_sync(
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.enqueue_algolia_sync(
     p_table_name VARCHAR,
     p_record_id VARCHAR,
     p_operation VARCHAR,
@@ -156,7 +156,7 @@ DECLARE
 BEGIN
     -- Check if indexing is enabled for this table
     SELECT is_enabled INTO config_enabled 
-    FROM sf_00dgk000007zmr7uam.algolia_index_config 
+    FROM sf_00dec00000e1fjdmaa.algolia_index_config 
     WHERE table_name = p_table_name;
     
     IF config_enabled IS FALSE THEN
@@ -164,7 +164,7 @@ BEGIN
     END IF;
     
     -- Insert into queue (ON CONFLICT prevents duplicate pending operations)
-    INSERT INTO sf_00dgk000007zmr7uam.algolia_sync_queue (table_name, record_id, operation, payload, status)
+    INSERT INTO sf_00dec00000e1fjdmaa.algolia_sync_queue (table_name, record_id, operation, payload, status)
     VALUES (p_table_name, p_record_id, p_operation, p_payload, 'pending')
     ON CONFLICT (table_name, record_id, operation) WHERE status = 'pending'
     DO UPDATE SET 
@@ -179,7 +179,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Get pending sync items (with locking for distributed workers)
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.get_pending_algolia_syncs(batch_limit INTEGER DEFAULT 100)
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.get_pending_algolia_syncs(batch_limit INTEGER DEFAULT 100)
 RETURNS TABLE (
     id BIGINT,
     table_name VARCHAR,
@@ -193,7 +193,7 @@ DECLARE
 BEGIN
     -- Get max retries from config (use 5 as default)
     SELECT COALESCE(MAX(c.max_retries), 5) INTO max_retries
-    FROM sf_00dgk000007zmr7uam.algolia_index_config c;
+    FROM sf_00dec00000e1fjdmaa.algolia_index_config c;
 
     RETURN QUERY
     SELECT 
@@ -203,7 +203,7 @@ BEGIN
         q.operation,
         q.payload,
         q.retry_count
-    FROM sf_00dgk000007zmr7uam.algolia_sync_queue q
+    FROM sf_00dec00000e1fjdmaa.algolia_sync_queue q
     WHERE q.status = 'pending'
     AND q.retry_count < max_retries
     ORDER BY q.created_at
@@ -213,7 +213,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Get pending syncs for a specific table (for batch operations)
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.get_pending_syncs_by_table(
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.get_pending_syncs_by_table(
     p_table_name VARCHAR,
     p_batch_limit INTEGER DEFAULT 100
 )
@@ -229,7 +229,7 @@ DECLARE
     max_retries INTEGER;
 BEGIN
     SELECT COALESCE(c.max_retries, 5) INTO max_retries
-    FROM sf_00dgk000007zmr7uam.algolia_index_config c
+    FROM sf_00dec00000e1fjdmaa.algolia_index_config c
     WHERE c.table_name = p_table_name;
     
     RETURN QUERY
@@ -240,7 +240,7 @@ BEGIN
         q.operation,
         q.payload,
         q.retry_count
-    FROM sf_00dgk000007zmr7uam.algolia_sync_queue q
+    FROM sf_00dec00000e1fjdmaa.algolia_sync_queue q
     WHERE q.status = 'pending'
     AND q.table_name = p_table_name
     AND q.retry_count < COALESCE(max_retries, 5)
@@ -251,10 +251,10 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Mark items as processing
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.mark_sync_processing(p_queue_ids BIGINT[])
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.mark_sync_processing(p_queue_ids BIGINT[])
 RETURNS VOID AS $$
 BEGIN
-    UPDATE sf_00dgk000007zmr7uam.algolia_sync_queue
+    UPDATE sf_00dec00000e1fjdmaa.algolia_sync_queue
     SET 
         status = 'processing',
         processed_at = CURRENT_TIMESTAMP
@@ -264,7 +264,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Mark sync as completed
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.mark_sync_completed(
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.mark_sync_completed(
     p_queue_id BIGINT,
     p_algolia_object_id VARCHAR DEFAULT NULL,
     p_sync_duration_ms INTEGER DEFAULT NULL,
@@ -272,13 +272,13 @@ CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.mark_sync_completed(
 )
 RETURNS VOID AS $$
 BEGIN
-    UPDATE sf_00dgk000007zmr7uam.algolia_sync_queue
+    UPDATE sf_00dec00000e1fjdmaa.algolia_sync_queue
     SET 
         status = 'completed',
         processed_at = CURRENT_TIMESTAMP
     WHERE id = p_queue_id;
     
-    INSERT INTO sf_00dgk000007zmr7uam.algolia_sync_log (
+    INSERT INTO sf_00dec00000e1fjdmaa.algolia_sync_log (
         queue_id, table_name, record_id, operation, 
         status, algolia_object_id, sync_duration_ms,
         response_payload, synced_at
@@ -287,13 +287,13 @@ BEGIN
         id, table_name, record_id, operation,
         'completed', p_algolia_object_id, p_sync_duration_ms,
         p_response_payload, CURRENT_TIMESTAMP
-    FROM sf_00dgk000007zmr7uam.algolia_sync_queue
+    FROM sf_00dec00000e1fjdmaa.algolia_sync_queue
     WHERE id = p_queue_id;
 END;
 $$ LANGUAGE plpgsql;
 
 -- Mark sync as failed (with retry logic)
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.mark_sync_failed(
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.mark_sync_failed(
     p_queue_id BIGINT,
     p_error_message TEXT,
     p_error_details JSONB DEFAULT NULL
@@ -307,16 +307,16 @@ BEGIN
     -- Get current state
     SELECT q.table_name, q.retry_count 
     INTO target_table_name, current_retry_count
-    FROM sf_00dgk000007zmr7uam.algolia_sync_queue q
+    FROM sf_00dec00000e1fjdmaa.algolia_sync_queue q
     WHERE q.id = p_queue_id;
     
     -- Get max retries from config
     SELECT COALESCE(c.max_retries, 5) INTO max_retries
-    FROM sf_00dgk000007zmr7uam.algolia_index_config c
+    FROM sf_00dec00000e1fjdmaa.algolia_index_config c
     WHERE c.table_name = target_table_name;
     
     -- Update queue with retry logic
-    UPDATE sf_00dgk000007zmr7uam.algolia_sync_queue
+    UPDATE sf_00dec00000e1fjdmaa.algolia_sync_queue
     SET 
         status = CASE 
             WHEN retry_count + 1 >= max_retries THEN 'failed'
@@ -332,7 +332,7 @@ BEGIN
     WHERE id = p_queue_id;
     
     -- Log the failure
-    INSERT INTO sf_00dgk000007zmr7uam.algolia_sync_log (
+    INSERT INTO sf_00dec00000e1fjdmaa.algolia_sync_log (
         queue_id, table_name, record_id, operation,
         status, error_details, synced_at
     )
@@ -348,18 +348,18 @@ BEGIN
             'retry_count', retry_count
         ),
         CURRENT_TIMESTAMP
-    FROM sf_00dgk000007zmr7uam.algolia_sync_queue
+    FROM sf_00dec00000e1fjdmaa.algolia_sync_queue
     WHERE id = p_queue_id;
 END;
 $$ LANGUAGE plpgsql;
 
 -- Reset stuck processing items (run periodically)
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.reset_stuck_processing(timeout_minutes INTEGER DEFAULT 10)
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.reset_stuck_processing(timeout_minutes INTEGER DEFAULT 10)
 RETURNS INTEGER AS $$
 DECLARE
     reset_count INTEGER;
 BEGIN
-    UPDATE sf_00dgk000007zmr7uam.algolia_sync_queue
+    UPDATE sf_00dec00000e1fjdmaa.algolia_sync_queue
     SET 
         status = 'pending',
         processed_at = NULL,
@@ -373,12 +373,12 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Cleanup old completed syncs
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.cleanup_old_sync_records(days_to_keep INTEGER DEFAULT 7)
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.cleanup_old_sync_records(days_to_keep INTEGER DEFAULT 7)
 RETURNS INTEGER AS $$
 DECLARE
     deleted_count INTEGER;
 BEGIN
-    DELETE FROM sf_00dgk000007zmr7uam.algolia_sync_queue
+    DELETE FROM sf_00dec00000e1fjdmaa.algolia_sync_queue
     WHERE status = 'completed'
     AND processed_at < CURRENT_TIMESTAMP - (days_to_keep || ' days')::INTERVAL;
     
@@ -391,7 +391,7 @@ $$ LANGUAGE plpgsql;
 -- ============================================
 
 -- Generic Trigger Function for Algolia Sync
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.trigger_algolia_sync()
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.trigger_algolia_sync()
 RETURNS TRIGGER AS $$
 DECLARE
     transform_func VARCHAR;
@@ -405,7 +405,7 @@ BEGIN
 
     -- Get transform function for this table
     SELECT transform_function INTO transform_func
-    FROM sf_00dgk000007zmr7uam.algolia_index_config
+    FROM sf_00dec00000e1fjdmaa.algolia_index_config
     WHERE (table_name = full_table_name OR table_name = TG_TABLE_NAME) 
     AND is_enabled = TRUE
     LIMIT 1;
@@ -419,7 +419,7 @@ BEGIN
         operation_type := 'DELETE';
         -- Handle different ID types (UUID vs String)
         BEGIN
-            record_id := OLD.sfid::TEXT; -- Try sfid first for sf_00dgk000007zmr7uam
+            record_id := OLD.sfid::TEXT; -- Try sfid first for sf_00dec00000e1fjdmaa
         EXCEPTION WHEN OTHERS THEN
             BEGIN
                 record_id := OLD.id::TEXT; -- Fallback to id
@@ -431,7 +431,7 @@ BEGIN
 
         payload := jsonb_build_object('objectID', record_id);
         
-        PERFORM sf_00dgk000007zmr7uam.enqueue_algolia_sync(
+        PERFORM sf_00dec00000e1fjdmaa.enqueue_algolia_sync(
             full_table_name,
             record_id,
             operation_type,
@@ -450,11 +450,11 @@ BEGIN
         END;
 
         -- Execute transform function dynamically with schema qualification
-        EXECUTE format('SELECT sf_00dgk000007zmr7uam.%I($1)', transform_func)
+        EXECUTE format('SELECT sf_00dec00000e1fjdmaa.%I($1)', transform_func)
         USING NEW
         INTO payload;
         
-        PERFORM sf_00dgk000007zmr7uam.enqueue_algolia_sync(
+        PERFORM sf_00dec00000e1fjdmaa.enqueue_algolia_sync(
             full_table_name,
             record_id,
             operation_type,
@@ -475,13 +475,13 @@ BEGIN
         END;
 
         -- Execute transform function dynamically with schema qualification
-        EXECUTE format('SELECT sf_00dgk000007zmr7uam.%I($1)', transform_func)
+        EXECUTE format('SELECT sf_00dec00000e1fjdmaa.%I($1)', transform_func)
         USING NEW
         INTO payload;
         
         -- Enqueue with error handling
         BEGIN
-            PERFORM sf_00dgk000007zmr7uam.enqueue_algolia_sync(
+            PERFORM sf_00dec00000e1fjdmaa.enqueue_algolia_sync(
                 full_table_name,
                 record_id,
                 operation_type,
@@ -502,22 +502,22 @@ $$ LANGUAGE plpgsql;
 -- 9. CREATE TRIGGERS
 -- ============================================
 
--- sf_00dgk000007zmr7uam Product2 Trigger
--- Note: This assumes the sf_00dgk000007zmr7uam schema and product2 table exist
+-- sf_00dec00000e1fjdmaa Product2 Trigger
+-- Note: This assumes the sf_00dec00000e1fjdmaa schema and product2 table exist
 DO $$
 BEGIN
     IF EXISTS (
         SELECT 1 
         FROM information_schema.tables 
-        WHERE table_schema = 'sf_00dgk000007zmr7uam' 
+        WHERE table_schema = 'sf_00dec00000e1fjdmaa' 
         AND table_name = 'product2'
     ) THEN
-        DROP TRIGGER IF EXISTS sf_product2_algolia_sync_trigger ON sf_00dgk000007zmr7uam.product2;
+        DROP TRIGGER IF EXISTS sf_product2_algolia_sync_trigger ON sf_00dec00000e1fjdmaa.product2;
         
         CREATE TRIGGER sf_product2_algolia_sync_trigger
-            AFTER INSERT OR UPDATE OR DELETE ON sf_00dgk000007zmr7uam.product2
+            AFTER INSERT OR UPDATE OR DELETE ON sf_00dec00000e1fjdmaa.product2
             FOR EACH ROW
-            EXECUTE FUNCTION sf_00dgk000007zmr7uam.trigger_algolia_sync();
+            EXECUTE FUNCTION sf_00dec00000e1fjdmaa.trigger_algolia_sync();
     END IF;
 END $$;
 
@@ -525,7 +525,7 @@ END $$;
 -- 10. AUTO-UPDATE TIMESTAMP TRIGGER
 -- ============================================
 
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.update_updated_at_column()
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = CURRENT_TIMESTAMP;
@@ -533,17 +533,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS update_algolia_config_timestamp ON sf_00dgk000007zmr7uam.algolia_index_config;
+DROP TRIGGER IF EXISTS update_algolia_config_timestamp ON sf_00dec00000e1fjdmaa.algolia_index_config;
 CREATE TRIGGER update_algolia_config_timestamp
-    BEFORE UPDATE ON sf_00dgk000007zmr7uam.algolia_index_config
+    BEFORE UPDATE ON sf_00dec00000e1fjdmaa.algolia_index_config
     FOR EACH ROW
-    EXECUTE FUNCTION sf_00dgk000007zmr7uam.update_updated_at_column();
+    EXECUTE FUNCTION sf_00dec00000e1fjdmaa.update_updated_at_column();
 
 -- ============================================
 -- 11. MONITORING VIEWS
 -- ============================================
 
-CREATE OR REPLACE VIEW sf_00dgk000007zmr7uam.algolia_sync_stats AS
+CREATE OR REPLACE VIEW sf_00dec00000e1fjdmaa.algolia_sync_stats AS
 SELECT 
     table_name,
     operation,
@@ -552,11 +552,11 @@ SELECT
     MAX(created_at) as last_created,
     MAX(processed_at) as last_processed,
     AVG(retry_count) as avg_retries
-FROM sf_00dgk000007zmr7uam.algolia_sync_queue
+FROM sf_00dec00000e1fjdmaa.algolia_sync_queue
 GROUP BY table_name, operation, status
 ORDER BY table_name, operation, status;
 
-CREATE OR REPLACE VIEW sf_00dgk000007zmr7uam.algolia_sync_health AS
+CREATE OR REPLACE VIEW sf_00dec00000e1fjdmaa.algolia_sync_health AS
 SELECT 
     COUNT(*) FILTER (WHERE status = 'pending' AND created_at < NOW() - INTERVAL '5 minutes') as stuck_pending_count,
     COUNT(*) FILTER (WHERE status = 'failed') as total_failed_count,
@@ -564,10 +564,10 @@ SELECT
     COUNT(*) FILTER (WHERE status = 'pending') as total_pending_count,
     MAX(created_at) FILTER (WHERE status = 'completed') as last_success_time,
     MAX(processed_at) FILTER (WHERE status = 'failed') as last_failure_time,
-    (SELECT COUNT(*) FROM sf_00dgk000007zmr7uam.algolia_sync_log WHERE status = 'completed' AND synced_at > NOW() - INTERVAL '1 hour') as syncs_last_hour
-FROM sf_00dgk000007zmr7uam.algolia_sync_queue;
+    (SELECT COUNT(*) FROM sf_00dec00000e1fjdmaa.algolia_sync_log WHERE status = 'completed' AND synced_at > NOW() - INTERVAL '1 hour') as syncs_last_hour
+FROM sf_00dec00000e1fjdmaa.algolia_sync_queue;
 
-CREATE OR REPLACE VIEW sf_00dgk000007zmr7uam.algolia_failed_syncs AS
+CREATE OR REPLACE VIEW sf_00dec00000e1fjdmaa.algolia_failed_syncs AS
 SELECT 
     q.id,
     q.table_name,
@@ -578,7 +578,7 @@ SELECT
     q.created_at,
     q.last_retry_at,
     q.processed_at
-FROM sf_00dgk000007zmr7uam.algolia_sync_queue q
+FROM sf_00dec00000e1fjdmaa.algolia_sync_queue q
 WHERE q.status = 'failed'
 ORDER BY q.processed_at DESC;
 
@@ -587,7 +587,7 @@ ORDER BY q.processed_at DESC;
 -- ============================================
 
 -- Run this periodically (e.g., via cron job or scheduler)
-CREATE OR REPLACE FUNCTION sf_00dgk000007zmr7uam.run_algolia_maintenance()
+CREATE OR REPLACE FUNCTION sf_00dec00000e1fjdmaa.run_algolia_maintenance()
 RETURNS TABLE (
     task VARCHAR,
     items_affected INTEGER
@@ -597,16 +597,16 @@ DECLARE
     cleanup_count INTEGER;
 BEGIN
     -- Reset stuck processing items
-    stuck_count := sf_00dgk000007zmr7uam.reset_stuck_processing(10);
+    stuck_count := sf_00dec00000e1fjdmaa.reset_stuck_processing(10);
     RETURN QUERY SELECT 'reset_stuck_processing'::VARCHAR, stuck_count;
     
     -- Cleanup old records (keep 7 days)
-    cleanup_count := sf_00dgk000007zmr7uam.cleanup_old_sync_records(7);
+    cleanup_count := sf_00dec00000e1fjdmaa.cleanup_old_sync_records(7);
     RETURN QUERY SELECT 'cleanup_old_records'::VARCHAR, cleanup_count;
     
     -- Vacuum analyze for performance
-    EXECUTE 'VACUUM ANALYZE sf_00dgk000007zmr7uam.algolia_sync_queue';
-    EXECUTE 'VACUUM ANALYZE sf_00dgk000007zmr7uam.algolia_sync_log';
+    EXECUTE 'VACUUM ANALYZE sf_00dec00000e1fjdmaa.algolia_sync_queue';
+    EXECUTE 'VACUUM ANALYZE sf_00dec00000e1fjdmaa.algolia_sync_log';
     
     RETURN;
 END;
@@ -616,17 +616,17 @@ $$ LANGUAGE plpgsql;
 -- COMMENTS FOR DOCUMENTATION
 -- ============================================
 
-COMMENT ON TABLE sf_00dgk000007zmr7uam.algolia_sync_queue IS 'Queue for tracking Algolia sync operations with retry logic';
-COMMENT ON TABLE sf_00dgk000007zmr7uam.algolia_sync_log IS 'Historical log of all Algolia sync operations for auditing';
-COMMENT ON TABLE sf_00dgk000007zmr7uam.algolia_index_config IS 'Configuration for Algolia indexes per table';
-COMMENT ON FUNCTION sf_00dgk000007zmr7uam.trigger_algolia_sync() IS 'Generic trigger function that queues records for Algolia sync';
-COMMENT ON FUNCTION sf_00dgk000007zmr7uam.enqueue_algolia_sync(VARCHAR, VARCHAR, VARCHAR, JSONB) IS 'Enqueues a record for Algolia synchronization';
-COMMENT ON FUNCTION sf_00dgk000007zmr7uam.get_pending_algolia_syncs(INTEGER) IS 'Retrieves pending sync items for batch processing with row-level locking';
-COMMENT ON FUNCTION sf_00dgk000007zmr7uam.mark_sync_completed(BIGINT, VARCHAR, INTEGER, JSONB) IS 'Marks a sync operation as successfully completed';
-COMMENT ON FUNCTION sf_00dgk000007zmr7uam.mark_sync_failed(BIGINT, TEXT, JSONB) IS 'Marks a sync operation as failed with automatic retry logic';
-COMMENT ON FUNCTION sf_00dgk000007zmr7uam.reset_stuck_processing(INTEGER) IS 'Resets items stuck in processing state back to pending';
-COMMENT ON FUNCTION sf_00dgk000007zmr7uam.cleanup_old_sync_records(INTEGER) IS 'Removes old completed sync records to prevent table bloat';
-COMMENT ON FUNCTION sf_00dgk000007zmr7uam.run_algolia_maintenance() IS 'Runs all maintenance tasks - should be scheduled to run periodically';
+COMMENT ON TABLE sf_00dec00000e1fjdmaa.algolia_sync_queue IS 'Queue for tracking Algolia sync operations with retry logic';
+COMMENT ON TABLE sf_00dec00000e1fjdmaa.algolia_sync_log IS 'Historical log of all Algolia sync operations for auditing';
+COMMENT ON TABLE sf_00dec00000e1fjdmaa.algolia_index_config IS 'Configuration for Algolia indexes per table';
+COMMENT ON FUNCTION sf_00dec00000e1fjdmaa.trigger_algolia_sync() IS 'Generic trigger function that queues records for Algolia sync';
+COMMENT ON FUNCTION sf_00dec00000e1fjdmaa.enqueue_algolia_sync(VARCHAR, VARCHAR, VARCHAR, JSONB) IS 'Enqueues a record for Algolia synchronization';
+COMMENT ON FUNCTION sf_00dec00000e1fjdmaa.get_pending_algolia_syncs(INTEGER) IS 'Retrieves pending sync items for batch processing with row-level locking';
+COMMENT ON FUNCTION sf_00dec00000e1fjdmaa.mark_sync_completed(BIGINT, VARCHAR, INTEGER, JSONB) IS 'Marks a sync operation as successfully completed';
+COMMENT ON FUNCTION sf_00dec00000e1fjdmaa.mark_sync_failed(BIGINT, TEXT, JSONB) IS 'Marks a sync operation as failed with automatic retry logic';
+COMMENT ON FUNCTION sf_00dec00000e1fjdmaa.reset_stuck_processing(INTEGER) IS 'Resets items stuck in processing state back to pending';
+COMMENT ON FUNCTION sf_00dec00000e1fjdmaa.cleanup_old_sync_records(INTEGER) IS 'Removes old completed sync records to prevent table bloat';
+COMMENT ON FUNCTION sf_00dec00000e1fjdmaa.run_algolia_maintenance() IS 'Runs all maintenance tasks - should be scheduled to run periodically';
 
 -- ============================================
 -- USAGE EXAMPLES
@@ -634,30 +634,30 @@ COMMENT ON FUNCTION sf_00dgk000007zmr7uam.run_algolia_maintenance() IS 'Runs all
 
 /*
 -- Fetch pending items for processing:
-SELECT * FROM sf_00dgk000007zmr7uam.get_pending_algolia_syncs(100);
+SELECT * FROM sf_00dec00000e1fjdmaa.get_pending_algolia_syncs(100);
 
 -- Mark items as processing:
-SELECT sf_00dgk000007zmr7uam.mark_sync_processing(ARRAY[1, 2, 3]);
+SELECT sf_00dec00000e1fjdmaa.mark_sync_processing(ARRAY[1, 2, 3]);
 
 -- Mark as completed:
-SELECT sf_00dgk000007zmr7uam.mark_sync_completed(1, 'product_123', 150, '{"status": "ok"}'::jsonb);
+SELECT sf_00dec00000e1fjdmaa.mark_sync_completed(1, 'product_123', 150, '{"status": "ok"}'::jsonb);
 
 -- Mark as failed:
-SELECT sf_00dgk000007zmr7uam.mark_sync_failed(1, 'Network timeout', '{"code": 500}'::jsonb);
+SELECT sf_00dec00000e1fjdmaa.mark_sync_failed(1, 'Network timeout', '{"code": 500}'::jsonb);
 
 -- Check sync health:
-SELECT * FROM sf_00dgk000007zmr7uam.algolia_sync_health;
+SELECT * FROM sf_00dec00000e1fjdmaa.algolia_sync_health;
 
 -- View failed syncs:
-SELECT * FROM sf_00dgk000007zmr7uam.algolia_failed_syncs;
+SELECT * FROM sf_00dec00000e1fjdmaa.algolia_failed_syncs;
 
 -- Run maintenance:
-SELECT * FROM sf_00dgk000007zmr7uam.run_algolia_maintenance();
+SELECT * FROM sf_00dec00000e1fjdmaa.run_algolia_maintenance();
 
 -- Manual cleanup:
-SELECT sf_00dgk000007zmr7uam.cleanup_old_sync_records(7);
-SELECT sf_00dgk000007zmr7uam.reset_stuck_processing(10);
+SELECT sf_00dec00000e1fjdmaa.cleanup_old_sync_records(7);
+SELECT sf_00dec00000e1fjdmaa.reset_stuck_processing(10);
 
 -- Check sync statistics:
-SELECT * FROM sf_00dgk000007zmr7uam.algolia_sync_stats;
+SELECT * FROM sf_00dec00000e1fjdmaa.algolia_sync_stats;
 */
