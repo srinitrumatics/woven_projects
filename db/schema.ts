@@ -18,11 +18,19 @@ export const users = pgTable('users', {
     .notNull(),
 });
 
-// Organizations table
+// Organizations table (Master Schema)
 export const organizations = pgTable('organizations', {
   id: uuid('id').primaryKey().defaultRandom(),
-  name: text('name').notNull(),
+  name: text('name').notNull(), // This is the org_name
+  orgId: text('org_id').unique(), // External Org ID or identifier
   description: text('description'),
+  
+  // Salesforce Connection Details
+  salesforceUrl: text('salesforce_url'),
+  salesforceAuthUrl: text('salesforce_auth_url'),
+  clientId: text('client_id'),
+  clientSecret: text('client_secret'), // In production, this should be encrypted!
+  
   createdAt: text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

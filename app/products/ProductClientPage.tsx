@@ -24,6 +24,17 @@ const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY || ""
 );
 
+// Helper for debugging unfiltered data
+const logUnfilteredData = async (indexName: string) => {
+  try {
+    const index = searchClient.initIndex(indexName);
+    const { hits } = await index.search("", { hitsPerPage: 5 });
+    console.log("[DEBUG] Unfiltered Algolia Data (First 5):", hits);
+  } catch (error) {
+    console.error("[DEBUG] Failed to fetch unfiltered data:", error);
+  }
+};
+
 function CustomClearButton({ onClear }: { onClear: () => void }) {
   const { canRefine, refine } = useClearRefinements();
   return (
@@ -38,19 +49,61 @@ function CustomClearButton({ onClear }: { onClear: () => void }) {
 }
 
 function Content() {
+  const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "dev_woven_products";
+  
+  useEffect(() => {
+    logUnfilteredData(indexName);
+  }, [indexName]);
+
   const [viewMode, setViewMode] = useState<'list' | 'card'>('card');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const { selectedAccount } = useUserSession();
-  const accountCategory = getCategoryFromAccountType(selectedAccount?.Account_Record_Type__c);
-  const isCustomer = accountCategory === 'Customer';
-  const filters = isCustomer ? '_tags:Available' : '';
+  const { selectedAccount, user } = useUserSession();
+  const accountType = selectedAccount?.Account_Record_Type__c;
+  const isCustomer = accountType === 'Customer' || accountType === 'NSO';
+  const isManufacturer = accountType === 'Manufacturer';
+  const isAdmin = user?.role === 'Admin' || user?.role === 'Super Admin';
+
+  let filters = '';
+  if (isCustomer) {
+    // Customers and NSO users see only Available products
+    filters = '_tags:Available';
+  } else if (isManufacturer && !isAdmin) {
+    // Manufacturers (non-admins) see only their own products
+    filters = `manufacturer:${selectedAccount?.Id}`;
+  } else if (isAdmin) {
+    // Admins see all products (no filter)
+    filters = '';
+  } else {
+    // Other roles (Hybrid, etc.) see all products by default
+    filters = '';
+  }
+
+  console.log('[Algolia] Search Context:', {
+    accountType,
+    isCustomer,
+    isManufacturer,
+    isAdmin,
+    appliedFilters: filters,
+    accountId: selectedAccount?.Id
+  });
 
   // Search Box Hook
   const { query, refine: setQuery } = useSearchBox();
 
   // Infinite Hits Hook
   const { hits, isLastPage, showMore } = useInfiniteHits();
-  console.log("Algolia Hits:", hits);
+  console.log("Algolia Products List:", hits);
+  
+  useEffect(() => {
+    if (hits.length > 0) {
+      console.log("Algolia Hits Count:", hits.length);
+      console.log("First Algolia Hit Sample:", hits[0]);
+      // Specifically check for manufacturer field in the first hit
+      const firstHit = hits[0] as any;
+      console.log("Manufacturer in Hit:", firstHit.manufacturer || firstHit.manufacturer_id || "MISSING");
+    }
+  }, [hits]);
+
   const sentinelRef = useRef(null);
 
   // Intersection Observer for infinite scroll
@@ -329,7 +382,7 @@ export default function ProductClientPage() {
 interface ViewProps {
   products: Product[];
 }
-
+/* card View Products Function Start */
 const CardView = ({ products }: ViewProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {products.length === 0 ? (
@@ -419,7 +472,7 @@ const CardView = ({ products }: ViewProps) => (
     )}
   </div>
 );
-
+/* card View Products Function Start */
 const ListView = ({ products }: ViewProps) => (
   <div className="overflow-x-auto">
     <table className="w-full">

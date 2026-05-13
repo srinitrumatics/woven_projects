@@ -47,6 +47,7 @@ export interface Proposal {
   priceBook?: string;
   site?: string;
   Proposal_Notes?: string;
+  Project_Workspace__c?: string;
 }
 
 export interface ProposalStats {

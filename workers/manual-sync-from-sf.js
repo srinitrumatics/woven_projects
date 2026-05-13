@@ -22,29 +22,40 @@ async function getSalesforceSession() {
 }
 
 async function fetchProductsFromSalesforce(session) {
-  // Querying standard fields that definitely exist + some custom fields without gtherp prefix
-  // Added explicit TRUE and checking the query carefully
+  let allRecords = [];
   const query = `
-    SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp, gtherp__Product_Availability__c
+    SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp, 
+           gtherp__Product_Availability__c, gtherp__Manufacturer_Name__c,  
+           gtherp__Available_To_Sell__c,
+           (SELECT Id, Name, gtherp__Selling_Unit_Price__c FROM PricebookEntries)
     FROM Product2
     WHERE IsActive = true
-    LIMIT 100
   `;
-  const url = `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`;
+  let url = `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`;
 
-  const res = await fetch(url, {
-    headers: {
-      "Authorization": `Bearer ${session.accessToken}`,
-      "Content-Type": "application/json"
+  while (url) {
+    const res = await fetch(url, {
+      headers: {
+        "Authorization": `Bearer ${session.accessToken}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!res.ok) {
+      const errorBody = await res.text();
+      throw new Error(`Failed to fetch products: ${res.statusText}. ${errorBody}`);
     }
-  });
+    const data = await res.json();
+    allRecords = allRecords.concat(data.records);
 
-  if (!res.ok) {
-    const errorBody = await res.text();
-    throw new Error(`Failed to fetch products: ${res.statusText}. ${errorBody}`);
+    if (data.nextRecordsUrl) {
+      url = `${session.instanceUrl}${data.nextRecordsUrl}`;
+    } else {
+      url = null;
+    }
   }
-  const data = await res.json();
-  return data.records;
+
+  return allRecords;
 }
 
 async function main() {
@@ -96,15 +107,15 @@ async function main() {
                    systemmodstamp = EXCLUDED.systemmodstamp
            `, [
         p.Id, p.ProductCode, p.Name, p.Description, p.IsActive, p.Family,
-        Math.floor(Math.random() * 500) + 10, // fake price
-        Math.floor(Math.random() * 100), // fake qty
-        Math.floor(Math.random() * 100), // fake qty
+        (p.PricebookEntries && p.PricebookEntries.records && p.PricebookEntries.records[0] && p.PricebookEntries.records[0].gtherp__Selling_Unit_Price__c) || 0, // real price from SF subquery
+        p.gtherp__Available_To_Sell__c || 0, // real qty
+        p.gtherp__Available_To_Sell__c || 0, // real qty
         0,
         p.Family || 'No Category',
         'Sub Category',
-        'Woven',
+        p.gtherp__Manufacturer_Name__c || '',
         p.gtherp__Product_Availability__c || '',
-        p.CreatedDate, p.SystemModstamp
+        p.CreatedDate, p.SystemModstamp || ''
       ]);
     }
 

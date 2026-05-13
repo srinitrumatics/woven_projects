@@ -28,21 +28,24 @@ export default function ForgotPasswordForm() {
       });
 
       const data = await response.json();
-      
+
       if (response.ok) {
         setSuccess(data.message || "Request processed. A reset code has been sent.");
+        setTimeout(() => setSuccess(""), 3000);
         setTimeout(() => {
           setStep(2);
         }, 1500);
       } else {
-        setError(data.error || "An error occurred. Please try again.");
+        setError(data.error || data.message || "Failed to send reset code. Please try again.");
+        setTimeout(() => setError(""), 5000);
       }
     } catch (err) {
       setError("Failed to connect to the server. Please try again.");
+      setTimeout(() => setError(""), 3000);
     }
   };
 
-    const handleResetSubmit = async (e: React.FormEvent) => {
+  const handleResetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -50,12 +53,14 @@ export default function ForgotPasswordForm() {
     // 1. Validation for Reset Code (exactly 6 digits)
     if (!/^\d{6}$/.test(resetCode)) {
       setError("Verification code must be exactly 6 digits.");
+      setTimeout(() => setError(""), 3000);
       return;
     }
 
     // 2. Validation for Password Matching
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
+      setTimeout(() => setError(""), 3000);
       return;
     }
 
@@ -64,6 +69,7 @@ export default function ForgotPasswordForm() {
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
     if (!passwordRegex.test(password)) {
       setError("Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character.");
+      setTimeout(() => setError(""), 3000);
       return;
     }
 
@@ -71,10 +77,10 @@ export default function ForgotPasswordForm() {
       const response = await fetch('/api/auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email, 
-          code: resetCode, 
-          newPassword: password 
+        body: JSON.stringify({
+          email,
+          code: resetCode,
+          newPassword: password
         }),
       });
 
@@ -82,14 +88,17 @@ export default function ForgotPasswordForm() {
 
       if (response.ok) {
         setSuccess("Your password has been reset successfully. Redirecting to login...");
+        setTimeout(() => setSuccess(""), 3000);
         setTimeout(() => {
           router.push("/signin");
         }, 2000);
       } else {
         setError(data.error || "Invalid code or reset failed. Please try again.");
+        setTimeout(() => setError(""), 3000);
       }
     } catch (err) {
       setError("Failed to connect to the server. Please try again.");
+      setTimeout(() => setError(""), 3000);
     }
   };
 
@@ -102,8 +111,8 @@ export default function ForgotPasswordForm() {
             {step === 1 ? "Forgot Password" : "Reset Password"}
           </h2>
           <p className="text-center text-sm text-gray-600 mb-8">
-            {step === 1 
-              ? "Enter your email address and we'll send you a code to reset your password." 
+            {step === 1
+              ? "Enter your email address and we'll send you a code to reset your password."
               : "Enter the verification code sent to your email and your new password."}
           </p>
 
@@ -131,7 +140,7 @@ export default function ForgotPasswordForm() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50"
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50"
                   placeholder="name@company.com"
                 />
               </div>
@@ -143,10 +152,10 @@ export default function ForgotPasswordForm() {
                 >
                   Send Reset Code
                 </button>
-                
+
                 <div className="flex justify-center">
-                  <Link 
-                    href="/signin" 
+                  <Link
+                    href="/signin"
                     className="text-sm font-medium text-gray-500 hover:text-[var(--primary)] transition-colors duration-200 flex items-center"
                   >
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,7 +178,7 @@ export default function ForgotPasswordForm() {
                   required
                   value={resetCode}
                   onChange={(e) => setResetCode(e.target.value)}
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50 font-mono tracking-widest text-center"
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50 font-mono tracking-widest text-center text-gray-600"
                   placeholder="000000"
                 />
               </div>
@@ -185,7 +194,7 @@ export default function ForgotPasswordForm() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50"
+                    className="block w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50 text-gray-600"
                     placeholder="••••••••"
                   />
                   <button
@@ -214,7 +223,7 @@ export default function ForgotPasswordForm() {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50"
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50 text-gray-600"
                   placeholder="••••••••"
                 />
               </div>

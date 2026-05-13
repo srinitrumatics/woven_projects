@@ -362,7 +362,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             companySignedTitle: item.Company_Signed_Title__c,
             proposalType: item.Proposal_Type__c || '',
             priceBook: item.Price_Book_Name || item.Pricebook2Id || '',
-            Proposal_Notes: item.Proposal_Notes__c || item.Proposal_Notes || ''
+            Proposal_Notes: item.Proposal_Notes__c || item.Proposal_Notes || '',
+            Project_Workspace__c: item.Project_Workspace__c || ''
           };
 
           console.log("Mapped Detailed Proposal:", detailedProposal);

@@ -1,5 +1,6 @@
 const algoliasearch = require('algoliasearch');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 const client = algoliasearch(
     process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
