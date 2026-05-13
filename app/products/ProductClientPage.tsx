@@ -66,7 +66,8 @@ function Content() {
   let filters = '';
   if (isCustomer) {
     // Customers and NSO users see only Available products
-    filters = '_tags:Available';
+    // We strictly use product_availability facet for this
+    filters = 'product_availability:Available';
   } else if (isManufacturer && !isAdmin) {
     // Manufacturers (non-admins) see only their own products
     filters = `manufacturer:${selectedAccount?.Id}`;
