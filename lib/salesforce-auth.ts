@@ -36,7 +36,9 @@ export async function salesforceForgotPassword(email: string): Promise<Salesforc
     let errorMessage = 'Failed to initiate password reset.';
     try {
       const sfErrData = await sfResponse.json();
-      if (sfErrData.message) errorMessage = sfErrData.message;
+      if (sfErrData.message) {
+        errorMessage = sfErrData.message;
+      }
     } catch (e) { /* ignore */ }
     throw new Error(errorMessage);
   }
@@ -46,9 +48,11 @@ export async function salesforceForgotPassword(email: string): Promise<Salesforc
     sfData = await sfResponse.json();
   } catch (e) { }
 
+  let message = sfData?.message;
+
   return {
     success: sfData?.success === true,
-    message: sfData?.message || (sfData?.success ? 'A verification code has been sent to your email' : 'Failed to send verification code'),
+    message: message || (sfData?.success ? 'A verification code has been sent to your email' : 'Failed to send verification code'),
     data: sfData?.data
   };
 }

@@ -40,11 +40,31 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       return null;
     }
 
+    // Check if this is a Postgres admin user
+    if (decryptedSession.role === 'Super Admin' || decryptedSession.role === 'Admin') {
+      return {
+        id: decryptedSession.Id || decryptedSession.userId || 'admin-user',
+        name: decryptedSession.contact?.Name || decryptedSession.email,
+        email: decryptedSession.email,
+        role: decryptedSession.role,
+        permissions: ['ALL_ACCESS'],
+        accountId: undefined,
+        Id: decryptedSession.Id || decryptedSession.userId,
+        user_details: decryptedSession.user_details,
+        roles: [{
+          id: 'admin',
+          name: decryptedSession.role,
+          description: 'Administrator'
+        }],
+        organizations: []
+      };
+    }
+
     // Get the account type to determine permissions
     // Use the first account as default or the specified accountId if present in session
     const accounts = decryptedSession.accounts || [];
     const currentAccount = accounts.find((a: any) => a.Id === decryptedSession.accountId) || accounts[0];
-    
+
     const accountType = currentAccount?.Account_Record_Type__c || 'Customer';
     const category = getCategoryFromAccountType(accountType);
     const userPermissions = PERMISSIONS_BY_CATEGORY[category] || [];
@@ -96,7 +116,7 @@ export async function requireAuth() {
 // Create a new Salesforce session
 export async function createSFSession(payload: any) {
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-  
+
   // Minimize payload to stay within 4KB cookie limit
   const minimizedPayload = {
     email: payload.email,

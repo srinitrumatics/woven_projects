@@ -6,6 +6,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/utils/formatting";
 import Link from "next/link";
+import { Eye } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface ShipmentLine {
@@ -233,7 +234,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                         <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={handleSort} width={widths.estimatedDeliveryDate} onResize={handleResize} align="left" />
                         <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={handleSort} width={widths.actualDeliveryDate} onResize={handleResize} align="left" />
                         {/* Action – non-sortable */}
-                        <th className="px-3 py-2 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap " style={{ width: widths.action }}>
+                        <th className="px-3 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.action }}>
                             Action
                         </th>
                     </tr>
@@ -279,20 +280,14 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                             <TextCell v={fmtDate(line.estimatedDeliveryDate)} w={widths.estimatedDeliveryDate} />
                             <TextCell v={fmtDate(line.actualDeliveryDate)} w={widths.actualDeliveryDate} />
                             {/* Action */}
-                            <td className="px-3 py-2 truncate" style={{ width: widths.action }}>
-                                {line.trackingNumber ? (
-                                    <button
-                                        className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors truncate"
-                                        title="View proposal" onClick={() => router.push(`/shipments/${shipmentId}/lines/${line.id}`)}
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    </button>
-                                ) : (
-                                    <span className="text-gray-300 dark:text-gray-600 text-xs truncate"> </span>
-                                )}
+                            <td className="px-3 py-2 text-center" style={{ width: widths.action }}>
+                                <Link
+                                    href={`/shipments/${shipmentId}/lines/${line.id}`}
+                                    className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full inline-flex items-center justify-center transition-colors"
+                                    title="View Line Details"
+                                >
+                                    <Eye className="w-5 h-5 text-primary" />
+                                </Link>
                             </td>
                         </tr>
                     ))}

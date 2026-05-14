@@ -21,11 +21,15 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Check if a route requires authentication
+// Check if a route requires authentication (Salesforce Webapp)
 function isProtectedRoutePath(pathname: string): boolean {
+  // Completely exclude detached Admin Portal routes from Salesforce Auth checks
+  if (pathname.startsWith('/admin-portal') || pathname === '/admin-login') {
+    return false;
+  }
+
   const protectedRoutes = [
     '/program360',
-    '/admin',
     '/products',
     '/orders',
     '/proposals',

@@ -4,6 +4,7 @@ import { QuoteLine, QuoteStatus } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
+import { Eye } from "lucide-react";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -76,6 +77,7 @@ export default function QuoteLinesTab({
                             <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Line Grand Total" field="lineGrandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.lineGrandTotal} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyShipped} onResize={onResize} align="left" truncate={false} />
+                            <th className="px-3 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white w-[80px]">Action</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -122,6 +124,15 @@ export default function QuoteLinesTab({
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.qtyShipped }} title={String(line.qtyShipped)}>
                                     {line.qtyShipped}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">
+                                    <Link
+                                        href={`/quotes/${quoteId}/lines/${line.id}`}
+                                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full inline-flex items-center justify-center transition-colors"
+                                        title="View Line Details"
+                                    >
+                                        <Eye className="w-5 h-5 text-primary" />
+                                    </Link>
                                 </td>
                             </tr>
                         ))}

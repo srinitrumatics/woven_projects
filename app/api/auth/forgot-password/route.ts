@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     } catch (apiError: any) {
       console.error('[Forgot Password] Salesforce API error:', apiError);
       return NextResponse.json(
-        { error: apiError.message || 'Failed to initiate password reset, please check the email provided or try again' },
+        { error: apiError.message || 'Email Address is not found' },
         { status: 400 }
       );
     }
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('[Forgot Password] Internal error:', error);
     return NextResponse.json(
-      { error: 'An error occurred while processing your request' },
+      { error: 'Failed to process request. Please try again later.' },
       { status: 500 }
     );
   }

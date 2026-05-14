@@ -144,7 +144,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
         ProductCode: formData.productCode,
         Family: formData.family || "",
         Product_Family__c: formData.productFamilyNo || "",
-        Product_Availability__c: "Available", // Always Draft as per requirements
+        Product_Availability__c: "Draft", // Always Draft as per requirements
         Availability_Status__c: formData.availabilityStatus,
         Available_To_Sell__c: Number(formData.availableToSell) || 0,
         Lead_Time_Wks__c: Number(formData.leadTimeWks) || 0,
