@@ -1,7 +1,7 @@
 import { getSalesforceSession, fetchWithLogging } from './salesforce-service';
 
 /**
- * Fetch dashboard insights for Program 360 from Salesforce
+ * Fetch dashboard insights for Home from Salesforce
  */
 export async function getProgramInsights(accountId: string, contactId: string): Promise<any> {
     try {

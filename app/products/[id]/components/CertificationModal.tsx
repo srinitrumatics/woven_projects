@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 
 const CERTIFICATION_STATUS_OPTIONS = ["Valid", "Expired", "Pending", "Revoked"];
 
@@ -16,6 +17,7 @@ interface CertificationModalProps {
 export default function CertificationModal({ productId, onClose, onSuccess, certificationToEdit, picklists }: CertificationModalProps) {
   const { user, selectedAccount } = useUserSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { error: toastError, warning } = useToast();
 
   const [formData, setFormData] = useState({
     Name: certificationToEdit?.Name || "",
@@ -31,7 +33,7 @@ export default function CertificationModal({ productId, onClose, onSuccess, cert
 
   const handleSubmit = async () => {
     if (!formData.Name) {
-      alert("Certification Name is required");
+      warning("Certification Name is required");
       return;
     }
     try {
@@ -71,7 +73,7 @@ export default function CertificationModal({ productId, onClose, onSuccess, cert
       }
     } catch (err: any) {
       console.error("Error saving certification:", err);
-      alert(`Error: ${err.message}`);
+      toastError(`Error: ${err.message}`);
     } finally {
       setIsSubmitting(false);
     }

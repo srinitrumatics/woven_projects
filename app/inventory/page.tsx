@@ -22,6 +22,7 @@ export default function InventoryPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [inventoryData, setInventoryData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
     // Top-level session hook
     const { user, selectedAccount } = useUserSession();
@@ -72,7 +73,15 @@ export default function InventoryPage() {
 
         const recordsToMap = Array.isArray(rawRecords) ? rawRecords : [];
 
-        return recordsToMap.map((item: any, idx: number) => ({
+        // Apply filtering logic: Inventory Account = Logged in Account AND (Ownership Status = "Client-Owned" OR Invoiced = True)
+        const filteredRecords = recordsToMap.filter((item: any) => {
+            const isInventoryAccount = item.Inventory_Account__c === accountId;
+            const isClientOwned = item.Ownership_Status__c === 'Client-Owned';
+            const isInvoiced = item.Invoiced__c === true || item.Invoiced__c === 'true';
+            return isInventoryAccount && (isClientOwned || isInvoiced);
+        });
+
+        return filteredRecords.map((item: any, idx: number) => ({
             id: item.Product_Name__c || `inv-${idx}`,
             productId: item.Product_Name__c || "",
             name: item.Product_Name || "",
@@ -124,8 +133,31 @@ export default function InventoryPage() {
         return sortedInventory.slice(start, start + ITEMS_PER_PAGE);
     }, [sortedInventory, currentPage]);
 
+    const toggleSelection = (id: string) => {
+        const newSelection = new Set(selectedItems);
+        if (newSelection.has(id)) {
+            newSelection.delete(id);
+        } else {
+            newSelection.add(id);
+        }
+        setSelectedItems(newSelection);
+    };
+
+    const toggleSelectAll = () => {
+        if (selectedItems.size === paginatedInventory.length && paginatedInventory.length > 0) {
+            setSelectedItems(new Set());
+        } else {
+            setSelectedItems(new Set(paginatedInventory.map(i => i.productId || i.id)));
+        }
+    };
+
+    useEffect(() => {
+        setSelectedItems(new Set());
+    }, [activeTab, searchQuery, currentPage]);
+
     // Resizable columns
     const { widths, handleResize } = useResizableColumns({
+        checkbox: 48,
         productName: 180,
         description: 200,
         manufacturer: 200,
@@ -149,7 +181,16 @@ export default function InventoryPage() {
 
 
         // Card 1: Total Inventory Value - from API "Total Inventory Value" array
-        const totalInvItems = inventoryData["Total Inventory Value"] || [];
+        const totalInvItemsRaw = inventoryData["Total Inventory Value"] || [];
+
+        // Filter by Inventory Account AND (Client-Owned or Invoiced)
+        const totalInvItems = totalInvItemsRaw.filter((item: any) => {
+            const isInventoryAccount = item.Inventory_Account__c === accountId;
+            const isClientOwned = item.Ownership_Status__c === 'Client-Owned';
+            const isInvoiced = item.Invoiced__c === true || item.Invoiced__c === 'true';
+            return isInventoryAccount && (isClientOwned || isInvoiced);
+        });
+
         const filteredTotalInvItems = totalInvItems.filter((item: any) => item.gtherp__Enable_Inventory_Calculation__c === true || item.gtherp__Enable_Inventory_Calculation__c === 'true');
         const itemsToUse = filteredTotalInvItems.length > 0 ? filteredTotalInvItems : totalInvItems; // fallback if true not present
         const totalValue = itemsToUse.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
@@ -157,11 +198,21 @@ export default function InventoryPage() {
 
         // Card 2: Average Aged
         const agedItemsRaw = inventoryData["Average Aged"] || inventoryData["Total Inventory Value"] || [];
-        const filteredAgedItems = agedItemsRaw.filter((item: any) =>
+        
+        // Always apply security filters first
+        const securedAgedItems = agedItemsRaw.filter((item: any) => {
+            const isInventoryAccount = item.Inventory_Account__c === accountId;
+            const isClientOwned = item.Ownership_Status__c === 'Client-Owned';
+            const isInvoiced = item.Invoiced__c === true || item.Invoiced__c === 'true';
+            return isInventoryAccount && (isClientOwned || isInvoiced);
+        });
+
+        const filteredAgedItems = securedAgedItems.filter((item: any) =>
             (item.gtherp__Enable_Inventory_Calculation__c === true || item.gtherp__Enable_Inventory_Calculation__c === 'true') &&
             (item.gtherp__Days_in_Inventory__c !== null && item.gtherp__Days_in_Inventory__c !== undefined)
         );
-        const agedItemsToUse = filteredAgedItems.length > 0 ? filteredAgedItems : agedItemsRaw;
+        
+        const agedItemsToUse = filteredAgedItems.length > 0 ? filteredAgedItems : securedAgedItems;
         const agedUniqueProducts = new Set(agedItemsToUse.map((item: any) => item.Product_Name || item.Name)).size;
         const agedTotalValue = agedItemsToUse.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
 
@@ -198,7 +249,7 @@ export default function InventoryPage() {
 
     }, [inventoryData]);
 
-    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+    const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
 
     const handleCardClick = (filter: TabFilter) => {
         setActiveTab(filter);
@@ -207,9 +258,25 @@ export default function InventoryPage() {
 
     return (
         <div className="flex flex-col gap-6 p-1 min-w-0">
-            <div className="flex flex-col min-w-0">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Inventory</h1>
-                <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and track your product inventory across all locations.">Manage and track your product inventory across all locations.</p>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 min-w-0">
+                <div className="flex flex-col min-w-0">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">My Inventory</h1>
+                    <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Managed and Track Inventory Across All Locations.">Managed and Track Inventory Across All Locations.</p>
+                </div>
+                <div className="flex items-center gap-3 min-w-0">
+                    <button
+                        onClick={() => {
+                            const query = selectedItems.size > 0 ? `transfer=true&products=${Array.from(selectedItems).join(',')}` : 'transfer=true';
+                            router.push(`/orders/create?${query}`);
+                        }}
+                        className={`px-4 py-2 text-white rounded-lg transition-colors flex items-center gap-2 truncate ${selectedItems.size > 0 ? 'bg-primary hover:bg-primary-dark' : 'bg-primary/80 hover:bg-primary-dark'}`}
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                        Request Transfer {selectedItems.size > 0 && `(${selectedItems.size})`}
+                    </button>
+                </div>
             </div>
 
             {/* Stat Cards - Inherited Design from Proposals */}
@@ -446,7 +513,15 @@ export default function InventoryPage() {
                         <table className="w-full text-sm">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} truncate={false} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                    <th className="px-3 py-2 sticky left-0 bg-primary-light dark:bg-gray-900 z-20 text-center" style={{ width: widths.checkbox, maxWidth: widths.checkbox }}>
+                                        <input 
+                                            type="checkbox" 
+                                            className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                                            checked={paginatedInventory.length > 0 && selectedItems.size === paginatedInventory.length}
+                                            onChange={toggleSelectAll}
+                                        />
+                                    </th>
+                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} truncate={false} className="sticky left-[48px] bg-primary-light dark:bg-gray-900 z-10" />
                                     <SortableHeader label="Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.family} onResize={handleResize} truncate={false} />
@@ -465,7 +540,7 @@ export default function InventoryPage() {
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
                                 {paginatedInventory.length === 0 ? (
                                     <tr>
-                                        <td colSpan={15} className="px-6 py-16 text-center text-gray-500 rounded-b-lg truncate">
+                                        <td colSpan={16} className="px-6 py-16 text-center text-gray-500 rounded-b-lg truncate">
                                             <div className="flex flex-col items-center justify-center min-w-0">
                                                 <svg className="w-20 h-20 text-gray-200 dark:text-gray-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -477,8 +552,16 @@ export default function InventoryPage() {
                                     </tr>
                                 ) : (
                                     paginatedInventory.map((item) => (
-                                        <tr key={item.id} className="hover:bg-primary-light/20 dark:hover:bg-primary/5 transition-colors group">
-                                            <td className="px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky left-0 bg-white dark:bg-gray-800 text-left truncate" style={{ width: widths.productName, maxWidth: widths.productName }}>
+                                        <tr key={item.id} className={`transition-colors group ${selectedItems.has(item.productId || item.id) ? 'bg-primary/5 dark:bg-primary/10' : 'hover:bg-primary-light/20 dark:hover:bg-primary/5'}`}>
+                                            <td className="px-3 py-2 sticky left-0 bg-white dark:bg-gray-800 z-10 text-center" style={{ width: widths.checkbox, maxWidth: widths.checkbox }}>
+                                                <input 
+                                                    type="checkbox" 
+                                                    className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                                                    checked={selectedItems.has(item.productId || item.id)}
+                                                    onChange={() => toggleSelection(item.productId || item.id)}
+                                                />
+                                            </td>
+                                            <td className="px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky left-[48px] bg-white dark:bg-gray-800 text-left truncate" style={{ width: widths.productName, maxWidth: widths.productName }}>
                                                 <button onClick={() => router.push(`/inventory/${item.productId || item.id}`)} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
 
                                                     {item.productName}

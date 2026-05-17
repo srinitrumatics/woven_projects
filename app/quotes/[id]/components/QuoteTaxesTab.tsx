@@ -1,8 +1,8 @@
-import { QuoteTax } from"@/app/quotes/types";
-import { SortableHeader } from"@/components/ui/SortableHeader";
-import { formatCurrency } from"@/lib/utils/formatting";
-import Pagination from"@/components/ui/Pagination";
-import { useState, useMemo } from"react";
+import { QuoteTax } from "@/app/quotes/types";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { formatCurrency } from "@/lib/utils/formatting";
+import Pagination from "@/components/ui/Pagination";
+import { useState, useMemo } from "react";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -26,7 +26,7 @@ export default function QuoteTaxesTab({
     onSort,
     widths,
     onResize
-}: QuoteTaxesTabProps) {
+}: QuoteTaxesTabProps): JSX.Element {
     const [currentPage, setCurrentPage] = useState(1);
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteTax);

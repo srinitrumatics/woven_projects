@@ -112,8 +112,9 @@ BEGIN
         END,
         
         -- Categories and Family
-        'category', product_row.family,
-        'sub_category', 'sub_category',
+        'category', product_row.gtherp__category__c,
+        'family', product_row.family,
+        'sub_category', product_row.gtherp__sub_category__c,
         'manufacturer', product_row.manufacturer_name__c,
         
         'status', CASE WHEN product_row.isactive THEN 'active' ELSE 'inactive' END,

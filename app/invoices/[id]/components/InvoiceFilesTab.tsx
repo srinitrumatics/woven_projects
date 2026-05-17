@@ -6,6 +6,7 @@ import { formatFileSize } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { useToast } from "@/components/ui/Toast";
 
 interface InvoiceFilesProps {
     files: InvoiceFile[];
@@ -16,6 +17,7 @@ interface InvoiceFilesProps {
 
 export default function InvoiceFiles({ files, invoiceId, accountId, contactId }: InvoiceFilesProps) {
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
+    const { error } = useToast();
     const { items: sortedFiles, requestSort, sortConfig } = useSortableData<InvoiceFile>(files);
     const { widths, handleResize } = useResizableColumns({
         name: 300,
@@ -58,7 +60,7 @@ export default function InvoiceFiles({ files, invoiceId, accountId, contactId }:
             );
             if (!response.ok) {
                 if (win) win.close();
-                alert("Unable to open preview.");
+                error("Unable to open preview.");
                 return;
             }
             const result = await response.json();

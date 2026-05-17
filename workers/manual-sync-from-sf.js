@@ -102,7 +102,13 @@ async function main() {
                    name = EXCLUDED.name,
                    description = EXCLUDED.description,
                    isactive = EXCLUDED.isactive,
+                   family = EXCLUDED.family,
                    gtherp__price__c = EXCLUDED.gtherp__price__c,
+                   gtherp__stock_quantity__c = EXCLUDED.gtherp__stock_quantity__c,
+                   gtherp__available_quantity__c = EXCLUDED.gtherp__available_quantity__c,
+                   gtherp__category__c = EXCLUDED.gtherp__category__c,
+                   gtherp__sub_category__c = EXCLUDED.gtherp__sub_category__c,
+                   manufacturer_name__c = EXCLUDED.manufacturer_name__c,
                    product_availability__c = EXCLUDED.product_availability__c,
                    systemmodstamp = EXCLUDED.systemmodstamp
            `, [
@@ -112,7 +118,7 @@ async function main() {
         p.gtherp__Available_To_Sell__c || 0, // real qty
         0,
         p.Family || 'No Category',
-        'Sub Category',
+        '',
         p.gtherp__Manufacturer_Name__c || '',
         p.gtherp__Product_Availability__c || '',
         p.CreatedDate, p.SystemModstamp || ''

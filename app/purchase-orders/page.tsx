@@ -171,7 +171,7 @@ export default function PurchaseOrdersPage() {
 
     const { items: sortedPOs, requestSort, sortConfig } = useSortableData<PurchaseOrder>(filteredPOs, { key: 'name', direction: 'desc' });
 
-    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+    const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
 
     // Pagination
     const totalPages = Math.max(1, Math.ceil(sortedPOs.length / ITEMS_PER_PAGE));

@@ -45,7 +45,7 @@ const ITEMS_PER_PAGE = 10;
 export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const { user, selectedAccount } = useUserSession();
-    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+    const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
 
     // Map data for sorting
     const mappedData = useMemo(() => debitMemos.map(d => ({

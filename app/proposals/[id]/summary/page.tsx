@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Link from "next/link";
 import { Proposal } from "../types";
+import { useUserSession } from "@/components/UserSessionContext";
 
 export default function ProposalSummaryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -13,8 +14,9 @@ export default function ProposalSummaryPage({ params }: { params: Promise<{ id: 
   const [loading, setLoading] = useState(true);
 
   // Constants used for Salesforce API
-  const SF_ACCOUNT_ID = '001Ec00001uyl3MIAQ';
-  const SF_CONTACT_ID = '003Ec00001g9GJnIAM';
+  const { user, selectedAccount } = useUserSession();
+  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
+  const SF_CONTACT_ID = user?.Id || "";
 
   useEffect(() => {
     async function fetchProposal() {
@@ -22,7 +24,7 @@ export default function ProposalSummaryPage({ params }: { params: Promise<{ id: 
         const res = await fetch(`/api/salesforce/proposals?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&proposalId=${id}&action=view`);
         if (!res.ok) throw new Error('Failed to fetch proposal');
         const data = await res.json();
-        
+
         let item: any = null;
         if (Array.isArray(data) && data.length > 0) {
           item = data[0];
@@ -65,12 +67,12 @@ export default function ProposalSummaryPage({ params }: { params: Promise<{ id: 
             Proposal Details
           </button>
           <span>&gt;</span>
-          <span className="text-gray-900 dark:text-white truncate">Proposal Vendor Page</span>
+          <span className="text-gray-900 dark:text-white truncate">Proposal Workspace Page</span>
         </div>
         <div className="flex items-center justify-between min-w-0">
           <div className="flex items-center gap-4 min-w-0">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">
-              Proposal Vendor Page
+              Proposal Workspace Page
             </h1>
           </div>
           <div className="flex items-center gap-2 min-w-0">
@@ -105,7 +107,7 @@ export default function ProposalSummaryPage({ params }: { params: Promise<{ id: 
             <p className="text-gray-500 dark:text-gray-400">Loading workspace...</p>
           </div>
         ) : proposal?.Project_Workspace__c ? (
-          <div 
+          <div
             className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full"
             dangerouslySetInnerHTML={{ __html: proposal.Project_Workspace__c }}
           />

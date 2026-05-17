@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 
 interface DatasheetModalProps {
   productId: string;
@@ -13,6 +14,7 @@ interface DatasheetModalProps {
 export default function DatasheetModal({ productId, onClose, onSuccess, datasheetToEdit }: DatasheetModalProps) {
   const { user, selectedAccount } = useUserSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { error: toastError, warning } = useToast();
 
   const [formData, setFormData] = useState({
     MPN__c: datasheetToEdit?.MPN__c || "",
@@ -32,7 +34,7 @@ export default function DatasheetModal({ productId, onClose, onSuccess, datashee
 
   const handleSubmit = async () => {
     if (!formData.MPN__c) {
-      alert("MPN is required");
+      warning("MPN is required");
       return;
     }
     try {
@@ -71,7 +73,7 @@ export default function DatasheetModal({ productId, onClose, onSuccess, datashee
       }
     } catch (err: any) {
       console.error("Error saving datasheet:", err);
-      alert(`Error: ${err.message}`);
+      toastError(`Error: ${err.message}`);
     } finally {
       setIsSubmitting(false);
     }

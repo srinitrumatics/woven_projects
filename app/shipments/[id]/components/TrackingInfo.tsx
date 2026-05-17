@@ -24,7 +24,7 @@ export default function TrackingInfo({ shipment, trackingData }: TrackingInfoPro
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Shipment Tracking Details">Shipment Tracking Details</p>
                 </div>
             </div>
-            <div className="text-sm mt-6">
+            <div className="text-sm mt-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <DetailInput label="Logistics Partner" value={logisticsPartner} />
                     <DetailInput label="Logistics Contact" value={shipment.Logistics_Contact_Name} />

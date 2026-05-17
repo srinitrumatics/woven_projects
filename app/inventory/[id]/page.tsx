@@ -61,7 +61,16 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                     if (responseData?.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
                         const info = responseData.data[0];
                         setProductInfo(info);
-                        setPositions(info.Inventory_Position__c || []);
+                        
+                        // Filter positions: Inventory Account = Logged in Account && (Ownership Status = “Client-Owned” or Invoiced = True)
+                        const rawPositions = info.Inventory_Position__c || [];
+                        const filtered = rawPositions.filter((p: any) => {
+                            const isLoggedAccount = p.Inventory_Account__c === accountId;
+                            const isClientOwned = p.Ownership_Status__c === 'Client-Owned';
+                            const isInvoiced = p.Invoiced__c === true || p.Invoiced__c === 'true';
+                            return isLoggedAccount && (isClientOwned || isInvoiced);
+                        });
+                        setPositions(filtered);
                     }
                 } else {
                     console.error("Failed to fetch inventory for product:", productId);
@@ -147,7 +156,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
         <div className="p-6">
             <div className="mb-6">
                 <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
-                    <button onClick={() => router.push('/inventory')} className="hover:text-primary transition-colors">Inventory</button>
+                    <button onClick={() => router.push('/inventory')} className="hover:text-primary transition-colors">My Inventory</button>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                     <span className="truncate max-w-[200px]" title={productName}>{productName}</span>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
@@ -176,7 +185,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
                             />
                         </svg>
-                        Back to Inventory
+                        Back to My Inventory
                     </Link>
 
                 </div>

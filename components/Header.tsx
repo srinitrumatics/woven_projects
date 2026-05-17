@@ -46,6 +46,9 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
   const getCurrentPageName = () => {
     const pathSegments = pathname?.split("/").filter(Boolean) || [];
     if (pathSegments.length === 0) return "Dashboard";
+    const firstSegment = pathSegments[0].toLowerCase();
+    if (firstSegment === "home") return "Home";
+    if (firstSegment === "products") return "Catalog";
     return pathSegments[0].charAt(0).toUpperCase() + pathSegments[0].slice(1);
   };
 
@@ -110,8 +113,8 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                                   await setSelectedAccountId(accId);
                                   
                                   const accType = account.Account_Record_Type__c || 'Customer';
-                                  const isCustomerType = accType === 'Customer' || accType === 'NSO';
-                                  const landPage = isCustomerType ? '/program360' : '/products';
+                                  const isCustomerType = accType === 'Customer' || accType === 'NSO' || accType === 'Hybrid';
+                                  const landPage = isCustomerType ? '/home' : '/products';
 
                                   const currentUrl = new URL(window.location.href);
                                   currentUrl.searchParams.delete('organizationId');

@@ -1,8 +1,9 @@
-import { useState } from"react";
-import { QuoteFile } from"@/app/quotes/types";
-import { formatDate, formatFileSize } from"@/lib/utils/formatting";
-import { SortableHeader } from"@/components/ui/SortableHeader";
-import { useResizableColumns } from"@/hooks/useResizableColumns";
+import { useState } from "react";
+import { QuoteFile } from "@/app/quotes/types";
+import { formatDate, formatFileSize } from "@/lib/utils/formatting";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { useToast } from "@/components/ui/Toast";
 
 interface QuoteFilesTabProps {
     quoteId: string;
@@ -12,10 +13,11 @@ interface QuoteFilesTabProps {
     loading: boolean;
 }
 
-export default function QuoteFilesTab({ quoteId, accountId, contactId, files, loading }: QuoteFilesTabProps) {
+export default function QuoteFilesTab({ quoteId, accountId, contactId, files, loading }: QuoteFilesTabProps): JSX.Element {
     const [sortField, setSortField] = useState<keyof QuoteFile>("fileName");
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
+    const { error } = useToast();
 
     const { widths, handleResize } = useResizableColumns({
         fileName: 300,
@@ -63,7 +65,7 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
         const contentVersionId = file.id;
 
         if (!contentVersionId) {
-            alert("File content not available - missing content version ID");
+            error("File content not available - missing content version ID");
             return;
         }
 
@@ -90,10 +92,10 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
             } else {
                 window.open(downloadUrl, '_blank', 'noopener');
             }
-        } catch (error) {
-            console.error("Error downloading file:", error);
+        } catch (err) {
+            console.error("Error downloading file:", err);
             if (win) win.close();
-            alert("Failed to download file");
+            error("Failed to download file");
         } finally {
             setDownloadingIds(prev => {
                 const newSet = new Set(prev);
@@ -107,7 +109,7 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
         const contentVersionId = file.id;
 
         if (!contentVersionId) {
-            alert("Missing Content Version ID");
+            error("Missing Content Version ID");
             return;
         }
 
@@ -121,7 +123,7 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
 
             if (!response.ok) {
                 if (win) win.close();
-                alert("Unable to open preview.");
+                error("Unable to open preview.");
                 return;
             }
             const result = await response.json();
@@ -129,7 +131,7 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
 
             if (!previewUrl) {
                 if (win) win.close();
-                alert("Preview URL missing");
+                error("Preview URL missing");
                 return;
             }
 
@@ -141,7 +143,7 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
         } catch (err) {
             console.error("Preview error:", err);
             if (win) win.close();
-            alert("Failed to open preview");
+            error("Failed to open preview");
         }
     };
 

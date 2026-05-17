@@ -2,11 +2,14 @@
 
 export type AccountTypeCategory = 'Customer' | 'Partner' | 'Hybrid';
 
+export const MANUFACTURER_GROUP = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'];
+
 export const getCategoryFromAccountType = (accountType?: string): AccountTypeCategory => {
   if (!accountType) return 'Customer';
   if (accountType === 'Customer' || accountType === 'NSO') return 'Customer';
   if (accountType === 'Hybrid') return 'Hybrid';
-  return 'Partner'; // Default for Partner types like 'Manufacturer', etc.
+  if (MANUFACTURER_GROUP.includes(accountType)) return 'Partner';
+  return 'Partner'; // Default for other Partner types
 };
 
 export const PERMISSIONS_BY_CATEGORY: Record<AccountTypeCategory, string[]> = {

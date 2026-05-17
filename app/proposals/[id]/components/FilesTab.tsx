@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ProposalFile, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { formatFileSize } from "@/lib/utils/formatting";
+import { useToast } from "@/components/ui/Toast";
 
 interface FilesTabProps {
     files: ProposalFile[];
@@ -31,6 +32,7 @@ export default function FilesTab({
     contactId
 }: FilesTabProps) {
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
+    const { error: toastError } = useToast();
 
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof ProposalFile);
@@ -62,7 +64,7 @@ export default function FilesTab({
         const contentVersionId = file.id;
 
         if (!contentVersionId) {
-            alert("File content not available - missing content document ID");
+            toastError("File content not available - missing content document ID");
             return;
         }
 
@@ -104,7 +106,7 @@ export default function FilesTab({
         } catch (error) {
             console.error("Error downloading file:", error);
             if (win) win.close();
-            alert("Failed to download file");
+            toastError("Failed to download file");
         } finally {
             // Clear loading state for this file
             setDownloadingIds(prev => {
@@ -119,7 +121,7 @@ export default function FilesTab({
         const contentVersionId = file.id;
 
         if (!contentVersionId) {
-            alert("Missing Content Version ID");
+            toastError("Missing Content Version ID");
             return;
         }
 
@@ -135,7 +137,7 @@ export default function FilesTab({
             );
             if (!response.ok) {
                 if (win) win.close();
-                alert("Unable to open preview.");
+                toastError("Unable to open preview.");
                 return;
             }
             const result = await response.json();
@@ -143,7 +145,7 @@ export default function FilesTab({
 
             if (!previewUrl) {
                 if (win) win.close();
-                alert("Preview URL missing");
+                toastError("Preview URL missing");
                 return;
             }
 
@@ -155,7 +157,7 @@ export default function FilesTab({
         } catch (err) {
             console.error("Preview error:", err);
             if (win) win.close();
-            alert("Failed to open preview");
+            toastError("Failed to open preview");
         }
     };
 

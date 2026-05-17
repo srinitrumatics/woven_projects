@@ -16,6 +16,7 @@ import QuoteFilesTab from "./components/QuoteFilesTab";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatCurrency, formatNumber, formatDate } from "@/lib/utils/formatting";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 
 const formatAddress = (addressConfig: any): string => {
   if (!addressConfig) return '';
@@ -35,6 +36,7 @@ const formatAddress = (addressConfig: any): string => {
 export default function QuoteDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
+  const { success, error: toastError, warning } = useToast();
 
   const [activeTab, setActiveTab] = useState<QuoteTabType>("quotelines");
   const [sortField, setSortField] = useState<keyof QuoteLine>("productName");
@@ -91,7 +93,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
       if (oversizedFiles.length > 0) {
         errorMessage += `The following files exceed the 10MB limit:\n${oversizedFiles.map(f => `- ${f.name} (${(f.size / 1024 / 1024).toFixed(2)} MB)`).join('\n')}`;
       }
-      alert(errorMessage);
+      warning(errorMessage);
       event.target.value = '';
       return;
     }
@@ -130,11 +132,11 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
 
       if (!response.ok) throw new Error('Failed to upload files');
 
-      alert('Files uploaded successfully!');
+      success('Files uploaded successfully!');
       window.location.reload();
-    } catch (error) {
-      console.error('Error uploading files:', error);
-      alert('Failed to upload files. Please try again.');
+    } catch (err) {
+      console.error('Error uploading files:', err);
+      toastError('Failed to upload files. Please try again.');
     } finally {
       setIsUploading(false);
       if (event.target) event.target.value = '';

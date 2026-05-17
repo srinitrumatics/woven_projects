@@ -29,7 +29,7 @@ function isProtectedRoutePath(pathname: string): boolean {
   }
 
   const protectedRoutes = [
-    '/program360',
+    '/home',
     '/products',
     '/orders',
     '/proposals',

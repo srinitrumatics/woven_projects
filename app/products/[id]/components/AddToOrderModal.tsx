@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
+import { useToast } from "@/components/ui/Toast";
 
 interface Order {
   id: string;
@@ -33,6 +34,7 @@ export default function AddToOrderModal({
   const [adding, setAdding] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { success } = useToast();
 
   useEffect(() => {
     if (isOpen && accountId && contactId) {
@@ -106,7 +108,7 @@ export default function AddToOrderModal({
         throw new Error(errData.error || "Failed to add product to order");
       }
 
-      alert("Product added to order successfully!");
+      success("Product added to order successfully!");
       onClose();
     } catch (err: any) {
       console.error("Error adding to order:", err);

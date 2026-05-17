@@ -3,6 +3,7 @@ import { FileData } from "@/app/orders/types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import { formatFileSize } from "@/lib/utils/formatting";
+import { useToast } from "@/components/ui/Toast";
 
 interface FilesTabProps {
     orderId: string;
@@ -17,6 +18,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
     const [loading, setLoading] = useState(false);
     const [selectedFileIds, setSelectedFileIds] = useState<Set<string>>(new Set());
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
+    const { success, error: toastError } = useToast();
 
     const fetchFiles = async () => {
         try {
@@ -72,7 +74,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
         const contentVersionId = file.Id;
 
         if (!contentVersionId) {
-            alert("File content not available - missing content document ID");
+            toastError("File content not available - missing content document ID");
             return;
         }
 
@@ -109,10 +111,10 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
             } else {
                 window.open(downloadUrl, '_blank', 'noopener');
             }
-        } catch (error) {
-            console.error("Error downloading file:", error);
+        } catch (err) {
+            console.error("Error downloading file:", err);
             if (win) win.close();
-            alert("Failed to download file");
+            toastError("Failed to download file");
         } finally {
             // Clear loading state for this file
             setDownloadingIds(prev => {
@@ -128,7 +130,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
         // Use ContentDocumentId (capital C) from Salesforce API response
         const contentDocumentId = file.ContentDocumentId;
         if (!contentDocumentId) {
-            alert("Cannot delete file - missing content document ID");
+            toastError("Cannot delete file - missing content document ID");
             return;
         }
         try {
@@ -147,9 +149,9 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                 newSet.delete(file.Id);
                 return newSet;
             });
-        } catch (error) {
-            console.error("Error deleting file:", error);
-            alert("Failed to delete file");
+        } catch (err) {
+            console.error("Error deleting file:", err);
+            toastError("Failed to delete file");
         }
     };
 
@@ -199,10 +201,10 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                 return newFiles;
             });
             setSelectedFileIds(new Set());
-            alert("Files deleted successfully");
-        } catch (error) {
-            console.error("Error deleting files:", error);
-            alert("Failed to delete files");
+            success("Files deleted successfully");
+        } catch (err) {
+            console.error("Error deleting files:", err);
+            toastError("Failed to delete files");
         }
     };
 
@@ -210,7 +212,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
         const contentVersionId = file.Id;
 
         if (!contentVersionId) {
-            alert("Missing Content Version ID");
+            toastError("Missing Content Version ID");
             return;
         }
 
@@ -224,10 +226,10 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
             const response = await fetch(
                 `/api/salesforce/orders?action=preview&contentVersionId=${encodeURIComponent(contentVersionId)}&accountId=${encodeURIComponent(accountId)}`
             );
-            // alert('check here result');
+
             if (!response.ok) {
                 if (win) win.close();
-                alert("Unable to open preview.");
+                toastError("Unable to open preview.");
                 return;
             }
             const result = await response.json();
@@ -238,7 +240,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
 
             if (!previewUrl) {
                 if (win) win.close();
-                alert("Preview URL missing");
+                toastError("Preview URL missing");
                 return;
             }
 
@@ -251,7 +253,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
         } catch (err) {
             console.error("Preview error:", err);
             if (win) win.close();
-            alert("Failed to open preview");
+            toastError("Failed to open preview");
         }
     };
 

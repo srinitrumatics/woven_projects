@@ -7,6 +7,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { formatFileSize, formatDate } from "@/lib/utils/formatting";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 
 interface POFile {
     id: string;
@@ -27,6 +28,7 @@ const ITEMS_PER_PAGE = 10;
 export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
+    const { error: toastError } = useToast();
     const { items: sortedData, requestSort, sortConfig } = useSortableData<POFile>(files);
 
   const { user, selectedAccount } = useUserSession();
@@ -118,7 +120,7 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
         } catch (err: any) {
             console.error(`${action} error:`, err);
             if (win) win.close();
-            alert(`Failed to ${action} file: ${err.message || 'Unknown error'}`);
+            toastError(`Failed to ${action} file: ${err.message || 'Unknown error'}`);
         } finally {
             if (action === 'download') {
                 setDownloadingIds(prev => {

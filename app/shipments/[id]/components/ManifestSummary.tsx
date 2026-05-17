@@ -67,8 +67,6 @@ export default function ManifestSummary({
                     <SummaryItem label="DIM Height (inches)" value={formatNumber(shipment.Case_Height__c || 0, 2)} />
                     <SummaryItem label="Net Weight (lbs)" value={formatNumber(shipment.Case_Net_Weight__c || 0, 2)} />
                     <SummaryItem label="Gross Weight (lbs)" value={formatNumber(shipment.Case_Gross_Weight__c || 0, 2)} />
-                    <SummaryItem label="DW 139 (lbs)" value={formatNumber(shipment.Case_DW_139__c || 0, 2)} />
-                    <SummaryItem label="DW 166 (lbs)" value={formatNumber(shipment.Case_DW_166__c || 0, 2)} />
                 </div>
 
                 <div className="pt-2 px-3 py-3 border border-gray-200 dark:border-gray-700 space-y-3">

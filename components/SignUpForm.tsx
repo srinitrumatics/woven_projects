@@ -87,7 +87,7 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
             login(sessionData.user);
 
             // Redirect to dashboard after successful verification
-            router.push("/program360");
+            router.push("/home");
             router.refresh(); // Refresh to update any UI that depends on auth state
           } else {
             setError("Session verification failed. Please try again.");

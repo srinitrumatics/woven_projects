@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Permission, PermissionGroup } from '../../db/schema';
 import { permissionApi, permissionGroupApi } from '@/lib/api/rbac-api';
 import { Save, X, Key, Folder, Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { useToast } from '@/components/ui/Toast';
 
 interface PermissionFormData {
   name: string;
@@ -35,6 +36,7 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
 }) => {
   const [showGroupForm, setShowGroupForm] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const { error: toastError } = useToast();
   const [newGroupData, setNewGroupData] = useState({
     name: '',
     description: ''
@@ -68,7 +70,7 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
       setNewGroupData({ name: '', description: '' });
     } catch (err) {
       console.error('Failed to create permission group:', err);
-      alert('Failed to create permission group');
+      toastError('Failed to create permission group');
     }
   };
 

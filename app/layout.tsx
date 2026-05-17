@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import AppAuthProvider from "@/components/AppAuthProvider";
 import { ThemeProvider } from "@/components/ThemeContext";
+import { ToastProvider } from "@/components/ui/Toast";
 
 export const metadata: Metadata = {
   title: "WOVN Client & Partner Portal",
@@ -17,9 +18,11 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased bg-background text-foreground" cz-shortcut-listen="true">
         <ThemeProvider>
-          <AppAuthProvider>
-            {children}
-          </AppAuthProvider>
+          <ToastProvider>
+            <AppAuthProvider>
+              {children}
+            </AppAuthProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html >

@@ -17,6 +17,7 @@ import SupplierBillDebitsTab from './components/SupplierBillDebitsTab';
 import { SupplierBill, SupplierBillLine, BillPayment, AppliedDebitMemo, DebitMemo } from '../types';
 import { StatusBadge, RemittanceBadge } from "@/components/ui/StatusBadge";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 
 export default function SupplierBillDetailPage() {
     const params = useParams();
@@ -30,6 +31,7 @@ export default function SupplierBillDetailPage() {
     const [appliedDebits, setAppliedDebits] = useState<AppliedDebitMemo[]>([]);
     const [debitMemos, setDebitMemos] = useState<DebitMemo[]>([]);
     const [activeTab, setActiveTab] = useState('lines');
+    const { success, error: toastError } = useToast();
     const [isLoading, setIsLoading] = useState(true);
 
   const { user, selectedAccount } = useUserSession();
@@ -281,7 +283,7 @@ export default function SupplierBillDetailPage() {
     }
 
     const handleDownloadPDF = () => {
-        alert("Downloading Supplier Bill PDF...");
+        success("Downloading Supplier Bill PDF...");
     };
 
     return (

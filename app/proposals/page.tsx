@@ -11,6 +11,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 
 type TabFilter = "Pipeline" | "Draft" | "Client Review" | "Won" | string;
 
@@ -18,6 +19,7 @@ const ITEMS_PER_PAGE = 10;
 
 export default function ProposalsPage() {
   const router = useRouter();
+  const { info } = useToast();
   const [activeTab, setActiveTab] = useState<TabFilter>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -165,7 +167,7 @@ export default function ProposalsPage() {
   // Sorting
   const { items: sortedProposals, requestSort, sortConfig } = useSortableData<Proposal>(filteredAndSearchedProposals, { key: 'proposalNumber', direction: 'desc' });
 
-  const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+  const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
 
   // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedProposals.length / ITEMS_PER_PAGE));
@@ -197,7 +199,7 @@ export default function ProposalsPage() {
   const handleDownloadProposal = (e: React.MouseEvent, proposalId: string) => {
     e.stopPropagation();
     console.log("Downloading proposal:", proposalId);
-    alert(`Downloading proposal ${proposalId}`);
+    info(`Downloading proposal ${proposalId}`);
   };
 
   // REMOVED EARLY RETURN for loading

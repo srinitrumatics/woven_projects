@@ -1,21 +1,11 @@
 import React from 'react';
 import '../globals.css';
-import { UserSessionProvider } from '@/components/UserSessionContext';
-import { PermissionProvider } from '@/components/PermissionContext';
-import Sidebar from '@/components/layouts/Sidebar';
 
-export default function AdminPortalLayout({
+// Plain layout — no Sidebar. Sidebar is applied in admin-portal/layout.tsx
+export default function AdminPortalGroupLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <UserSessionProvider>
-      <PermissionProvider>
-        <Sidebar>
-          {children}
-        </Sidebar>
-      </PermissionProvider>
-    </UserSessionProvider>
-  );
+  return <>{children}</>;
 }

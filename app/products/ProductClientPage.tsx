@@ -10,14 +10,15 @@ import {
   useRefinementList,
   useClearRefinements,
   RefinementList,
-  CurrentRefinements
+  CurrentRefinements,
+  useInstantSearch
 } from "react-instantsearch";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { Product } from "../orders/types";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
 import AddProductModal from "./components/AddProductModal";
-import { getCategoryFromAccountType } from "@/lib/permissions";
+import { getCategoryFromAccountType, MANUFACTURER_GROUP } from "@/lib/permissions";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || "",
@@ -48,9 +49,82 @@ function CustomClearButton({ onClear }: { onClear: () => void }) {
   );
 }
 
+function CategoryHeader({ attribute, title }: { attribute: string, title: string }) {
+  const { items } = useRefinementList({ attribute });
+  const selectedCount = items.filter(item => item.isRefined).length;
+
+  return (
+    <div className="flex items-center justify-between mb-3">
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
+      {selectedCount > 0 && (
+        <span className="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
+          {selectedCount}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function CustomRefinementList(props: any) {
+  const {
+    items,
+    refine,
+    toggleShowMore,
+    isShowingMore,
+    canToggleShowMore,
+  } = useRefinementList(props);
+
+  const { status } = useInstantSearch();
+  const isLoading = status === 'loading' || status === 'stalled';
+
+  if (items.length === 0) {
+    if (isLoading) {
+      return (
+        <div className="animate-pulse space-y-3">
+          <div className="h-4 bg-gray-100 dark:bg-gray-700 rounded w-3/4"></div>
+          <div className="h-4 bg-gray-100 dark:bg-gray-700 rounded w-1/2"></div>
+          <div className="h-4 bg-gray-100 dark:bg-gray-700 rounded w-2/3"></div>
+        </div>
+      );
+    }
+    return <p className="text-sm text-gray-500">No options available</p>;
+  }
+
+  return (
+    <ul className="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+      {items.map((item) => (
+        <li key={item.label} className="flex items-center">
+          <label className="flex items-center cursor-pointer w-full group">
+            <input
+              type="checkbox"
+              checked={item.isRefined}
+              onChange={() => refine(item.value)}
+              className="w-4 h-4 text-primary border-gray-300 dark:border-gray-600 rounded focus:ring-primary dark:focus:ring-primary cursor-pointer"
+            />
+            <span className={`ml-2 text-sm group-hover:text-gray-900 dark:group-hover:text-white flex-1 ${item.isRefined ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
+              {item.label}
+            </span>
+            <span className="ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full">
+              {item.count}
+            </span>
+          </label>
+        </li>
+      ))}
+      {canToggleShowMore && (
+        <button
+          onClick={toggleShowMore}
+          className="mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer w-full text-left"
+        >
+          {isShowingMore ? 'Show less' : 'Show more'}
+        </button>
+      )}
+    </ul>
+  );
+}
+
 function Content() {
   const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "dev_woven_products";
-  
+
   useEffect(() => {
     logUnfilteredData(indexName);
   }, [indexName]);
@@ -60,23 +134,37 @@ function Content() {
   const { selectedAccount, user } = useUserSession();
   const accountType = selectedAccount?.Account_Record_Type__c;
   const isCustomer = accountType === 'Customer' || accountType === 'NSO';
-  const isManufacturer = accountType === 'Manufacturer';
+  const isManufacturer = MANUFACTURER_GROUP.includes(accountType || '');
+  const isHybrid = accountType === 'Hybrid';
+  const isSupplierGroup = isManufacturer;
   const isAdmin = user?.role === 'Admin' || user?.role === 'Super Admin';
+  const [showOnlyMine, setShowOnlyMine] = useState(false);
+  const [productToEdit, setProductToEdit] = useState<any>(null);
+
+  const canEditProduct = (p: any) => {
+    if (isAdmin) return true;
+    if (isCustomer) return false;
+    // Hybrid and Supplier Group can only edit their own products
+    // Note: manufacturer field in Algolia stores the Account ID
+    return (isHybrid || isSupplierGroup) && p.manufacturer === selectedAccount?.Id;
+  };
 
   let filters = '';
   if (isCustomer) {
-    // Customers and NSO users see only Available products
-    // We strictly use product_availability facet for this
-    filters = 'product_availability:Available';
-  } else if (isManufacturer && !isAdmin) {
-    // Manufacturers (non-admins) see only their own products
-    filters = `manufacturer:${selectedAccount?.Id}`;
+    // (1) Customer or NSO: Display only Available products
+    filters = "product_availability:'Available'";
+  } else if (isHybrid) {
+    // (2) Hybrid: Display All Products OR My Products
+    filters = showOnlyMine ? `manufacturer:'${selectedAccount?.Id}'` : "";
+  } else if (isSupplierGroup && !isAdmin) {
+    // (3) Supplier/Manufacturer Group: Display only their own products
+    filters = `manufacturer:'${selectedAccount?.Id}'`;
   } else if (isAdmin) {
-    // Admins see all products (no filter)
+    // Admins see all products
     filters = '';
   } else {
-    // Other roles (Hybrid, etc.) see all products by default
-    filters = '';
+    // Default
+    filters = "product_availability:'Available'";
   }
 
   console.log('[Algolia] Search Context:', {
@@ -91,10 +179,14 @@ function Content() {
   // Search Box Hook
   const { query, refine: setQuery } = useSearchBox();
 
+  // InstantSearch Status Hook
+  const { status } = useInstantSearch();
+  const isLoading = status === 'loading' || status === 'stalled';
+
   // Infinite Hits Hook
   const { hits, isLastPage, showMore } = useInfiniteHits();
   console.log("Algolia Products List:", hits);
-  
+
   useEffect(() => {
     if (hits.length > 0) {
       console.log("Algolia Hits Count:", hits.length);
@@ -134,9 +226,9 @@ function Content() {
     <div className="flex flex-col lg:flex-row gap-6 min-w-0">
       <Configure
         hitsPerPage={9}
-        facets={['category', 'genre', 'product_availability', 'availability_status']}
         maxValuesPerFacet={200}
         filters={filters}
+        facets={['*']}
       />
       {/* Filters Sidebar */}
       <aside className="lg:w-64 flex-shrink-0">
@@ -148,65 +240,26 @@ function Content() {
 
           {/* Category Filter */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 ">Category</h3>
-            <RefinementList
+            <CategoryHeader attribute="category" title="Category" />
+            <CustomRefinementList
               attribute="category"
               operator="or"
-              limit={5}
+              limit={10}
               showMore={true}
               showMoreLimit={200}
-              classNames={{
-                root: "",
-                noRefinementRoot: "",
-                list: "space-y-2",
-                item: "flex items-center",
-                selectedItem: "font-medium",
-                label: "flex items-center cursor-pointer w-full group",
-                checkbox: "w-4 h-4 text-primary border-gray-300 dark:border-gray-600 rounded focus:ring-primary dark:focus:ring-primary cursor-pointer",
-                labelText: "ml-2 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white flex-1",
-                count: "ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full",
-                showMore: "mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer w-full text-left",
-                disabledShowMore: "hidden"
-              }}
-              translations={{
-                showMoreButtonText({ isShowingMore }) {
-                  return isShowingMore ? 'Show less' : 'Show more';
-                }
-              }}
             />
           </div>
 
-          {/* Availability Filter – only visible to Manufacturer/Hybrid users */}
-          {!isCustomer && (
-            <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Availability</h3>
-              <RefinementList
-                attribute="product_availability"
-                operator="or"
-                limit={5}
-                showMore={true}
-                showMoreLimit={200}
-                classNames={{
-                  root: "",
-                  noRefinementRoot: "",
-                  list: "space-y-2",
-                  item: "flex items-center",
-                  selectedItem: "font-medium",
-                  label: "flex items-center cursor-pointer w-full group",
-                  checkbox: "w-4 h-4 text-primary border-gray-300 dark:border-gray-600 rounded focus:ring-primary dark:focus:ring-primary cursor-pointer",
-                  labelText: "ml-2 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white flex-1",
-                  count: "ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full",
-                  showMore: "mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer w-full text-left",
-                  disabledShowMore: "hidden"
-                }}
-                translations={{
-                  showMoreButtonText({ isShowingMore }) {
-                    return isShowingMore ? 'Show less' : 'Show more';
-                  }
-                }}
-              />
-            </div>
-          )}
+          <div className="mb-6">
+            <CategoryHeader attribute="product_availability" title="Availability" />
+            <CustomRefinementList
+              attribute="product_availability"
+              operator="or"
+              limit={10}
+              showMore={true}
+              showMoreLimit={200}
+            />
+          </div>
 
           {/* Type Filter */}
           {/*<div className="mb-6">
@@ -260,17 +313,33 @@ function Content() {
 
             {/* View Mode Toggle */}
             <div className="flex items-center gap-2 min-w-0">
-              {/* Add Product Button – hidden for customer accounts */}
-              {!isCustomer && (
+              {/* My Products Toggle – Only for Hybrid accounts */}
+              {isHybrid && (
                 <button
-                  onClick={() => setIsAddModalOpen(true)}
+                  onClick={() => setShowOnlyMine(!showOnlyMine)}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg transition-colors shadow-sm whitespace-nowrap text-sm font-medium ${showOnlyMine
+                    ? "bg-primary text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600"
+                    }`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  My Products
+                </button>
+              )}
+
+              {/* Create Product Button – visible for Hybrid and Supplier group */}
+              {(isHybrid || isSupplierGroup) && (
+                <button
+                  onClick={() => { setProductToEdit(null); setIsAddModalOpen(true); }}
                   className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm whitespace-nowrap"
-                  title="Add Product"
+                  title="Create Product"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  Add Product
+                  Create Product
                 </button>
               )}
 
@@ -313,11 +382,30 @@ function Content() {
         </div>
 
         {/* Render products based on viewMode */}
-        {viewMode === 'card' ? (
-          <CardView products={products} />
-        ) : (
-          <ListView products={products} />
-        )}
+        <div className="relative min-h-[400px]">
+          {isLoading && (
+            <div className="absolute inset-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-lg">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Loading catalog...</p>
+              </div>
+            </div>
+          )}
+
+          {viewMode === 'card' ? (
+            <CardView
+              products={products}
+              canEditProduct={canEditProduct}
+              onEdit={(p) => { setProductToEdit(p); setIsAddModalOpen(true); }}
+            />
+          ) : (
+            <ListView
+              products={products}
+              canEditProduct={canEditProduct}
+              onEdit={(p) => { setProductToEdit(p); setIsAddModalOpen(true); }}
+            />
+          )}
+        </div>
 
         {/* Infinite Scroll Sentinel */}
         {!isLastPage && (
@@ -351,7 +439,11 @@ function Content() {
 
       <AddProductModal
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
+        onClose={() => {
+          setIsAddModalOpen(false);
+          setProductToEdit(null);
+        }}
+        productToEdit={productToEdit}
       />
     </div>
   );
@@ -382,9 +474,11 @@ export default function ProductClientPage() {
 
 interface ViewProps {
   products: Product[];
+  canEditProduct: (p: any) => boolean;
+  onEdit: (p: any) => void;
 }
 /* card View Products Function Start */
-const CardView = ({ products }: ViewProps) => (
+const CardView = ({ products, canEditProduct, onEdit }: ViewProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {products.length === 0 ? (
       <div key="no-matches" className="col-span-full text-center py-12 text-gray-500 dark:text-gray-400">
@@ -429,13 +523,22 @@ const CardView = ({ products }: ViewProps) => (
             <div className="p-4 flex flex-col flex-grow">
               <div className="mb-2">
                 <span className="text-xs font-medium text-primary  truncate">
-                  {category}
+                  {p.category || p.family || product.productFamily || "No Category"}
                 </span>
               </div>
               <div className="flex justify-between items-start gap-2 mb-2">
                 <h3 className="text-base text-sm font-bold text-gray-900 dark:text-white min-w-200px truncate group-hover:text-primary transition-colors " title={product.name}>
                   {product.name}
                 </h3>
+                {canEditProduct(p) && (
+                  <button
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); onEdit(p); }}
+                    className="p-1.5 rounded-md bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-500 transition-colors"
+                    title="Edit Product"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                  </button>
+                )}
               </div>
 
               <p className="text-sm text-gray-600 dark:text-gray-400 min-w-200px truncate mb-3" title={product.description}>
@@ -474,7 +577,7 @@ const CardView = ({ products }: ViewProps) => (
   </div>
 );
 /* card View Products Function Start */
-const ListView = ({ products }: ViewProps) => (
+const ListView = ({ products, canEditProduct, onEdit }: ViewProps) => (
   <div className="overflow-x-auto">
     <table className="w-full">
       <thead className="bg-primary-light dark:bg-gray-900">
@@ -522,26 +625,37 @@ const ListView = ({ products }: ViewProps) => (
                   </Link>
                 </td>
                 <td className="px-4 py-3 truncate">
-                  <div className="line-clamp-2" title={category}>
-                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">{category}</span>
+                  <div className="line-clamp-2" title={p.category || p.family || product.productFamily || "No Category"}>
+                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">{p.category || p.family || product.productFamily || "No Category"}</span>
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }} title={product.description}>{product.description}</td>
                 <td className="px-4 py-3 text-sm  text-gray-500 dark:text-gray-400 line-through truncate">{formatCurrency(listPrice)}</td>
                 <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(sellingPrice)}</td>
                 <td className="px-4 py-3 text-left truncate">
-                  <button
-                    disabled={product.availableQty <= 0}
-                    title={product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
-                    className={`p-2 rounded-lg transition-colors ${product.availableQty <= 0
-                      ? "bg-gray-100 dark:bg-gray-700 cursor-not-allowed text-gray-400"
-                      : "bg-primary text-white hover:bg-primary-dark"
-                      }`}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      disabled={product.availableQty <= 0}
+                      title={product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
+                      className={`p-2 rounded-lg transition-colors ${product.availableQty <= 0
+                        ? "bg-gray-100 dark:bg-gray-700 cursor-not-allowed text-gray-400"
+                        : "bg-primary text-white hover:bg-primary-dark"
+                        }`}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </button>
+                    {canEditProduct(p) && (
+                      <button
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onEdit(p); }}
+                        className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-500 transition-colors"
+                        title="Edit Product"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             );

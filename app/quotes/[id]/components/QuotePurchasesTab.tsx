@@ -1,11 +1,11 @@
-import { useState } from"react";
-import { QuotePurchase, QuoteSupplierBill } from"../../types";
-import { useResizableColumns } from"@/hooks/useResizableColumns";
-import QuotePurchasesSubTab from"./QuotePurchasesSubTab";
-import QuoteSupplierBillsSubTab from"./QuoteSupplierBillsSubTab";
-import Pagination from"@/components/ui/Pagination";
+import { useState } from "react";
+import { QuotePurchase, QuoteSupplierBill } from "../../types";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import QuotePurchasesSubTab from "./QuotePurchasesSubTab";
+import QuoteSupplierBillsSubTab from "./QuoteSupplierBillsSubTab";
+import Pagination from "@/components/ui/Pagination";
 
-type PurchasesSubTab ="purchases"|"supplierBills";
+type PurchasesSubTab = "purchases" | "supplierBills";
 
 interface QuotePurchasesTabProps {
     quoteId: string;
@@ -18,7 +18,7 @@ interface QuotePurchasesTabProps {
 
 const ITEMS_PER_PAGE = 10;
 
-export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurchasesTabProps) {
+export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurchasesTabProps): JSX.Element {
     const [activeSubTab, setActiveSubTab] = useState<PurchasesSubTab>("purchases");
     const { purchases = [], supplierBills = [] } = data;
 

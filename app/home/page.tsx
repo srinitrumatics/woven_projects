@@ -28,10 +28,10 @@ interface StatItem {
   iconColor: string;
 }
 
-export default function Program360Page() {
+export default function HomePage() {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const { selectedAccount, user } = useUserSession();
-  const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+  const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 

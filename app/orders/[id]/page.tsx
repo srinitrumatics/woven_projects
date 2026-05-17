@@ -22,8 +22,11 @@ import ProductCatalog from "./components/ProductCatalog";
 import MyOrderTable from "./components/MyOrderTable";
 import PDFTemplate from "./components/PDFTemplate";
 import TaxesTab from "./components/TaxesTab";
+import FulfillmentTab from "./components/FulfillmentTab";
+import ReturnsTab from "./components/ReturnsTab";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 // import { mockProducts } from "@/app/products/mockData"; // Removed in favor of API data
 
 interface Address {
@@ -135,11 +138,15 @@ interface Order {
 export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
+  const { success, error: toastError, warning } = useToast();
 
   // This page is always in edit mode (order must be created first via the orders list page)
 
   const searchParams = useSearchParams();
   const isNew = searchParams.get("new") === "true";
+  const isTransfer = searchParams.get("transfer") === "true";
+  const isProposal = searchParams.get("proposal") === "true";
+  const transferProductsStr = searchParams.get("products");
 
   const { user, selectedAccount } = useUserSession();
   const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
@@ -151,7 +158,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   // State management for product tables
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"myOrder" | "catalog" | "files" | "taxes">("myOrder"); // Default to My Order table
+  const [viewMode, setViewMode] = useState<"myOrder" | "catalog" | "files" | "taxes" | "fulfillment" | "returns">("myOrder"); // Default to My Order table
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -630,6 +637,57 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     loadProducts();
   }, [SF_ACCOUNT_ID, SF_CONTACT_ID, orderData?.AccountId, orderData?.Ship_to_Contact__c]);
 
+  // Auto-add transfer products once catalog loads
+  useEffect(() => {
+    if (isNew && isTransfer && transferProductsStr && catalogProducts.length > 0 && orderProducts.length === 0) {
+      const transferIds = transferProductsStr.split(',');
+      const selectedProducts = catalogProducts.filter(p => transferIds.includes(p.id));
+      
+      const newLineItems = selectedProducts.map(product => {
+        const qty = product.availableQty || 1;
+        return {
+          ...product,
+          orderQty: qty,
+          unitPrice: 0, // Unit Price as $0.00
+          subtotal: 0,
+          lineItemKey: `${product.id}-${Date.now()}-${Math.random()}`
+        };
+      });
+
+      if (newLineItems.length > 0) {
+        setOrderProducts(newLineItems);
+      }
+    }
+  }, [isNew, isTransfer, transferProductsStr, catalogProducts, orderProducts.length]);
+
+  // Auto-add Proposal Request line item
+  useEffect(() => {
+    if (isNew && isProposal && orderProducts.length === 0 && catalogProducts.length > 0) {
+      // Find a matching product if it exists, otherwise use a fallback
+      const existingProduct = catalogProducts.find(p => p.name === "Proposal Request");
+      const productId = existingProduct ? existingProduct.id : "PROPOSAL-REQ";
+      
+      const newLineItem = {
+        id: productId,
+        name: "Proposal Request",
+        description: "Special request for proposal",
+        sku: existingProduct?.sku || "PROPOSAL-REQ",
+        manufacturer: existingProduct?.manufacturer || "",
+        productFamily: existingProduct?.productFamily || "Service",
+        productGrouping: existingProduct?.productGrouping || "",
+        brand: existingProduct?.brand || "",
+        listPrice: existingProduct?.listPrice || 0,
+        unitPrice: existingProduct?.unitPrice || 0,
+        availableQty: existingProduct?.availableQty || 1,
+        moq: existingProduct?.moq || 1,
+        orderQty: 1,
+        subtotal: 0,
+        lineItemKey: `proposal-req-${Date.now()}-${Math.random()}`
+      };
+      setOrderProducts([newLineItem]);
+    }
+  }, [isNew, isProposal, catalogProducts, orderProducts.length]);
+
   // Handle contact selection
   const handleContactSelect = (contactId: string) => {
     setSelectedContactId(contactId);
@@ -1020,10 +1078,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
         // Remove from state only after successful API deletion
         setOrderProducts(orderProducts.filter(p => p.lineItemKey !== lineItemKey));
-        alert('Order line deleted successfully');
-      } catch (error) {
-        console.error('Error deleting order line:', error);
-        alert(error instanceof Error ? error.message : 'Failed to delete order line. Please try again.');
+        success('Order line deleted successfully');
+      } catch (err) {
+        console.error('Error deleting order line:', err);
+        toastError(err instanceof Error ? err.message : 'Failed to delete order line. Please try again.');
       }
     } else {
       // Product doesn't exist in Salesforce yet, just remove from state
@@ -1063,7 +1121,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       if (oversizedFiles.length > 0) {
         errorMessage += `The following files exceed the 10MB limit:\n${oversizedFiles.map(f => `- ${f.name} (${(f.size / 1024 / 1024).toFixed(2)} MB)`).join('\n')}`;
       }
-      alert(errorMessage);
+      warning(errorMessage);
       e.target.value = '';
       return;
     }
@@ -1113,13 +1171,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
       if (!res.ok) throw new Error("Failed to upload files");
 
-      alert("Files uploaded successfully");
+      success("Files uploaded successfully");
 
       // Reload the page to reflect the uploaded files
       window.location.reload();
     } catch (error) {
       console.error("Error uploading files:", error);
-      alert("Failed to upload files. Please try smaller files.");
+      toastError("Failed to upload files. Please try smaller files.");
     }
   };
 
@@ -1137,7 +1195,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     const element = document.getElementById('pdf-template');
     if (!element) {
       console.error("PDF template element not found");
-      alert("Error: PDF template not found");
+      toastError("Error: PDF template not found");
       return;
     }
 
@@ -1180,7 +1238,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       console.log("PDF saved");
     } catch (error: any) {
       console.error('Error generating PDF:', error);
-      alert(`Failed to generate PDF: ${error.message || error}`);
+      toastError(`Failed to generate PDF: ${error.message || error}`);
     } finally {
       setIsGeneratingPDF(false);
     }
@@ -1253,7 +1311,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           Ship_to_Contact__c: shipToContactId, // Must be Contact ID (003xxx)
           Inventory_Account__c: SF_ACCOUNT_ID,
           Shipping_Method__c: formData.shippingMethod,
-          Incoterms__c: formData.incoterms
+          Incoterms__c: formData.incoterms,
+          ...(isTransfer || isProposal ? { Proposal_Requested__c: true } : {})
         },
         orderLines: orderProducts.map(product => ({
           ...(product.orderLineId ? { Id: product.orderLineId } : {}),
@@ -1296,7 +1355,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       setOrderStatus(isDraft ? "Draft" : "Submitted");
 
       // Show success message
-      alert(isDraft ? "Order saved as draft successfully!" : "Order submitted successfully!");
+      success(isDraft ? "Order saved as draft successfully!" : "Order submitted successfully!");
       // After successful save, ensure formData reflects the selected contact details
       if (selectedContactId) {
         const selectedContact = shipContacts.find(c => c.Id === selectedContactId);
@@ -1397,13 +1456,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         // Redirect to the new order
         router.push(`/orders/${result.orderId}`);
       } else {
-        alert("Order cloned, but could not retrieve new ID.");
+        toastError("Order cloned, but could not retrieve new ID.");
       }
 
     } catch (error) {
       console.error("Error cloning order:", error);
       setSubmitError(error instanceof Error ? error.message : "Failed to clone order");
-      alert("Failed to clone order: " + (error instanceof Error ? error.message : "Unknown error"));
+      toastError("Failed to clone order: " + (error instanceof Error ? error.message : "Unknown error"));
     } finally {
       setIsSubmitting(false);
     }
@@ -1457,6 +1516,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         onEditToggle={() => setIsEditing(!isEditing)}
         onClone={handleClone}
         isNew={isNew}
+        isTransfer={isTransfer}
+        isProposal={isProposal}
       />
       <div className="grid grid-cols-1 w1025:grid-cols-10 gap-6 items-stretch">
         {/* Row 1 Left - Billing & Shipping (70%) */}
@@ -1587,6 +1648,24 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 Taxes
               </button>
               <button
+                onClick={() => setViewMode("fulfillment")}
+                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "fulfillment"
+                  ? "bg-primary text-white"
+                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                  }`}
+              >
+                Fulfillment
+              </button>
+              <button
+                onClick={() => setViewMode("returns")}
+                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "returns"
+                  ? "bg-primary text-white"
+                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                  }`}
+              >
+                Returns
+              </button>
+              <button
                 onClick={() => setViewMode("files")}
                 className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "files"
                   ? "bg-primary text-white"
@@ -1659,6 +1738,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
             {viewMode === "taxes" && (
               <TaxesTab order={orderData} loading={loadingOrder} widths={taxesColumns.widths} onResize={taxesColumns.handleResize} />
+            )}
+
+            {viewMode === "fulfillment" && (
+              <FulfillmentTab orderId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} />
+            )}
+
+            {viewMode === "returns" && (
+              <ReturnsTab orderId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} />
             )}
           </div>
         </div>

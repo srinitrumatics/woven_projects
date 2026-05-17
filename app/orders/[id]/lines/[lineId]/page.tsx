@@ -15,6 +15,7 @@ import ProductInfo from "./components/ProductInfo";
 import OrderDetailsTable from "./components/OrderDetailsTable";
 import LineNavigation from "./components/LineNavigation";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 
 // Interface for order line item from Salesforce
 interface OrderLineItem {
@@ -110,6 +111,7 @@ export default function OrderLineDetailPage({
 }) {
   const { id, lineId } = use(params);
   const router = useRouter();
+  const { success, error: toastError } = useToast();
 
   // State for order data
   const [loading, setLoading] = useState(true);
@@ -297,10 +299,10 @@ export default function OrderLineDetailPage({
       ));
 
       setIsEditing(false);
-      alert("Order line updated successfully");
-    } catch (error) {
-      console.error("Error updating order line:", error);
-      alert("Failed to update order line");
+      success("Order line updated successfully");
+    } catch (err) {
+      console.error("Error updating order line:", err);
+      toastError("Failed to update order line");
     } finally {
       setIsSubmitting(false);
     }

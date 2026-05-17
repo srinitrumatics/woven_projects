@@ -50,13 +50,26 @@ export async function POST(request: Request) {
     const algoliaSqlPath = path.join(process.cwd(), 'db/algolia.sql');
     let algoliaSqlContent = fs.readFileSync(algoliaSqlPath, 'utf8');
 
-    // Replace schema references
-    let transformedSqlContent = algoliaSqlContent.replace(/salesforce\./g, `${sanitizedSchemaName}.`);
-    
-    // Replace the default index name inside the insert statement config
+    // Detect the actual schema name embedded in the SQL file (e.g. sf_00dgk000007zmr7uam)
+    // The file was generated for a specific tenant schema — we need to replace ALL occurrences.
+    const sourceSchemaMatch = algoliaSqlContent.match(/CREATE TABLE IF NOT EXISTS ([a-z0-9_]+)\.algolia_sync_queue/);
+    const sourceSchemaInFile = sourceSchemaMatch ? sourceSchemaMatch[1] : 'salesforce';
+
+    // Replace both the actual source schema name AND the generic 'salesforce.' placeholder
+    let transformedSqlContent = algoliaSqlContent
+      .replace(new RegExp(`\\b${sourceSchemaInFile}\\.`, 'g'), `${sanitizedSchemaName}.`)
+      .replace(/\bsalesforce\./g, `${sanitizedSchemaName}.`);
+
+    // Replace the default index name in algolia_index_config INSERT
     transformedSqlContent = transformedSqlContent.replace(
-      /'dev_woven_products'/g, 
+      /'dev_woven_products'/g,
       `'${sanitizedIndexName}'`
+    );
+
+    // Fix the table_name reference in the algolia_index_config INSERT to use new schema
+    transformedSqlContent = transformedSqlContent.replace(
+      new RegExp(`'${sourceSchemaInFile}\\.product2'`, 'g'),
+      `'${sanitizedSchemaName}.product2'`
     );
 
     // 4. Execute the transformed SQL script

@@ -21,7 +21,7 @@ export default function ShipmentInfo({ shipment, formatAddress }: ShipmentInfoPr
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Delivery Destination">Delivery Destination</p>
                 </div>
             </div>
-            <div className="text-sm mt-6">
+            <div className="text-sm mt-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <DetailInput label="Ship to Account" value={shipment.Ship_to_Account_Name} />
                     <DetailInput label="Ship to Location" value={shipment.Authorized_Ship_To_Location_Name} />

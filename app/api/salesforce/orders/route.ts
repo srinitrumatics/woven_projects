@@ -78,6 +78,18 @@ export async function GET(req: Request) {
       if (!result) {
         return NextResponse.json({ error: "Failed to get preview URL" }, { status: 500 });
       }
+    } else if (rawAction === "fulfillment") {
+      if (!orderId) {
+        return NextResponse.json({ error: "Missing orderId for fulfillment action" }, { status: 400 });
+      }
+      const { getQuotesFromSalesforce } = await import('@/lib/quote-service');
+      result = await getQuotesFromSalesforce(accountId, contactId, orderId, "Fulfillment", "Customer_Order__c");
+    } else if (rawAction === "returns") {
+      if (!orderId) {
+        return NextResponse.json({ error: "Missing orderId for returns action" }, { status: 400 });
+      }
+      const { getQuotesFromSalesforce } = await import('@/lib/quote-service');
+      result = await getQuotesFromSalesforce(accountId, contactId, orderId, "Returns", "Customer_Order__c");
     } else if (orderId) {
       // support direct order fetch when orderId provided without explicit action
       orderUrl = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;

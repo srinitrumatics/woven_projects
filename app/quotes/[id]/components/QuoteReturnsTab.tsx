@@ -1,12 +1,12 @@
-import { useState } from"react";
-import { QuoteRMA, QuoteCreditMemo, QuoteRTV, QuoteDebitMemo } from"@/app/quotes/types";
-import { useResizableColumns } from"@/hooks/useResizableColumns";
-import QuoteRMASubTab from"./QuoteRMASubTab";
-import QuoteCreditMemoSubTab from"./QuoteCreditMemoSubTab";
-import QuoteRTVSubTab from"./QuoteRTVSubTab";
-import QuoteDebitMemoSubTab from"./QuoteDebitMemoSubTab";
+import { useState } from "react";
+import { QuoteRMA, QuoteCreditMemo, QuoteRTV, QuoteDebitMemo } from "@/app/quotes/types";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import QuoteRMASubTab from "./QuoteRMASubTab";
+import QuoteCreditMemoSubTab from "./QuoteCreditMemoSubTab";
+import QuoteRTVSubTab from "./QuoteRTVSubTab";
+import QuoteDebitMemoSubTab from "./QuoteDebitMemoSubTab";
 
-type ReturnsSubTab ="rmas"|"creditMemo"|"rtvs"|"debitMemo";
+type ReturnsSubTab = "rmas" | "creditMemo" | "rtvs" | "debitMemo";
 
 interface QuoteReturnsTabProps {
     quoteId: string;
@@ -20,7 +20,7 @@ interface QuoteReturnsTabProps {
     loading: boolean;
 }
 
-export default function QuoteReturnsTab({ quoteId, accountType, data, loading }: QuoteReturnsTabProps) {
+export default function QuoteReturnsTab({ quoteId, accountType, data, loading }: QuoteReturnsTabProps): JSX.Element {
     const [activeSubTab, setActiveSubTab] = useState<ReturnsSubTab>("rmas");
     const { rma = [], creditMemos = [], rtv = [], debitMemos = [] } = data;
 

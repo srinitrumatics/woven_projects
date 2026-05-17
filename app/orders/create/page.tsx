@@ -7,9 +7,11 @@ export default function CreateOrderPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to a new order with a generated ID
+    // Redirect to a new order with a generated ID, preserving any incoming query parameters
     const newOrderId = "new-" + Date.now();
-    router.push(`/orders/${newOrderId}`);
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("new", "true");
+    router.push(`/orders/${newOrderId}?${searchParams.toString()}`);
   }, [router]);
 
   return (

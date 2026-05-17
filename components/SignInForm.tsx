@@ -16,7 +16,7 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
   const [error, setError] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnUrl = searchParams?.get('return') || '/program360';
+  const returnUrl = searchParams?.get('return') || '/home';
   const { login } = useUserSession();
 
   const handleSignUpClick = () => {
@@ -53,8 +53,8 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
           const directAccount = accounts.find((a: any) => a.isdirect === true || a.isdirect === 'true');
           const primaryAccount = directAccount || accounts[0];
           const accType = primaryAccount?.Account_Record_Type__c || 'Customer';
-          const isCustomerType = accType === 'Customer' || accType === 'NSO';
-          const landPage = isCustomerType ? '/program360' : '/products';
+          const isCustomerType = accType === 'Customer' || accType === 'NSO' || accType === 'Hybrid';
+          const landPage = isCustomerType ? '/home' : '/products';
 
           // Redirect to dashboard or return URL after successful verification
           router.push(searchParams?.get('return') || landPage);

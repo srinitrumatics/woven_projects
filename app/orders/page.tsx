@@ -12,6 +12,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 
 type TabFilter = string;
 
@@ -19,6 +20,7 @@ const ITEMS_PER_PAGE = 10;
 
 export default function OrdersPage() {
   const router = useRouter();
+  const { success, error: toastError, warning } = useToast();
 
   // raw SF orders array (use API shape)
   const [sfOrders, setSfOrders] = useState<any[]>([]);
@@ -186,7 +188,7 @@ export default function OrdersPage() {
   // Sorting
   const { items: sortedOrders, requestSort, sortConfig } = useSortableData(filteredAndSearchedOrders);
 
-  const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+  const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
 
   // pagination calculations
   const totalPages = Math.max(1, Math.ceil(sortedOrders.length / ITEMS_PER_PAGE));
@@ -224,17 +226,9 @@ export default function OrdersPage() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          order: {
-            Bill_to_Account__c: accountId,
-            Ship_to_Account__c: accountId,
-            Inventory_Account__c: accountId,
-            Status__c: 'Draft'
-          },
-          shipToContact: {},
-          orderLines: [],
           accountId: accountId,
           contactId: contactId,
-          isDraft: true
+          Proposal_Requested__c: false
         })
       });
 
@@ -263,7 +257,56 @@ export default function OrdersPage() {
     } catch (err: any) {
       console.error('Failed to create order:', err);
       setError(err.message || 'Failed to create order');
-      alert(`Failed to create order: ${err.message}`);
+      toastError(`Failed to create order: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRequestProposal = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Call create order API with Proposal_Requested__c
+      const response = await fetch('/api/salesforce/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          accountId: accountId,
+          contactId: contactId,
+          Proposal_Requested__c: true
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to request proposal' }));
+        throw new Error(errorData.error || 'Failed to request proposal');
+      }
+
+      const result = await response.json();
+      console.log('Proposal order created successfully:', result);
+
+      // Extract the order ID from the response (nested in data[0].Id)
+      let newOrderId = null;
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        newOrderId = result.data[0].Id;
+      } else {
+        // Fallback to other possible locations
+        newOrderId = result.orderId || result.Id || result.id;
+      }
+
+      if (newOrderId) {
+        router.push(`/orders/${newOrderId}?new=true&proposal=true`);
+      } else {
+        throw new Error('No order ID returned from API');
+      }
+    } catch (err: any) {
+      console.error('Failed to request proposal:', err);
+      setError(err.message || 'Failed to request proposal');
+      toastError(`Failed to request proposal: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -397,7 +440,7 @@ export default function OrdersPage() {
 
     } catch (err: any) {
       console.error("Clone failed:", err);
-      alert(`Failed to clone order: ${err.message}`);
+      toastError(`Failed to clone order: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -405,7 +448,7 @@ export default function OrdersPage() {
 
   const handleDeleteOrder = async (orderId: string, status: string) => {
     if (status !== "Draft") {
-      alert("Only draft orders can be deleted.");
+      warning("Only draft orders can be deleted.");
       return;
     }
 
@@ -426,7 +469,7 @@ export default function OrdersPage() {
       console.log("Delete result:", result);
 
       if (result.success) {
-        alert("Order deleted successfully.");
+        success("Order deleted successfully.");
         // Refresh the list
         setSfOrders(prev => prev.filter(o => o.Id !== orderId));
       } else {
@@ -434,7 +477,7 @@ export default function OrdersPage() {
       }
     } catch (err: any) {
       console.error("Delete failed:", err);
-      alert(`Failed to delete order: ${err.message}`);
+      toastError(`Failed to delete order: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -449,7 +492,7 @@ export default function OrdersPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Orders</h1>
-          <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Sales Orders">Manage and Track Sales Orders</p>
+          <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Managed and Track Orders">Managed and Track Orders</p>
         </div>
         <div className="flex items-center gap-3 min-w-0">
           <button
@@ -460,7 +503,17 @@ export default function OrdersPage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            {loading ? 'Creating...' : 'Create Order'}
+            {loading ? 'Creating...' : 'Quick Order'}
+          </button>
+          <button
+            onClick={handleRequestProposal}
+            disabled={loading}
+            className="px-4 py-2 border-2 border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 truncate"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Request Proposal
           </button>
         </div>
       </div>

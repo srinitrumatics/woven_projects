@@ -32,7 +32,7 @@ export default function QuoteRMASubTab({
 }: QuoteRMASubTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const { user, selectedAccount } = useUserSession();
-    const isManufacturer = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'manufacturer' || user?.role?.toLowerCase() === 'manufacturer';
+    const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteRMA);
 

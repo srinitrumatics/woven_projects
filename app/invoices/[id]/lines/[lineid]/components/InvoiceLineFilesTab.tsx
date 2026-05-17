@@ -5,6 +5,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatFileSize } from "@/lib/utils/formatting";
+import { useToast } from "@/components/ui/Toast";
 
 interface LineFile {
     id: string;
@@ -25,6 +26,7 @@ export default function InvoiceLineFilesTab({ lineId, accountId, contactId }: In
     const [loading, setLoading] = useState(true);
     const [files, setFiles] = useState<LineFile[]>([]);
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
+    const { error: toastError } = useToast();
 
     useEffect(() => {
         async function fetchFiles() {
@@ -95,7 +97,7 @@ export default function InvoiceLineFilesTab({ lineId, accountId, contactId }: In
             );
             if (!response.ok) {
                 if (win) win.close();
-                alert("Unable to open preview.");
+                toastError("Unable to open preview.");
                 return;
             }
             const result = await response.json();
@@ -130,9 +132,10 @@ export default function InvoiceLineFilesTab({ lineId, accountId, contactId }: In
             } else {
                 if (win) win.close();
             }
-        } catch (error) {
-            console.error("Error downloading file:", error);
+        } catch (err) {
+            console.error("Error downloading file:", err);
             if (win) win.close();
+            toastError("Failed to download file");
         } finally {
             setDownloadingIds((prev) => {
                 const newSet = new Set(prev);

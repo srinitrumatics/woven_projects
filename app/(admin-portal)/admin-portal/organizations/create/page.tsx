@@ -28,17 +28,41 @@ export default function CreateOrganizationPage() {
     clientSecret: '',
   });
 
+  const [createdOrgId, setCreatedOrgId] = useState('');
+
   const [schemaData, setSchemaData] = useState({
     schemaName: '',
     indexName: ''
   });
 
+  // Derive schemaName from orgId using the sf_ convention (matches the sync worker)
+  const deriveSchemaName = (orgId: string) =>
+    orgId ? `sf_${orgId.toLowerCase().replace(/[^a-z0-9]/g, '')}` : '';
+
+  const deriveIndexName = (schemaName: string) =>
+    schemaName ? `dev_woven_products_${schemaName}` : '';
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (step === 1) {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData(prev => {
+        const updated = { ...prev, [name]: value };
+        // Auto-derive schema and index from orgId as user types
+        if (name === 'orgId') {
+          const schema = deriveSchemaName(value);
+          setSchemaData({ schemaName: schema, indexName: deriveIndexName(schema) });
+        }
+        return updated;
+      });
     } else {
-      setSchemaData(prev => ({ ...prev, [name]: value }));
+      setSchemaData(prev => {
+        const updated = { ...prev, [name]: value };
+        // When schemaName changes, auto-update indexName too
+        if (name === 'schemaName') {
+          updated.indexName = deriveIndexName(value);
+        }
+        return updated;
+      });
     }
   };
 
@@ -57,10 +81,12 @@ export default function CreateOrganizationPage() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Failed to create organization');
 
-      const sanitizedName = formData.name.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+      // Use orgId-based naming to match worker convention: sf_<orgid>
+      const schema = deriveSchemaName(formData.orgId || formData.name);
+      setCreatedOrgId(data.organization?.id || '');
       setSchemaData({
-        schemaName: `org_${sanitizedName}`,
-        indexName: `idx_${sanitizedName}_products`
+        schemaName: schema,
+        indexName: deriveIndexName(schema),
       });
       setStep(2);
     } catch (err: any) {
@@ -142,7 +168,7 @@ export default function CreateOrganizationPage() {
           <form onSubmit={handleNextStep} className="p-8 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Organization Name</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Organization Name <span className="text-red-500">*</span></label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <BuildingOfficeIcon className="h-5 w-5 text-gray-400" />
@@ -153,44 +179,73 @@ export default function CreateOrganizationPage() {
                     required
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                    className="block w-full pl-10 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm py-2"
                     placeholder="Acme Corp"
                   />
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">External Org ID</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Salesforce Org ID <span className="text-red-500">*</span>
+                  <span className="ml-1 text-xs text-gray-400 font-normal">(18-char, e.g. 00D...)</span>
+                </label>
                 <input
                   type="text"
                   name="orgId"
+                  required
                   value={formData.orgId}
                   onChange={handleInputChange}
-                  className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm font-mono"
-                  placeholder="00D..."
+                  className="block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm font-mono py-2 px-3"
+                  placeholder="00DgK000007zMR7UAM"
                 />
+                {formData.orgId && (
+                  <p className="text-xs text-primary font-mono mt-1">
+                    Schema: <strong>{deriveSchemaName(formData.orgId)}</strong>
+                  </p>
+                )}
               </div>
             </div>
 
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Salesforce URL</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <GlobeAltIcon className="h-5 w-5 text-gray-400" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Salesforce Instance URL <span className="text-red-500">*</span></label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <GlobeAltIcon className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="url"
+                    name="salesforceUrl"
+                    required
+                    value={formData.salesforceUrl}
+                    onChange={handleInputChange}
+                    className="block w-full pl-10 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm py-2"
+                    placeholder="https://acme.my.salesforce.com"
+                  />
                 </div>
-                <input
-                  type="url"
-                  name="salesforceUrl"
-                  value={formData.salesforceUrl}
-                  onChange={handleInputChange}
-                  className="block w-full pl-10 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-                  placeholder="https://acme.my.salesforce.com"
-                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Salesforce Auth URL <span className="text-red-500">*</span></label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <LockClosedIcon className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="url"
+                    name="salesforceAuthUrl"
+                    required
+                    value={formData.salesforceAuthUrl}
+                    onChange={handleInputChange}
+                    className="block w-full pl-10 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm py-2"
+                    placeholder="https://acme.my.salesforce.com/services/oauth2/token"
+                  />
+                </div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
               <div className="space-y-1">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Client ID</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Client ID <span className="text-red-500">*</span></label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <LockClosedIcon className="h-5 w-5 text-gray-400" />
@@ -198,14 +253,16 @@ export default function CreateOrganizationPage() {
                   <input
                     type="text"
                     name="clientId"
+                    required
                     value={formData.clientId}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                    className="block w-full pl-10 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm py-2"
+                    placeholder="3MVG9..."
                   />
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Client Secret</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Client Secret <span className="text-red-500">*</span></label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <LockClosedIcon className="h-5 w-5 text-gray-400" />
@@ -213,9 +270,11 @@ export default function CreateOrganizationPage() {
                   <input
                     type="password"
                     name="clientSecret"
+                    required
                     value={formData.clientSecret}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                    className="block w-full pl-10 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm py-2"
+                    placeholder="••••••••••••••••"
                   />
                 </div>
               </div>
@@ -234,21 +293,40 @@ export default function CreateOrganizationPage() {
           </form>
         ) : (
           <form onSubmit={handleProvision} className="p-8 space-y-8">
-            <div className="rounded-lg bg-primary/5 p-4 flex gap-4 border border-primary/10">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <div className="rounded-lg bg-green-50 dark:bg-green-900/20 p-4 flex gap-4 border border-green-200 dark:border-green-800">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/40 text-green-600">
                 <CheckCircleIcon className="h-6 w-6" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-primary uppercase tracking-wider">Identity Confirmed</h4>
+                <h4 className="text-sm font-bold text-green-700 dark:text-green-400 uppercase tracking-wider">✓ Organization Registered</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Tenant <strong>{formData.name}</strong> has been successfully registered. Now we will provision the isolated PostgreSQL environment.
+                  <strong>{formData.name}</strong> has been saved to the <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">organizations</code> table.
+                  Now provision its isolated schema and Algolia search index.
                 </p>
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">What will be created</p>
+              <div className="flex flex-wrap gap-2 text-xs">
+                <span className="rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 font-mono">
+                  PostgreSQL schema: {schemaData.schemaName || '—'}
+                </span>
+                <span className="rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 px-3 py-1 font-mono">
+                  Algolia index: {schemaData.indexName || '—'}
+                </span>
+                <span className="rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1">
+                  algolia_sync_queue + algolia_index_config + triggers
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-5">
               <div className="space-y-1">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Database Schema Name</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  PostgreSQL Schema Name
+                  <span className="ml-2 text-xs text-gray-400 font-normal">auto-derived from Org ID</span>
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <CircleStackIcon className="h-5 w-5 text-gray-400" />
@@ -259,13 +337,18 @@ export default function CreateOrganizationPage() {
                     required
                     value={schemaData.schemaName}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm font-mono"
+                    className="block w-full pl-10 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm font-mono py-2"
+                    placeholder="sf_00dgk000007zmr7uam"
                   />
                 </div>
+                <p className="text-xs text-gray-400">Convention: <code>sf_{'<'}orgid_lowercase{'>'}</code> — must match ALGOLIA_SYNC_SCHEMAS in worker</p>
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Algolia Index ID</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Algolia Index Name
+                  <span className="ml-2 text-xs text-gray-400 font-normal">auto-derived from schema</span>
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <GlobeAltIcon className="h-5 w-5 text-gray-400" />
@@ -276,9 +359,20 @@ export default function CreateOrganizationPage() {
                     required
                     value={schemaData.indexName}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm font-mono"
+                    className="block w-full pl-10 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm font-mono py-2"
+                    placeholder="dev_woven_products_sf_00dgk000007zmr7uam"
                   />
                 </div>
+                <p className="text-xs text-gray-400">This index will be created in your Algolia account dashboard</p>
+              </div>
+
+              <div className="rounded-md bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-3">
+                <p className="text-xs text-amber-700 dark:text-amber-400">
+                  <strong>After provisioning</strong>, add the schema to your worker env:
+                </p>
+                <code className="text-xs block mt-1 text-amber-800 dark:text-amber-300 font-mono">
+                  ALGOLIA_SYNC_SCHEMAS=...existing...,{schemaData.schemaName || 'sf_neworg'}
+                </code>
               </div>
             </div>
 

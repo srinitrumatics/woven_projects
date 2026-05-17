@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 import { getCategoryFromAccountType } from "@/lib/permissions";
 import React from 'react';
 import ProductTabs from './ProductTabs';
@@ -19,6 +20,7 @@ interface EditProductTabsProps {
 
 export default function EditProductTabs({ productToEdit, onClose }: EditProductTabsProps) {
   const { user, selectedAccount } = useUserSession();
+  const { success, error } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [picklists, setPicklists] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("Overview");
@@ -299,7 +301,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
 
       const result = await response.json();
       if (result.success) {
-        alert(`Product updated to ${status} successfully!`);
+        success(`Product updated to ${status} successfully!`);
         onClose();
         window.location.reload();
       } else {
@@ -307,7 +309,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
       }
     } catch (err: any) {
       console.error("Error updating product:", err);
-      alert(`Error: ${err.message}`);
+      error(`Error: ${err.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -640,7 +642,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
           onSuccess={() => {
             setIsDatasheetModalOpen(false);
             setSelectedDatasheet(null);
-            alert("Datasheet saved successfully!");
+            success("Datasheet saved successfully!");
             window.location.reload();
           }}
         />
@@ -654,7 +656,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
           onSuccess={() => {
             setIsCertModalOpen(false);
             setSelectedCert(null);
-            alert("Certification saved successfully!");
+            success("Certification saved successfully!");
             window.location.reload();
           }}
         />

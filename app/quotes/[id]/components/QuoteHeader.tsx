@@ -1,4 +1,4 @@
-import { QuoteStatus } from"@/app/quotes/types";
+import { QuoteStatus } from "@/app/quotes/types";
 
 interface QuoteHeaderProps {
     quoteNumber: string;
@@ -7,7 +7,7 @@ interface QuoteHeaderProps {
     onBack: () => void;
 }
 
-export default function QuoteHeader({ quoteNumber, status, description, onBack }: QuoteHeaderProps) {
+export default function QuoteHeader({ quoteNumber, status, description, onBack }: QuoteHeaderProps): JSX.Element {
     return (
         <div className="mb-6">
             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2 min-w-0">

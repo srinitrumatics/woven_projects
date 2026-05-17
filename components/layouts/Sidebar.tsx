@@ -7,6 +7,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useUserSession } from '../UserSessionContext';
 import { usePermissions } from '../PermissionContext';
 import Header from '../Header';
+import { MANUFACTURER_GROUP } from "@/lib/permissions";
 
 interface SidebarProps {
   children: React.ReactNode;
@@ -21,25 +22,25 @@ interface NavigationItem {
 
 const navigation: NavigationItem[] = [
   {
-    name: "Program 360", href: "/program360", icon: (
+    name: "Home", href: "/home", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
       </svg>
-    ), visibleFor: ["Customer"]
+    ), visibleFor: ["Customer", "Hybrid"]
   },
   {
-    name: "Products", href: "/products", icon: (
+    name: "Catalog", href: "/products", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
       </svg>
     )
   },
   {
-    name: "Inventory", href: "/inventory", icon: (
+    name: "My Inventory", href: "/inventory", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
       </svg>
-    )
+    ), visibleFor: ["Customer", "Hybrid"]
   },
   {
     name: "Orders", href: "/orders", icon: (
@@ -148,15 +149,17 @@ export default function Sidebar({ children }: SidebarProps) {
 
 
   const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
-  const isCustomerType = accountType === 'Customer' || accountType === 'NSO';
+  const isManufacturerGroup = MANUFACTURER_GROUP.includes(accountType);
+  const isCustomerType = accountType === 'Customer' || accountType === 'NSO' || accountType === 'Hybrid';
   
-  let landingPage = isCustomerType ? '/program360' : '/products';
+  let landingPage = isCustomerType ? '/home' : '/products';
+  if (isManufacturerGroup) landingPage = '/products';
   if (user?.role === 'Super Admin' || user?.role === 'Admin') {
     landingPage = '/admin-portal/organizations';
   }
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
+    <div className="flex h-screen bg-gray-100 overflow-hidden">
       {/* Mobile overlay (when drawer open) */}
       {mobileOpen && (
         <div
@@ -167,11 +170,11 @@ export default function Sidebar({ children }: SidebarProps) {
 
       {/* Desktop Sidebar (visible from md and up) */}
       <aside
-        className={`hidden md:flex flex-col fixed top-0 left-0 bottom-0 z-40 bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 ease-in-out ${isCollapsed ? "w-20" : "w-64"
+        className={`hidden md:flex flex-col fixed top-0 left-0 bottom-0 z-40 bg-white shadow-lg border-r border-gray-200 transition-all duration-300 ease-in-out ${isCollapsed ? "w-20" : "w-64"
           }`}
       >
         {/* Logo + Toggle */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 min-w-0">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 min-w-0">
           {!isCollapsed && (
             <Link href={landingPage} className="flex items-center">
               <span className="text-2xl font-bold text-primary dark:text-primary">GTH</span>
@@ -179,11 +182,11 @@ export default function Sidebar({ children }: SidebarProps) {
           )}
           <button
             onClick={() => setIsCollapsed((s) => !s)}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             <svg
-              className={`w-5 h-5 text-gray-600 dark:text-gray-400 transition-transform ${isCollapsed ? "-rotate-180" : "rotate-0"}`}
+              className={`w-5 h-5 text-gray-600 transition-transform ${isCollapsed ? "-rotate-180" : "rotate-0"}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -201,8 +204,8 @@ export default function Sidebar({ children }: SidebarProps) {
                 <Link
                   href="/admin-portal/organizations"
                   className={`flex items-center px-3 py-2 rounded-lg transition-colors group ${pathname === '/admin-portal/organizations'
-                    ? "bg-primary-light dark:bg-primary/20 text-primary dark:text-primary"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary"
+                    ? "bg-blue-50 text-primary"
+                    : "text-gray-700 hover:bg-blue-50 hover:text-primary"
                     }`}
                   title={isCollapsed ? "Organizations" : undefined}
                 >
@@ -217,7 +220,8 @@ export default function Sidebar({ children }: SidebarProps) {
             ) : navigation.map((item) => {
               const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
               const typeCategory = (accountType === 'Customer' || accountType === 'NSO') ? 'Customer' :
-                (accountType === 'Hybrid') ? 'Hybrid' : 'Partner';
+                (accountType === 'Hybrid') ? 'Hybrid' :
+                MANUFACTURER_GROUP.includes(accountType) ? 'Partner' : 'Partner';
 
               const hasPermission = !item.visibleFor || item.visibleFor.includes(typeCategory);
 
@@ -229,14 +233,14 @@ export default function Sidebar({ children }: SidebarProps) {
               return (
                 <li key={item.name}>
                   {item.name === "Admin" && (
-                    <div className="my-4 border-t border-gray-200 dark:border-gray-700 mx-3" />
+                    <div className="my-4 border-t border-gray-200 mx-3" />
                   )}
                   <Link
                     href={item.href}
                     className={`flex items-center px-3 py-2 rounded-lg transition-colors group ${isActive
-                      ? "bg-primary-light dark:bg-primary/20 text-primary dark:text-primary"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary"
-                      }`}
+                      ? "bg-blue-50 text-primary"
+                      : "text-gray-700 hover:bg-blue-50 hover:text-primary"
+                    }`}
                     title={isCollapsed ? item.name : undefined}
                   >
                     <span className="flex-shrink-0">{item.icon}</span>
@@ -249,7 +253,7 @@ export default function Sidebar({ children }: SidebarProps) {
         </nav>
 
         {/* Footer - profile / settings */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-4 border-t border-gray-200">
           {user ? (
             <div className="flex items-center justify-between min-w-0">
               <div className="flex items-center gap-3 min-w-0">
@@ -261,7 +265,7 @@ export default function Sidebar({ children }: SidebarProps) {
               {!isCollapsed && (
                 <button
                   onClick={async () => await logout()}
-                  className="p-2 text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  className="p-2 text-gray-500 hover:text-red-500 rounded-full hover:bg-gray-100 transition-colors"
                   title="Logout"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -281,10 +285,10 @@ export default function Sidebar({ children }: SidebarProps) {
 
       {/* Mobile Drawer (md:hidden) */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 md:hidden w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "-translate-x-72"
+        className={`fixed inset-y-0 left-0 z-40 md:hidden w-64 bg-white shadow-lg border-r border-gray-200 transform transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "-translate-x-72"
           }`}
       >
-        <div className="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+        <div className="p-4 flex items-center justify-between border-b border-gray-200">
           <Link href={landingPage} className="flex items-center">
             <span className="text-xl font-bold text-primary dark:text-primary">GTH</span>
           </Link>
@@ -301,8 +305,8 @@ export default function Sidebar({ children }: SidebarProps) {
                   href="/admin-portal/organizations"
                   onClick={() => setMobileOpen(false)}
                   className={`flex items-center px-3 py-2 rounded-lg transition-colors group ${pathname === '/admin-portal/organizations'
-                    ? "bg-primary-light dark:bg-primary/20 text-primary dark:text-primary"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary"
+                    ? "bg-blue-50 text-primary"
+                    : "text-gray-700 hover:bg-blue-50 hover:text-primary"
                     }`}
                 >
                   <span className="flex-shrink-0">
@@ -316,7 +320,8 @@ export default function Sidebar({ children }: SidebarProps) {
             ) : navigation.map((item) => {
               const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
               const typeCategory = (accountType === 'Customer' || accountType === 'NSO') ? 'Customer' :
-                (accountType === 'Hybrid') ? 'Hybrid' : 'Partner';
+                (accountType === 'Hybrid') ? 'Hybrid' :
+                MANUFACTURER_GROUP.includes(accountType) ? 'Partner' : 'Partner';
 
               const hasPermission = !item.visibleFor || item.visibleFor.includes(typeCategory);
 
@@ -327,14 +332,14 @@ export default function Sidebar({ children }: SidebarProps) {
               return (
                 <li key={item.name}>
                   {item.name === "Admin" && (
-                    <div className="my-4 border-t border-gray-200 dark:border-gray-700 mx-3" />
+                    <div className="my-4 border-t border-gray-200 mx-3" />
                   )}
                   <Link
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center px-3 py-2 rounded-lg transition-colors group ${pathname === item.href
-                      ? "bg-primary-light dark:bg-primary/20 text-primary dark:text-primary"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary"
+                      ? "bg-blue-50 text-primary"
+                      : "text-gray-700 hover:bg-blue-50 hover:text-primary"
                       }`}
                   >
                     <span className="flex-shrink-0">{item.icon}</span>
@@ -352,7 +357,7 @@ export default function Sidebar({ children }: SidebarProps) {
         <Header mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} isCollapsed={isCollapsed} />
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4 md:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto bg-gray-100 p-4 md:p-6">{children}</main>
       </div>
     </div>
   );

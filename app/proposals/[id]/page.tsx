@@ -44,10 +44,12 @@ import ReturnsTab from "./components/ReturnsTab";
 import TaxesTab from "./components/TaxesTab";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 
 export default function ProposalDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
+  const { success, error, warning } = useToast();
 
   // State
   const [proposal, setProposal] = useState<Proposal | null>(null);
@@ -1085,7 +1087,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       if (oversizedFiles.length > 0) {
         errorMessage += `The following files exceed the 10MB limit:\n${oversizedFiles.map(f => `- ${f.name} (${(f.size / 1024 / 1024).toFixed(2)} MB)`).join('\n')}`;
       }
-      alert(errorMessage);
+      warning(errorMessage);
       event.target.value = '';
       return;
     }
@@ -1148,11 +1150,11 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         }
       }
 
-      alert('Files uploaded successfully!');
+      success('Files uploaded successfully!');
       window.location.reload();
-    } catch (error) {
-      console.error('Error uploading files:', error);
-      alert('Failed to upload files. Please try again.');
+    } catch (err) {
+      console.error('Error uploading files:', err);
+      error('Failed to upload files. Please try again.');
     } finally {
       setIsUploading(false);
       event.target.value = '';

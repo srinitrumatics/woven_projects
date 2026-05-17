@@ -30,7 +30,7 @@ export default function QuoteLinesTab({
     onSort,
     widths,
     onResize
-}: QuoteLinesTabProps) {
+}: QuoteLinesTabProps): JSX.Element {
     const [currentPage, setCurrentPage] = useState(1);
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteLine);

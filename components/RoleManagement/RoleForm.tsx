@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Role, Permission, PermissionGroup } from '../../db/schema';
 import { roleApi, permissionApi, permissionGroupApi } from '@/lib/api/rbac-api';
 import { Save, X, Shield, Key, ChevronDown, ChevronUp, Search, CheckCircle2 } from 'lucide-react';
+import { useToast } from '@/components/ui/Toast';
 
 interface GroupedPermission {
   id: string | null;
@@ -49,6 +50,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
   );
   const [searchTerm, setSearchTerm] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const { error: toastError } = useToast();
 
   const toggleGroup = (groupId: string | null) => {
     const id = groupId || 'ungrouped';
@@ -91,7 +93,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
       await loadRolesPermissionsAndOrganizations();
     } catch (err) {
       console.error('Failed to save role:', err);
-      alert('Failed to save role');
+      toastError('Failed to save role');
     } finally {
       setIsSaving(false);
     }

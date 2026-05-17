@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -16,6 +17,7 @@ interface AddProductModalProps {
 
 export default function AddProductModal({ isOpen, onClose, productToEdit, inlineMode }: AddProductModalProps) {
   const { user, selectedAccount } = useUserSession();
+  const { success, error, warning } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [picklists, setPicklists] = useState<any>(null);
   const isEditingMode = !!productToEdit;
@@ -128,7 +130,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
 
   const handleSubmit = async () => {
     if (!selectedAccount || !user) {
-      alert("Session expired. Please log in again.");
+      warning("Session expired. Please log in again.");
       return;
     }
 
@@ -201,7 +203,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
       const result = await response.json();
 
       if (result.success) {
-        alert(isEditingMode ? "Product updated successfully!" : "Product created successfully!");
+        success(isEditingMode ? "Product updated successfully!" : "Product created successfully!");
         onClose();
         // Refresh product list if needed
         window.location.reload();
@@ -210,7 +212,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
       }
     } catch (err: any) {
       console.error("Error creating product:", err);
-      alert(`Error: ${err.message}`);
+      error(`Error: ${err.message}`);
     } finally {
       setIsSubmitting(false);
     }

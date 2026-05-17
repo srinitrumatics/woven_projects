@@ -1,11 +1,11 @@
-import { useState } from"react";
-import { QuoteSalesOrder, QuoteShippingManifest, QuoteInvoice } from"../../types";
-import { useResizableColumns } from"@/hooks/useResizableColumns";
-import QuoteSalesOrdersSubTab from"./QuoteSalesOrdersSubTab";
-import QuoteShippingManifestsSubTab from"./QuoteShippingManifestsSubTab";
-import QuoteInvoicesSubTab from"./QuoteInvoicesSubTab";
+import { useState } from "react";
+import { QuoteSalesOrder, QuoteShippingManifest, QuoteInvoice } from "../../types";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import QuoteSalesOrdersSubTab from "./QuoteSalesOrdersSubTab";
+import QuoteShippingManifestsSubTab from "./QuoteShippingManifestsSubTab";
+import QuoteInvoicesSubTab from "./QuoteInvoicesSubTab";
 
-type FulfillmentSubTab ="salesOrders"|"shippingManifests"|"invoices";
+type FulfillmentSubTab = "salesOrders" | "shippingManifests" | "invoices";
 
 interface QuoteFulfillmentTabProps {
     quoteId: string;
@@ -17,7 +17,7 @@ interface QuoteFulfillmentTabProps {
     loading: boolean;
 }
 
-export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFulfillmentTabProps) {
+export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFulfillmentTabProps): JSX.Element {
     const [activeSubTab, setActiveSubTab] = useState<FulfillmentSubTab>("salesOrders");
     const { salesOrders = [], shippingManifests = [], invoices = [] } = data;
 

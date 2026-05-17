@@ -5,6 +5,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatDate, formatFileSize } from "@/lib/utils/formatting";
+import { useToast } from "@/components/ui/Toast";
 
 interface FileData {
     Id: string;
@@ -27,6 +28,7 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
     const [loading, setLoading] = useState(true);
     const [files, setFiles] = useState<FileData[]>([]);
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
+    const { error: toastError } = useToast();
 
     const fetchFiles = async () => {
         try {
@@ -79,7 +81,7 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
     const handleDownload = async (file: FileData) => {
         const contentVersionId = file.Id;
         if (!contentVersionId) {
-            alert("File content not available");
+            toastError("File content not available");
             return;
         }
 
@@ -108,10 +110,10 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
             } else {
                 window.open(downloadUrl, '_blank', 'noopener');
             }
-        } catch (error) {
-            console.error("Error downloading file:", error);
+        } catch (err) {
+            console.error("Error downloading file:", err);
             if (win) win.close();
-            alert("Failed to download file");
+            toastError("Failed to download file");
         } finally {
             setDownloadingIds(prev => {
                 const newSet = new Set(prev);
@@ -134,7 +136,7 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
             );
             if (!response.ok) {
                 if (win) win.close();
-                alert("Unable to open preview.");
+                toastError("Unable to open preview.");
                 return;
             }
             const result = await response.json();
@@ -148,7 +150,7 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
                 }
             } else {
                 if (win) win.close();
-                alert("Preview URL missing");
+                toastError("Preview URL missing");
             }
         } catch (err) {
             console.error("Preview error:", err);
