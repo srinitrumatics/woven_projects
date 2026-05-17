@@ -1,2 +1,2 @@
-web: npm start
-worker: npm run start:worker
+web: pnpm start
+worker: ALGOLIA_SYNC_SCHEMAS=sf_00dec00000e1fjdmaa,sf_00dgk000007zmr7uam,sf_00dwi00000cadad2ar,00DgK000007zMR7UAM_salesforce node workers/algolia-sync-worker.js
