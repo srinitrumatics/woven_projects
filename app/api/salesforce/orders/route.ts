@@ -171,8 +171,14 @@ export async function PATCH(req: Request) {
     let newOrderId = null;
     if (result && typeof result === 'object') {
       // Extract order ID from the nested Salesforce response
-      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-        newOrderId = result.data[0].Id;
+      if (Array.isArray(result) && result.length > 0) {
+        newOrderId = result[0].Id || result[0].id || result[0].orderId;
+      } else if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        if (result.data[0].Customer_Order__c && Array.isArray(result.data[0].Customer_Order__c) && result.data[0].Customer_Order__c.length > 0) {
+          newOrderId = result.data[0].Customer_Order__c[0].Id;
+        } else {
+          newOrderId = result.data[0].Id;
+        }
       } else if (result.Id) {
         newOrderId = result.Id;
       }

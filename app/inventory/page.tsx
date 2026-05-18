@@ -6,10 +6,11 @@ import Pagination from "@/components/ui/Pagination";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatDate, formatCurrency, formatNumber } from "@/lib/utils/formatting";
+import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { InventoryPosition, InventoryStatus } from "./types";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 
 type TabFilter = "All" | "On Hold" | "Put-Away";
 
@@ -17,11 +18,14 @@ const ITEMS_PER_PAGE = 10;
 
 export default function InventoryPage() {
     const router = useRouter();
+    const { warning, error: toastError } = useToast();
     const [activeTab, setActiveTab] = useState<TabFilter>("All");
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [inventoryData, setInventoryData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [isTransferring, setIsTransferring] = useState(false);
+    const [transferError, setTransferError] = useState<string | null>(null);
     const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
     // Top-level session hook
@@ -30,22 +34,15 @@ export default function InventoryPage() {
     const contactId = user?.Id || "";
 
     const fetchInventory = async () => {
-        if (!accountId) return; // Wait for accountId
+        if (!accountId) return;
         try {
             setLoading(true);
-
-            // Determine isSupplier based on account record type
-            const accountType = selectedAccount?.Account_Record_Type__c || '';
-            const isSupplier = accountType === 'Manufacturer' ? 'true' : 'false';
-
-            const response = await fetch(`/api/salesforce/inventory?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&isInventory=true&isSupplier=${isSupplier}`);
-
+            const response = await fetch(
+                `/api/salesforce/inventory?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&isInventory=true`
+            );
             if (response.ok) {
                 const responseData = await response.json();
-                console.log("Inventory API Raw Response:", responseData);
-
                 if (responseData?.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
-                    console.log("Inventory API Processed Data (responseData.data):", responseData.data);
                     setInventoryData(responseData.data[0]);
                 }
             }
@@ -62,32 +59,38 @@ export default function InventoryPage() {
         }
     }, [accountId, contactId]);
 
+    // Auto-hide the transfer error message after a few seconds
+    useEffect(() => {
+        if (transferError) {
+            const timer = setTimeout(() => {
+                setTransferError(null);
+            }, 3000); // 3 seconds
+            return () => clearTimeout(timer);
+        }
+    }, [transferError]);
+
+    // We will define handleRequestTransfer below mappedInventory so it can read product details.
     // Map raw data from API to InventoryPosition objects
+    // NOTE: The API already applies the ownership/account filter conditions.
+    // Do NOT re-filter here — just map the returned records.
     const mappedInventory = useMemo((): InventoryPosition[] => {
         if (!inventoryData) return [];
 
-        let rawRecords = [];
+        let rawRecords: any[] = [];
         if (activeTab === "All") rawRecords = inventoryData["Total Inventory Value"] || [];
         else if (activeTab === "On Hold") rawRecords = inventoryData["Products On Hold"] || [];
         else if (activeTab === "Put-Away") rawRecords = inventoryData["Put-Away"] || [];
 
         const recordsToMap = Array.isArray(rawRecords) ? rawRecords : [];
 
-        // Apply filtering logic: Inventory Account = Logged in Account AND (Ownership Status = "Client-Owned" OR Invoiced = True)
-        const filteredRecords = recordsToMap.filter((item: any) => {
-            const isInventoryAccount = item.Inventory_Account__c === accountId;
-            const isClientOwned = item.Ownership_Status__c === 'Client-Owned';
-            const isInvoiced = item.Invoiced__c === true || item.Invoiced__c === 'true';
-            return isInventoryAccount && (isClientOwned || isInvoiced);
-        });
-
-        return filteredRecords.map((item: any, idx: number) => ({
+        return recordsToMap.map((item: any, idx: number) => ({
             id: item.Product_Name__c || `inv-${idx}`,
             productId: item.Product_Name__c || "",
             name: item.Product_Name || "",
             productName: item.Product_Name || "",
             productDescription: item.Product_Description__c || "",
-            productFamily: item.Product_Name_Family || "",
+            // API returns "Family" (not Product_Name_Family)
+            productFamily: item.Family || "",
             manufacturerDBA: item.Manufacturer_DBA__c || "",
             qtyOnHand: item.Qty_On_Hand__c || 0,
             qtyAvailable: item.Qty_Available__c || 0,
@@ -98,12 +101,15 @@ export default function InventoryPage() {
             avgInventoryAge: item.Avg_Inventory_Age__c || 0,
             totalPositions: item.Total_Positions__c || 0,
             countSites: item.Count_Sites__c || 0,
+            moq: item.MOQ__c || 0,
+            availableToSell: item.Available_To_Sell__c || 0,
+            manufacturerName: item.Manufacturer_Name || "",
             status: (item.Qty_Available__c > 0 ? "Available" : "Reserved") as InventoryStatus,
             receivedDate: "",
-            daysInInventory: item.Avg_Inventory_Age__c || item.gtherp__Days_in_Inventory__c || 0,
-            supplierName: "",
+            daysInInventory: item.Avg_Inventory_Age__c || 0,
+            supplierName: item.Manufacturer_Name || "",
             purchaseOrder: "",
-            inventoryLocation: item.Inventory_Location__c || item.Inventory_Location || "",
+            inventoryLocation: "",
             rack: "",
             bay: "",
             levelPosition: "",
@@ -175,62 +181,34 @@ export default function InventoryPage() {
         actions: 80
     });
 
-    // Summary stats
+    // Summary stats — derived directly from API response arrays.
+    // API already applies all ownership/account/status filters.
     const stats = useMemo(() => {
         if (!inventoryData) return { total: 0, totalValue: 0, uniqueProducts: 0, agedUniqueProducts: 0, agedTotalValue: 0, avgDaysAged: 0, putAwayCount: 0, putAwayUniqueProducts: 0, putAwayTotalValue: 0, onHoldCount: 0, onHoldUniqueProducts: 0, onHoldTotalValue: 0 };
 
+        // Card 1: Total Inventory Value — from "Total Inventory Value" array
+        const totalInvItems: any[] = inventoryData["Total Inventory Value"] || [];
+        const totalValue = totalInvItems.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
+        const uniqueProducts = new Set(totalInvItems.map((item: any) => item.Product_Name__c)).size;
 
-        // Card 1: Total Inventory Value - from API "Total Inventory Value" array
-        const totalInvItemsRaw = inventoryData["Total Inventory Value"] || [];
+        // Card 2: Average Aged — from "Average Aged" array
+        const agedItems: any[] = inventoryData["Average Aged"] || [];
+        const agedUniqueProducts = new Set(agedItems.map((item: any) => item.Product_Name__c)).size;
+        const agedTotalValue = agedItems.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
+        const totalAge = agedItems.reduce((sum: number, item: any) => sum + (item.Avg_Inventory_Age__c || 0), 0);
+        const avgDaysAged = agedItems.length > 0 ? (totalAge / agedItems.length) : 0;
 
-        // Filter by Inventory Account AND (Client-Owned or Invoiced)
-        const totalInvItems = totalInvItemsRaw.filter((item: any) => {
-            const isInventoryAccount = item.Inventory_Account__c === accountId;
-            const isClientOwned = item.Ownership_Status__c === 'Client-Owned';
-            const isInvoiced = item.Invoiced__c === true || item.Invoiced__c === 'true';
-            return isInventoryAccount && (isClientOwned || isInvoiced);
-        });
-
-        const filteredTotalInvItems = totalInvItems.filter((item: any) => item.gtherp__Enable_Inventory_Calculation__c === true || item.gtherp__Enable_Inventory_Calculation__c === 'true');
-        const itemsToUse = filteredTotalInvItems.length > 0 ? filteredTotalInvItems : totalInvItems; // fallback if true not present
-        const totalValue = itemsToUse.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
-        const uniqueProducts = new Set(itemsToUse.map((item: any) => item.Product_Name || item.Name)).size;
-
-        // Card 2: Average Aged
-        const agedItemsRaw = inventoryData["Average Aged"] || inventoryData["Total Inventory Value"] || [];
-        
-        // Always apply security filters first
-        const securedAgedItems = agedItemsRaw.filter((item: any) => {
-            const isInventoryAccount = item.Inventory_Account__c === accountId;
-            const isClientOwned = item.Ownership_Status__c === 'Client-Owned';
-            const isInvoiced = item.Invoiced__c === true || item.Invoiced__c === 'true';
-            return isInventoryAccount && (isClientOwned || isInvoiced);
-        });
-
-        const filteredAgedItems = securedAgedItems.filter((item: any) =>
-            (item.gtherp__Enable_Inventory_Calculation__c === true || item.gtherp__Enable_Inventory_Calculation__c === 'true') &&
-            (item.gtherp__Days_in_Inventory__c !== null && item.gtherp__Days_in_Inventory__c !== undefined)
-        );
-        
-        const agedItemsToUse = filteredAgedItems.length > 0 ? filteredAgedItems : securedAgedItems;
-        const agedUniqueProducts = new Set(agedItemsToUse.map((item: any) => item.Product_Name || item.Name)).size;
-        const agedTotalValue = agedItemsToUse.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
-
-        // Card 3: Put-Away - Calculated from totalInvItems in "Receiving" location
-        const putAwayItems = totalInvItems.filter((item: any) => (item.Inventory_Location__c || item.Inventory_Location || "").toLowerCase() === "receiving");
+        // Card 3: Put-Away — from "Put-Away" array directly
+        const putAwayItems: any[] = inventoryData["Put-Away"] || [];
         const putAwayCount = putAwayItems.length;
-        const putAwayUniqueProducts = new Set(putAwayItems.map((item: any) => item.Product_Name || item.Name)).size;
+        const putAwayUniqueProducts = new Set(putAwayItems.map((item: any) => item.Product_Name__c)).size;
         const putAwayTotalValue = putAwayItems.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
 
-        // Card 4: Products On Hold - Calculated from totalInvItems in "On Hold" location
-        const onHoldItems = totalInvItems.filter((item: any) => (item.Inventory_Location__c || item.Inventory_Location || "").toLowerCase() === "on hold");
+        // Card 4: Products On Hold — from "Products On Hold" array directly
+        const onHoldItems: any[] = inventoryData["Products On Hold"] || [];
         const onHoldCount = onHoldItems.length;
-        const onHoldUniqueProducts = new Set(onHoldItems.map((item: any) => item.Product_Name || item.Name)).size;
+        const onHoldUniqueProducts = new Set(onHoldItems.map((item: any) => item.Product_Name__c)).size;
         const onHoldTotalValue = onHoldItems.reduce((sum: number, item: any) => sum + (item.Total_Price__c || 0), 0);
-
-        // Calculate Average Days Aged across all unique IPs
-        const totalAge = itemsToUse.reduce((sum: number, item: any) => sum + (item.Avg_Inventory_Age__c || 0), 0);
-        const avgDaysAged = itemsToUse.length > 0 ? (totalAge / itemsToUse.length) : 0;
 
         return {
             total: totalInvItems.length,
@@ -251,6 +229,91 @@ export default function InventoryPage() {
 
     const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
 
+    const handleRequestTransfer = async () => {
+        setTransferError(null);
+        if (selectedItems.size === 0) {
+            setTransferError("Please select at least one product to transfer.");
+            return;
+        }
+
+        try {
+            setIsTransferring(true);
+
+            // Get product details for selected items
+            const selectedProductsDetails = Array.from(selectedItems)
+                .map(id => mappedInventory.find(p => p.id === id))
+                .filter(Boolean);
+
+            const payload = {
+                order: {
+                    Bill_to_Account__c: accountId,
+                    Ship_to_Account__c: accountId,
+                    Inventory_Account__c: accountId,
+                    Status__c: 'Draft',
+                    Proposal_Requested__c: true
+                },
+                shipToContact: {
+                    Id: contactId
+                },
+                orderLines: selectedProductsDetails.map(product => ({
+                    Status__c: 'Draft',
+                    Product_Name__c: product!.productId || product!.id,
+                    Order_Qty__c: product!.availableToSell && product!.availableToSell > 0 ? 1 : 1,
+                    Unit_Price__c: 0, // Transfer orders always have $0.00 unit price initially
+                    MOQ__c: product!.moq || 1,
+                    Inventory_Account__c: accountId,
+                    IsTaxable__c: true
+                })),
+                accountId: accountId,
+                contactId: contactId,
+                isDraft: true
+            };
+
+            const response = await fetch('/api/salesforce/orders', {
+                method: 'PATCH', // Using PATCH to hit clone logic which supports orderLines
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ error: 'Failed to create transfer order' }));
+                throw new Error(errorData.error || 'Failed to create transfer order');
+            }
+
+            const result = await response.json();
+            
+            let newOrderId = null;
+            if (result.orderId) {
+                newOrderId = result.orderId;
+            } else if (Array.isArray(result) && result.length > 0) {
+                newOrderId = result[0].Id || result[0].id || result[0].orderId;
+            } else if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+                if (result.data[0].Customer_Order__c && Array.isArray(result.data[0].Customer_Order__c) && result.data[0].Customer_Order__c.length > 0) {
+                    newOrderId = result.data[0].Customer_Order__c[0].Id;
+                } else {
+                    newOrderId = result.data[0].Id;
+                }
+            } else {
+                newOrderId = result.Id || result.id;
+            }
+
+            if (newOrderId) {
+                const productsStr = selectedItems.size > 0 ? `&products=${Array.from(selectedItems).join(',')}` : '';
+                router.push(`/orders/${newOrderId}?new=true&transfer=true${productsStr}`);
+            } else {
+                throw new Error('No order ID returned from API');
+            }
+        } catch (error: any) {
+            console.error('Failed to create transfer order:', error);
+            const errMsg = error.message || 'Failed to initiate transfer. Please try again.';
+            setTransferError(errMsg);
+        } finally {
+            setIsTransferring(false);
+        }
+    };
+
     const handleCardClick = (filter: TabFilter) => {
         setActiveTab(filter);
         setCurrentPage(1);
@@ -265,16 +328,14 @@ export default function InventoryPage() {
                 </div>
                 <div className="flex items-center gap-3 min-w-0">
                     <button
-                        onClick={() => {
-                            const query = selectedItems.size > 0 ? `transfer=true&products=${Array.from(selectedItems).join(',')}` : 'transfer=true';
-                            router.push(`/orders/create?${query}`);
-                        }}
-                        className={`px-4 py-2 text-white rounded-lg transition-colors flex items-center gap-2 truncate ${selectedItems.size > 0 ? 'bg-primary hover:bg-primary-dark' : 'bg-primary/80 hover:bg-primary-dark'}`}
+                        onClick={handleRequestTransfer}
+                        disabled={isTransferring}
+                        className={`px-4 py-2 text-white rounded-lg transition-colors flex items-center gap-2 truncate disabled:opacity-50 disabled:cursor-not-allowed ${selectedItems.size > 0 ? 'bg-primary hover:bg-primary-dark' : 'bg-primary/80 hover:bg-primary-dark'}`}
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                         </svg>
-                        Request Transfer {selectedItems.size > 0 && `(${selectedItems.size})`}
+                        {isTransferring ? 'Creating...' : `Request Transfer ${selectedItems.size > 0 ? `(${selectedItems.size})` : ''}`}
                     </button>
                 </div>
             </div>
@@ -467,6 +528,15 @@ export default function InventoryPage() {
                     </div>
                 </button>
             </div >
+
+            {transferError && (
+                <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center gap-3">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>{transferError}</p>
+                </div>
+            )}
 
             {/* Filters & Table Section */}
             < div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden p-4" >

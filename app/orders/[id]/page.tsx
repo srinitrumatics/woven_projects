@@ -131,6 +131,7 @@ interface Order {
   Total_GST_Amount__c?: number;
   VAT_Rate__c?: number;
   Total_VAT_Amount__c?: number;
+  Proposal_Requested__c?: boolean;
 
   [key: string]: any;
 }
@@ -1517,7 +1518,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         onClone={handleClone}
         isNew={isNew}
         isTransfer={isTransfer}
-        isProposal={isProposal}
+        isProposal={!isTransfer && (isProposal || !!orderData?.Proposal_Requested__c)}
       />
       <div className="grid grid-cols-1 w1025:grid-cols-10 gap-6 items-stretch">
         {/* Row 1 Left - Billing & Shipping (70%) */}

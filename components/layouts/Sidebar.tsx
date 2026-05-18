@@ -159,7 +159,7 @@ export default function Sidebar({ children }: SidebarProps) {
   }
 
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden">
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
       {/* Mobile overlay (when drawer open) */}
       {mobileOpen && (
         <div
@@ -170,11 +170,11 @@ export default function Sidebar({ children }: SidebarProps) {
 
       {/* Desktop Sidebar (visible from md and up) */}
       <aside
-        className={`hidden md:flex flex-col fixed top-0 left-0 bottom-0 z-40 bg-white shadow-lg border-r border-gray-200 transition-all duration-300 ease-in-out ${isCollapsed ? "w-20" : "w-64"
+        className={`hidden md:flex flex-col fixed top-0 left-0 bottom-0 z-40 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out ${isCollapsed ? "w-20" : "w-64"
           }`}
       >
         {/* Logo + Toggle */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 min-w-0">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 min-w-0">
           {!isCollapsed && (
             <Link href={landingPage} className="flex items-center">
               <span className="text-2xl font-bold text-primary dark:text-primary">GTH</span>
@@ -182,11 +182,11 @@ export default function Sidebar({ children }: SidebarProps) {
           )}
           <button
             onClick={() => setIsCollapsed((s) => !s)}
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             <svg
-              className={`w-5 h-5 text-gray-600 transition-transform ${isCollapsed ? "-rotate-180" : "rotate-0"}`}
+              className={`w-5 h-5 text-gray-600 dark:text-gray-400 transition-transform ${isCollapsed ? "-rotate-180" : "rotate-0"}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -204,8 +204,8 @@ export default function Sidebar({ children }: SidebarProps) {
                 <Link
                   href="/admin-portal/organizations"
                   className={`flex items-center px-3 py-2 rounded-lg transition-colors group ${pathname === '/admin-portal/organizations'
-                    ? "bg-blue-50 text-primary"
-                    : "text-gray-700 hover:bg-blue-50 hover:text-primary"
+                    ? "bg-blue-50 text-primary dark:bg-blue-900/50 dark:text-blue-400"
+                    : "text-gray-700 hover:bg-blue-50 hover:text-primary dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                     }`}
                   title={isCollapsed ? "Organizations" : undefined}
                 >
@@ -238,8 +238,8 @@ export default function Sidebar({ children }: SidebarProps) {
                   <Link
                     href={item.href}
                     className={`flex items-center px-3 py-2 rounded-lg transition-colors group ${isActive
-                      ? "bg-blue-50 text-primary"
-                      : "text-gray-700 hover:bg-blue-50 hover:text-primary"
+                      ? "bg-blue-50 text-primary dark:bg-blue-900/50 dark:text-blue-400"
+                      : "text-gray-700 hover:bg-blue-50 hover:text-primary dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                     }`}
                     title={isCollapsed ? item.name : undefined}
                   >
@@ -253,7 +253,7 @@ export default function Sidebar({ children }: SidebarProps) {
         </nav>
 
         {/* Footer - profile / settings */}
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           {user ? (
             <div className="flex items-center justify-between min-w-0">
               <div className="flex items-center gap-3 min-w-0">
@@ -285,10 +285,10 @@ export default function Sidebar({ children }: SidebarProps) {
 
       {/* Mobile Drawer (md:hidden) */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 md:hidden w-64 bg-white shadow-lg border-r border-gray-200 transform transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "-translate-x-72"
+        className={`fixed inset-y-0 left-0 z-40 md:hidden w-64 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "-translate-x-72"
           }`}
       >
-        <div className="p-4 flex items-center justify-between border-b border-gray-200">
+        <div className="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
           <Link href={landingPage} className="flex items-center">
             <span className="text-xl font-bold text-primary dark:text-primary">GTH</span>
           </Link>
@@ -305,8 +305,8 @@ export default function Sidebar({ children }: SidebarProps) {
                   href="/admin-portal/organizations"
                   onClick={() => setMobileOpen(false)}
                   className={`flex items-center px-3 py-2 rounded-lg transition-colors group ${pathname === '/admin-portal/organizations'
-                    ? "bg-blue-50 text-primary"
-                    : "text-gray-700 hover:bg-blue-50 hover:text-primary"
+                    ? "bg-blue-50 text-primary dark:bg-blue-900/50 dark:text-blue-400"
+                    : "text-gray-700 hover:bg-blue-50 hover:text-primary dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                     }`}
                 >
                   <span className="flex-shrink-0">
@@ -338,8 +338,8 @@ export default function Sidebar({ children }: SidebarProps) {
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center px-3 py-2 rounded-lg transition-colors group ${pathname === item.href
-                      ? "bg-blue-50 text-primary"
-                      : "text-gray-700 hover:bg-blue-50 hover:text-primary"
+                      ? "bg-blue-50 text-primary dark:bg-blue-900/50 dark:text-blue-400"
+                      : "text-gray-700 hover:bg-blue-50 hover:text-primary dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                       }`}
                   >
                     <span className="flex-shrink-0">{item.icon}</span>
@@ -357,7 +357,7 @@ export default function Sidebar({ children }: SidebarProps) {
         <Header mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} isCollapsed={isCollapsed} />
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto bg-gray-100 p-4 md:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4 md:p-6">{children}</main>
       </div>
     </div>
   );

@@ -103,29 +103,29 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
 
                             {/* Request Transfer Checkbox - only shown when true */}
                             {!!isTransfer && (
-                                <label className="flex items-center gap-2 cursor-default select-none" title="Request Transfer">
+                                <label className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-100 border border-blue-200 text-blue-800 dark:bg-blue-900/40 dark:border-blue-700 dark:text-blue-300 shadow-sm cursor-default select-none" title="Request Transfer">
                                     <input
                                         type="checkbox"
                                         readOnly
                                         checked
-                                        className="w-4 h-4 accent-primary cursor-default"
+                                        className="w-4 h-4 text-blue-600 rounded cursor-default"
                                         onChange={() => {}}
                                     />
-                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Request Transfer</span>
+                                    <span className="text-sm font-semibold whitespace-nowrap">Request Transfer</span>
                                 </label>
                             )}
 
                             {/* Request Proposal Checkbox - only shown when true */}
                             {!!isProposal && (
-                                <label className="flex items-center gap-2 cursor-default select-none" title="Request Proposal">
+                                <label className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-100 border border-blue-200 text-blue-800 dark:bg-blue-900/40 dark:border-blue-700 dark:text-blue-300 shadow-sm cursor-default select-none" title="Request Proposal">
                                     <input
                                         type="checkbox"
                                         readOnly
                                         checked
-                                        className="w-4 h-4 accent-primary cursor-default"
+                                        className="w-4 h-4 text-blue-600 rounded cursor-default"
                                         onChange={() => {}}
                                     />
-                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Request Proposal</span>
+                                    <span className="text-sm font-semibold whitespace-nowrap">Request Proposal</span>
                                 </label>
                             )}
                         </div>

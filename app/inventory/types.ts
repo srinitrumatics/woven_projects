@@ -11,6 +11,7 @@ export interface InventoryPosition {
     productDescription: string;
     productFamily?: string;
     manufacturerDBA: string;
+    manufacturerName?: string;
     supplierName: string;
     purchaseOrder: string;
     qtyOnHand: number;
@@ -22,6 +23,8 @@ export interface InventoryPosition {
     avgInventoryAge?: number;
     totalPositions?: number;
     countSites?: number;
+    moq?: number;
+    availableToSell?: number;
     inventoryLocation: string;
     rack: string;
     bay: string;
@@ -31,3 +34,4 @@ export interface InventoryPosition {
     shipConfirmedDate: string;
     status: InventoryStatus;
 }
+
