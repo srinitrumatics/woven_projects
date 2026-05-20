@@ -132,6 +132,7 @@ interface Order {
   VAT_Rate__c?: number;
   Total_VAT_Amount__c?: number;
   Proposal_Requested__c?: boolean;
+  Transfer_Order__c?: boolean;
 
   [key: string]: any;
 }
@@ -645,7 +646,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       const selectedProducts = catalogProducts.filter(p => transferIds.includes(p.id));
       
       const newLineItems = selectedProducts.map(product => {
-        const qty = product.availableQty || 1;
+        const qty = product.moq && product.moq > 0
+          ? Math.max(1, Math.floor((product.availableQty || 0) / product.moq))
+          : Math.max(1, product.availableQty || 0);
         return {
           ...product,
           orderQty: qty,
@@ -1313,7 +1316,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           Inventory_Account__c: SF_ACCOUNT_ID,
           Shipping_Method__c: formData.shippingMethod,
           Incoterms__c: formData.incoterms,
-          ...(isTransfer || isProposal ? { Proposal_Requested__c: true } : {})
+          ...((isTransfer || orderData?.Transfer_Order__c) ? { Transfer_Order__c: true } : {}),
+          ...((isTransfer || isProposal || orderData?.Proposal_Requested__c) ? { Proposal_Requested__c: true } : {})
         },
         orderLines: orderProducts.map(product => ({
           ...(product.orderLineId ? { Id: product.orderLineId } : {}),
@@ -1517,8 +1521,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         onEditToggle={() => setIsEditing(!isEditing)}
         onClone={handleClone}
         isNew={isNew}
-        isTransfer={isTransfer}
-        isProposal={!isTransfer && (isProposal || !!orderData?.Proposal_Requested__c)}
+        isTransfer={isTransfer || !!orderData?.Transfer_Order__c}
+        isProposal={!(isTransfer || !!orderData?.Transfer_Order__c) && (isProposal || !!orderData?.Proposal_Requested__c)}
       />
       <div className="grid grid-cols-1 w1025:grid-cols-10 gap-6 items-stretch">
         {/* Row 1 Left - Billing & Shipping (70%) */}

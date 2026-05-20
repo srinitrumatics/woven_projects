@@ -228,7 +228,8 @@ export default function OrdersPage() {
         body: JSON.stringify({
           accountId: accountId,
           contactId: contactId,
-          Proposal_Requested__c: false
+          Proposal_Requested__c: false,
+          Transfer_Order__c: false
         })
       });
 
@@ -277,7 +278,9 @@ export default function OrdersPage() {
         body: JSON.stringify({
           accountId: accountId,
           contactId: contactId,
-          Proposal_Requested__c: true
+          Proposal_Requested__c: true,
+          Transfer_Order__c: false
+
         })
       });
 

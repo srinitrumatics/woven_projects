@@ -140,6 +140,11 @@ export default function InventoryPage() {
     }, [sortedInventory, currentPage]);
 
     const toggleSelection = (id: string) => {
+        const item = mappedInventory.find(i => i.productId === id || i.id === id);
+        if (item && item.qtyAvailable <= 0) {
+            warning("Products with zero available quantity cannot be selected for transfer.");
+            return;
+        }
         const newSelection = new Set(selectedItems);
         if (newSelection.has(id)) {
             newSelection.delete(id);
@@ -150,11 +155,19 @@ export default function InventoryPage() {
     };
 
     const toggleSelectAll = () => {
-        if (selectedItems.size === paginatedInventory.length && paginatedInventory.length > 0) {
-            setSelectedItems(new Set());
+        const selectableItems = paginatedInventory.filter(i => i.qtyAvailable > 0);
+        const selectableIds = selectableItems.map(i => i.productId || i.id);
+        
+        const allSelectableSelected = selectableIds.length > 0 && 
+            selectableIds.every(id => selectedItems.has(id));
+
+        const newSelection = new Set(selectedItems);
+        if (allSelectableSelected) {
+            selectableIds.forEach(id => newSelection.delete(id));
         } else {
-            setSelectedItems(new Set(paginatedInventory.map(i => i.productId || i.id)));
+            selectableIds.forEach(id => newSelection.add(id));
         }
+        setSelectedItems(newSelection);
     };
 
     useEffect(() => {
@@ -250,7 +263,8 @@ export default function InventoryPage() {
                     Ship_to_Account__c: accountId,
                     Inventory_Account__c: accountId,
                     Status__c: 'Draft',
-                    Proposal_Requested__c: true
+                    Proposal_Requested__c: false,
+                    Transfer_Order__c: true
                 },
                 shipToContact: {
                     Id: contactId
@@ -258,7 +272,9 @@ export default function InventoryPage() {
                 orderLines: selectedProductsDetails.map(product => ({
                     Status__c: 'Draft',
                     Product_Name__c: product!.productId || product!.id,
-                    Order_Qty__c: product!.availableToSell && product!.availableToSell > 0 ? 1 : 1,
+                    Order_Qty__c: product!.moq && product!.moq > 0
+                        ? Math.max(1, Math.floor((product!.qtyAvailable || 0) / product!.moq))
+                        : Math.max(1, product!.qtyAvailable || 0),
                     Unit_Price__c: 0, // Transfer orders always have $0.00 unit price initially
                     MOQ__c: product!.moq || 1,
                     Inventory_Account__c: accountId,
@@ -283,7 +299,7 @@ export default function InventoryPage() {
             }
 
             const result = await response.json();
-            
+
             let newOrderId = null;
             if (result.orderId) {
                 newOrderId = result.orderId;
@@ -584,10 +600,13 @@ export default function InventoryPage() {
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
                                     <th className="px-3 py-2 sticky left-0 bg-primary-light dark:bg-gray-900 z-20 text-center" style={{ width: widths.checkbox, maxWidth: widths.checkbox }}>
-                                        <input 
-                                            type="checkbox" 
+                                        <input
+                                            type="checkbox"
                                             className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
-                                            checked={paginatedInventory.length > 0 && selectedItems.size === paginatedInventory.length}
+                                            checked={
+                                                paginatedInventory.filter(i => i.qtyAvailable > 0).length > 0 &&
+                                                paginatedInventory.filter(i => i.qtyAvailable > 0).every(i => selectedItems.has(i.productId || i.id))
+                                            }
                                             onChange={toggleSelectAll}
                                         />
                                     </th>
@@ -624,11 +643,12 @@ export default function InventoryPage() {
                                     paginatedInventory.map((item) => (
                                         <tr key={item.id} className={`transition-colors group ${selectedItems.has(item.productId || item.id) ? 'bg-primary/5 dark:bg-primary/10' : 'hover:bg-primary-light/20 dark:hover:bg-primary/5'}`}>
                                             <td className="px-3 py-2 sticky left-0 bg-white dark:bg-gray-800 z-10 text-center" style={{ width: widths.checkbox, maxWidth: widths.checkbox }}>
-                                                <input 
-                                                    type="checkbox" 
-                                                    className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                                                <input
+                                                    type="checkbox"
+                                                    className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                                                     checked={selectedItems.has(item.productId || item.id)}
                                                     onChange={() => toggleSelection(item.productId || item.id)}
+                                                    disabled={item.qtyAvailable <= 0}
                                                 />
                                             </td>
                                             <td className="px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky left-[48px] bg-white dark:bg-gray-800 text-left truncate" style={{ width: widths.productName, maxWidth: widths.productName }}>
