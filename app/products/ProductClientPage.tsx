@@ -123,7 +123,7 @@ function CustomRefinementList(props: any) {
 }
 
 function Content() {
-  const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "dev_woven_products";
+  const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
 
   useEffect(() => {
     logUnfilteredData(indexName);

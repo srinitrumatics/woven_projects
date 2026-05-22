@@ -211,15 +211,25 @@ class SchemaWorker {
     }
 
     async getIndexConfig(client, tableName) {
-        const r = await client.query(
-            `SELECT table_name, index_name
-               FROM ${this.schema}.algolia_index_config
-              WHERE table_name = $1
-                AND COALESCE(is_enabled, TRUE) = TRUE
-              LIMIT 1`,
-            [tableName]
-        );
-        return r.rows[0] || null;
+        // Try exact match first (e.g. 'product2' queued by trigger),
+        // then try schema-prefixed form (e.g. 'salesforce.product2' stored in config).
+        const candidates = [tableName, `${this.schema}.${tableName}`];
+        // If tableName already contains a dot, also try the part after the dot.
+        if (tableName.includes('.')) {
+            candidates.push(tableName.split('.').pop());
+        }
+        for (const candidate of candidates) {
+            const r = await client.query(
+                `SELECT table_name, index_name
+                   FROM ${this.schema}.algolia_index_config
+                  WHERE table_name = $1
+                    AND COALESCE(is_enabled, TRUE) = TRUE
+                  LIMIT 1`,
+                [candidate]
+            );
+            if (r.rows[0]) return r.rows[0];
+        }
+        return null;
     }
 
     async markCompleted(client, row) {
@@ -230,6 +240,47 @@ class SchemaWorker {
             `UPDATE ${schema}.algolia_sync_queue SET ${sets.join(', ')} WHERE ${shape.pkCol} = $1`,
             [row.row_pk]
         );
+    }
+
+    /**
+     * Insert one row into <schema>.algolia_sync_log.
+     * Fields match the table definition exactly:
+     *   id, queue_id, table_name, record_id, operation, status,
+     *   algolia_object_id, request_payload, response_payload,
+     *   error_details, sync_duration_ms, synced_at
+     */
+    async writeSyncLog(client, {
+        queueId, tableName, recordId, operation, status,
+        algoliaObjectId = null,
+        requestPayload  = null,
+        responsePayload = null,
+        errorDetails    = null,
+        durationMs      = null,
+    }) {
+        try {
+            await client.query(
+                `INSERT INTO ${this.schema}.algolia_sync_log
+                    (queue_id, table_name, record_id, operation, status,
+                     algolia_object_id, request_payload, response_payload,
+                     error_details, sync_duration_ms, synced_at)
+                 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,NOW())`,
+                [
+                    queueId      ?? null,
+                    tableName,
+                    recordId,
+                    operation,
+                    status,
+                    algoliaObjectId,
+                    requestPayload  ? JSON.stringify(requestPayload)  : null,
+                    responsePayload ? JSON.stringify(responsePayload) : null,
+                    errorDetails,
+                    durationMs,
+                ]
+            );
+        } catch (logErr) {
+            // Never let logging failures crash the worker.
+            this.log('warn', 'algolia_sync_log insert failed', { error: logErr.message });
+        }
     }
 
     async markFailed(client, row, message) {
@@ -283,16 +334,46 @@ class SchemaWorker {
                 }
                 continue;
             }
-            const index = this.algolia.initIndex(cfg.index_name);
+            // Use environment variable index override if present, else fall back to DB config
+            const envIndexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || process.env.ALGOLIA_INDEX_NAME;
+            const indexName = envIndexName || cfg.index_name;
+            const index = this.algolia.initIndex(indexName);
 
             try {
                 if (op === 'DELETE') {
                     const ids = batch.map(it => (it.payload && it.payload.objectID) || it.record_id).filter(Boolean);
                     if (ids.length === 0) {
-                        for (const it of batch) { await this.markFailed(client, it, 'no objectID for delete'); failed++; }
+                        for (const it of batch) {
+                            await this.markFailed(client, it, 'no objectID for delete');
+                            await this.writeSyncLog(client, {
+                                queueId:     it.row_pk,
+                                tableName,
+                                recordId:    it.record_id,
+                                operation:   op,
+                                status:      'failed',
+                                errorDetails: 'no objectID for delete',
+                            });
+                            failed++;
+                        }
                         continue;
                     }
+                    const t0del = Date.now();
                     await index.deleteObjects(ids);
+                    const durDel = Date.now() - t0del;
+                    for (const it of batch) {
+                        await this.markCompleted(client, it);
+                        await this.writeSyncLog(client, {
+                            queueId:        it.row_pk,
+                            tableName,
+                            recordId:       it.record_id,
+                            operation:      op,
+                            status:         'success',
+                            algoliaObjectId: (it.payload && it.payload.objectID) || it.record_id,
+                            requestPayload:  { indexName, ids },
+                            durationMs:     durDel,
+                        });
+                        success++;
+                    }
                 } else {
                     // INSERT/UPDATE — saveObjects upserts in Algolia.
                     // Inject objectID from record_id when missing (the key fix).
@@ -302,16 +383,55 @@ class SchemaWorker {
                         return obj;
                     }).filter(o => o.objectID);
                     if (objects.length === 0) {
-                        for (const it of batch) { await this.markFailed(client, it, 'no objectID'); failed++; }
+                        for (const it of batch) {
+                            await this.markFailed(client, it, 'no objectID');
+                            await this.writeSyncLog(client, {
+                                queueId:     it.row_pk,
+                                tableName,
+                                recordId:    it.record_id,
+                                operation:   op,
+                                status:      'failed',
+                                errorDetails: 'no objectID',
+                            });
+                            failed++;
+                        }
                         continue;
                     }
-                    await index.saveObjects(objects);
+                    const t0save = Date.now();
+                    const saveResult = await index.saveObjects(objects);
+                    const durSave = Date.now() - t0save;
+                    for (const it of batch) {
+                        const obj = objects.find(o => o.objectID === it.record_id) || {};
+                        await this.markCompleted(client, it);
+                        await this.writeSyncLog(client, {
+                            queueId:        it.row_pk,
+                            tableName,
+                            recordId:       it.record_id,
+                            operation:      op,
+                            status:         'success',
+                            algoliaObjectId: obj.objectID || it.record_id,
+                            requestPayload:  obj,
+                            responsePayload: saveResult ? { taskID: saveResult.taskID, objectIDs: saveResult.objectIDs } : null,
+                            durationMs:     durSave,
+                        });
+                        success++;
+                    }
                 }
-                for (const it of batch) { await this.markCompleted(client, it); success++; }
-                this.log('info', 'batch sync completed', { tableName, op, count: batch.length, indexName: cfg.index_name });
+                this.log('info', 'batch sync completed', { tableName, op, count: batch.length, indexName });
             } catch (err) {
                 this.log('error', 'batch sync failed', { tableName, op, error: err.message });
-                for (const it of batch) { await this.markFailed(client, it, err.message); failed++; }
+                for (const it of batch) {
+                    await this.markFailed(client, it, err.message);
+                    await this.writeSyncLog(client, {
+                        queueId:     it.row_pk,
+                        tableName,
+                        recordId:    it.record_id,
+                        operation:   op,
+                        status:      'failed',
+                        errorDetails: err.message,
+                    });
+                    failed++;
+                }
             }
         }
         return { success, failed };

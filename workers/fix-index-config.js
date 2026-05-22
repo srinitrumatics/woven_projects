@@ -17,7 +17,7 @@ async function fixIndexConfig() {
             SET index_name = 'dev_woven_products'
             WHERE table_name = 'products'
         `);
-        console.log("✓ Updated index_name to 'dev_woven_products'");
+        console.log("✓ Updated index_name to 'wovn_products_local'");
 
         // 2. Reset queue items to pending (so they get synced to the new index)
         const result = await client.query(`

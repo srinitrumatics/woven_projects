@@ -2,15 +2,15 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  ArrowLeftIcon, 
-  CheckCircleIcon, 
-  ChevronRightIcon, 
-  CircleStackIcon, 
-  GlobeAltIcon, 
-  LockClosedIcon, 
+import {
+  ArrowLeftIcon,
+  CheckCircleIcon,
+  ChevronRightIcon,
+  CircleStackIcon,
+  GlobeAltIcon,
+  LockClosedIcon,
   ShieldCheckIcon,
-  BuildingOfficeIcon 
+  BuildingOfficeIcon
 } from '@heroicons/react/24/outline';
 
 export default function CreateOrganizationPage() {
@@ -18,7 +18,7 @@ export default function CreateOrganizationPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   const [formData, setFormData] = useState({
     name: '',
     orgId: '',
@@ -40,7 +40,7 @@ export default function CreateOrganizationPage() {
     orgId ? `sf_${orgId.toLowerCase().replace(/[^a-z0-9]/g, '')}` : '';
 
   const deriveIndexName = (schemaName: string) =>
-    schemaName ? `dev_woven_products_${schemaName}` : '';
+    schemaName ? `woven_products_${schemaName}` : '';
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -124,7 +124,7 @@ export default function CreateOrganizationPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <button 
+      <button
         onClick={() => router.back()}
         className="flex items-center text-sm text-gray-500 hover:text-primary transition-colors"
       >
@@ -360,7 +360,7 @@ export default function CreateOrganizationPage() {
                     value={schemaData.indexName}
                     onChange={handleInputChange}
                     className="block w-full pl-10 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm font-mono py-2"
-                    placeholder="dev_woven_products_sf_00dgk000007zmr7uam"
+                    placeholder="woven_products_sf_00dgk000007zmr7uam"
                   />
                 </div>
                 <p className="text-xs text-gray-400">This index will be created in your Algolia account dashboard</p>

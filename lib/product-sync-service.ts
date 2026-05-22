@@ -23,7 +23,7 @@ export async function syncNewProductToPostgresAndAlgolia(
 
       if (sfResult && (sfResult.success || sfResult.Id || sfResult.product)) {
         // Handle various response structures (data, product array, or direct object)
-        const fetchedData = 
+        const fetchedData =
           (Array.isArray(sfResult.data) ? sfResult.data[0] : sfResult.data) ||
           (Array.isArray(sfResult.product) ? sfResult.product[0] : sfResult.product) ||
           (sfResult.Id ? sfResult : null);
@@ -101,7 +101,7 @@ export async function syncNewProductToPostgresAndAlgolia(
   try {
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
     const adminKey = process.env.ALGOLIA_ADMIN_KEY;
-    const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'dev_woven_products';
+    const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
 
     if (!appId || !adminKey) {
       console.warn('[ProductSync] ⚠️ Algolia credentials missing. Skipping direct push.');
@@ -132,7 +132,7 @@ export async function syncNewProductToPostgresAndAlgolia(
       _tags: [
         productData.Product_Family__c,
         productData.product_family__c,
-        productData.Family, 
+        productData.Family,
         productData.family,
         productData.Category__c,
         productData.gtherp__category__c,

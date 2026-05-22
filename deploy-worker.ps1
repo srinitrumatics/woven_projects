@@ -91,9 +91,9 @@ if (![string]::IsNullOrWhiteSpace($ALGOLIA_ADMIN_KEY)) {
 }
 
 # Algolia Index Name
-$ALGOLIA_INDEX_NAME = Read-Host "NEXT_PUBLIC_ALGOLIA_INDEX_NAME (default: dev_woven_products)"
+$ALGOLIA_INDEX_NAME = Read-Host "NEXT_PUBLIC_ALGOLIA_INDEX_NAME (default: wovn_products_local)"
 if ([string]::IsNullOrWhiteSpace($ALGOLIA_INDEX_NAME)) {
-    $ALGOLIA_INDEX_NAME = "dev_woven_products"
+    $ALGOLIA_INDEX_NAME = "wovn_products_local"
 }
 heroku config:set "NEXT_PUBLIC_ALGOLIA_INDEX_NAME=$ALGOLIA_INDEX_NAME" -a $APP_NAME
 

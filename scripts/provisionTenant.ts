@@ -57,9 +57,9 @@ export async function provisionTenantSchema(schemaName: string) {
     const transformedSqlContent = algoliaSqlContent.replace(/salesforce\./g, `${sanitizedSchemaName}.`);
 
     // We also need to update the default index name inside the insert statement if needed
-    // e.g., 'dev_woven_products' -> '${sanitizedSchemaName}_products'
+    // e.g., 'woven_products' -> '${sanitizedSchemaName}_products'
     const finalSqlContent = transformedSqlContent.replace(
-      /'dev_woven_products'/g, 
+      /'woven_products'/g,
       `'${sanitizedSchemaName}_products'`
     );
 
@@ -67,7 +67,7 @@ export async function provisionTenantSchema(schemaName: string) {
     // Note: If the SQL script is very large or contains multiple statements, 
     // it's best to execute it directly. pg driver supports multiple statements.
     await db.execute(sql.raw(finalSqlContent));
-    
+
     console.log(`✅ All Algolia sync tables, logs, views, and triggers created in ${sanitizedSchemaName}.`);
     console.log(`🎉 Tenant provisioning complete for ${sanitizedSchemaName}.`);
 
@@ -84,7 +84,7 @@ if (require.main === module) {
     console.error("Please provide a schema name. Usage: npx ts-node scripts/provisionTenant.ts org_mycompany");
     process.exit(1);
   }
-  
+
   provisionTenantSchema(schemaArg)
     .then(() => process.exit(0))
     .catch(() => process.exit(1));

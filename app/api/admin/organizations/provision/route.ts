@@ -62,7 +62,7 @@ export async function POST(request: Request) {
 
     // Replace the default index name in algolia_index_config INSERT
     transformedSqlContent = transformedSqlContent.replace(
-      /'dev_woven_products'/g,
+      /'wovn_products_local'/g,
       `'${sanitizedIndexName}'`
     );
 
@@ -78,32 +78,32 @@ export async function POST(request: Request) {
     // 5. Create the Algolia index
     const algoliaAppId = process.env.ALGOLIA_APP_ID;
     const algoliaAdminKey = process.env.ALGOLIA_ADMIN_KEY;
-    
+
     if (algoliaAppId && algoliaAdminKey) {
       const client = algoliasearch(algoliaAppId, algoliaAdminKey);
       const index = client.initIndex(sanitizedIndexName);
-      
+
       // Save an init object to ensure the index is fully created in Algolia Dashboard
       await index.saveObject({
         objectID: 'init',
         message: 'Index created automatically via Admin Provisioning',
         created_at: Date.now()
       });
-      
+
       // Set basic default settings based on existing app configs
       await index.setSettings({
         searchableAttributes: ['name', 'description', 'productcode', 'family', 'gtherp__category__c', 'gtherp__sub_category__c', 'manufacturer_name__c'],
         attributesForFaceting: ['family', 'gtherp__category__c', 'gtherp__sub_category__c', 'manufacturer_name__c', 'product_availability__c'],
       });
-      
+
       console.log(`Algolia index ${sanitizedIndexName} initialized successfully.`);
     } else {
       console.warn("ALGOLIA_APP_ID or ALGOLIA_ADMIN_KEY missing. Algolia index not created via API.");
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      message: `Schema ${sanitizedSchemaName} and Index ${sanitizedIndexName} provisioned successfully.` 
+    return NextResponse.json({
+      success: true,
+      message: `Schema ${sanitizedSchemaName} and Index ${sanitizedIndexName} provisioned successfully.`
     });
 
   } catch (error: any) {

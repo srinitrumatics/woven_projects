@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS sf_00dec00000e1fjdmaa.algolia_index_config (
 
 -- Insert default configurations
 INSERT INTO sf_00dec00000e1fjdmaa.algolia_index_config (table_name, index_name, transform_function, filter_condition, batch_size) VALUES
-('sf_00dec00000e1fjdmaa.product2', 'dev_woven_products', 'transform_sf_product_for_algolia', NULL, 100)
+('sf_00dec00000e1fjdmaa.product2', 'wovn_products_local', 'transform_sf_product_for_algolia', NULL, 100)
 ON CONFLICT (table_name) DO UPDATE SET
     index_name = EXCLUDED.index_name,
     transform_function = EXCLUDED.transform_function,

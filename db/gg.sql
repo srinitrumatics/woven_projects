@@ -15,7 +15,7 @@
 -- If your columns end in `__c` instead of `_c`, do a find/replace in this file
 -- (`_c` → `__c`) before running.
 --
--- Index name set to `dev_woven_products_sf_00dgk000007zmr7uam` to match
+-- Index name set to `woven_products_sf_00dgk000007zmr7uam` to match
 -- Pattern A naming. Each tenant schema gets its own Algolia index.
 --
 -- DBeaver-safe: every reference to a function body uses a unique dollar-quote
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS sf_00dgk000007zmr7uam.algolia_index_config (
 
 -- Pattern A: per-tenant index name.
 INSERT INTO sf_00dgk000007zmr7uam.algolia_index_config (table_name, index_name, transform_function, filter_condition, batch_size) VALUES
-('sf_00dgk000007zmr7uam.product2', 'dev_woven_products_sf_00dgk000007zmr7uam', 'transform_sf_product_for_algolia', NULL, 100)
+('sf_00dgk000007zmr7uam.product2', 'woven_products_sf_00dgk000007zmr7uam', 'transform_sf_product_for_algolia', NULL, 100)
 ON CONFLICT (table_name) DO UPDATE SET
     index_name         = EXCLUDED.index_name,
     transform_function = EXCLUDED.transform_function,
@@ -658,15 +658,15 @@ ORDER BY 1;
 
 
 UPDATE sf_00dec00000e1fjdmaa.algolia_index_config
-   SET index_name = 'dev_woven_products_sf_00dec00000e1fjdmaa'
+   SET index_name = 'woven_products_sf_00dec00000e1fjdmaa'
  WHERE table_name = 'sf_00dec00000e1fjdmaa.product2';
 
 UPDATE sf_00dgk000007zmr7uam.algolia_index_config
-   SET index_name = 'dev_woven_products_sf_00dgk000007zmr7uam'
+   SET index_name = 'woven_products_sf_00dgk000007zmr7uam'
  WHERE table_name = 'sf_00dgk000007zmr7uam.product2';
 
 UPDATE sf_00dwi00000cadad2ar.algolia_index_config
-   SET index_name = 'dev_woven_products_sf_00dwi00000cadad2ar'
+   SET index_name = 'woven_products_sf_00dwi00000cadad2ar'
  WHERE table_name = 'sf_00dwi00000cadad2ar.product2';
 
 

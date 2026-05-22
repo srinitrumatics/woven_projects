@@ -14,7 +14,7 @@
 //   node scripts/setup-tenant-schema.js sf_new_tenant --index dev_my_products
 //
 // OPTIONS
-//   --index <name>     Algolia index name (default: dev_woven_products_<schema>)
+//   --index <name>     Algolia index name (default: woven_products_<schema>)
 //   --source <schema>  Source schema to clone from (default: salesforce)
 //   --no-product2      Skip product2 cloning (if HC will provision it later)
 //   --no-trigger       Skip attaching the product2 trigger
@@ -57,13 +57,13 @@ if (!SCHEMA_NAME_RE.test(schema)) {
     process.exit(1);
 }
 
-const sourceSchema   = flagValue('source', 'salesforce');
-const indexName      = flagValue('index', `dev_woven_products_${schema.toLowerCase()}`);
-const skipProduct2   = hasFlag('no-product2');
-const skipTrigger    = hasFlag('no-trigger');
-const skipApiKey     = hasFlag('no-api-key');
-const rotateKey      = hasFlag('rotate-key');
-const dryRun         = hasFlag('dry-run');
+const sourceSchema = flagValue('source', 'salesforce');
+const indexName = flagValue('index', `woven_products_${schema.toLowerCase()}`);
+const skipProduct2 = hasFlag('no-product2');
+const skipTrigger = hasFlag('no-trigger');
+const skipApiKey = hasFlag('no-api-key');
+const rotateKey = hasFlag('rotate-key');
+const dryRun = hasFlag('dry-run');
 
 if (!SCHEMA_NAME_RE.test(sourceSchema)) {
     console.error(`Invalid source schema name: "${sourceSchema}"`);
@@ -330,7 +330,7 @@ async function main() {
 
             if (!dryRun) await client.query('COMMIT');
         } catch (e) {
-            await client.query('ROLLBACK').catch(() => {});
+            await client.query('ROLLBACK').catch(() => { });
             throw e;
         }
 

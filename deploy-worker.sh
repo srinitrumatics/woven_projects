@@ -81,8 +81,8 @@ if [ ! -z "$ALGOLIA_ADMIN_KEY" ]; then
 fi
 
 # Algolia Index Name
-read -p "NEXT_PUBLIC_ALGOLIA_INDEX_NAME (default: dev_woven_products): " ALGOLIA_INDEX_NAME
-ALGOLIA_INDEX_NAME=${ALGOLIA_INDEX_NAME:-dev_woven_products}
+read -p "NEXT_PUBLIC_ALGOLIA_INDEX_NAME (default: wovn_products_local): " ALGOLIA_INDEX_NAME
+ALGOLIA_INDEX_NAME=${ALGOLIA_INDEX_NAME:-wovn_products_local}
 heroku config:set NEXT_PUBLIC_ALGOLIA_INDEX_NAME="$ALGOLIA_INDEX_NAME" -a "$APP_NAME"
 
 echo ""

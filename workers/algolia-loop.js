@@ -1,7 +1,7 @@
 // ============================================================================
 // algolia-loop.js — polling version of manual-sync.js
 // ============================================================================
-// SAME proven code that pushed your first record to dev_woven_products.
+// SAME proven code that pushed your first record to wovn_products_local.
 // The only difference: it wraps the main flow in a 5-second polling loop
 // with graceful shutdown.
 //
@@ -25,11 +25,11 @@ if (!/^[a-z][a-z0-9_]{0,62}$/.test(SCHEMA)) {
     process.exit(1);
 }
 
-const APP_ID  = process.env[`ALGOLIA_APP_ID_${SCHEMA.toUpperCase()}`]
-             || process.env.NEXT_PUBLIC_ALGOLIA_APP_ID
-             || process.env.ALGOLIA_APP_ID;
+const APP_ID = process.env[`ALGOLIA_APP_ID_${SCHEMA.toUpperCase()}`]
+    || process.env.NEXT_PUBLIC_ALGOLIA_APP_ID
+    || process.env.ALGOLIA_APP_ID;
 const API_KEY = process.env[`ALGOLIA_ADMIN_KEY_${SCHEMA.toUpperCase()}`]
-             || process.env.ALGOLIA_ADMIN_KEY;
+    || process.env.ALGOLIA_ADMIN_KEY;
 if (!APP_ID || !API_KEY) {
     console.error('Missing Algolia credentials (ALGOLIA_APP_ID + ALGOLIA_ADMIN_KEY)');
     process.exit(1);
@@ -63,16 +63,16 @@ async function introspectQueue(client) {
     );
     const cols = new Set(r.rows.map(x => x.column_name));
     const shape = {
-        pkCol:      cols.has('id') ? 'id' : (cols.has('queue_id') ? 'queue_id' : null),
-        recordCol:  cols.has('record_id') ? 'record_id' : (cols.has('object_id') ? 'object_id' : null),
-        tableCol:   cols.has('table_name') ? 'table_name' : null,
+        pkCol: cols.has('id') ? 'id' : (cols.has('queue_id') ? 'queue_id' : null),
+        recordCol: cols.has('record_id') ? 'record_id' : (cols.has('object_id') ? 'object_id' : null),
+        tableCol: cols.has('table_name') ? 'table_name' : null,
         attemptCol: cols.has('attempts') ? 'attempts' : (cols.has('retry_count') ? 'retry_count' : null),
-        errorCol:   cols.has('last_error') ? 'last_error' : (cols.has('error_message') ? 'error_message' : null),
-        statusCol:  cols.has('status') ? 'status' : null,
-        procCol:    cols.has('processed_at') ? 'processed_at' : null,
+        errorCol: cols.has('last_error') ? 'last_error' : (cols.has('error_message') ? 'error_message' : null),
+        statusCol: cols.has('status') ? 'status' : null,
+        procCol: cols.has('processed_at') ? 'processed_at' : null,
     };
-    if (!shape.statusCol)  throw new Error(`No 'status' column`);
-    if (!shape.recordCol)  throw new Error(`No 'record_id'/'object_id' column`);
+    if (!shape.statusCol) throw new Error(`No 'status' column`);
+    if (!shape.recordCol) throw new Error(`No 'record_id'/'object_id' column`);
     return shape;
 }
 
@@ -187,12 +187,12 @@ async function shutdown(signal) {
     while (cycleInFlight && Date.now() < deadline) {
         await new Promise(r => setTimeout(r, 100));
     }
-    try { await pool.end(); } catch {}
+    try { await pool.end(); } catch { }
     process.exit(0);
 }
-process.on('SIGINT',  () => shutdown('SIGINT'));
+process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('uncaughtException',  (e) => { log('error', 'uncaught', { error: e?.message, stack: e?.stack }); process.exit(1); });
+process.on('uncaughtException', (e) => { log('error', 'uncaught', { error: e?.message, stack: e?.stack }); process.exit(1); });
 process.on('unhandledRejection', (r) => { log('error', 'unhandled', { error: r?.message || String(r) }); process.exit(1); });
 
 (async () => {
