@@ -599,7 +599,7 @@ export default function InventoryPage() {
                         <table className="w-full text-sm" style={{ tableLayout: 'fixed' }}>
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <th className="px-3 py-2 sticky left-0 bg-primary-light dark:bg-gray-900 z-50 text-center" style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
+                                    <th className="px-3 py-2 sticky left-0 bg-primary-light dark:bg-gray-900 z-30 text-center" style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
                                         <input
                                             type="checkbox"
                                             className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
@@ -610,7 +610,7 @@ export default function InventoryPage() {
                                             onChange={toggleSelectAll}
                                         />
                                     </th>
-                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} truncate={false} className="sticky bg-primary-light dark:bg-gray-900 z-40" style={{ left: widths.checkbox }} />
+                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} truncate={false} className="sticky bg-primary-light dark:bg-gray-900 z-20" style={{ left: widths.checkbox }} />
                                     <SortableHeader label="Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.family} onResize={handleResize} truncate={false} />
@@ -642,7 +642,7 @@ export default function InventoryPage() {
                                 ) : (
                                     paginatedInventory.map((item) => (
                                         <tr key={item.id} className={`transition-colors group ${selectedItems.has(item.productId || item.id) ? 'bg-primary/5 dark:bg-primary/10' : 'hover:bg-primary-light/20 dark:hover:bg-primary/5'}`}>
-                                            <td className={`px-3 py-2 sticky left-0 z-50 text-center ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
+                                            <td className={`px-3 py-2 sticky left-0 z-30 text-center ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
                                                 <input
                                                     type="checkbox"
                                                     className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
@@ -651,7 +651,7 @@ export default function InventoryPage() {
                                                     disabled={item.qtyAvailable <= 0}
                                                 />
                                             </td>
-                                            <td className={`px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky text-left truncate shadow-[1px_0_0_0_#f3f4f6] dark:shadow-[1px_0_0_0_#374151] z-40 ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.productName, minWidth: widths.productName, maxWidth: widths.productName, left: widths.checkbox }}>
+                                            <td className={`px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky text-left truncate shadow-[1px_0_0_0_#f3f4f6] dark:shadow-[1px_0_0_0_#374151] z-20 ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.productName, minWidth: widths.productName, maxWidth: widths.productName, left: widths.checkbox }}>
                                                 <button onClick={() => router.push(`/inventory/${item.productId || item.id}`)} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
 
                                                     {item.productName}

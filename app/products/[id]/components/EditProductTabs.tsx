@@ -303,7 +303,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
       if (result.success) {
         success(`Product updated to ${status} successfully!`);
         onClose();
-        window.location.reload();
+        setTimeout(() => window.location.reload(), 5000);
       } else {
         throw new Error(result.message || "Failed to update product");
       }
@@ -643,7 +643,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
             setIsDatasheetModalOpen(false);
             setSelectedDatasheet(null);
             success("Datasheet saved successfully!");
-            window.location.reload();
+            setTimeout(() => window.location.reload(), 5000);
           }}
         />
       )}
@@ -657,7 +657,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
             setIsCertModalOpen(false);
             setSelectedCert(null);
             success("Certification saved successfully!");
-            window.location.reload();
+            setTimeout(() => window.location.reload(), 5000);
           }}
         />
       )}

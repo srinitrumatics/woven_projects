@@ -168,7 +168,7 @@ export default function SearchPage() {
       setSeedStatus("success");
       setSeedMessage(`Successfully seeded ${data.count} records! Refresh the page to see results.`);
       // Optional: reload page after a delay
-      setTimeout(() => window.location.reload(), 2000);
+      setTimeout(() => window.location.reload(), 5000);
     } catch (err: any) {
       setSeedStatus("error");
       setSeedMessage(err.message);

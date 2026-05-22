@@ -133,7 +133,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
       if (!response.ok) throw new Error('Failed to upload files');
 
       success('Files uploaded successfully!');
-      window.location.reload();
+      setTimeout(() => window.location.reload(), 5000);
     } catch (err) {
       console.error('Error uploading files:', err);
       toastError('Failed to upload files. Please try again.');
@@ -742,15 +742,15 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
                 loading={tabLoading}
               />
             )}
-            {activeTab === 'purchases' && 
-              (selectedAccount?.Account_Record_Type__c?.toLowerCase() !== 'customer' && selectedAccount?.Account_Type__c?.toLowerCase() !== 'customer' && user?.role?.toLowerCase() !== 'customer') && 
+            {activeTab === 'purchases' &&
+              (selectedAccount?.Account_Record_Type__c?.toLowerCase() !== 'customer' && selectedAccount?.Account_Type__c?.toLowerCase() !== 'customer' && user?.role?.toLowerCase() !== 'customer') &&
               (selectedAccount?.Account_Record_Type__c?.toLowerCase() !== 'nso' && selectedAccount?.Account_Type__c?.toLowerCase() !== 'nso' && user?.role?.toLowerCase() !== 'nso') && (
-              <QuotePurchasesTab
-                quoteId={id}
-                data={purchasesData}
-                loading={tabLoading}
-              />
-            )}
+                <QuotePurchasesTab
+                  quoteId={id}
+                  data={purchasesData}
+                  loading={tabLoading}
+                />
+              )}
             {activeTab === 'returns' && (
               <QuoteReturnsTab
                 quoteId={id}

@@ -14,7 +14,7 @@ interface ShipmentTabsProps {
 
 const TAB_DEFS: { id: ShipmentTabId; label: string }[] = [
     { id: "lines", label: "Shipping Manifest Lines" },
-    { id: "inventory", label: "Inventory Positions" },
+    // { id: "inventory", label: "Inventory Positions" },
     { id: "serial", label: "Serial Numbers Logs" },
     { id: "files", label: "Files" },
 ];

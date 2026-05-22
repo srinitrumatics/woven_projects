@@ -63,7 +63,7 @@ export default function ProfilePage() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name } = e.target;
         let value = e.target.value;
-        
+
         // Sanitize phone numbers: Force remove alphabets and invalid symbols
         if (name === "MobilePhone" || name === "Phone") {
             value = value.replace(/[^0-9\+\-\s\(\)]/g, '');
@@ -74,9 +74,9 @@ export default function ProfilePage() {
             if (value && value.trim() !== "") {
                 const numericOnly = value.replace(/\D/g, '');
                 if (numericOnly.length < 10 || numericOnly.length > 15) {
-                    setFieldErrors((prev: any) => ({ 
-                        ...prev, 
-                        [name]: "Please enter 10-15 digits." 
+                    setFieldErrors((prev: any) => ({
+                        ...prev,
+                        [name]: "Please enter 10-15 digits."
                     }));
                 } else {
                     setFieldErrors((prev: any) => {
@@ -106,7 +106,7 @@ export default function ProfilePage() {
 
     const validatePhone = (phone: string) => {
         if (!phone || phone.trim() === "") return true;
-        
+
         // Check for invalid characters (No alphabets allowed)
         const allowedCharsRegex = /^[0-9\+\-\s\(\)]*$/;
         if (!allowedCharsRegex.test(phone)) return false;
@@ -117,7 +117,7 @@ export default function ProfilePage() {
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // Ensure we don't submit if already loading
         if (loading) return;
 
@@ -126,14 +126,14 @@ export default function ProfilePage() {
 
         // Calculate all errors fresh
         const errors: any = {};
-        
+
         // Mobile Phone validation
         if (formData.MobilePhone && formData.MobilePhone.trim() !== "") {
             if (!validatePhone(formData.MobilePhone)) {
                 errors.MobilePhone = "Please enter a valid mobile number (10-15 digits).";
             }
         }
-        
+
         // Work Phone validation (Mandatory)
         if (!formData.Phone || formData.Phone.trim() === "") {
             errors.Phone = "Work Phone is required.";
@@ -145,9 +145,9 @@ export default function ProfilePage() {
         if (Object.keys(errors).length > 0) {
             console.log("Validation failed, blocking submission:", errors);
             setFieldErrors(errors);
-            setMessage({ 
-                type: "error", 
-                text: "Please fix the validation errors below." 
+            setMessage({
+                type: "error",
+                text: "Please fix the validation errors below."
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
@@ -155,31 +155,31 @@ export default function ProfilePage() {
 
         console.log("Validation passed, submitting form...");
         setLoading(true);
-        
+
         try {
             const response = await fetch('/api/salesforce/profile', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
-                    userId: user.Id, 
-                    ...formData 
+                body: JSON.stringify({
+                    userId: user.Id,
+                    ...formData
                 })
             });
-            
+
             const result = await response.json();
 
             if (response.ok) {
                 setMessage({ type: "success", text: "Profile updated successfully!" });
                 setIsEditing(false);
-                
+
                 // Refresh session data globally
                 const sessionRes = await fetch('/api/auth/session');
                 const sessionData = await sessionRes.json();
                 if (sessionData.authenticated) {
                     // This will update the context state
-                    window.location.reload(); 
+                    setTimeout(() => window.location.reload(), 5000);
                 }
             } else {
                 setMessage({ type: "error", text: result.error || "Failed to update profile." });
@@ -227,7 +227,7 @@ export default function ProfilePage() {
                                 </div>
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{details.Name}</h2>
                                 <p className="text-primary font-medium mb-4">{details.Title || 'Member'}</p>
-                                
+
                                 <div className="w-full pt-6 border-t border-gray-100 dark:border-slate-800 mt-2 space-y-4">
                                     <div className="flex justify-between items-center text-sm">
                                         <span className="text-gray-500 font-medium">Department</span>
@@ -267,7 +267,7 @@ export default function ProfilePage() {
                                                 <span className="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded-full uppercase tracking-wider">Active</span>
                                             )}
                                         </div>
-                                        
+
                                         <div>
                                             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Display Name</label>
                                             <p className="text-gray-900 dark:text-white font-medium px-4 py-2.5 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-transparent opacity-70">{details.Name}</p>

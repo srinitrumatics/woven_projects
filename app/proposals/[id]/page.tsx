@@ -1151,7 +1151,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       }
 
       success('Files uploaded successfully!');
-      window.location.reload();
+      setTimeout(() => window.location.reload(), 5000);
     } catch (err) {
       console.error('Error uploading files:', err);
       error('Failed to upload files. Please try again.');

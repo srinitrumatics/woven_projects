@@ -203,10 +203,10 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
       const result = await response.json();
 
       if (result.success) {
-        success(isEditingMode ? "Product updated successfully!" : "Product created successfully!");
+        success(isEditingMode ? "Product updated" : "Product created");
         onClose();
-        // Refresh product list if needed
-        window.location.reload();
+        // Refresh after a short delay to allow Salesforce/Algolia to sync
+        setTimeout(() => window.location.reload(), 5000);
       } else {
         throw new Error(result.message || "Failed to create product");
       }

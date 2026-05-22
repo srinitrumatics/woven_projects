@@ -216,7 +216,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             <EditProductTabs
               onClose={() => {
                 setEditModalOpen(false);
-                window.location.reload();
+                setTimeout(() => window.location.reload(), 5000);
               }}
               productToEdit={rawProduct}
             />

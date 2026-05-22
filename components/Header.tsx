@@ -54,7 +54,7 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
   };
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-sm relative z-[100]">
+    <header className="bg-white dark:bg-gray-800 shadow-sm relative z-40">
       <div className="flex items-center justify-between px-6 py-4 min-w-0">
         <div className="flex items-center gap-4 min-w-0">
           {/* Mobile hamburger (left) */}

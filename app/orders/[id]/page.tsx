@@ -617,7 +617,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           productFamily: item.Family || item.productFamily || "General",
           productGrouping: item.Grouping__c || item.Product_Grouping__c || item.productGrouping || "",
           sku: item.StockKeepingUnit || item.SKU || item.sku || item.Name || "",
-          manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
+          manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.Manufacturer_Name || item.Manufacturer_Name__c || "",
           brand: item.Brand__c || item.brand || item.Brand || item['Manufacturer_Name__r.Name'] || "",
           availableQty: item.Available_To_Sell__c || item.availableQty || 0,
           moq: item.MOQ__c || item.moq || 1,
@@ -644,7 +644,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     if (isNew && isTransfer && transferProductsStr && catalogProducts.length > 0 && orderProducts.length === 0) {
       const transferIds = transferProductsStr.split(',');
       const selectedProducts = catalogProducts.filter(p => transferIds.includes(p.id));
-      
+
       const newLineItems = selectedProducts.map(product => {
         const qty = product.moq && product.moq > 0
           ? Math.max(1, Math.floor((product.availableQty || 0) / product.moq))
@@ -670,7 +670,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       // Find a matching product if it exists, otherwise use a fallback
       const existingProduct = catalogProducts.find(p => p.name === "Proposal Request");
       const productId = existingProduct ? existingProduct.id : "PROPOSAL-REQ";
-      
+
       const newLineItem = {
         id: productId,
         name: "Proposal Request",
@@ -1177,8 +1177,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
       success("Files uploaded successfully");
 
-      // Reload the page to reflect the uploaded files
-      window.location.reload();
+      // Reload the page after a short delay to allow Salesforce to propagate
+      setTimeout(() => window.location.reload(), 5000);
     } catch (error) {
       console.error("Error uploading files:", error);
       toastError("Failed to upload files. Please try smaller files.");
@@ -1360,7 +1360,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       setOrderStatus(isDraft ? "Draft" : "Submitted");
 
       // Show success message
-      success(isDraft ? "Order saved as draft successfully!" : "Order submitted successfully!");
+      success(isDraft ? "Order saved as draft" : "Order submitted");
       // After successful save, ensure formData reflects the selected contact details
       if (selectedContactId) {
         const selectedContact = shipContacts.find(c => c.Id === selectedContactId);
@@ -1373,8 +1373,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           }));
         }
       }
-      // Refresh the page to reflect latest data
-      window.location.reload();
+      // Refresh after a short delay to allow Salesforce to propagate
+      setTimeout(() => window.location.reload(), 5000);
 
     } catch (error) {
       console.error("Error submitting order:", error);
