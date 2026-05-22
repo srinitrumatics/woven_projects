@@ -11,6 +11,7 @@ interface SortableHeaderProps {
     width?: string | number;
     onResize?: (field: string, newWidth: number) => void;
     truncate?: boolean;
+    style?: React.CSSProperties;
 }
 
 export function SortableHeader({
@@ -22,7 +23,8 @@ export function SortableHeader({
     align = "left",
     width,
     onResize,
-    truncate = true
+    truncate = true,
+    style = {}
 }: SortableHeaderProps) {
     const isSorted = sortConfig?.key === field;
     const thRef = useRef<HTMLTableHeaderCellElement>(null);
@@ -57,9 +59,9 @@ export function SortableHeader({
     return (
         <th
             ref={thRef}
-            className={`p-0 text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none relative ${className}`}
+            className={`p-0 text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none ${className?.includes('sticky') ? '' : 'relative'} ${className}`}
             onClick={() => requestSort && requestSort(field)}
-            style={displayWidth ? { width: displayWidth, minWidth: displayWidth, maxWidth: displayWidth } : {}}
+            style={{ ...(displayWidth ? { width: displayWidth, minWidth: displayWidth, maxWidth: displayWidth } : {}), ...style }}
         >
             <div
                 className={`px-2 py-3 flex items-center gap-1 h-full min-h-[44px]`}

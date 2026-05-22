@@ -99,7 +99,7 @@ const navigation: NavigationItem[] = [
       </svg>
     )
   },
-  {
+  /*{
     name: "Reports", href: "/reports", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -112,11 +112,11 @@ const navigation: NavigationItem[] = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
       </svg>
     )
-  },
+  },*/
 
 
   {
-    name: "Users", href: "/admin/users", icon: (
+    name: "Contacts", href: "/admin/users", icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
       </svg>
@@ -151,7 +151,7 @@ export default function Sidebar({ children }: SidebarProps) {
   const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
   const isManufacturerGroup = MANUFACTURER_GROUP.includes(accountType);
   const isCustomerType = accountType === 'Customer' || accountType === 'NSO' || accountType === 'Hybrid';
-  
+
   let landingPage = isCustomerType ? '/home' : '/products';
   if (isManufacturerGroup) landingPage = '/products';
   if (user?.role === 'Super Admin' || user?.role === 'Admin') {
@@ -221,7 +221,7 @@ export default function Sidebar({ children }: SidebarProps) {
               const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
               const typeCategory = (accountType === 'Customer' || accountType === 'NSO') ? 'Customer' :
                 (accountType === 'Hybrid') ? 'Hybrid' :
-                MANUFACTURER_GROUP.includes(accountType) ? 'Partner' : 'Partner';
+                  MANUFACTURER_GROUP.includes(accountType) ? 'Partner' : 'Partner';
 
               const hasPermission = !item.visibleFor || item.visibleFor.includes(typeCategory);
 
@@ -240,7 +240,7 @@ export default function Sidebar({ children }: SidebarProps) {
                     className={`flex items-center px-3 py-2 rounded-lg transition-colors group ${isActive
                       ? "bg-blue-50 text-primary dark:bg-blue-900/50 dark:text-blue-400"
                       : "text-gray-700 hover:bg-blue-50 hover:text-primary dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
-                    }`}
+                      }`}
                     title={isCollapsed ? item.name : undefined}
                   >
                     <span className="flex-shrink-0">{item.icon}</span>
@@ -252,35 +252,6 @@ export default function Sidebar({ children }: SidebarProps) {
           </ul>
         </nav>
 
-        {/* Footer - profile / settings */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-          {user ? (
-            <div className="flex items-center justify-between min-w-0">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
-                  {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                </div>
-                {!isCollapsed && <div className="text-sm">{user.name || 'User'}</div>}
-              </div>
-              {!isCollapsed && (
-                <button
-                  onClick={async () => await logout()}
-                  className="p-2 text-gray-500 hover:text-red-500 rounded-full hover:bg-gray-100 transition-colors"
-                  title="Logout"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                </button>
-              )}
-            </div>
-          ) : (
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">U</div>
-              {!isCollapsed && <div className="text-sm">User Name</div>}
-            </div>
-          )}
-        </div>
       </aside>
 
       {/* Mobile Drawer (md:hidden) */}
@@ -321,7 +292,7 @@ export default function Sidebar({ children }: SidebarProps) {
               const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
               const typeCategory = (accountType === 'Customer' || accountType === 'NSO') ? 'Customer' :
                 (accountType === 'Hybrid') ? 'Hybrid' :
-                MANUFACTURER_GROUP.includes(accountType) ? 'Partner' : 'Partner';
+                  MANUFACTURER_GROUP.includes(accountType) ? 'Partner' : 'Partner';
 
               const hasPermission = !item.visibleFor || item.visibleFor.includes(typeCategory);
 

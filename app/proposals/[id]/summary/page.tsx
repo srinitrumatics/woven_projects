@@ -67,12 +67,12 @@ export default function ProposalSummaryPage({ params }: { params: Promise<{ id: 
             Proposal Details
           </button>
           <span>&gt;</span>
-          <span className="text-gray-900 dark:text-white truncate">Proposal Workspace Page</span>
+          <span className="text-gray-900 dark:text-white truncate">Proposal Workspace</span>
         </div>
         <div className="flex items-center justify-between min-w-0">
           <div className="flex items-center gap-4 min-w-0">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">
-              Proposal Workspace Page
+              Proposal Workspace
             </h1>
           </div>
           <div className="flex items-center gap-2 min-w-0">

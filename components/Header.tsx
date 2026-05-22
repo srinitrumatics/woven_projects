@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { useUserSession } from './UserSessionContext';
 import { usePermissions } from './PermissionContext';
@@ -53,7 +54,7 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
   };
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-sm">
+    <header className="bg-white dark:bg-gray-800 shadow-sm relative z-[100]">
       <div className="flex items-center justify-between px-6 py-4 min-w-0">
         <div className="flex items-center gap-4 min-w-0">
           {/* Mobile hamburger (left) */}
@@ -86,7 +87,7 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
               {/* Account dropdown menu */}
               {isOrgDropdownOpen && (
                 <div
-                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50"
+                  className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 max-h-48 overflow-y-auto">
@@ -170,7 +171,7 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
             {/* User profile dropdown menu */}
             {isUserDropdownOpen && (
               <div
-                className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50"
+                className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
@@ -181,6 +182,13 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                     {user?.email || 'user@example.com'}
                   </p>
                 </div>
+                <Link
+                  href="/profile"
+                  onClick={() => setIsUserDropdownOpen(false)}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white"
+                >
+                  Profile
+                </Link>
                 <button
                   onClick={async () => await logout()}
                   className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white"

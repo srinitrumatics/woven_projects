@@ -40,7 +40,7 @@ export const useToast = () => {
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const showToast = useCallback((message: string, type: ToastType = 'info', duration: number = 5000) => {
+  const showToast = useCallback((message: string, type: ToastType = 'info', duration: number = 600000) => {
     const id = Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, message, type, duration }]);
 
@@ -63,7 +63,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ToastContext.Provider value={{ showToast, success, error, info, warning }}>
       {children}
-      <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none">
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] flex flex-col items-center gap-3 pointer-events-none">
         <AnimatePresence>
           {toasts.map((toast) => (
             <ToastItem key={toast.id} toast={toast} onRemove={() => removeToast(toast.id)} />
@@ -91,9 +91,9 @@ const ToastItem = ({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95, x: 20 }}
-      animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
-      exit={{ opacity: 0, scale: 0.95, x: 20 }}
+      initial={{ opacity: 0, y: -20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95, y: -20 }}
       layout
       className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl border shadow-lg backdrop-blur-md min-w-[320px] max-w-md ${bgColors[toast.type]}`}
     >
