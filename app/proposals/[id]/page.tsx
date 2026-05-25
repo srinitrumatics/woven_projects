@@ -87,6 +87,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const { user, selectedAccount } = useUserSession();
   const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
   const SF_CONTACT_ID = user?.Id || "";
+  const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
+  const isRestricted = accountType === 'Customer' || accountType === 'NSO';
 
   // Resizable Columns hooks
   const { widths: productWidths, handleResize: handleProductResize } = useResizableColumns({
@@ -1398,7 +1400,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                     orders: orders.length,
                     fulfillment: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
                     purchases: purchases.length + supplierBills.length,
-                    returns: returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length,
+                    returns: isRestricted
+                      ? returnsData.rma.length + returnsData.creditMemos.length
+                      : returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length,
                     taxes: taxesData.length
                   }}
                 />
