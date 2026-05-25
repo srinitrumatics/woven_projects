@@ -36,13 +36,14 @@ const logUnfilteredData = async (indexName: string) => {
   }
 };
 
-function CustomClearButton({ onClear }: { onClear: () => void }) {
+function CustomClearButton({ onClear, canClearCustom }: { onClear: () => void, canClearCustom?: boolean }) {
   const { canRefine, refine } = useClearRefinements();
+  const isClearable = canRefine || canClearCustom;
   return (
     <button
-      onClick={() => { refine(); onClear(); }}
-      disabled={!canRefine}
-      className={`text-sm font-medium transition-colors ${canRefine ? 'text-primary hover:text-primary-dark cursor-pointer' : 'text-gray-400 cursor-not-allowed'}`}
+      onClick={() => { if (canRefine) refine(); onClear(); }}
+      disabled={!isClearable}
+      className={`text-sm font-medium transition-colors ${isClearable ? 'text-primary hover:text-primary-dark cursor-pointer' : 'text-gray-400 cursor-not-allowed'}`}
     >
       Clear all
     </button>
@@ -140,6 +141,7 @@ function Content() {
   const isAdmin = user?.role === 'Admin' || user?.role === 'Super Admin';
   const [showOnlyMine, setShowOnlyMine] = useState(false);
   const [productToEdit, setProductToEdit] = useState<any>(null);
+  const [stockFilter, setStockFilter] = useState<'all' | 'in_stock' | 'out_of_stock'>('all');
 
   const canEditProduct = (p: any) => {
     if (isAdmin) return true;
@@ -165,6 +167,12 @@ function Content() {
   } else {
     // Default
     filters = "product_availability:'Available'";
+  }
+
+  if (stockFilter === 'in_stock') {
+    filters = filters ? `${filters} AND stock_quantity > 0` : "stock_quantity > 0";
+  } else if (stockFilter === 'out_of_stock') {
+    filters = filters ? `${filters} AND stock_quantity <= 0` : "stock_quantity <= 0";
   }
 
   console.log('[Algolia] Search Context:', {
@@ -235,7 +243,10 @@ function Content() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sticky top-6">
           <div className="flex items-center justify-between mb-4 min-w-0">
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">Filters</h2>
-            <CustomClearButton onClear={() => setQuery('')} />
+            <CustomClearButton 
+              onClear={() => { setQuery(''); setStockFilter('all'); }} 
+              canClearCustom={stockFilter !== 'all'} 
+            />
           </div>
 
           {/* Category Filter */}
@@ -259,6 +270,32 @@ function Content() {
               showMore={true}
               showMoreLimit={200}
             />
+          </div>
+
+          {/* Stock Filter */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Stock Status</h3>
+            <ul className="space-y-2">
+              {[
+                { label: 'All', value: 'all' },
+                { label: 'In Stock', value: 'in_stock' },
+                { label: 'Out of Stock', value: 'out_of_stock' }
+              ].map((item) => (
+                <li key={item.value} className="flex items-center">
+                  <label className="flex items-center cursor-pointer w-full group">
+                    <input
+                      type="radio"
+                      checked={stockFilter === item.value}
+                      onChange={() => setStockFilter(item.value as any)}
+                      className="w-4 h-4 text-primary border-gray-300 dark:border-gray-600 focus:ring-primary dark:focus:ring-primary cursor-pointer"
+                    />
+                    <span className={`ml-2 text-sm group-hover:text-gray-900 dark:group-hover:text-white flex-1 ${stockFilter === item.value ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
+                      {item.label}
+                    </span>
+                  </label>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Type Filter */}
