@@ -62,15 +62,8 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                         const info = responseData.data[0];
                         setProductInfo(info);
                         
-                        // Filter positions: Inventory Account = Logged in Account && (Ownership Status = “Client-Owned” or Invoiced = True)
                         const rawPositions = info.Inventory_Position__c || [];
-                        const filtered = rawPositions.filter((p: any) => {
-                            const isLoggedAccount = p.Inventory_Account__c === accountId;
-                            const isClientOwned = p.Ownership_Status__c === 'Client-Owned';
-                            const isInvoiced = p.Invoiced__c === true || p.Invoiced__c === 'true';
-                            return isLoggedAccount && (isClientOwned || isInvoiced);
-                        });
-                        setPositions(filtered);
+                        setPositions(rawPositions);
                     }
                 } else {
                     console.error("Failed to fetch inventory for product:", productId);
