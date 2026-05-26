@@ -139,8 +139,10 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
       const accountId = selectedAccount.Id || selectedAccount.id;
       const contactId = user.Id || user.contact?.Id;
 
+      // productToEdit can be an Algolia hit (uses objectID) or a SF record (uses Id)
+      const sfProductId = productToEdit?.Id || productToEdit?.objectID || null;
       const productData: any = {
-        ...(productToEdit?.Id ? { Id: productToEdit.Id } : {}),
+        ...(sfProductId ? { Id: sfProductId } : {}),
         Name: formData.name,
         StockKeepingUnit: formData.sku,
         ProductCode: formData.productCode,

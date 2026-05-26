@@ -22,15 +22,23 @@ export async function syncNewProductToPostgresAndAlgolia(
       const sfResult = await getProductDetailsFromSalesforce(accountId, contactId, sfProductId, 'product');
 
       if (sfResult && (sfResult.success || sfResult.Id || sfResult.product)) {
-        // Handle various response structures (data, product array, or direct object)
-        const fetchedData =
-          (Array.isArray(sfResult.data) ? sfResult.data[0] : sfResult.data) ||
-          (Array.isArray(sfResult.product) ? sfResult.product[0] : sfResult.product) ||
-          (sfResult.Id ? sfResult : null);
+        let fetchedData = null;
+        if (sfResult.data) {
+          const firstData = Array.isArray(sfResult.data) ? sfResult.data[0] : sfResult.data;
+          if (firstData && firstData.Product && Array.isArray(firstData.Product) && firstData.Product.length > 0) {
+            fetchedData = firstData.Product[0];
+          } else {
+            fetchedData = firstData;
+          }
+        } else if (sfResult.product) {
+          fetchedData = Array.isArray(sfResult.product) ? sfResult.product[0] : sfResult.product;
+        } else if (sfResult.Id) {
+          fetchedData = sfResult;
+        }
 
         if (fetchedData) {
-          // Merge fetched data over initial data to ensure we have full record
-          productData = { ...productData, ...fetchedData };
+          // We want the new edits (initialProductData) to take precedence over the old fetched data
+          productData = { ...fetchedData, ...productData };
           console.log(`[ProductSync] 📥 Successfully fetched latest data from Salesforce for ${sfProductId}`);
         }
       }
@@ -86,9 +94,9 @@ export async function syncNewProductToPostgresAndAlgolia(
         productData.UnitPrice ?? productData.UnitPrice__c ?? 0, // $8 gtherp__price__c
         productData.Available_To_Sell__c ?? 0,          // $9 gtherp__available_quantity__c
         productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? null, // $10 product_availability__c
-        productData.gtherp__category__c ?? productData.Category__c ?? null, // $11 gtherp__category__c
+        productData.gtherp__category__c ?? productData.Category__c ?? productData.Family ?? productData.family ?? null, // $11 gtherp__category__c
         productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null, // $12 gtherp__sub_category__c
-        productData.CreatedDate ?? null,                // $13 createddate
+        productData.CreatedDate ? new Date(productData.CreatedDate).toISOString() : null, // $13 createddate
       ]
     );
 
@@ -122,13 +130,15 @@ export async function syncNewProductToPostgresAndAlgolia(
       discount: 0,
       image_url: productData.image_url ?? null,
       images: productData.images ?? [],
-      category: productData.gtherp__category__c ?? productData.Category__c ?? null,
+      category: productData.gtherp__category__c ?? productData.Category__c ?? productData.Family ?? productData.family ?? null,
       sub_category: productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null,
       family: productData.Product_Family__c ?? productData.product_family__c ?? productData.Family ?? productData.family ?? '',
       manufacturer: accountId,
       status: productData.IsActive === false ? 'inactive' : 'active',
       is_active: productData.IsActive === false ? false : true,
       product_availability: productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? '',
+      updated_at: Math.floor(Date.now() / 1000),
+      created_at: productData.CreatedDate ? Math.floor(new Date(productData.CreatedDate).getTime() / 1000) : Math.floor(Date.now() / 1000),
       _tags: [
         productData.Product_Family__c,
         productData.product_family__c,

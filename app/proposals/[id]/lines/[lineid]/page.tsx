@@ -953,17 +953,23 @@ export default function ProposalProductDetailPage({
                 {/* Tabs Header */}
                 <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 mb-6 items-center min-w-0">
                     {
-                        [
-                            { id: "taxes", label: "Taxes", count: product.taxDetail ? 1 : 0 },
-                            { id: "fulfillment", label: "Fulfillment", count: (fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length) },
-                            { id: "purchases", label: "Purchases", count: (purchasesData.purchaseOrders.length + purchasesData.supplierBills.length) },
-                            { id: "returns", label: "Returns", count: (returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length) }
-                        ].filter(tab => {
-                            const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type || selectedAccount?.type;
+                        (() => {
+                            const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type || (selectedAccount as any)?.type;
                             const isRestricted = accountType === 'Customer' || accountType === 'NSO';
-                            if (isRestricted && tab.id === 'purchases') return false;
-                            return true;
-                        }).map((tab) => (
+                            // Returns count: exclude rtv/debit for Customer/NSO (matching LineReturnsTab filter)
+                            const returnsCount = isRestricted
+                                ? (returnsData.rma.length + returnsData.creditMemos.length)
+                                : (returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length);
+                            return [
+                                { id: "taxes", label: "Taxes", count: product.taxDetail ? 1 : 0 },
+                                { id: "fulfillment", label: "Fulfillment", count: (fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length) },
+                                { id: "purchases", label: "Purchases", count: (purchasesData.purchaseOrders.length + purchasesData.supplierBills.length) },
+                                { id: "returns", label: "Returns", count: returnsCount }
+                            ].filter(tab => {
+                                if (isRestricted && tab.id === 'purchases') return false;
+                                return true;
+                            });
+                        })().map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as any)}
