@@ -56,7 +56,14 @@ function CategoryHeader({ attribute, title }: { attribute: string, title: string
 
   return (
     <div className="flex items-center justify-between mb-3">
-      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
+      <div className="flex items-center gap-2">
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
+        {items.length > 0 && (
+          <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
+            ({items.length})
+          </span>
+        )}
+      </div>
       {selectedCount > 0 && (
         <span className="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
           {selectedCount}
@@ -243,9 +250,9 @@ function Content() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sticky top-6">
           <div className="flex items-center justify-between mb-4 min-w-0">
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">Filters</h2>
-            <CustomClearButton 
-              onClear={() => { setQuery(''); setStockFilter('all'); }} 
-              canClearCustom={stockFilter !== 'all'} 
+            <CustomClearButton
+              onClear={() => { setQuery(''); setStockFilter('all'); }}
+              canClearCustom={stockFilter !== 'all'}
             />
           </div>
 
@@ -530,7 +537,7 @@ const CardView = ({ products, canEditProduct, onEdit }: ViewProps) => (
         // Price logic
         const sellingPrice = typeof p.price === 'number' ? p.price : (product.unitPrice || 0);
         const listPrice = product.listPrice || 0;
-        const category = p.category || product.productFamily || product.manufacturer || "Product";
+        const category = p.category || p.family || product.productFamily || product.manufacturer || "No Category";
 
         return (
           <Link
@@ -560,7 +567,7 @@ const CardView = ({ products, canEditProduct, onEdit }: ViewProps) => (
             <div className="p-4 flex flex-col flex-grow">
               <div className="mb-2">
                 <span className="text-xs font-medium text-primary  truncate">
-                  {p.category || p.family || product.productFamily || "No Category"}
+                  {category}
                 </span>
               </div>
               <div className="flex justify-between items-start gap-2 mb-2">
@@ -598,16 +605,6 @@ const CardView = ({ products, canEditProduct, onEdit }: ViewProps) => (
                     </svg>
                     <span className="truncate">{product.availableQty === 0 ? "Out of Stock" : "Add to Order"}</span>
                   </button>
-                  
-                  {canEditProduct(p) && (
-                    <button
-                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); onEdit(p); }}
-                      className="px-2 py-1.5 text-sm font-medium rounded-lg transition-colors flex items-center justify-center bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
-                      title="Edit Product"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                    </button>
-                  )}
                 </div>
               </div>
             </div>
@@ -644,7 +641,7 @@ const ListView = ({ products, canEditProduct, onEdit }: ViewProps) => (
             // Price logic
             const sellingPrice = typeof p.price === 'number' ? p.price : (product.unitPrice || 0);
             const listPrice = product.listPrice || 0;
-            const category = p.category || product.productFamily || product.manufacturer || "Product";
+            const category = p.category || p.family || product.productFamily || product.manufacturer || "No Category";
 
             return (
               <tr key={p.objectID || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group">
@@ -666,8 +663,8 @@ const ListView = ({ products, canEditProduct, onEdit }: ViewProps) => (
                   </Link>
                 </td>
                 <td className="px-4 py-3 truncate">
-                  <div className="line-clamp-2" title={p.category || p.family || product.productFamily || "No Category"}>
-                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">{p.category || p.family || product.productFamily || "No Category"}</span>
+                  <div className="line-clamp-2" title={category}>
+                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">{category}</span>
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }} title={product.description}>{product.description}</td>
@@ -687,15 +684,7 @@ const ListView = ({ products, canEditProduct, onEdit }: ViewProps) => (
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                       </svg>
                     </button>
-                    {canEditProduct(p) && (
-                      <button
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onEdit(p); }}
-                        title="Edit Product"
-                        className="p-2 rounded-lg transition-colors bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                      </button>
-                    )}
+
                   </div>
                 </td>
               </tr>
