@@ -2,7 +2,7 @@
 
 export type AccountTypeCategory = 'Customer' | 'Partner' | 'Hybrid';
 
-export const MANUFACTURER_GROUP = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'];
+export const MANUFACTURER_GROUP = ['Supplier', 'Manufacturer', 'Manufacturer_Rep', 'Logistics_Partner'];
 
 export const getCategoryFromAccountType = (accountType?: string): AccountTypeCategory => {
   if (!accountType) return 'Customer';

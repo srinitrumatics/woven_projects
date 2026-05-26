@@ -585,18 +585,30 @@ const CardView = ({ products, canEditProduct, onEdit }: ViewProps) => (
                     {formatCurrency(sellingPrice)}
                   </span>
                 </div>*/}
-                <button
-                  disabled={product.availableQty <= 0}
-                  className={`w-full mt-2 px-2 py-1.5 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-1 ${product.availableQty <= 0
-                    ? "bg-gray-400 cursor-not-allowed text-white opacity-70"
-                    : "bg-primary hover:bg-primary-dark text-white"
-                    }`}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 20 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                  {product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
-                </button>
+                <div className="flex gap-2 w-full mt-2">
+                  <button
+                    disabled={product.availableQty <= 0}
+                    className={`flex-1 px-2 py-1.5 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-1 ${product.availableQty <= 0
+                      ? "bg-gray-400 cursor-not-allowed text-white opacity-70"
+                      : "bg-primary hover:bg-primary-dark text-white"
+                      }`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 20 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span className="truncate">{product.availableQty === 0 ? "Out of Stock" : "Add to Order"}</span>
+                  </button>
+                  
+                  {canEditProduct(p) && (
+                    <button
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); onEdit(p); }}
+                      className="px-2 py-1.5 text-sm font-medium rounded-lg transition-colors flex items-center justify-center bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
+                      title="Edit Product"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </Link>
@@ -675,7 +687,15 @@ const ListView = ({ products, canEditProduct, onEdit }: ViewProps) => (
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                       </svg>
                     </button>
-
+                    {canEditProduct(p) && (
+                      <button
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onEdit(p); }}
+                        title="Edit Product"
+                        className="p-2 rounded-lg transition-colors bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
