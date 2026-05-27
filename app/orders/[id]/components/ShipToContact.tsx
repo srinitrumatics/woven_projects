@@ -81,7 +81,7 @@ export default function ShipToContact({
 
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Phone Number">
-                            Phone Number <span className="text-red-500 truncate">*</span>
+                            Phone Number
                         </label>
                         <input
                             type="tel"
@@ -96,7 +96,7 @@ export default function ShipToContact({
 
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Email Address">
-                            Email Address <span className="text-red-500 truncate">*</span>
+                            Email Address
                         </label>
                         <input
                             type="email"

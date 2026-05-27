@@ -168,6 +168,8 @@ export default function ProposalsPage() {
   const { items: sortedProposals, requestSort, sortConfig } = useSortableData<Proposal>(filteredAndSearchedProposals, { key: 'proposalNumber', direction: 'desc' });
 
   const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
+  const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
+  const isRestricted = accountType === 'Customer' || accountType === 'NSO';
 
   // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedProposals.length / ITEMS_PER_PAGE));
@@ -588,7 +590,7 @@ export default function ProposalsPage() {
                       </td>
                       <td className="px-3 py-2 truncate text-left">
                         {proposal.purchaseOrderId && proposal.customerPO !== 'N/A' ? (
-                          !isManufacturer ? (
+                          !isManufacturer && !isRestricted ? (
                             <Link
                               href={`/purchase-orders/${proposal.purchaseOrderId}`}
                               target="_blank"

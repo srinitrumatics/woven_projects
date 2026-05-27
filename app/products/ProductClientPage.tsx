@@ -11,7 +11,8 @@ import {
   useClearRefinements,
   RefinementList,
   CurrentRefinements,
-  useInstantSearch
+  useInstantSearch,
+  usePagination
 } from "react-instantsearch";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { Product } from "../orders/types";
@@ -164,7 +165,7 @@ function Content() {
     filters = "product_availability:'Available'";
   } else if (isHybrid) {
     // (2) Hybrid: Display All Products OR My Products
-    filters = showOnlyMine ? `manufacturer:'${selectedAccount?.Id}'` : "";
+    filters = showOnlyMine ? `manufacturer:'${selectedAccount?.Id}'` : `product_availability:'Available' OR manufacturer:'${selectedAccount?.Id}'`;
   } else if (isSupplierGroup && !isAdmin) {
     // (3) Supplier/Manufacturer Group: Display only their own products
     filters = `manufacturer:'${selectedAccount?.Id}'`;
@@ -194,6 +195,9 @@ function Content() {
   // Search Box Hook
   const { query, refine: setQuery } = useSearchBox();
 
+  // Pagination Hook to explicitly reset page on custom filter changes
+  const { refine: setPage } = usePagination();
+
   // InstantSearch Status Hook
   const { status } = useInstantSearch();
   const isLoading = status === 'loading' || status === 'stalled';
@@ -216,23 +220,24 @@ function Content() {
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
-    if (!sentinelRef.current || isLastPage) return;
+    // Prevent race conditions by not observing while loading
+    if (!sentinelRef.current || isLastPage || isLoading) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !isLastPage) {
+          if (entry.isIntersecting) {
             showMore();
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.1 }
     );
 
     observer.observe(sentinelRef.current);
 
     return () => observer.disconnect();
-  }, [isLastPage, showMore]);
+  }, [isLastPage, showMore, isLoading]);
 
   // derived state for UI
   const products = hits as unknown as Product[];
@@ -251,7 +256,7 @@ function Content() {
           <div className="flex items-center justify-between mb-4 min-w-0">
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">Filters</h2>
             <CustomClearButton
-              onClear={() => { setQuery(''); setStockFilter('all'); }}
+              onClear={() => { setQuery(''); setStockFilter('all'); setPage(0); }}
               canClearCustom={stockFilter !== 'all'}
             />
           </div>
@@ -293,7 +298,7 @@ function Content() {
                     <input
                       type="radio"
                       checked={stockFilter === item.value}
-                      onChange={() => setStockFilter(item.value as any)}
+                      onChange={() => { setStockFilter(item.value as any); setPage(0); }}
                       className="w-4 h-4 text-primary border-gray-300 dark:border-gray-600 focus:ring-primary dark:focus:ring-primary cursor-pointer"
                     />
                     <span className={`ml-2 text-sm group-hover:text-gray-900 dark:group-hover:text-white flex-1 ${stockFilter === item.value ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
@@ -359,18 +364,20 @@ function Content() {
             <div className="flex items-center gap-2 min-w-0">
               {/* My Products Toggle – Only for Hybrid accounts */}
               {isHybrid && (
-                <button
-                  onClick={() => setShowOnlyMine(!showOnlyMine)}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg transition-colors shadow-sm whitespace-nowrap text-sm font-medium ${showOnlyMine
-                    ? "bg-primary text-white"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600"
+                <label
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors shadow-sm whitespace-nowrap text-sm font-medium cursor-pointer border select-none ${showOnlyMine
+                    ? "bg-primary/10 text-primary border-primary/20 dark:border-primary/30"
+                    : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600"
                     }`}
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                  <input
+                    type="checkbox"
+                    checked={showOnlyMine}
+                    onChange={() => { setShowOnlyMine(!showOnlyMine); setPage(0); }}
+                    className="hidden"
+                  />
                   My Products
-                </button>
+                </label>
               )}
 
               {/* Create Product Button – visible for Hybrid and Supplier group */}

@@ -52,6 +52,8 @@ interface AuthorizedLocation {
   Authorized_Ship_To_Location_Delivery_Notes?: string;
   Authorized_Ship_To_Location_Delivery_Notes__c?: string;
   Delivery_Notes__c?: string;
+  Site_Name?: string;
+
 }
 
 interface LocationResponse {
@@ -735,6 +737,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     setFormData(prev => ({
       ...prev,
       shipTo: location.Id,
+      site: location.Site_Name || "",
       shipToAccountId: location.Account_Name__c || "",
       shipToAccountName: accName,
       shippingAddress: formattedAddress,
@@ -1254,32 +1257,29 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       setIsSubmitting(true);
       setSubmitError(null);
 
-      // Validate required fields (only for submission)
-      if (!isDraft) {
-        const requiredFields = [
-          { key: 'billTo', label: 'Bill to Location' },
-          { key: 'billingAddress', label: 'Billing Address' },
-          { key: 'purchaseOrder', label: 'CPO #' },
-          { key: 'shipTo', label: 'Ship to Location' },
-          { key: 'shippingAddress', label: 'Shipping Address' },
-          { key: 'requestedDeliveryDate', label: 'Request Date' },
-          { key: 'locationContact', label: 'Contact Name' },
-          { key: 'contactPhone', label: 'Phone Number' },
-          { key: 'contactEmail', label: 'Email Address' },
-          { key: 'dropShip', label: 'Drop-Ship' },
-          { key: 'liftGateRequired', label: 'Lift Gate' },
-          { key: 'insideDelivery', label: 'Inside Delivery' },
-        ];
 
-        const missingFields = requiredFields
-          .filter(field => !(formData as any)[field.key])
-          .map(f => f.label);
 
-        if (missingFields.length > 0) {
-          setSubmitError(`Please fill in all required fields: ${missingFields.join(', ')}`);
-          setIsSubmitting(false);
-          return;
-        }
+      // Validate required fields
+      const requiredFields = [
+        { key: 'billTo', label: 'Bill to Location' },
+        { key: 'billingAddress', label: 'Billing Address' },
+        { key: 'purchaseOrder', label: 'Customer PO' },
+        { key: 'shipTo', label: 'Ship to Location' },
+        { key: 'shippingAddress', label: 'Shipping Address' },
+        { key: 'requestedDeliveryDate', label: 'Request Date' },
+        { key: 'locationContact', label: 'Contact Name' },
+        { key: 'liftGateRequired', label: 'Lift Gate' },
+        { key: 'insideDelivery', label: 'Inside Delivery' },
+      ];
+
+      const missingFields = requiredFields
+        .filter(field => !(formData as any)[field.key])
+        .map(f => f.label);
+
+      if (missingFields.length > 0) {
+        setSubmitError(`Please fill in all required fields: ${missingFields.join(', ')}`);
+        setIsSubmitting(false);
+        return;
       }
       if (orderProducts.length === 0) {
         setSubmitError("Please add at least one product to the order");
@@ -1518,7 +1518,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         orderStatus={orderStatus}
         name={formData.orderName}
         isEditing={isEditing}
-        onEditToggle={() => setIsEditing(!isEditing)}
+        onEditToggle={() => {
+          if (isEditing) setSubmitError(null);
+          setIsEditing(!isEditing);
+        }}
         onClone={handleClone}
         isNew={isNew}
         isTransfer={isTransfer || !!orderData?.Transfer_Order__c}

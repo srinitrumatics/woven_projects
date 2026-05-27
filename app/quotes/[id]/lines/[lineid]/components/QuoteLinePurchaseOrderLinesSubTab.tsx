@@ -1,8 +1,8 @@
-import { SortableHeader } from"@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from"@/lib/utils/formatting";
-import Pagination from"@/components/ui/Pagination";
-import { useState, useMemo } from"react";
-import Link from"next/link";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import Pagination from "@/components/ui/Pagination";
+import { useState, useMemo } from "react";
+import Link from "next/link";
 
 interface POLI {
     id: string;
@@ -70,32 +70,32 @@ export default function QuoteLinePurchaseOrderLinesSubTab({
             <div className="overflow-x-auto">
                 {data.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium"title="No records found">No records found</p>
+                        <p className="text-lg font-medium" title="No records found">No records found</p>
                         <p className="text-sm">There are no purchase order lines associated with this quote line.</p>
                     </div>
                 ) : (
                     <table className="w-full text-sm table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                             <tr>
-                                <SortableHeader label="Purchase Order Line"field="name"sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"/>
-                                <SortableHeader label="Status"field="status"sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                <SortableHeader label="Purchase Order"field="purchaseOrder"sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={handleResize} />
-                                <SortableHeader label="Customer Quote Line"field="customerQuoteLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
-                                <SortableHeader label="Product Name"field="productName"sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
-                                <SortableHeader label="Product Description"field="description"sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                <SortableHeader label="Manufacturer DBA"field="manufacturerDBA"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
-                                <SortableHeader label="Unit Cost"field="unitCost"sortConfig={sortConfig} requestSort={requestSort} width={widths.unitCost} onResize={handleResize} />
-                                <SortableHeader label="Total Order Qty"field="orderQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={handleResize} />
-                                <SortableHeader label="Total Cost"field="productCost"sortConfig={sortConfig} requestSort={requestSort} width={widths.productCost} onResize={handleResize} />
-                                <SortableHeader label="Shipping"field="shipping"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
-                                <SortableHeader label="Line Total Cost"field="totalCost"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCost} onResize={handleResize} />
-                                <SortableHeader label="Open Balance Qty"field="openBalanceQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalanceQty} onResize={handleResize} />
-                                <SortableHeader label="Tracking Number"field="trackingNumber"sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} />
-                                <SortableHeader label="Estimated Delivery Date"field="estimatedDeliveryDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={handleResize} />
-                                <SortableHeader label="Tracking Status"field="trackingStatus"sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} />
-                                <SortableHeader label="Actual Delivery Date"field="actualDeliveryDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={handleResize} />
-                                <SortableHeader label="Goods Receipt Date"field="receiptDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.receiptDate} onResize={handleResize} />
-                                <SortableHeader label="Invoice Status"field="invoiceStatus"sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceStatus} onResize={handleResize} />
+                                <SortableHeader label="Purchase Order Line" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                                <SortableHeader label="Purchase Order" field="purchaseOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={handleResize} />
+                                <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
+                                <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
+                                <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
+                                <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
+                                <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitCost} onResize={handleResize} />
+                                <SortableHeader label="Total Order Qty" field="orderQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={handleResize} />
+                                <SortableHeader label="Total Cost" field="productCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCost} onResize={handleResize} />
+                                <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
+                                <SortableHeader label="Line Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalCost} onResize={handleResize} />
+                                <SortableHeader label="Open Balance Qty" field="openBalanceQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalanceQty} onResize={handleResize} />
+                                <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} />
+                                <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={handleResize} />
+                                <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} />
+                                <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={handleResize} />
+                                <SortableHeader label="Goods Receipt Date" field="receiptDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.receiptDate} onResize={handleResize} />
+                                <SortableHeader label="Invoice Status" field="invoiceStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceStatus} onResize={handleResize} />
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800">
@@ -109,10 +109,10 @@ export default function QuoteLinePurchaseOrderLinesSubTab({
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
                                         {item.purchaseOrderId ? (
-                                            <Link href={`/purchase-orders/${item.purchaseOrderId}`} target="_blank"className="text-primary hover:underline font-medium">
+                                            <Link href={`/purchase-orders/${item.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {item.purchaseOrder}
                                             </Link>
-                                        ) : item.purchaseOrder ||""}
+                                        ) : item.purchaseOrder || ""}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuoteLine }}>
                                         {item.customerQuoteLine}

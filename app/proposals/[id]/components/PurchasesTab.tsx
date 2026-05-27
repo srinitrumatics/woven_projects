@@ -4,6 +4,7 @@ import { PurchaseOrder, SupplierBill } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import Pagination from "../../../../components/ui/Pagination";
+import { useUserSession } from "../../../../components/UserSessionContext";
 
 interface PurchasesTabProps {
     purchases: PurchaseOrder[];
@@ -31,6 +32,9 @@ export default function PurchasesTab({
     const [activeTab, setActiveTab] = useState<TabType>("orders");
     const [currentPageOrders, setCurrentPageOrders] = useState(1);
     const [currentPageBills, setCurrentPageBills] = useState(1);
+    const { selectedAccount } = useUserSession();
+    const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
+    const isRestricted = accountType === 'Customer' || accountType === 'NSO';
 
     // Use separate sort states for each tab to avoid type conflicts and preserve state
     const { items: sortedPurchases, requestSort: requestSortPurchases, sortConfig: sortConfigPurchases } = useSortableData<PurchaseOrder>(purchases);
@@ -137,14 +141,18 @@ export default function PurchasesTab({
                                         {paginatedPurchases.map((purchase) => (
                                             <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={purchase.name}>
-                                                    <Link
-                                                        href={`/purchase-orders/${purchase.id}`}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-sm font-semibold text-primary hover:underline truncate"
-                                                    >
-                                                        {purchase.name}
-                                                    </Link>
+                                                    {!isRestricted ? (
+                                                        <Link
+                                                            href={`/purchase-orders/${purchase.id}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-sm font-semibold text-primary hover:underline truncate"
+                                                        >
+                                                            {purchase.name}
+                                                        </Link>
+                                                    ) : (
+                                                        <span className="text-sm font-semibold truncate">{purchase.name}</span>
+                                                    )}
                                                 </td>
                                                 <td className="px-3 py-2 truncate">
                                                     <StatusBadge status={purchase.status} />

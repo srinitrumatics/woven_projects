@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Order, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import Pagination from "../../../../components/ui/Pagination";
+import { useUserSession } from "../../../../components/UserSessionContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -18,6 +19,9 @@ interface OrdersTabProps {
 
 export default function OrdersTab({ orders, loading, sortField, sortDirection, onSort, widths, onResize }: OrdersTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const { selectedAccount } = useUserSession();
+    const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
+    const isRestricted = accountType === 'Customer' || accountType === 'NSO';
 
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => {
@@ -80,32 +84,24 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                         {paginatedOrders.map((order) => (
                             <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={order.name}>
-                                    <Link
-                                        href={`/orders/${order.id}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-sm font-semibold text-primary hover:underline truncate inline-block w-full"
-                                    >
-                                        {order.name}
-                                    </Link>
+                                    {!isRestricted && order.id ? (
+                                        <Link
+                                            href={`/orders/${order.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-sm font-semibold text-primary hover:underline truncate inline-block w-full"
+                                        >
+                                            {order.name}
+                                        </Link>
+                                    ) : (
+                                        <span className="text-sm font-semibold truncate">{order.name}</span>
+                                    )}
                                 </td>
                                 <td className="px-3 py-2 truncate">
                                     <StatusBadge status={order.status} />
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                    {order.purchaseOrderId ? (
-                                        <Link
-                                            href={`/purchase-orders/${order.purchaseOrderId}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-sm font-semibold text-primary hover:underline truncate"
-                                            title={order.customerPO}
-                                        >
-                                            {order.customerPO}
-                                        </Link>
-                                    ) : (
-                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerPO}>{order.customerPO}</div>
-                                    )}
+                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerPO}>{order.customerPO}</div>
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{order.customerPODate}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToAccountName}>{order.billToAccountName}</td>

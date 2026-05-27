@@ -33,6 +33,8 @@ export default function QuoteRMASubTab({
     const [currentPage, setCurrentPage] = useState(1);
     const { user, selectedAccount } = useUserSession();
     const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
+    const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
+    const isRestricted = accountType === 'Customer' || accountType === 'NSO';
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteRMA);
 
@@ -113,7 +115,7 @@ export default function QuoteRMASubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }} title={rma.customerOrder}>
                                             {rma.customerOrderId ? (
-                                                !isManufacturer ? (
+                                                !isManufacturer && !isRestricted ? (
                                                     <Link href={`/orders/${rma.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {rma.customerOrder}
                                                     </Link>

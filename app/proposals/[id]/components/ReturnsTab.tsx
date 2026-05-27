@@ -221,7 +221,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                         {activeTab === 'rma' ? (
                                             <>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {rma.salesOrderName && rma.salesOrderId ? (
+                                                    {rma.salesOrderName && rma.salesOrderId && !isRestricted ? (
                                                         <Link href={`/orders/${rma.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.salesOrderName}>{rma.salesOrderName}</Link>
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.salesOrderName}>{rma.salesOrderName}</div>

@@ -32,6 +32,8 @@ export default function QuoteDebitMemoSubTab({
     const [currentPage, setCurrentPage] = useState(1);
     const { user, selectedAccount } = useUserSession();
     const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
+    const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
+    const isRestricted = accountType === 'Customer' || accountType === 'NSO';
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteDebitMemo);
 
@@ -94,7 +96,7 @@ export default function QuoteDebitMemoSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierBill }}>
                                             {memo.supplierBillId ? (
-                                                !isManufacturer ? (
+                                                !isManufacturer && !isRestricted ? (
                                                     <Link href={`/supplier-bills/${memo.supplierBillId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {memo.supplierBill}
                                                     </Link>
@@ -103,7 +105,7 @@ export default function QuoteDebitMemoSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
                                             {memo.purchaseOrderId ? (
-                                                !isManufacturer ? (
+                                                !isManufacturer && !isRestricted ? (
                                                     <Link href={`/purchase-orders/${memo.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {memo.purchaseOrder}
                                                     </Link>
@@ -121,7 +123,7 @@ export default function QuoteDebitMemoSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {memo.customerOrderId ? (
-                                                !isManufacturer ? (
+                                                !isManufacturer && !isRestricted ? (
                                                     <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {memo.customerOrder}
                                                     </Link>

@@ -145,6 +145,8 @@ export default function QuotesPage() {
   const { items: sortedQuotes, requestSort, sortConfig } = useSortableData<Quote>(filteredAndSearchedQuotes, { key: 'quoteNumber', direction: 'desc' });
 
   const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
+  const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
+  const isRestricted = accountType === 'Customer' || accountType === 'NSO';
 
   // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedQuotes.length / ITEMS_PER_PAGE));
@@ -514,7 +516,7 @@ export default function QuotesPage() {
                       </td>
                       <td className="px-3 py-2  text-left truncate">
                         {quote.customerOrderId && quote.customerOrder !== 'N/A' ? (
-                          !isManufacturer ? (
+                          !isManufacturer && !isRestricted ? (
                             <Link
                               href={`/orders/${quote.customerOrderId}`}
                               target="_blank"
@@ -534,7 +536,7 @@ export default function QuotesPage() {
                       </td>
                       <td className="px-3 py-2  text-left truncate">
                         {quote.purchaseOrderId && quote.customerPO !== 'N/A' ? (
-                          !isManufacturer ? (
+                          !isManufacturer && !isRestricted ? (
                             <Link
                               href={`/purchase-orders/${quote.purchaseOrderId}`}
                               target="_blank"

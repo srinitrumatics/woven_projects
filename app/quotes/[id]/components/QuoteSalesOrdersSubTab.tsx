@@ -32,6 +32,8 @@ export default function QuoteSalesOrdersSubTab({
     const [currentPage, setCurrentPage] = useState(1);
     const { user, selectedAccount } = useUserSession();
     const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
+    const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
+    const isRestricted = accountType === 'Customer' || accountType === 'NSO';
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteSalesOrder);
 
@@ -107,7 +109,7 @@ export default function QuoteSalesOrdersSubTab({
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {order.customerOrderId ? (
-                                                !isManufacturer ? (
+                                                !isManufacturer && !isRestricted ? (
                                                     <Link href={`/orders/${order.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {order.customerOrder}
                                                     </Link>

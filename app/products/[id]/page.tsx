@@ -163,7 +163,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
   return (
     <Sidebar>
-      <div className=" mx-auto p-4 md:p-6">
+      <div className=" mx-auto p-2 md:p-4">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
           <span className="hover:text-primary cursor-pointer">Home</span>
@@ -226,12 +226,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             {/* Top Section: Gallery and Info Card */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
               {/* Gallery - Left Side */}
-              <div className="lg:col-span-8 flex flex-col xl:flex-row gap-4">
+              <div className="lg:col-span-7 flex flex-col xl:flex-row gap-4">
                 <ProductGallery images={product.images} />
               </div>
 
               {/* Info Card - Right Side */}
-              <div className="lg:col-span-4">
+              <div className="lg:col-span-5">
                 <ProductInfoCard product={product} />
               </div>
             </div>

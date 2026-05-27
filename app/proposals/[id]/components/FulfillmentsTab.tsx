@@ -4,6 +4,7 @@ import { FulfillmentData, FulfillmentTabType, Invoice, ShippingManifest, SalesOr
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import Pagination from "../../../../components/ui/Pagination";
+import { useUserSession } from "../../../../components/UserSessionContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -25,6 +26,9 @@ export default function FulfillmentsTab({
     onResize
 }: FulfillmentsTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const { selectedAccount } = useUserSession();
+    const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
+    const isRestricted = accountType === 'Customer' || accountType === 'NSO';
 
     useEffect(() => {
         setCurrentPage(1);
@@ -182,19 +186,7 @@ export default function FulfillmentsTab({
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {quote.customerPO && quote.purchaseOrderId ? (
-                                                        <Link
-                                                            href={`/purchase-orders/${quote.purchaseOrderId}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={quote.customerPO}
-                                                        >
-                                                            {quote.customerPO}
-                                                        </Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.customerPO}>{quote.customerPO}</div>
-                                                    )}
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.customerPO}>{quote.customerPO}</div>
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.billToAccountName}>{quote.billToAccountName}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.billToLocationName}>{quote.billToLocationName}</td>
@@ -292,7 +284,7 @@ export default function FulfillmentsTab({
                                         {(paginatedData as SalesOrder[]).map((order) => (
                                             <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={order.name}>
-                                                    {order.name && order.salesOrderId ? (
+                                                    {!isRestricted && order.name && order.salesOrderId ? (
                                                         <Link
                                                             href={`/orders/${order.salesOrderId}`}
                                                             target="_blank"
@@ -340,19 +332,7 @@ export default function FulfillmentsTab({
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {order.customerPO && order.purchaseOrderId ? (
-                                                        <Link
-                                                            href={`/purchase-orders/${order.purchaseOrderId}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={order.customerPO}
-                                                        >
-                                                            {order.customerPO}
-                                                        </Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerPO}>{order.customerPO}</div>
-                                                    )}
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerPO}>{order.customerPO}</div>
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToAccountName}>{order.billToAccountName}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToLocationName}>{order.billToLocationName}</td>
@@ -647,19 +627,7 @@ export default function FulfillmentsTab({
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    {manifest.customerPO && manifest.purchaseOrderId ? (
-                                                        <Link
-                                                            href={`/purchase-orders/${manifest.purchaseOrderId}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={manifest.customerPO}
-                                                        >
-                                                            {manifest.customerPO}
-                                                        </Link>
-                                                    ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.customerPO}>{manifest.customerPO}</div>
-                                                    )}
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.customerPO}>{manifest.customerPO}</div>
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shipToAccountName}>{manifest.shipToAccountName}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shipToLocationName}>{manifest.shipToLocationName}</td>
