@@ -18,25 +18,7 @@ export default function TaxesTab({ order, loading, widths, onResize }: TaxesTabP
         );
     }
 
-    // Check if order exists and if at least one tax field is present (not null/undefined)
-    const hasTaxData = order && (
-        (order.Sales_Tax_Rate__c !== undefined && order.Sales_Tax_Rate__c !== null) ||
-        (order.Total_Sales_Tax_Amount__c !== undefined && order.Total_Sales_Tax_Amount__c !== null) ||
-        (order.Use_Tax_Rate__c !== undefined && order.Use_Tax_Rate__c !== null) ||
-        (order.Total_Use_Tax_Amount__c !== undefined && order.Total_Use_Tax_Amount__c !== null) ||
-        (order.Local_Tax_Rate__c !== undefined && order.Local_Tax_Rate__c !== null) ||
-        (order.Total_Local_Tax_Amount__c !== undefined && order.Total_Local_Tax_Amount__c !== null) ||
-        (order.Excise_Tax_Rate__c !== undefined && order.Excise_Tax_Rate__c !== null) ||
-        (order.Total_Excise_Tax_Amount__c !== undefined && order.Total_Excise_Tax_Amount__c !== null) ||
-        (order.Gross_Receipts_Tax_Rate__c !== undefined && order.Gross_Receipts_Tax_Rate__c !== null) ||
-        (order.Total_Gross_Receipts_Tax_Amount__c !== undefined && order.Total_Gross_Receipts_Tax_Amount__c !== null) ||
-        (order.GST_Rate__c !== undefined && order.GST_Rate__c !== null) ||
-        (order.Total_GST_Amount__c !== undefined && order.Total_GST_Amount__c !== null) ||
-        (order.VAT_Rate__c !== undefined && order.VAT_Rate__c !== null) ||
-        (order.Total_VAT_Amount__c !== undefined && order.Total_VAT_Amount__c !== null)
-    );
-
-    if (!hasTaxData) {
+    if (!order) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
                 <p className="text-lg font-medium truncate" title="No records found">No records found</p>

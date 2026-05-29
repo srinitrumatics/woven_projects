@@ -68,13 +68,7 @@ export default function LineTaxesTab({ product, loading }: LineTaxesTabProps) {
                 </h2>
             </div>
             <div className="overflow-x-auto">
-                {product.isTaxable === "No" ? (
-                    <div className="py-4 text-sm text-gray-500 dark:text-gray-400 text-center">
-                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                        <p className="text-sm truncate" title="There are no taxes associated with this Order.">There are no taxes associated with this Order.</p>
-                    </div>
-                ) : (
-                    <table className="w-full table-fixed">
+                <table className="w-full table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900">
                             <tr>
                                 <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxRate} onResize={handleResize} />
@@ -146,7 +140,6 @@ export default function LineTaxesTab({ product, loading }: LineTaxesTabProps) {
                             </tr>
                         </tbody>
                     </table>
-                )}
             </div>
         </div>
     );

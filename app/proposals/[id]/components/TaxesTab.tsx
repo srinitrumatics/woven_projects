@@ -15,7 +15,26 @@ interface TaxesTabProps {
 
 export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
-    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<TaxDetail>(taxes);
+    
+    const displayTaxes = taxes && taxes.length > 0 ? taxes : [{
+        id: 'default-tax',
+        salesTaxRate: 0,
+        salesTaxAmount: 0,
+        useTaxRate: 0,
+        useTaxAmount: 0,
+        localTaxRate: 0,
+        localTaxAmount: 0,
+        exciseTaxRate: 0,
+        exciseTaxAmount: 0,
+        grossReceiptsTaxRate: 0,
+        grossReceiptsTaxAmount: 0,
+        gstRate: 0,
+        gstAmount: 0,
+        vatRate: 0,
+        vatAmount: 0
+    } as TaxDetail];
+
+    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<TaxDetail>(displayTaxes);
 
     const requestSort = (key: string) => {
         originalRequestSort(key as keyof TaxDetail);
@@ -27,7 +46,7 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
         return sortedData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
     }, [sortedData, currentPage]);
 
-    const totalPages = Math.ceil(taxes.length / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(displayTaxes.length / ITEMS_PER_PAGE);
 
     if (loading) {
         return (
@@ -37,14 +56,7 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
         );
     }
 
-    if (taxes.length === 0) {
-        return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium" title="No records found">No records found</p>
-                <p className="text-sm" title="There are no taxes associated with this proposal.">There are no taxes associated with this proposal.</p>
-            </div>
-        );
-    }
+
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
@@ -123,7 +135,7 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
                     currentPage={currentPage}
                     totalPages={totalPages}
                     onPageChange={setCurrentPage}
-                    totalItems={taxes.length}
+                    totalItems={displayTaxes.length}
                     itemsPerPage={ITEMS_PER_PAGE}
                     itemName=""
                 />
