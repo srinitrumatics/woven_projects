@@ -1,3 +1,4 @@
+import { getOrgConfig } from './org-config';
 // lib/salesforce-service.ts
 import { db } from '../db';
 import { users } from '../db/schema';
@@ -74,12 +75,19 @@ export async function fetchWithLogging(url: string | URL | Request, options: Req
 }
 
 export async function getSalesforceSession() {
-  // obtain or reuse token
-  const tokenUrl = process.env.SF_AUTH_URL || "";
+  const orgConfig = await getOrgConfig().catch(e => {
+    console.warn("Could not load org config, falling back to env:", e.message);
+    return null;
+  });
+  
+  const tokenUrl = orgConfig?.salesforceAuthUrl || process.env.SF_AUTH_URL || "";
+  const clientId = orgConfig?.clientId || process.env.SF_CLIENT_ID || "";
+  const clientSecret = orgConfig?.clientSecret || process.env.SF_CLIENT_SECRET || "";
+
   const body = new URLSearchParams({
     grant_type: "client_credentials",
-    client_id: process.env.SF_CLIENT_ID || "",
-    client_secret: process.env.SF_CLIENT_SECRET || "",
+    client_id: clientId,
+    client_secret: clientSecret,
   });
 
   const res = await fetchWithLogging(tokenUrl, {
@@ -110,7 +118,7 @@ export async function getSalesforceSession() {
   }
   return {
     accessToken: tokenData.access_token,
-    instanceUrl: tokenData.instance_url,
+    instanceUrl: orgConfig?.salesforceUrl || tokenData.instance_url || process.env.SF_DATA_URL || "",
   };
 }
 
@@ -386,7 +394,7 @@ export async function createOrderFromSalesforce(orderData: any): Promise<Salesfo
       return null;
     }
 
-    let Url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
+    let Url = `${session.instanceUrl}/services/apexrest/gtherp/orders`;
     console.log('createOrderFromSalesforce URL:', Url);
     console.log('createOrderFromSalesforce Payload:', JSON.stringify(orderData, null, 2));
 
@@ -424,7 +432,7 @@ export async function updateOrderFromSalesforce(orderId: string, orderData: any)
     }
 
     // Use the same custom Apex REST endpoint as create order
-    const url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
+    const url = `${session.instanceUrl}/services/apexrest/gtherp/orders`;
     console.log('updateOrderFromSalesforce URL:', url);
     console.log('updateOrderFromSalesforce orderData:', JSON.stringify(orderData, null, 2));
 
@@ -463,7 +471,7 @@ export async function cloneOrderFromSalesforce(orderData: any): Promise<any> {
     }
 
     // Use the same custom Apex REST endpoint as create order
-    const url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
+    const url = `${session.instanceUrl}/services/apexrest/gtherp/orders`;
     console.log('cloneOrderFromSalesforce URL:', url);
     console.log('cloneOrderFromSalesforce orderData:', JSON.stringify(orderData, null, 2));
 

@@ -131,8 +131,7 @@ function CustomRefinementList(props: any) {
   );
 }
 
-function Content() {
-  const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
+function Content({ indexName }: { indexName: string }) {
 
   useEffect(() => {
     logUnfilteredData(indexName);
@@ -500,8 +499,8 @@ function Content() {
   );
 }
 
-export default function ProductClientPage() {
-  const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
+export default function ProductClientPage({ indexName }: { indexName?: string }) {
+  const finalIndexName = indexName || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
 
   if (!process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || !process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY) {
     return (
@@ -515,10 +514,10 @@ export default function ProductClientPage() {
   return (
     <InstantSearch
       searchClient={searchClient}
-      indexName={indexName}
+      indexName={finalIndexName}
       future={{ preserveSharedStateOnUnmount: true }}
     >
-      <Content />
+      <Content indexName={finalIndexName} />
     </InstantSearch>
   );
 }

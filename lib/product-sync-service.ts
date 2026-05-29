@@ -1,6 +1,7 @@
 import { pool } from '@/db';
 import algoliasearch from 'algoliasearch';
 import { getProductDetailsFromSalesforce } from './product-salesforce-service';
+import { getOrgConfig } from './org-config';
 
 /**
  * Syncs a newly created or updated Salesforce product to PostgreSQL and Algolia immediately.
@@ -107,9 +108,10 @@ export async function syncNewProductToPostgresAndAlgolia(
 
   // ── Step 2: Push directly to Algolia ──────────────────────────────────────
   try {
+    const orgConfig = await getOrgConfig().catch(() => null);
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
     const adminKey = process.env.ALGOLIA_ADMIN_KEY;
-    const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
+    const indexName = orgConfig?.algoliaIndexName || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
 
     if (!appId || !adminKey) {
       console.warn('[ProductSync] ⚠️ Algolia credentials missing. Skipping direct push.');

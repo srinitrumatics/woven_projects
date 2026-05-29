@@ -31,6 +31,9 @@ export const organizations = pgTable('organizations', {
   clientId: text('client_id'),
   clientSecret: text('client_secret'), // In production, this should be encrypted!
   
+  siteUrl: text('site_url'),
+  algoliaIndexName: text('algolia_index_name'),
+  
   createdAt: text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

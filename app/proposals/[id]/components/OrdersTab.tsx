@@ -84,18 +84,14 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                         {paginatedOrders.map((order) => (
                             <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={order.name}>
-                                    {!isRestricted && order.id ? (
-                                        <Link
-                                            href={`/orders/${order.id}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-sm font-semibold text-primary hover:underline truncate inline-block w-full"
-                                        >
-                                            {order.name}
-                                        </Link>
-                                    ) : (
-                                        <span className="text-sm font-semibold truncate">{order.name}</span>
-                                    )}
+                                    <Link
+                                        href={`/orders/${order.id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm font-semibold text-primary hover:underline truncate inline-block w-full"
+                                    >
+                                        {order.name}
+                                    </Link>
                                 </td>
                                 <td className="px-3 py-2 truncate">
                                     <StatusBadge status={order.status} />

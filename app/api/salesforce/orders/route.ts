@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getOrgConfig } from "@/lib/org-config";
 import { exit } from "process";
 import { getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce, cloneOrderFromSalesforce, deleteOrderFromSalesforce, deleteFullOrderFromSalesforce, getFilesFromSalesforce, deleteFileFromSalesforce, uploadFilesToSalesforce, downloadFileFromSalesforce, getFileUrl, getOrderLinesFromSalesforce, getAccountFromSalesforce } from '@/lib/salesforce-service';
 import { getProductsFromSalesforce } from '@/lib/product-salesforce-service';
@@ -27,7 +28,11 @@ export async function GET(req: Request) {
 
     // compose Salesforce REST URL
 
-    const baseUrl = (process.env.SF_DATA_URL || "").replace(/\/+$/, "");
+        const orgConfig = await getOrgConfig().catch(e => {
+      console.warn("Could not load org config, falling back to env:", e.message);
+      return null;
+    });
+    const baseUrl = (orgConfig?.salesforceUrl || process.env.SF_DATA_URL || "").replace(/\/+$/, "");
     let orderUrl = "";
     let locationUrl = "";
     let contactUrl = "";
@@ -92,7 +97,7 @@ export async function GET(req: Request) {
       result = await getQuotesFromSalesforce(accountId, contactId, orderId, "Returns", "Customer_Order__c");
     } else if (orderId) {
       // support direct order fetch when orderId provided without explicit action
-      orderUrl = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
+      orderUrl = `${baseUrl}/services/apexrest/gtherp/orders`;
       result = await getOrderFromSalesforce(accountId, contactId, orderId, orderUrl);
     } else {
       return NextResponse.json({ error: "Unsupported action or missing orderId" }, { status: 400 });

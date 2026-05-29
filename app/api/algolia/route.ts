@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getOrgConfig } from "@/lib/org-config";
 import algoliasearch from "algoliasearch";
 import { mockProducts } from "../../products/mockData";
 
@@ -8,7 +9,8 @@ export async function POST() {
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
     const searchKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY;
     const adminKey = process.env.ALGOLIA_ADMIN_KEY;
-    const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
+    const orgConfig = await getOrgConfig().catch(() => null);
+    const indexName = orgConfig?.algoliaIndexName || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
 
     if (!appId || !adminKey) {
       return NextResponse.json(
@@ -92,7 +94,8 @@ export async function GET() {
   try {
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
     const searchKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY;
-    const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
+    const orgConfig = await getOrgConfig().catch(() => null);
+    const indexName = orgConfig?.algoliaIndexName || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
 
     if (!appId || !searchKey) {
       return NextResponse.json(
