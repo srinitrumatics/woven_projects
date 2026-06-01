@@ -123,17 +123,10 @@ export default function CreateOrganizationPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <button
-        onClick={() => router.back()}
-        className="flex items-center text-sm text-gray-500 hover:text-primary transition-colors"
-      >
-        <ArrowLeftIcon className="mr-2 w-4 h-4" />
-        Back to Organizations
-      </button>
-
+    <div className="w-full space-y-8">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+        {/* Left: Step Indicators */}
+        <div className="flex items-center space-x-4 flex-1">
           <div className={`flex h-10 w-10 items-center justify-center rounded-full font-bold transition-all ${step >= 1 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
             {step > 1 ? <CheckCircleIcon className="h-6 w-6" /> : '1'}
           </div>
@@ -144,11 +137,24 @@ export default function CreateOrganizationPage() {
             2
           </div>
         </div>
-        <div className="text-right">
+
+        {/* Center: Title and Subtitle */}
+        <div className="text-center flex-1">
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">
             {step === 1 ? 'Tenant Registry' : 'Resource Provisioning'}
           </h1>
           <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Step {step} of 2</p>
+        </div>
+
+        {/* Right: Back Button */}
+        <div className="flex justify-end flex-1">
+          <button
+            onClick={() => router.back()}
+            className="inline-flex items-center justify-center rounded-md bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 shadow-sm border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors"
+          >
+            <ArrowLeftIcon className="-ml-1 mr-2 w-5 h-5" aria-hidden="true" />
+            Back to Organizations
+          </button>
         </div>
       </div>
 

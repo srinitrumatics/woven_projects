@@ -29,7 +29,10 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
       salesforceUrl, 
       salesforceAuthUrl, 
       clientId, 
-      clientSecret 
+      clientSecret,
+      siteUrl,
+      algoliaIndexName,
+      algoliaSchema
     } = body;
 
     if (!name) {
@@ -43,6 +46,9 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
       salesforceAuthUrl,
       clientId,
       clientSecret,
+      siteUrl,
+      algoliaIndexName,
+      algoliaSchema,
       updatedAt: new Date().toISOString()
     }).where(eq(organizations.id, id)).returning();
 

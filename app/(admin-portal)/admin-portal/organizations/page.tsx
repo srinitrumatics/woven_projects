@@ -96,9 +96,9 @@ export default function AdminOrganizationsPage() {
                     <BuildingOfficeIcon className="h-6 w-6" />
                   </div>
                   <div className="flex space-x-2">
-                    <button className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-500 dark:hover:bg-gray-700">
+                    <Link href={`/admin-portal/organizations/${org.id}`} className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-500 dark:hover:bg-gray-700">
                       <PencilSquareIcon className="h-5 w-5" />
-                    </button>
+                    </Link>
                     <button
                       onClick={() => handleDelete(org.id, org.name)}
                       className="rounded-full p-1.5 text-gray-400 hover:bg-red-50 hover:text-white dark:hover:bg-red-900/30 dark:hover:text-red-400"
