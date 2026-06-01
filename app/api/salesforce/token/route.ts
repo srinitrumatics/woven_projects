@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getOrgConfig } from "@/lib/org-config";
 
 // simple in-memory token cache (clears on server restart)
 let cachedToken: string | null = null;
@@ -11,14 +12,21 @@ export async function POST() {
       return NextResponse.json({ access_token: cachedToken });
     }
 
-    // build Salesforce token URL
-    const tokenUrl = "https://test.salesforce.com/services/oauth2/token";
+    // Fetch org config from organizations table (falls back to env vars)
+    const orgConfig = await getOrgConfig().catch(e => {
+      console.warn("Token route: Could not load org config, falling back to env:", e.message);
+      return null;
+    });
+
+    // build Salesforce token URL from org config or env vars
+    const tokenUrl = orgConfig?.salesforceAuthUrl || process.env.SF_AUTH_URL || "https://test.salesforce.com/services/oauth2/token";
+    const clientId = orgConfig?.clientId || process.env.SF_CLIENT_ID || "";
+    const clientSecret = orgConfig?.clientSecret || process.env.SF_CLIENT_SECRET || "";
+
     const body = new URLSearchParams({
-      grant_type: "password",
-      client_id: process.env.SF_CLIENT_ID || "",
-      client_secret: process.env.SF_CLIENT_SECRET || "",
-      username: process.env.SF_USERNAME || "",
-      password: process.env.SF_PASSWORD || "",
+      grant_type: "client_credentials",
+      client_id: clientId,
+      client_secret: clientSecret,
     });
 
     const res = await fetch(tokenUrl, {
@@ -43,3 +51,4 @@ export async function POST() {
     return NextResponse.json({ error: "Token fetch failed" }, { status: 500 });
   }
 }
+

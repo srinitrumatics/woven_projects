@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import algoliasearch from "algoliasearch";
 import { mockProducts } from "../../products/mockData";
+import { getOrgConfig } from "@/lib/org-config";
 
 export async function POST() {
   try {
@@ -8,7 +9,8 @@ export async function POST() {
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
     const searchKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY;
     const adminKey = process.env.ALGOLIA_ADMIN_KEY;
-    const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
+    const orgConfig = await getOrgConfig().catch(() => null);
+    const indexName = orgConfig?.algoliaIndexName || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
 
     if (!appId || !adminKey) {
       return NextResponse.json(
@@ -31,7 +33,10 @@ export async function POST() {
       sku: product.sku,
       brand: product.brand,
       category: product.productFamily,
-      genre: product.manufacturer, // Mapping manufacturer to genre to match "Type" filter
+      genre: product.manufacturer, // Legacy UI mapping
+      manufacturer: product.manufacturer, // Required for hybrid/supplier filters
+      product_availability: "Available", // Required for customer/hybrid filters
+      stock_quantity: product.availableQty || 10, // Ensure it's in stock
       price: product.unitPrice,    // Selling price
       listPrice: product.listPrice,
       unitPrice: product.unitPrice,
@@ -50,6 +55,8 @@ export async function POST() {
         'searchable(productFamily)',
         'searchable(brand)',
         'searchable(manufacturer)',
+        'filterOnly(product_availability)',
+        'filterOnly(stock_quantity)',
         'price'
       ],
       searchableAttributes: [
@@ -92,7 +99,8 @@ export async function GET() {
   try {
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
     const searchKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY;
-    const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
+    const orgConfig = await getOrgConfig().catch(() => null);
+    const indexName = orgConfig?.algoliaIndexName || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
 
     if (!appId || !searchKey) {
       return NextResponse.json(

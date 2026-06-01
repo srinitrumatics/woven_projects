@@ -131,10 +131,9 @@ function CustomRefinementList(props: any) {
   );
 }
 
-function Content() {
-  const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
-
+function Content({ indexName }: { indexName: string }) {
   useEffect(() => {
+    console.log(`[ProductsList] 🔍 CHECKPOINT (Client Content): Initializing Algolia search on index: '${indexName}'`);
     logUnfilteredData(indexName);
   }, [indexName]);
 
@@ -142,9 +141,10 @@ function Content() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const { selectedAccount, user } = useUserSession();
   const accountType = selectedAccount?.Account_Record_Type__c;
-  const isCustomer = accountType === 'Customer' || accountType === 'NSO';
+  const accountCategory = getCategoryFromAccountType(accountType);
+  const isCustomer = accountCategory === 'Customer';
   const isManufacturer = MANUFACTURER_GROUP.includes(accountType || '');
-  const isHybrid = accountType === 'Hybrid';
+  const isHybrid = accountCategory === 'Hybrid';
   const isSupplierGroup = isManufacturer;
   const isAdmin = user?.role === 'Admin' || user?.role === 'Super Admin';
   const [showOnlyMine, setShowOnlyMine] = useState(false);
@@ -183,10 +183,11 @@ function Content() {
     filters = filters ? `${filters} AND stock_quantity <= 0` : "stock_quantity <= 0";
   }
 
-  console.log('[Algolia] Search Context:', {
+  console.log('[ProductsList] 🎯 CHECKPOINT (Client Content): User Type & Algolia Filters Applied', {
     accountType,
     isCustomer,
     isManufacturer,
+    isHybrid,
     isAdmin,
     appliedFilters: filters,
     accountId: selectedAccount?.Id
@@ -500,8 +501,10 @@ function Content() {
   );
 }
 
-export default function ProductClientPage() {
-  const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
+export default function ProductClientPage({ indexName = "wovn_products_local" }: { indexName?: string }) {
+  useEffect(() => {
+    console.log(`[ProductsList] 📦 CHECKPOINT (Client Main): ProductClientPage mounted with indexName: '${indexName}'`);
+  }, [indexName]);
 
   if (!process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || !process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY) {
     return (
@@ -518,7 +521,7 @@ export default function ProductClientPage() {
       indexName={indexName}
       future={{ preserveSharedStateOnUnmount: true }}
     >
-      <Content />
+      <Content indexName={indexName} />
     </InstantSearch>
   );
 }

@@ -1268,8 +1268,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         { key: 'shippingAddress', label: 'Shipping Address' },
         { key: 'requestedDeliveryDate', label: 'Request Date' },
         { key: 'locationContact', label: 'Contact Name' },
-        { key: 'liftGateRequired', label: 'Lift Gate' },
-        { key: 'insideDelivery', label: 'Inside Delivery' },
       ];
 
       const missingFields = requiredFields
@@ -1319,17 +1317,21 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           ...((isTransfer || orderData?.Transfer_Order__c) ? { Transfer_Order__c: true } : {}),
           ...((isTransfer || isProposal || orderData?.Proposal_Requested__c) ? { Proposal_Requested__c: true } : {})
         },
-        orderLines: orderProducts.map(product => ({
-          ...(product.orderLineId ? { Id: product.orderLineId } : {}),
-          Status__c: isDraft ? "Draft" : "Submitted",
-          // Customer_Order_Line_Notes__c: "", // Optional, removed to match example if needed, but keeping empty string is fine
-          Product_Name__c: product.id,
-          Order_Qty__c: product.orderQty,
-          MOQ__c: product.moq,
-          Unit_Price__c: product.unitPrice,
-          Inventory_Account__c: SF_ACCOUNT_ID,
-          IsTaxable__c: true,
-        })),
+        orderLines: orderProducts
+          // Filter out placeholder proposal line items — Product_Name__c is a SF lookup
+          // field and rejects non-ID strings like "PROPOSAL-REQ". The Proposal_Requested__c
+          // flag on the order record is sufficient for Salesforce to handle proposal orders.
+          .filter(product => /^[a-zA-Z0-9]{15,18}$/.test(product.id))
+          .map(product => ({
+            ...(product.orderLineId ? { Id: product.orderLineId } : {}),
+            Status__c: isDraft ? "Draft" : "Submitted",
+            Product_Name__c: product.id,
+            Order_Qty__c: product.orderQty,
+            MOQ__c: product.moq,
+            Unit_Price__c: product.unitPrice,
+            Inventory_Account__c: SF_ACCOUNT_ID,
+            IsTaxable__c: true,
+          })),
 
         accountId: SF_ACCOUNT_ID,
         contactId: SF_CONTACT_ID, // Use actual Contact ID
@@ -1420,17 +1422,20 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           Phone: formData.contactPhone,
           Email: formData.contactEmail
         },
-        orderLines: orderProducts.map(product => ({
-          // Id removed for clone
-          Status__c: "Draft",
-          Customer_Order_Line_Notes__c: "",
-          Product_Name__c: product.id,
-          Order_Qty__c: product.orderQty,
-          MOQ__c: product.moq,
-          Unit_Price__c: product.unitPrice,
-          Inventory_Account__c: SF_ACCOUNT_ID,
-          IsTaxable__c: true,
-        })),
+        orderLines: orderProducts
+          // Filter out placeholder proposal line items (same reason as save/submit)
+          .filter(product => /^[a-zA-Z0-9]{15,18}$/.test(product.id))
+          .map(product => ({
+            // Id removed for clone
+            Status__c: "Draft",
+            Customer_Order_Line_Notes__c: "",
+            Product_Name__c: product.id,
+            Order_Qty__c: product.orderQty,
+            MOQ__c: product.moq,
+            Unit_Price__c: product.unitPrice,
+            Inventory_Account__c: SF_ACCOUNT_ID,
+            IsTaxable__c: true,
+          })),
 
         accountId: SF_ACCOUNT_ID,
         contactId: SF_CONTACT_ID,

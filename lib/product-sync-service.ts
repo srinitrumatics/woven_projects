@@ -2,7 +2,6 @@ import { pool } from '@/db';
 import algoliasearch from 'algoliasearch';
 import { getProductDetailsFromSalesforce } from './product-salesforce-service';
 import { getOrgConfig } from './org-config';
-
 /**
  * Syncs a newly created or updated Salesforce product to PostgreSQL and Algolia immediately.
  */
@@ -113,6 +112,12 @@ export async function syncNewProductToPostgresAndAlgolia(
     const adminKey = process.env.ALGOLIA_ADMIN_KEY;
     const indexName = orgConfig?.algoliaIndexName || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
 
+    console.log(`[ProductSync] 🔍 CHECKPOINT: Algolia Configured Index Name:`, {
+      orgConfigIndex: orgConfig?.algoliaIndexName,
+      envFallback: process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME,
+      finalIndexUsed: indexName
+    });
+
     if (!appId || !adminKey) {
       console.warn('[ProductSync] ⚠️ Algolia credentials missing. Skipping direct push.');
       return;
@@ -121,6 +126,17 @@ export async function syncNewProductToPostgresAndAlgolia(
     const client = algoliasearch(appId, adminKey);
     const index = client.initIndex(indexName);
 
+    // Ensure required filter attributes are always set
+    await index.setSettings({
+      attributesForFaceting: [
+        'searchable(category)',
+        'searchable(manufacturer)',
+        'filterOnly(product_availability)',
+        'filterOnly(stock_quantity)',
+      ],
+    }, { forwardToReplicas: true });
+
+    console.log(`[ProductSync] 📦 CHECKPOINT: Preparing to push product list to Algolia index '${indexName}' for sfid: ${sfProductId}`);
     await index.saveObject({
       objectID: sfProductId,
       name: productData.Name ?? productData.name ?? '',
@@ -155,8 +171,8 @@ export async function syncNewProductToPostgresAndAlgolia(
       ].filter(Boolean),
     });
 
-    console.log(`[ProductSync] ✅ Algolia direct push succeeded for ${sfProductId}`);
+    console.log(`[ProductSync] ✅ CHECKPOINT: SUCCESS - Pushed product to Algolia index '${indexName}': ${sfProductId}`);
   } catch (algoliaErr: any) {
-    console.error(`[ProductSync] ❌ Algolia push failed for ${sfProductId}:`, algoliaErr.message);
+    console.error(`[ProductSync] ❌ CHECKPOINT: ERROR - Failed pushing to Algolia index:`, algoliaErr.message);
   }
 }

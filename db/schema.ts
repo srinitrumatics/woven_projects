@@ -33,6 +33,7 @@ export const organizations = pgTable('organizations', {
   
   siteUrl: text('site_url'),
   algoliaIndexName: text('algolia_index_name'),
+  algoliaSchema: text('algolia_schema'),
   
   createdAt: text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)

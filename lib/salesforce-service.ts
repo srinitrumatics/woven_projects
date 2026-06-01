@@ -1,5 +1,5 @@
-import { getOrgConfig } from './org-config';
 // lib/salesforce-service.ts
+import { getOrgConfig } from './org-config';
 import { db } from '../db';
 import { users } from '../db/schema';
 import { eq } from 'drizzle-orm';
@@ -394,7 +394,7 @@ export async function createOrderFromSalesforce(orderData: any): Promise<Salesfo
       return null;
     }
 
-    let Url = `${session.instanceUrl}/services/apexrest/gtherp/orders`;
+    let Url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
     console.log('createOrderFromSalesforce URL:', Url);
     console.log('createOrderFromSalesforce Payload:', JSON.stringify(orderData, null, 2));
 
@@ -432,7 +432,7 @@ export async function updateOrderFromSalesforce(orderId: string, orderData: any)
     }
 
     // Use the same custom Apex REST endpoint as create order
-    const url = `${session.instanceUrl}/services/apexrest/gtherp/orders`;
+    const url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
     console.log('updateOrderFromSalesforce URL:', url);
     console.log('updateOrderFromSalesforce orderData:', JSON.stringify(orderData, null, 2));
 
@@ -471,7 +471,7 @@ export async function cloneOrderFromSalesforce(orderData: any): Promise<any> {
     }
 
     // Use the same custom Apex REST endpoint as create order
-    const url = `${session.instanceUrl}/services/apexrest/gtherp/orders`;
+    const url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
     console.log('cloneOrderFromSalesforce URL:', url);
     console.log('cloneOrderFromSalesforce orderData:', JSON.stringify(orderData, null, 2));
 

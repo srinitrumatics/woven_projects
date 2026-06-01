@@ -12,6 +12,8 @@ export async function getOrgConfig() {
     throw new Error('Could not determine host for org config');
   }
 
+  console.log(`[OrgConfig] 🔍 CHECKPOINT: Fetching config for host: '${host}'`);
+
   // Look up organization by siteUrl. We use ilike to match the domain
   // Assumes siteUrl might be "http://pitwatter.co" or "pitwatter.co"
   const orgs = await db.select().from(organizations)
@@ -19,8 +21,21 @@ export async function getOrgConfig() {
     .limit(1);
 
   if (orgs.length === 0) {
+    console.warn(`[OrgConfig] ⚠️ CHECKPOINT: No organization found for host: '${host}'`);
     throw new Error(`No organization found for host: ${host}`);
   }
 
-  return orgs[0];
+  const config = orgs[0];
+  console.log(`[OrgConfig] ✅ CHECKPOINT: Successfully fetched org config for '${config.name}'`, {
+    orgId: config.id,
+    siteUrl: config.siteUrl,
+    salesforceUrl: config.salesforceUrl,
+    salesforceAuthUrl: config.salesforceAuthUrl,
+    hasClientId: !!config.clientId,
+    hasClientSecret: !!config.clientSecret,
+    algoliaIndexName: config.algoliaIndexName,
+    algoliaSchema: config.algoliaSchema
+  });
+
+  return config;
 }
