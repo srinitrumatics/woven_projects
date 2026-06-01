@@ -165,7 +165,7 @@ function Content({ indexName }: { indexName: string }) {
     filters = "product_availability:'Available'";
   } else if (isHybrid) {
     // (2) Hybrid: Display All Products OR My Products
-    filters = showOnlyMine ? `manufacturer:'${selectedAccount?.Id}'` : `product_availability:'Available' OR manufacturer:'${selectedAccount?.Id}'`;
+    filters = showOnlyMine ? `manufacturer:'${selectedAccount?.Id}'` : '';
   } else if (isSupplierGroup && !isAdmin) {
     // (3) Supplier/Manufacturer Group: Display only their own products
     filters = `manufacturer:'${selectedAccount?.Id}'`;

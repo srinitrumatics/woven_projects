@@ -131,7 +131,7 @@ export async function syncNewProductToPostgresAndAlgolia(
       attributesForFaceting: [
         'searchable(category)',
         'searchable(manufacturer)',
-        'filterOnly(product_availability)',
+        'product_availability',
         'filterOnly(stock_quantity)',
       ],
     }, { forwardToReplicas: true });
