@@ -22,6 +22,7 @@ export default function CreateOrganizationPage() {
   const [formData, setFormData] = useState({
     name: '',
     orgId: '',
+    siteUrl: '',
     salesforceUrl: '',
     salesforceAuthUrl: '',
     clientId: '',
@@ -209,6 +210,26 @@ export default function CreateOrganizationPage() {
                     Schema: <strong>{deriveSchemaName(formData.orgId)}</strong>
                   </p>
                 )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6">
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Site URL / Host</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <GlobeAltIcon className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="text"
+                    name="siteUrl"
+                    value={formData.siteUrl}
+                    onChange={handleInputChange}
+                    className="block w-full pl-10 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm py-2"
+                    placeholder="e.g. acme.wovn.com"
+                  />
+                </div>
+                <p className="text-xs text-gray-400">Host URL used to dynamically resolve this organization's configuration.</p>
               </div>
             </div>
 
