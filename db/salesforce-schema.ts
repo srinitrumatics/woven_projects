@@ -17,6 +17,7 @@ export const product2 = salesforceSchema.table('product2', {
     // Custom fields (using snake_case as per Drizzle convention for mapping to specific DB columns)
     // Mapping to Salesforce field names which seem to be lowercase in the SQL dump provided
     price: numeric('gtherp__price__c'),
+    listPrice: numeric('list_price__c'),
     stockQuantity: numeric('gtherp__stock_quantity__c'),
     availableQuantity: numeric('gtherp__available_quantity__c'),
     discount: numeric('gtherp__discount__c'),

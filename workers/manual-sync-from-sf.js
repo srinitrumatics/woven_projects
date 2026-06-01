@@ -27,7 +27,7 @@ async function fetchProductsFromSalesforce(session) {
     SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp, 
            gtherp__Product_Availability__c, gtherp__Manufacturer_Name__c,  
            gtherp__Available_To_Sell__c,
-           (SELECT Id, Name, gtherp__Selling_Unit_Price__c FROM PricebookEntries)
+           (SELECT Id, Name, UnitPrice, gtherp__Selling_Unit_Price__c FROM PricebookEntries)
     FROM Product2
     WHERE IsActive = true
   `;
@@ -92,11 +92,11 @@ async function main() {
       await client.query(`
                INSERT INTO salesforce.product2 (
                    sfid, productcode, name, description, isactive, family,
-                   gtherp__price__c, gtherp__stock_quantity__c,
+                   gtherp__price__c, list_price__c, gtherp__stock_quantity__c,
                    gtherp__available_quantity__c, gtherp__discount__c,
                    gtherp__category__c, gtherp__sub_category__c,
                    manufacturer_name__c, product_availability__c, createddate, systemmodstamp
-               ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+               ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
                ON CONFLICT (sfid) DO UPDATE SET
                    productcode = EXCLUDED.productcode,
                    name = EXCLUDED.name,
@@ -104,6 +104,7 @@ async function main() {
                    isactive = EXCLUDED.isactive,
                    family = EXCLUDED.family,
                    gtherp__price__c = EXCLUDED.gtherp__price__c,
+                   list_price__c = EXCLUDED.list_price__c,
                    gtherp__stock_quantity__c = EXCLUDED.gtherp__stock_quantity__c,
                    gtherp__available_quantity__c = EXCLUDED.gtherp__available_quantity__c,
                    gtherp__category__c = EXCLUDED.gtherp__category__c,
@@ -113,7 +114,8 @@ async function main() {
                    systemmodstamp = EXCLUDED.systemmodstamp
            `, [
         p.Id, p.ProductCode, p.Name, p.Description, p.IsActive, p.Family,
-        (p.PricebookEntries && p.PricebookEntries.records && p.PricebookEntries.records[0] && p.PricebookEntries.records[0].gtherp__Selling_Unit_Price__c) || 0, // real price from SF subquery
+        (p.PricebookEntries && p.PricebookEntries.records && p.PricebookEntries.records[0] && p.PricebookEntries.records[0].gtherp__Selling_Unit_Price__c) || 0, // selling price
+        (p.PricebookEntries && p.PricebookEntries.records && p.PricebookEntries.records[0] && p.PricebookEntries.records[0].UnitPrice) || 0, // list price
         p.gtherp__Available_To_Sell__c || 0, // real qty
         p.gtherp__Available_To_Sell__c || 0, // real qty
         0,
