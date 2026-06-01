@@ -7,7 +7,7 @@ const DEFAULT_SETTINGS = {
   attributesForFaceting: [
     "searchable(category)",
     "searchable(manufacturer)",
-    "filterOnly(product_availability)",
+    "product_availability",
     "filterOnly(stock_quantity)",
     "searchable(brand)",
     "searchable(productFamily)",
