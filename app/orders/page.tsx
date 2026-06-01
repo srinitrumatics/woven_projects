@@ -27,6 +27,9 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Proposal Request product ID (fetched from DB, cached in sessionStorage)
+  const [proposalProductId, setProposalProductId] = useState<string>('');
+
   // UI state
   const [activeTab, setActiveTab] = useState<TabFilter>("All");
   const [dateRange, setDateRange] = useState("Jan 1 - Jan 30, 2024");
@@ -51,6 +54,26 @@ export default function OrdersPage() {
   const accountId = selectedAccount?.Id || selectedAccount?.id || user?.accountId || "";
   const contactId = user?.Id || "";
 
+
+  // Fetch and cache the "Proposal Request" product ID on page load
+  useEffect(() => {
+    const CACHE_KEY = 'proposal_product_id';
+    const cached = sessionStorage.getItem(CACHE_KEY);
+    if (cached) {
+      setProposalProductId(cached);
+      return;
+    }
+    fetch('/api/salesforce/products?action=proposalProduct')
+      .then(res => res.ok ? res.json() : Promise.reject(res))
+      .then(data => {
+        if (data.id) {
+          sessionStorage.setItem(CACHE_KEY, data.id);
+          setProposalProductId(data.id);
+          console.log('[Orders] Proposal Request product ID cached:', data.id);
+        }
+      })
+      .catch(err => console.warn('[Orders] Could not fetch proposal product ID:', err));
+  }, []);
 
   // Fetch from backend API (backend should handle Salesforce auth)
   useEffect(() => {
@@ -269,7 +292,7 @@ export default function OrdersPage() {
       setLoading(true);
       setError(null);
 
-      // Call create order API with Proposal_Requested__c
+      // 1. Call create order API with Proposal_Requested__c
       const response = await fetch('/api/salesforce/orders', {
         method: 'POST',
         headers: {
@@ -280,28 +303,62 @@ export default function OrdersPage() {
           contactId: contactId,
           Proposal_Requested__c: true,
           Transfer_Order__c: false
-
         })
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to request proposal' }));
-        throw new Error(errorData.error || 'Failed to request proposal');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to create proposal order' }));
+        throw new Error(errorData.error || 'Failed to create proposal order');
       }
 
       const result = await response.json();
       console.log('Proposal order created successfully:', result);
 
-      // Extract the order ID from the response (nested in data[0].Id)
+      // Extract the order ID from the response
       let newOrderId = null;
       if (result.data && Array.isArray(result.data) && result.data.length > 0) {
         newOrderId = result.data[0].Id;
       } else {
-        // Fallback to other possible locations
         newOrderId = result.orderId || result.Id || result.id;
       }
 
       if (newOrderId) {
+        // 2. Attach the "Proposal Request" Order Line Item
+        // The Salesforce Apex endpoint requires an 'order' object with 'Id' to identify the order
+        const lineItemResponse = await fetch(`/api/salesforce/orders?orderId=${newOrderId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            order: {
+              Id: newOrderId,
+              Status__c: 'Draft',
+              Proposal_Requested__c: true,
+              Bill_to_Account__c: accountId,
+              Ship_to_Account__c: accountId,
+              Inventory_Account__c: accountId
+            },
+            orderLines: [
+              {
+                Status__c: 'Draft',
+                Product_Name__c: proposalProductId, // Proposal Request Product ID (fetched from DB)
+                Order_Qty__c: 1,
+                Unit_Price__c: 0,
+                Inventory_Account__c: accountId,
+                IsTaxable__c: false
+              }
+            ],
+            accountId: accountId,
+            contactId: contactId,
+            isDraft: true
+          })
+        });
+
+        if (!lineItemResponse.ok) {
+          console.warn('Failed to attach proposal request line item, but order was created.');
+        }
+
         router.push(`/orders/${newOrderId}?new=true&proposal=true`);
       } else {
         throw new Error('No order ID returned from API');
