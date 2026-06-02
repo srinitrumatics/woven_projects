@@ -143,7 +143,7 @@ const UserList: React.FC<UserListProps> = ({
     <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
       {/* Header with Search and Filter */}
       <div className="border-b border-gray-200 dark:border-gray-700">
-        <div className="flex flex-wrap items-center gap-3 px-2 pb-4">
+        <div className="flex flex-wrap items-center gap-3 p-4">
           <div className="relative min-w-[220px] max-w-xs flex-shrink-0">
             <input
               type="text"
