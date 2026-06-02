@@ -217,15 +217,17 @@ const UserList: React.FC<UserListProps> = ({
                   <div key={user.id} className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group">
                     <div className="p-5 flex flex-col flex-grow">
                       <div className="flex justify-between items-start mb-3">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
-                            <span className="font-bold text-lg">{user.name.charAt(0).toUpperCase()}</span>
-                          </div>
-                          <div className="pr-2 min-w-0">
+                        <div className="flex flex-col min-w-0 flex-grow">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                              <span className="font-bold text-lg">{user.name.charAt(0).toUpperCase()}</span>
+                            </div>
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate" title={user.name}>
                               {user.name}
                             </h3>
-                            <p className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate mt-1 min-h-[20px]">
+                          </div>
+                          <div className="pl-[52px] pr-2 min-w-0 mt-1">
+                            <p className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate min-h-[20px]">
                               {title || '\u00A0'}
                             </p>
                             <p className="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5 min-h-[20px]">
