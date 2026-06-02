@@ -60,6 +60,7 @@ export async function syncNewProductToPostgresAndAlgolia(
         description,
         manufacturer_name__c,
         gtherp__price__c,
+        list_price__c,
         gtherp__available_quantity__c,
         product_availability__c,
         gtherp__category__c,
@@ -67,36 +68,38 @@ export async function syncNewProductToPostgresAndAlgolia(
         createddate,
         systemmodstamp
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, COALESCE($13, NOW()), NOW()
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, COALESCE($14, NOW()), NOW()
       )
       ON CONFLICT (sfid) DO UPDATE SET
-        name                         = EXCLUDED.name,
-        productcode                  = EXCLUDED.productcode,
-        isactive                     = EXCLUDED.isactive,
-        family                       = EXCLUDED.family,
-        description                  = EXCLUDED.description,
-        manufacturer_name__c         = EXCLUDED.manufacturer_name__c,
-        gtherp__price__c             = EXCLUDED.gtherp__price__c,
+        name                          = EXCLUDED.name,
+        productcode                   = EXCLUDED.productcode,
+        isactive                      = EXCLUDED.isactive,
+        family                        = EXCLUDED.family,
+        description                   = COALESCE(EXCLUDED.description, product2.description),
+        manufacturer_name__c          = EXCLUDED.manufacturer_name__c,
+        gtherp__price__c              = EXCLUDED.gtherp__price__c,
+        list_price__c                 = EXCLUDED.list_price__c,
         gtherp__available_quantity__c = EXCLUDED.gtherp__available_quantity__c,
-        product_availability__c      = EXCLUDED.product_availability__c,
-        gtherp__category__c          = EXCLUDED.gtherp__category__c,
+        product_availability__c       = EXCLUDED.product_availability__c,
+        gtherp__category__c           = EXCLUDED.gtherp__category__c,
         gtherp__sub_category__c       = EXCLUDED.gtherp__sub_category__c,
-        systemmodstamp               = NOW()
+        systemmodstamp                = NOW()
       `,
       [
-        sfProductId,                                    // $1 sfid
-        productData.Name ?? productData.name ?? '',      // $2 name
-        productData.ProductCode ?? productData.productcode ?? null, // $3 productcode
-        productData.IsActive === false ? false : true,  // $4 isactive (default true)
-        productData.Family ?? productData.family ?? null, // $5 family
-        productData.Description ?? productData.description ?? null, // $6 description
-        accountId,                                      // $7 manufacturer_name__c
-        productData.UnitPrice ?? productData.UnitPrice__c ?? 0, // $8 gtherp__price__c
-        productData.Available_To_Sell__c ?? 0,          // $9 gtherp__available_quantity__c
-        productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? null, // $10 product_availability__c
-        productData.gtherp__category__c ?? productData.Category__c ?? productData.Family ?? productData.family ?? null, // $11 gtherp__category__c
-        productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null, // $12 gtherp__sub_category__c
-        productData.CreatedDate ? new Date(productData.CreatedDate).toISOString() : null, // $13 createddate
+        sfProductId,                                                                          // $1  sfid
+        productData.Name ?? productData.name ?? '',                                           // $2  name
+        productData.ProductCode ?? productData.productcode ?? null,                           // $3  productcode
+        productData.IsActive === false ? false : true,                                        // $4  isactive
+        productData.Family ?? productData.family ?? null,                                     // $5  family
+        productData.Description ?? productData.description ?? null,                           // $6  description
+        accountId,                                                                            // $7  manufacturer_name__c
+        productData.gtherp__price__c ?? productData.gtherp__Selling_Unit_Price__c ?? 0,      // $8  gtherp__price__c (selling price)
+        productData.list_price__c ?? productData.List_Price__c ?? productData.UnitPrice ?? 0, // $9  list_price__c (list price)
+        productData.Available_To_Sell__c ?? 0,                                                // $10 gtherp__available_quantity__c
+        productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? null, // $11
+        productData.gtherp__category__c ?? productData.Category__c ?? productData.Family ?? productData.family ?? null, // $12
+        productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null,           // $13
+        productData.CreatedDate ? new Date(productData.CreatedDate).toISOString() : null,     // $14 createddate
       ]
     );
 
@@ -140,11 +143,12 @@ export async function syncNewProductToPostgresAndAlgolia(
     await index.saveObject({
       objectID: sfProductId,
       name: productData.Name ?? productData.name ?? '',
-      sku: productData.StockKeepingUnit ?? productData.ProductCode ?? productData.productcode ?? '',
-      description: productData.Description ?? productData.description ?? '',
-      price: productData.gtherp__price__c ?? productData.UnitPrice__c ?? productData.unit_price__c ?? 0,
-      listPrice: productData.list_price__c ?? productData.List_Price__c ?? productData.UnitPrice ?? 0,
-      unitPrice: productData.gtherp__price__c ?? productData.UnitPrice__c ?? productData.unit_price__c ?? 0,
+      sku: productData.StockKeepingUnit ?? productData.ProductCode ?? productData.productcode ?? productData.sku ?? '',
+      description: productData.Description ?? productData.description ?? productData.Description__c ?? '',
+      list_price__c: productData.list_price__c ?? productData.List_Price__c ?? productData.UnitPrice ?? 0,
+      price: productData.gtherp__price__c ?? productData.gtherp__Selling_Unit_Price__c ?? productData.UnitPrice__c ?? 0,
+      listPrice: productData.list_price__c ?? productData.List_Price__c ?? productData.UnitPrice ?? productData.UnitPrice__c ?? 0,
+      unitPrice: productData.gtherp__price__c ?? productData.gtherp__Selling_Unit_Price__c ?? productData.UnitPrice__c ?? 0,
       stock_quantity: 0,
       available_quantity: productData.Available_To_Sell__c ?? 0,
       discount: 0,

@@ -42,7 +42,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
     manufacturer: productToEdit?.Manufacturer_Name || "",
 
     // Overview
-    description: productToEdit?.Description || "",
+    description: productToEdit?.Description || productToEdit?.description || "",
     keyFeatures: productToEdit?.Key_Features__c || "",
 
     // Quick Specifications (Unit)
