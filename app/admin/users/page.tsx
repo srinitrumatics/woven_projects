@@ -77,15 +77,16 @@ const UserManagement: React.FC = () => {
 
       const uniqueUsersMap = new Map();
       sfData.forEach((contact: any) => {
-        if (contact.Id && !uniqueUsersMap.has(contact.Id)) {
-          uniqueUsersMap.set(contact.Id, {
-            id: contact.Id,
-            name: contact.Name || 'Unknown',
-            email: contact.Email || '',
-            phone: contact.Phone || '',
-            title: contact.Title || '',
-            department: contact.Department || '',
-            mobile: contact.MobilePhone || '',
+        const contactId = contact.Id || contact.id;
+        if (contactId && !uniqueUsersMap.has(contactId)) {
+          uniqueUsersMap.set(contactId, {
+            id: contact.Id || contact.id,
+            name: contact.Name || contact.name || 'Unknown',
+            email: contact.Email || contact.email || '',
+            phone: contact.Phone || contact.phone || '',
+            title: contact.Title || contact.title || '',
+            department: contact.Department || contact.department || '',
+            mobile: contact.MobilePhone || contact.mobilePhone || contact.mobile || '',
           });
         }
       });

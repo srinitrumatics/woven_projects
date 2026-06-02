@@ -211,7 +211,7 @@ const UserList: React.FC<UserListProps> = ({
               </div>
             ) : (
               paginatedUsers.map((user) => {
-                const { title, department, mobile, phone } = user as any;
+                const { title, department, mobile, phone } = user as any; console.log("USER DATA:", user);
 
                 return (
                   <div key={user.id} className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group">
@@ -242,9 +242,8 @@ const UserList: React.FC<UserListProps> = ({
                           {user.email && (
                             <>
                               <Mail className="w-4 h-4 flex-shrink-0 text-gray-400" />
-                              <span className="truncate text-primary hover:underline">
-                                <a href={`mailto:${user.email}`}>{user.email}</a>
-                              </span>
+                              <span className="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5 min-h-[20px]">
+                                {user.email}</span>
                             </>
                           )}
                         </div>
@@ -252,9 +251,7 @@ const UserList: React.FC<UserListProps> = ({
                           {mobile && (
                             <>
                               <Phone className="w-4 h-4 flex-shrink-0 text-gray-400" />
-                              <span className="truncate text-primary hover:underline">
-                                <a href={`tel:${mobile}`}>{mobile}</a> <span className="text-gray-400 dark:text-gray-500 no-underline">(Mobile)</span>
-                              </span>
+                              <span className="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5 min-h-[20px]">{mobile}</span>
                             </>
                           )}
                         </div>
@@ -262,9 +259,8 @@ const UserList: React.FC<UserListProps> = ({
                           {phone && (
                             <>
                               <Phone className="w-4 h-4 flex-shrink-0 text-gray-400" />
-                              <span className="truncate text-primary hover:underline">
-                                <a href={`tel:${phone}`}>{phone}</a> <span className="text-gray-400 dark:text-gray-500 no-underline">(Phone)</span>
-                              </span>
+                              <span className="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5 min-h-[20px]">
+                                {phone}</span>
                             </>
                           )}
                         </div>
@@ -301,40 +297,40 @@ const UserList: React.FC<UserListProps> = ({
                 </tr>
               ) : (
                 paginatedUsers.map((user) => {
-                  const { title, department, mobile, phone } = user as any;
+                  const { title, department, mobile, phone } = user as any; console.log("USER DATA:", user);
 
                   return (
                     <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-3 min-w-0">
+                      <td className="px-3 py-2 whitespace-nowrap">
+                        <div className="flex gap-3 min-w-0">
                           <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                             {user.name}
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap">
                         <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
                           {title}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 py-2 whitespace-nowrap">
                         <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
                           {department}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-primary hover:underline truncate min-w-0">
-                          {user.email && <a href={`mailto:${user.email}`}>{user.email}</a>}
+                      <td className="px-3 py-2 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5 min-h-[20px]">
+                          {user.email && user.email}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-primary hover:underline truncate min-w-0">
-                          {mobile ? <a href={`tel:${mobile}`}>{mobile}</a> : ''}
+                      <td className="px-3 py-2 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5 min-h-[20px]">
+                          {mobile ? mobile : ''}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-primary hover:underline truncate min-w-0">
-                          {phone ? <a href={`tel:${phone}`}>{phone}</a> : ''}
+                      <td className="px-3 py-2 whitespace-nowrap">
+                        <div className="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5 min-h-[20px]">
+                          {phone ? phone : ''}
                         </div>
                       </td>
                     </tr>
