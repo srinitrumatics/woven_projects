@@ -12,28 +12,43 @@ async function triggerResync() {
 
     try {
         const client = await pool.connect();
+        
+        // Fetch all organizations
+        const orgsResult = await client.query(`SELECT * FROM organizations`);
 
-        // Get count of products
-        const countResult = await client.query(`
-            SELECT COUNT(*) FROM salesforce.product2
-        `);
-        const totalProducts = parseInt(countResult.rows[0].count);
+        for (const org of orgsResult.rows) {
+            const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '');
+            console.log(`\n--- Processing Tenant: ${org.name || schema} ---`);
 
-        console.log(`Found ${totalProducts} products in database`);
-        console.log('Triggering update to force re-sync...\n');
+            try {
+                console.log(`Checking active products in "${schema}".product2...`);
+                const countResult = await client.query(`
+                    SELECT COUNT(*) FROM "${schema}".product2
+                    WHERE isactive = true
+                `);
+                const activeCount = parseInt(countResult.rows[0].count, 10);
+                console.log(`Found ${activeCount} active products in "${schema}".product2.`);
 
-        // Update all products to trigger the sync
-        // We'll just touch the systemmodstamp field
-        const updateResult = await client.query(`
-            UPDATE salesforce.product2
-            SET systemmodstamp = CURRENT_TIMESTAMP
-            WHERE image_url IS NOT NULL
-            RETURNING sfid
-        `);
+                if (activeCount === 0) {
+                    console.log(`⚠️ No active products found in "${schema}".product2. Skipping trigger.`);
+                    continue;
+                }
 
-        console.log(`✅ Triggered re-sync for ${updateResult.rows.length} products with images`);
-        console.log('\nThe Algolia sync worker will process these updates.');
-        console.log('Wait a few moments, then run: node workers/check-algolia-images.js');
+                console.log(`Triggering UPDATE for ${activeCount} active products in "${schema}".product2...`);
+                
+                await client.query(`
+                    UPDATE "${schema}".product2
+                    SET systemmodstamp = CURRENT_TIMESTAMP
+                    WHERE isactive = true;
+                `);
+
+                console.log(`✅ Success! The syncing worker will pick up ${activeCount} records for tenant ${schema} in a few seconds.`);
+            } catch (dbErr) {
+                console.error(`❌ Error triggering sync for ${schema}:`, dbErr.message);
+            }
+        }
+
+        console.log("\nFinished processing all tenants!");
 
         client.release();
     } catch (error) {

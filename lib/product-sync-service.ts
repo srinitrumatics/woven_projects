@@ -13,6 +13,9 @@ export async function syncNewProductToPostgresAndAlgolia(
 ): Promise<void> {
   let productData = initialProductData;
 
+  const orgConfig = await getOrgConfig().catch(() => null);
+  const dbSchemaName = (orgConfig?.algoliaSchema || 'salesforce').replace(/"/g, '');
+
   // ── Step 0: Fetch latest data from Salesforce ──────────────────────────────
   // If we have a contactId, we can fetch the full record from Salesforce to ensure
   // we have all fields (like CreatedDate, proper picklist values, etc.)
@@ -51,7 +54,7 @@ export async function syncNewProductToPostgresAndAlgolia(
   try {
     const result = await pool.query(
       `
-      INSERT INTO salesforce.product2 (
+      INSERT INTO "${dbSchemaName}".product2 (
         sfid,
         name,
         productcode,
@@ -110,7 +113,6 @@ export async function syncNewProductToPostgresAndAlgolia(
 
   // ── Step 2: Push directly to Algolia ──────────────────────────────────────
   try {
-    const orgConfig = await getOrgConfig().catch(() => null);
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
     const adminKey = process.env.ALGOLIA_ADMIN_KEY;
     const indexName = orgConfig?.algoliaIndexName || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';

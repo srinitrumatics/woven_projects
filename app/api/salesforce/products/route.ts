@@ -11,10 +11,14 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const action = (searchParams.get("action") || "").toLowerCase();
 
+    const { getOrgConfig } = await import('@/lib/org-config');
+    const orgConfig = await getOrgConfig().catch(() => null);
+    const dbSchemaName = (orgConfig?.algoliaSchema || 'salesforce').replace(/"/g, '');
+
     if (action === "proposalproduct") {
-      // Query the local salesforce.product2 table for the Proposal Request product
+      // Query the local product2 table for the Proposal Request product
       const result = await db.execute(
-        sql`SELECT sfid FROM salesforce.product2 WHERE name ILIKE 'Proposal Request' LIMIT 1`
+        sql.raw(`SELECT sfid FROM "${dbSchemaName}".product2 WHERE name ILIKE 'Proposal Request' LIMIT 1`)
       );
 
       const rows = result.rows as { sfid: string }[];
