@@ -17,11 +17,26 @@ async function wipeAndResync() {
         process.env.ALGOLIA_ADMIN_KEY
     );
 
-    const orgsResult = await pgClient.query(`SELECT algolia_schema, algolia_index_name FROM organizations`);
+    const targetSchemaArg = process.argv[2];
+    const targetIndexArg = process.argv[3];
+
+    let orgRows = [];
+    if (targetSchemaArg) {
+        const res = await pgClient.query(`SELECT algolia_schema, algolia_index_name, name FROM organizations WHERE algolia_schema = $1`, [targetSchemaArg]);
+        if (res.rows.length > 0) {
+            orgRows = res.rows;
+        } else {
+            console.log(`⚠️ Schema '${targetSchemaArg}' not found in DB. Using as manual override.`);
+            orgRows = [{ algolia_schema: targetSchemaArg, name: 'Manual Override' }];
+        }
+    } else {
+        const res = await pgClient.query(`SELECT algolia_schema, algolia_index_name, name FROM organizations`);
+        orgRows = res.rows;
+    }
     
-    for (const org of orgsResult.rows) {
-        const schema = org.algolia_schema || 'salesforce';
-        const indexName = org.algolia_index_name || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
+    for (const org of orgRows) {
+        const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '');
+        const indexName = targetIndexArg || org.algolia_index_name || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
 
         console.log(`\n--- Processing Tenant: Schema "${schema}", Index "${indexName}" ---`);
         

@@ -76,10 +76,23 @@ async function main() {
 
     const client = await pool.connect();
     
-    // Fetch all organizations
-    const orgsResult = await client.query(`SELECT * FROM organizations`);
+    const targetSchemaArg = process.argv[2];
+
+    let orgRows = [];
+    if (targetSchemaArg) {
+        const res = await client.query(`SELECT * FROM organizations WHERE algolia_schema = $1`, [targetSchemaArg]);
+        if (res.rows.length > 0) {
+            orgRows = res.rows;
+        } else {
+            console.log(`⚠️ Schema '${targetSchemaArg}' not found in DB. Using as manual override with default env credentials.`);
+            orgRows = [{ algolia_schema: targetSchemaArg, name: 'Manual Override' }];
+        }
+    } else {
+        const res = await client.query(`SELECT * FROM organizations`);
+        orgRows = res.rows;
+    }
     
-    for (const org of orgsResult.rows) {
+    for (const org of orgRows) {
         const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '');
         console.log(`\n--- Processing Tenant: ${org.name || schema} ---`);
         

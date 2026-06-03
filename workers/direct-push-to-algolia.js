@@ -29,15 +29,26 @@ async function main() {
         ssl: { rejectUnauthorized: false },
     });
 
-    const client = await pool.connect();
+    const targetSchemaArg = process.argv[2];
+    const targetIndexArg = process.argv[3];
 
-    // Fetch all organizations
-    const orgsResult = await client.query(`SELECT * FROM organizations`);
+    let orgRows = [];
+    if (targetSchemaArg) {
+        const res = await client.query(`SELECT * FROM organizations WHERE algolia_schema = $1`, [targetSchemaArg]);
+        if (res.rows.length > 0) {
+            orgRows = res.rows;
+        } else {
+            console.log(`⚠️ Schema '${targetSchemaArg}' not found in DB. Using as manual override.`);
+            orgRows = [{ algolia_schema: targetSchemaArg, name: 'Manual Override' }];
+        }
+    } else {
+        const res = await client.query(`SELECT * FROM organizations`);
+        orgRows = res.rows;
+    }
 
-    for (const org of orgsResult.rows) {
+    for (const org of orgRows) {
         const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '');
-        // If an explicit index is passed in process.argv[2], use it for testing, else use org specific index
-        const targetIndex = process.argv[2] || org.algolia_index_name || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
+        const targetIndex = targetIndexArg || org.algolia_index_name || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
 
         console.log(`\n--- Processing Tenant: ${org.name || schema} ---`);
         console.log(`Fetching active products from "${schema}".product2...`);
