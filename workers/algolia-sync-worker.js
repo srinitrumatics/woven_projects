@@ -2,24 +2,17 @@
 // Algolia Sync Worker — Multi-Schema, Schema-Adaptive
 // ============================================
 //
-// One Node process drains one or more <schema>.algolia_sync_queue tables
-// concurrently. Each schema runs an independent polling loop so a slow
-// tenant never blocks a fast one.
+// Run Modes:
+//   node workers/algolia-sync-worker.js                          → auto-discover ALL orgs from organizations table
+//   node workers/algolia-sync-worker.js my_algolia_index         → find org by index name, process that schema only
+//   node workers/algolia-sync-worker.js my_schema_name           → use schema name directly
 //
-// Modes:
-//   ALGOLIA_SYNC_SCHEMAS=sf_00dec00000e1fjdmaa,sf_00dgk000007zmr7uam  (multi)
-//   ALGOLIA_SYNC_SCHEMA=sf_00dec00000e1fjdmaa                          (single)
+// Env var overrides (legacy):
+//   ALGOLIA_SYNC_SCHEMAS=sf_a,sf_b     (multi)
+//   ALGOLIA_SYNC_SCHEMA=sf_a           (single)
 //
 // Per-schema Algolia credentials (optional):
-//   ALGOLIA_APP_ID_<UPPERSCHEMA>     /  ALGOLIA_ADMIN_KEY_<UPPERSCHEMA>
-//
-// Schema-adaptive behaviour:
-//   - Introspects column shape per schema on startup (`id` vs `record_id` for
-//     PK, `attempts` vs `retry_count`, `last_error` vs `error_message`, etc.).
-//   - Uses raw SQL with FOR UPDATE SKIP LOCKED for claim/lock — no stored
-//     function dependency.
-//   - Auto-injects `objectID` from `record_id` (sfid) when payloads lack it,
-//     so triggers that don't set it still work.
+//   ALGOLIA_APP_ID_<UPPERSCHEMA>  /  ALGOLIA_ADMIN_KEY_<UPPERSCHEMA>
 //
 // Test-only env (do not set in prod):
 //   _WORKER_MAX_ITERATIONS=N   — exit after N poll cycles (used by smoke tests)
@@ -30,30 +23,89 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 // ============================================
-// SCHEMA RESOLUTION
+// SCHEMA RESOLUTION  (async, runs before worker starts)
 // ============================================
 
-function parseSchemaList() {
-    const multi = process.env.ALGOLIA_SYNC_SCHEMAS;
-    if (multi) return multi.split(',').map(s => s.trim()).filter(Boolean);
-    const single = process.env.ALGOLIA_SYNC_SCHEMA;
-    if (single) return [single.trim()];
-    return ['salesforce']; // backward-compat default
-}
-
 const SCHEMA_NAME_REGEX = /^[a-z][a-z0-9_]{0,62}$/;
-const SCHEMAS = parseSchemaList();
 
-if (SCHEMAS.length === 0) {
-    throw new Error('No schemas configured. Set ALGOLIA_SYNC_SCHEMAS or ALGOLIA_SYNC_SCHEMA.');
-}
-for (const s of SCHEMAS) {
-    if (!SCHEMA_NAME_REGEX.test(s)) {
-        throw new Error(`Invalid schema name ${JSON.stringify(s)}. Must match /^[a-z][a-z0-9_]{0,62}$/`);
+/**
+ * Resolve the list of schemas to process.
+ * Priority:
+ *   1. CLI arg (index name or schema name)
+ *   2. Env vars (ALGOLIA_SYNC_SCHEMAS / ALGOLIA_SYNC_SCHEMA)
+ *   3. Auto-discover from organizations table
+ *   4. Fallback: ['salesforce']
+ */
+async function resolveSchemas(dbPool) {
+    const cliArg = process.argv[2] ? process.argv[2].trim() : null;
+
+    // ── CLI argument provided ────────────────────────────────────────────────
+    if (cliArg) {
+        try {
+            // Try to find org by algolia_index_name first (case-insensitive)
+            const byIndex = await dbPool.query(
+                `SELECT algolia_schema, name, algolia_index_name FROM organizations WHERE algolia_index_name ILIKE $1 LIMIT 1`,
+                [cliArg]
+            );
+            if (byIndex.rows.length > 0) {
+                const org = byIndex.rows[0];
+                const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '').toLowerCase();
+                console.log(`[worker] CLI arg "${cliArg}" matched org "${org.name}" → schema: "${schema}", index: "${org.algolia_index_name}"`);
+                return [schema];
+            }
+
+            // Try to find org by algolia_schema (case-insensitive)
+            const bySchema = await dbPool.query(
+                `SELECT algolia_schema, name, algolia_index_name FROM organizations WHERE algolia_schema ILIKE $1 LIMIT 1`,
+                [cliArg]
+            );
+            if (bySchema.rows.length > 0) {
+                const org = bySchema.rows[0];
+                const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '').toLowerCase();
+                console.log(`[worker] CLI arg "${cliArg}" matched org "${org.name}" by schema → index: "${org.algolia_index_name}"`);
+                return [schema];
+            }
+
+            // Use as raw schema name (manual override), force lowercase
+            const lowercaseSchema = cliArg.toLowerCase();
+            console.log(`[worker] CLI arg "${cliArg}" not found in organizations table — using as raw schema name "${lowercaseSchema}"`);
+            return [lowercaseSchema];
+        } catch (err) {
+            console.warn(`[worker] DB lookup failed for CLI arg "${cliArg}": ${err.message} — using as raw schema name`);
+            return [cliArg.toLowerCase()];
+        }
     }
-}
-if (new Set(SCHEMAS).size !== SCHEMAS.length) {
-    throw new Error(`Duplicate schemas: ${SCHEMAS.join(',')}`);
+
+    // ── Env var overrides (legacy) ────────────────────────────────────────────
+    const multi = process.env.ALGOLIA_SYNC_SCHEMAS;
+    if (multi) {
+        const schemas = multi.split(',').map(s => s.trim()).filter(Boolean);
+        console.log(`[worker] Using ALGOLIA_SYNC_SCHEMAS env var: ${schemas.join(', ')}`);
+        return schemas;
+    }
+    const single = process.env.ALGOLIA_SYNC_SCHEMA;
+    if (single) {
+        console.log(`[worker] Using ALGOLIA_SYNC_SCHEMA env var: ${single.trim()}`);
+        return [single.trim()];
+    }
+
+    // ── Auto-discover from organizations table ────────────────────────────────
+    try {
+        const orgsRes = await dbPool.query(
+            `SELECT algolia_schema, name, algolia_index_name FROM organizations WHERE algolia_schema IS NOT NULL AND algolia_schema != ''`
+        );
+        if (orgsRes.rows.length > 0) {
+            const schemas = [...new Set(orgsRes.rows.map(r => (r.algolia_schema || '').replace(/"/g, '').trim()).filter(Boolean))];
+            console.log(`[worker] Auto-discovered ${schemas.length} schema(s) from organizations table: ${schemas.join(', ')}`);
+            return schemas;
+        }
+    } catch (err) {
+        console.warn(`[worker] Could not query organizations table: ${err.message}`);
+    }
+
+    // ── Ultimate fallback ─────────────────────────────────────────────────────
+    console.log('[worker] No schemas configured — falling back to "salesforce"');
+    return ['salesforce'];
 }
 
 // ============================================
@@ -70,9 +122,9 @@ const MAX_ITERATIONS = (() => {
 const config = {
     postgres: {
         connectionString: process.env.DATABASE_URL,
-        max: Math.max(20, SCHEMAS.length * 5),
+        max: 20, // updated dynamically after schemas are resolved
         idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 10000,
+        connectionTimeoutMillis: 30000, // increased to 30s for serverless DB wake-up
         ssl: { rejectUnauthorized: false }, // Required for AWS RDS
     },
     worker: {
@@ -122,6 +174,7 @@ class SchemaWorker {
         this.activeProcessing = 0;
         this.isRunning = false;
         this.shape = null; // populated by init()
+        this.configuredIndices = new Set();
 
         const upper = schema.toUpperCase();
         const appId =
@@ -334,10 +387,28 @@ class SchemaWorker {
                 }
                 continue;
             }
-            // Use environment variable index override if present, else fall back to DB config
-            const envIndexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || process.env.ALGOLIA_INDEX_NAME;
-            const indexName = envIndexName || cfg.index_name;
+            // Always use the index name from the database config for this tenant.
+            // (We DO NOT fall back to NEXT_PUBLIC_ALGOLIA_INDEX_NAME here because it breaks multi-tenant sync).
+            const indexName = cfg.index_name;
             const index = this.algolia.initIndex(indexName);
+            
+            // Ensure faceting is configured automatically upon index creation/usage
+            if (!this.configuredIndices.has(indexName)) {
+                try {
+                    await index.setSettings({
+                        attributesForFaceting: [
+                            'category',
+                            'product_availability',
+                            'manufacturer',
+                            'searchable(productFamily)'
+                        ]
+                    });
+                    this.log('info', `Configured Algolia facets for index: ${indexName}`);
+                    this.configuredIndices.add(indexName);
+                } catch (err) {
+                    this.log('error', `Failed to configure facets for ${indexName}: ${err.message}`);
+                }
+            }
 
             try {
                 if (op === 'DELETE') {
@@ -474,13 +545,13 @@ class SchemaWorker {
 // ORCHESTRATION
 // ============================================
 
-const workers = SCHEMAS.map(s => new SchemaWorker(s));
+let workers = [];
 let runPromise = null;
 
-async function preflight() {
-    rootLog('info', 'preflight — initializing schemas', { schemas: SCHEMAS });
+async function preflight(schemas) {
+    rootLog('info', 'preflight — initializing schemas', { schemas });
     for (const w of workers) await w.init();
-    rootLog('info', 'all schemas initialized', { schemas: SCHEMAS, poolMax: config.postgres.max });
+    rootLog('info', 'all schemas initialized', { schemas, poolMax: config.postgres.max });
 }
 
 async function startAll() {
@@ -488,8 +559,8 @@ async function startAll() {
     await runPromise;
 }
 
-async function stopAll() {
-    rootLog('info', 'stopping all workers', { schemas: SCHEMAS });
+async function stopAll(schemas) {
+    rootLog('info', 'stopping all workers', { schemas });
     isShuttingDown = true;
     const timeout = setTimeout(() => {
         rootLog('warn', 'shutdown timeout, forcing exit');
@@ -517,8 +588,29 @@ process.on('unhandledRejection', (r) => { rootLog('error', 'unhandled', { error:
 
 (async () => {
     try {
-        await preflight();
+        // Resolve schemas BEFORE building workers (async DB lookup)
+        const schemas = await resolveSchemas(pgPool);
+
+        if (schemas.length === 0) {
+            rootLog('error', 'No schemas resolved — exiting');
+            process.exit(1);
+        }
+        for (const s of schemas) {
+            if (!SCHEMA_NAME_REGEX.test(s)) {
+                rootLog('error', `Invalid schema name "${s}" — must match /^[a-z][a-z0-9_]{0,62}$/`);
+                process.exit(1);
+            }
+        }
+
+        // Update pool size based on actual schema count
+        config.postgres.max = Math.max(20, schemas.length * 5);
+
+        // Build workers
+        workers = schemas.map(s => new SchemaWorker(s));
+
+        await preflight(schemas);
         await startAll();
+
         // If MAX_ITERATIONS finite (tests), exit cleanly after loops finish.
         if (Number.isFinite(MAX_ITERATIONS)) {
             await pgPool.end();

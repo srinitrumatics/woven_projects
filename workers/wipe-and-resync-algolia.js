@@ -22,12 +22,13 @@ async function wipeAndResync() {
 
     let orgRows = [];
     if (targetSchemaArg) {
-        const res = await pgClient.query(`SELECT algolia_schema, algolia_index_name, name FROM organizations WHERE algolia_schema = $1`, [targetSchemaArg]);
+        const res = await pgClient.query(`SELECT algolia_schema, algolia_index_name, name FROM organizations WHERE algolia_schema ILIKE $1`, [targetSchemaArg]);
         if (res.rows.length > 0) {
             orgRows = res.rows;
         } else {
+            const lowercaseSchema = targetSchemaArg.toLowerCase();
             console.log(`⚠️ Schema '${targetSchemaArg}' not found in DB. Using as manual override.`);
-            orgRows = [{ algolia_schema: targetSchemaArg, name: 'Manual Override' }];
+            orgRows = [{ algolia_schema: lowercaseSchema, name: 'Manual Override' }];
         }
     } else {
         const res = await pgClient.query(`SELECT algolia_schema, algolia_index_name, name FROM organizations`);
@@ -42,6 +43,7 @@ async function wipeAndResync() {
         
         console.log(`Wiping existing products from the Algolia index...`);
         const index = client.initIndex(indexName);
+        await index.setSettings({ attributesForFaceting: ['category', 'product_availability', 'manufacturer', 'searchable(productFamily)'] });
         await index.clearObjects();
         console.log("✅ Algolia index is now empty!");
 

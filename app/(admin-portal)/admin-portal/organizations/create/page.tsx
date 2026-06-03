@@ -40,8 +40,9 @@ export default function CreateOrganizationPage() {
   const deriveSchemaName = (orgId: string) =>
     orgId ? `sf_${orgId.toLowerCase().replace(/[^a-z0-9]/g, '')}` : '';
 
-  const deriveIndexName = (schemaName: string) =>
-    schemaName ? `woven_products_${schemaName}` : '';
+  // Index name uses orgId directly: woven_products_<orgid>
+  const deriveIndexName = (orgId: string) =>
+    orgId ? `woven_products_${orgId.toLowerCase().replace(/[^a-z0-9]/g, '')}` : '';
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -51,19 +52,12 @@ export default function CreateOrganizationPage() {
         // Auto-derive schema and index from orgId as user types
         if (name === 'orgId') {
           const schema = deriveSchemaName(value);
-          setSchemaData({ schemaName: schema, indexName: deriveIndexName(schema) });
+          setSchemaData({ schemaName: schema, indexName: deriveIndexName(value) });
         }
         return updated;
       });
     } else {
-      setSchemaData(prev => {
-        const updated = { ...prev, [name]: value };
-        // When schemaName changes, auto-update indexName too
-        if (name === 'schemaName') {
-          updated.indexName = deriveIndexName(value);
-        }
-        return updated;
-      });
+      setSchemaData(prev => ({ ...prev, [name]: value }));
     }
   };
 
@@ -73,22 +67,25 @@ export default function CreateOrganizationPage() {
     setLoading(true);
 
     try {
+      // Derive schema/index upfront so we can save them immediately on org creation
+      const schema = deriveSchemaName(formData.orgId || formData.name);
+      const indexName = deriveIndexName(formData.orgId || formData.name);
+
       const response = await fetch('/api/admin/organizations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          algoliaSchema: schema,
+          algoliaIndexName: indexName,
+        }),
       });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Failed to create organization');
 
-      // Use orgId-based naming to match worker convention: sf_<orgid>
-      const schema = deriveSchemaName(formData.orgId || formData.name);
       setCreatedOrgId(data.organization?.id || '');
-      setSchemaData({
-        schemaName: schema,
-        indexName: deriveIndexName(schema),
-      });
+      setSchemaData({ schemaName: schema, indexName });
       setStep(2);
     } catch (err: any) {
       setError(err.message);
@@ -103,6 +100,7 @@ export default function CreateOrganizationPage() {
     setLoading(true);
 
     try {
+      // Step 1: Provision the DB schema and sync infrastructure
       const response = await fetch('/api/admin/organizations/provision', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -114,6 +112,20 @@ export default function CreateOrganizationPage() {
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Failed to provision schema');
+
+      // Step 2: Update the org record with final algoliaSchema/algoliaIndexName
+      // (in case user edited them manually on this step)
+      if (createdOrgId) {
+        await fetch(`/api/admin/organizations/${createdOrgId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...formData,
+            algoliaSchema: schemaData.schemaName,
+            algoliaIndexName: schemaData.indexName,
+          }),
+        });
+      }
 
       router.push('/admin-portal/organizations');
     } catch (err: any) {

@@ -80,12 +80,13 @@ async function main() {
 
     let orgRows = [];
     if (targetSchemaArg) {
-        const res = await client.query(`SELECT * FROM organizations WHERE algolia_schema = $1`, [targetSchemaArg]);
+        const res = await client.query(`SELECT * FROM organizations WHERE algolia_schema ILIKE $1`, [targetSchemaArg]);
         if (res.rows.length > 0) {
             orgRows = res.rows;
         } else {
+            const lowercaseSchema = targetSchemaArg.toLowerCase();
             console.log(`⚠️ Schema '${targetSchemaArg}' not found in DB. Using as manual override with default env credentials.`);
-            orgRows = [{ algolia_schema: targetSchemaArg, name: 'Manual Override' }];
+            orgRows = [{ algolia_schema: lowercaseSchema, name: 'Manual Override' }];
         }
     } else {
         const res = await client.query(`SELECT * FROM organizations`);

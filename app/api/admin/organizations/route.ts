@@ -12,7 +12,10 @@ export async function POST(request: Request) {
       salesforceUrl, 
       salesforceAuthUrl, 
       clientId, 
-      clientSecret 
+      clientSecret,
+      siteUrl,
+      algoliaIndexName,
+      algoliaSchema
     } = body;
 
     if (!name) {
@@ -25,7 +28,10 @@ export async function POST(request: Request) {
       salesforceUrl,
       salesforceAuthUrl,
       clientId,
-      clientSecret
+      clientSecret,
+      siteUrl,
+      algoliaIndexName,
+      algoliaSchema
     }).returning();
 
     return NextResponse.json({ success: true, organization: newOrg });
