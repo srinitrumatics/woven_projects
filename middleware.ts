@@ -1,19 +1,44 @@
 // middleware.ts
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * ADMIN_HOST env var defines the ONLY host allowed to access /admin-login and /admin-portal.
+ * Example: ADMIN_HOST=gterp-wovn-prod.herokuapp.com
+ * On localhost, admin routes are always allowed (unless ADMIN_HOST is explicitly set).
+ */
+const ADMIN_HOST = process.env.ADMIN_HOST || '';
+
 export async function middleware(request: NextRequest) {
-  // Check if user is authenticated by looking for session cookie
+  const host = request.headers.get('host') || '';
+  const pathname = request.nextUrl.pathname;
+
+  // --- Admin route protection: block tenant subdomains from accessing admin ---
+  const isAdminRoute =
+    pathname.startsWith('/admin-login') ||
+    pathname.startsWith('/admin-portal');
+
+  if (isAdminRoute && ADMIN_HOST) {
+    // Strip port from host for comparison
+    const bareHost = host.split(':')[0];
+    const bareAdminHost = ADMIN_HOST.split(':')[0];
+
+    if (bareHost !== bareAdminHost) {
+      // Return a clean 404 – tenant users should not even know this route exists
+      return new NextResponse(null, { status: 404 });
+    }
+  }
+
+  // --- Salesforce session protection for webapp routes ---
   const sessionCookie = request.cookies.get('session')?.value;
   const isAuthenticated = Boolean(sessionCookie);
 
-  // If not authenticated and accessing a protected route
   if (!isAuthenticated) {
-    const isProtectedRoute = isProtectedRoutePath(request.nextUrl.pathname);
+    const isProtectedRoute = isProtectedRoutePath(pathname);
 
     if (isProtectedRoute) {
       const url = request.nextUrl.clone();
       url.pathname = '/auth';
-      url.search = `return=${encodeURIComponent(request.nextUrl.pathname)}`;
+      url.search = `return=${encodeURIComponent(pathname)}`;
       return NextResponse.redirect(url);
     }
   }
