@@ -33,6 +33,7 @@ export async function POST(request: Request) {
           family VARCHAR(255),
           image_url JSONB,
           gtherp__price__c NUMERIC,
+          list_price__c NUMERIC,
           gtherp__stock_quantity__c NUMERIC,
           gtherp__available_quantity__c NUMERIC,
           gtherp__discount__c NUMERIC,
@@ -56,8 +57,9 @@ export async function POST(request: Request) {
     const sourceSchemaInFile = sourceSchemaMatch ? sourceSchemaMatch[1] : 'salesforce';
 
     // Replace both the actual source schema name AND the generic 'salesforce.' placeholder
+    // Also replace instances of the schema name that don't have a trailing dot (like in string literals)
     let transformedSqlContent = algoliaSqlContent
-      .replace(new RegExp(`\\b${sourceSchemaInFile}\\.`, 'g'), `${sanitizedSchemaName}.`)
+      .replace(new RegExp(`\\b${sourceSchemaInFile}\\b`, 'g'), `${sanitizedSchemaName}`)
       .replace(/\bsalesforce\./g, `${sanitizedSchemaName}.`);
 
     // Replace the default index name in algolia_index_config INSERT
