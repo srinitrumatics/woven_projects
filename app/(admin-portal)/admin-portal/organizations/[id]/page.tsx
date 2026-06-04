@@ -7,7 +7,11 @@ import {
   GlobeAltIcon,
   LockClosedIcon,
   BuildingOfficeIcon,
-  ServerStackIcon
+  ServerStackIcon,
+  ArrowPathIcon,
+  ArrowTopRightOnSquareIcon,
+  CheckCircleIcon,
+  XCircleIcon
 } from '@heroicons/react/24/outline';
 
 export default function EditOrganizationPage() {
@@ -19,6 +23,9 @@ export default function EditOrganizationPage() {
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [syncing, setSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState('');
+  const [syncError, setSyncError] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -92,6 +99,31 @@ export default function EditOrganizationPage() {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSyncProducts = async () => {
+    setSyncing(true);
+    setSyncMessage('Syncing from Salesforce...');
+    setSyncError('');
+
+    try {
+      const res = await fetch(`/api/admin/organizations/${id}/sync`, { method: 'POST' });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Sync failed');
+      }
+
+      const { summary } = data;
+      setSyncMessage(`✅ ${summary.dbUpserted} products synced · ${summary.algoliaPushed} pushed to Algolia`);
+      setTimeout(() => setSyncMessage(''), 6000);
+    } catch (err: any) {
+      setSyncMessage('');
+      setSyncError(err.message);
+      setTimeout(() => setSyncError(''), 8000);
+    } finally {
+      setSyncing(false);
     }
   };
 
@@ -298,11 +330,40 @@ export default function EditOrganizationPage() {
           </div>
         </div>
 
-        <div className="flex justify-end pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col sm:flex-row items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700 gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleSyncProducts}
+              disabled={syncing}
+              className="inline-flex items-center justify-center rounded-md bg-indigo-50 dark:bg-indigo-900/30 px-4 py-2.5 text-sm font-semibold text-indigo-700 dark:text-indigo-300 shadow-sm border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 disabled:opacity-50 transition-all"
+            >
+              {syncing ? (
+                <ArrowPathIcon className="animate-spin -ml-1 mr-2 h-5 w-5" />
+              ) : (
+                <ArrowPathIcon className="-ml-1 mr-2 h-5 w-5" />
+              )}
+              Add Products to Index
+            </button>
+
+            {syncMessage && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-md border border-green-200 text-sm">
+                <CheckCircleIcon className="h-4 w-4" />
+                {syncMessage}
+              </div>
+            )}
+            {syncError && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 rounded-md border border-red-200 text-sm">
+                <XCircleIcon className="h-4 w-4" />
+                {syncError}
+              </div>
+            )}
+          </div>
+
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center rounded-md bg-primary px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 transition-all"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 transition-all w-full sm:w-auto"
           >
             {loading ? 'Saving...' : 'Save Changes'}
           </button>

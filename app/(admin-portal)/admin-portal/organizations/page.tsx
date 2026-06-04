@@ -9,6 +9,7 @@ type Organization = {
   name: string;
   orgId: string;
   salesforceUrl: string;
+  siteUrl: string;
   createdAt: string;
 };
 
@@ -123,8 +124,19 @@ export default function AdminOrganizationsPage() {
                 </div>
               </div>
               <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 px-6 py-4">
-                <button className="flex w-full items-center justify-between text-xs font-semibold uppercase tracking-wider text-primary hover:text-primary/80">
-                  <span>Manage Schema</span>
+                <button
+                  onClick={() => {
+                    const url = org.siteUrl;
+                    if (!url) {
+                      alert('No site URL configured for this organization.');
+                      return;
+                    }
+                    const fullUrl = url.startsWith('http') ? url : `https://${url}`;
+                    window.open(fullUrl, '_blank', 'noopener,noreferrer');
+                  }}
+                  className="flex w-full items-center justify-between text-xs font-semibold uppercase tracking-wider text-primary hover:text-primary/80"
+                >
+                  <span>Launch Webapp</span>
                   <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                 </button>
               </div>

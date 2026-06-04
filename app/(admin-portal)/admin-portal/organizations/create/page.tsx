@@ -10,7 +10,10 @@ import {
   GlobeAltIcon,
   LockClosedIcon,
   ShieldCheckIcon,
-  BuildingOfficeIcon
+  BuildingOfficeIcon,
+  ArrowPathIcon,
+  ArrowTopRightOnSquareIcon,
+  XCircleIcon
 } from '@heroicons/react/24/outline';
 
 export default function CreateOrganizationPage() {
@@ -35,6 +38,11 @@ export default function CreateOrganizationPage() {
     schemaName: '',
     indexName: ''
   });
+
+  const [syncing, setSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState('');
+  const [syncError, setSyncError] = useState('');
+  const [hasSynced, setHasSynced] = useState(false);
 
   // Derive schemaName from orgId using the sf_ convention (matches the sync worker)
   const deriveSchemaName = (orgId: string) =>
@@ -127,7 +135,7 @@ export default function CreateOrganizationPage() {
         });
       }
 
-      router.push('/admin-portal/organizations');
+      setStep(3);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -135,28 +143,74 @@ export default function CreateOrganizationPage() {
     }
   };
 
+  const handleSyncProducts = async () => {
+    if (!createdOrgId) return;
+    setSyncing(true);
+    setSyncMessage('Syncing from Salesforce...');
+    setSyncError('');
+
+    try {
+      const res = await fetch(`/api/admin/organizations/${createdOrgId}/sync`, { method: 'POST' });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Sync failed');
+      }
+
+      const { summary } = data;
+      setSyncMessage(`✅ ${summary.dbUpserted} products synced · ${summary.algoliaPushed} pushed to Algolia`);
+      setHasSynced(true);
+      setTimeout(() => setSyncMessage(''), 6000);
+    } catch (err: any) {
+      setSyncMessage('');
+      setSyncError(err.message);
+      setTimeout(() => setSyncError(''), 8000);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  const handleLaunchWebapp = () => {
+    const url = formData.siteUrl;
+    if (!url) {
+      alert('No site URL configured for this organization.');
+      return;
+    }
+    const fullUrl = url.startsWith('http') ? url : `https://${url}`;
+    window.open(fullUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="w-full space-y-8">
       <div className="flex items-center justify-between">
         {/* Left: Step Indicators */}
-        <div className="flex items-center space-x-4 flex-1">
-          <div className={`flex h-10 w-10 items-center justify-center rounded-full font-bold transition-all ${step >= 1 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
-            {step > 1 ? <CheckCircleIcon className="h-6 w-6" /> : '1'}
+        <div className="flex items-center space-x-2 flex-1">
+          {/* Step 1 */}
+          <div className={`flex h-8 w-8 text-sm items-center justify-center rounded-full font-bold transition-all ${step >= 1 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
+            {step > 1 ? <CheckCircleIcon className="h-5 w-5" /> : '1'}
           </div>
-          <div className="h-0.5 w-12 bg-gray-200">
+          <div className="h-0.5 w-8 bg-gray-200">
             <div className={`h-full bg-primary transition-all duration-500 ${step > 1 ? 'w-full' : 'w-0'}`}></div>
           </div>
-          <div className={`flex h-10 w-10 items-center justify-center rounded-full font-bold transition-all ${step >= 2 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
-            2
+          {/* Step 2 */}
+          <div className={`flex h-8 w-8 text-sm items-center justify-center rounded-full font-bold transition-all ${step >= 2 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
+            {step > 2 ? <CheckCircleIcon className="h-5 w-5" /> : '2'}
+          </div>
+          <div className="h-0.5 w-8 bg-gray-200">
+            <div className={`h-full bg-primary transition-all duration-500 ${step > 2 ? 'w-full' : 'w-0'}`}></div>
+          </div>
+          {/* Step 3 */}
+          <div className={`flex h-8 w-8 text-sm items-center justify-center rounded-full font-bold transition-all ${step >= 3 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
+            3
           </div>
         </div>
 
         {/* Center: Title and Subtitle */}
         <div className="text-center flex-1">
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-            {step === 1 ? 'Tenant Registry' : 'Resource Provisioning'}
+            {step === 1 ? 'Tenant Registry' : step === 2 ? 'Resource Provisioning' : 'Initial Sync & Launch'}
           </h1>
-          <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Step {step} of 2</p>
+          <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Step {step} of 3</p>
         </div>
 
         {/* Right: Back Button */}
@@ -330,7 +384,7 @@ export default function CreateOrganizationPage() {
               </button>
             </div>
           </form>
-        ) : (
+        ) : step === 2 ? (
           <form onSubmit={handleProvision} className="p-8 space-y-8">
             <div className="rounded-lg bg-green-50 dark:bg-green-900/20 p-4 flex gap-4 border border-green-200 dark:border-green-800">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/40 text-green-600">
@@ -432,7 +486,82 @@ export default function CreateOrganizationPage() {
               </button>
             </div>
           </form>
-        )}
+        ) : step === 3 ? (
+          <div className="p-8 space-y-8">
+            <div className="rounded-lg bg-green-50 dark:bg-green-900/20 p-4 flex gap-4 border border-green-200 dark:border-green-800">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/40 text-green-600">
+                <CheckCircleIcon className="h-6 w-6" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-green-700 dark:text-green-400 uppercase tracking-wider">✓ Infrastructure Provisioned</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  Database schema <code>{schemaData.schemaName}</code> and Algolia index <code>{schemaData.indexName}</code> are ready.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Final Steps</h3>
+              <p className="text-sm text-gray-500">
+                Sync the initial product catalog from Salesforce to your new index, and verify the storefront launches correctly.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                <button
+                  type="button"
+                  onClick={handleSyncProducts}
+                  disabled={syncing}
+                  className="inline-flex items-center justify-center rounded-md bg-indigo-50 dark:bg-indigo-900/30 px-6 py-3 text-sm font-semibold text-indigo-700 dark:text-indigo-300 shadow-sm border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 disabled:opacity-50 transition-all"
+                >
+                  {syncing ? (
+                    <ArrowPathIcon className="animate-spin -ml-1 mr-2 h-5 w-5" />
+                  ) : (
+                    <ArrowPathIcon className="-ml-1 mr-2 h-5 w-5" />
+                  )}
+                  {hasSynced ? 'Resync Products' : 'Add Products to Index'}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleLaunchWebapp}
+                  className="inline-flex items-center justify-center rounded-md bg-emerald-50 dark:bg-emerald-900/30 px-6 py-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300 shadow-sm border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-all"
+                >
+                  <ArrowTopRightOnSquareIcon className="-ml-1 mr-2 h-5 w-5" />
+                  Launch Webapp
+                </button>
+              </div>
+
+              {syncMessage && (
+                <div className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-md border border-green-200 text-sm w-fit mt-4">
+                  <CheckCircleIcon className="h-5 w-5" />
+                  {syncMessage}
+                </div>
+              )}
+              {syncError && (
+                <div className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 rounded-md border border-red-200 text-sm w-fit mt-4">
+                  <XCircleIcon className="h-5 w-5" />
+                  {syncError}
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end pt-8 border-t border-gray-200 dark:border-gray-700">
+              <button
+                type="button"
+                onClick={() => {
+                  if (!hasSynced) {
+                    alert('Please click "Add Products to Index" to initialize your catalog before completing! (You can also do this later from the Organizations list card)');
+                  }
+                  router.push('/admin-portal/organizations');
+                }}
+                className={`inline-flex items-center rounded-md px-8 py-2.5 text-sm font-semibold text-white shadow-sm transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+                  hasSynced ? 'bg-primary hover:bg-primary/90' : 'bg-gray-400 hover:bg-gray-500'
+                }`}
+              >
+                Complete Setup
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );
