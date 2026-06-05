@@ -56,6 +56,7 @@ export default function LocationModal({
         insideDelivery: false,
         deliveryNotes: "",
         status: "Active",
+        Site_Name: "",
     });
 
     useEffect(() => {
@@ -80,6 +81,7 @@ export default function LocationModal({
                 insideDelivery: !!location.insideDelivery,
                 deliveryNotes: location.deliveryNotes || "",
                 status: location.status || "Active",
+                Site_Name: location.Site_Name || "",
             });
         } else if (mode === "add") {
             setFormData({
@@ -96,6 +98,7 @@ export default function LocationModal({
                 insideDelivery: false,
                 deliveryNotes: "",
                 status: "Active",
+                Site_Name: "",
             });
         }
     }, [location, mode, isOpen]);
@@ -304,6 +307,20 @@ export default function LocationModal({
                                     disabled={true}
                                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:disabled:bg-gray-900/50 text-gray-500 outline-none cursor-not-allowed truncate"
                                     placeholder="US"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
+                                    Site Name
+                                </label>
+                                <input
+                                    type="text"
+                                    name="Site_Name"
+                                    value={formData.Site_Name || ""}
+                                    disabled={true}
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:disabled:bg-gray-900/50 text-gray-500 outline-none cursor-not-allowed truncate"
+                                    placeholder="Site Name" title={String(formData.Site_Name ?? '')}
                                 />
                             </div>
 

@@ -24,4 +24,5 @@ export interface AuthorizeLocation {
     createdAt?: string;
     code?: string;
     address?: string; // used in card
+    Site_Name?: string;
 }

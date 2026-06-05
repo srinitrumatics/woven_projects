@@ -114,7 +114,8 @@ export default function AuthorizeLocationsPage() {
                     liftGate: !!item.Lift_Gate__c,
                     insideDelivery: !!item.Inside_Delivery__c,
                     deliveryNotes: item.Delivery_Notes__c || "",
-                    status: item.Active__c ? "Active" : "Inactive"
+                    status: item.Active__c ? "Active" : "Inactive",
+                    Site_Name: item.Site_Name || item.Site_Name__c || ""
                 }));
             }
 
@@ -332,7 +333,7 @@ export default function AuthorizeLocationsPage() {
                                         <div className="p-5 flex flex-col flex-grow cursor-pointer" onClick={() => openModal("view", loc)}>
                                             <div className="flex justify-between items-start mb-3">
                                                 <div className="pr-2 min-w-0">
-                                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors " title={loc.name}>
+                                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate" title={loc.name}>
                                                         {loc.name}
                                                     </h3>
                                                     <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mt-1 truncate" title={loc.accountName}>
