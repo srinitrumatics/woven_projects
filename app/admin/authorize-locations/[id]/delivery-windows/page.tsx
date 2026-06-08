@@ -17,6 +17,7 @@ const ITEMS_PER_PAGE = 10;
 
 import DeliveryWindowModal from "./components/DeliveryWindowModal";
 import { useUserSession } from "@/components/UserSessionContext";
+import { useToast } from "@/components/ui/Toast";
 
 export default function DeliveryWindowsPage() {
     const router = useRouter();
@@ -35,6 +36,7 @@ export default function DeliveryWindowsPage() {
     const { user, selectedAccount } = useUserSession();
     const accountId = selectedAccount?.Id || selectedAccount?.id || "";
     const contactId = user?.contact?.Id || user?.contact?.id || "";
+    const { confirm: confirmToast, success: successToast, error: errorToast } = useToast();
 
     const fetchDeliveryWindows = async () => {
         try {
@@ -121,26 +123,24 @@ export default function DeliveryWindowsPage() {
     };
 
     const handleDeleteWindow = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this delivery window?")) {
-            return;
-        }
+        confirmToast("Are you sure you want to delete this delivery window?", async () => {
+            try {
+                const response = await fetch(`/api/salesforce/deliverywindows?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&deliveryWindowId=${encodeURIComponent(id)}`, {
+                    method: 'DELETE',
+                });
 
-        try {
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || "Failed to delete delivery window");
+                }
 
-            const response = await fetch(`/api/salesforce/deliverywindows?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&deliveryWindowId=${encodeURIComponent(id)}`, {
-                method: 'DELETE',
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to delete delivery window");
+                successToast("Delivery window deleted successfully");
+                await fetchDeliveryWindows();
+            } catch (error) {
+                console.error("Error deleting delivery window:", error);
+                errorToast("Failed to delete delivery window. Please try again.");
             }
-
-            await fetchDeliveryWindows();
-        } catch (error) {
-            console.error("Error deleting delivery window:", error);
-            alert("Failed to delete delivery window. Please try again.");
-        }
+        });
     };
     // Initialize resizable columns
     const [dayOfWeekPicklist, setDayOfWeekPicklist] = useState<string[]>([]);

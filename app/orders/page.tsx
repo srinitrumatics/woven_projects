@@ -20,7 +20,7 @@ const ITEMS_PER_PAGE = 10;
 
 export default function OrdersPage() {
   const router = useRouter();
-  const { success, error: toastError, warning } = useToast();
+  const { success, error: toastError, warning, confirm: confirmToast } = useToast();
 
   // raw SF orders array (use API shape)
   const [sfOrders, setSfOrders] = useState<any[]>([]);
@@ -373,137 +373,137 @@ export default function OrdersPage() {
   };
 
   const handleCloneOrder = async (orderId: string) => {
-    if (!confirm("Are you sure you want to clone this order?")) return;
+    confirmToast("Are you sure you want to clone this order?", async () => {
+      try {
+        setLoading(true);
+        // 1. Fetch full order details
+        const res = await fetch(`/api/salesforce/orders?accountId=${accountId}&orderId=${orderId}&contactId=${contactId}`);
+        if (!res.ok) throw new Error("Failed to fetch order details");
+        const data = await res.json();
+        // The API might return an array or object depending on the response structure
+        const sourceOrder = Array.isArray(data) ? data[0] : data;
 
-    try {
-      setLoading(true);
-      // 1. Fetch full order details
-      const res = await fetch(`/api/salesforce/orders?accountId=${accountId}&orderId=${orderId}&contactId=${contactId}`);
-      if (!res.ok) throw new Error("Failed to fetch order details");
-      const data = await res.json();
-      // The API might return an array or object depending on the response structure
-      const sourceOrder = Array.isArray(data) ? data[0] : data;
+        if (!sourceOrder) throw new Error("Order details not found");
 
-      if (!sourceOrder) throw new Error("Order details not found");
+        // Debug: Log the source order to see what fields are available
+        console.log('Source order data:', sourceOrder);
+        console.log('Source order keys:', Object.keys(sourceOrder));
 
-      // Debug: Log the source order to see what fields are available
-      console.log('Source order data:', sourceOrder);
-      console.log('Source order keys:', Object.keys(sourceOrder));
-
-      // 2. Fetch contact details if we have a Ship_to_Contact__c
-      let contactDetails: any = null;
-      if (sourceOrder.Ship_to_Contact__c) {
-        try {
-          const contactRes = await fetch(`/api/salesforce/orders?accountId=${accountId}&contactId=${contactId}&action=contacts`);
-          if (contactRes.ok) {
-            const contacts = await contactRes.json();
-            contactDetails = Array.isArray(contacts) ? contacts.find((c: any) => c.Id === sourceOrder.Ship_to_Contact__c) : null;
-            console.log('Contact details fetched:', contactDetails);
+        // 2. Fetch contact details if we have a Ship_to_Contact__c
+        let contactDetails: any = null;
+        if (sourceOrder.Ship_to_Contact__c) {
+          try {
+            const contactRes = await fetch(`/api/salesforce/orders?accountId=${accountId}&contactId=${contactId}&action=contacts`);
+            if (contactRes.ok) {
+              const contacts = await contactRes.json();
+              contactDetails = Array.isArray(contacts) ? contacts.find((c: any) => c.Id === sourceOrder.Ship_to_Contact__c) : null;
+              console.log('Contact details fetched:', contactDetails);
+            }
+          } catch (err) {
+            console.warn('Failed to fetch contact details:', err);
           }
-        } catch (err) {
-          console.warn('Failed to fetch contact details:', err);
         }
+
+        // 3. Prepare payload (excluding Request_Date__c as per requirement)
+        // Build order object matching Salesforce API specification
+        const orderData: any = {
+          Bill_to_Account__c: sourceOrder.Bill_to_Account__c || accountId,
+          Ship_to_Account__c: sourceOrder.Ship_to_Account__c || accountId,
+          Inventory_Account__c: sourceOrder.Inventory_Account__c || accountId,
+          Status__c: 'Draft'
+        };
+
+        // Add all available fields from source order (excluding Request_Date__c)
+        if (sourceOrder.Authorized_Bill_To_Location__c) orderData.Authorized_Bill_To_Location__c = sourceOrder.Authorized_Bill_To_Location__c;
+        if (sourceOrder.Authorized_Ship_To_Location__c) orderData.Authorized_Ship_To_Location__c = sourceOrder.Authorized_Ship_To_Location__c;
+
+        // Contact fields - IMPORTANT: Include Bill_to_Contact__c if available
+        if (sourceOrder.Bill_to_Contact__c) {
+          orderData.Bill_to_Contact__c = sourceOrder.Bill_to_Contact__c;
+        } else if (sourceOrder.Ship_to_Contact__c) {
+          // Fallback: use Ship_to_Contact as Bill_to_Contact if Bill_to_Contact is missing
+          orderData.Bill_to_Contact__c = sourceOrder.Ship_to_Contact__c;
+        }
+
+        if (sourceOrder.Ship_to_Contact__c) {
+          orderData.Ship_to_Contact__c = sourceOrder.Ship_to_Contact__c;
+        }
+
+        // Other order fields
+        if (sourceOrder.Customer_PO__c) orderData.Customer_PO__c = sourceOrder.Customer_PO__c;
+        if (sourceOrder.Drop_Ship__c !== undefined) orderData.Drop_Ship__c = sourceOrder.Drop_Ship__c;
+        if (sourceOrder.Customer_Order_Notes__c) orderData.Customer_Order_Notes__c = sourceOrder.Customer_Order_Notes__c;
+        if (sourceOrder.Payment_Term__c) orderData.Payment_Term__c = sourceOrder.Payment_Term__c;
+
+        // Build shipToContact object with Phone and Email
+        const shipToContactData: any = {};
+        if (sourceOrder.Ship_to_Contact__c) {
+          shipToContactData.Id = sourceOrder.Ship_to_Contact__c;
+        }
+
+        // Try to get contact details from source order if available
+        if (sourceOrder.ShipToContact) {
+          if (sourceOrder.ShipToContact.Phone) shipToContactData.Phone = sourceOrder.ShipToContact.Phone;
+          if (sourceOrder.ShipToContact.Email) shipToContactData.Email = sourceOrder.ShipToContact.Email;
+        } else if (contactDetails) {
+          // Use separately fetched contact details
+          if (contactDetails.Phone) shipToContactData.Phone = contactDetails.Phone;
+          if (contactDetails.Email) shipToContactData.Email = contactDetails.Email;
+        }
+
+        const payload = {
+          order: orderData,
+          shipToContact: shipToContactData,
+          orderLines: (sourceOrder.CustomerOrderLines || []).map((line: any) => ({
+            Status__c: 'Draft',
+            Product_Name__c: line.Product_Name__c,
+            Order_Qty__c: line.Order_Qty__c,
+            Unit_Price__c: line.Unit_Price__c,
+            MOQ__c: line.MOQ__c,
+            Inventory_Account__c: accountId,
+            IsTaxable__c: line.IsTaxable__c !== undefined ? line.IsTaxable__c : true,
+            ...(line.Customer_Order_Line_Notes__c && { Customer_Order_Line_Notes__c: line.Customer_Order_Line_Notes__c })
+          })),
+          accountId: accountId,
+          contactId: contactId,
+          isDraft: true
+        };
+        console.log('Clone payload:', JSON.stringify(payload, null, 2));
+        // 3. Create new order
+        const createRes = await fetch('/api/salesforce/orders', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!createRes.ok) {
+          const errorData = await createRes.json().catch(() => ({ error: 'Failed to clone order' }));
+          throw new Error(errorData.error || 'Failed to clone order');
+        }
+
+        const result = await createRes.json();
+
+        // 4. Redirect
+        let newId = null;
+        if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+          newId = result.data[0].Id;
+        } else {
+          newId = result.orderId || result.Id || result.id;
+        }
+
+        if (newId) {
+          router.push(`/orders/${newId}`);
+        } else {
+          throw new Error('No new order ID returned');
+        }
+
+      } catch (err: any) {
+        console.error("Clone failed:", err);
+        toastError(`Failed to clone order: ${err.message}`);
+      } finally {
+        setLoading(false);
       }
-
-      // 3. Prepare payload (excluding Request_Date__c as per requirement)
-      // Build order object matching Salesforce API specification
-      const orderData: any = {
-        Bill_to_Account__c: sourceOrder.Bill_to_Account__c || accountId,
-        Ship_to_Account__c: sourceOrder.Ship_to_Account__c || accountId,
-        Inventory_Account__c: sourceOrder.Inventory_Account__c || accountId,
-        Status__c: 'Draft'
-      };
-
-      // Add all available fields from source order (excluding Request_Date__c)
-      if (sourceOrder.Authorized_Bill_To_Location__c) orderData.Authorized_Bill_To_Location__c = sourceOrder.Authorized_Bill_To_Location__c;
-      if (sourceOrder.Authorized_Ship_To_Location__c) orderData.Authorized_Ship_To_Location__c = sourceOrder.Authorized_Ship_To_Location__c;
-
-      // Contact fields - IMPORTANT: Include Bill_to_Contact__c if available
-      if (sourceOrder.Bill_to_Contact__c) {
-        orderData.Bill_to_Contact__c = sourceOrder.Bill_to_Contact__c;
-      } else if (sourceOrder.Ship_to_Contact__c) {
-        // Fallback: use Ship_to_Contact as Bill_to_Contact if Bill_to_Contact is missing
-        orderData.Bill_to_Contact__c = sourceOrder.Ship_to_Contact__c;
-      }
-
-      if (sourceOrder.Ship_to_Contact__c) {
-        orderData.Ship_to_Contact__c = sourceOrder.Ship_to_Contact__c;
-      }
-
-      // Other order fields
-      if (sourceOrder.Customer_PO__c) orderData.Customer_PO__c = sourceOrder.Customer_PO__c;
-      if (sourceOrder.Drop_Ship__c !== undefined) orderData.Drop_Ship__c = sourceOrder.Drop_Ship__c;
-      if (sourceOrder.Customer_Order_Notes__c) orderData.Customer_Order_Notes__c = sourceOrder.Customer_Order_Notes__c;
-      if (sourceOrder.Payment_Term__c) orderData.Payment_Term__c = sourceOrder.Payment_Term__c;
-
-      // Build shipToContact object with Phone and Email
-      const shipToContactData: any = {};
-      if (sourceOrder.Ship_to_Contact__c) {
-        shipToContactData.Id = sourceOrder.Ship_to_Contact__c;
-      }
-
-      // Try to get contact details from source order if available
-      if (sourceOrder.ShipToContact) {
-        if (sourceOrder.ShipToContact.Phone) shipToContactData.Phone = sourceOrder.ShipToContact.Phone;
-        if (sourceOrder.ShipToContact.Email) shipToContactData.Email = sourceOrder.ShipToContact.Email;
-      } else if (contactDetails) {
-        // Use separately fetched contact details
-        if (contactDetails.Phone) shipToContactData.Phone = contactDetails.Phone;
-        if (contactDetails.Email) shipToContactData.Email = contactDetails.Email;
-      }
-
-      const payload = {
-        order: orderData,
-        shipToContact: shipToContactData,
-        orderLines: (sourceOrder.CustomerOrderLines || []).map((line: any) => ({
-          Status__c: 'Draft',
-          Product_Name__c: line.Product_Name__c,
-          Order_Qty__c: line.Order_Qty__c,
-          Unit_Price__c: line.Unit_Price__c,
-          MOQ__c: line.MOQ__c,
-          Inventory_Account__c: accountId,
-          IsTaxable__c: line.IsTaxable__c !== undefined ? line.IsTaxable__c : true,
-          ...(line.Customer_Order_Line_Notes__c && { Customer_Order_Line_Notes__c: line.Customer_Order_Line_Notes__c })
-        })),
-        accountId: accountId,
-        contactId: contactId,
-        isDraft: true
-      };
-      console.log('Clone payload:', JSON.stringify(payload, null, 2));
-      // 3. Create new order
-      const createRes = await fetch('/api/salesforce/orders', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!createRes.ok) {
-        const errorData = await createRes.json().catch(() => ({ error: 'Failed to clone order' }));
-        throw new Error(errorData.error || 'Failed to clone order');
-      }
-
-      const result = await createRes.json();
-
-      // 4. Redirect
-      let newId = null;
-      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-        newId = result.data[0].Id;
-      } else {
-        newId = result.orderId || result.Id || result.id;
-      }
-
-      if (newId) {
-        router.push(`/orders/${newId}`);
-      } else {
-        throw new Error('No new order ID returned');
-      }
-
-    } catch (err: any) {
-      console.error("Clone failed:", err);
-      toastError(`Failed to clone order: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   const handleDeleteOrder = async (orderId: string, status: string) => {
@@ -512,35 +512,35 @@ export default function OrdersPage() {
       return;
     }
 
-    if (!confirm("Are you sure you want to delete this order? This action cannot be undone.")) return;
+    confirmToast("Are you sure you want to delete this order? This action cannot be undone.", async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/salesforce/orders?accountId=${accountId}&orderId=${orderId}&contactId=${contactId}`, {
+          method: "DELETE",
+        });
 
-    try {
-      setLoading(true);
-      const res = await fetch(`/api/salesforce/orders?accountId=${accountId}&orderId=${orderId}&contactId=${contactId}`, {
-        method: "DELETE",
-      });
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({ error: "Failed to delete order" }));
+          throw new Error(errorData.error || "Failed to delete order");
+        }
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ error: "Failed to delete order" }));
-        throw new Error(errorData.error || "Failed to delete order");
+        const result = await res.json();
+        console.log("Delete result:", result);
+
+        if (result.success) {
+          success("Order deleted successfully.");
+          // Refresh the list
+          setSfOrders(prev => prev.filter(o => o.Id !== orderId));
+        } else {
+          throw new Error(result.message || "Failed to delete order");
+        }
+      } catch (err: any) {
+        console.error("Delete failed:", err);
+        toastError(`Failed to delete order: ${err.message}`);
+      } finally {
+        setLoading(false);
       }
-
-      const result = await res.json();
-      console.log("Delete result:", result);
-
-      if (result.success) {
-        success("Order deleted successfully.");
-        // Refresh the list
-        setSfOrders(prev => prev.filter(o => o.Id !== orderId));
-      } else {
-        throw new Error(result.message || "Failed to delete order");
-      }
-    } catch (err: any) {
-      console.error("Delete failed:", err);
-      toastError(`Failed to delete order: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   const handleCardClick = (tab: TabFilter) => {

@@ -8,6 +8,7 @@ import { Plus, Key, Sparkles } from 'lucide-react';
 import PermissionList from '../../../components/PermissionManagement/PermissionList';
 import PermissionForm from '../../../components/PermissionManagement/PermissionForm';
 import ProtectedRoute from '../../../components/ProtectedRoute';
+import { useToast } from '../../../components/ui/Toast';
 
 interface GroupedPermission {
   id: string | null;
@@ -31,6 +32,8 @@ const PermissionManagement: React.FC = () => {
     description: '',
     groupId: null as string | null,
   });
+
+  const { confirm: confirmToast, success: successToast, error: errorToast } = useToast();
 
   useEffect(() => {
     loadPermissions();
@@ -88,11 +91,12 @@ const PermissionManagement: React.FC = () => {
         setEditingPermission(null);
         setShowForm(false);
         await loadPermissions();
+        successToast('Permission saved successfully');
       } else {
-        setError('Failed to save permission - permission not found');
+        errorToast('Failed to save permission - permission not found');
       }
     } catch (err) {
-      setError('Failed to save permission');
+      errorToast('Failed to save permission');
       console.error(err);
     }
   };
@@ -108,15 +112,16 @@ const PermissionManagement: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this permission?')) {
+    confirmToast('Are you sure you want to delete this permission?', async () => {
       try {
         await permissionApi.deletePermission(id);
         await loadPermissions();
+        successToast('Permission deleted successfully');
       } catch (err) {
-        setError('Failed to delete permission');
+        errorToast('Failed to delete permission');
         console.error(err);
       }
-    }
+    });
   };
 
   const handleCancel = () => {

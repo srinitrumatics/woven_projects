@@ -142,7 +142,7 @@ interface Order {
 export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const { success, error: toastError, warning } = useToast();
+  const { success, error: toastError, warning, confirm: confirmToast } = useToast();
 
   // This page is always in edit mode (order must be created first via the orders list page)
 
@@ -1059,37 +1059,35 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     // If product has an orderLineId, it exists in Salesforce and needs to be deleted via API
     if (product?.orderLineId) {
       // Confirm deletion with user
-      if (!confirm(`Are you sure you want to delete ${product.name} from this order?`)) {
-        return;
-      }
+      confirmToast(`Are you sure you want to delete ${product.name} from this order?`, async () => {
+        try {
+          const deleteUrl = `/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID || '')}&orderLineId=${encodeURIComponent(product.orderLineId || '')}&contactId=${encodeURIComponent(SF_CONTACT_ID || '')}`;
 
-      try {
-        const deleteUrl = `/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&orderLineId=${encodeURIComponent(product.orderLineId)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}`;
+          console.log('Deleting order line:', product.orderLineId);
 
-        console.log('Deleting order line:', product.orderLineId);
+          const response = await fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
 
-        const response = await fetch(deleteUrl, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ error: 'Failed to delete order line' }));
+            throw new Error(errorData.error || 'Failed to delete order line from Salesforce');
           }
-        });
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: 'Failed to delete order line' }));
-          throw new Error(errorData.error || 'Failed to delete order line from Salesforce');
+          const result = await response.json();
+          console.log('Order line deleted successfully:', result);
+
+          // Remove from state only after successful API deletion
+          setOrderProducts(orderProducts.filter(p => p.lineItemKey !== lineItemKey));
+          success('Order line deleted successfully');
+        } catch (err) {
+          console.error('Error deleting order line:', err);
+          toastError(err instanceof Error ? err.message : 'Failed to delete order line. Please try again.');
         }
-
-        const result = await response.json();
-        console.log('Order line deleted successfully:', result);
-
-        // Remove from state only after successful API deletion
-        setOrderProducts(orderProducts.filter(p => p.lineItemKey !== lineItemKey));
-        success('Order line deleted successfully');
-      } catch (err) {
-        console.error('Error deleting order line:', err);
-        toastError(err instanceof Error ? err.message : 'Failed to delete order line. Please try again.');
-      }
+      });
     } else {
       // Product doesn't exist in Salesforce yet, just remove from state
       setOrderProducts(orderProducts.filter(p => p.lineItemKey !== lineItemKey));
@@ -1390,92 +1388,92 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const handleSubmit = () => handleSubmitOrder(false);
 
   const handleClone = async () => {
-    if (!confirm("Are you sure you want to clone this order?")) return;
+    confirmToast("Are you sure you want to clone this order?", async () => {
+      try {
+        setIsSubmitting(true);
+        setSubmitError(null);
 
-    try {
-      setIsSubmitting(true);
-      setSubmitError(null);
+        // Use the selected contact ID or the contactId from the loaded order
+        const shipToContactId = selectedContactId || contactId;
 
-      // Use the selected contact ID or the contactId from the loaded order
-      const shipToContactId = selectedContactId || contactId;
-
-      // Prepare order data similar to submit, but for cloning (no ID, status Draft)
-      const orderPayload = {
-        order: {
-          // Id removed for clone
-          Authorized_Bill_To_Location__c: formData.billTo === "same" ? formData.shipTo : formData.billTo,
-          Authorized_Ship_To_Location__c: formData.shipTo,
-          Bill_to_Account__c: (formData.billTo === "same" ? formData.shipToAccountId : formData.billToAccountId) || SF_ACCOUNT_ID,
-          Bill_to_Contact__c: shipToContactId,
-          Request_Date__c: formData.requestedDeliveryDate,
-          Customer_PO__c: formData.purchaseOrder,
-          Drop_Ship__c: formData.dropShip,
-          Customer_Order_Notes__c: formData.orderNotes,
-          Ship_to_Account__c: formData.shipToAccountId || SF_ACCOUNT_ID,
-          Ship_to_Contact__c: shipToContactId,
-          Payment_Term__c: formData.paymentTerms,
-          Inventory_Account__c: SF_ACCOUNT_ID,
-          Status__c: "Draft" // Always Draft for clones
-        },
-        shipToContact: {
-          Id: shipToContactId,
-          Phone: formData.contactPhone,
-          Email: formData.contactEmail
-        },
-        orderLines: orderProducts
-          // Filter out placeholder proposal line items (same reason as save/submit)
-          .filter(product => /^[a-zA-Z0-9]{15,18}$/.test(product.id))
-          .map(product => ({
+        // Prepare order data similar to submit, but for cloning (no ID, status Draft)
+        const orderPayload = {
+          order: {
             // Id removed for clone
-            Status__c: "Draft",
-            Customer_Order_Line_Notes__c: "",
-            Product_Name__c: product.id,
-            Order_Qty__c: product.orderQty,
-            MOQ__c: product.moq,
-            Unit_Price__c: product.unitPrice,
+            Authorized_Bill_To_Location__c: formData.billTo === "same" ? formData.shipTo : formData.billTo,
+            Authorized_Ship_To_Location__c: formData.shipTo,
+            Bill_to_Account__c: (formData.billTo === "same" ? formData.shipToAccountId : formData.billToAccountId) || SF_ACCOUNT_ID,
+            Bill_to_Contact__c: shipToContactId,
+            Request_Date__c: formData.requestedDeliveryDate,
+            Customer_PO__c: formData.purchaseOrder,
+            Drop_Ship__c: formData.dropShip,
+            Customer_Order_Notes__c: formData.orderNotes,
+            Ship_to_Account__c: formData.shipToAccountId || SF_ACCOUNT_ID,
+            Ship_to_Contact__c: shipToContactId,
+            Payment_Term__c: formData.paymentTerms,
             Inventory_Account__c: SF_ACCOUNT_ID,
-            IsTaxable__c: true,
-          })),
+            Status__c: "Draft" // Always Draft for clones
+          },
+          shipToContact: {
+            Id: shipToContactId,
+            Phone: formData.contactPhone,
+            Email: formData.contactEmail
+          },
+          orderLines: orderProducts
+            // Filter out placeholder proposal line items (same reason as save/submit)
+            .filter(product => /^[a-zA-Z0-9]{15,18}$/.test(product.id))
+            .map(product => ({
+              // Id removed for clone
+              Status__c: "Draft",
+              Customer_Order_Line_Notes__c: "",
+              Product_Name__c: product.id,
+              Order_Qty__c: product.orderQty,
+              MOQ__c: product.moq,
+              Unit_Price__c: product.unitPrice,
+              Inventory_Account__c: SF_ACCOUNT_ID,
+              IsTaxable__c: true,
+            })),
 
-        accountId: SF_ACCOUNT_ID,
-        contactId: SF_CONTACT_ID,
-      };
+          accountId: SF_ACCOUNT_ID,
+          contactId: SF_CONTACT_ID,
+        };
 
-      // PATCH without orderId implies clone in our API
-      const endpoint = "/api/salesforce/orders";
-      const method = "PATCH";
-      const url = endpoint;
+        // PATCH without orderId implies clone in our API
+        const endpoint = "/api/salesforce/orders";
+        const method = "PATCH";
+        const url = endpoint;
 
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(orderPayload)
-      });
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(orderPayload)
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Failed to clone order" }));
-        throw new Error(errorData.error || "Failed to clone order");
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: "Failed to clone order" }));
+          throw new Error(errorData.error || "Failed to clone order");
+        }
+
+        const result = await response.json();
+        console.log("Order cloned successfully:", result);
+
+        if (result.orderId) {
+          // Redirect to the new order
+          router.push(`/orders/${result.orderId}`);
+        } else {
+          toastError("Order cloned, but could not retrieve new ID.");
+        }
+
+      } catch (error) {
+        console.error("Error cloning order:", error);
+        setSubmitError(error instanceof Error ? error.message : "Failed to clone order");
+        toastError("Failed to clone order: " + (error instanceof Error ? error.message : "Unknown error"));
+      } finally {
+        setIsSubmitting(false);
       }
-
-      const result = await response.json();
-      console.log("Order cloned successfully:", result);
-
-      if (result.orderId) {
-        // Redirect to the new order
-        router.push(`/orders/${result.orderId}`);
-      } else {
-        toastError("Order cloned, but could not retrieve new ID.");
-      }
-
-    } catch (error) {
-      console.error("Error cloning order:", error);
-      setSubmitError(error instanceof Error ? error.message : "Failed to clone order");
-      toastError("Failed to clone order: " + (error instanceof Error ? error.message : "Unknown error"));
-    } finally {
-      setIsSubmitting(false);
-    }
+    });
   };
 
 

@@ -9,6 +9,7 @@ import UserList from '../../../components/UserManagement/UserList';
 import UserForm from '../../../components/UserManagement/UserForm';
 import ProtectedRoute from '../../../components/ProtectedRoute';
 import { useUserSession } from '../../../components/UserSessionContext';
+import { useToast } from '../../../components/ui/Toast';
 
 interface UserRole {
   roleId: string;
@@ -41,6 +42,8 @@ const UserManagement: React.FC = () => {
     password: '',
   });
   const [organizationAssignments, setOrganizationAssignments] = useState<string[]>([]);
+
+  const { confirm: confirmToast, success: successToast, error: errorToast } = useToast();
 
   const { user, selectedAccount } = useUserSession();
   const accountType = selectedAccount?.Account_Record_Type__c || 'Customer';
@@ -245,22 +248,24 @@ const UserManagement: React.FC = () => {
       setEditingUser(null);
       setShowForm(false);
       await loadUsersRolesAndOrganizations();
+      successToast('User saved successfully');
     } catch (err) {
-      setError('Failed to save user');
+      errorToast('Failed to save user');
       console.error(err);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
+    confirmToast('Are you sure you want to delete this user?', async () => {
       try {
         await userApi.deleteUser(id);
         await loadUsersRolesAndOrganizations();
+        successToast('User deleted successfully');
       } catch (err) {
-        setError('Failed to delete user');
+        errorToast('Failed to delete user');
         console.error(err);
       }
-    }
+    });
   };
 
   if (loading) {

@@ -8,6 +8,7 @@ import { Plus, Shield, Sparkles } from 'lucide-react';
 import RoleList from '../../../components/RoleManagement/RoleList';
 import RoleForm from '../../../components/RoleManagement/RoleForm';
 import ProtectedRoute from '../../../components/ProtectedRoute';
+import { useToast } from '../../../components/ui/Toast';
 
 interface RolePermission {
   permissionId: string;
@@ -40,6 +41,7 @@ const RoleManagement: React.FC = () => {
     description: '',
   });
   const [formPermissionAssignments, setFormPermissionAssignments] = useState<string[]>([]);
+  const { confirm: confirmToast, success: successToast, error: errorToast } = useToast();
 
   useEffect(() => {
     loadRolesPermissionsAndOrganizations();
@@ -131,15 +133,16 @@ const RoleManagement: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this role?')) {
+    confirmToast('Are you sure you want to delete this role?', async () => {
       try {
         await roleApi.deleteRole(id);
         await loadRolesPermissionsAndOrganizations();
+        successToast('Role deleted successfully');
       } catch (err) {
-        setError('Failed to delete role');
+        errorToast('Failed to delete role');
         console.error(err);
       }
-    }
+    });
   };
 
   if (loading) {

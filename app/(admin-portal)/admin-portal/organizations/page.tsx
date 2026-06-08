@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { PlusIcon, BuildingOfficeIcon, GlobeAltIcon, CalendarIcon, TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import { useToast } from '@/components/ui/Toast';
 
 type Organization = {
   id: string;
@@ -16,6 +17,7 @@ type Organization = {
 export default function AdminOrganizationsPage() {
   const [orgs, setOrgs] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
+  const { confirm: confirmToast, success: successToast, error: errorToast } = useToast();
 
   useEffect(() => {
     fetch('/api/admin/organizations')
@@ -33,16 +35,20 @@ export default function AdminOrganizationsPage() {
   }, []);
 
   const handleDelete = async (id: string, name: string) => {
-    if (!window.confirm(`Are you sure you want to delete ${name}? This will NOT delete the provisioned schema automatically.`)) return;
-    
-    try {
-      const res = await fetch(`/api/admin/organizations/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        setOrgs(orgs.filter(org => org.id !== id));
+    confirmToast(`Are you sure you want to delete ${name}? This will NOT delete the provisioned schema automatically.`, async () => {
+      try {
+        const res = await fetch(`/api/admin/organizations/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          setOrgs(orgs.filter(org => org.id !== id));
+          successToast('Organization deleted successfully');
+        } else {
+          errorToast('Failed to delete organization');
+        }
+      } catch (err) {
+        console.error('Error deleting organization:', err);
+        errorToast('Error deleting organization');
       }
-    } catch (err) {
-      console.error('Error deleting organization:', err);
-    }
+    });
   };
 
   return (

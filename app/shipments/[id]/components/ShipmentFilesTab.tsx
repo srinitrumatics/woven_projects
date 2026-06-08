@@ -28,7 +28,7 @@ export default function ShipmentFilesTab({ shipmentId, accountId, contactId, isE
     const [loading, setLoading] = useState(false);
     const [selectedFileIds, setSelectedFileIds] = useState<Set<string>>(new Set());
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
-    const { success, error: toastError } = useToast();
+    const { success, error: toastError, confirm: confirmToast } = useToast();
 
     const fetchFiles = async () => {
         try {
@@ -138,33 +138,34 @@ export default function ShipmentFilesTab({ shipmentId, accountId, contactId, isE
     };
 
     const handleDelete = async (file: FileData) => {
-        if (!confirm("Are you sure you want to delete this file?")) return;
-        // Use ContentDocumentId (capital C) from Salesforce API response
-        const contentDocumentId = file.ContentDocumentId;
-        if (!contentDocumentId) {
-            toastError("Cannot delete file - missing content document ID");
-            return;
-        }
-        try {
-            const res = await fetch(`/api/salesforce/shipments?action=delete&objectId=${encodeURIComponent(shipmentId)}&contentDocumentId=${encodeURIComponent(contentDocumentId)}&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`, {
-                method: "DELETE"
-            });
-            if (!res.ok) throw new Error("Failed to delete file");
+        confirmToast("Are you sure you want to delete this file?", async () => {
+            // Use ContentDocumentId (capital C) from Salesforce API response
+            const contentDocumentId = file.ContentDocumentId;
+            if (!contentDocumentId) {
+                toastError("Cannot delete file - missing content document ID");
+                return;
+            }
+            try {
+                const res = await fetch(`/api/salesforce/shipments?action=delete&objectId=${encodeURIComponent(shipmentId)}&contentDocumentId=${encodeURIComponent(contentDocumentId)}&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`, {
+                    method: "DELETE"
+                });
+                if (!res.ok) throw new Error("Failed to delete file");
 
-            setFiles(prev => {
-                const newFiles = prev.filter(f => f.Id !== file.Id);
-                onFilesCountChange?.(newFiles.length);
-                return newFiles;
-            });
-            setSelectedFileIds(prev => {
-                const newSet = new Set(prev);
-                newSet.delete(file.Id);
-                return newSet;
-            });
-        } catch (err) {
-            console.error("Error deleting file:", err);
-            toastError("Failed to delete file");
-        }
+                setFiles(prev => {
+                    const newFiles = prev.filter(f => f.Id !== file.Id);
+                    onFilesCountChange?.(newFiles.length);
+                    return newFiles;
+                });
+                setSelectedFileIds(prev => {
+                    const newSet = new Set(prev);
+                    newSet.delete(file.Id);
+                    return newSet;
+                });
+            } catch (err) {
+                console.error("Error deleting file:", err);
+                toastError("Failed to delete file");
+            }
+        });
     };
 
     const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -194,30 +195,30 @@ export default function ShipmentFilesTab({ shipmentId, accountId, contactId, isE
 
     const handleBulkDelete = async () => {
         if (selectedFileIds.size === 0) return;
-        if (!confirm(`Are you sure you want to delete ${selectedFileIds.size} file(s)?`)) return;
+        confirmToast(`Are you sure you want to delete ${selectedFileIds.size} file(s)?`, async () => {
+            // Get contentDocumentIds for selected files - use ContentDocumentId (capital C) from Salesforce API
+            const selectedFiles = files.filter(f => selectedFileIds.has(f.Id));
+            const contentDocumentIds = selectedFiles.map(f => f.ContentDocumentId).join(',');
 
-        // Get contentDocumentIds for selected files - use ContentDocumentId (capital C) from Salesforce API
-        const selectedFiles = files.filter(f => selectedFileIds.has(f.Id));
-        const contentDocumentIds = selectedFiles.map(f => f.ContentDocumentId).join(',');
+            try {
+                const res = await fetch(`/api/salesforce/shipments?action=delete&objectId=${encodeURIComponent(shipmentId)}&contentDocumentId=${encodeURIComponent(contentDocumentIds)}&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`, {
+                    method: "DELETE"
+                });
+                if (!res.ok) throw new Error("Failed to delete files");
 
-        try {
-            const res = await fetch(`/api/salesforce/shipments?action=delete&objectId=${encodeURIComponent(shipmentId)}&contentDocumentId=${encodeURIComponent(contentDocumentIds)}&accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`, {
-                method: "DELETE"
-            });
-            if (!res.ok) throw new Error("Failed to delete files");
-
-            // Remove deleted files from list
-            setFiles(prev => {
-                const newFiles = prev.filter(f => !selectedFileIds.has(f.Id));
-                onFilesCountChange?.(newFiles.length);
-                return newFiles;
-            });
-            setSelectedFileIds(new Set());
-            success("Files deleted successfully");
-        } catch (err) {
-            console.error("Error deleting files:", err);
-            toastError("Failed to delete files");
-        }
+                // Remove deleted files from list
+                setFiles(prev => {
+                    const newFiles = prev.filter(f => !selectedFileIds.has(f.Id));
+                    onFilesCountChange?.(newFiles.length);
+                    return newFiles;
+                });
+                setSelectedFileIds(new Set());
+                success("Files deleted successfully");
+            } catch (err) {
+                console.error("Error deleting files:", err);
+                toastError("Failed to delete files");
+            }
+        });
     };
 
     const handlePreview = async (file: FileData) => {
