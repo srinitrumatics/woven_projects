@@ -121,7 +121,7 @@ export default function LocationModal({
             >
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white " title={title}>{title}</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white truncate" title={title}>{title}</h2>
                     <button
                         onClick={onClose}
                         className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors truncate"

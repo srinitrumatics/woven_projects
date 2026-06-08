@@ -345,9 +345,9 @@ export default function AuthorizeLocationsPage() {
 
                                             <div className="space-y-3 mt-4 flex-grow">
                                                 <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-sm">
-                                                    <div>
+                                                    <div className="min-w-0">
                                                         <span className="text-xs text-gray-500 dark:text-gray-400 block mb-0.5 uppercase tracking-wide truncate">Location ID</span>
-                                                        <span className="font-medium text-gray-900 dark:text-white truncate">{loc.locationId}</span>
+                                                        <span className="font-medium text-gray-900 dark:text-white truncate block" title={loc.locationId}>{loc.locationId}</span>
                                                     </div>
                                                     <div className="min-w-0">
                                                         <span className="text-xs text-gray-500 dark:text-gray-400 block mb-0.5 uppercase tracking-wide truncate">Location Type</span>
