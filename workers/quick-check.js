@@ -18,12 +18,9 @@ async function quickCheck() {
             );
         `);
 
-        console.log('Products table exists:', tableCheck.rows[0].exists);
-
         if (tableCheck.rows[0].exists) {
             // Count products
             const productCount = await client.query('SELECT COUNT(*) FROM products');
-            console.log('Products count:', productCount.rows[0].count);
 
             // Check queue
             const queueCheck = await client.query(`
@@ -34,11 +31,8 @@ async function quickCheck() {
                 );
             `);
 
-            console.log('Queue table exists:', queueCheck.rows[0].exists);
-
             if (queueCheck.rows[0].exists) {
                 const queueCount = await client.query('SELECT COUNT(*), status FROM algolia_sync_queue GROUP BY status');
-                console.log('Queue items:', queueCount.rows);
             }
         }
 

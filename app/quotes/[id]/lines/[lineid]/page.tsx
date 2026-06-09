@@ -166,7 +166,6 @@ export default function QuoteLineDetailPage({
                 }
 
                 const data = await res.json();
-                console.log("Fetched quote lines data:", data);
                 if (data && data.length > 0) {
                     const mappedLines: ProductData[] = data.map((item: any) => ({
                         id: item.Id,
@@ -293,7 +292,6 @@ export default function QuoteLineDetailPage({
     }, [lineid, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
     const product = quoteLines[currentLineIndex];
-    console.log(product);
     const totalLines = quoteLines.length;
     const lineNumber = currentLineIndex + 1;
 

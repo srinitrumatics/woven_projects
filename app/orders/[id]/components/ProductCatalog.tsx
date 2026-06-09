@@ -261,7 +261,6 @@ export default function ProductCatalog({
                     </table>
                 </div>
             )}
-
             {/* Image Popup Modal */}
             {
                 popupProduct && (
@@ -325,7 +324,6 @@ export default function ProductCatalog({
                     </div>
                 )
             }
-
             {/* Pagination for Catalog */}
             {
                 paginatedCatalogProducts.length > 0 && (

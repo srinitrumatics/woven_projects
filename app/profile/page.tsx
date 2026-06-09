@@ -143,7 +143,6 @@ export default function ProfilePage() {
 
         // If any errors exist, STOP here
         if (Object.keys(errors).length > 0) {
-            console.log("Validation failed, blocking submission:", errors);
             setFieldErrors(errors);
             setMessage({
                 type: "error",
@@ -153,7 +152,6 @@ export default function ProfilePage() {
             return;
         }
 
-        console.log("Validation passed, submitting form...");
         setLoading(true);
 
         try {

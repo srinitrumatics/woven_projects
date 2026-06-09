@@ -42,11 +42,7 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false },
 });
 
-function log(level, message, meta = {}) {
-    console.log(JSON.stringify({
-        ts: new Date().toISOString(), level, schema: SCHEMA, message, ...meta,
-    }));
-}
+function log(level, message, meta = {}) {}
 
 let isShuttingDown = false;
 let cycleInFlight = false;

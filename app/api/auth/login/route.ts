@@ -7,7 +7,6 @@ import { getCategoryFromAccountType } from '@/lib/permissions';
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
-    console.log(`[API] SF Login request received for email: ${email}`);
 
     if (!email || !password) {
       return NextResponse.json(
@@ -40,8 +39,6 @@ export async function POST(request: NextRequest) {
     // Determine initial role
     const defaultAccount = accounts.find((a: any) => (a.Id || a.id) === defaultAccountId);
     const initialRole = defaultAccount?.Account_Record_Type__c || 'Customer';
-
-    console.log('[API] SF Login success - contact:', contact?.Id, 'role:', initialRole, 'defaultAccountId:', defaultAccountId);
 
     // Store SF data in session cookie (no DB needed)
     await createSFSession({ 

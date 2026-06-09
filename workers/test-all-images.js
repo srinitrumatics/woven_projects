@@ -22,11 +22,6 @@ async function testAllImages() {
 
         if (result.rows.length > 0) {
             const transformed = result.rows[0].transformed;
-            console.log('Product:', result.rows[0].name);
-            console.log('\nPrimary image_url:', transformed.image_url);
-            console.log('\nAll images array:');
-            console.log(JSON.stringify(transformed.images, null, 2));
-            console.log(`\nTotal images: ${transformed.images?.length || 0}`);
         }
 
         client.release();

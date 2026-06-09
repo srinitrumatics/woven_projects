@@ -90,13 +90,10 @@ const pool = new Pool({
 function log(level, msg, meta = {}) {
     const prefix = level === 'error' ? '✗' : level === 'warn' ? '!' : '✓';
     const extra = Object.keys(meta).length ? ' ' + JSON.stringify(meta) : '';
-    console.log(`${prefix} ${msg}${extra}`);
 }
 
 async function run(client, label, sql, params = []) {
     if (dryRun) {
-        console.log(`[dry-run] ${label}`);
-        console.log('         ' + sql.replace(/\s+/g, ' ').trim().slice(0, 140) + (sql.length > 140 ? '...' : ''));
         return { rows: [], rowCount: 0 };
     }
     try {
@@ -113,12 +110,7 @@ async function run(client, label, sql, params = []) {
 // Main
 // ----------------------------------------------------------------------------
 async function main() {
-    console.log(`\n==============================================`);
-    console.log(`Setting up tenant schema: ${schema}`);
-    console.log(`Source schema:            ${sourceSchema}`);
-    console.log(`Target Algolia index:     ${indexName}`);
-    if (dryRun) console.log(`MODE: DRY RUN (no changes)`);
-    console.log(`==============================================\n`);
+    dryRun;
 
     const client = await pool.connect();
 
@@ -355,15 +347,6 @@ async function main() {
             [schema]
         );
         const v = verify.rows[0];
-        console.log(`\n==============================================`);
-        console.log(`Summary for ${schema}:`);
-        console.log(`  tables:     ${v.tables}`);
-        console.log(`  functions:  ${v.functions}`);
-        console.log(`  views:      ${v.views}`);
-        console.log(`  triggers:   ${v.triggers}`);
-        console.log(`  product2:   ${v.product2_present ? 'yes' : 'no'}`);
-        console.log(`  index:      ${indexName}`);
-        console.log(`==============================================\n`);
 
         // ============================================================
         // 4. Provision API key in public.tenant_api_keys
@@ -371,7 +354,6 @@ async function main() {
         if (!skipApiKey) {
             await provisionApiKey(client, relationExists);
         }
-
     } finally {
         client.release();
         await pool.end();
@@ -384,8 +366,6 @@ async function main() {
 // Stores both the hash and (if the column exists) the plaintext api_key.
 // ----------------------------------------------------------------------------
 async function provisionApiKey(client, relationExists) {
-    console.log(`API key provisioning:`);
-
     const hasTable = await relationExists('public', 'tenant_api_keys');
     if (!hasTable) {
         log('warn', 'public.tenant_api_keys does not exist — skipping API key step');
@@ -434,14 +414,11 @@ async function provisionApiKey(client, relationExists) {
                 [pepper]
             );
             log('info', `Generated new pepper, stored in public.api_config`);
-            console.log(`    PEPPER (set as EXTERNAL_API_KEY_PEPPER on every API server):`);
-            console.log(`      ${pepper}`);
         }
     } else {
         // No api_config table — generate pepper but only print, don't store
         pepper = crypto.randomBytes(32).toString('hex');
         log('warn', 'public.api_config missing — pepper not persisted; print only');
-        console.log(`    PEPPER: ${pepper}`);
     }
 
     // Generate the key
@@ -478,13 +455,6 @@ async function provisionApiKey(client, relationExists) {
         );
         log('info', `Inserted into public.tenant_api_keys (hash-only — no plaintext column)`);
     }
-
-    console.log(`\n--------------------------------------------------------`);
-    console.log(`API KEY for tenant: ${schema}`);
-    console.log(`  prefix:  ${prefix}`);
-    console.log(`  KEY:     ${fullKey}`);
-    console.log(`  (COPY NOW — never stored unless you have the api_key column)`);
-    console.log(`--------------------------------------------------------\n`);
 }
 
 main().catch(err => {

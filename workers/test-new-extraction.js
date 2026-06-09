@@ -21,20 +21,9 @@ async function testNewExtraction() {
             LIMIT 5
         `);
 
-        console.log('Testing new extraction method:\n');
-        result.rows.forEach((row, i) => {
-            console.log(`${i + 1}. ${row.name}`);
-            console.log(`   URL: ${row.extracted_url}`);
-            console.log('');
-        });
+        result.rows.forEach((row, i) => {});
 
-        if (result.rows.every(r => r.extracted_url)) {
-            console.log('✅ SUCCESS! All URLs extracted correctly!');
-            console.log('\nNext step: Apply the updated transform function');
-            console.log('Run the SQL snippet I provided earlier.');
-        } else {
-            console.log('❌ Some URLs are still NULL');
-        }
+        if (result.rows.every(r => r.extracted_url)) {} else {}
 
         client.release();
     } catch (error) {

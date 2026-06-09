@@ -30,47 +30,30 @@ const SALESFORCE_CONFIG = {
 export async function fetchWithLogging(url: string | URL | Request, options: RequestInit = {}): Promise<Response> {
   const method = options.method || 'GET';
   const urlStr = typeof url === 'string' ? url : url.toString();
-  
+
   // Create a correlation ID for matching requests and responses
   const correlationId = Math.random().toString(36).substring(7);
-  
-  console.log(`[SF API Request][${correlationId}] ${method} ${urlStr}`);
-  
+
   if (options.body) {
     try {
-      if (typeof options.body === 'string') {
-        console.log(`[SF API Request Body][${correlationId}]:`, options.body.substring(0, 1000));
-      } else if (Buffer.isBuffer(options.body)) {
-        console.log(`[SF API Request Body][${correlationId}]: (Buffer, size: ${options.body.length} bytes)`);
-      } else {
-        console.log(`[SF API Request Body][${correlationId}]: (Unknown type)`);
-      }
+      if (typeof options.body === 'string') {} else if (Buffer.isBuffer(options.body)) {} else {}
     } catch (e) {}
   }
 
   const start = Date.now();
   const response = await fetch(url, options);
   const duration = Date.now() - start;
-  
-  console.log(`[SF API Response][${correlationId}] ${response.status} ${response.statusText} (${duration}ms)`);
-  
+
   try {
     const clone = response.clone();
     const text = await clone.text();
     try {
       const json = JSON.parse(text);
-      console.log(`[SF API Response Body Data][${correlationId}]:`, JSON.stringify(json).substring(0, 1000));
     } catch {
-      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
-        console.log(`[SF API Response Body HTML][${correlationId}]: (HTML content, length: ${text.length})`);
-      } else {
-        console.log(`[SF API Response Body Text][${correlationId}]:`, text.substring(0, 1000));
-      }
+      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {} else {}
     }
-  } catch (error) {
-    console.log(`[SF API Response][${correlationId}] (Could not read body)`);
-  }
-  
+  } catch (error) {}
+
   return response;
 }
 
@@ -79,7 +62,7 @@ export async function getSalesforceSession() {
     console.warn("Could not load org config, falling back to env:", e.message);
     return null;
   });
-  
+
   const tokenUrl = orgConfig?.salesforceAuthUrl || process.env.SF_AUTH_URL || "";
   const clientId = orgConfig?.clientId || process.env.SF_CLIENT_ID || "";
   const clientSecret = orgConfig?.clientSecret || process.env.SF_CLIENT_SECRET || "";
@@ -112,7 +95,6 @@ export async function getSalesforceSession() {
   }
 
   const tokenData = JSON.parse(rawText);
-  console.log("getSalesforceSession - tokenData received:", !!tokenData.access_token);
   if (!tokenData.access_token) {
     console.error("getSalesforceSession - FAILED to get access token:", tokenData);
   }
@@ -125,7 +107,6 @@ export async function getSalesforceSession() {
 // Fetch orders from Salesforce
 export async function getOrderslistFromSalesforce(accountId?: string, contactId?: string, orderUrl?: string): Promise<any> {
   try {
-    console.log("getOrderslistFromSalesforce called with accountId:", accountId, "contactId:", contactId);
     const session = await getSalesforceSession();
 
     if (!session.accessToken) {
@@ -175,12 +156,10 @@ export async function getOrderFromSalesforce(accountId?: string, contactId?: str
       console.error('No Salesforce access token available');
       return []; // Return empty array if not authenticated to Salesforce
     }
-    console.log('Fetching orders from Salesforce with session:', session);
 
     const separator = orderUrl?.includes('?') ? '&' : '?';
     let Url = orderUrl + `${separator}accountId=${encodeURIComponent(accountId ?? '001WL00000bapRiYAI')}&orderId=${encodeURIComponent(orderId ?? '')}&contactId=${encodeURIComponent(contactId ?? '')}`;
 
-    console.log('Fetching orders from Salesforce with URL:', Url);
     // Make API call to Salesforce
 
     const response = await fetchWithLogging(Url, {
@@ -252,8 +231,6 @@ export async function getAuthorizedLocationsFromSalesforce(accountId: string, co
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/authorizedlocations`;
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`;
 
-    console.log('Fetching authorized locations with URL:', url);
-
     const response = await fetchWithLogging(url, {
       method: "GET",
       headers: {
@@ -287,8 +264,6 @@ export async function getOrderLinesFromSalesforce(accountId: string, contactId: 
     // Construct URL with query parameters
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/orderlines`;
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&orderId=${encodeURIComponent(orderId)}&contactId=${encodeURIComponent(contactId)}`;
-
-    console.log('Fetching order lines from Salesforce with URL:', url);
 
     const response = await fetchWithLogging(url, {
       method: "GET",
@@ -361,8 +336,6 @@ export async function getAccountFromSalesforce(accountId?: string): Promise<any[
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/account`;
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId ?? '')}`;
 
-    console.log('Fetching account from Salesforce with URL:', url);
-
     const response = await fetchWithLogging(url, {
       method: "GET",
       headers: {
@@ -395,8 +368,6 @@ export async function createOrderFromSalesforce(orderData: any): Promise<Salesfo
     }
 
     let Url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
-    console.log('createOrderFromSalesforce URL:', Url);
-    console.log('createOrderFromSalesforce Payload:', JSON.stringify(orderData, null, 2));
 
     const response = await fetchWithLogging(Url, {
       method: 'POST',
@@ -433,8 +404,6 @@ export async function updateOrderFromSalesforce(orderId: string, orderData: any)
 
     // Use the same custom Apex REST endpoint as create order
     const url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
-    console.log('updateOrderFromSalesforce URL:', url);
-    console.log('updateOrderFromSalesforce orderData:', JSON.stringify(orderData, null, 2));
 
     const response = await fetchWithLogging(url, {
       method: 'PATCH',
@@ -444,8 +413,6 @@ export async function updateOrderFromSalesforce(orderId: string, orderData: any)
       },
       body: JSON.stringify(orderData),
     });
-
-    console.log('updateOrderFromSalesforce Response:', response);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -472,8 +439,6 @@ export async function cloneOrderFromSalesforce(orderData: any): Promise<any> {
 
     // Use the same custom Apex REST endpoint as create order
     const url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
-    console.log('cloneOrderFromSalesforce URL:', url);
-    console.log('cloneOrderFromSalesforce orderData:', JSON.stringify(orderData, null, 2));
 
     const response = await fetchWithLogging(url, {
       method: 'PATCH',
@@ -484,8 +449,6 @@ export async function cloneOrderFromSalesforce(orderData: any): Promise<any> {
       body: JSON.stringify(orderData),
     });
 
-    console.log('cloneOrderFromSalesforce Response:', response.status, response.statusText);
-
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Salesforce API error response:', errorText);
@@ -493,7 +456,6 @@ export async function cloneOrderFromSalesforce(orderData: any): Promise<any> {
     }
 
     const result = await response.json();
-    console.log('cloneOrderFromSalesforce Result:', result);
     return result;
   } catch (error) {
     console.error('Error Clone order in Salesforce:', error);
@@ -515,8 +477,6 @@ export async function deleteOrderFromSalesforce(accountId: string, contactId: st
     // Construct URL with query parameters
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/orderlines`;
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&orderLineId=${encodeURIComponent(orderLineId)}`;
-
-    console.log('Deleting order line from Salesforce with URL:', url);
 
     const response = await fetchWithLogging(url, {
       method: 'DELETE',
@@ -554,8 +514,6 @@ export async function deleteFullOrderFromSalesforce(accountId: string, contactId
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/orders`;
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&orderId=${encodeURIComponent(orderId)}`;
 
-    console.log('Deleting full order from Salesforce with URL:', url);
-
     const response = await fetchWithLogging(url, {
       method: 'DELETE',
       headers: {
@@ -571,7 +529,6 @@ export async function deleteFullOrderFromSalesforce(accountId: string, contactId
     }
 
     const result = await response.json();
-    console.log('Order and related lines are deleted successfully:', result);
     return true;
   } catch (error) {
     console.error('Error deleting full order from Salesforce:', error);
@@ -593,8 +550,6 @@ export async function getFilesFromSalesforce(accountId: string, contactId: strin
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(orderId)}&objectName=${encodeURIComponent(objectName)}`;
 
-    console.log('Fetching files from Salesforce with URL:', url);
-
     const response = await fetchWithLogging(url, {
       method: "GET",
       headers: {
@@ -608,7 +563,6 @@ export async function getFilesFromSalesforce(accountId: string, contactId: strin
     }
 
     const resultdata = await response.json();
-    console.log('Files resultdata:', resultdata);
 
     return resultdata.data || [];
   } catch (error) {
@@ -641,8 +595,6 @@ export async function downloadFileFromSalesforce(
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(objectId)}&objectName=Customer_Order__c&contentDocumentId=${encodeURIComponent(documentIds)}`;
 
-    console.log('Downloading file from Salesforce with URL:', url);
-
     const response = await fetchWithLogging(url, {
       method: "GET",
       headers: {
@@ -656,7 +608,6 @@ export async function downloadFileFromSalesforce(
     }
 
     const resultdata = await response.json();
-    console.log('File download resultdata received:', resultdata);
 
     // Return the file data array with download URLs
     return resultdata.data || null;
@@ -690,8 +641,6 @@ export async function deleteFileFromSalesforce(
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(objectId)}&objectName=Customer_Order__c&contentDocumentId=${encodeURIComponent(documentIds)}`;
 
-    console.log('Deleting file from Salesforce with URL:', url);
-
     const response = await fetchWithLogging(url, {
       method: 'DELETE',
       headers: {
@@ -707,7 +656,6 @@ export async function deleteFileFromSalesforce(
     }
 
     const result = await response.json();
-    console.log('File deleted successfully:', result);
     return true;
   } catch (error) {
     console.error('Error deleting file from Salesforce:', error);
@@ -779,8 +727,6 @@ export async function uploadFilesToSalesforce(uploadData: {
           linkId,
           success: true
         });
-
-        console.log(`File ${file.fileName} uploaded and linked successfully`);
       } catch (fileError) {
         console.error(`Error uploading file ${file.fileName}:`, fileError);
         results.push({
@@ -874,7 +820,6 @@ async function createContentVersion(
     }
 
     const result = await response.json();
-    console.log('ContentVersion created:', result.id);
     return result.id;
   } catch (error) {
     console.error('Error creating ContentVersion:', error);
@@ -909,11 +854,9 @@ async function getContentDocumentId(
     const result = await response.json();
     if (result.records && result.records.length > 0) {
       const contentDocumentId = result.records[0].ContentDocumentId;
-      console.log('ContentDocumentId:', contentDocumentId);
       return contentDocumentId;
     }
 
-    console.log('ContentDocumentId not found');
     return null;
   } catch (error) {
     console.error('Error querying ContentDocumentId:', error);
@@ -952,7 +895,6 @@ async function createContentDocumentLink(
       const errorData = await response.json();
       // Check for duplicate link error (already linked)
       if (errorData && Array.isArray(errorData) && errorData[0]?.errorCode === 'DUPLICATE_VALUE') {
-        console.log('ContentDocumentLink already exists');
         return 'existing';
       }
       console.error('Failed to create ContentDocumentLink:', errorData);
@@ -960,7 +902,6 @@ async function createContentDocumentLink(
     }
 
     const result = await response.json();
-    console.log('ContentDocumentLink created:', result.id);
     return result.id;
   } catch (error) {
     console.error('Error creating ContentDocumentLink:', error);
@@ -1007,7 +948,6 @@ export async function createContentDistribution(
     }
 
     const result = await response.json();
-    console.log('ContentDistribution created:', result.id);
     return result.id;
   } catch (error) {
     console.error('Error creating ContentDistribution:', error);
@@ -1051,7 +991,6 @@ export async function getPublicDistributionUrl(
     }
 
     const result = await response.json();
-    console.log('ContentDistribution URLs - Preview:', result.DistributionPublicUrl, 'Download:', result.ContentDownloadUrl);
 
     return {
       previewUrl: decodeSalesforceUrl(result.DistributionPublicUrl),
@@ -1108,8 +1047,6 @@ export async function getFileUrl(
       }
     }
 
-    console.log('getFileUrl for ID:', id, 'resolved to ContentVersionId:', contentVersionId);
-
     // Step 1: Check if an active ContentDistribution already exists
     const existingDistQuery = `SELECT Id, DistributionPublicUrl, ContentDownloadUrl FROM ContentDistribution WHERE ContentVersionId = '${contentVersionId}' AND IsDeleted = false LIMIT 1`;
     const distResponse = await fetchWithLogging(
@@ -1124,7 +1061,6 @@ export async function getFileUrl(
       if (distResult.records && distResult.records.length > 0) {
         const existing = distResult.records[0];
         if (existing.DistributionPublicUrl || existing.ContentDownloadUrl) {
-          console.log('getFileUrl: Reusing existing ContentDistribution:', existing.Id);
           return {
             previewUrl: decodeSalesforceUrl(existing.DistributionPublicUrl),
             downloadUrl: decodeSalesforceUrl(existing.ContentDownloadUrl)
@@ -1147,9 +1083,7 @@ export async function getFileUrl(
       return null;
     }
 
-    console.log('getFileUrl success:', urls);
     return urls;
-
   } catch (error) {
     console.error('Error in getFileUrl:', error);
     return null;

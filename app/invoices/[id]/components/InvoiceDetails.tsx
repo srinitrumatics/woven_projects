@@ -95,13 +95,9 @@ export default function InvoiceDetails(props: InvoiceDetailsProps) {
     } = props;
 
     // Handlers for summary buttons
-    const handleDownloadPDF = () => {
-        console.log("Downloading PDF...");
-    };
+    const handleDownloadPDF = () => {};
 
-    const handleMakePayment = () => {
-        console.log("Opening payment modal...");
-    };
+    const handleMakePayment = () => {};
 
     return (
         <div className="grid grid-cols-1 w1025:grid-cols-10 gap-6 items-stretch">

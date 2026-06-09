@@ -50,7 +50,6 @@ async function resolveSchemas(dbPool) {
             if (byIndex.rows.length > 0) {
                 const org = byIndex.rows[0];
                 const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '').toLowerCase();
-                console.log(`[worker] CLI arg "${cliArg}" matched org "${org.name}" → schema: "${schema}", index: "${org.algolia_index_name}"`);
                 return [schema];
             }
 
@@ -62,13 +61,11 @@ async function resolveSchemas(dbPool) {
             if (bySchema.rows.length > 0) {
                 const org = bySchema.rows[0];
                 const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '').toLowerCase();
-                console.log(`[worker] CLI arg "${cliArg}" matched org "${org.name}" by schema → index: "${org.algolia_index_name}"`);
                 return [schema];
             }
 
             // Use as raw schema name (manual override), force lowercase
             const lowercaseSchema = cliArg.toLowerCase();
-            console.log(`[worker] CLI arg "${cliArg}" not found in organizations table — using as raw schema name "${lowercaseSchema}"`);
             return [lowercaseSchema];
         } catch (err) {
             console.warn(`[worker] DB lookup failed for CLI arg "${cliArg}": ${err.message} — using as raw schema name`);
@@ -80,12 +77,10 @@ async function resolveSchemas(dbPool) {
     const multi = process.env.ALGOLIA_SYNC_SCHEMAS;
     if (multi) {
         const schemas = multi.split(',').map(s => s.trim()).filter(Boolean);
-        console.log(`[worker] Using ALGOLIA_SYNC_SCHEMAS env var: ${schemas.join(', ')}`);
         return schemas;
     }
     const single = process.env.ALGOLIA_SYNC_SCHEMA;
     if (single) {
-        console.log(`[worker] Using ALGOLIA_SYNC_SCHEMA env var: ${single.trim()}`);
         return [single.trim()];
     }
 
@@ -96,15 +91,12 @@ async function resolveSchemas(dbPool) {
         );
         if (orgsRes.rows.length > 0) {
             const schemas = [...new Set(orgsRes.rows.map(r => (r.algolia_schema || '').replace(/"/g, '').trim()).filter(Boolean))];
-            console.log(`[worker] Auto-discovered ${schemas.length} schema(s) from organizations table: ${schemas.join(', ')}`);
             return schemas;
         }
     } catch (err) {
         console.warn(`[worker] Could not query organizations table: ${err.message}`);
     }
 
-    // ── Ultimate fallback ─────────────────────────────────────────────────────
-    console.log('[worker] No schemas configured — falling back to "salesforce"');
     return ['salesforce'];
 }
 
@@ -158,8 +150,8 @@ let isShuttingDown = false;
 function rootLog(level, message, meta = {}) {
     const line = JSON.stringify({ level, timestamp: new Date().toISOString(), message, ...meta });
     if (level === 'error') console.error(line);
-    else if (level === 'warn') console.warn(line);
-    else console.log(line);
+    else if (level === 'warn')
+        console.warn(line);
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }

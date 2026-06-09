@@ -53,7 +53,6 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ accountId: id, contactId: user?.Id || user?.contact?.Id })
       });
-      console.log('[UserSessionContext] Server session updated to account:', id);
     } catch (error) {
       console.error('[UserSessionContext] Failed to update server session:', error);
     }
@@ -66,7 +65,6 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
         const data = await response.json();
 
         if (data.authenticated) {
-          console.log('[UserSessionContext] Session loaded successfully:', data.user);
           setUser(data.user);
           localStorage.setItem('user', JSON.stringify(data.user));
 

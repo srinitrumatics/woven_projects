@@ -3,7 +3,6 @@ import { getSalesforceSession, fetchWithLogging } from './salesforce-service';
 // Fetch products from Salesforce
 export async function getProductsFromSalesforce(accountId?: string, contactId?: string, contactUrl?: string): Promise<any[]> {
   try {
-    console.log('DEBUG: getProductsFromSalesforce called', { accountId, contactId });
     const session = await getSalesforceSession();
 
     if (!session.accessToken) {
@@ -17,8 +16,6 @@ export async function getProductsFromSalesforce(accountId?: string, contactId?: 
     // Construct URL with query parameters
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId ?? '')}&contactId=${encodeURIComponent(contactId ?? '')}`;
 
-    console.log('DEBUG: Fetching products from Salesforce with URL:', url);
-
     const response = await fetchWithLogging(url, {
       method: "GET",
       headers: {
@@ -27,8 +24,6 @@ export async function getProductsFromSalesforce(accountId?: string, contactId?: 
       },
     });
 
-    console.log('DEBUG: Salesforce products response status:', response.status);
-
     if (!response.ok) {
       const errorText = await response.text();
       console.error('DEBUG: Salesforce products error text:', errorText);
@@ -36,7 +31,6 @@ export async function getProductsFromSalesforce(accountId?: string, contactId?: 
     }
 
     const resultdata = await response.json();
-    console.log('DEBUG: getProductsFromSalesforce resultdata received:', !!resultdata);
 
     // Try to extract data robustly
     if (resultdata?.data) {
@@ -46,26 +40,18 @@ export async function getProductsFromSalesforce(accountId?: string, contactId?: 
           const firstItem = resultdata.data[0];
           const objectKey = Object.keys(firstItem).find(key => key.endsWith('__c') && Array.isArray(firstItem[key]));
           if (objectKey) {
-            console.log('DEBUG: found nested array in key:', objectKey);
             const products = firstItem[objectKey];
-            console.log(`DEBUG: getProductsFromSalesforce returning ${products.length} products (nested)`);
-            if (products.length > 0) {
-              console.log('DEBUG: First product sample (nested):', JSON.stringify(products[0], null, 2));
-            }
+            if (products.length > 0) {}
             return products;
           }
         }
         const products = resultdata.data;
-        console.log(`DEBUG: getProductsFromSalesforce returning ${products.length} products`);
         // Log the first few products for inspection
-        if (products.length > 0) {
-          console.log('DEBUG: First product sample:', JSON.stringify(products[0], null, 2));
-        }
+        if (products.length > 0) {}
         return products;
       }
     }
 
-    console.log('DEBUG: getProductsFromSalesforce returning empty list');
     return [];
   } catch (error) {
     console.error('DEBUG: Error fetching Products from Salesforce:', error);
@@ -84,8 +70,6 @@ export async function getProductDetailsFromSalesforce(accountId: string, contact
 
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/product/details`;
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&productId=${encodeURIComponent(productId)}&tabName=${encodeURIComponent(tabName)}`;
-
-    console.log('Fetching product details from Salesforce with URL:', url);
 
     const response = await fetchWithLogging(url, {
       method: "GET",
@@ -124,10 +108,6 @@ export async function createProductInSalesforce(accountId: string, contactId: st
       tabName: "product"
     };
 
-    console.log("=== SALESFORCE PRODUCT CREATION PAYLOAD ===");
-    console.log(JSON.stringify(body, null, 2));
-    console.log("===========================================");
-
     const response = await fetchWithLogging(url, {
       method: "POST",
       headers: {
@@ -160,10 +140,6 @@ export async function updateProductTabInSalesforce(payload: any): Promise<any> {
 
     const url = `${session.instanceUrl}/services/apexrest/gtherp/product/details`;
 
-    console.log("=== SALESFORCE TAB UPDATE PAYLOAD ===");
-    console.log(JSON.stringify(payload, null, 2));
-    console.log("===========================================");
-
     const response = await fetchWithLogging(url, {
       method: "POST",
       headers: {
@@ -195,10 +171,6 @@ export async function patchProductTabInSalesforce(payload: any): Promise<any> {
     }
 
     const url = `${session.instanceUrl}/services/apexrest/gtherp/product/details`;
-
-    console.log("=== SALESFORCE TAB PATCH PAYLOAD ===");
-    console.log(JSON.stringify(payload, null, 2));
-    console.log("===========================================");
 
     const response = await fetchWithLogging(url, {
       method: "PATCH",

@@ -31,7 +31,6 @@ const logUnfilteredData = async (indexName: string) => {
   try {
     const index = searchClient.initIndex(indexName);
     const { hits } = await index.search("", { hitsPerPage: 5 });
-    console.log("[DEBUG] Unfiltered Algolia Data (First 5):", hits);
   } catch (error) {
     console.error("[DEBUG] Failed to fetch unfiltered data:", error);
   }
@@ -133,7 +132,6 @@ function CustomRefinementList(props: any) {
 
 function Content({ indexName }: { indexName: string }) {
   useEffect(() => {
-    console.log(`[ProductsList] 🔍 CHECKPOINT (Client Content): Initializing Algolia search on index: '${indexName}'`);
     logUnfilteredData(indexName);
   }, [indexName]);
 
@@ -183,16 +181,6 @@ function Content({ indexName }: { indexName: string }) {
     filters = filters ? `${filters} AND stock_quantity <= 0` : "stock_quantity <= 0";
   }
 
-  console.log('[ProductsList] 🎯 CHECKPOINT (Client Content): User Type & Algolia Filters Applied', {
-    accountType,
-    isCustomer,
-    isManufacturer,
-    isHybrid,
-    isAdmin,
-    appliedFilters: filters,
-    accountId: selectedAccount?.Id
-  });
-
   // Search Box Hook
   const { query, refine: setQuery } = useSearchBox();
 
@@ -205,15 +193,11 @@ function Content({ indexName }: { indexName: string }) {
 
   // Infinite Hits Hook
   const { hits, isLastPage, showMore } = useInfiniteHits();
-  console.log("Algolia Products List:", hits);
 
   useEffect(() => {
     if (hits.length > 0) {
-      console.log("Algolia Hits Count:", hits.length);
-      console.log("First Algolia Hit Sample:", hits[0]);
       // Specifically check for manufacturer field in the first hit
       const firstHit = hits[0] as any;
-      console.log("Manufacturer in Hit:", firstHit.manufacturer || firstHit.manufacturer_id || "MISSING");
     }
   }, [hits]);
 
@@ -502,9 +486,7 @@ function Content({ indexName }: { indexName: string }) {
 }
 
 export default function ProductClientPage({ indexName = "wovn_products_local" }: { indexName?: string }) {
-  useEffect(() => {
-    console.log(`[ProductsList] 📦 CHECKPOINT (Client Main): ProductClientPage mounted with indexName: '${indexName}'`);
-  }, [indexName]);
+  useEffect(() => {}, [indexName]);
 
   if (!process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || !process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY) {
     return (

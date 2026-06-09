@@ -29,7 +29,6 @@ export interface RoleWithPermissions {
  */
 export async function authenticateUser(email: string, password: string): Promise<UserWithPermissions | null> {
   try {
-    console.log(`[AUTH] Attempting authentication for user: ${email}`);
     // Find user by email
     const [user] = await db
       .select()
@@ -37,20 +36,14 @@ export async function authenticateUser(email: string, password: string): Promise
       .where(eq(users.email, email));
 
     if (!user) {
-      console.log(`[AUTH] No user found with email: ${email}`);
       return null;
     }
-
-    console.log(`[AUTH] User found: ${user.name} (${user.id})`);
 
     // Verify password
     const isValidPassword = await compare(password, user.password);
     if (!isValidPassword) {
-      console.log(`[AUTH] Invalid password for user: ${email}`);
       return null;
     }
-
-    console.log(`[AUTH] Password verified successfully for user: ${email}`);
 
     // Get user's roles
     const userRoleRecords = await db

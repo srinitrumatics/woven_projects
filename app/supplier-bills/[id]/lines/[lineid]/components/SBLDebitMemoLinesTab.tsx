@@ -44,7 +44,6 @@ const ITEMS_PER_PAGE = 10;
 export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: DebitMemoLine[], id?: string }) {
     const [currentPage, setCurrentPage] = useState(1);
     const { items: sortedData, requestSort, sortConfig } = useSortableData<DebitMemoLine>(debitMemos);
-    console.log("sortedData", sortedData);
     const initialWidths = {
         Name: 180,
         Status__c: 120,

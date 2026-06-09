@@ -61,7 +61,6 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    console.log('[ProductSync] 🚀 POST request received at /api/salesforce/product-details');
     const body = await req.json();
 
     if (body.tabName && body.tabName !== "product") {
@@ -77,7 +76,6 @@ export async function POST(req: Request) {
     }
 
     const result = await createProductInSalesforce(accountId, contactId, productData);
-    console.log('[ProductSync] 📥 Salesforce create result:', JSON.stringify(result));
 
     // After successful Salesforce creation, sync to PostgreSQL and Algolia.
     // We check for .success OR a success message to match frontend logic
@@ -86,13 +84,9 @@ export async function POST(req: Request) {
       const sfProductId = findSfId(result) || findSfId(productData);
 
       if (sfProductId) {
-        console.log(`[ProductSync] 🟢 Salesforce record handled, sfid: ${sfProductId}`);
-        console.log(`[ProductSync] Triggering sync for ${sfProductId} (POST)`);
-        
         // Await the sync to ensure it completes before the API response returns
         try {
           await syncNewProductToPostgresAndAlgolia(sfProductId, productData, accountId, contactId);
-          console.log(`[ProductSync] ✅ Sync completed successfully for ${sfProductId}`);
         } catch (syncErr) {
           console.error('[ProductSync] ❌ Sync error:', syncErr);
         }
@@ -110,10 +104,8 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
-    console.log('[ProductSync] 🚀 PATCH request received at /api/salesforce/product-details');
     const body = await req.json();
     const result = await patchProductTabInSalesforce(body);
-    console.log('[ProductSync] 📥 Salesforce patch result:', JSON.stringify(result));
 
     // Sync to PostgreSQL and Algolia on successful update
     if (result?.success || result?.message?.includes("successfully")) {
@@ -124,12 +116,8 @@ export async function PATCH(req: Request) {
         const sfProductId = findSfId(productData) || findSfId(result);
         
         if (sfProductId && accountId) {
-          console.log(`[ProductSync] 🟢 Salesforce update handled, sfid: ${sfProductId}`);
-          console.log(`[ProductSync] Triggering sync for ${sfProductId} (PATCH)`);
-          
           try {
             await syncNewProductToPostgresAndAlgolia(sfProductId, productData, accountId, contactId);
-            console.log(`[ProductSync] ✅ Update sync completed successfully for ${sfProductId}`);
           } catch (syncErr) {
             console.error('[ProductSync] ❌ Update sync error:', syncErr);
           }

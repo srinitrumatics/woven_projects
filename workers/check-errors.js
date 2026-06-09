@@ -16,17 +16,7 @@ async function checkFailedItems() {
             ORDER BY created_at
         `);
 
-        console.log('Failed items:', failedItems.rows.length);
-        console.log('');
-
-        failedItems.rows.forEach((item, idx) => {
-            console.log(`${idx + 1}. Queue ID: ${item.id}`);
-            console.log(`   Table: ${item.table_name}, Operation: ${item.operation}`);
-            console.log(`   Retries: ${item.retry_count}`);
-            console.log(`   Error: ${item.error_message}`);
-            console.log(`   Payload objectID: ${item.payload?.objectID}`);
-            console.log('');
-        });
+        failedItems.rows.forEach((item, idx) => {});
 
         client.release();
     } catch (error) {

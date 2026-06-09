@@ -79,7 +79,6 @@ export default function QuoteLinePurchasesTab({
                 if (!res.ok) throw new Error("Failed to fetch purchases data");
 
                 const responseData = await res.json();
-                console.log("Purchases API Response:", responseData);
 
                 if (responseData) {
                     // Map Purchase Order Lines

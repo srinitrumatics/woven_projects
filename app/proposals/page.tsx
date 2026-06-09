@@ -53,13 +53,11 @@ export default function ProposalsPage() {
         const res = await fetch(`/api/salesforce/proposals?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&action=list`);
         if (!res.ok) throw new Error('Failed to fetch proposals');
         const data = await res.json();
-        console.log("Fetched proposals data:", data);
 
         // Based on API: { data: [{ Status__c: [...], Proposal__c: [...] }] }
         const responseData = data;
         const rawItems = responseData?.Proposal__c || [];
         const apiStatuses = responseData?.Status__c || [];
-        console.log("Fetched proposals data:", rawItems);
         const mappedProposals: Proposal[] = rawItems.map((item: any) => ({
           id: item.Id,
           proposalNumber: item.Proposal_Number__c || item.Name || 'N/A',
@@ -200,7 +198,6 @@ export default function ProposalsPage() {
 
   const handleDownloadProposal = (e: React.MouseEvent, proposalId: string) => {
     e.stopPropagation();
-    console.log("Downloading proposal:", proposalId);
     info(`Downloading proposal ${proposalId}`);
   };
 

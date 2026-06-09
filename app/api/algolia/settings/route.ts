@@ -49,8 +49,6 @@ export async function PATCH() {
       "wovn_products_local";
     const algoliaSchema = orgConfig?.algoliaSchema ?? null;
 
-    console.log(`[Algolia Settings] 🔍 CHECKPOINT: org='${orgConfig?.name}', index='${indexName}', algolia_schema='${algoliaSchema}'`);
-
     // ── Parse algolia_schema ─────────────────────────────────────────────────
     let schemaOverride: Record<string, any> = {};
     let schemaSource = "default";
@@ -59,26 +57,18 @@ export async function PATCH() {
       try {
         schemaOverride = JSON.parse(algoliaSchema);
         schemaSource = "organizations.algolia_schema (JSON)";
-        console.log(`[Algolia Settings] ✅ Parsed algolia_schema from org table:`, schemaOverride);
       } catch {
         // Not JSON — treat as a schema label/name for reference only
         schemaSource = `organizations.algolia_schema (label: '${algoliaSchema}')`;
-        console.log(`[Algolia Settings] ℹ️ algolia_schema is a label, not JSON — using defaults. Label: '${algoliaSchema}'`);
       }
-    } else {
-      console.log(`[Algolia Settings] ℹ️ No algolia_schema set for org '${orgConfig?.name}' — using defaults`);
-    }
+    } else {}
 
     // ── Merge: schema JSON overrides take priority over defaults ──────────────
     const finalSettings = { ...DEFAULT_SETTINGS, ...schemaOverride };
 
-    console.log(`[Algolia Settings] 📦 Applying final settings to index '${indexName}':`, finalSettings);
-
     const client = algoliasearch(appId, adminKey);
     const index = client.initIndex(indexName);
     await index.setSettings(finalSettings);
-
-    console.log(`[Algolia Settings] ✅ Settings successfully applied to '${indexName}'`);
 
     return NextResponse.json({
       success: true,

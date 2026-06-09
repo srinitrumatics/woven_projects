@@ -68,14 +68,13 @@ async function fetchProductsFromSalesforce(session) {
 
 async function main() {
   try {
-    console.log("Connecting to Postgres...");
     const pool = new Pool({
       connectionString: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false }
     });
 
     const client = await pool.connect();
-    
+
     const targetSchemaArg = process.argv[2];
 
     let orgRows = [];
@@ -84,92 +83,81 @@ async function main() {
         if (res.rows.length > 0) {
             orgRows = res.rows;
         } else {
-            const lowercaseSchema = targetSchemaArg.toLowerCase();
-            console.log(`⚠️ Schema '${targetSchemaArg}' not found in DB. Using as manual override with default env credentials.`);
-            orgRows = [{ algolia_schema: lowercaseSchema, name: 'Manual Override' }];
+          const lowercaseSchema = targetSchemaArg.toLowerCase();
+          orgRows = [{ algolia_schema: lowercaseSchema, name: 'Manual Override' }];
         }
     } else {
         const res = await client.query(`SELECT * FROM organizations`);
         orgRows = res.rows;
     }
-    
+
     for (const org of orgRows) {
-        const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '');
-        console.log(`\n--- Processing Tenant: ${org.name || schema} ---`);
-        
-        let session;
+      const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '');
+
+      let session;
+      try {
+        session = await getSalesforceSession(org);
+      } catch (authErr) {
+          console.warn(`⚠️ Skipping ${org.name}: ${authErr.message}`);
+          continue;
+      }
+
+      const products = await fetchProductsFromSalesforce(session);
+
+      let processedCount = 0;
+      let inactiveCount = 0;
+
+      for (const p of products) {
+        if (p.IsActive !== true && p.IsActive !== 'true') {
+          inactiveCount++;
+          continue;
+        }
+
+        processedCount++;
         try {
-            session = await getSalesforceSession(org);
-            console.log(`✅ Authenticated with Salesforce for ${org.name}`);
-        } catch (authErr) {
-            console.warn(`⚠️ Skipping ${org.name}: ${authErr.message}`);
-            continue;
+            await client.query(`
+                     INSERT INTO "${schema}".product2 (
+                         sfid, productcode, name, description, isactive, family,
+                         gtherp__price__c, list_price__c, gtherp__stock_quantity__c,
+                         gtherp__available_quantity__c, gtherp__discount__c,
+                         gtherp__category__c, gtherp__sub_category__c,
+                         manufacturer_name__c, product_availability__c, createddate, systemmodstamp
+                     ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+                     ON CONFLICT (sfid) DO UPDATE SET
+                         productcode = EXCLUDED.productcode,
+                         name = EXCLUDED.name,
+                         description = EXCLUDED.description,
+                         isactive = EXCLUDED.isactive,
+                         family = EXCLUDED.family,
+                         gtherp__price__c = EXCLUDED.gtherp__price__c,
+                         list_price__c = EXCLUDED.list_price__c,
+                         gtherp__stock_quantity__c = EXCLUDED.gtherp__stock_quantity__c,
+                         gtherp__available_quantity__c = EXCLUDED.gtherp__available_quantity__c,
+                         gtherp__category__c = EXCLUDED.gtherp__category__c,
+                         gtherp__sub_category__c = EXCLUDED.gtherp__sub_category__c,
+                         manufacturer_name__c = EXCLUDED.manufacturer_name__c,
+                         product_availability__c = EXCLUDED.product_availability__c,
+                         systemmodstamp = EXCLUDED.systemmodstamp
+                 `, [
+              p.Id, p.ProductCode, p.Name, p.Description, p.IsActive, p.Family,
+              (p.PricebookEntries && p.PricebookEntries.records && p.PricebookEntries.records[0] && p.PricebookEntries.records[0].gtherp__Selling_Unit_Price__c) || 0,
+              (p.PricebookEntries && p.PricebookEntries.records && p.PricebookEntries.records[0] && p.PricebookEntries.records[0].UnitPrice) || 0,
+              p.gtherp__Available_To_Sell__c || 0,
+              p.gtherp__Available_To_Sell__c || 0,
+              0,
+              p.Family || 'No Category',
+              '',
+              p.gtherp__Manufacturer_Name__c || '',
+              p.gtherp__Product_Availability__c || '',
+              p.CreatedDate, p.SystemModstamp || ''
+            ]);
+        } catch (dbErr) {
+            console.error(`Error inserting product ${p.Id} for ${schema}:`, dbErr.message);
         }
+      }
 
-        console.log("Fetching products from Salesforce via SOQL...");
-        const products = await fetchProductsFromSalesforce(session);
-        console.log(`Found ${products.length} active products from Salesforce.`);
-
-        let processedCount = 0;
-        let inactiveCount = 0;
-
-        for (const p of products) {
-          if (p.IsActive !== true && p.IsActive !== 'true') {
-            inactiveCount++;
-            continue;
-          }
-
-          processedCount++;
-          try {
-              await client.query(`
-                       INSERT INTO "${schema}".product2 (
-                           sfid, productcode, name, description, isactive, family,
-                           gtherp__price__c, list_price__c, gtherp__stock_quantity__c,
-                           gtherp__available_quantity__c, gtherp__discount__c,
-                           gtherp__category__c, gtherp__sub_category__c,
-                           manufacturer_name__c, product_availability__c, createddate, systemmodstamp
-                       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-                       ON CONFLICT (sfid) DO UPDATE SET
-                           productcode = EXCLUDED.productcode,
-                           name = EXCLUDED.name,
-                           description = EXCLUDED.description,
-                           isactive = EXCLUDED.isactive,
-                           family = EXCLUDED.family,
-                           gtherp__price__c = EXCLUDED.gtherp__price__c,
-                           list_price__c = EXCLUDED.list_price__c,
-                           gtherp__stock_quantity__c = EXCLUDED.gtherp__stock_quantity__c,
-                           gtherp__available_quantity__c = EXCLUDED.gtherp__available_quantity__c,
-                           gtherp__category__c = EXCLUDED.gtherp__category__c,
-                           gtherp__sub_category__c = EXCLUDED.gtherp__sub_category__c,
-                           manufacturer_name__c = EXCLUDED.manufacturer_name__c,
-                           product_availability__c = EXCLUDED.product_availability__c,
-                           systemmodstamp = EXCLUDED.systemmodstamp
-                   `, [
-                p.Id, p.ProductCode, p.Name, p.Description, p.IsActive, p.Family,
-                (p.PricebookEntries && p.PricebookEntries.records && p.PricebookEntries.records[0] && p.PricebookEntries.records[0].gtherp__Selling_Unit_Price__c) || 0,
-                (p.PricebookEntries && p.PricebookEntries.records && p.PricebookEntries.records[0] && p.PricebookEntries.records[0].UnitPrice) || 0,
-                p.gtherp__Available_To_Sell__c || 0,
-                p.gtherp__Available_To_Sell__c || 0,
-                0,
-                p.Family || 'No Category',
-                '',
-                p.gtherp__Manufacturer_Name__c || '',
-                p.gtherp__Product_Availability__c || '',
-                p.CreatedDate, p.SystemModstamp || ''
-              ]);
-          } catch (dbErr) {
-              console.error(`Error inserting product ${p.Id} for ${schema}:`, dbErr.message);
-          }
-        }
-
-        console.log(`✅ Processed ${processedCount} active products for ${org.name}.`);
-        if (inactiveCount > 0) {
-          console.log(`⚠️  Skipped ${inactiveCount} inactive products returned by Salesforce.`);
-        }
+      if (inactiveCount > 0) {}
     }
-
-    console.log("\nFinished processing all tenants!");
-    console.log("This will trigger the local algolia_sync_queue! Run 'npm run start:worker' to push them to Algolia.");
 
     await client.release();
     await pool.end();

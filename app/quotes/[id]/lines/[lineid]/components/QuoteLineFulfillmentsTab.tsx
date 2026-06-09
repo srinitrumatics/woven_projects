@@ -108,7 +108,6 @@ export default function QuoteLineFulfillmentsTab({
                 if (!res.ok) throw new Error("Failed to fetch fulfillment data");
 
                 const responseData = await res.json();
-                console.log("Fulfillment API Response:", responseData);
 
                 if (responseData) {
                     // Map Sales Order Lines

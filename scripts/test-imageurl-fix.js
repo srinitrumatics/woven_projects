@@ -7,8 +7,6 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const fetch = global.fetch || require('node-fetch');
 
 async function testImageUrlFix() {
-    console.log('Testing imageUrl field fix...\n');
-
     // 1. Setup DB Connection
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
@@ -22,15 +20,11 @@ async function testImageUrlFix() {
         const testKey = 'sk_test_' + crypto.randomBytes(16).toString('hex');
         const keyHash = crypto.createHash('sha256').update(testKey).digest('hex');
 
-        console.log(`Generated Test Key: ${testKey}\n`);
-
         await client.query(`
             INSERT INTO api_keys (id, key_hash, prefix, name, is_active, rate_limit)
             VALUES (gen_random_uuid(), $1, $2, 'Test Key ImageUrl', true, 100)
             ON CONFLICT (key_hash) DO NOTHING
         `, [keyHash, 'sk_test_']);
-
-        console.log('Test key inserted into DB.\n');
 
         // 3. Test POST with imageUrl
         const API_URL = 'http://localhost:3000/api/external/v1/products';
@@ -81,14 +75,12 @@ async function testImageUrlFix() {
             subCategory: "Refrigerators"
         };
 
-        console.log('Testing POST Create with imageUrl...');
         const createRes = await fetch(API_URL, {
             method: 'POST',
             headers,
             body: JSON.stringify(testProductData)
         });
 
-        console.log(`Create Status: ${createRes.status}`);
         const createdData = await createRes.json();
 
         if (!createdData.data?.sfid) {
@@ -98,36 +90,20 @@ async function testImageUrlFix() {
         }
 
         const productId = createdData.data.sfid;
-        console.log('✅ Created Product ID:', productId);
-
-        // 4. Verify imageUrl is stored correctly
-        console.log('\n--- Checking imageUrl field ---');
-        console.log('imageUrl type:', typeof createdData.data.imageUrl);
-        console.log('imageUrl value:', JSON.stringify(createdData.data.imageUrl, null, 2));
 
         if (createdData.data.imageUrl === null) {
             console.error('❌ FAILED: imageUrl is null!');
-        } else if (createdData.data.imageUrl && createdData.data.imageUrl.images) {
-            console.log('✅ SUCCESS: imageUrl is properly stored with', createdData.data.imageUrl.images.length, 'images');
-        } else {
+        } else if (createdData.data.imageUrl && createdData.data.imageUrl.images) {} else {
             console.error('❌ FAILED: imageUrl structure is incorrect');
         }
 
-        // 5. Test GET to verify persistence
-        console.log('\n--- Testing GET to verify persistence ---');
         const getRes = await fetch(`${API_URL}/${productId}`, { headers });
         const getData = await getRes.json();
 
-        console.log('Retrieved imageUrl:', JSON.stringify(getData.data.imageUrl, null, 2));
-
-        if (getData.data.imageUrl && getData.data.imageUrl.images) {
-            console.log('✅ SUCCESS: imageUrl persisted correctly in database');
-        } else {
+        if (getData.data.imageUrl && getData.data.imageUrl.images) {} else {
             console.error('❌ FAILED: imageUrl not persisted correctly');
         }
 
-        // 6. Test PUT to update imageUrl
-        console.log('\n--- Testing PUT to update imageUrl ---');
         const updatedImageUrl = {
             images: [
                 {
@@ -152,25 +128,15 @@ async function testImageUrlFix() {
         });
 
         const updatedData = await updateRes.json();
-        console.log('Update Status:', updateRes.status);
-        console.log('Updated imageUrl:', JSON.stringify(updatedData.data.imageUrl, null, 2));
 
-        if (updatedData.data.imageUrl && updatedData.data.imageUrl.images.length === 1) {
-            console.log('✅ SUCCESS: imageUrl updated correctly');
-        } else {
+        if (updatedData.data.imageUrl && updatedData.data.imageUrl.images.length === 1) {} else {
             console.error('❌ FAILED: imageUrl update failed');
         }
 
-        // 7. Cleanup
-        console.log('\n--- Cleaning up test data ---');
         const deleteRes = await fetch(`${API_URL}/${productId}`, {
             method: 'DELETE',
             headers
         });
-        console.log(`Delete Status: ${deleteRes.status}`);
-
-        console.log('\n✅ All tests completed successfully!');
-
     } catch (error) {
         console.error('\n❌ Test Failed:', error.message);
         console.error(error.stack);

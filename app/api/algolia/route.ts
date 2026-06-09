@@ -83,9 +83,7 @@ export async function POST() {
       count: productsToSeed.length,
       taskIDs: result.taskIDs
     });
-    console.log('Searcch', response);
     return response;
-
   } catch (error) {
     console.error("Error seeding Algolia:", error);
     return NextResponse.json(
@@ -122,7 +120,6 @@ export async function GET() {
       recordCount: indexInfo.nbHits,
       status: "available"
     });
-    console.log('Searcch ag', response);
     return response;
   } catch (error) {
     console.error("Error checking Algolia index:", error);

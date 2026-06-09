@@ -9,7 +9,6 @@ const client = algoliasearch(
 const index = client.initIndex(process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "dev_woven_products");
 
 async function checkAlgolia() {
-    console.log("Fetching all products from Algolia...");
     let hits = [];
     await index.browseObjects({
         query: '',
@@ -18,10 +17,7 @@ async function checkAlgolia() {
         }
     });
 
-    console.log(`Total hits in Algolia: ${hits.length}`);
-    hits.slice(0, 50).forEach(hit => {
-        console.log(`- ID: ${hit.objectID}, Name: ${hit.name}, Availability: ${hit.product_availability}`);
-    });
+    hits.slice(0, 50).forEach(hit => {});
 }
 
 checkAlgolia().catch(console.error);

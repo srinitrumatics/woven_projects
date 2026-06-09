@@ -454,7 +454,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             const foundName = foundLocWithName?.Account_Name__r?.Name || (foundLocWithName as any)?.['Account_Name__r.Name'] || (foundLocWithName as any)?.Account_Name_Name || (foundLocWithName as any)?.Account_Name__c_Name;
 
             if (foundName && (!currentAccountName || currentAccountName.startsWith('001'))) {
-              console.log('Found account name in locations:', foundName);
               setAccountName(foundName);
             }
 
@@ -466,8 +465,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               }
               return isValid;
             });
-
-            console.log('Valid locations count:', validLocations.length);
 
             const uniqueLocations = Array.from(
               new Map(validLocations.map(item => [item.Id, item])).values()
@@ -481,7 +478,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
           // Set payment terms if available
           if (paymentTerms) {
-            console.log('Setting payment terms:', paymentTerms);
             setFormData(prev => ({ ...prev, paymentTerms }));
           }
           // Set price book if available
@@ -509,8 +505,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       try {
         setContactsLoading(true);
         const res = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&action=contacts`);
-        console.log('=== CONTACTS FETCH ===');
-        console.log('Response status:', res.status, res.statusText);
 
         if (!res.ok) {
           const errorText = await res.text();
@@ -519,7 +513,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         }
 
         const data = await res.json();
-        console.log('Raw contacts API response:', JSON.stringify(data, null, 2));
 
         if (mounted) {
           // Handle the API response structure
@@ -528,22 +521,17 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           // The API returns data directly as an array
           if (Array.isArray(data)) {
             contacts = data;
-            console.log('Response is a direct array, length:', data.length);
           } else if (data.data && Array.isArray(data.data)) {
             contacts = data.data;
-            console.log('Response has data property, length:', data.data.length);
           }
 
-          console.log('Parsed contacts count:', contacts.length);
           if (contacts.length > 0) {
-            console.log('Sample contact:', JSON.stringify(contacts[0], null, 2));
             setShipContacts(contacts);
           } else {
             console.warn('No contacts found in response');
             setShipContacts([]);
           }
         }
-
       } catch (e) {
         console.error("Error loading contacts:", e);
       } finally {
@@ -591,23 +579,18 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         const currentAccountId = orderData?.AccountId || SF_ACCOUNT_ID;
         const currentContactId = orderData?.Ship_to_Contact__c || SF_CONTACT_ID;
 
-        console.log('DEBUG: loadProducts started', { currentAccountId, currentContactId, orderDataId: orderData?.Id });
         setProductsLoading(true);
         const url = `/api/salesforce/orders?action=products&accountId=${currentAccountId}&contactId=${currentContactId}`;
-        console.log('DEBUG: loadProducts URL:', url);
         const res = await fetch(url);
         if (!res.ok) throw new Error(`Failed to fetch products: ${res.status} ${res.statusText}`);
         const responseData = await res.json();
-        console.log('DEBUG: loadProducts responseData received:', !!responseData);
 
         // Handle potential different response structures
         let data = [];
         if (Array.isArray(responseData)) {
           data = responseData;
-          console.log('DEBUG: responseData is array, count:', data.length);
         } else if (responseData && responseData.data && Array.isArray(responseData.data)) {
           data = responseData.data;
-          console.log('DEBUG: responseData has data property, count:', data.length);
         } else {
           console.warn('DEBUG: responseData structure unexpected:', responseData);
         }
@@ -628,7 +611,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           orderQty: 0,
           subtotal: 0
         }));
-        console.log('DEBUG: mappedProducts count:', mappedProducts.length);
         setCatalogProducts(mappedProducts);
       } catch (error) {
         console.error("DEBUG: Error loading products:", error);
@@ -836,7 +818,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         }
 
         const responseData = await res.json();
-        console.log("Fetched order data:", responseData);
 
         let order: Order | null = null;
 
@@ -860,13 +841,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
           // Proactively set accountName state from order names if context matches
           if (order.Inventory_Account_Name) {
-            console.log('Setting accountName from Order Inventory_Account_Name:', order.Inventory_Account_Name);
             setAccountName(order.Inventory_Account_Name);
           } else if (order.Ship_to_Account_Name && !order.Ship_to_Account_Name.startsWith('001')) {
-            console.log('Setting accountName from Order Ship_to_Account_Name:', order.Ship_to_Account_Name);
             setAccountName(order.Ship_to_Account_Name);
           } else if (order.Bill_to_Account_Name && !order.Bill_to_Account_Name.startsWith('001')) {
-            console.log('Setting accountName from Order Bill_to_Account_Name:', order.Bill_to_Account_Name);
             setAccountName(order.Bill_to_Account_Name);
           }
 
@@ -880,7 +858,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               const linesRes = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(accountId)}&orderId=${encodeURIComponent(order.Id)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&action=orderlines`);
               if (linesRes.ok) {
                 const linesData = await linesRes.json();
-                console.log("Fetched order lines data:", linesData);
 
                 let lines: any[] = [];
                 if (Array.isArray(linesData) && linesData.length > 0) {
@@ -923,7 +900,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                     // Add unique lineItemKey for proper tracking and deletion
                     lineItemKey: `${item.Id}-${Date.now()}-${index}-${Math.random()}`
                   }));
-                  console.log("Mapped products:", mappedProducts);
                   setOrderProducts(mappedProducts);
                 }
               }
@@ -1000,7 +976,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             setInitialOrderContactId(order.Ship_to_Contact__c);
           }
         }
-
       } catch (error) {
         console.error("Error fetching order:", error);
       } finally {
@@ -1063,8 +1038,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         try {
           const deleteUrl = `/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID || '')}&orderLineId=${encodeURIComponent(product.orderLineId || '')}&contactId=${encodeURIComponent(SF_CONTACT_ID || '')}`;
 
-          console.log('Deleting order line:', product.orderLineId);
-
           const response = await fetch(deleteUrl, {
             method: 'DELETE',
             headers: {
@@ -1078,7 +1051,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           }
 
           const result = await response.json();
-          console.log('Order line deleted successfully:', result);
 
           // Remove from state only after successful API deletion
           setOrderProducts(orderProducts.filter(p => p.lineItemKey !== lineItemKey));
@@ -1196,7 +1168,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const handleDownloadPDF = async () => {
-    console.log("Starting PDF generation...");
     const element = document.getElementById('pdf-template');
     if (!element) {
       console.error("PDF template element not found");
@@ -1206,7 +1177,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
     try {
       setIsGeneratingPDF(true);
-      console.log("Capturing canvas...");
 
       const canvas = await html2canvas(element, {
         scale: 2,
@@ -1227,7 +1197,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         }
       });
 
-      console.log("Canvas captured, generating PDF...");
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: 'portrait',
@@ -1240,7 +1209,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
       pdf.save(`Order_${id}.pdf`);
-      console.log("PDF saved");
     } catch (error: any) {
       console.error('Error generating PDF:', error);
       toastError(`Failed to generate PDF: ${error.message || error}`);
@@ -1354,7 +1322,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       }
 
       const result = await response.json();
-      console.log("Order submitted successfully:", result);
 
       // Update local order status
       setOrderStatus(isDraft ? "Draft" : "Submitted");
@@ -1375,7 +1342,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       }
       // Refresh after a short delay to allow Salesforce to propagate
       setTimeout(() => window.location.reload(), 5000);
-
     } catch (error) {
       console.error("Error submitting order:", error);
       setSubmitError(error instanceof Error ? error.message : "Failed to submit order");
@@ -1457,7 +1423,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         }
 
         const result = await response.json();
-        console.log("Order cloned successfully:", result);
 
         if (result.orderId) {
           // Redirect to the new order
@@ -1465,7 +1430,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         } else {
           toastError("Order cloned, but could not retrieve new ID.");
         }
-
       } catch (error) {
         console.error("Error cloning order:", error);
         setSubmitError(error instanceof Error ? error.message : "Failed to clone order");

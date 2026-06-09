@@ -22,8 +22,6 @@ export async function getQuotesFromSalesforce(
             url += `&objectId=${encodeURIComponent(quoteId)}`;
         }
 
-        console.log(`Fetching Quote Data from Salesforce with URL:`, url);
-
         const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -88,8 +86,6 @@ export async function getQuoteFilesFromSalesforce(
 
         const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
         const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(quoteId)}&objectName=Customer_Quote__c`;
-
-        console.log('Fetching quote files from Salesforce with URL:', url);
 
         const response = await fetch(url, {
             method: "GET",

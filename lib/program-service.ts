@@ -14,8 +14,6 @@ export async function getProgramInsights(accountId: string, contactId: string): 
         const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/programInsights`;
         const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}`;
 
-        console.log('[ProgramService] Fetching program insights with URL:', url);
-
         const response = await fetchWithLogging(url, {
             method: "GET",
             headers: {

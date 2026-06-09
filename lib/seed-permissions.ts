@@ -3,8 +3,6 @@ import { permissionGroups, permissions } from '../db/schema';
 import { eq, and, ilike } from 'drizzle-orm';
 
 async function seedPermissions() {
-  console.log('Seeding permission groups and permissions...');
-
   try {
     // Define the main menu groups
     const menuGroups = [
@@ -49,8 +47,6 @@ async function seedPermissions() {
           })
           .returning();
 
-        console.log(`Created permission group: ${newGroup.name}`);
-
         // For the Admin group, create specific permissions instead of generic CRUDL
         if (group.name === 'Admin Management') {
           const adminPermissions = [
@@ -68,7 +64,6 @@ async function seedPermissions() {
                 groupId: newGroup.id,
               });
           }
-          console.log(`  Added admin-specific permissions`);
         } else {
           // For other groups, add CRUDL operations
           for (const operation of operations) {
@@ -83,14 +78,9 @@ async function seedPermissions() {
                 groupId: newGroup.id,
               });
           }
-          console.log(`  Added CRUDL permissions for ${group.name}`);
         }
-      } else {
-        console.log(`Permission group already exists: ${group.name}`);
-      }
+      } else {}
     }
-
-    console.log('Permission seeding completed successfully!');
   } catch (error) {
     console.error('Error seeding permissions:', error);
   }

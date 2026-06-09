@@ -69,7 +69,6 @@ export default function OrdersPage() {
         if (data.id) {
           sessionStorage.setItem(CACHE_KEY, data.id);
           setProposalProductId(data.id);
-          console.log('[Orders] Proposal Request product ID cached:', data.id);
         }
       })
       .catch(err => console.warn('[Orders] Could not fetch proposal product ID:', err));
@@ -82,12 +81,9 @@ export default function OrdersPage() {
         setLoading(true);
         setError(null);
 
-        // Change accountId as needed or make dynamic later
-        console.log("Fetching orders with accountId:", accountId, "contactId:", contactId);
         const res = await fetch(`/api/salesforce/orders?accountId=${accountId}&contactId=${contactId}&action=list`, {
           cache: "no-store",
         });
-        console.log("res raw:", res);
         if (!res.ok) {
           const text = await res.text();
           throw new Error(`API error: ${res.status} ${text}`);
@@ -104,15 +100,9 @@ export default function OrdersPage() {
         setSfOrders(rawItems);
 
         // DEBUG: log first order to verify field names
-        if (rawItems.length > 0) {
-          console.log('[Orders DEBUG] Total orders received:', rawItems.length);
-          console.log('[Orders DEBUG] First order keys:', Object.keys(rawItems[0]));
-          console.log('[Orders DEBUG] First order data:', JSON.stringify(rawItems[0], null, 2));
-        } else {
+        if (rawItems.length > 0) {} else {
           console.warn('[Orders DEBUG] Customer_Order__c is empty or missing. Full response:', JSON.stringify(data, null, 2)?.slice(0, 500));
         }
-
-
       } catch (err: any) {
         console.error("Failed to fetch orders:", err);
         setError(err.message || "Failed to fetch orders");
@@ -262,7 +252,6 @@ export default function OrdersPage() {
       }
 
       const result = await response.json();
-      console.log('Order created successfully:', result);
 
       // Extract the order ID from the response (nested in data[0].Id)
       let newOrderId = null;
@@ -312,7 +301,6 @@ export default function OrdersPage() {
       }
 
       const result = await response.json();
-      console.log('Proposal order created successfully:', result);
 
       // Extract the order ID from the response
       let newOrderId = null;
@@ -385,10 +373,6 @@ export default function OrdersPage() {
 
         if (!sourceOrder) throw new Error("Order details not found");
 
-        // Debug: Log the source order to see what fields are available
-        console.log('Source order data:', sourceOrder);
-        console.log('Source order keys:', Object.keys(sourceOrder));
-
         // 2. Fetch contact details if we have a Ship_to_Contact__c
         let contactDetails: any = null;
         if (sourceOrder.Ship_to_Contact__c) {
@@ -397,7 +381,6 @@ export default function OrdersPage() {
             if (contactRes.ok) {
               const contacts = await contactRes.json();
               contactDetails = Array.isArray(contacts) ? contacts.find((c: any) => c.Id === sourceOrder.Ship_to_Contact__c) : null;
-              console.log('Contact details fetched:', contactDetails);
             }
           } catch (err) {
             console.warn('Failed to fetch contact details:', err);
@@ -468,7 +451,6 @@ export default function OrdersPage() {
           contactId: contactId,
           isDraft: true
         };
-        console.log('Clone payload:', JSON.stringify(payload, null, 2));
         // 3. Create new order
         const createRes = await fetch('/api/salesforce/orders', {
           method: 'PATCH',
@@ -496,7 +478,6 @@ export default function OrdersPage() {
         } else {
           throw new Error('No new order ID returned');
         }
-
       } catch (err: any) {
         console.error("Clone failed:", err);
         toastError(`Failed to clone order: ${err.message}`);
@@ -525,7 +506,6 @@ export default function OrdersPage() {
         }
 
         const result = await res.json();
-        console.log("Delete result:", result);
 
         if (result.success) {
           success("Order deleted successfully.");

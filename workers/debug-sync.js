@@ -9,8 +9,7 @@ async function debugSync() {
 
     try {
         const client = await pool.connect();
-        
-        console.log('--- Sync Queue Summary ---');
+
         const countRes = await client.query(`
             SELECT status, count(*) 
             FROM salesforce.algolia_sync_queue 
@@ -18,7 +17,6 @@ async function debugSync() {
         `);
         console.table(countRes.rows);
 
-        console.log('\n--- Recent Items ---');
         const recentRes = await client.query(`
             SELECT id, table_name, operation, status, error_message, created_at 
             FROM salesforce.algolia_sync_queue 
@@ -27,7 +25,6 @@ async function debugSync() {
         `);
         console.table(recentRes.rows);
 
-        console.log('\n--- Index Config ---');
         const configRes = await client.query(`
             SELECT * FROM salesforce.algolia_index_config
         `);

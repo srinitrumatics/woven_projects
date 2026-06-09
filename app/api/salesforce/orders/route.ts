@@ -13,12 +13,6 @@ export async function GET(req: Request) {
     const objectName = searchParams.get("objectName") || "Customer_Order__c";
 
     const rawAction = (searchParams.get("action") || "").toLowerCase();
-    console.log("=== Orders API Route ===");
-    console.log("Method: GET");
-    console.log("URL:", req.url);
-    console.log("accountId:", accountId);
-    console.log("contactId:", contactId);
-    console.log("action:", rawAction);
 
     if (!accountId || !contactId) {
       return NextResponse.json({ error: "Missing accountId or contactId" }, { status: 400 });
@@ -96,7 +90,6 @@ export async function GET(req: Request) {
     } else {
       return NextResponse.json({ error: "Unsupported action or missing orderId" }, { status: 400 });
     }
-    console.log('result', result);
     // The service functions return the data directly (or empty array on error)
     return NextResponse.json(result);
   } catch (err) {
@@ -113,7 +106,6 @@ export async function POST(req: Request) {
 
     if (action === "uploadFiles") {
       const uploadData = await req.json();
-      console.log('POST /api/salesforce/orders?action=uploadFiles');
       const result = await uploadFilesToSalesforce(uploadData);
 
       if (!result) {
@@ -142,8 +134,6 @@ export async function PATCH(req: Request) {
     const { searchParams } = new URL(req.url);
     const orderId = searchParams.get("orderId");
     const orderData = await req.json();
-    console.log('PATCH /api/salesforce/orders - orderId:', orderId);
-    console.log('PATCH /api/salesforce/orders - orderData:', JSON.stringify(orderData, null, 2));
 
     let result;
     if (orderId) {
@@ -216,7 +206,6 @@ export async function DELETE(req: Request) {
     }
 
     if (contentDocumentId && orderId) {
-      console.log('DELETE file - accountId:', accountId, 'orderId:', orderId, 'contentDocumentId:', contentDocumentId, 'contactId:', contactId);
       const result = await deleteFileFromSalesforce(accountId, contactId, orderId, contentDocumentId);
       if (!result) {
         return NextResponse.json({ error: "Failed to delete file" }, { status: 500 });
@@ -225,7 +214,6 @@ export async function DELETE(req: Request) {
     }
 
     if (orderLineId) {
-      console.log('DELETE order line - accountId:', accountId, 'orderLineId:', orderLineId, 'contactId:', contactId);
       const result = await deleteOrderFromSalesforce(accountId, contactId, orderLineId);
       if (!result) {
         return NextResponse.json({ error: "Failed to delete order line" }, { status: 500 });
@@ -234,7 +222,6 @@ export async function DELETE(req: Request) {
     }
 
     if (orderId) {
-      console.log('DELETE full order - accountId:', accountId, 'orderId:', orderId, 'contactId:', contactId);
       const result = await deleteFullOrderFromSalesforce(accountId, contactId, orderId);
       if (!result) {
         return NextResponse.json({ error: "Failed to delete order" }, { status: 500 });

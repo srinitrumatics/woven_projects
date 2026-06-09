@@ -232,7 +232,6 @@ export default function AuthorizeLocationsPage() {
                 throw new Error(errorData.error || "Failed to save location");
             }
 
-            console.log("Location saved successfully");
             setIsModalOpen(false);
             fetchLocations(); // Refresh the list
         } catch (error: any) {

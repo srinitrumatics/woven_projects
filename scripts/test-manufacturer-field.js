@@ -6,8 +6,6 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const fetch = global.fetch || require('node-fetch');
 
 async function testManufacturerField() {
-    console.log('Testing manufacturerName field...\n');
-
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false }
@@ -32,8 +30,6 @@ async function testManufacturerField() {
             'Content-Type': 'application/json'
         };
 
-        // Test POST with manufacturerName
-        console.log('Testing POST with manufacturerName...');
         const createRes = await fetch(API_URL, {
             method: 'POST',
             headers,
@@ -49,19 +45,12 @@ async function testManufacturerField() {
         });
 
         const createdData = await createRes.json();
-        console.log('Create Status:', createRes.status);
 
-        if (createdData.data?.manufacturerName) {
-            console.log('✅ manufacturerName stored:', createdData.data.manufacturerName);
-        } else {
-            console.log('❌ manufacturerName not stored');
-        }
+        if (createdData.data?.manufacturerName) {} else {}
 
         const productId = createdData.data?.sfid;
 
         if (productId) {
-            // Test PUT to update manufacturerName
-            console.log('\nTesting PUT to update manufacturerName...');
             const updateRes = await fetch(`${API_URL}/${productId}`, {
                 method: 'PUT',
                 headers,
@@ -73,19 +62,12 @@ async function testManufacturerField() {
             });
 
             const updatedData = await updateRes.json();
-            console.log('Update Status:', updateRes.status);
 
-            if (updatedData.data?.manufacturerName === 'LG Corporation') {
-                console.log('✅ manufacturerName updated:', updatedData.data.manufacturerName);
-            } else {
-                console.log('❌ manufacturerName not updated correctly');
-            }
+            if (updatedData.data?.manufacturerName === 'LG Corporation') {} else {}
 
             // Cleanup
             await fetch(`${API_URL}/${productId}`, { method: 'DELETE', headers });
-            console.log('\n✅ Test completed and cleaned up');
         }
-
     } catch (error) {
         console.error('❌ Test failed:', error.message);
     } finally {

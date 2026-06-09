@@ -5,17 +5,6 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 async function diagnose() {
-    console.log('=== Algolia Sync Diagnostics (Salesforce Schema) ===\n');
-
-    // 1. Check environment variables
-    console.log('1. Environment Variables:');
-    console.log('   DATABASE_URL:', process.env.DATABASE_URL ? '✓ Set' : '✗ Missing');
-    console.log('   ALGOLIA_APP_ID:', process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || process.env.ALGOLIA_APP_ID || '✗ Missing');
-    console.log('   ALGOLIA_ADMIN_KEY:', process.env.ALGOLIA_ADMIN_KEY ? '✓ Set' : '✗ Missing');
-    console.log('');
-
-    // 2. Test database connection
-    console.log('2. Database Connection:');
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false }
@@ -23,10 +12,6 @@ async function diagnose() {
 
     try {
         const client = await pool.connect();
-        console.log('   ✓ Connected successfully');
-
-        // 3. Check if tables exist
-        console.log('\n3. Database Tables (salesforce schema):');
         const tables = await client.query(`
             SELECT table_name 
             FROM information_schema.tables 
@@ -35,16 +20,10 @@ async function diagnose() {
             ORDER BY table_name
         `);
 
-        if (tables.rows.length === 0) {
-            console.log('   ✗ No Algolia tables found in salesforce schema!');
-        } else {
-            tables.rows.forEach(row => {
-                console.log(`   ✓ ${row.table_name}`);
-            });
+        if (tables.rows.length === 0) {} else {
+            tables.rows.forEach(row => {});
         }
 
-        // 4. Check queue status
-        console.log('\n4. Queue Status:');
         // Check if table exists before querying
         const queueExists = tables.rows.some(r => r.table_name === 'algolia_sync_queue');
 
@@ -58,12 +37,8 @@ async function diagnose() {
                 ORDER BY status
             `);
 
-            if (queueStats.rows.length === 0) {
-                console.log('   ℹ Queue is empty (no items to sync)');
-            } else {
-                queueStats.rows.forEach(row => {
-                    console.log(`   ${row.status}: ${row.count} items`);
-                });
+            if (queueStats.rows.length === 0) {} else {
+                queueStats.rows.forEach(row => {});
             }
 
             // 5. Check pending items details
@@ -76,21 +51,12 @@ async function diagnose() {
             `);
 
             if (pendingItems.rows.length > 0) {
-                console.log('\n5. Recent Items (Pending/Failed):');
                 pendingItems.rows.forEach((item, idx) => {
-                    console.log(`   ${idx + 1}. ID: ${item.id}`);
-                    console.log(`      Table: ${item.table_name}, Operation: ${item.operation}`);
-                    console.log(`      Created: ${item.created_at}`);
-                    console.log(`      Retries: ${item.retry_count}`);
-                    if (item.error_message) {
-                        console.log(`      Error: ${item.error_message}`);
-                    }
+                    if (item.error_message) {}
                 });
             }
         }
 
-        // 6. Check index configuration
-        console.log('\n6. Index Configuration:');
         const configExists = tables.rows.some(r => r.table_name === 'algolia_index_config');
         if (configExists) {
             const indexConfig = await client.query(`
@@ -99,19 +65,13 @@ async function diagnose() {
                 ORDER BY table_name
             `);
 
-            if (indexConfig.rows.length === 0) {
-                console.log('   ✗ No index configurations found!');
-            } else {
+            if (indexConfig.rows.length === 0) {} else {
                 indexConfig.rows.forEach(row => {
                     const status = row.is_enabled ? '✓' : '✗';
-                    console.log(`   ${status} ${row.table_name} → ${row.index_name}`);
-                    console.log(`     Transform: ${row.transform_function}`);
                 });
             }
         }
 
-        // 7. Check database functions
-        console.log('\n7. Database Functions:');
         const functions = await client.query(`
             SELECT routine_name 
             FROM information_schema.routines 
@@ -120,45 +80,26 @@ async function diagnose() {
             ORDER BY routine_name
         `);
 
-        if (functions.rows.length === 0) {
-            console.log('   ✗ No Algolia functions found in salesforce schema!');
-        } else {
-            functions.rows.forEach(row => {
-                console.log(`   ✓ ${row.routine_name}()`);
-            });
+        if (functions.rows.length === 0) {} else {
+            functions.rows.forEach(row => {});
         }
 
         client.release();
-    } catch (error) {
-        console.log('   ✗ Error:', error.message);
-    }
+    } catch (error) {}
 
-    // 8. Test Algolia connection
-    console.log('\n8. Algolia Connection:');
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || process.env.ALGOLIA_APP_ID;
     const adminKey = process.env.ALGOLIA_ADMIN_KEY;
 
-    if (!appId || !adminKey) {
-        console.log('   ✗ Missing Algolia credentials');
-    } else {
+    if (!appId || !adminKey) {} else {
         try {
             const client = algoliasearch(appId, adminKey);
             const indices = await client.listIndices();
-            console.log(`   ✓ Connected successfully (${indices.items.length} indices found)`);
 
             // list a few indices
-            if (indices.items.length > 0) {
-                console.log(`   Sample indices: ${indices.items.slice(0, 3).map(i => i.name).join(', ')}`);
-            }
-
-        } catch (error) {
-            console.log('   ✗ Error:', error.message);
-            console.log('   Hint: Check if ALGOLIA_ADMIN_KEY is correct (not search key)');
-        }
+            if (indices.items.length > 0) {}
+        } catch (error) {}
     }
 
-    // 9. Specific Check for salesforce.product2 and triggers
-    console.log('\n9. Salesforce Table & Trigger Check:');
     try {
         const client = await pool.connect();
 
@@ -170,11 +111,7 @@ async function diagnose() {
             AND table_name = 'product2'
         `);
 
-        if (productTable.rows.length === 0) {
-            console.log('   ✗ Table salesforce.product2 NOT FOUND!');
-        } else {
-            console.log('   ✓ Table salesforce.product2 exists');
-
+        if (productTable.rows.length === 0) {} else {
             // Check triggers
             const triggers = await client.query(`
                 SELECT trigger_name, event_manipulation, action_statement
@@ -183,29 +120,18 @@ async function diagnose() {
                 AND event_object_table = 'product2'
             `);
 
-            if (triggers.rows.length === 0) {
-                console.log('   ✗ NO TRIGGERS found on salesforce.product2');
-            } else {
-                triggers.rows.forEach(t => {
-                    console.log(`   ✓ Trigger: ${t.trigger_name} (${t.event_manipulation})`);
-                });
+            if (triggers.rows.length === 0) {} else {
+                triggers.rows.forEach(t => {});
 
                 // Check if specific algolia trigger exists
                 const algoliaTrigger = triggers.rows.find(t => t.trigger_name.includes('algolia'));
-                if (algoliaTrigger) {
-                    console.log('   ✓ Algolia sync trigger seems to be present');
-                } else {
-                    console.log('   ✗ Algolia sync trigger is MISSING');
-                }
+                if (algoliaTrigger) {} else {}
             }
         }
         client.release();
-    } catch (e) {
-        console.log('   ✗ Error checking triggers:', e.message);
-    }
+    } catch (e) {}
 
     await pool.end();
-    console.log('\n=== Diagnostics Complete ===');
 }
 
 diagnose().catch(console.error);

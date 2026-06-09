@@ -304,7 +304,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         const res = await fetch(`/api/salesforce/proposals?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&proposalId=${id}&action=view`);
         if (!res.ok) throw new Error('Failed to fetch proposal');
         const data = await res.json();
-        console.log("Fetched proposal data raw:", data);
 
         let item: any = null;
         if (Array.isArray(data) && data.length > 0) {
@@ -344,7 +343,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             accountExecutive: item.Owner_Name || item.Owner?.Name || item.Company_Signed_By_Name || 'N/A'
           };
 
-          console.log("Proposal API Item:", item);
           const detailedProposal = {
             ...mappedProposal,
             accountExecutive: item.Owner_Name || item.Owner?.Name || item.Company_Signed_By_Name || 'N/A',
@@ -370,7 +368,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             Project_Workspace__c: item.Project_Workspace__c || ''
           };
 
-          console.log("Mapped Detailed Proposal:", detailedProposal);
           setProposal(detailedProposal as any);
 
           if (item.Proposal_Elements__r && item.Proposal_Elements__r.records) {
@@ -454,7 +451,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           break;
         case 'products':
           if (json.length > 0) {
-            console.log('result data', json);
             setProposedProducts(json.map((item: any) => ({
               id: item.Id,
               Name: item.Name || 'N/A',
@@ -545,8 +541,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           }
           break;
         case 'purchases':
-          // JSON returns object with Purchase_Order__c and Supplier_Bill__c arrays
-          console.log(json);
           const purchaseOrders = (json.Purchase_Order__c || []);
           if (Array.isArray(purchaseOrders) && purchaseOrders.length > 0) {
             setPurchases(purchaseOrders.map((p: any) => ({
@@ -627,7 +621,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           }
           break;
         case 'returns':
-          console.log("returns", json);
           setReturnsData({
             rma: (json.RMA__c || []).map((r: any) => ({
               id: r.Id,
@@ -761,7 +754,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           });
           break;
         case 'taxes':
-          console.log("Taxes Raw JSON:", json);
           let taxDataArray: any[] = [];
 
           if (Array.isArray(json)) {
@@ -778,8 +770,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               if (key) taxDataArray = potentialData[key];
             }
           }
-
-          console.log("Resolved Tax Array:", taxDataArray);
 
           if (taxDataArray.length > 0) {
             setTaxesData(taxDataArray.map((t: any) => ({
@@ -804,7 +794,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           }
           break;
         case 'fulfillment':
-          console.log("Fulfillments json:", json.Invoice__c);
           setFulfillmentData({
             invoices: (json.Invoice__c || []).map((inv: any) => ({
               id: inv.Id,

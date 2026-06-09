@@ -21,8 +21,6 @@ export async function getSupplierBillsFromSalesforce(
             url += `&objectId=${encodeURIComponent(objectId)}`;
         }
 
-        console.log(`Fetching Supplier Bill ${tabName} from Salesforce with URL:`, url);
-
         const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -64,8 +62,6 @@ export async function getSupplierBillFilesFromSalesforce(
 
         const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
         const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(objectId)}&objectName=${encodeURIComponent(objectName)}`;
-
-        console.log('Fetching Supplier Bill files from Salesforce with URL:', url);
 
         const response = await fetch(url, {
             method: "GET",

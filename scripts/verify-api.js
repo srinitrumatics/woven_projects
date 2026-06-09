@@ -7,8 +7,6 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const fetch = global.fetch || require('node-fetch');
 
 async function runVerification() {
-    console.log('Starting verification...');
-
     // 1. Setup DB Connection
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
@@ -22,15 +20,11 @@ async function runVerification() {
         const testKey = 'sk_test_' + crypto.randomBytes(16).toString('hex');
         const keyHash = crypto.createHash('sha256').update(testKey).digest('hex');
 
-        console.log(`Generated Test Key: ${testKey}`);
-
         await client.query(`
             INSERT INTO api_keys (id, key_hash, prefix, name, is_active, rate_limit)
             VALUES (gen_random_uuid(), $1, $2, 'Test Key', true, 100)
             ON CONFLICT (key_hash) DO NOTHING
         `, [keyHash, 'sk_test_']);
-
-        console.log('Test key inserted into DB.');
 
         // 3. Test Endpoints
         const API_URL = 'http://localhost:3000/api/external/v1/products';
@@ -39,14 +33,9 @@ async function runVerification() {
             'Content-Type': 'application/json'
         };
 
-        // TEST 1: LIST
-        console.log('\nTesting GET List...');
         const listRes = await fetch(API_URL, { headers });
-        console.log(`List Status: ${listRes.status}`);
         if (listRes.status !== 200) throw new Error('Failed to list products');
 
-        // TEST 2: CREATE
-        console.log('\nTesting POST Create...');
         const newProductCode = `TEST_${Date.now()}`;
         const createRes = await fetch(API_URL, {
             method: 'POST',
@@ -59,21 +48,14 @@ async function runVerification() {
                 price: "99.99"
             })
         });
-        console.log(`Create Status: ${createRes.status}`);
         const createdData = await createRes.json();
-        console.log('Created Product ID:', createdData.data?.sfid);
 
         if (!createdData.data?.sfid) throw new Error('Failed to create product');
         const productId = createdData.data.sfid;
 
-        // TEST 3: GET ONE
-        console.log('\nTesting GET One...');
         const getRes = await fetch(`${API_URL}/${productId}`, { headers });
-        console.log(`Get One Status: ${getRes.status}`);
         if (getRes.status !== 200) throw new Error('Failed to get created product');
 
-        // TEST 4: UPDATE
-        console.log('\nTesting PUT Update...');
         const updateRes = await fetch(`${API_URL}/${productId}`, {
             method: 'PUT',
             headers,
@@ -83,21 +65,14 @@ async function runVerification() {
                 isActive: false
             })
         });
-        console.log(`Update Status: ${updateRes.status}`);
         const updatedData = await updateRes.json();
         if (updatedData.data?.name !== 'Test Product Updated') throw new Error('Update validation failed');
 
-        // TEST 5: DELETE
-        console.log('\nTesting DELETE...');
         const deleteRes = await fetch(`${API_URL}/${productId}`, {
             method: 'DELETE',
             headers
         });
-        console.log(`Delete Status: ${deleteRes.status}`);
         if (deleteRes.status !== 200) throw new Error('Failed to delete product');
-
-        console.log('\nVerification Successful! All endpoints are working.');
-
     } catch (error) {
         console.error('\nVerification Failed:', error);
     } finally {

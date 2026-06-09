@@ -34,13 +34,11 @@ function checkFile(filePath) {
         if (title && text && title !== text) {
             // Exclude common dynamic or special cases
             if (title.includes('{') || text.includes('{') || text.includes('$')) continue;
-            
-            console.log(`[FIXING] ${filePath}: "${title}" -> "${text}"`);
-            
+
             // Construct replacement
             const oldTag = match[0];
             const newTag = `<${tag}${attrPre}title="${text}"${attrPost}>${match[5]}</${tag}>`;
-            
+
             content = content.replace(oldTag, newTag);
             foundDiscrepancies = true;
         }
@@ -52,4 +50,3 @@ function checkFile(filePath) {
 }
 
 walkDir(directoryPath, checkFile);
-console.log("Cleanup complete.");

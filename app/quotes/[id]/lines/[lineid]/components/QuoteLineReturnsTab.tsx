@@ -129,7 +129,6 @@ export default function QuoteLineReturnsTab({
                 if (!res.ok) throw new Error("Failed to fetch returns data");
 
                 const responseData = await res.json();
-                console.log("Returns API Response:", responseData);
 
                 if (responseData) {
                     // Map Debit Memo Lines

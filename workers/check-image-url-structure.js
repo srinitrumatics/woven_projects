@@ -18,14 +18,7 @@ async function checkImageUrlStructure() {
             LIMIT 3
         `);
 
-        console.log('Sample image_url values:\n');
-        result.rows.forEach((row, i) => {
-            console.log(`${i + 1}. Product: ${row.name}`);
-            console.log(`   SFID: ${row.sfid}`);
-            console.log(`   image_url type: ${typeof row.image_url}`);
-            console.log(`   image_url value:`, JSON.stringify(row.image_url, null, 2));
-            console.log('');
-        });
+        result.rows.forEach((row, i) => {});
 
         client.release();
     } catch (error) {

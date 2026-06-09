@@ -33,17 +33,8 @@ function checkFile(filePath) {
             // Exclude some common patterns that are likely intentional
             if (title.includes('.') || title.includes('{') || text.includes('{')) continue;
             if (title === "Notes" && text === "Shipment Notes") {
-                 console.log(`[DISCREPANCY] ${filePath}`);
-                 console.log(`  Text: "${text}"`);
-                 console.log(`  Title: "${title}"`);
-                 console.log('---');
-                 continue;
+                continue;
             }
-
-            console.log(`[DISCREPANCY] ${filePath}`);
-            console.log(`  Text: "${text}"`);
-            console.log(`  Title: "${title}"`);
-            console.log('---');
         }
     }
 }

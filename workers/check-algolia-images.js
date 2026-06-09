@@ -7,9 +7,6 @@ async function checkAlgoliaImages() {
     const adminKey = process.env.ALGOLIA_ADMIN_KEY;
     const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
 
-    console.log('Checking Algolia index:', indexName);
-    console.log('');
-
     try {
         const client = algoliasearch(appId, adminKey);
         const index = client.initIndex(indexName);
@@ -17,21 +14,13 @@ async function checkAlgoliaImages() {
         const response = await index.search('', { hitsPerPage: 10 });
         const hits = response.hits || [];
 
-        console.log(`Total hits: ${hits.length}\n`);
-
         if (hits.length === 0) {
-            console.log('No products found in Algolia.');
             return;
         }
 
-        hits.forEach((hit, i) => {
-            console.log(`${i + 1}. ${hit.name || 'Unnamed'}`);
-            console.log(`   image_url: ${hit.image_url || 'MISSING'}`);
-        });
+        hits.forEach((hit, i) => {});
 
         const withImages = hits.filter(h => h.image_url && h.image_url !== 'MISSING').length;
-        console.log(`\n✅ ${withImages} out of ${hits.length} have image_url`);
-
     } catch (error) {
         console.error('Error:', error.message);
         console.error(error.stack);

@@ -5,9 +5,6 @@ import { createAuthorizedLocationInSalesforce, updateAuthorizedLocationInSalesfo
 export async function PATCH(req: NextRequest) {
     try {
         const body = await req.json();
-        console.log("=== Authorized Locations API Route ===");
-        console.log("Method: PATCH");
-        console.log("Payload:", JSON.stringify(body, null, 2));
 
         const data = await updateAuthorizedLocationInSalesforce(body);
         return NextResponse.json(data);
@@ -22,12 +19,6 @@ export async function GET(req: NextRequest) {
         const { searchParams } = new URL(req.url);
         const accountId = searchParams.get("accountId");
         const contactId = searchParams.get("contactId");
-
-        console.log("=== Authorized Locations API Route ===");
-        console.log("Method: GET");
-        console.log("URL:", req.url);
-        console.log("accountId:", accountId);
-        console.log("contactId:", contactId);
 
         if (!accountId || !contactId) {
             return NextResponse.json(
@@ -47,9 +38,6 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        console.log("=== Authorized Locations API Route ===");
-        console.log("Method: POST");
-        console.log("Payload:", JSON.stringify(body, null, 2));
 
         const data = await createAuthorizedLocationInSalesforce(body);
         return NextResponse.json(data);

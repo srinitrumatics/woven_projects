@@ -387,7 +387,6 @@ export default function ProposalProductDetailPage({
                 }
 
                 const data = await res.json();
-                console.log("Fetched proposal products for details:", data);
 
                 if (data && data.length > 0) {
                     const products = data;

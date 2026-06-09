@@ -21,9 +21,6 @@ async function main() {
         process.exit(1);
     }
 
-    console.log(`\n📋 Algolia App ID  : ${appId}`);
-    console.log(`🔑 Admin Key       : ${apiKey.slice(0, 8)}...\n`);
-
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false },
@@ -39,7 +36,6 @@ async function main() {
             orgRows = res.rows;
         } else {
             const lowercaseSchema = targetSchemaArg.toLowerCase();
-            console.log(`⚠️ Schema '${targetSchemaArg}' not found in DB. Using as manual override.`);
             orgRows = [{ algolia_schema: lowercaseSchema, name: 'Manual Override' }];
         }
     } else {
@@ -50,9 +46,6 @@ async function main() {
     for (const org of orgRows) {
         const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '');
         const targetIndex = targetIndexArg || org.algolia_index_name || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
-
-        console.log(`\n--- Processing Tenant: ${org.name || schema} ---`);
-        console.log(`Fetching active products from "${schema}".product2...`);
 
         try {
             const { rows } = await client.query(`
@@ -78,17 +71,13 @@ async function main() {
                 WHERE isactive = true
             `);
 
-            console.log(`Found ${rows.length} active products in DB.\n`);
-
             if (rows.length === 0) {
-                console.log('⚠️  No products to sync for this tenant.');
                 continue;
             }
 
             const algolia = algoliasearch(appId, apiKey);
             const index = algolia.initIndex(targetIndex);
-            
-            console.log(`Configuring facets for index "${targetIndex}"...`);
+
             await index.setSettings({
                 attributesForFaceting: [
                     'category',
@@ -98,20 +87,15 @@ async function main() {
                 ]
             });
 
-            console.log(`Pushing ${rows.length} objects to Algolia index "${targetIndex}"...`);
             const result = await index.saveObjects(rows);
-            console.log(`✅ Success! Saved ${result.objectIDs.length} records.`);
-            
+
             // Verify
             await new Promise(r => setTimeout(r, 1500)); // brief wait for indexing
             const search = await index.search('', { hitsPerPage: 1 });
-            console.log(`📊 Index "${targetIndex}" now has ${search.nbHits} total records.`);
         } catch (dbErr) {
             console.error(`❌ Error processing tenant ${schema}:`, dbErr.message);
         }
     }
-
-    console.log("\nFinished processing all tenants!");
 
     await client.release();
     await pool.end();

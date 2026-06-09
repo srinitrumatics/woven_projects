@@ -9,14 +9,11 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
   const indexName = algoliaIndexName || `${s}_products`;
   const client = await pool.connect();
 
-  console.log(`\n🚀 Provisioning new tenant schema: "${s}" (index: "${indexName}")`);
-
   try {
     await client.query('BEGIN');
 
     // ── 1. Create Schema ──────────────────────────────────────────────────────
     await client.query(`CREATE SCHEMA IF NOT EXISTS "${s}"`);
-    console.log(`✅ Schema "${s}" created`);
 
     // ── 2. product2 table ─────────────────────────────────────────────────────
     await client.query(`
@@ -41,7 +38,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
         systemmodstamp                TIMESTAMP
       )
     `);
-    console.log(`✅ Table "${s}".product2 created`);
 
     // ── 3. algolia_sync_queue table ───────────────────────────────────────────
     await client.query(`
@@ -64,7 +60,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
     await client.query(`CREATE INDEX IF NOT EXISTS "${s}_idx_queue_table_record" ON "${s}".algolia_sync_queue(table_name, record_id)`);
     await client.query(`CREATE INDEX IF NOT EXISTS "${s}_idx_queue_cleanup"      ON "${s}".algolia_sync_queue(status, processed_at) WHERE status = 'completed'`);
     await client.query(`CREATE INDEX IF NOT EXISTS "${s}_idx_queue_retry"        ON "${s}".algolia_sync_queue(status, last_retry_at) WHERE status = 'pending' AND retry_count > 0`);
-    console.log(`✅ Table "${s}".algolia_sync_queue created`);
 
     // ── 4. algolia_sync_log table ─────────────────────────────────────────────
     await client.query(`
@@ -86,7 +81,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
     await client.query(`CREATE INDEX IF NOT EXISTS "${s}_idx_sync_log_status" ON "${s}".algolia_sync_log(status, synced_at)`);
     await client.query(`CREATE INDEX IF NOT EXISTS "${s}_idx_sync_log_record" ON "${s}".algolia_sync_log(table_name, record_id)`);
     await client.query(`CREATE INDEX IF NOT EXISTS "${s}_idx_sync_log_queue"  ON "${s}".algolia_sync_log(queue_id)`);
-    console.log(`✅ Table "${s}".algolia_sync_log created`);
 
     // ── 5. algolia_index_config table ─────────────────────────────────────────
     await client.query(`
@@ -112,7 +106,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
         transform_function = EXCLUDED.transform_function,
         batch_size         = EXCLUDED.batch_size
     `, [`${s}.product2`, indexName]);
-    console.log(`✅ Table "${s}".algolia_index_config created (index: ${indexName})`);
 
     // ── 6. transform_sf_product_for_algolia function ──────────────────────────
     await client.query(`
@@ -161,7 +154,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       END;
       $$ LANGUAGE plpgsql IMMUTABLE
     `);
-    console.log(`✅ Function "${s}".transform_sf_product_for_algolia created`);
 
     // ── 7. enqueue_algolia_sync function ──────────────────────────────────────
     await client.query(`
@@ -181,7 +173,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       END;
       $$ LANGUAGE plpgsql
     `);
-    console.log(`✅ Function "${s}".enqueue_algolia_sync created`);
 
     // ── 8. get_pending_algolia_syncs function ─────────────────────────────────
     await client.query(`
@@ -198,7 +189,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       END;
       $$ LANGUAGE plpgsql
     `);
-    console.log(`✅ Function "${s}".get_pending_algolia_syncs created`);
 
     // ── 9. get_pending_syncs_by_table function ────────────────────────────────
     await client.query(`
@@ -215,7 +205,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       END;
       $$ LANGUAGE plpgsql
     `);
-    console.log(`✅ Function "${s}".get_pending_syncs_by_table created`);
 
     // ── 10. mark_sync_processing function ─────────────────────────────────────
     await client.query(`
@@ -226,7 +215,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       END;
       $$ LANGUAGE plpgsql
     `);
-    console.log(`✅ Function "${s}".mark_sync_processing created`);
 
     // ── 11. mark_sync_completed function ──────────────────────────────────────
     await client.query(`
@@ -242,7 +230,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       END;
       $$ LANGUAGE plpgsql
     `);
-    console.log(`✅ Function "${s}".mark_sync_completed created`);
 
     // ── 12. mark_sync_failed function ─────────────────────────────────────────
     await client.query(`
@@ -269,7 +256,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       END;
       $$ LANGUAGE plpgsql
     `);
-    console.log(`✅ Function "${s}".mark_sync_failed created`);
 
     // ── 13. reset_stuck_processing function ───────────────────────────────────
     await client.query(`
@@ -283,7 +269,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       END;
       $$ LANGUAGE plpgsql
     `);
-    console.log(`✅ Function "${s}".reset_stuck_processing created`);
 
     // ── 14. cleanup_old_sync_records function ─────────────────────────────────
     await client.query(`
@@ -296,7 +281,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       END;
       $$ LANGUAGE plpgsql
     `);
-    console.log(`✅ Function "${s}".cleanup_old_sync_records created`);
 
     // ── 15. run_algolia_maintenance function ──────────────────────────────────
     await client.query(`
@@ -314,7 +298,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       END;
       $$ LANGUAGE plpgsql
     `);
-    console.log(`✅ Function "${s}".run_algolia_maintenance created`);
 
     // ── 16. update_updated_at_column function ─────────────────────────────────
     await client.query(`
@@ -322,7 +305,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       BEGIN NEW.updated_at = CURRENT_TIMESTAMP; RETURN NEW; END;
       $$ LANGUAGE plpgsql
     `);
-    console.log(`✅ Function "${s}".update_updated_at_column created`);
 
     // ── 17. trigger_algolia_sync function ─────────────────────────────────────
     await client.query(`
@@ -365,7 +347,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       END;
       $$ LANGUAGE plpgsql
     `);
-    console.log(`✅ Function "${s}".trigger_algolia_sync created`);
 
     // ── 18. Triggers ──────────────────────────────────────────────────────────
     await client.query(`DROP TRIGGER IF EXISTS sf_product2_algolia_sync_trigger ON "${s}".product2`);
@@ -374,7 +355,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
         AFTER INSERT OR UPDATE OR DELETE ON "${s}".product2
         FOR EACH ROW EXECUTE FUNCTION "${s}".trigger_algolia_sync()
     `);
-    console.log(`✅ Trigger sf_product2_algolia_sync_trigger on "${s}".product2 created`);
 
     await client.query(`DROP TRIGGER IF EXISTS update_algolia_config_timestamp ON "${s}".algolia_index_config`);
     await client.query(`
@@ -382,7 +362,6 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
         BEFORE UPDATE ON "${s}".algolia_index_config
         FOR EACH ROW EXECUTE FUNCTION "${s}".update_updated_at_column()
     `);
-    console.log(`✅ Trigger update_algolia_config_timestamp on "${s}".algolia_index_config created`);
 
     // ── 19. Monitoring Views ──────────────────────────────────────────────────
     await client.query(`
@@ -409,11 +388,8 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
       SELECT q.id, q.table_name, q.record_id, q.operation, q.error_message, q.retry_count, q.created_at, q.last_retry_at, q.processed_at
       FROM "${s}".algolia_sync_queue q WHERE q.status = 'failed' ORDER BY q.processed_at DESC
     `);
-    console.log(`✅ Views created in "${s}"`);
 
     await client.query('COMMIT');
-    console.log(`\n🎉 Tenant provisioning complete for "${s}" (Algolia index: "${indexName}")\n`);
-
   } catch (error) {
     await client.query('ROLLBACK');
     console.error(`❌ Failed to provision schema "${s}":`, error);

@@ -18,8 +18,6 @@ async function runMigrations() {
     process.exit(1);
   }
 
-  console.log('🔌 Connecting to database...');
-
   const pool = new Pool({
     connectionString: databaseUrl,
     ssl: {
@@ -30,11 +28,9 @@ async function runMigrations() {
   const db = drizzle(pool);
 
   const migrationsFolder = path.join(__dirname, '..', 'drizzle');
-  console.log(`📂 Running migrations from: ${migrationsFolder}`);
 
   try {
     await migrate(db, { migrationsFolder });
-    console.log('✅ Migrations completed successfully!');
   } catch (error) {
     console.error('❌ Migration failed:', error);
     process.exit(1);

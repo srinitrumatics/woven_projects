@@ -5,7 +5,6 @@ import { adminLoginWithPostgres } from '@/lib/admin-auth-service';
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
-    console.log(`[API] Admin Postgres Login request received for email: ${email}`);
 
     if (!email || !password) {
       return NextResponse.json(
@@ -16,15 +15,13 @@ export async function POST(request: NextRequest) {
 
     // Authenticate via Postgres
     const result = await adminLoginWithPostgres(email, password);
-    
+
     if (!result.success) {
       return NextResponse.json(
         { error: result.error },
         { status: 401 }
       );
     }
-
-    console.log('[API] Admin Postgres Login success - user:', result.user?.id);
 
     return NextResponse.json(
       {

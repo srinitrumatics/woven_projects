@@ -177,8 +177,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             const isManufacturerOrHybrid = accountCategory === 'Partner' || accountCategory === 'Hybrid';
             const status = (product.status || '').trim();
 
-            console.log('DEBUG: Edit check', { accountCategory, status, isCustomer, isManufacturerOrHybrid });
-
             // Rule 1: If product is in 'Available' status, NO users can edit it
             if (status.toLowerCase() === 'available') return null;
 

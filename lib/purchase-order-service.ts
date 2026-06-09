@@ -11,8 +11,6 @@ export async function getPurchaseOrderFilesFromSalesforce(accountId: string, con
         const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
         const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(objectId)}&objectName=${encodeURIComponent(objectName)}`;
 
-        console.log('Fetching PO files from Salesforce with URL:', url);
-
         const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -53,8 +51,6 @@ export async function getPurchaseOrdersFromSalesforce(
         if (objectId) {
             url += `&objectId=${encodeURIComponent(objectId)}`;
         }
-
-        console.log(`Fetching Purchase Order ${tabName} from Salesforce with URL:`, url);
 
         const response = await fetch(url, {
             method: "GET",

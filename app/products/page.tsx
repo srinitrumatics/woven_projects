@@ -10,11 +10,6 @@ export default async function ProductsPage() {
   const orgConfig = await getOrgConfig().catch(() => null);
   const indexName = orgConfig?.algoliaIndexName || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
 
-  console.log(`[ProductsList] 🔍 CHECKPOINT (Server): Algolia Index resolved to '${indexName}'`, {
-    fromOrgConfig: orgConfig?.algoliaIndexName,
-    fromEnvFallback: process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME
-  });
-
   return (
     <Sidebar>
       <div className="mb-6">

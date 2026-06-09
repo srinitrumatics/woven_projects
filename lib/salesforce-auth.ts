@@ -22,8 +22,6 @@ export async function salesforceForgotPassword(email: string): Promise<Salesforc
     isReset: true
   };
 
-  console.log('[SF Auth Service] Forgot Password Payload:', JSON.stringify(payload, null, 2));
-
   const sfResponse = await fetchWithLogging(url, {
     method: 'PATCH',
     headers: {
@@ -75,8 +73,6 @@ export async function salesforceResetPassword(email: string, code: number, newPa
     password: newPassword,
     verificationCode: code
   };
-
-  console.log('[SF Auth Service] Reset Password Payload:', JSON.stringify(payload, null, 2));
 
   const sfResponse = await fetchWithLogging(url, {
     method: 'PATCH',
@@ -143,9 +139,6 @@ export async function salesforceLogin(email: string, password: string): Promise<
       let data = '';
       const correlationId = Math.random().toString(36).substring(7);
       const start = Date.now();
-      
-      console.log(`[SF API Request][${correlationId}] GET ${requestUrl.toString()}`);
-      console.log(`[SF API Request Body][${correlationId}]:`, payloadString);
 
       res.on('data', (chunk) => {
         data += chunk;
@@ -153,8 +146,7 @@ export async function salesforceLogin(email: string, password: string): Promise<
 
       res.on('end', () => {
         const duration = Date.now() - start;
-        console.log(`[SF API Response][${correlationId}] ${res.statusCode} ${res.statusMessage} (${duration}ms)`);
-        
+
         if (!res.statusCode || res.statusCode < 200 || res.statusCode >= 300) {
           console.error(`[SF API Response Error][${correlationId}]:`, data);
           reject(new Error('Invalid email or password'));
@@ -162,7 +154,6 @@ export async function salesforceLogin(email: string, password: string): Promise<
         }
 
         try {
-          console.log(`[SF API Response Body Data][${correlationId}]:`, data.substring(0, 1000));
           const sfData = JSON.parse(data);
           resolve({
             success: sfData?.success === true,

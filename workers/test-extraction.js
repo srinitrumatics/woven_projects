@@ -25,11 +25,6 @@ async function testExtraction() {
 
         if (result.rows.length > 0) {
             const row = result.rows[0];
-            console.log('Product:', row.name);
-            console.log('Type:', row.type);
-            console.log('First element:', JSON.stringify(row.first_element, null, 2));
-            console.log('Method 1 (->0->>url):', row.method1);
-            console.log('Method 2 (#>>{0,url}):', row.method2);
         }
 
         client.release();

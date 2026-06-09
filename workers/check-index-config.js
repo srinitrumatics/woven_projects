@@ -9,7 +9,6 @@ async function checkIndexConfig() {
     try {
         const client = await pool.connect();
 
-        console.log('Checking algolia_index_config...');
         const result = await client.query(`
             SELECT table_name, index_name, is_enabled 
             FROM algolia_index_config

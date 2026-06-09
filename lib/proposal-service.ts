@@ -13,8 +13,6 @@ export async function getFilesFromSalesforce(accountId: string, contactId: strin
     const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
     const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(objectId)}&objectName=Proposal__c`;
 
-    console.log('Fetching files from Salesforce with URL:', url);
-
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -28,7 +26,6 @@ export async function getFilesFromSalesforce(accountId: string, contactId: strin
     }
 
     const resultdata = await response.json();
-    console.log('Files resultdata:', resultdata);
 
     return resultdata.data || [];
   } catch (error) {
@@ -67,8 +64,6 @@ export async function getGenericTabDataFromSalesforce(
       url += `&objectId=${encodeURIComponent(proposalId)}`;
     }
 
-    console.log(`Fetching ${tabName} from Salesforce with URL:`, url);
-
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -82,7 +77,6 @@ export async function getGenericTabDataFromSalesforce(
     }
 
     const result = await response.json();
-    console.log(`${tabName} result:`, result);
 
     // The API returns data in format: { data: [{ <ObjectName>__c: [...] }] }
     // Extract the data from the nested structure
@@ -102,7 +96,6 @@ export async function getGenericTabDataFromSalesforce(
     }
 
     return [];
-
   } catch (error) {
     console.error(`Error fetching ${tabName}:`, error);
     return [];

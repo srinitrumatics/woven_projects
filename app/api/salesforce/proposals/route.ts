@@ -11,12 +11,6 @@ export async function GET(req: NextRequest) {
         const proposalId = searchParams.get("proposalId") || ""
         const action = searchParams.get("action") || "";
         const objectName = searchParams.get("objectName");
-        console.log("=== Proposal API Route ===");
-        console.log("Method: GET");
-        console.log("URL:", req.url);
-        console.log("accountId:", accountId);
-        console.log("contactId:", contactId);
-        console.log("action:", action);
 
         if (!accountId || !contactId) {
             return NextResponse.json(
@@ -56,7 +50,6 @@ export async function GET(req: NextRequest) {
             else tabName = "Proposal";
             data = await getGenericTabDataFromSalesforce(accountId, contactId, proposalId, tabName, objectName || "Proposal__c");
         }
-        console.log("result data", NextResponse.json(data));
         return NextResponse.json(data);
     } catch (error) {
         console.error("Error in proposals API:", error);

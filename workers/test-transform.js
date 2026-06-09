@@ -23,13 +23,7 @@ async function testTransform() {
             LIMIT 3
         `);
 
-        console.log('Transform Function Test:\n');
-        result.rows.forEach((row, i) => {
-            console.log(`${i + 1}. ${row.name}`);
-            console.log(`   Raw image_url:`, JSON.stringify(row.raw_image_url, null, 2));
-            console.log(`   Transformed image_url:`, row.transformed.image_url);
-            console.log('');
-        });
+        result.rows.forEach((row, i) => {});
 
         client.release();
     } catch (error) {

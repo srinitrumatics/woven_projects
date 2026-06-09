@@ -17,20 +17,17 @@ async function quickTest() {
         `);
 
         if (product.rows.length === 0) {
-            console.log('No products found');
             client.release();
             await pool.end();
             return;
         }
 
         const sfid = product.rows[0].sfid;
-        console.log('Testing with product:', sfid);
 
         // Count queue before
         const before = await client.query(`
             SELECT COUNT(*) FROM salesforce.algolia_sync_queue
         `);
-        console.log('Queue count before:', before.rows[0].count);
 
         // Update
         await client.query(`
@@ -38,22 +35,15 @@ async function quickTest() {
             SET image_url = jsonb_build_object('test', NOW()::text)
             WHERE sfid = $1
         `, [sfid]);
-        console.log('Updated product');
 
         // Count queue after
         const after = await client.query(`
             SELECT COUNT(*) FROM salesforce.algolia_sync_queue
         `);
-        console.log('Queue count after:', after.rows[0].count);
 
         const diff = parseInt(after.rows[0].count) - parseInt(before.rows[0].count);
-        console.log('Difference:', diff);
 
-        if (diff > 0) {
-            console.log('✓ Trigger is working!');
-        } else {
-            console.log('❌ Trigger did NOT fire!');
-        }
+        if (diff > 0) {} else {}
 
         client.release();
     } catch (error) {

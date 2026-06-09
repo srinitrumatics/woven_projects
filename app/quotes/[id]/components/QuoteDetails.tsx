@@ -14,9 +14,7 @@ interface QuoteDetailsProps {
 }
 
 export default function QuoteDetailsSection({ quote, lines, isUploading, handleFileUpload, handleDownloadPDF }: QuoteDetailsProps) {
-    const defaultHandleDownloadPDF = () => {
-        console.log("Downloading Quote PDF...");
-    };
+    const defaultHandleDownloadPDF = () => {};
 
     return (
         <div className="grid grid-cols-1 w1025:grid-cols-10 gap-6 items-stretch">

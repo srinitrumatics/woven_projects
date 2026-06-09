@@ -33,10 +33,6 @@ export async function createAuthorizedLocationInSalesforce(payload: CreateAuthor
 
         const url = `${session.instanceUrl}/services/apexrest/gtherp/authorizedlocations`;
 
-        console.log("Creating authorized location in Salesforce...");
-        console.log("URL:", url);
-        console.log("Payload:", JSON.stringify(payload, null, 2));
-
         const response = await fetch(url, {
             method: "POST",
             headers: {
@@ -53,7 +49,6 @@ export async function createAuthorizedLocationInSalesforce(payload: CreateAuthor
         }
 
         const result = await response.json();
-        console.log("Salesforce API response:", JSON.stringify(result, null, 2));
         return result;
     } catch (error) {
         console.error("Error in createAuthorizedLocationInSalesforce:", error);
@@ -69,10 +64,6 @@ export async function updateAuthorizedLocationInSalesforce(payload: CreateAuthor
         }
 
         const url = `${session.instanceUrl}/services/apexrest/gtherp/authorizedlocations`;
-
-        console.log("Updating authorized location in Salesforce...");
-        console.log("URL:", url);
-        console.log("Payload:", JSON.stringify(payload, null, 2));
 
         const response = await fetch(url, {
             method: "PATCH",
@@ -90,7 +81,6 @@ export async function updateAuthorizedLocationInSalesforce(payload: CreateAuthor
         }
 
         const result = await response.json();
-        console.log("Salesforce API response:", JSON.stringify(result, null, 2));
         return result;
     } catch (error) {
         console.error("Error in updateAuthorizedLocationInSalesforce:", error);
@@ -107,9 +97,6 @@ export async function getDeliveryWindowsFromSalesforce(accountId: string, contac
 
         const url = `${session.instanceUrl}/services/apexrest/gtherp/deliverywindows?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&locationId=${encodeURIComponent(locationId)}`;
 
-        console.log("Fetching delivery windows from Salesforce...");
-        console.log("URL:", url);
-
         const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -125,7 +112,6 @@ export async function getDeliveryWindowsFromSalesforce(accountId: string, contac
         }
 
         const result = await response.json();
-        console.log("Salesforce API response (Delivery Windows):", JSON.stringify(result, null, 2));
         return result;
     } catch (error) {
         console.error("Error in getDeliveryWindowsFromSalesforce:", error);
@@ -161,10 +147,6 @@ export async function createDeliveryWindowInSalesforce(payload: CreateDeliveryWi
 
         const url = `${session.instanceUrl}/services/apexrest/gtherp/deliverywindows`;
 
-        console.log("Creating delivery window in Salesforce...");
-        console.log("URL:", url);
-        console.log("Payload:", JSON.stringify(payload, null, 2));
-
         const response = await fetch(url, {
             method: "POST",
             headers: {
@@ -181,7 +163,6 @@ export async function createDeliveryWindowInSalesforce(payload: CreateDeliveryWi
         }
 
         const result = await response.json();
-        console.log("Salesforce API response (Create):", JSON.stringify(result, null, 2));
         return result;
     } catch (error) {
         console.error("Error in createDeliveryWindowInSalesforce:", error);
@@ -197,10 +178,6 @@ export async function updateDeliveryWindowInSalesforce(payload: CreateDeliveryWi
         }
 
         const url = `${session.instanceUrl}/services/apexrest/gtherp/deliverywindows`;
-
-        console.log("Updating delivery window in Salesforce...");
-        console.log("URL:", url);
-        console.log("Payload:", JSON.stringify(payload, null, 2));
 
         const response = await fetch(url, {
             method: "PATCH",
@@ -218,7 +195,6 @@ export async function updateDeliveryWindowInSalesforce(payload: CreateDeliveryWi
         }
 
         const result = await response.json();
-        console.log("Salesforce API response (Update):", JSON.stringify(result, null, 2));
         return result;
     } catch (error) {
         console.error("Error in updateDeliveryWindowInSalesforce:", error);
@@ -235,9 +211,6 @@ export async function deleteDeliveryWindowFromSalesforce(accountId: string, cont
 
         const url = `${session.instanceUrl}/services/apexrest/gtherp/deliverywindows?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&deliveryWindowId=${encodeURIComponent(deliveryWindowId)}`;
 
-        console.log("Deleting delivery window from Salesforce...");
-        console.log("URL:", url);
-
         const response = await fetch(url, {
             method: "DELETE",
             headers: {
@@ -253,7 +226,6 @@ export async function deleteDeliveryWindowFromSalesforce(accountId: string, cont
         }
 
         const result = await response.json();
-        console.log("Salesforce API response (Delete):", JSON.stringify(result, null, 2));
         return result;
     } catch (error) {
         console.error("Error in deleteDeliveryWindowFromSalesforce:", error);

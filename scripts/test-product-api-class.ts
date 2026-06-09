@@ -26,7 +26,6 @@ export class ProductApiTest {
     }
 
     private async setup() {
-        console.log('Setup: Generating temporary API Key...');
         // Generate a random key
         const rawKey = 'sk_test_cls_' + crypto.randomBytes(16).toString('hex');
         this.apiKey = rawKey;
@@ -38,27 +37,22 @@ export class ProductApiTest {
             VALUES ($1, $2, 'Test Class Key', true, 100)
             ON CONFLICT (key_hash) DO NOTHING
         `, [this.keyHash, 'sk_test_cls_']);
-        console.log('Setup: Key inserted.');
     }
 
     private async cleanup() {
-        console.log('Cleanup: Removing API Key...');
         if (this.keyHash) {
             await this.pool.query(`
                 DELETE FROM api_keys WHERE key_hash = $1
             `, [this.keyHash]);
         }
         await this.pool.end();
-        console.log('Cleanup: Done.');
     }
 
     public async testGetProducts() {
-        console.log('\n--- Testing GET /products ---');
         try {
             await this.setup();
 
             const url = `${BASE_URL}/products?limit=5`;
-            console.log(`Requesting: ${url}`);
 
             const response = await fetch(url, {
                 method: 'GET',
@@ -68,8 +62,6 @@ export class ProductApiTest {
                 }
             });
 
-            console.log(`Response Status: ${response.status}`);
-
             if (response.status !== 200) {
                 console.error('FAILED: Expected 200 OK');
                 const text = await response.text();
@@ -78,20 +70,14 @@ export class ProductApiTest {
             }
 
             const data = await response.json();
-            console.log('Response Metadata:', data.meta);
-            console.log(`Received ${data.data?.length} products.`);
 
             if (Array.isArray(data.data)) {
-                console.log('SUCCESS: Data is an array.');
-                if (data.data.length > 0) {
-                    console.log('Sample Product:', data.data[0].productCode);
-                } else {
+                if (data.data.length > 0) {} else {
                     console.warn('WARNING: No products found in DB/Salesforce table.');
                 }
             } else {
                 console.error('FAILED: Data is not an array.');
             }
-
         } catch (error) {
             console.error('Test Exception:', error);
         } finally {

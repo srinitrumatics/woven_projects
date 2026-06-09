@@ -13,12 +13,8 @@ async function fixKey() {
     });
 
     try {
-        console.log('Fixing API Key...');
-        console.log(`Target Key: ${TARGET_KEY.substring(0, 30)}...`);
-
         // 1. Calculate Hash
         const keyHash = crypto.createHash('sha256').update(TARGET_KEY).digest('hex');
-        console.log(`Key Hash:   ${keyHash}`);
 
         // 2. Insert or Update
         // modifying schema to be safe: key_hash is unique
@@ -31,12 +27,6 @@ async function fixKey() {
         `;
 
         const res = await pool.query(query, [keyHash, 'sk_test_', 'Manual Test Key']);
-
-        console.log('✅ Key inserted/updated successfully!');
-        console.log(`Record ID: ${res.rows[0].id}`);
-        console.log('\nYou can now use this key in your headers:');
-        console.log(`x-api-key: ${TARGET_KEY}`);
-
     } catch (error) {
         console.error('Error fixing key:', error);
     } finally {

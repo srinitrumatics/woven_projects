@@ -49,9 +49,6 @@ export async function POST(request: NextRequest) {
     const newAccount = accounts.find((acc: any) => (acc.Id || acc.id) === accountId);
     const newRole = newAccount?.Account_Record_Type__c || 'Customer';
 
-    console.log('[UpdateSession] New Account Found:', newAccount?.Name, 'Type:', newAccount?.Account_Record_Type__c);
-    console.log('[UpdateSession] Assigned Role:', newRole);
-
     const updatedSession = {
       ...currentSession,
       accountId: accountId,
@@ -75,8 +72,6 @@ export async function POST(request: NextRequest) {
       expires: expiresDate,
       path: '/',
     });
-
-    console.log('[UpdateSession] Session cookie updated successfully to account:', accountId);
 
     return new Response(
       JSON.stringify({

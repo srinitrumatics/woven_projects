@@ -4,8 +4,6 @@ import { hash } from 'bcryptjs';
 
 async function seedDatabase() {
   try {
-    console.log('Starting database seeding...');
-
     // Create permission groups
     const userManagementGroup = await db
       .insert(permissionGroups)
@@ -97,12 +95,6 @@ async function seedDatabase() {
         roleId: insertedRoles[2].id, // USER
         organizationId: insertedOrgs[1].id,
       });
-
-    console.log('Database seeding completed successfully!');
-    console.log(`Created ${insertedOrgs.length} organizations`);
-    console.log(`Created ${insertedRoles.length} roles`);
-    console.log(`Created ${insertedPermissions.length} permissions`);
-    console.log(`Created 1 sample user: ${sampleUser[0].email}`);
   } catch (error) {
     console.error('Error during database seeding:', error);
     throw error;

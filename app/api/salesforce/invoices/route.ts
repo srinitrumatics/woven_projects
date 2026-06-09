@@ -38,7 +38,6 @@ export async function GET(req: NextRequest) {
 
             // Allow overriding objectName via query param (e.g. for Invoice_Line__c related records)
             const overrideObjectName = searchParams.get("objectName");
-            console.log("overrideObjectName: ", overrideObjectName);
             // Map actions to tab names as specified
             if (action === "payments") {
                 tabName = "Payments";

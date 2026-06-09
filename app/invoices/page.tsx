@@ -53,7 +53,6 @@ export default function InvoicesPage() {
         const res = await fetch(`/api/salesforce/invoices?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&action=list`);
         if (!res.ok) throw new Error('Failed to fetch invoices');
         const data = await res.json();
-        console.log("Fetched invoices data:", data);
 
         // API might return standard list or object with metadata
         const responseData = Array.isArray(data) ? (data[0] || {}) : data;

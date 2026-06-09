@@ -107,23 +107,19 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
 
             if (linesRes.ok) {
                 const linesData = await linesRes.json();
-                console.log('PO Lines Raw Response:', linesData);
                 setPoLines(linesData?.Purchase_Order_Line__c || []);
             }
             if (billsRes.ok) {
                 const billsData = await billsRes.json();
-                console.log('PO Bills Raw Response:', billsData);
                 setBills(billsData?.Supplier_Bill__c || []);
             }
             if (returnsRes.ok) {
                 const returnsData = await returnsRes.json();
-                console.log('PO Returns Raw Response:', returnsData);
                 setDebitMemos(returnsData?.Debit_Memo_Line__c || returnsData?.Debit_Memo__c || []);
                 setRtv(returnsData?.RTV_Line__c || returnsData?.RTV__c || []);
             }
             if (filesRes.ok) {
                 const filesResponse = await filesRes.json();
-                console.log('PO Files Raw Response:', filesResponse);
                 // Files could be directly the array or wrapped in a data property
                 const filesData = Array.isArray(filesResponse) ? filesResponse : (filesResponse.data || []);
                 const mappedFiles = filesData.map((f: any) => ({
@@ -138,7 +134,6 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
             }
             if (serialRes.ok) {
                 const serialData = await serialRes.json();
-                console.log('PO Serial Numbers Raw Response:', serialData);
                 setSerialNumbers(serialData?.Serial_Number_Log__c || []);
             }
 

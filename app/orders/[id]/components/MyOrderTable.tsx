@@ -215,7 +215,6 @@ export default function MyOrderTable({
                     </table>
                 </div>
             )}
-
             {
                 sortedProducts.length > 0 && (
                     <Pagination

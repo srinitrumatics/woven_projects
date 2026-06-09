@@ -33,15 +33,7 @@ async function debugImageUrl() {
             LIMIT 5
         `);
 
-        console.log('Debugging image_url structure:\n');
-        result.rows.forEach((row, i) => {
-            console.log(`${i + 1}. ${row.name}`);
-            console.log(`   JSON Type: ${row.json_type}`);
-            console.log(`   Array Length: ${row.array_length}`);
-            console.log(`   Raw value:`, JSON.stringify(row.image_url, null, 2));
-            console.log(`   Extracted URL: ${row.extracted_url}`);
-            console.log('');
-        });
+        result.rows.forEach((row, i) => {});
 
         client.release();
     } catch (error) {

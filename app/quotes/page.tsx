@@ -50,7 +50,6 @@ export default function QuotesPage() {
         const res = await fetch(`/api/salesforce/quotes?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}`);
         if (!res.ok) throw new Error('Failed to fetch quotes');
         const data = await res.json();
-        console.log("Fetched quotes data:", data);
 
         // API might return standard list or object with metadata
         const responseData = Array.isArray(data) ? (data[0] || {}) : data;

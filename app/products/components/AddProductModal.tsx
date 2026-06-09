@@ -189,7 +189,6 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
           delete productData[key];
         }
       });
-      console.log('payload for product:', productData);
       const response = await fetch("/api/salesforce/product-details", {
         method: "POST",
         headers: {

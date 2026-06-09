@@ -151,9 +151,6 @@ export default function OrderLineDetailPage({
         const orderData = await orderRes.json();
         const linesData = await linesRes.json();
 
-        console.log("Fetched order data:", orderData);
-        console.log("Fetched order lines data:", linesData);
-
         let order = null;
         if (Array.isArray(orderData) && orderData.length > 0) {
           if (orderData[0].Customer_Order__c && Array.isArray(orderData[0].Customer_Order__c) && orderData[0].Customer_Order__c.length > 0) {
@@ -289,7 +286,6 @@ export default function OrderLineDetailPage({
       }
 
       const result = await response.json();
-      console.log("Update result:", result);
 
       // Update local state
       setOrderLines(prev => prev.map((line, idx) =>

@@ -21,13 +21,7 @@ async function inspectKeys() {
             LIMIT 1
         `);
 
-        console.log('Image URL structure:');
-        console.log('Product:', result.rows[0]?.name);
-        console.log('Full image_url:', JSON.stringify(result.rows[0]?.image_url, null, 2));
-        console.log('\nKeys in the JSONB object:');
-        result.rows.forEach(row => {
-            console.log(' -', row.keys);
-        });
+        result.rows.forEach(row => {});
 
         client.release();
     } catch (error) {

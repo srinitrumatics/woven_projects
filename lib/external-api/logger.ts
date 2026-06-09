@@ -26,9 +26,7 @@ function emit(level: LogLevel, msg: string, ctx?: LogContext) {
   });
   if (level === 'error' || level === 'warn') {
     console.error(line);
-  } else {
-    console.log(line);
-  }
+  } else {}
 }
 
 export const log = {

@@ -12,7 +12,6 @@ async function checkPermissions() {
         return;
     }
 
-    console.log('Checking permissions for App ID:', appId);
     // We can't easily check the key's permissions without using the key itself to query the keys API, 
     // which requires an admin key (catch-22 if this ISN'T an admin key).
     // However, we can try a write operation on a dummy index to confirm.
@@ -21,23 +20,17 @@ async function checkPermissions() {
     const index = client.initIndex('test_permission_check');
 
     try {
-        console.log('Attempting to add a test object...');
         await index.saveObject({
             objectID: 'test_obj',
             test: true,
             timestamp: Date.now()
         });
-        console.log('✓ Success! Key has write permissions.');
 
         // Clean up
         await index.deleteObject('test_obj');
     } catch (error) {
         console.error('✗ Failed to write object:', error.message);
-        if (error.message.includes('Not enough rights')) {
-            console.log('\nCONCLUSION: The provided ALGOLIA_ADMIN_KEY is likely a Search-Only Key.');
-            console.log('Please replace it with the Admin API Key from your Algolia Dashboard.');
-            console.log('Dashboard > Settings > API Keys > Admin API Key');
-        }
+        if (error.message.includes('Not enough rights')) {}
     }
 }
 

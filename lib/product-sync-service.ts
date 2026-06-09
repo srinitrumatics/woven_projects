@@ -21,7 +21,6 @@ export async function syncNewProductToPostgresAndAlgolia(
   // we have all fields (like CreatedDate, proper picklist values, etc.)
   if (contactId) {
     try {
-      console.log(`[ProductSync] 🔍 Fetching latest data from Salesforce for ${sfProductId}...`);
       const sfResult = await getProductDetailsFromSalesforce(accountId, contactId, sfProductId, 'product');
 
       if (sfResult && (sfResult.success || sfResult.Id || sfResult.product)) {
@@ -42,7 +41,6 @@ export async function syncNewProductToPostgresAndAlgolia(
         if (fetchedData) {
           // We want the new edits (initialProductData) to take precedence over the old fetched data
           productData = { ...fetchedData, ...productData };
-          console.log(`[ProductSync] 📥 Successfully fetched latest data from Salesforce for ${sfProductId}`);
         }
       }
     } catch (fetchErr: any) {
@@ -105,8 +103,6 @@ export async function syncNewProductToPostgresAndAlgolia(
         productData.CreatedDate ? new Date(productData.CreatedDate).toISOString() : null,     // $14 createddate
       ]
     );
-
-    console.log(`[ProductSync] 🔵 DATA UPSERTED INTO POSTGRES: sfid: ${sfProductId}`);
   } catch (pgErr: any) {
     console.error(`[ProductSync] ❌ PostgreSQL upsert failed for ${sfProductId}:`, pgErr.message);
   }
@@ -116,12 +112,6 @@ export async function syncNewProductToPostgresAndAlgolia(
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
     const adminKey = process.env.ALGOLIA_ADMIN_KEY;
     const indexName = orgConfig?.algoliaIndexName || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
-
-    console.log(`[ProductSync] 🔍 CHECKPOINT: Algolia Configured Index Name:`, {
-      orgConfigIndex: orgConfig?.algoliaIndexName,
-      envFallback: process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME,
-      finalIndexUsed: indexName
-    });
 
     if (!appId || !adminKey) {
       console.warn('[ProductSync] ⚠️ Algolia credentials missing. Skipping direct push.');
@@ -141,7 +131,6 @@ export async function syncNewProductToPostgresAndAlgolia(
       ],
     }, { forwardToReplicas: true });
 
-    console.log(`[ProductSync] 📦 CHECKPOINT: Preparing to push product list to Algolia index '${indexName}' for sfid: ${sfProductId}`);
     await index.saveObject({
       objectID: sfProductId,
       name: productData.Name ?? productData.name ?? '',
@@ -178,8 +167,6 @@ export async function syncNewProductToPostgresAndAlgolia(
         productData.Product_Availability__c ?? productData.product_availability__c
       ].filter(Boolean),
     });
-
-    console.log(`[ProductSync] ✅ CHECKPOINT: SUCCESS - Pushed product to Algolia index '${indexName}': ${sfProductId}`);
   } catch (algoliaErr: any) {
     console.error(`[ProductSync] ❌ CHECKPOINT: ERROR - Failed pushing to Algolia index:`, algoliaErr.message);
   }

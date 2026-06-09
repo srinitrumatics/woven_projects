@@ -29,11 +29,8 @@ async function describeProduct2() {
         }
     });
     const data = await res.json();
-    console.log("Fields on Product2:");
     data.fields.forEach(f => {
-        if (f.name.includes('Avail') || f.name.includes('Stock')) {
-            console.log(`- ${f.name} (${f.type})`);
-        }
+        if (f.name.includes('Avail') || f.name.includes('Stock')) {}
     });
 }
 

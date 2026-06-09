@@ -17,8 +17,6 @@ export async function POST(request: Request) {
     const sanitizedSchemaName = schemaName.toLowerCase().replace(/[^a-z0-9_]/g, '_');
     const sanitizedIndexName = indexName; // Can be any valid Algolia index name string
 
-    console.log(`Provisioning schema: ${sanitizedSchemaName}, Index: ${sanitizedIndexName}`);
-
     // 1. Create the new schema
     await db.execute(sql.raw(`CREATE SCHEMA IF NOT EXISTS ${sanitizedSchemaName};`));
 
@@ -97,8 +95,6 @@ export async function POST(request: Request) {
         searchableAttributes: ['name', 'description', 'productcode', 'family', 'gtherp__category__c', 'gtherp__sub_category__c', 'manufacturer_name__c'],
         attributesForFaceting: ['family', 'gtherp__category__c', 'gtherp__sub_category__c', 'manufacturer_name__c', 'product_availability__c'],
       });
-
-      console.log(`Algolia index ${sanitizedIndexName} initialized successfully.`);
     } else {
       console.warn("ALGOLIA_APP_ID or ALGOLIA_ADMIN_KEY missing. Algolia index not created via API.");
     }
@@ -107,7 +103,6 @@ export async function POST(request: Request) {
       success: true,
       message: `Schema ${sanitizedSchemaName} and Index ${sanitizedIndexName} provisioned successfully.`
     });
-
   } catch (error: any) {
     console.error('Error provisioning tenant:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

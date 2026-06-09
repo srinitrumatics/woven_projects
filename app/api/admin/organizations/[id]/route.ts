@@ -119,14 +119,11 @@ export async function DELETE(request: Request, context: { params: Promise<{ id: 
       cleanupLog.push('⚠️  No Algolia index name on org record — skipped index deletion.');
     }
 
-    console.log('[DELETE org] Cleanup summary:\n', cleanupLog.join('\n'));
-
     return NextResponse.json({
       success: true,
       message: `Organization "${org.name}" deleted successfully.`,
       cleanup: cleanupLog,
     });
-
   } catch (error: any) {
     console.error('Error deleting organization:', error);
     return NextResponse.json({ error: error.message, cleanup: cleanupLog }, { status: 500 });

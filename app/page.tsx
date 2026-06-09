@@ -7,15 +7,11 @@ import SignUpForm from "@/components/SignUpForm";
 export default function HomePage() {
   const [isSignUp, setIsSignUp] = useState(false);
 
-  console.log("HomePage - isSignUp:", isSignUp);
-
   const handleSignUpToggle = () => {
-    console.log("HomePage - Toggling to Sign Up");
     setIsSignUp(true);
   };
 
   const handleSignInToggle = () => {
-    console.log("HomePage - Toggling to Sign In");
     setIsSignUp(false);
   };
 

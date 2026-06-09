@@ -31,8 +31,6 @@ export async function getInventoryFromSalesforce(
             url += `&isInventory=true&isSupplier=true`;
         }
 
-        console.log('Fetching inventory data from Salesforce with URL:', url);
-
         const response = await fetch(url, {
             method: "GET",
             headers: {

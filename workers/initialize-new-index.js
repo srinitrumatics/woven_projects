@@ -16,8 +16,6 @@ const index = client.initIndex(indexName);
 
 async function initializeIndex() {
   try {
-    console.log(`🚀 Initializing new index: ${indexName}`);
-
     const settings = {
       searchableAttributes: [
         'name',
@@ -47,11 +45,7 @@ async function initializeIndex() {
       highlightPostTag: '</mark>'
     };
 
-    console.log('⚙️ Applying settings...');
     await index.setSettings(settings);
-    
-    console.log('✅ Index settings applied successfully.');
-    console.log('👉 Next step: Run the wipe-and-resync-algolia.js script or manually trigger a sync.');
   } catch (err) {
     console.error('❌ Error initializing index:', err.message);
     process.exit(1);

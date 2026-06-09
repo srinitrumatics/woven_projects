@@ -24,8 +24,6 @@ export async function getShipmentsFromSalesforce(
             url += `&objectId=${encodeURIComponent(objectId)}`;
         }
 
-        console.log('Fetching shipment data from Salesforce with URL:', url);
-
         const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -41,7 +39,6 @@ export async function getShipmentsFromSalesforce(
         }
 
         const result = await response.json();
-        console.log('Shipment resultdata:', JSON.stringify(result)?.slice(0, 300));
         return result;
     } catch (error) {
         console.error('Error fetching shipments from Salesforce:', error);
@@ -61,8 +58,6 @@ export async function getShipmentFilesFromSalesforce(accountId: string, contactI
 
         const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
         const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(shipmentId)}&objectName=${encodeURIComponent(objectName)}`;
-
-        console.log('Fetching shipment files from Salesforce with URL:', url);
 
         const response = await fetch(url, {
             method: "GET",

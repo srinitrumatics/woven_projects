@@ -83,7 +83,6 @@ export default function ShipmentLineDetailPage({
                 }
 
                 const json = await res.value.json();
-                console.log("Fetched shipment lines data:", json);
 
                 let linesData: ManifestLineItem[] = [];
                 if (json && json.data && json.data.length > 0) {

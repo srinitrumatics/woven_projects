@@ -12,22 +12,12 @@ async function main() {
         process.exit(1);
     }
 
-    console.log(`\n📋 Algolia App ID : ${appId}`);
-    console.log(`🔑 Admin Key      : ${adminKey.slice(0, 8)}...`);
-    console.log(`📦 Index Name     : ${indexName}\n`);
-
     const client = algoliasearch(appId, adminKey);
 
-    // 1. List all indexes
-    console.log('=== All indexes in your Algolia app ===');
     try {
         const { items } = await client.listIndices();
-        if (!items || items.length === 0) {
-            console.log('⚠️  No indexes found. Either the Admin Key is wrong (search-only key) or no data has been synced.');
-        } else {
-            for (const idx of items) {
-                console.log(`  - ${idx.name} (${idx.entries} entries, updated: ${idx.updatedAt})`);
-            }
+        if (!items || items.length === 0) {} else {
+            for (const idx of items) {}
         }
     } catch (err) {
         console.error('❌ Failed to list indexes:', err.message);
@@ -35,15 +25,11 @@ async function main() {
         process.exit(1);
     }
 
-    // 2. Check the specific index
-    console.log(`\n=== Checking index: ${indexName} ===`);
     try {
         const index = client.initIndex(indexName);
         const result = await index.search('', { hitsPerPage: 3 });
-        console.log(`✅ Index found. Total records: ${result.nbHits}`);
         if (result.hits.length > 0) {
-            console.log('Sample records:');
-            result.hits.forEach(h => console.log(`  - [${h.objectID}] ${h.Name || h.name || '(no name field)'}`));
+            result.hits.forEach(h => );
         }
     } catch (err) {
         console.error(`❌ Error querying index "${indexName}":`, err.message);

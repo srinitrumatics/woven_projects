@@ -9,8 +9,6 @@ async function resetQueue() {
     try {
         const client = await pool.connect();
 
-        console.log('Resetting failed items to pending...');
-
         const result = await client.query(`
             UPDATE algolia_sync_queue
             SET 
@@ -21,8 +19,6 @@ async function resetQueue() {
             WHERE status = 'failed'
             RETURNING id
         `);
-
-        console.log(`✓ Reset ${result.rowCount} items.`);
 
         client.release();
     } catch (error) {

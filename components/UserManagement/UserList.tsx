@@ -196,7 +196,6 @@ const UserList: React.FC<UserListProps> = ({
           </div>
         </div>
       </div>
-
       <div className="overflow-x-auto">
         {viewMode === 'card' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
@@ -211,7 +210,7 @@ const UserList: React.FC<UserListProps> = ({
               </div>
             ) : (
               paginatedUsers.map((user) => {
-                const { title, department, mobile, phone } = user as any; console.log("USER DATA:", user);
+                const { title, department, mobile, phone } = user as any;
 
                 return (
                   <div key={user.id} className="flex flex-col h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group">
@@ -297,7 +296,7 @@ const UserList: React.FC<UserListProps> = ({
                 </tr>
               ) : (
                 paginatedUsers.map((user) => {
-                  const { title, department, mobile, phone } = user as any; console.log("USER DATA:", user);
+                  const { title, department, mobile, phone } = user as any;
 
                   return (
                     <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
@@ -341,7 +340,6 @@ const UserList: React.FC<UserListProps> = ({
           </table>
         )}
       </div>
-
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">

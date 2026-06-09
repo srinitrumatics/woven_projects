@@ -9,15 +9,12 @@ async function fixIndexConfig() {
     try {
         const client = await pool.connect();
 
-        console.log('Updating index configuration...');
-
         // 1. Update index name
         await client.query(`
             UPDATE algolia_index_config
             SET index_name = 'dev_woven_products'
             WHERE table_name = 'products'
         `);
-        console.log("✓ Updated index_name to 'wovn_products_local'");
 
         // 2. Reset queue items to pending (so they get synced to the new index)
         const result = await client.query(`
@@ -29,7 +26,6 @@ async function fixIndexConfig() {
                 processed_at = NULL
             WHERE table_name = 'products'
         `);
-        console.log(`✓ Reset ${result.rowCount} items to pending`);
 
         client.release();
     } catch (error) {

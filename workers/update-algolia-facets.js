@@ -20,11 +20,8 @@ const index = client.initIndex(indexName);
 
 async function updateFacets() {
   try {
-    console.log(`🔧 Updating attributesForFaceting on index: ${indexName}`);
-
     // First, check current settings
     const currentSettings = await index.getSettings();
-    console.log('Current attributesForFaceting:', currentSettings.attributesForFaceting);
 
     // Merge existing with new ones to avoid removing any existing facets
     const existing = currentSettings.attributesForFaceting || [];
@@ -36,9 +33,6 @@ async function updateFacets() {
     await index.setSettings({
       attributesForFaceting: merged
     });
-
-    console.log('✅ Updated attributesForFaceting:', merged);
-    console.log('✅ Done! The product_availability filter should now show options in the UI.');
   } catch (err) {
     console.error('❌ Error updating Algolia settings:', err.message);
     process.exit(1);

@@ -16,10 +16,7 @@ async function checkFullErrors() {
             LIMIT 1
         `);
 
-        if (failedItems.rows.length > 0) {
-            console.log('Full error message:');
-            console.log(failedItems.rows[0].error_message);
-        }
+        if (failedItems.rows.length > 0) {}
 
         client.release();
     } catch (error) {

@@ -24,8 +24,6 @@ export async function getInvoicesFromSalesforce(
             url += `&objectId=${encodeURIComponent(invoiceId)}`;
         }
 
-        console.log(`Fetching ${tabName} from Salesforce with URL:`, url);
-
         const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -39,7 +37,6 @@ export async function getInvoicesFromSalesforce(
         }
 
         const result = await response.json();
-        console.log(`${tabName} result:`, result);
 
         if (result.data && result.data.length > 0) {
             const dataObject = result.data[0];
@@ -81,8 +78,6 @@ export async function getInvoiceFilesFromSalesforce(
 
         const baseUrl = `${session.instanceUrl}/services/apexrest/gtherp/files`;
         const url = `${baseUrl}?accountId=${encodeURIComponent(accountId)}&contactId=${encodeURIComponent(contactId)}&objectId=${encodeURIComponent(invoiceId)}&objectName=${encodeURIComponent(objectName)}`;
-
-        console.log('Fetching invoice files from Salesforce with URL:', url);
 
         const response = await fetch(url, {
             method: "GET",

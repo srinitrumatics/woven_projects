@@ -10,9 +10,6 @@ async function fixConstraint() {
 
     try {
         const client = await pool.connect();
-        console.log('Connected to database.');
-
-        console.log('Dropping existing constraint and creating partial unique index...');
         await client.query(`
             -- 1. Drop existing constraint
             ALTER TABLE salesforce.algolia_sync_queue 
@@ -60,7 +57,6 @@ async function fixConstraint() {
             $$ LANGUAGE plpgsql;
         `);
 
-        console.log('✅ Successfully updated database schema and functions.');
         client.release();
     } catch (err) {
         console.error('❌ Error fixing constraint:', err);

@@ -10,15 +10,9 @@ async function diagnose() {
     });
 
     try {
-        console.log('Testing database connection...');
         const client = await pool.connect();
-        console.log('✅ Connected successfully\n');
-
-        console.log('Testing salesforce.get_pending_algolia_syncs function...');
         try {
             const result = await client.query('SELECT * FROM salesforce.get_pending_algolia_syncs(10)');
-            console.log('✅ Function exists and works');
-            console.log('   Pending items:', result.rows.length);
         } catch (err) {
             console.error('❌ Function call failed:', err.message);
         }
