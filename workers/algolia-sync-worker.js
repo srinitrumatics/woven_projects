@@ -26,7 +26,7 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 // SCHEMA RESOLUTION  (async, runs before worker starts)
 // ============================================
 
-const SCHEMA_NAME_REGEX = /^[a-z][a-z0-9_]{0,62}$/;
+const SCHEMA_NAME_REGEX = /^[a-zA-Z0-9_]{1,63}$/;
 
 /**
  * Resolve the list of schemas to process.
@@ -50,7 +50,7 @@ async function resolveSchemas(dbPool) {
             );
             if (byIndex.rows.length > 0) {
                 const org = byIndex.rows[0];
-                const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '').toLowerCase();
+                const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '');
                 return [schema];
             }
 
@@ -61,16 +61,16 @@ async function resolveSchemas(dbPool) {
             );
             if (bySchema.rows.length > 0) {
                 const org = bySchema.rows[0];
-                const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '').toLowerCase();
+                const schema = (org.algolia_schema || 'salesforce').replace(/"/g, '');
                 return [schema];
             }
 
             // Use as raw schema name (manual override), force lowercase
-            const lowercaseSchema = cliArg.toLowerCase();
+            const lowercaseSchema = cliArg;
             return [lowercaseSchema];
         } catch (err) {
             console.warn(`[worker] DB lookup failed for CLI arg "${cliArg}": ${err.message} — using as raw schema name`);
-            return [cliArg.toLowerCase()];
+            return [cliArg];
         }
     }
 
@@ -237,7 +237,7 @@ class SchemaWorker {
 
             // Get the max systemmodstamp from product2 to initialize sfLastSyncTime
             try {
-                const maxDateRes = await client.query(`SELECT MAX(systemmodstamp) as max_date FROM ${this.schema}.product2`);
+                const maxDateRes = await client.query(`SELECT MAX(systemmodstamp) as max_date FROM "${this.schema}".product2`);
                 if (maxDateRes.rows[0] && maxDateRes.rows[0].max_date) {
                     let d = maxDateRes.rows[0].max_date;
                     if (typeof d === 'string') d = new Date(d);
@@ -270,11 +270,11 @@ class SchemaWorker {
         // Use FOR UPDATE SKIP LOCKED on the inner SELECT so multiple workers
         // on the same schema (if you scale to >1) interleave safely.
         const sql = `
-            UPDATE ${schema}.algolia_sync_queue q
+            UPDATE "${schema}".algolia_sync_queue q
                SET ${setExprs.join(', ')}
              WHERE q.${pkCol} IN (
                 SELECT inner_q.${pkCol}
-                  FROM ${schema}.algolia_sync_queue inner_q
+                  FROM "${schema}".algolia_sync_queue inner_q
                  WHERE inner_q.${statusCol} = 'pending'
                  ORDER BY inner_q.${pkCol}
                  LIMIT $1
@@ -302,7 +302,7 @@ class SchemaWorker {
         for (const candidate of candidates) {
             const r = await client.query(
                 `SELECT table_name, index_name
-                   FROM ${this.schema}.algolia_index_config
+                   FROM "${this.schema}".algolia_index_config
                   WHERE table_name = $1
                     AND COALESCE(is_enabled, TRUE) = TRUE
                   LIMIT 1`,
@@ -319,7 +319,7 @@ class SchemaWorker {
         const sets = [`${shape.statusCol} = 'completed'`];
         if (shape.procCol) sets.push(`${shape.procCol} = now()`);
         await client.query(
-            `UPDATE ${schema}.algolia_sync_queue SET ${sets.join(', ')} WHERE ${shape.pkCol} = $1`,
+            `UPDATE "${schema}".algolia_sync_queue SET ${sets.join(', ')} WHERE ${shape.pkCol} = $1`,
             [row.row_pk]
         );
     }
@@ -342,7 +342,7 @@ class SchemaWorker {
         console.log("[Function Start] algolia-sync-worker.js -> writeSyncLog");
         try {
             await client.query(
-                `INSERT INTO ${this.schema}.algolia_sync_log
+                `INSERT INTO "${this.schema}".algolia_sync_log
                     (queue_id, table_name, record_id, operation, status,
                      algolia_object_id, request_payload, response_payload,
                      error_details, sync_duration_ms, synced_at)
@@ -377,7 +377,7 @@ class SchemaWorker {
         let attempts = 0;
         if (shape.attemptCol) {
             const r = await client.query(
-                `SELECT ${shape.attemptCol} AS attempts FROM ${schema}.algolia_sync_queue WHERE ${shape.pkCol} = $1`,
+                `SELECT ${shape.attemptCol} AS attempts FROM "${schema}".algolia_sync_queue WHERE ${shape.pkCol} = $1`,
                 [row.row_pk]
             );
             attempts = r.rows[0]?.attempts || 0;
@@ -388,7 +388,7 @@ class SchemaWorker {
             : [row.row_pk, newStatus];
 
         await client.query(
-            `UPDATE ${schema}.algolia_sync_queue SET ${sets.join(', ')} WHERE ${shape.pkCol} = $1`,
+            `UPDATE "${schema}".algolia_sync_queue SET ${sets.join(', ')} WHERE ${shape.pkCol} = $1`,
             params
         );
     }
