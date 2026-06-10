@@ -15,6 +15,7 @@ const client = algoliasearch(appId, adminKey);
 const index = client.initIndex(indexName);
 
 async function initializeIndex() {
+  console.log("[Function Start] initialize-new-index.js -> initializeIndex");
   try {
     const settings = {
       searchableAttributes: [

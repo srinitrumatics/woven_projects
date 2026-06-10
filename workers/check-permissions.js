@@ -4,6 +4,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 async function checkPermissions() {
+    console.log("[Function Start] check-permissions.js -> checkPermissions");
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || process.env.ALGOLIA_APP_ID;
     const apiKey = process.env.ALGOLIA_ADMIN_KEY;
 

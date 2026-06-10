@@ -9,6 +9,7 @@ const client = algoliasearch(
 const index = client.initIndex(process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "dev_woven_products");
 
 async function checkAlgolia() {
+    console.log("[Function Start] inspect-algolia.js -> checkAlgolia");
     let hits = [];
     await index.browseObjects({
         query: '',

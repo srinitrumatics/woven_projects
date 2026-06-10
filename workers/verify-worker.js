@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Pool } = require('pg');
 
 async function verifyWorker() {
+    console.log("[Function Start] verify-worker.js -> verifyWorker");
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false }

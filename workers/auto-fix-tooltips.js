@@ -4,6 +4,7 @@ const path = require('path');
 const directoryPath = '/media/trumatics/New Volume/wovn/woven_projects-main/app';
 
 function walkDir(dir, callback) {
+    console.log("[Function Start] auto-fix-tooltips.js -> walkDir");
     fs.readdirSync(dir).forEach(f => {
         let dirPath = path.join(dir, f);
         let isDirectory = fs.statSync(dirPath).isDirectory();
@@ -12,18 +13,19 @@ function walkDir(dir, callback) {
 }
 
 function checkFile(filePath) {
+    console.log("[Function Start] auto-fix-tooltips.js -> checkFile");
     if (!filePath.endsWith('.tsx') && !filePath.endsWith('.js') && !filePath.endsWith('.ts')) return;
 
     let content = fs.readFileSync(filePath, 'utf8');
     let originalContent = content;
-    
+
     // Pattern: title="OLD" text="NEW"
     // Pattern for static text
     const regex = /<(\w+)([^>]*?)\btitle="([^"]+)"([^>]*?)>([^<]+)<\/\1>/g;
-    
+
     let match;
     let foundDiscrepancies = false;
-    
+
     while ((match = regex.exec(content)) !== null) {
         const tag = match[1];
         const attrPre = match[2];

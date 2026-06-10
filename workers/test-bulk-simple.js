@@ -3,6 +3,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 async function testBulkUpdateSimple() {
+    console.log("[Function Start] test-bulk-simple.js -> testBulkUpdateSimple");
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false }

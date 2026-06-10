@@ -13,6 +13,7 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const TARGET_INDEX = process.argv[2] || process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'wovn_products_local';
 
 async function main() {
+    console.log("[Function Start] direct-push-to-algolia.js -> main");
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
     const apiKey = process.env.ALGOLIA_ADMIN_KEY;
 

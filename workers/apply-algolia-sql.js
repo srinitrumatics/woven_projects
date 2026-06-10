@@ -4,6 +4,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 async function applyAlgoliaSql() {
+    console.log("[Function Start] apply-algolia-sql.js -> applyAlgoliaSql");
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false }

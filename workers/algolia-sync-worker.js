@@ -37,6 +37,7 @@ const SCHEMA_NAME_REGEX = /^[a-z][a-z0-9_]{0,62}$/;
  *   4. Fallback: ['salesforce']
  */
 async function resolveSchemas(dbPool) {
+    console.log("[Function Start] algolia-sync-worker.js -> resolveSchemas");
     const cliArg = process.argv[2] ? process.argv[2].trim() : null;
 
     // ── CLI argument provided ────────────────────────────────────────────────
@@ -137,6 +138,7 @@ const pgPool = new Pool(config.postgres);
 
 const algoliaClientCache = new Map();
 function getAlgoliaClient(appId, apiKey) {
+    console.log("[Function Start] algolia-sync-worker.js -> getAlgoliaClient");
     let c = algoliaClientCache.get(appId);
     if (!c) {
         c = algoliasearch(appId, apiKey);
@@ -148,13 +150,17 @@ function getAlgoliaClient(appId, apiKey) {
 let isShuttingDown = false;
 
 function rootLog(level, message, meta = {}) {
+    console.log("[Function Start] algolia-sync-worker.js -> rootLog");
     const line = JSON.stringify({ level, timestamp: new Date().toISOString(), message, ...meta });
     if (level === 'error') console.error(line);
     else if (level === 'warn')
         console.warn(line);
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function sleep(ms) {
+    console.log("[Function Start] algolia-sync-worker.js -> sleep");
+    return new Promise(r => setTimeout(r, ms));
+}
 
 // ============================================
 // PER-SCHEMA WORKER
@@ -162,6 +168,7 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 class SchemaWorker {
     constructor(schema) {
+        console.log("[Function Start] algolia-sync-worker.js -> constructor");
         this.schema = schema;
         this.activeProcessing = 0;
         this.isRunning = false;
@@ -187,11 +194,13 @@ class SchemaWorker {
     }
 
     log(level, message, meta = {}) {
+        console.log("[Function Start] algolia-sync-worker.js -> log");
         rootLog(level, message, { schema: this.schema, ...meta });
     }
 
     /** Introspect column shape — done once per worker on startup. */
     async init() {
+        console.log("[Function Start] algolia-sync-worker.js -> init");
         const client = await pgPool.connect();
         try {
             const r = await client.query(
@@ -219,6 +228,31 @@ class SchemaWorker {
 
             this.shape = shape;
             this.log('info', 'queue shape detected', shape);
+
+            // Fetch org details for Salesforce sync
+            const orgRes = await client.query(`SELECT * FROM organizations WHERE algolia_schema = $1 LIMIT 1`, [this.schema]);
+            if (orgRes.rows.length > 0) {
+                this.org = orgRes.rows[0];
+            }
+
+            // Get the max systemmodstamp from product2 to initialize sfLastSyncTime
+            try {
+                const maxDateRes = await client.query(`SELECT MAX(systemmodstamp) as max_date FROM ${this.schema}.product2`);
+                if (maxDateRes.rows[0] && maxDateRes.rows[0].max_date) {
+                    let d = maxDateRes.rows[0].max_date;
+                    if (typeof d === 'string') d = new Date(d);
+                    this.sfLastSyncTime = d.toISOString();
+                } else {
+                    const d = new Date();
+                    d.setDate(d.getDate() - 1);
+                    this.sfLastSyncTime = d.toISOString();
+                }
+            } catch (err) {
+                this.log('warn', 'Could not fetch max systemmodstamp, using default 1 day ago', { error: err.message });
+                const d = new Date();
+                d.setDate(d.getDate() - 1);
+                this.sfLastSyncTime = d.toISOString();
+            }
         } finally {
             client.release();
         }
@@ -226,6 +260,7 @@ class SchemaWorker {
 
     /** Atomically claim a batch of pending rows. */
     async claimPending(client, batchSize) {
+        console.log("[Function Start] algolia-sync-worker.js -> claimPending");
         const { schema } = this;
         const { pkCol, recordCol, tableCol, statusCol, attemptCol } = this.shape;
 
@@ -256,6 +291,7 @@ class SchemaWorker {
     }
 
     async getIndexConfig(client, tableName) {
+        console.log("[Function Start] algolia-sync-worker.js -> getIndexConfig");
         // Try exact match first (e.g. 'product2' queued by trigger),
         // then try schema-prefixed form (e.g. 'salesforce.product2' stored in config).
         const candidates = [tableName, `${this.schema}.${tableName}`];
@@ -278,6 +314,7 @@ class SchemaWorker {
     }
 
     async markCompleted(client, row) {
+        console.log("[Function Start] algolia-sync-worker.js -> markCompleted");
         const { schema, shape } = this;
         const sets = [`${shape.statusCol} = 'completed'`];
         if (shape.procCol) sets.push(`${shape.procCol} = now()`);
@@ -302,6 +339,7 @@ class SchemaWorker {
         errorDetails    = null,
         durationMs      = null,
     }) {
+        console.log("[Function Start] algolia-sync-worker.js -> writeSyncLog");
         try {
             await client.query(
                 `INSERT INTO ${this.schema}.algolia_sync_log
@@ -329,6 +367,7 @@ class SchemaWorker {
     }
 
     async markFailed(client, row, message) {
+        console.log("[Function Start] algolia-sync-worker.js -> markFailed");
         const { schema, shape } = this;
         const sets = [`${shape.statusCol} = $2`];
         if (shape.errorCol) sets.push(`${shape.errorCol} = $3`);
@@ -356,6 +395,7 @@ class SchemaWorker {
 
     /** Process one claimed batch. Pushes to Algolia, marks rows complete/failed. */
     async syncBatch(client, items) {
+        console.log("[Function Start] algolia-sync-worker.js -> syncBatch");
         if (!items || items.length === 0) return { success: 0, failed: 0 };
 
         // Group by (table, op) so we make minimal Algolia API calls.
@@ -501,6 +541,7 @@ class SchemaWorker {
     }
 
     async processQueue() {
+        console.log("[Function Start] algolia-sync-worker.js -> processQueue");
         if (isShuttingDown || this.activeProcessing > 0) return;
         this.activeProcessing++;
         const client = await pgPool.connect();
@@ -519,17 +560,161 @@ class SchemaWorker {
     }
 
     async runLoop() {
+        console.log("[Function Start] algolia-sync-worker.js -> runLoop");
         this.isRunning = true;
         this.log('info', 'schema worker started', { ...config.worker });
         let iterations = 0;
+        let lastSfSync = 0;
+        const sfSyncInterval = parseInt(process.env.SF_POLLING_INTERVAL) || 60000; // default 1 minute
+
         while (this.isRunning && !isShuttingDown && iterations < MAX_ITERATIONS) {
-            try { await this.processQueue(); }
+            try { 
+                const now = Date.now();
+                if (now - lastSfSync > sfSyncInterval) {
+                    await this.syncFromSalesforce();
+                    lastSfSync = now;
+                }
+
+                await this.processQueue(); 
+            }
             catch (err) { this.log('error', 'unexpected loop error', { error: err.message }); }
             iterations++;
             if (iterations < MAX_ITERATIONS) await sleep(config.worker.pollingInterval);
         }
         while (this.activeProcessing > 0) await sleep(100);
         this.log('info', 'schema worker stopped', { iterations });
+    }
+
+    async getSalesforceSession() {
+        console.log("[Function Start] algolia-sync-worker.js -> getSalesforceSession");
+        if (!this.org) throw new Error("No organization found for schema " + this.schema);
+        const org = this.org;
+        const tokenUrl = org.salesforce_auth_url || process.env.SF_AUTH_URL || "";
+        const clientId = org.client_id || process.env.SF_CLIENT_ID || "";
+        const clientSecret = org.client_secret || process.env.SF_CLIENT_SECRET || "";
+
+        if (!tokenUrl || !clientId || !clientSecret) {
+            throw new Error("Missing Salesforce credentials for organization");
+        }
+
+        const body = new URLSearchParams({
+            grant_type: "client_credentials",
+            client_id: clientId,
+            client_secret: clientSecret,
+        });
+
+        const res = await fetch(tokenUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: body.toString(),
+        });
+
+        if (!res.ok) throw new Error("Failed to authenticate with Salesforce");
+        const data = await res.json();
+        return { accessToken: data.access_token, instanceUrl: data.instance_url || org.salesforce_url || process.env.SF_DATA_URL };
+    }
+
+    async syncFromSalesforce() {
+        console.log("[Function Start] algolia-sync-worker.js -> syncFromSalesforce");
+        if (!this.org) return; // Cannot sync without org details
+
+        try {
+            const session = await this.getSalesforceSession();
+            
+            let allRecords = [];
+            const sinceDate = this.sfLastSyncTime || new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+            
+            const query = `
+                SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp, 
+                       gtherp__Product_Availability__c, gtherp__Manufacturer_Name__c,  
+                       gtherp__Available_To_Sell__c,
+                       (SELECT Id, Name, UnitPrice, gtherp__Selling_Unit_Price__c FROM PricebookEntries)
+                FROM Product2
+                WHERE IsActive = true AND SystemModstamp > ${sinceDate}
+            `;
+            let url = `${session.instanceUrl}/services/data/v60.0/query?q=${encodeURIComponent(query)}`;
+
+            while (url) {
+                const res = await fetch(url, {
+                    headers: {
+                        "Authorization": `Bearer ${session.accessToken}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (!res.ok) {
+                    const errorBody = await res.text();
+                    throw new Error(`Failed to fetch products: ${res.statusText}. ${errorBody}`);
+                }
+                const data = await res.json();
+                allRecords = allRecords.concat(data.records);
+
+                if (data.nextRecordsUrl) {
+                    url = `${session.instanceUrl}${data.nextRecordsUrl}`;
+                } else {
+                    url = null;
+                }
+            }
+
+            if (allRecords.length === 0) {
+                return;
+            }
+
+            this.log('info', `Fetched ${allRecords.length} updated products from Salesforce`);
+
+            const client = await pgPool.connect();
+            let latestModstamp = this.sfLastSyncTime;
+            try {
+                for (const p of allRecords) {
+                    await client.query(`
+                        INSERT INTO "${this.schema}".product2 (
+                            sfid, productcode, name, description, isactive, family,
+                            gtherp__price__c, list_price__c, gtherp__stock_quantity__c,
+                            gtherp__available_quantity__c, gtherp__discount__c,
+                            gtherp__category__c, gtherp__sub_category__c,
+                            manufacturer_name__c, product_availability__c, createddate, systemmodstamp
+                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+                        ON CONFLICT (sfid) DO UPDATE SET
+                            productcode = EXCLUDED.productcode,
+                            name = EXCLUDED.name,
+                            description = EXCLUDED.description,
+                            isactive = EXCLUDED.isactive,
+                            family = EXCLUDED.family,
+                            gtherp__price__c = EXCLUDED.gtherp__price__c,
+                            list_price__c = EXCLUDED.list_price__c,
+                            gtherp__stock_quantity__c = EXCLUDED.gtherp__stock_quantity__c,
+                            gtherp__available_quantity__c = EXCLUDED.gtherp__available_quantity__c,
+                            gtherp__category__c = EXCLUDED.gtherp__category__c,
+                            gtherp__sub_category__c = EXCLUDED.gtherp__sub_category__c,
+                            manufacturer_name__c = EXCLUDED.manufacturer_name__c,
+                            product_availability__c = EXCLUDED.product_availability__c,
+                            systemmodstamp = EXCLUDED.systemmodstamp
+                    `, [
+                        p.Id, p.ProductCode, p.Name, p.Description, p.IsActive, p.Family,
+                        (p.PricebookEntries && p.PricebookEntries.records && p.PricebookEntries.records[0] && p.PricebookEntries.records[0].gtherp__Selling_Unit_Price__c) || 0,
+                        (p.PricebookEntries && p.PricebookEntries.records && p.PricebookEntries.records[0] && p.PricebookEntries.records[0].UnitPrice) || 0,
+                        p.gtherp__Available_To_Sell__c || 0,
+                        p.gtherp__Available_To_Sell__c || 0,
+                        0,
+                        p.Family || 'No Category',
+                        '',
+                        p.gtherp__Manufacturer_Name__c || '',
+                        p.gtherp__Product_Availability__c || '',
+                        p.CreatedDate, p.SystemModstamp || ''
+                    ]);
+                    
+                    if (p.SystemModstamp && p.SystemModstamp > latestModstamp) {
+                        latestModstamp = p.SystemModstamp;
+                    }
+                }
+                this.sfLastSyncTime = latestModstamp; // update the sync time
+                this.log('info', `Successfully upserted ${allRecords.length} products to Postgres database`);
+            } finally {
+                client.release();
+            }
+        } catch (err) {
+            this.log('error', 'Salesforce sync failed', { error: err.message });
+        }
     }
 }
 
@@ -541,17 +726,20 @@ let workers = [];
 let runPromise = null;
 
 async function preflight(schemas) {
+    console.log("[Function Start] algolia-sync-worker.js -> preflight");
     rootLog('info', 'preflight — initializing schemas', { schemas });
     for (const w of workers) await w.init();
     rootLog('info', 'all schemas initialized', { schemas, poolMax: config.postgres.max });
 }
 
 async function startAll() {
+    console.log("[Function Start] algolia-sync-worker.js -> startAll");
     runPromise = Promise.all(workers.map(w => w.runLoop()));
     await runPromise;
 }
 
 async function stopAll(schemas) {
+    console.log("[Function Start] algolia-sync-worker.js -> stopAll");
     rootLog('info', 'stopping all workers', { schemas });
     isShuttingDown = true;
     const timeout = setTimeout(() => {

@@ -5,6 +5,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 async function diagnose() {
+    console.log("[Function Start] diagnose.js -> diagnose");
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });
     try {
         const client = await pool.connect();

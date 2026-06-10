@@ -19,6 +19,7 @@ const client = algoliasearch(appId, adminKey);
 const index = client.initIndex(indexName);
 
 async function updateFacets() {
+  console.log("[Function Start] update-algolia-facets.js -> updateFacets");
   try {
     // First, check current settings
     const currentSettings = await index.getSettings();

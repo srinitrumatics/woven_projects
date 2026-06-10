@@ -52,10 +52,13 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false },
 });
 
-function log(level, message, meta = {}) {}
+function log(level, message, meta = {}) {
+    console.log("[Function Start] manual-sync.js -> log");
+}
 
 // Introspect the queue's columns so we adapt to either schema convention.
 async function introspectQueue(client) {
+    console.log("[Function Start] manual-sync.js -> introspectQueue");
     const r = await client.query(
         `SELECT column_name FROM information_schema.columns
           WHERE table_schema = $1 AND table_name = 'algolia_sync_queue'`,
@@ -79,6 +82,7 @@ async function introspectQueue(client) {
 }
 
 async function main() {
+    console.log("[Function Start] manual-sync.js -> main");
     log('info', 'manual-sync started', { app_id: APP_ID });
 
     const client = await pool.connect();
@@ -193,10 +197,12 @@ async function main() {
 }
 
 function objectIdFor(it) {
+    console.log("[Function Start] manual-sync.js -> objectIdFor");
     return (it.payload && it.payload.objectID) || it.record_id || null;
 }
 
 async function markCompleted(client, shape, it) {
+    console.log("[Function Start] manual-sync.js -> markCompleted");
     const sets = [`${shape.statusCol} = 'completed'`];
     if (shape.procCol) sets.push(`${shape.procCol} = now()`);
     const idCol = shape.pkCol || shape.recordCol;
@@ -209,6 +215,7 @@ async function markCompleted(client, shape, it) {
 }
 
 async function markFailed(client, shape, it, message) {
+    console.log("[Function Start] manual-sync.js -> markFailed");
     const sets = [`${shape.statusCol} = 'failed'`];
     if (shape.errorCol) sets.push(`${shape.errorCol} = $2`);
     if (shape.attemptCol) sets.push(`${shape.attemptCol} = COALESCE(${shape.attemptCol}, 0) + 1`);

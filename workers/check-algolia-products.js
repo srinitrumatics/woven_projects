@@ -8,6 +8,7 @@ const client = algoliasearch(
 const index = client.initIndex(process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "dev_woven_products");
 
 async function checkAlgolia() {
+    console.log("[Function Start] check-algolia-products.js -> checkAlgolia");
     const results = await index.search('', {
         facetFilters: [
             ['category:Apple Inc', 'category:Happy Tech']

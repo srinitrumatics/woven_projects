@@ -4,6 +4,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 async function checkIndexConfig() {
+    console.log("[Function Start] check-index-config.js -> checkIndexConfig");
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
     try {

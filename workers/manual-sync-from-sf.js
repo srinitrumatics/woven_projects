@@ -4,6 +4,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 async function getSalesforceSession(org) {
+  console.log("[Function Start] manual-sync-from-sf.js -> getSalesforceSession");
   const tokenUrl = org.salesforce_auth_url || process.env.SF_AUTH_URL || "";
   const clientId = org.client_id || process.env.SF_CLIENT_ID || "";
   const clientSecret = org.client_secret || process.env.SF_CLIENT_SECRET || "";
@@ -23,13 +24,14 @@ async function getSalesforceSession(org) {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString(),
   });
-  
+
   if (!res.ok) throw new Error("Failed to authenticate with Salesforce");
   const data = await res.json();
   return { accessToken: data.access_token, instanceUrl: data.instance_url || org.salesforce_url || process.env.SF_DATA_URL };
 }
 
 async function fetchProductsFromSalesforce(session) {
+  console.log("[Function Start] manual-sync-from-sf.js -> fetchProductsFromSalesforce");
   let allRecords = [];
   const query = `
     SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp, 
@@ -67,6 +69,7 @@ async function fetchProductsFromSalesforce(session) {
 }
 
 async function main() {
+  console.log("[Function Start] manual-sync-from-sf.js -> main");
   try {
     const pool = new Pool({
       connectionString: process.env.DATABASE_URL,

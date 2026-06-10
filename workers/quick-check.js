@@ -4,6 +4,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 async function quickCheck() {
+    console.log("[Function Start] quick-check.js -> quickCheck");
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
     try {

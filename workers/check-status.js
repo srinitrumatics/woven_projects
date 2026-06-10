@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Pool } = require('pg');
 
 async function checkStatus() {
+    console.log("[Function Start] check-status.js -> checkStatus");
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false }

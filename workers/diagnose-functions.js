@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Pool } = require('pg');
 
 async function diagnose() {
+    console.log("[Function Start] diagnose-functions.js -> diagnose");
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: {

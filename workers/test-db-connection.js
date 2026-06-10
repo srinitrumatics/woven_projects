@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Pool } = require('pg');
 
 async function testDatabaseConnection() {
+    console.log("[Function Start] test-db-connection.js -> testDatabaseConnection");
     const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         ssl: {

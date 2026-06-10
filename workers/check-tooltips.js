@@ -4,6 +4,7 @@ const path = require('path');
 const directoryPath = '/media/trumatics/New Volume/wovn/woven_projects-main/app';
 
 function walkDir(dir, callback) {
+    console.log("[Function Start] check-tooltips.js -> walkDir");
     fs.readdirSync(dir).forEach(f => {
         let dirPath = path.join(dir, f);
         let isDirectory = fs.statSync(dirPath).isDirectory();
@@ -12,15 +13,16 @@ function walkDir(dir, callback) {
 }
 
 function checkFile(filePath) {
+    console.log("[Function Start] check-tooltips.js -> checkFile");
     if (!filePath.endsWith('.tsx') && !filePath.endsWith('.js') && !filePath.endsWith('.ts')) return;
 
     const content = fs.readFileSync(filePath, 'utf8');
-    
+
     // Regex to find title attribute and the text inside the tag
     // Match pattern: <Tag ... title="TITLE">TEXT</Tag> or <Tag ... title={TITLE}>TEXT</Tag>
     // This is a simplified regex and won't catch everything (like nested tags), but it's a good start.
     const regex = /<(\w+)[^>]*title=(?:"([^"]+)"|{([^}]+)})[^>]*>([^<]+)<\/\1>/g;
-    
+
     let match;
     while ((match = regex.exec(content)) !== null) {
         const tag = match[1];

@@ -4,6 +4,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 async function resetQueue() {
+    console.log("[Function Start] reset-queue.js -> resetQueue");
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
     try {

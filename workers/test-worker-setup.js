@@ -3,6 +3,7 @@ const { Pool } = require('pg');
 const algoliasearch = require('algoliasearch');
 
 async function testWorkerSetup() {
+    console.log("[Function Start] test-worker-setup.js -> testWorkerSetup");
     try {
         const client = algoliasearch(
             process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
