@@ -182,7 +182,8 @@ export async function POST(
           name:                 row.name,
           description:          row.description,
           price:                row.gtherp__price__c ?? 0,
-          list_price:           row.list_price__c ?? 0,
+          listPrice:            row.list_price__c ?? 0,
+          unitPrice:            row.gtherp__price__c ?? 0,
           stock_quantity:       row.gtherp__stock_quantity__c ?? 0,
           available_quantity:   row.gtherp__available_quantity__c ?? 0,
           discount:             row.gtherp__discount__c ?? 0,
@@ -198,7 +199,7 @@ export async function POST(
           Availability_Status__c: row.product_availability__c,
           created_at: row.createddate ? Math.floor(new Date(row.createddate).getTime() / 1000) : null,
           updated_at: row.systemmodstamp ? Math.floor(new Date(row.systemmodstamp).getTime() / 1000) : null,
-          _tags: [row.family, row.gtherp__category__c, row.gtherp__sub_category__c, row.manufacturer_name__c].filter(Boolean),
+          _tags: [row.family, row.gtherp__category__c, row.gtherp__sub_category__c, row.manufacturer_name__c, row.product_availability__c].filter(Boolean),
         };
       });
 
