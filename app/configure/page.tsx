@@ -66,7 +66,8 @@ export default function ConfigureOrderPage() {
             family: p.Family || p.productFamily || 'General',
             groupingLabel: p.Grouping__c || p.Product_Grouping__c || '',
             sell: p.List_Price__c || p.listPrice || p.Unit_Price__c || p.unitPrice || 0,
-            avail: p.Available_To_Sell__c || p.availableQty || 10
+            avail: p.Available_To_Sell__c || p.availableQty || 10,
+            moq: p.MOQ__c || p.moq || 1
           }));
           setCatalog(cat);
         })
@@ -114,7 +115,7 @@ export default function ConfigureOrderPage() {
     const id = nextId; setNextId(id + 1);
     return {
       id, productId: p.id, type: 'product', sku: p.sku, name: p.name, desc: p.desc, mfr: p.mfr, groupingLabel: p.groupingLabel,
-      lv: 1, seq: 0, sell: p.sell, qty: 1, pid: null, exp: true, dirty: true, sel: false
+      lv: 1, seq: 0, sell: p.sell, qty: p.moq || 1, pid: null, exp: true, dirty: true, sel: false
     };
   };
 
@@ -242,7 +243,7 @@ export default function ConfigureOrderPage() {
       if (!prod) return;
       const nl = {
         id: nextId, productId: prod.id, type: 'product', sku: prod.sku, name: prod.name, desc: prod.desc, mfr: prod.mfr, groupingLabel: prod.groupingLabel,
-        lv: 1, seq: 0, sell: prod.sell, qty: 1, pid: null, exp: true, dirty: true, sel: false
+        lv: 1, seq: 0, sell: prod.sell, qty: prod.moq || 1, pid: null, exp: true, dirty: true, sel: false
       };
       setNextId(nextId + 1);
 
@@ -616,11 +617,16 @@ export default function ConfigureOrderPage() {
                           <td><a className="prod-lk" title={`${l.sku} - ${l.name}`}>{l.name}</a></td>
                           <td><span className="trunc" style={{ color: 'var(--text-muted)' }} title={l.desc}>{l.desc}</span></td>
                           <td><span className="trunc" title={l.mfr}>{trn(l.mfr, 18)}</span></td>
-                          <td className="r">
-                            <input type="number" value={l.sell} step="0.01" style={{ width: '80px', textAlign: 'right', background: 'transparent', border: '1px solid transparent' }} onChange={e => setLines(prev => prev.map(x => x.id === l.id ? { ...x, sell: parseFloat(e.target.value) || 0 } : x))} />
+                          <td className="r" style={{ color: 'var(--text-secondary)' }}>
+                            {fmt(l.sell)}
                           </td>
                           <td className="r">
-                            <input type="number" value={l.qty} min="1" step="1" style={{ width: '60px', textAlign: 'right', background: 'transparent', border: '1px solid transparent' }} onChange={e => setLines(prev => prev.map(x => x.id === l.id ? { ...x, qty: parseInt(e.target.value) || 1 } : x))} />
+                            <input 
+                              type="text" 
+                              value={l.qty} 
+                              readOnly 
+                              className="w-[60px] text-right py-1 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md !bg-gray-50 dark:!bg-gray-800 text-gray-900 dark:text-white cursor-default focus:outline-none"
+                            />
                           </td>
                           <td className="r" style={{ fontWeight: 600, color: 'var(--green)' }}>{fmt(l.sell * l.qty)}</td>
                           <td className="c"><button className="x-btn" onClick={() => delLine(l.id)}>&#10005;</button></td>
