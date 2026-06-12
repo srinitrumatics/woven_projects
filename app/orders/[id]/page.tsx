@@ -150,6 +150,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const isNew = searchParams.get("new") === "true";
   const isTransfer = searchParams.get("transfer") === "true";
   const isProposal = searchParams.get("proposal") === "true";
+  const isFromConfigure = searchParams.get("from_configure") === "true";
   const transferProductsStr = searchParams.get("products");
 
   const { user, selectedAccount } = useUserSession();
@@ -675,6 +676,39 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       setOrderProducts([newLineItem]);
     }
   }, [isNew, isProposal, catalogProducts, orderProducts.length]);
+
+  // Auto-add Configure Order lines
+  useEffect(() => {
+    if (isNew && isFromConfigure && orderProducts.length === 0) {
+      try {
+        const configuredStr = localStorage.getItem('gth-configured-order');
+        if (configuredStr) {
+          const lines = JSON.parse(configuredStr);
+          const productsOnly = lines.filter((l: any) => l.type === 'product');
+          const newLineItems = productsOnly.map((p: any) => ({
+            id: p.id || `conf-${Date.now()}-${Math.random()}`,
+            name: p.name,
+            sku: p.sku,
+            description: p.desc,
+            productFamily: "General",
+            productGrouping: p.groupingLabel || "",
+            manufacturer: p.mfr,
+            listPrice: p.sell,
+            unitPrice: p.sell,
+            orderQty: p.qty,
+            subtotal: p.sell * p.qty,
+            lineItemKey: `conf-${p.id}-${Date.now()}-${Math.random()}`,
+            sequence: p.seq
+          }));
+          if (newLineItems.length > 0) {
+            setOrderProducts(newLineItems);
+          }
+        }
+      } catch(e) {
+        console.error("Error loading configured order", e);
+      }
+    }
+  }, [isNew, isFromConfigure, orderProducts.length]);
 
   // Handle contact selection
   const handleContactSelect = (contactId: string) => {
