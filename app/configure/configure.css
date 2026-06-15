@@ -198,7 +198,7 @@ html.dark .configure-wrapper,
 
 /* ═══ GROUP DROPDOWN ═══ */
 .grp-dd-wrap{position:relative}
-.grp-dd{position:absolute;top:calc(100% + 4px);left:0;width:240px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px var(--shadow);z-index:100;overflow:hidden}
+.grp-dd{position:absolute;top:calc(100% + 4px);right:0;width:240px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px var(--shadow);z-index:100;overflow:hidden}
 .grp-dd-title{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);padding:8px 12px 4px;font-weight:700}
 .grp-dd-item{padding:7px 12px;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:8px;transition:background .08s;color:var(--text-primary)}
 .grp-dd-item:hover{background:var(--bg-empty-hover)}

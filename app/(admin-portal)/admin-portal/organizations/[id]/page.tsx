@@ -211,15 +211,24 @@ export default function EditOrganizationPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Salesforce Org ID <span className="text-red-500">*</span></label>
-              <input
-                type="text"
-                name="orgId"
-                required
-                value={formData.orgId}
-                onChange={handleInputChange}
-                className="block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm font-mono py-2 px-3"
-              />
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Salesforce Org ID</label>
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-400">
+                  <LockClosedIcon className="h-3 w-3" />
+                  Locked
+                </span>
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="orgId"
+                  value={formData.orgId}
+                  readOnly
+                  tabIndex={-1}
+                  className="block w-full rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400 sm:text-sm font-mono py-2 px-3 cursor-not-allowed select-all"
+                />
+              </div>
+              <p className="text-xs text-amber-600 dark:text-amber-500">Org ID is fixed after provisioning and cannot be changed.</p>
             </div>
             
             <div className="space-y-1">
@@ -295,7 +304,13 @@ export default function EditOrganizationPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Algolia Index Name</label>
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Algolia Index Name</label>
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-400">
+                  <LockClosedIcon className="h-3 w-3" />
+                  Locked
+                </span>
+              </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <ServerStackIcon className="h-5 w-5 text-gray-400" />
@@ -304,15 +319,22 @@ export default function EditOrganizationPage() {
                   type="text"
                   name="algoliaIndexName"
                   value={formData.algoliaIndexName}
-                  onChange={handleInputChange}
-                  className="block w-full pl-10 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm font-mono py-2"
-                  placeholder="woven_products_..."
+                  readOnly
+                  tabIndex={-1}
+                  className="block w-full pl-10 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400 sm:text-sm font-mono py-2 cursor-not-allowed select-all"
                 />
               </div>
+              <p className="text-xs text-amber-600 dark:text-amber-500">Index name is fixed after provisioning and cannot be changed.</p>
             </div>
             
             <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Algolia Schema</label>
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Algolia Schema</label>
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-400">
+                  <LockClosedIcon className="h-3 w-3" />
+                  Locked
+                </span>
+              </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <ServerStackIcon className="h-5 w-5 text-gray-400" />
@@ -321,11 +343,12 @@ export default function EditOrganizationPage() {
                   type="text"
                   name="algoliaSchema"
                   value={formData.algoliaSchema}
-                  onChange={handleInputChange}
-                  className="block w-full pl-10 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm py-2"
-                  placeholder="e.g. JSON overrides or schema name"
+                  readOnly
+                  tabIndex={-1}
+                  className="block w-full pl-10 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400 sm:text-sm py-2 cursor-not-allowed select-all"
                 />
               </div>
+              <p className="text-xs text-amber-600 dark:text-amber-500">Schema is fixed after provisioning and cannot be changed.</p>
             </div>
           </div>
         </div>
