@@ -91,7 +91,7 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 max-h-48 overflow-y-auto">
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400  mb-2">
                       Accounts
                     </p>
                     <div className="space-y-1">
@@ -108,20 +108,20 @@ export default function Header({ mobileOpen, setMobileOpen, isCollapsed }: Heade
                                 ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
                                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                                 }`}
-                                onClick={async (e) => {
-                                  e.stopPropagation();
-                                  setIsOrgDropdownOpen(false); // Close dropdown after selection
-                                  await setSelectedAccountId(accId);
-                                  
-                                  const accType = account.Account_Record_Type__c || 'Customer';
-                                  const isCustomerType = accType === 'Customer' || accType === 'NSO' || accType === 'Hybrid';
-                                  const landPage = isCustomerType ? '/home' : '/products';
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                setIsOrgDropdownOpen(false); // Close dropdown after selection
+                                await setSelectedAccountId(accId);
 
-                                  const currentUrl = new URL(window.location.href);
-                                  currentUrl.searchParams.delete('organizationId');
-                                  
-                                  window.location.href = landPage;
-                                }}
+                                const accType = account.Account_Record_Type__c || 'Customer';
+                                const isCustomerType = accType === 'Customer' || accType === 'NSO' || accType === 'Hybrid';
+                                const landPage = isCustomerType ? '/home' : '/products';
+
+                                const currentUrl = new URL(window.location.href);
+                                currentUrl.searchParams.delete('organizationId');
+
+                                window.location.href = landPage;
+                              }}
                             >
                               {account.Name || account.name || 'Unnamed Account'}
                             </button>

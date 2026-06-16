@@ -79,7 +79,7 @@ function InfiniteHits() {
 
             <div className="p-4 flex flex-col flex-grow">
               <div className="mb-2">
-                <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 uppercase tracking-wider truncate">
+                <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400  truncate">
                   {Array.isArray(hit.genre) ? hit.genre[0] : (hit.genre || hit.category || "Product")}
                 </span>
               </div>

@@ -140,7 +140,7 @@ export default function AdminOrganizationsPage() {
                     const fullUrl = url.startsWith('http') ? url : `https://${url}`;
                     window.open(fullUrl, '_blank', 'noopener,noreferrer');
                   }}
-                  className="flex w-full items-center justify-between text-xs font-semibold uppercase tracking-wider text-primary hover:text-primary/80"
+                  className="flex w-full items-center justify-between text-xs font-semibold  text-primary hover:text-primary/80"
                 >
                   <span>Launch Webapp</span>
                   <ArrowTopRightOnSquareIcon className="h-4 w-4" />

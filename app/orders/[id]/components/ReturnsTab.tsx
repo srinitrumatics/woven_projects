@@ -139,10 +139,10 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
             s === "approved" || s === "completed"
                 ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                 : s === "pending" || s === "submitted" || s === "draft"
-                ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
-                : s === "rejected" || s === "cancelled" || s === "canceled"
-                ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
-                : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300";
+                    ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
+                    : s === "rejected" || s === "cancelled" || s === "canceled"
+                        ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                        : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300";
         return (
             <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${color}`}>
                 {status || "—"}
@@ -160,7 +160,7 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
         </div>
     );
 
-    const thClass = "px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider";
+    const thClass = "px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 ";
     const tdClass = "px-4 py-3 text-sm text-gray-700 dark:text-gray-300 truncate";
     const tdBoldClass = "px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate";
     const trClass = "hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors";
@@ -186,11 +186,10 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
                     <button
                         key={tab.id}
                         onClick={() => setActiveSubTab(tab.id)}
-                        className={`pb-2 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px ${
-                            activeSubTab === tab.id
+                        className={`pb-2 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px ${activeSubTab === tab.id
                                 ? "border-primary text-primary"
                                 : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                        }`}
+                            }`}
                     >
                         {tab.label} {tab.count > 0 && `(${tab.count})`}
                     </button>

@@ -262,7 +262,7 @@ export default function ProfilePage() {
                                         <div className="md:col-span-2 flex items-center justify-between">
                                             <h3 className="text-lg font-bold text-gray-900 dark:text-white">Personal Information</h3>
                                             {!isEditing && (
-                                                <span className="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded-full uppercase tracking-wider">Active</span>
+                                                <span className="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded-full ">Active</span>
                                             )}
                                         </div>
 

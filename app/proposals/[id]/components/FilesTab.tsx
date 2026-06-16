@@ -230,7 +230,7 @@ export default function FilesTab({
                                 <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={100} truncate={false} />
                                 <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={180} truncate={false} />
                                 <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={150} truncate={false} />
-                                <th className="px-3 py-2 text-left text-xs font-bold text-gray-900 dark:text-white w-[100px] border-b border-gray-100 dark:border-gray-700 uppercase tracking-wider">Action</th>
+                                <th className="px-3 py-2 text-left text-xs font-bold text-gray-900 dark:text-white w-[100px] border-b border-gray-100 dark:border-gray-700 ">Action</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

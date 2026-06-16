@@ -210,7 +210,7 @@ export default function CreateOrganizationPage() {
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">
             {step === 1 ? 'Tenant Registry' : step === 2 ? 'Resource Provisioning' : 'Initial Sync & Launch'}
           </h1>
-          <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Step {step} of 3</p>
+          <p className="text-xs text-gray-500  mt-1">Step {step} of 3</p>
         </div>
 
         {/* Right: Back Button */}
@@ -391,7 +391,7 @@ export default function CreateOrganizationPage() {
                 <CheckCircleIcon className="h-6 w-6" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-green-700 dark:text-green-400 uppercase tracking-wider">✓ Organization Registered</h4>
+                <h4 className="text-sm font-bold text-green-700 dark:text-green-400 ">✓ Organization Registered</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                   <strong>{formData.name}</strong> has been saved to the <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">organizations</code> table.
                   Now provision its isolated schema and Algolia search index.
@@ -400,7 +400,7 @@ export default function CreateOrganizationPage() {
             </div>
 
             <div className="rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">What will be created</p>
+              <p className="text-xs font-semibold  text-gray-500">What will be created</p>
               <div className="flex flex-wrap gap-2 text-xs">
                 <span className="rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 font-mono">
                   PostgreSQL schema: {schemaData.schemaName || '—'}
@@ -493,7 +493,7 @@ export default function CreateOrganizationPage() {
                 <CheckCircleIcon className="h-6 w-6" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-green-700 dark:text-green-400 uppercase tracking-wider">✓ Infrastructure Provisioned</h4>
+                <h4 className="text-sm font-bold text-green-700 dark:text-green-400 ">✓ Infrastructure Provisioned</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                   Database schema <code>{schemaData.schemaName}</code> and Algolia index <code>{schemaData.indexName}</code> are ready.
                 </p>
@@ -505,7 +505,7 @@ export default function CreateOrganizationPage() {
               <p className="text-sm text-gray-500">
                 Sync the initial product catalog from Salesforce to your new index, and verify the storefront launches correctly.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 mt-6">
                 <button
                   type="button"
@@ -553,9 +553,8 @@ export default function CreateOrganizationPage() {
                   }
                   router.push('/admin-portal/organizations');
                 }}
-                className={`inline-flex items-center rounded-md px-8 py-2.5 text-sm font-semibold text-white shadow-sm transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
-                  hasSynced ? 'bg-primary hover:bg-primary/90' : 'bg-gray-400 hover:bg-gray-500'
-                }`}
+                className={`inline-flex items-center rounded-md px-8 py-2.5 text-sm font-semibold text-white shadow-sm transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${hasSynced ? 'bg-primary hover:bg-primary/90' : 'bg-gray-400 hover:bg-gray-500'
+                  }`}
               >
                 Complete Setup
               </button>
