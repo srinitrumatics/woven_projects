@@ -425,31 +425,24 @@ export default function ConfigureOrderPage() {
       }}>
 
 
-        <div className="pg-hdr">
-          <div className="pg-hdr-left">
-            <div className="pg-hdr-icon">
-              <svg fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V2m0 4a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V8m12 10a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-              </svg>
-            </div>
-            <div>
-              <div className="pg-hdr-title">Configure Order</div>
-              <div className="pg-hdr-sub">Build a hierarchical list of products</div>
-            </div>
+        <div className="px-6 pt-6 pb-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Configure Order</h1>
+            <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Build a hierarchical list of products">Build a hierarchical list of products</p>
           </div>
-          <div className="pg-hdr-actions flex items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             <button
-              className="px-4 py-2 !bg-gray-100 !text-gray-700 dark:!bg-gray-800 dark:!text-gray-300 rounded-lg hover:!bg-gray-200 dark:hover:!bg-gray-700 transition-colors flex items-center gap-2 truncate text-sm"
+              className="px-4 py-2 bg-gray-300 text-gray-900 dark:bg-gray-800 text-bold dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 truncate"
               onClick={() => { setLines([]); localStorage.removeItem('gth-configured-draft'); }}
             >
               Discard
             </button>
             <button
-              className="px-4 py-2 !bg-primary !text-white rounded-lg hover:!bg-[#6B9DB8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 truncate text-sm"
+              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 truncate"
               onClick={handleCreateOrder}
               disabled={loading}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
               {loading ? 'Creating...' : 'Create Order'}
@@ -463,7 +456,7 @@ export default function ConfigureOrderPage() {
             <div className="sm"><span className="sm-v green">{fmt(totalSell)}</span><span className="sm-l">Order Total</span></div>
           </div>
           <div className="tbar-r">
-            <button className="configure-btn btn-bo" onClick={() => setPanelOpen(!panelOpen)}>{panelOpen ? 'Close Catalog' : 'Browse Catalog'}</button>
+            <button className="px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-primary text-primary rounded-md hover:bg-primary/10 transition-colors" onClick={() => setPanelOpen(!panelOpen)}>{panelOpen ? 'Close Catalog' : 'Browse Catalog'}</button>
           </div>
         </div>
 
@@ -502,11 +495,11 @@ export default function ConfigureOrderPage() {
                 </div>
               </div>
               <div className="tbar-r">
-                <button className="configure-btn btn-n" disabled={selectedCount === 0} onClick={() => doIndent(-1)}>Outdent</button>
-                <button className="configure-btn btn-n" disabled={selectedCount === 0} onClick={() => doIndent(1)}>Indent</button>
+                <button className="px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={selectedCount === 0} onClick={() => doIndent(-1)}>Outdent</button>
+                <button className="px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={selectedCount === 0} onClick={() => doIndent(1)}>Indent</button>
                 <div className="sep"></div>
                 <div className="grp-dd-wrap" id="grpWrap">
-                  <button className="configure-btn btn-grp" onClick={() => setGrpDDOpen(!grpDDOpen)}>+ Add Group</button>
+                  <button className="px-3 py-1.5 text-sm bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800 rounded-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors" onClick={() => setGrpDDOpen(!grpDDOpen)}>+ Add Group</button>
                   {grpDDOpen && (
                     <div className="grp-dd open">
                       <div className="grp-dd-title">Presets</div>
@@ -522,7 +515,7 @@ export default function ConfigureOrderPage() {
                     </div>
                   )}
                 </div>
-                <button className="configure-btn btn-del" disabled={selectedCount === 0} onClick={delSelected}>Remove</button>
+                <button className="px-3 py-1.5 text-sm bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-md hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={selectedCount === 0} onClick={delSelected}>Remove</button>
               </div>
             </div>
 
@@ -554,18 +547,18 @@ export default function ConfigureOrderPage() {
                   <col className="csp" /><col className="cq" /><col className="cep" /><col className="ca" />
                 </colgroup>
                 <thead>
-                  <tr>
-                    <th className="c"><input type="checkbox" checked={lines.length > 0 && lines.every(l => l.sel)} onChange={e => selAll(e.target.checked)} /></th>
+                  <tr className="bg-primary-light dark:bg-gray-900">
+                    <th ><input type="checkbox" checked={lines.length > 0 && lines.every(l => l.sel)} onChange={e => selAll(e.target.checked)} /></th>
                     <th></th>
                     <th>Level</th>
-                    <th className="c">Seq</th>
+                    <th >Seq</th>
                     <th>Product / Sku</th>
                     <th>Description</th>
                     <th>Manufacturer</th>
-                    <th className="r">Sell Price</th>
-                    <th className="r">Qty</th>
-                    <th className="r">Ext. Price</th>
-                    <th className="c"></th>
+                    <th >Sell Price</th>
+                    <th >Qty</th>
+                    <th >Ext. Price</th>
+                    <th ></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -586,7 +579,7 @@ export default function ConfigureOrderPage() {
 
                       return (
                         <tr key={l.id} draggable className={`grp-row ${l.sel ? 'sel' : ''}`} onDragStart={e => startDrag(e, 'row', l.id)} onDragOver={e => onDragOverRow(e, idx)} onDrop={e => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
-                          <td className="c"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} /></td>
+                          <td ><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} /></td>
                           <td><div className="grip">&#9776;</div></td>
                           <td colSpan={3} style={{ paddingLeft: '4px' }}>
                             {hasKids ? <button className={`exp-btn ${l.exp ? '' : 'shut'}`} onClick={() => toggleExp(l.id)}>&#9660;</button> : <span className="exp-ph"></span>}
@@ -595,8 +588,8 @@ export default function ConfigureOrderPage() {
                             <span className="grp-meta">{s.n} item{s.n !== 1 ? 's' : ''}</span>
                           </td>
                           <td colSpan={4}></td>
-                          <td className="r"><span className="grp-subtotal">{fmt(s.ts)}</span></td>
-                          <td className="c"><button className="x-btn" onClick={() => delLine(l.id)}>&#10005;</button></td>
+                          <td ><span className="grp-subtotal">{fmt(s.ts)}</span></td>
+                          <td ><button className="x-btn" onClick={() => delLine(l.id)}>&#10005;</button></td>
                         </tr>
                       );
                     } else {
@@ -604,32 +597,32 @@ export default function ConfigureOrderPage() {
                       const lvCls = 'lv' + Math.min(l.lv - 1, 3);
                       return (
                         <tr key={l.id} draggable className={l.sel ? 'sel' : ''} onDragStart={e => startDrag(e, 'row', l.id)} onDragOver={e => onDragOverRow(e, idx)} onDrop={e => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
-                          <td className="c"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} /></td>
+                          <td ><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} /></td>
                           <td><div className="grip">&#9776;</div></td>
-                          <td className="c">
+                          <td >
                             <div className="lvl-wrap">
                               <span className="lvl-indent" style={{ width: indent }}></span>
                               {hasKids ? <button className={`exp-btn ${l.exp ? '' : 'shut'}`} onClick={() => toggleExp(l.id)}>&#9660;</button> : <span className="exp-ph"></span>}
                               <span className={`lvl-badge ${lvCls}`}>{l.lv}</span>
                             </div>
                           </td>
-                          <td className="c" style={{ color: 'var(--text-dim)' }}>{l.seq}</td>
+                          <td style={{ color: 'var(--text-dim)' }}>{l.seq}</td>
                           <td><a className="prod-lk" title={`${l.sku} - ${l.name}`}>{l.name}</a></td>
                           <td><span className="trunc" style={{ color: 'var(--text-muted)' }} title={l.desc}>{l.desc}</span></td>
                           <td><span className="trunc" title={l.mfr}>{trn(l.mfr, 18)}</span></td>
-                          <td className="r" style={{ color: 'var(--text-secondary)' }}>
+                          <td style={{ color: 'var(--text-secondary)' }}>
                             {fmt(l.sell)}
                           </td>
-                          <td className="r">
-                            <input 
-                              type="text" 
-                              value={l.qty} 
-                              readOnly 
+                          <td >
+                            <input
+                              type="text"
+                              value={l.qty}
+                              readOnly
                               className="w-[60px] text-right py-1 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md !bg-gray-50 dark:!bg-gray-800 text-gray-900 dark:text-white cursor-default focus:outline-none"
                             />
                           </td>
-                          <td className="r" style={{ fontWeight: 600, color: 'var(--green)' }}>{fmt(l.sell * l.qty)}</td>
-                          <td className="c"><button className="x-btn" onClick={() => delLine(l.id)}>&#10005;</button></td>
+                          <td style={{ fontWeight: 600, color: 'var(--green)' }}>{fmt(l.sell * l.qty)}</td>
+                          <td ><button className="x-btn" onClick={() => delLine(l.id)}>&#10005;</button></td>
                         </tr>
                       );
                     }
@@ -638,8 +631,8 @@ export default function ConfigureOrderPage() {
                 <tfoot>
                   <tr>
                     <td colSpan={7}></td>
-                    <td className="tot-label">Order Total</td>
-                    <td colSpan={2} className="tot-val">{fmt(totalSell)}</td>
+                    <td colSpan={2} className="tot-label">Order Total</td>
+                    <td className="tot-val">{fmt(totalSell)}</td>
                     <td></td>
                   </tr>
                 </tfoot>
