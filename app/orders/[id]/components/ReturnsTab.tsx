@@ -160,7 +160,7 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
         </div>
     );
 
-    const thClass = "px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 ";
+    const thClass = "px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-300 ";
     const tdClass = "px-4 py-3 text-sm text-gray-700 dark:text-gray-300 truncate";
     const tdBoldClass = "px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate";
     const trClass = "hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors";
@@ -187,8 +187,8 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
                         key={tab.id}
                         onClick={() => setActiveSubTab(tab.id)}
                         className={`pb-2 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px ${activeSubTab === tab.id
-                                ? "border-primary text-primary"
-                                : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                             }`}
                     >
                         {tab.label} {tab.count > 0 && `(${tab.count})`}
