@@ -1,420 +1,12 @@
-"use client";
+import re
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
-import { useUserSession } from '@/components/UserSessionContext';
-import { useToast } from "@/components/ui/Toast";
-// Formatter
-const fmt = (n: number) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const trn = (s: string, m: number) => s.length > m ? s.substring(0, m) + '\u2026' : s;
+with open('/media/trumatics/New Volume/wovn/woven_projects-main/app/configure/page.tsx', 'r') as f:
+    content = f.read()
 
-export default function ConfigureOrderPage() {
-  const router = useRouter();
-  const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.Id || user?.contact?.Id || user?.contact?.id || "";
+# We want to replace the return statement with standard Tailwind classes.
+# But it's 300 lines long, so we can just provide the new return statement.
 
-  const { success, error: toastError } = useToast();
-  const [loading, setLoading] = useState(false);
-
-  const [lines, setLines] = useState<any[]>([]);
-  const [catalog, setCatalog] = useState<any[]>([]);
-  const [nextId, setNextId] = useState(1000);
-
-  const [panelOpen, setPanelOpen] = useState(false);
-  const [searchQ, setSearchQ] = useState('');
-  const [quickAddQ, setQuickAddQ] = useState('');
-  const [catQ, setCatQ] = useState('');
-  const [fMfr, setFMfr] = useState('');
-  const [fFamily, setFFamily] = useState('');
-  const [quickAddOpen, setQuickAddOpen] = useState(false);
-  const [grpDDOpen, setGrpDDOpen] = useState(false);
-  const [customGrpName, setCustomGrpName] = useState('');
-
-  // DnD state refs (to avoid re-renders during drag)
-  const dragSrcRef = useRef<{ type: string, id: string | number } | null>(null);
-  const insertIdxRef = useRef<number>(-1);
-  const [insertLineStyle, setInsertLineStyle] = useState<{ top: string, display: string }>({ top: '0', display: 'none' });
-
-  // Load draft and catalog on mount
-  useEffect(() => {
-    try {
-      const draft = localStorage.getItem('gth-configured-draft');
-      if (draft) {
-        const parsed = JSON.parse(draft);
-        if (parsed && parsed.length > 0) {
-          setLines(parsed);
-          const maxId = Math.max(...parsed.map((l: any) => l.id), 1000);
-          setNextId(maxId + 1);
-        }
-      }
-    } catch (e) { }
-
-    if (SF_ACCOUNT_ID && SF_CONTACT_ID) {
-      fetch(`/api/salesforce/orders?action=products&accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}`)
-        .then(res => res.json())
-        .then(data => {
-          let items = Array.isArray(data) ? data : (data.data || []);
-          const cat = items.map((p: any) => ({
-            id: p.Id || p.id,
-            sku: p.StockKeepingUnit || p.SKU || p.sku || p.Name,
-            name: p.Name || p.name || 'Unnamed',
-            desc: p.Description || p.description || '',
-            mfr: p['Manufacturer_Name__r.Name'] || p.Manufacturer__c || p.Manufacturer_Name || p.Manufacturer_Name__c || 'Unknown',
-            family: p.Family || p.productFamily || 'General',
-            groupingLabel: p.Grouping__c || p.Product_Grouping__c || '',
-            sell: p.List_Price__c || p.listPrice || p.Unit_Price__c || p.unitPrice || 0,
-            avail: p.Available_To_Sell__c || p.availableQty || 10,
-            moq: p.MOQ__c || p.moq || 1
-          }));
-          setCatalog(cat);
-        })
-        .catch(err => console.error(err));
-    }
-  }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
-
-  // Save draft on lines change
-  useEffect(() => {
-    if (lines.length > 0) {
-      localStorage.setItem('gth-configured-draft', JSON.stringify(lines));
-    } else {
-      localStorage.removeItem('gth-configured-draft');
-    }
-  }, [lines]);
-
-  const reseq = (newLines: any[]) => {
-    let s = 0;
-    return newLines.map(l => {
-      if (l.type === 'product') { s += 10; return { ...l, seq: s }; }
-      else { return { ...l, seq: 0 }; }
-    });
-  };
-
-  const calcTotals = () => {
-    let ts = 0, pc = 0;
-    lines.forEach(l => { if (l.type === 'product') { ts += l.sell * l.qty; pc++; } });
-    return { ts, pc };
-  };
-  const { ts: totalSell, pc: productCount } = calcTotals();
-  const selectedCount = lines.filter(l => l.sel).length;
-
-  const isHidden = (l: any) => {
-    let c = l;
-    while (c.pid !== null) {
-      const p = lines.find(x => x.id === c.pid);
-      if (!p) break;
-      if (!p.exp) return true;
-      c = p;
-    }
-    return false;
-  };
-
-  const makeLine = (p: any) => {
-    const id = nextId; setNextId(id + 1);
-    return {
-      id, productId: p.id, type: 'product', sku: p.sku, name: p.name, desc: p.desc, mfr: p.mfr, groupingLabel: p.groupingLabel,
-      lv: 1, seq: 0, sell: p.sell, qty: p.moq || 1, pid: null, exp: true, dirty: true, sel: false
-    };
-  };
-
-  const quickAddProduct = (p: any) => {
-    const nl = makeLine(p);
-    setLines(prev => reseq([...prev, nl]));
-    setQuickAddQ('');
-    setQuickAddOpen(false);
-  };
-
-  const addCat = (id: string) => {
-    const p = catalog.find(x => x.id === id);
-    if (p) quickAddProduct(p);
-  };
-
-  const selAll = (v: boolean) => setLines(prev => prev.map(l => ({ ...l, sel: v })));
-  const rowSel = (id: number, v: boolean) => setLines(prev => prev.map(l => l.id === id ? { ...l, sel: v } : l));
-  const toggleExp = (id: number) => setLines(prev => prev.map(l => l.id === id ? { ...l, exp: !l.exp } : l));
-  const renameGrp = (id: number, name: string) => setLines(prev => prev.map(l => l.id === id ? { ...l, grpName: name.trim() || 'Untitled Group', dirty: true } : l));
-
-  const rmTree = (id: number, currentLines: any[]) => {
-    let toRemove = new Set([id]);
-    let changed = true;
-    while (changed) {
-      changed = false;
-      currentLines.forEach(l => {
-        if (l.pid && toRemove.has(l.pid) && !toRemove.has(l.id)) {
-          toRemove.add(l.id);
-          changed = true;
-        }
-      });
-    }
-    return currentLines.filter(l => !toRemove.has(l.id));
-  };
-
-  const delLine = (id: number) => setLines(prev => reseq(rmTree(id, prev)));
-  const delSelected = () => {
-    setLines(prev => {
-      let temp = [...prev];
-      prev.filter(l => l.sel).forEach(l => temp = rmTree(l.id, temp));
-      return reseq(temp);
-    });
-  };
-
-  const addGroup = (name: string, color: string) => {
-    const id = nextId; setNextId(id + 1);
-    const nl = { id, type: 'group', grpName: name, grpColor: color || 'gc-misc', lv: 1, seq: 0, pid: null, exp: true, dirty: true, sel: false, sku: '', name: '', desc: '', mfr: '', sell: 0, qty: 0 };
-    setLines(prev => reseq([...prev, nl]));
-    setGrpDDOpen(false);
-  };
-
-  const shiftKids = (pid: number, d: number, curLines: any[]) => {
-    curLines.filter(l => l.pid === pid).forEach(c => {
-      c.lv += d;
-      shiftKids(c.id, d, curLines);
-    });
-  };
-
-  const doIndent = (dir: number) => {
-    setLines(prev => {
-      let temp = JSON.parse(JSON.stringify(prev)); // Deep copy to mutate safely
-      temp.filter((l: any) => l.sel && l.type === 'product').forEach((l: any) => {
-        if (dir > 0) {
-          const idx = temp.findIndex((x: any) => x.id === l.id);
-          let prevRow = null;
-          for (let i = idx - 1; i >= 0; i--) {
-            if (temp[i].lv === l.lv && temp[i].pid === l.pid) { prevRow = temp[i]; break; }
-            if (temp[i].lv < l.lv) break;
-          }
-          if (prevRow) {
-            l.lv++; l.pid = prevRow.id; prevRow.exp = true;
-            shiftKids(l.id, 1, temp);
-          }
-        } else {
-          if (l.lv <= 1) return;
-          const par = temp.find((p: any) => p.id === l.pid);
-          if (par) {
-            l.lv--; l.pid = par.pid;
-            shiftKids(l.id, -1, temp);
-          }
-        }
-      });
-      return reseq(temp);
-    });
-  };
-
-  // DnD Logic
-  const startDrag = (e: React.DragEvent, type: string, id: string | number) => {
-    dragSrcRef.current = { type, id };
-    e.dataTransfer.effectAllowed = 'copyMove';
-    e.dataTransfer.setData('text/plain', type + ':' + id);
-    // Let CSS handle visual state, or we can force it here
-  };
-
-  const resolveParentInList = (list: any[], at: number) => {
-    for (let i = at - 1; i >= 0; i--) {
-      if (list[i].type === 'group' && list[i].lv === 1) {
-        let j = i + 1;
-        while (j < list.length && list[j].lv > list[i].lv) j++;
-        if (at <= j) return { pid: list[i].id, lv: list[i].lv + 1 };
-      }
-      if (list[i].type === 'product' && list[i].pid !== null) return { pid: list[i].pid, lv: list[i].lv };
-    }
-    return { pid: null, lv: 1 };
-  };
-
-  const collectTree = (rid: number, list: any[]) => {
-    const root = list.find(l => l.id === rid);
-    if (!root) return [];
-    const res = [root];
-    const ri = list.indexOf(root);
-    for (let i = ri + 1; i < list.length; i++) {
-      if (list[i].lv > root.lv) res.push(list[i]);
-      else break;
-    }
-    return res;
-  };
-
-  const execDrop = (at: number) => {
-    const dragSrc = dragSrcRef.current;
-    if (!dragSrc) return;
-
-    if (dragSrc.type === 'cat') {
-      const prod = catalog.find(p => p.id === dragSrc.id);
-      if (!prod) return;
-      const nl = {
-        id: nextId, productId: prod.id, type: 'product', sku: prod.sku, name: prod.name, desc: prod.desc, mfr: prod.mfr, groupingLabel: prod.groupingLabel,
-        lv: 1, seq: 0, sell: prod.sell, qty: prod.moq || 1, pid: null, exp: true, dirty: true, sel: false
-      };
-      setNextId(nextId + 1);
-
-      setLines(prev => {
-        const ctx = resolveParentInList(prev, at);
-        nl.pid = ctx.pid; nl.lv = ctx.lv;
-        let temp = [...prev];
-        temp.splice(at, 0, nl);
-        return reseq(temp);
-      });
-    } else {
-      setLines(prev => {
-        const src = prev.find(l => l.id === dragSrc.id);
-        if (!src) return prev;
-        const subtree = collectTree(src.id as number, prev);
-        const filtered = prev.filter(l => !subtree.includes(l));
-        let tgt = at - subtree.filter(l => prev.indexOf(l) < at).length;
-        tgt = Math.max(0, Math.min(tgt, filtered.length));
-        const ctx = resolveParentInList(filtered, tgt);
-        const delta = ctx.lv - src.lv;
-        subtree.forEach(l => l.lv += delta);
-        src.pid = ctx.pid;
-        filtered.splice(tgt, 0, ...subtree);
-        return reseq(filtered);
-      });
-    }
-    dragSrcRef.current = null;
-    insertIdxRef.current = -1;
-    setInsertLineStyle({ top: '0', display: 'none' });
-  };
-
-  const onDragOverRow = (e: React.DragEvent, idx: number) => {
-    e.preventDefault();
-    if (!dragSrcRef.current) return;
-    e.dataTransfer.dropEffect = dragSrcRef.current.type === 'cat' ? 'copy' : 'move';
-    const tr = e.currentTarget as HTMLElement;
-    const rect = tr.getBoundingClientRect();
-    const mid = rect.top + rect.height / 2;
-    insertIdxRef.current = e.clientY < mid ? idx : idx + 1;
-
-    const tbody = tr.closest('tbody');
-    if (tbody) {
-      const rows = Array.from(tbody.querySelectorAll('tr:not(.child-hidden)'));
-      const tscroll = document.querySelector('.tscroll');
-      if (tscroll) {
-        const sr = tscroll.getBoundingClientRect();
-        let y = 0;
-        if (insertIdxRef.current <= 0 && rows[0]) {
-          y = rows[0].getBoundingClientRect().top - sr.top + tscroll.scrollTop - 1;
-        } else if (insertIdxRef.current >= lines.length && rows[rows.length - 1]) {
-          y = rows[rows.length - 1].getBoundingClientRect().bottom - sr.top + tscroll.scrollTop - 1;
-        } else {
-          const ref = rows[insertIdxRef.current - 1];
-          if (ref) {
-            y = ref.getBoundingClientRect().bottom - sr.top + tscroll.scrollTop - 1;
-          }
-        }
-        setInsertLineStyle({ top: y + 'px', display: 'block' });
-      }
-    }
-  };
-
-  const handleCreateOrder = async () => {
-    if (productCount === 0) {
-      toastError('Please add at least one product');
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      // Create base order
-      const orderPayload = {
-        accountId: SF_ACCOUNT_ID,
-        contactId: SF_CONTACT_ID,
-        Proposal_Requested__c: false,
-        Transfer_Order__c: false
-      };
-
-      const orderRes = await fetch('/api/salesforce/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderPayload)
-      });
-
-      if (!orderRes.ok) {
-        throw new Error('Failed to create order');
-      }
-
-      const orderResult = await orderRes.json();
-      let newOrderId = null;
-      if (orderResult.data && Array.isArray(orderResult.data) && orderResult.data.length > 0) {
-        newOrderId = orderResult.data[0].Id;
-      } else {
-        newOrderId = orderResult.orderId || orderResult.Id || orderResult.id;
-      }
-
-      if (!newOrderId) throw new Error('No order ID returned from API');
-
-      // Add order lines
-      const productsOnly = lines.filter(l => l.type === 'product');
-      if (productsOnly.length > 0) {
-        const orderLines = productsOnly.map(l => ({
-          Status__c: 'Draft',
-          Product_Name__c: l.productId || l.id,
-          Order_Qty__c: l.qty,
-          Unit_Price__c: l.sell,
-          Inventory_Account__c: SF_ACCOUNT_ID,
-          IsTaxable__c: true
-        }));
-
-        const linesPayload = {
-          order: {
-            Id: newOrderId,
-            Status__c: 'Draft',
-            Bill_to_Account__c: SF_ACCOUNT_ID,
-            Ship_to_Account__c: SF_ACCOUNT_ID,
-            Inventory_Account__c: SF_ACCOUNT_ID
-          },
-          orderLines,
-          accountId: SF_ACCOUNT_ID,
-          contactId: SF_CONTACT_ID,
-          isDraft: true
-        };
-
-        const linesRes = await fetch(`/api/salesforce/orders?orderId=${newOrderId}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(linesPayload)
-        });
-
-        if (!linesRes.ok) {
-          throw new Error('Failed to add products to order');
-        }
-      }
-
-      success('Order created successfully!');
-
-      // Clear configuration
-      setLines([]);
-      localStorage.removeItem('gth-configured-draft');
-      localStorage.removeItem('gth-configured-order');
-
-      router.push('/orders/' + newOrderId);
-
-    } catch (err: any) {
-      console.error(err);
-      toastError(err.message || 'Failed to create order');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Filtered lists
-  const filteredQuickAdd = useMemo(() => {
-    const q = quickAddQ.toLowerCase();
-    if (!q) return [];
-    return catalog.filter(p => p.sku.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.mfr.toLowerCase().includes(q)).slice(0, 8);
-  }, [quickAddQ, catalog]);
-
-  const filteredCatalog = useMemo(() => {
-    const q = catQ.toLowerCase();
-    return catalog.filter(p =>
-      (!q || p.sku.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.mfr.toLowerCase().includes(q)) &&
-      (!fMfr || p.mfr === fMfr) &&
-      (!fFamily || p.family === fFamily)
-    );
-  }, [catalog, catQ, fMfr, fFamily]);
-
-  const mfrs = useMemo(() => [...new Set(catalog.map(p => p.mfr))].sort(), [catalog]);
-  const fams = useMemo(() => [...new Set(catalog.map(p => p.family))].sort(), [catalog]);
-
-  return (
+new_return = """  return (
     <div onClick={(e) => {
       // close dropdowns if clicked outside
       if (!(e.target as Element).closest('#quickAddWrap')) setQuickAddOpen(false);
@@ -447,33 +39,43 @@ export default function ConfigureOrderPage() {
       </div>
 
       {/* Stats Cards - New Design matching Orders Page */}
-      {/* Combined Stats Card */}
-      <div className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-200 mb-6">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-emerald-500"></div>
-        <div className="flex flex-col md:flex-row p-4">
-          {/* Lines Stat */}
-          <div className="flex-1 flex items-center gap-4">
-            <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 transition-colors">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-0.5 truncate" title="Lines">Total Products</p>
-              <div className="text-3xl font-bold text-gray-900 dark:text-white truncate leading-none">{productCount}</div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Lines Stats Card */}
+        <div className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-200">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-blue-500"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Lines">Lines</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{productCount}</span>
+                </div>
+              </div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Order Total Stat */}
-          <div className="flex-1 flex items-center justify-end gap-4 mt-4 md:mt-0">
-            <div className="text-right">
-              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-0.5 truncate" title="Order Total">Order Total</p>
-              <div className="text-3xl font-bold text-gray-900 dark:text-white truncate leading-none">{fmt(totalSell)}</div>
-            </div>
-            <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 transition-colors">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+        {/* Order Total Card */}
+        <div className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-200">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-emerald-500"></div>
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="Order Total">Order Total</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white truncate">{fmt(totalSell)}</span>
+                </div>
+              </div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -483,7 +85,7 @@ export default function ConfigureOrderPage() {
         {/* Table Area */}
         <div className="flex-1 flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
           {/* Toolbar */}
-          <div className="flex items-center justify-between p-4 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
             <div className="flex flex-wrap items-center gap-3">
               <span className="font-semibold text-sm text-gray-900 dark:text-white">Lines</span>
               <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs py-0.5 px-2 rounded-full font-medium">{lines.length}</span>
@@ -523,11 +125,11 @@ export default function ConfigureOrderPage() {
                 <button className="px-3 py-1.5 text-sm bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800 rounded-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors shadow-sm" onClick={() => setGrpDDOpen(!grpDDOpen)}>+ Add Group</button>
                 {grpDDOpen && (
                   <div className="absolute top-full right-0 mt-1 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden">
-                    <div className="px-3 py-2 text-xs font-bold text-gray-500  tracking-wider bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">Presets</div>
+                    <div className="px-3 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">Presets</div>
                     <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer flex items-center gap-2" onClick={() => addGroup('AV Components', 'bg-indigo-500')}><span className="w-5 h-5 rounded flex items-center justify-center text-[8px] font-bold text-white bg-indigo-500">AV</span> AV Components</div>
                     <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer flex items-center gap-2" onClick={() => addGroup('Networking', 'bg-teal-600')}><span className="w-5 h-5 rounded flex items-center justify-center text-[8px] font-bold text-white bg-teal-600">NW</span> Networking</div>
                     <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer flex items-center gap-2" onClick={() => addGroup('Cables & Wiring', 'bg-blue-500')}><span className="w-5 h-5 rounded flex items-center justify-center text-[8px] font-bold text-white bg-blue-500">CW</span> Cables & Wiring</div>
-                    <div className="px-3 py-2 text-xs font-bold text-gray-500  tracking-wider bg-gray-50 dark:bg-gray-800/80 border-y border-gray-100 dark:border-gray-700 mt-1">Custom</div>
+                    <div className="px-3 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50 dark:bg-gray-800/80 border-y border-gray-100 dark:border-gray-700 mt-1">Custom</div>
                     <div className="p-2 flex gap-2">
                       <input type="text" placeholder="Group name..." value={customGrpName} onChange={e => setCustomGrpName(e.target.value)} onKeyDown={e => e.key === 'Enter' && addGroup(customGrpName, 'bg-gray-500')} className="flex-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 focus:outline-none focus:border-purple-500" />
                       <button onClick={() => addGroup(customGrpName, 'bg-gray-500')} className="px-2 py-1 text-xs bg-purple-600 text-white rounded hover:bg-purple-700">Add</button>
@@ -561,7 +163,7 @@ export default function ConfigureOrderPage() {
           >
             <div className="absolute left-0 right-0 h-0.5 bg-blue-500 pointer-events-none z-50 transition-all duration-75" style={insertLineStyle}></div>
             <table className="w-full text-left border-collapse min-w-[800px]" style={{ display: lines.length ? 'table' : 'none' }}>
-              <thead className="bg-primary-light dark:bg-gray-900 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
+              <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
                 <tr>
                   <th className="px-3 py-3 w-10 text-center"><input type="checkbox" checked={lines.length > 0 && lines.every(l => l.sel)} onChange={e => selAll(e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></th>
                   <th className="px-1 py-3 w-8"></th>
@@ -641,7 +243,7 @@ export default function ConfigureOrderPage() {
               <tfoot className="bg-gray-50 dark:bg-gray-800/80 border-t-2 border-gray-200 dark:border-gray-700">
                 <tr>
                   <td colSpan={7}></td>
-                  <td colSpan={2} className="px-3 py-3 text-right text-sm font-bold text-gray-700 dark:text-gray-300  tracking-wider">Order Total</td>
+                  <td colSpan={2} className="px-3 py-3 text-right text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Order Total</td>
                   <td className="px-3 py-3 text-right text-lg font-bold text-green-600 dark:text-green-400">{fmt(totalSell)}</td>
                   <td></td>
                 </tr>
@@ -716,5 +318,18 @@ export default function ConfigureOrderPage() {
       </div>
     </div>
   );
+"""
 
-}
+import sys
+# Find the start of the return statement
+start_idx = content.find("  return (")
+if start_idx == -1:
+    print("Could not find return statement")
+    sys.exit(1)
+
+# we just replace everything from `return (` to the end with `new_return + "\n}\n"`
+new_content = content[:start_idx] + new_return + "\n}\n"
+
+with open('/media/trumatics/New Volume/wovn/woven_projects-main/app/configure/page.tsx', 'w') as f:
+    f.write(new_content)
+print("Updated successfully")

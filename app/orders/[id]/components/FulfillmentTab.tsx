@@ -187,7 +187,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId }: Fulfil
         </div>
     );
 
-    const thClass = "px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 ";
+    const thClass = "px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 ";
     const tdClass = "px-4 py-3 text-sm text-gray-700 dark:text-gray-300 truncate";
     const tdBoldClass = "px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate";
 
@@ -249,18 +249,17 @@ export default function FulfillmentTab({ orderId, accountId, contactId }: Fulfil
                         <table className="w-full table-fixed text-sm">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
-                                    <SortableHeader label="Proposal Number" field="Proposal_Number__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propName || 150} onResize={handleResize} />
+                                    <SortableHeader label="Proposal Number" field="Proposal_Number__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propName || 190} onResize={handleResize} />
                                     <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propStatus || 120} onResize={handleResize} />
                                     <SortableHeader label="Proposal Name" field="Name" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propProposalName || 150} onResize={handleResize} />
                                     <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propCustomerOrder || 150} onResize={handleResize} />
-                                    <SortableHeader label="Customer PO" field="Customer_PO__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propCustomerPO || 120} onResize={handleResize} />
+                                    <SortableHeader label="Customer PO" field="Customer_PO__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propCustomerPO || 150} onResize={handleResize} />
                                     <SortableHeader label="Bill to Account" field="Bill_to_Account_Name" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propBillToAccount || 150} onResize={handleResize} />
                                     <SortableHeader label="Ship to Account" field="Ship_to_Account_Name" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propShipToAccount || 150} onResize={handleResize} />
-                                    <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propTotalLines || 100} onResize={handleResize} />
+                                    <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propTotalLines || 150} onResize={handleResize} />
                                     <SortableHeader label="Total Price" field="Total_Price__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propTotalPrice || 120} onResize={handleResize} />
-                                    <SortableHeader label="Expires" field="Expiration_Date__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propExpires || 120} onResize={handleResize} />
-                                    <SortableHeader label="Request Date" field="Request_Date__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propRequestDate || 120} onResize={handleResize} />
-                                    <th className={`${thClass} w-20`}>Action</th>
+                                    <SortableHeader label="Expires" field="Expiration_Date__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propExpires || 150} onResize={handleResize} />
+                                    <SortableHeader label="Request Date" field="Request_Date__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propRequestDate || 150} onResize={handleResize} />
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -277,9 +276,6 @@ export default function FulfillmentTab({ orderId, accountId, contactId }: Fulfil
                                         <td className={`${tdBoldClass} `}>{formatCurrency(prop.Total_Price__c ?? 0)}</td>
                                         <td className={tdClass}>{formatDate(prop.Expiration_Date__c, "numeric-dash") || "—"}</td>
                                         <td className={tdClass}>{formatDate(prop.Request_Date__c, "numeric-dash") || "—"}</td>
-                                        <td className="px-4 py-3 ">
-                                            <button className="text-primary hover:underline font-medium text-sm">View</button>
-                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -295,27 +291,27 @@ export default function FulfillmentTab({ orderId, accountId, contactId }: Fulfil
                         <table className="w-full table-fixed text-sm">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
-                                    <SortableHeader label="Customer Quote" field="Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqName || 150} onResize={handleResize} />
+                                    <SortableHeader label="Customer Quote" field="Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqName || 160} onResize={handleResize} />
                                     <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqStatus || 120} onResize={handleResize} />
                                     <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqCustomerOrder || 150} onResize={handleResize} />
-                                    <SortableHeader label="Customer PO" field="Customer_PO__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqCustomerPO || 120} onResize={handleResize} />
+                                    <SortableHeader label="Customer PO" field="Customer_PO__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqCustomerPO || 150} onResize={handleResize} />
                                     <SortableHeader label="Bill to Account" field="Bill_to_Account_Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqBillToAccount || 150} onResize={handleResize} />
                                     <SortableHeader label="Bill to Location" field="Bill_to_Location_Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqBillToLocation || 150} onResize={handleResize} />
                                     <SortableHeader label="Bill to Contact" field="Bill_to_Contact_Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqBillToContact || 150} onResize={handleResize} />
                                     <SortableHeader label="Ship to Account" field="Ship_to_Account_Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqShipToAccount || 150} onResize={handleResize} />
                                     <SortableHeader label="Ship to Location" field="Ship_to_Location_Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqShipToLocation || 150} onResize={handleResize} />
                                     <SortableHeader label="Ship to Contact" field="Ship_to_Contact_Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqShipToContact || 150} onResize={handleResize} />
-                                    <SortableHeader label="Drop Ship" field="Drop_Ship__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqDropShip || 100} onResize={handleResize} />
-                                    <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqTotalLines || 100} onResize={handleResize} />
+                                    <SortableHeader label="Drop Ship" field="Drop_Ship__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqDropShip || 140} onResize={handleResize} />
+                                    <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqTotalLines || 140} onResize={handleResize} />
                                     <SortableHeader label="Total Price" field="Total_Price__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqTotalPrice || 120} onResize={handleResize} />
                                     <SortableHeader label="Shipping" field="Total_Shipping_Charges__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqShipping || 120} onResize={handleResize} />
                                     <SortableHeader label="Taxes" field="Total_Taxes_Amount__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqTaxes || 120} onResize={handleResize} />
                                     <SortableHeader label="Grand Total" field="Grand_Total__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqGrandTotal || 120} onResize={handleResize} />
-                                    <SortableHeader label="Issue Date" field="Issue_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqIssueDate || 120} onResize={handleResize} />
-                                    <SortableHeader label="Expiration Date" field="Expiration_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqExpirationDate || 120} onResize={handleResize} />
-                                    <SortableHeader label="Request Date" field="Request_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqRequestDate || 120} onResize={handleResize} />
-                                    <SortableHeader label="Planned Ship Date" field="Planned_Ship_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqPlannedShipDate || 150} onResize={handleResize} />
-                                    <SortableHeader label="Ship Confirmed Date" field="Ship_Confirmed_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqShipConfirmedDate || 150} onResize={handleResize} />
+                                    <SortableHeader label="Issue Date" field="Issue_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqIssueDate || 150} onResize={handleResize} />
+                                    <SortableHeader label="Expiration Date" field="Expiration_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqExpirationDate || 150} onResize={handleResize} />
+                                    <SortableHeader label="Request Date" field="Request_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqRequestDate || 150} onResize={handleResize} />
+                                    <SortableHeader label="Planned Ship Date" field="Planned_Ship_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqPlannedShipDate || 170} onResize={handleResize} />
+                                    <SortableHeader label="Ship Confirmed Date" field="Ship_Confirmed_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqShipConfirmedDate || 190} onResize={handleResize} />
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
