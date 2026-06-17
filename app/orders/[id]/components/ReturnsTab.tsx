@@ -160,11 +160,11 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
         </div>
     );
 
-    const thClass = "px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 ";
+    const thClass = "px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 ";
     const tdClass = "px-4 py-3 text-sm text-gray-700 dark:text-gray-300 truncate";
     const tdBoldClass = "px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate";
     const trClass = "hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors";
-    const tableClass = "w-full text-sm";
+    const tableClass = "w-full text-sm table-fixed";
     const theadClass = "bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700";
     const tbodyClass = "bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700";
     const wrapClass = "overflow-auto rounded-lg border border-gray-200 dark:border-gray-700";
