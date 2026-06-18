@@ -63,9 +63,9 @@ export default function ConfigureOrderPage() {
             mfr: p['Manufacturer_Name__r.Name'] || p.Manufacturer__c || p.Manufacturer_Name || p.Manufacturer_Name__c || 'Unknown',
             family: p.Family || p.productFamily || 'General',
             groupingLabel: p.Grouping__c || p.Product_Grouping__c || '',
-            sell: p.List_Price__c || p.listPrice || p.Unit_Price__c || p.unitPrice || 0,
-            avail: p.Available_To_Sell__c || p.availableQty || 10,
-            moq: p.MOQ__c || p.moq || 1
+            sell: p.List_Price__c ?? p.listPrice ?? p.Unit_Price__c ?? p.unitPrice ?? 0,
+            avail: p.Available_To_Sell__c ?? p.availableQty ?? 0,
+            moq: p.MOQ__c ?? p.moq ?? 1
           }));
           setCatalog(cat);
         })
@@ -377,13 +377,22 @@ export default function ConfigureOrderPage() {
       // Add order lines
       const productsOnly = lines.filter(l => l.type === 'product');
       if (productsOnly.length > 0) {
+        const getGroupName = (id: number): string => {
+          const item = lines.find(x => x.id === id);
+          if (!item) return '';
+          if (item.type === 'group') return item.grpName;
+          if (item.pid !== null) return getGroupName(item.pid);
+          return '';
+        };
+
         const orderLines = productsOnly.map(l => ({
           Status__c: 'Draft',
           Product_Name__c: l.productId || l.id,
           Order_Qty__c: l.qty,
           Unit_Price__c: l.sell,
           Inventory_Account__c: SF_ACCOUNT_ID,
-          IsTaxable__c: true
+          IsTaxable__c: true,
+          Grouping__c: l.pid !== null ? getGroupName(l.pid) : ''
         }));
 
         const linesPayload = {
@@ -521,19 +530,32 @@ export default function ConfigureOrderPage() {
               <span className="font-semibold text-sm text-gray-900 dark:text-white">Order Lines</span>
               <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs py-0.5 px-2 rounded-full font-medium">{lines.length}</span>
               <div className="w-px h-5 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-              
+
               <div className="relative flex items-center" id="grpWrap">
                 <button className="inline-flex items-center justify-center px-3 h-9 text-sm bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800 rounded-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors shadow-sm" onClick={() => setGrpDDOpen(!grpDDOpen)}>+ Add Group</button>
                 {grpDDOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden">
-                    <div className="px-3 py-2 text-xs font-bold text-gray-500  tracking-wider bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">Presets</div>
-                    <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer flex items-center gap-2" onClick={() => addGroup('AV Components', 'bg-indigo-500')}><span className="w-5 h-5 rounded flex items-center justify-center text-[8px] font-bold text-white bg-indigo-500">AV</span> AV Components</div>
-                    <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer flex items-center gap-2" onClick={() => addGroup('Networking', 'bg-teal-600')}><span className="w-5 h-5 rounded flex items-center justify-center text-[8px] font-bold text-white bg-teal-600">NW</span> Networking</div>
-                    <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer flex items-center gap-2" onClick={() => addGroup('Cables & Wiring', 'bg-blue-500')}><span className="w-5 h-5 rounded flex items-center justify-center text-[8px] font-bold text-white bg-blue-500">CW</span> Cables & Wiring</div>
-                    <div className="px-3 py-2 text-xs font-bold text-gray-500  tracking-wider bg-gray-50 dark:bg-gray-800/80 border-y border-gray-100 dark:border-gray-700 mt-1">Custom</div>
-                    <div className="p-2 flex gap-2">
-                      <input type="text" placeholder="Group name..." value={customGrpName} onChange={e => setCustomGrpName(e.target.value)} onKeyDown={e => e.key === 'Enter' && addGroup(customGrpName, 'bg-gray-500')} className="flex-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 focus:outline-none focus:border-purple-500" />
-                      <button onClick={() => addGroup(customGrpName, 'bg-gray-500')} className="px-2 py-1 text-xs bg-purple-600 text-white rounded hover:bg-purple-700">Add</button>
+                  <div className="absolute top-full left-0 mt-1 w-72 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden">
+                    <div className="px-4 pt-4 pb-2 text-sm font-bold text-slate-500 dark:text-gray-400">Presets</div>
+                    <div className="max-h-48 overflow-y-auto">
+                      {fams.length > 0 ? fams.map((f, i) => {
+                        const colors = ['bg-indigo-500', 'bg-teal-600', 'bg-blue-500', 'bg-purple-500', 'bg-rose-500', 'bg-orange-500'];
+                        const color = colors[i % colors.length];
+                        const initials = f.substring(0, 2).toUpperCase();
+                        return (
+                          <div key={f} className="px-4 py-2.5 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors" onClick={() => addGroup(f, color)}>
+                            <span className={`w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center text-[11px] font-bold text-white ${color}`}>{initials}</span>
+                            <span className="text-sm text-slate-700 dark:text-gray-300 truncate">{f}</span>
+                          </div>
+                        );
+                      }) : (
+                        <div className="px-4 py-3 text-sm text-gray-500 text-center italic">No preset families found</div>
+                      )}
+                    </div>
+                    <div className="border-t border-gray-100 dark:border-gray-700"></div>
+                    <div className="px-4 pt-3 pb-2 text-sm font-bold text-slate-500 dark:text-gray-400">Custom</div>
+                    <div className="px-4 pb-4 flex items-center gap-2">
+                      <input type="text" placeholder="Group name..." value={customGrpName} onChange={e => setCustomGrpName(e.target.value)} onKeyDown={e => e.key === 'Enter' && addGroup(customGrpName, 'bg-gray-500')} className="flex-1 min-w-0 px-3 h-9 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 focus:outline-none focus:border-purple-500 transition-colors" />
+                      <button onClick={() => addGroup(customGrpName, 'bg-gray-500')} className="inline-flex flex-shrink-0 items-center justify-center px-4 h-9 text-sm font-medium bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">Add</button>
                     </div>
                   </div>
                 )}
@@ -542,7 +564,7 @@ export default function ConfigureOrderPage() {
               <button className="inline-flex items-center justify-center px-3 h-9 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm" disabled={selectedCount === 0} onClick={() => doIndent(-1)}>&#x21A4; Outdent</button>
               <button className="inline-flex items-center justify-center px-3 h-9 text-sm bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-md hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm" disabled={selectedCount === 0} onClick={delSelected}>Remove</button>
             </div>
-            
+
             <div className="flex flex-wrap items-center gap-2">
               <div className="relative flex items-center">
                 <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -574,7 +596,7 @@ export default function ConfigureOrderPage() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-auto relative"
+          <div className="flex-1 overflow-auto relative px-3 py-2"
             onDragLeave={(e) => {
               const r = e.currentTarget.getBoundingClientRect();
               if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) {

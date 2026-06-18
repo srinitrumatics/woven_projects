@@ -605,10 +605,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           sku: item.StockKeepingUnit || item.SKU || item.sku || item.Name || "",
           manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.Manufacturer_Name || item.Manufacturer_Name__c || "",
           brand: item.Brand__c || item.brand || item.Brand || item['Manufacturer_Name__r.Name'] || "",
-          availableQty: item.Available_To_Sell__c || item.availableQty || 0,
-          moq: item.MOQ__c || item.moq || 1,
-          listPrice: item.List_Price__c || item.listPrice || 0,
-          unitPrice: item.Unit_Price__c || item.unitPrice || 0,
+          availableQty: item.Available_To_Sell__c ?? item.availableQty ?? 0,
+          moq: item.MOQ__c ?? item.moq ?? 1,
+          listPrice: item.List_Price__c ?? item.listPrice ?? 0,
+          unitPrice: item.Unit_Price__c ?? item.unitPrice ?? 0,
           orderQty: 0,
           subtotal: 0
         }));
@@ -925,8 +925,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                     manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__r?.Name || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
                     productFamily: item.Product_Family__c || "", // Not in API response
                     productGrouping: item.Product_Grouping__c || item.Grouping__c || "",
-                    availableQty: 999,
-                    moq: item.MOQ__c || 1,
+                    availableQty: item.Available_To_Sell__c ?? item['Product_Name__r.Available_To_Sell__c'] ?? item.availableQty ?? 0,
+                    moq: item.MOQ__c ?? 1,
                     orderQty: item.Order_Qty__c,
                     subtotal: item.Total_Price__c,
                     // Store the original order line ID for updates
@@ -1331,6 +1331,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             Unit_Price__c: product.unitPrice,
             Inventory_Account__c: SF_ACCOUNT_ID,
             IsTaxable__c: true,
+            Grouping__c: product.productGrouping || "",
           })),
 
         accountId: SF_ACCOUNT_ID,
@@ -1432,6 +1433,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               Unit_Price__c: product.unitPrice,
               Inventory_Account__c: SF_ACCOUNT_ID,
               IsTaxable__c: true,
+              Grouping__c: product.productGrouping || "",
             })),
 
           accountId: SF_ACCOUNT_ID,
