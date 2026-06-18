@@ -180,7 +180,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     sku: 200,
     name: 200,
     manufacturer: 120,
-    productFamily: 120,
+    productFamily: 150,
+    productGrouping: 140,
     listPrice: 100,
     unitPrice: 120,
     orderQty: 180,
@@ -704,7 +705,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             setOrderProducts(newLineItems);
           }
         }
-      } catch(e) {
+      } catch (e) {
         console.error("Error loading configured order", e);
       }
     }
@@ -924,7 +925,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                     brand: "", // Not in API response
                     manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__r?.Name || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
                     productFamily: item.Product_Family__c || "", // Not in API response
-                    productGrouping: item.Product_Grouping__c || item.Grouping__c || "",
+                    productGrouping: item.Grouping__c || item.Product_Grouping__c || "",
                     availableQty: item.Available_To_Sell__c ?? item['Product_Name__r.Available_To_Sell__c'] ?? item.availableQty ?? 0,
                     moq: item.MOQ__c ?? 1,
                     orderQty: item.Order_Qty__c,
