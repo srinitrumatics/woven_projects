@@ -30,6 +30,7 @@ export default function ConfigureOrderPage() {
   const [quickAddOpen, setQuickAddOpen] = useState(false);
   const [grpDDOpen, setGrpDDOpen] = useState(false);
   const [customGrpName, setCustomGrpName] = useState('');
+  const [grpNameError, setGrpNameError] = useState(false);
 
   // DnD state refs (to avoid re-renders during drag)
   const dragSrcRef = useRef<{ type: string, id: string | number } | null>(null);
@@ -193,8 +194,14 @@ export default function ConfigureOrderPage() {
   };
 
   const addGroup = (name: string, color: string) => {
+    if (!name || !name.trim()) {
+      setGrpNameError(true);
+      toastError('Please enter a group name');
+      return;
+    }
+    setGrpNameError(false);
     const id = nextId; setNextId(id + 1);
-    const nl = { id, type: 'group', grpName: name, grpColor: color || 'gc-misc', lv: 1, seq: 0, pid: null, exp: true, dirty: true, sel: false, sku: '', name: '', desc: '', mfr: '', sell: 0, qty: 0 };
+    const nl = { id, type: 'group', grpName: name.trim(), grpColor: color || 'gc-misc', lv: 1, seq: 0, pid: null, exp: true, dirty: true, sel: false, sku: '', name: '', desc: '', mfr: '', sell: 0, qty: 0 };
     setLines(prev => reseq([...prev, nl]));
     setCustomGrpName('');
     setGrpDDOpen(false);
@@ -554,7 +561,14 @@ export default function ConfigureOrderPage() {
                     <div className="border-t border-gray-100 dark:border-gray-700"></div>
                     <div className="px-4 pt-3 pb-2 text-sm font-bold text-slate-500 dark:text-gray-400">Custom</div>
                     <div className="px-4 pb-4 flex items-center gap-2">
-                      <input type="text" placeholder="Group name..." value={customGrpName} onChange={e => setCustomGrpName(e.target.value)} onKeyDown={e => e.key === 'Enter' && addGroup(customGrpName, 'bg-gray-500')} className="flex-1 min-w-0 px-3 h-9 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 focus:outline-none focus:border-purple-500 transition-colors" />
+                      <input
+                        type="text"
+                        placeholder="Group name..."
+                        value={customGrpName}
+                        onChange={e => { setCustomGrpName(e.target.value); setGrpNameError(false); }}
+                        onKeyDown={e => e.key === 'Enter' && addGroup(customGrpName, 'bg-gray-500')}
+                        className={`flex-1 min-w-0 px-3 h-9 text-sm border rounded-md bg-white dark:bg-gray-700 focus:outline-none focus:border-purple-500 transition-colors ${grpNameError ? 'border-red-500 focus:border-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'}`}
+                      />
                       <button onClick={() => addGroup(customGrpName, 'bg-gray-500')} className="inline-flex flex-shrink-0 items-center justify-center px-4 h-9 text-sm font-medium bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">Add</button>
                     </div>
                   </div>

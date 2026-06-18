@@ -53,7 +53,7 @@ interface AuthorizedLocation {
   Authorized_Ship_To_Location_Delivery_Notes__c?: string;
   Delivery_Notes__c?: string;
   Site_Name?: string;
-
+  Site__c?: string;
 }
 
 interface LocationResponse {
@@ -339,7 +339,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     liftGateRequired: false,
     insideDelivery: false,
     deliveryNotes: "",
-    site: "",
+    site: "",      // display name only
+    siteId: "",    // Salesforce Site__c lookup ID
     shippingMethod: "",
     incoterms: "",
 
@@ -755,6 +756,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       ...prev,
       shipTo: location.Id,
       site: location.Site_Name || "",
+      siteId: location.Site__c || "", // Make sure to capture the Site ID from the location as well
       shipToAccountId: location.Account_Name__c || "",
       shipToAccountName: accName,
       shippingAddress: formattedAddress,
@@ -915,6 +917,12 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 }
 
                 if (lines && Array.isArray(lines)) {
+                  // Capture the site ID from the first line that has one (all lines share same site)
+                  const firstSiteId = lines.find((l: any) => l.Site__c)?.Site__c || "";
+                  if (firstSiteId) {
+                    setFormData(prev => ({ ...prev, siteId: firstSiteId }));
+                  }
+
                   const mappedProducts: Product[] = lines.map((item: any, index: number) => ({
                     id: item.Product_Name__c || item.Id, // Use Product_Name__c as product ID if available
                     name: item.Product_Name || "",
@@ -932,6 +940,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                     subtotal: item.Total_Price__c,
                     // Store the original order line ID for updates
                     orderLineId: item.Id,
+                    // Store the Salesforce Site__c lookup ID per line
+                    siteId: item.Site__c || "",
                     // Add unique lineItemKey for proper tracking and deletion
                     lineItemKey: `${item.Id}-${Date.now()}-${index}-${Math.random()}`
                   }));
@@ -951,6 +961,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             orderNotes: order.Customer_Order_Notes__c || prev.orderNotes || "",
             priceBook: order.Assigned_Price_Book_Name || prev.priceBook || "",
             dropShip: order.Drop_Ship__c || prev.dropShip || false,
+            siteId: order.Site__c || prev.siteId || "",
             // Set Bill To and Ship To from order data
             billTo: order.Authorized_Bill_To_Location__c || prev.billTo || "",
             site: order.Site_Name || prev.site || "",
@@ -1333,6 +1344,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             Inventory_Account__c: SF_ACCOUNT_ID,
             IsTaxable__c: true,
             Grouping__c: product.productGrouping || "",
+            // Site__c is a lookup field — must be a SF Record ID, not a display name
+            Site__c: product.siteId || formData.siteId || undefined,
           })),
 
         accountId: SF_ACCOUNT_ID,
@@ -1340,6 +1353,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       };
 
       // Submit to API (always PATCH for edit mode)
+      console.log("[handleSubmitOrder] Payload being sent to SF:", JSON.stringify(orderPayload, null, 2));
       const endpoint = "/api/salesforce/orders";
       const method = "PATCH";
       const url = `${endpoint}?orderId=${id}`;
@@ -1435,6 +1449,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               Inventory_Account__c: SF_ACCOUNT_ID,
               IsTaxable__c: true,
               Grouping__c: product.productGrouping || "",
+              // Site__c is a lookup field — must be a SF Record ID, not a display name
+              Site__c: product.siteId || formData.siteId || undefined,
             })),
 
           accountId: SF_ACCOUNT_ID,

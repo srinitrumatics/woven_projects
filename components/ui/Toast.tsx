@@ -43,7 +43,7 @@ export const useToast = () => {
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const showToast = useCallback((message: string, type: ToastType = 'info', duration: number = 10000, onConfirm?: () => void, onCancel?: () => void) => {
+  const showToast = useCallback((message: string, type: ToastType = 'info', duration: number = 5000, onConfirm?: () => void, onCancel?: () => void) => {
     const id = Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, message, type, duration, onConfirm, onCancel }]);
 
