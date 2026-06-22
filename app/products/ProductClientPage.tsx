@@ -1,6 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { useSortableData } from "@/hooks/useSortableData";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import Pagination from "@/components/ui/Pagination";
 import algoliasearch from "algoliasearch";
 import {
   InstantSearch,
@@ -327,9 +331,9 @@ function Content({ indexName }: { indexName: string }) {
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <div className="flex-1 min-w-0 flex flex-col gap-4">
         {/* Search and View Mode Header */}
-        <div className="mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between min-w-0">
             {/* Search */}
             <div className="flex-1 relative w-full md:max-w-md">
@@ -418,7 +422,7 @@ function Content({ indexName }: { indexName: string }) {
         </div>
 
         {/* Render products based on viewMode */}
-        <div className="relative min-h-[400px]">
+        <div className={`relative min-h-[400px] ${viewMode === 'card' ? 'bg-gray-50 dark:bg-gray-900 rounded-lg p-4' : ''}`}>
           {isLoading && (
             <div className="absolute inset-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-lg">
               <div className="flex flex-col items-center gap-3">
@@ -443,8 +447,8 @@ function Content({ indexName }: { indexName: string }) {
           )}
         </div>
 
-        {/* Infinite Scroll Sentinel */}
-        {!isLastPage && (
+        {/* Infinite Scroll Sentinel — card view only */}
+        {!isLastPage && viewMode === 'card' && (
           <div ref={sentinelRef} className="flex justify-center py-8">
             <div className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400">
               <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-primary"></div>
@@ -453,8 +457,8 @@ function Content({ indexName }: { indexName: string }) {
           </div>
         )}
 
-        {/* Manual Load More Button (fallback) */}
-        {!isLastPage && (
+        {/* Manual Load More Button — card view only */}
+        {!isLastPage && viewMode === 'card' && (
           <div className="flex justify-center mt-6">
             <button
               onClick={showMore}
@@ -465,8 +469,8 @@ function Content({ indexName }: { indexName: string }) {
           </div>
         )}
 
-        {/* End of Results Message */}
-        {isLastPage && products.length > 0 && (
+        {/* End of Results Message — card view only */}
+        {isLastPage && products.length > 0 && viewMode === 'card' && (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             <p className="text-sm truncate" title="You've reached the end of the results">You've reached the end of the results</p>
           </div>
@@ -486,7 +490,7 @@ function Content({ indexName }: { indexName: string }) {
 }
 
 export default function ProductClientPage({ indexName = "wovn_products_local" }: { indexName?: string }) {
-  useEffect(() => {}, [indexName]);
+  useEffect(() => { }, [indexName]);
 
   if (!process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || !process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY) {
     return (
@@ -606,84 +610,116 @@ const CardView = ({ products, canEditProduct, onEdit }: ViewProps) => (
     )}
   </div>
 );
-/* card View Products Function Start */
-const ListView = ({ products, canEditProduct, onEdit }: ViewProps) => (
-  <div className="overflow-x-auto">
-    <table className="w-full">
-      <thead className="bg-primary-light dark:bg-gray-900">
-        <tr>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">&nbsp;</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }}>Product Name</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Category</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }}>Description</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">List Price</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Selling Price</th>
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Action</th>
-        </tr>
-      </thead>
-      <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-        {products.length === 0 ? (
-          <tr key="no-matches"><td colSpan={7} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400 truncate">No products found.</td></tr>
-        ) : (
-          products.map((product) => {
-            // Cast to access Algolia fields
-            const p = product as any;
-            const thumbnail = p.images?.[0]?.thumb || p.image_url;
+/* List View Products Function Start */
+const LIST_ITEMS_PER_PAGE = 10;
 
-            // Price logic
-            const sellingPrice = typeof p.price === 'number' ? p.price : (product.unitPrice || 0);
-            const listPrice = product.listPrice || 0;
-            const category = p.category || p.family || product.productFamily || product.manufacturer || "No Category";
+function ListView({ products, canEditProduct, onEdit }: ViewProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const { items: sortedProducts, requestSort, sortConfig } = useSortableData<any>(products, { key: 'name', direction: 'asc' });
+  const { widths, handleResize } = useResizableColumns({
+    name: 250,
+    category: 200,
+    description: 250,
+    listPrice: 120,
+    sellingPrice: 120,
+  });
 
-            return (
-              <tr key={p.objectID || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group">
-                <td className="px-4 py-3 truncate">
-                  <Link href={`/products/${p.objectID || product.id}`} className="block">
-                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden">
-                      {thumbnail ? (
-                        <img src={thumbnail} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                      ) : (
-                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-                      )}
-                    </div>
-                  </Link>
-                </td>
-                <td className="px-4 py-3" style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }}>
-                  <Link href={`/products/${p.objectID || product.id}`} className="block overflow-hidden" title={product.name}>
-                    <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">{product.name}</div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">{product.sku}</div>
-                  </Link>
-                </td>
-                <td className="px-4 py-3 truncate">
-                  <div className="line-clamp-2" title={category}>
-                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">{category}</span>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: '200px', minWidth: '200px', maxWidth: '200px' }} title={product.description}>{product.description}</td>
-                <td className="px-4 py-3 text-sm  text-gray-500 dark:text-gray-400 line-through truncate">{formatCurrency(listPrice)}</td>
-                <td className="px-4 py-3 text-sm  text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(sellingPrice)}</td>
-                <td className="px-4 py-3 text-left truncate">
-                  <div className="flex items-center gap-2">
-                    <button
-                      disabled={product.availableQty <= 0}
-                      title={product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
-                      className={`p-2 rounded-lg transition-colors ${product.availableQty <= 0
-                        ? "bg-gray-100 dark:bg-gray-700 cursor-not-allowed text-gray-400"
-                        : "bg-primary text-white hover:bg-primary-dark"
-                        }`}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
-                    </button>
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / LIST_ITEMS_PER_PAGE));
 
-                  </div>
-                </td>
-              </tr>
-            );
-          })
-        )}
-      </tbody>
-    </table>
-  </div>
-);
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * LIST_ITEMS_PER_PAGE;
+    return sortedProducts.slice(start, start + LIST_ITEMS_PER_PAGE);
+  }, [sortedProducts, currentPage]);
+
+  // Reset to page 1 whenever the source product list changes (filter/search)
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [products]);
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[640px]">
+          <thead className="bg-primary-light dark:bg-gray-900">
+            <tr>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: 80, minWidth: 80 }}>&nbsp;</th>
+              <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} truncate={false} />
+              <SortableHeader label="Category" field="category" sortConfig={sortConfig} requestSort={requestSort} width={widths.category} onResize={handleResize} truncate={false} />
+              <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} truncate={false} className="hidden md:table-cell" />
+              <SortableHeader label="List Price" field="listPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={handleResize} truncate={false} className="hidden sm:table-cell" />
+              <SortableHeader label="Selling Price" field="price" sortConfig={sortConfig} requestSort={requestSort} width={widths.sellingPrice} onResize={handleResize} truncate={false} />
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Action</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            {paginatedProducts.length === 0 ? (
+              <tr key="no-matches"><td colSpan={7} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">No products found.</td></tr>
+            ) : (
+              paginatedProducts.map((product) => {
+                const p = product as any;
+                const thumbnail = p.images?.[0]?.thumb || p.image_url;
+                const sellingPrice = typeof p.price === 'number' ? p.price : (product.unitPrice || 0);
+                const listPrice = product.listPrice || 0;
+                const category = p.category || p.family || product.productFamily || product.manufacturer || "No Category";
+
+                return (
+                  <tr key={p.objectID || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group">
+                    <td className="px-4 py-3" style={{ width: 80, minWidth: 80 }}>
+                      <Link href={`/products/${p.objectID || product.id}`} className="block">
+                        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden">
+                          {thumbnail ? (
+                            <img src={thumbnail} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                          ) : (
+                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                          )}
+                        </div>
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3 overflow-hidden" style={{ width: widths.name, minWidth: widths.name, maxWidth: widths.name }}>
+                      <Link href={`/products/${p.objectID || product.id}`} className="block" title={product.name}>
+                        <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">{product.name}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400 font-mono truncate">{product.sku}</div>
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3 overflow-hidden" style={{ width: widths.category, minWidth: widths.category, maxWidth: widths.category }}>
+                      <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary max-w-full truncate" title={category}>{category}</span>
+                    </td>
+                    <td className="px-4 py-3 overflow-hidden hidden md:table-cell" style={{ width: widths.description, minWidth: widths.description, maxWidth: widths.description }}>
+                      <div className="text-sm text-gray-600 dark:text-gray-400 truncate" title={product.description || ''}>{product.description}</div>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-left text-gray-500 dark:text-gray-400 line-through hidden sm:table-cell" style={{ width: widths.listPrice, minWidth: widths.listPrice }}>{formatCurrency(listPrice)}</td>
+                    <td className="px-4 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold" style={{ width: widths.sellingPrice, minWidth: widths.sellingPrice }}>{formatCurrency(sellingPrice)}</td>
+                    <td className="px-4 py-3 text-left">
+                      <div className="flex items-center gap-2">
+                        <button
+                          disabled={product.availableQty <= 0}
+                          title={product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
+                          className={`p-2 rounded-lg transition-colors ${product.availableQty <= 0
+                            ? "bg-gray-100 dark:bg-gray-700 cursor-not-allowed text-gray-400"
+                            : "bg-primary text-white hover:bg-primary-dark"
+                            }`}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={sortedProducts.length}
+        itemsPerPage={LIST_ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+        itemName="products"
+      />
+    </div>
+  );
+}
