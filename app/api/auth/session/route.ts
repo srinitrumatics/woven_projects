@@ -24,15 +24,23 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const isSuperAdmin =
+      sfSession.role === 'Super Admin' || sfSession.role === 'Admin';
+
     const accounts = sfSession.accounts || [];
     const currentAccount = accounts.find((a: any) => a.Id === sfSession.accountId) || accounts[0];
     const accountType = currentAccount?.Account_Record_Type__c || 'Customer';
     const category = getCategoryFromAccountType(accountType);
-    const userPermissions = PERMISSIONS_BY_CATEGORY[category] || [];
+    const userPermissions = isSuperAdmin
+      ? ['ALL_ACCESS']
+      : PERMISSIONS_BY_CATEGORY[category] || [];
 
     return NextResponse.json(
       {
         authenticated: true,
+        isSuperAdmin,
+        permissions: userPermissions,
+        roles: isSuperAdmin ? [{ id: 'admin', name: sfSession.role }] : [],
         user: {
           id: sfSession.contact?.Id || sfSession.userId || 'sf-user',
           name: sfSession.contact?.Name || sfSession.email,

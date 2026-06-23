@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthorizedLocationsFromSalesforce } from "@/lib/salesforce-service";
 import { createAuthorizedLocationInSalesforce, updateAuthorizedLocationInSalesforce } from "@/lib/authorized-location-service";
+import { requireAccountAccess } from "@/lib/api-auth";
 
 export async function PATCH(req: NextRequest) {
     try {
@@ -26,6 +27,9 @@ export async function GET(req: NextRequest) {
                 { status: 400 }
             );
         }
+
+        const auth = await requireAccountAccess(accountId);
+        if (auth instanceof NextResponse) return auth;
 
         const data = await getAuthorizedLocationsFromSalesforce(accountId, contactId);
         return NextResponse.json(data);

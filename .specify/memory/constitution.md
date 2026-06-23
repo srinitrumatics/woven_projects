@@ -1,25 +1,25 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: 1.0.0 → 1.0.1 (PATCH)
+Version change: 1.0.1 → 1.0.2 (PATCH)
 
-Bump rationale: Added UI Component Conventions bullet to Technology Stack section,
-  documenting the project-wide table pattern (SortableHeader, useSortableData,
-  useResizableColumns, Pagination) now uniformly applied across all 7 menu landing
-  pages, and the Algolia / client-side pagination split for the Products catalog.
-  No governance rule changed; this is a codification of established practice.
+Bump rationale: Propagated Next.js App Router path conventions from Principle III into
+  tasks-template.md so that generated task lists reflect the project's actual directory
+  structure (app/, app/api/, components/, lib/, db/) rather than the generic
+  single-project / web-app / mobile defaults. No principle semantics changed.
 
 Modified principles: None
 
 Added content:
-  - Technology Stack → "UI Component Conventions" bullet (new)
+  - .specify/templates/tasks-template.md — "Next.js App Router (this project)" bullet
+    added to Path Conventions section
 
 Removed sections: None
 
 Templates requiring updates:
-  ✅ .specify/templates/plan-template.md — Constitution Check generic; no changes needed
+  ✅ .specify/templates/tasks-template.md — Next.js App Router path convention added
+  ✅ .specify/templates/plan-template.md — no changes needed (paths filled per-feature)
   ✅ .specify/templates/spec-template.md — no outdated references
-  ✅ .specify/templates/tasks-template.md — task phases align with principles
   ✅ .specify/memory/constitution.md — this file
 
 Follow-up TODOs:
@@ -147,4 +147,4 @@ MUST be documented in the plan's Complexity Tracking table with explicit justifi
 
 Use `CLAUDE.md` for runtime development guidance; this constitution governs design intent.
 
-**Version**: 1.0.1 | **Ratified**: 2026-06-22 | **Last Amended**: 2026-06-22
+**Version**: 1.0.2 | **Ratified**: 2026-06-22 | **Last Amended**: 2026-06-23

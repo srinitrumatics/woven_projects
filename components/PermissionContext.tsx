@@ -27,12 +27,8 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
   const [isSuperAdminState, setIsSuperAdminState] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Only access localStorage on the client-side
-    if (typeof window !== 'undefined') {
-      setIsSuperAdminState(localStorage.getItem('isSuperAdmin') === 'true');
-    }
-  }, []);
+  // isSuperAdmin is set exclusively from the server session API (see refreshPermissions).
+  // We deliberately do NOT bootstrap from localStorage to prevent client-side privilege escalation.
 
   // Function to fetch user permissions from API
   const fetchUserSessionData = async (): Promise<{permissions: string[], roles: any[], isSuperAdmin: boolean}> => {
@@ -90,9 +86,6 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
       setPermissions(sessionData.permissions);
       setRoles(sessionData.roles);
       setIsSuperAdminState(sessionData.isSuperAdmin);
-
-      // Set super admin status in local storage for quick access
-      localStorage.setItem('isSuperAdmin', sessionData.isSuperAdmin ? 'true' : 'false');
     } catch (error) {
       console.error('Error fetching permissions:', error);
       setPermissions(user?.permissions || []);

@@ -24,7 +24,9 @@ description: "Task list template for feature implementation"
 - **Single project**: `src/`, `tests/` at repository root
 - **Web app**: `backend/src/`, `frontend/src/`
 - **Mobile**: `api/src/`, `ios/src/` or `android/src/`
-- Paths shown below assume single project - adjust based on plan.md structure
+- **Next.js App Router** (this project): `app/` (page routes), `app/api/` (API routes),
+  `components/` (React components), `lib/` (services/utilities), `db/` (schema/migrations)
+- Paths shown below assume single project — adjust based on plan.md structure
 
 <!--
   ============================================================================

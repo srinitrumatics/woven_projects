@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getProgramInsights } from '@/lib/program-service';
+import { requireAccountAccess } from "@/lib/api-auth";
 
 export async function GET(req: Request) {
   try {
@@ -10,6 +11,9 @@ export async function GET(req: Request) {
     if (!accountId || !contactId) {
       return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
     }
+
+    const auth = await requireAccountAccess(accountId);
+    if (auth instanceof NextResponse) return auth;
 
     const result = await getProgramInsights(accountId, contactId);
     

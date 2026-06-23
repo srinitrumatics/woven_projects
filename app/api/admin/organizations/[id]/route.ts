@@ -4,8 +4,12 @@ import { sql } from 'drizzle-orm';
 import { organizations } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import algoliasearch from 'algoliasearch';
+import { requireAdminAuth } from '@/lib/api-auth';
 
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
+  const auth = await requireAdminAuth();
+  if (auth instanceof NextResponse) return auth;
+
   try {
     const { id } = await context.params;
     const [org] = await db.select().from(organizations).where(eq(organizations.id, id));
@@ -22,6 +26,9 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
 }
 
 export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
+  const auth = await requireAdminAuth();
+  if (auth instanceof NextResponse) return auth;
+
   try {
     const { id } = await context.params;
     const body = await request.json();
@@ -62,6 +69,9 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
 }
 
 export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
+  const auth = await requireAdminAuth();
+  if (auth instanceof NextResponse) return auth;
+
   const cleanupLog: string[] = [];
 
   try {

@@ -1,6 +1,19 @@
 import { getCategoryFromAccountType, PERMISSIONS_BY_CATEGORY } from './permissions';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { SignJWT, jwtVerify } from 'jose';
+
+const getSessionSecret = () => {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('SESSION_SECRET env var is required in production');
+    }
+    // Dev fallback — never used in production
+    return new TextEncoder().encode('dev-only-secret-set-SESSION_SECRET-in-env');
+  }
+  return new TextEncoder().encode(secret);
+};
 
 // lib/session.ts
 export interface CurrentUser {
@@ -146,6 +159,7 @@ export async function createSFSession(payload: any) {
   cookieStore.set('session', session, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
     expires,
     path: '/',
   });
@@ -161,11 +175,13 @@ export async function getSFSession(sessionCookie: string) {
 }
 
 
-// Encrypt the session
+// Encrypt the session as a signed JWT (HS256)
 export async function encrypt(payload: any) {
-  // In a real app, use a robust encryption library like iron-session or jose
-  // We use URL encoding to ensure special JSON characters don't break cookie storage
-  return encodeURIComponent(JSON.stringify(payload));
+  return new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('7d')
+    .sign(getSessionSecret());
 }
 
 // Get user data by ID (deprecated - database no longer used for users/permissions)
@@ -179,25 +195,16 @@ export async function deleteSession() {
   cookieStore.delete('session');
 }
 
-// Decrypt the session
+// Verify and decrypt the session JWT
 export async function decrypt(session: string) {
+  if (!session) return null;
   try {
-    if (!session) return null;
-    let parsed;
-    try {
-      parsed = JSON.parse(session);
-    } catch (e) {
-      const decoded = session.includes('%') ? decodeURIComponent(session) : session;
-      parsed = JSON.parse(decoded);
-    }
-    // Ensure backward compatibility with old session format
-    if (parsed.hasOwnProperty('userId') && !parsed.hasOwnProperty('organizationId')) {
-      // Old format: { userId, expires } - set organizationId to undefined
-      return { ...parsed, organizationId: undefined };
-    }
-    return parsed;
-  } catch (error) {
-    console.error('Failed to parse session:', error);
+    const { payload } = await jwtVerify(session, getSessionSecret(), {
+      algorithms: ['HS256'],
+    });
+    return payload as any;
+  } catch {
+    // Invalid or tampered token — treat as no session
     return null;
   }
 }
