@@ -30,6 +30,8 @@ export default function ConfigureOrderPage() {
   const [quickAddOpen, setQuickAddOpen] = useState(false);
   const [grpDDOpen, setGrpDDOpen] = useState(false);
   const [customGrpName, setCustomGrpName] = useState('');
+  const [grpLabels, setGrpLabels] = useState<string[]>([]);
+  const [grpSearch, setGrpSearch] = useState<string>('');
 
   // DnD state refs (to avoid re-renders during drag)
   const dragSrcRef = useRef<{ type: string, id: string | number } | null>(null);
@@ -81,6 +83,36 @@ export default function ConfigureOrderPage() {
       localStorage.removeItem('gth-configured-draft');
     }
   }, [lines]);
+
+  // Load Product_Grouping__c picklist values for the "+ Add Group" dropdown
+  useEffect(() => {
+    if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
+    async function loadPicklists() {
+      try {
+        const res = await fetch(`/api/salesforce/picklists?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}`);
+        if (res.ok) {
+          const result = await res.json();
+          if (result.success && result.data && result.data.length > 0) {
+            const picklistData = result.data[0];
+            if (picklistData.Product_Grouping__c) {
+              const raw: any[] = picklistData.Product_Grouping__c;
+              const normalized = raw.map((item: any) =>
+                typeof item === 'object' && item !== null
+                  ? (item.value ?? item.label ?? String(item))
+                  : String(item)
+              ).filter(Boolean);
+              setGrpLabels(normalized);
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Error loading picklists:", e);
+      }
+    }
+    loadPicklists();
+  }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
+
+  useEffect(() => { if (!grpDDOpen) setGrpSearch(''); }, [grpDDOpen]);
 
   const reseq = (newLines: any[]) => {
     let s = 0;
@@ -413,6 +445,10 @@ export default function ConfigureOrderPage() {
 
   const mfrs = useMemo(() => [...new Set(catalog.map(p => p.mfr))].sort(), [catalog]);
   const fams = useMemo(() => [...new Set(catalog.map(p => p.family))].sort(), [catalog]);
+  const filteredGrpLabels = useMemo(
+    () => grpLabels.filter(l => l.toLowerCase().includes(grpSearch.toLowerCase())),
+    [grpLabels, grpSearch]
+  );
 
   return (
     <div onClick={(e) => {
@@ -522,14 +558,33 @@ export default function ConfigureOrderPage() {
               <div className="relative" id="grpWrap">
                 <button className="px-3 py-1.5 text-sm bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800 rounded-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors shadow-sm" onClick={() => setGrpDDOpen(!grpDDOpen)}>+ Add Group</button>
                 {grpDDOpen && (
-                  <div className="absolute top-full right-0 mt-1 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden">
-                    <div className="px-3 py-2 text-xs font-bold text-gray-500  tracking-wider bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">Presets</div>
-                    <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer flex items-center gap-2" onClick={() => addGroup('AV Components', 'bg-indigo-500')}><span className="w-5 h-5 rounded flex items-center justify-center text-[8px] font-bold text-white bg-indigo-500">AV</span> AV Components</div>
-                    <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer flex items-center gap-2" onClick={() => addGroup('Networking', 'bg-teal-600')}><span className="w-5 h-5 rounded flex items-center justify-center text-[8px] font-bold text-white bg-teal-600">NW</span> Networking</div>
-                    <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer flex items-center gap-2" onClick={() => addGroup('Cables & Wiring', 'bg-blue-500')}><span className="w-5 h-5 rounded flex items-center justify-center text-[8px] font-bold text-white bg-blue-500">CW</span> Cables & Wiring</div>
-                    <div className="px-3 py-2 text-xs font-bold text-gray-500  tracking-wider bg-gray-50 dark:bg-gray-800/80 border-y border-gray-100 dark:border-gray-700 mt-1">Custom</div>
+                  <div className="absolute top-full right-0 mt-1 w-70 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden">
+                    {grpLabels.length > 0 && (
+                      <>
+                        <div className="px-3 py-2 text-xs font-bold text-gray-500 tracking-wider bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">Product Groups</div>
+                        <input
+                          type="text"
+                          autoFocus
+                          placeholder="Search groups..."
+                          value={grpSearch}
+                          onChange={e => setGrpSearch(e.target.value)}
+                          className="w-full px-3 py-1.5 text-xs border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 placeholder-gray-400 focus:outline-none"
+                        />
+                        <div className="max-h-[180px] overflow-y-auto">
+                          {filteredGrpLabels.length > 0
+                            ? filteredGrpLabels.map(label => (
+                              <div key={label} className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer" onClick={() => addGroup(label, 'bg-gray-500')}>{label}</div>
+                            ))
+                            : grpSearch
+                              ? <div className="px-3 py-2 text-xs text-gray-400 dark:text-gray-500 italic">No results</div>
+                              : null
+                          }
+                        </div>
+                      </>
+                    )}
+                    <div className="px-3 py-2 text-xs font-bold text-gray-500 tracking-wider bg-gray-50 dark:bg-gray-800/80 border-y border-gray-100 dark:border-gray-700 mt-1">Custom</div>
                     <div className="p-2 flex gap-2">
-                      <input type="text" placeholder="Group name..." value={customGrpName} onChange={e => setCustomGrpName(e.target.value)} onKeyDown={e => e.key === 'Enter' && addGroup(customGrpName, 'bg-gray-500')} className="flex-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 focus:outline-none focus:border-purple-500" />
+                      <input type="text" placeholder="Group name..." value={customGrpName} onChange={e => setCustomGrpName(e.target.value)} onKeyDown={e => e.key === 'Enter' && addGroup(customGrpName, 'bg-gray-500')} className="flex-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 focus:outline-none focus:border-purple-500 text-gray-900 dark:text-white" />
                       <button onClick={() => addGroup(customGrpName, 'bg-gray-500')} className="px-2 py-1 text-xs bg-purple-600 text-white rounded hover:bg-purple-700">Add</button>
                     </div>
                   </div>

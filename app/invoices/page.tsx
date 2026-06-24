@@ -519,10 +519,10 @@ export default function InvoicesPage() {
                           <StatusBadge status={invoice.status} />
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm font-medium">{invoice.salesOrderNumber || ''}</div>
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">{invoice.salesOrderNumber || ''}</div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div>
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">
                             {invoice.purchaseOrderId ? (
                               !isManufacturer ? (
                                 <Link
