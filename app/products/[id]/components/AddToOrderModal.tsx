@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
 
@@ -29,12 +30,14 @@ export default function AddToOrderModal({
   accountId,
   contactId,
 }: AddToOrderModalProps) {
+  const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [creating, setCreating] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { success } = useToast();
+  const { success, warning, error: toastError } = useToast();
 
   useEffect(() => {
     if (isOpen && accountId && contactId) {
@@ -85,16 +88,22 @@ export default function AddToOrderModal({
       const payload = {
         order: {
           Id: selectedOrderId,
+          Status__c: 'Draft',
+          Bill_to_Account__c: accountId,
+          Ship_to_Account__c: accountId,
+          Inventory_Account__c: accountId,
         },
         orderLines: [{
+          Status__c: 'Draft',
           Product_Name__c: product.id,
           Order_Qty__c: quantity,
           Unit_Price__c: product.price,
           Inventory_Account__c: accountId,
-          Status__c: 'Draft'
+          IsTaxable__c: false,
         }],
         accountId,
         contactId,
+        isDraft: true,
       };
 
       const res = await fetch(`/api/salesforce/orders?orderId=${selectedOrderId}`, {
@@ -109,12 +118,76 @@ export default function AddToOrderModal({
       }
 
       success("Product added to order successfully!");
-      onClose();
+      router.push(`/orders/${selectedOrderId}`);
     } catch (err: any) {
       console.error("Error adding to order:", err);
       setError(err.message || "Failed to add product to order.");
     } finally {
       setAdding(false);
+    }
+  };
+
+  const handleCreateOrder = async () => {
+    try {
+      setCreating(true);
+      setError(null);
+
+      const createRes = await fetch('/api/salesforce/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          accountId,
+          contactId,
+          Proposal_Requested__c: false,
+          Transfer_Order__c: false,
+        }),
+      });
+
+      if (!createRes.ok) throw new Error('Failed to create order');
+
+      const createResult = await createRes.json();
+      const newOrderId = createResult.data?.[0]?.Id ?? createResult.orderId ?? createResult.Id;
+
+      if (!newOrderId) throw new Error('No order ID returned from server');
+
+      const patchRes = await fetch(`/api/salesforce/orders?orderId=${newOrderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          order: {
+            Id: newOrderId,
+            Status__c: 'Draft',
+            Bill_to_Account__c: accountId,
+            Ship_to_Account__c: accountId,
+            Inventory_Account__c: accountId,
+          },
+          orderLines: [{
+            Status__c: 'Draft',
+            Product_Name__c: product.id,
+            Order_Qty__c: quantity,
+            Unit_Price__c: product.price,
+            Inventory_Account__c: accountId,
+            IsTaxable__c: false,
+          }],
+          accountId,
+          contactId,
+          isDraft: true,
+        }),
+      });
+
+      if (!patchRes.ok) {
+        warning('Order created, but the product line could not be added. Please add it manually.');
+        router.push(`/orders/${newOrderId}`);
+        return;
+      }
+
+      success('Order created and product added successfully!');
+      router.push(`/orders/${newOrderId}`);
+    } catch (err: any) {
+      console.error('Error creating order:', err);
+      setError(err.message || 'Failed to create order.');
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -161,7 +234,14 @@ export default function AddToOrderModal({
               </div>
             ) : orders.length === 0 ? (
               <div className="text-center py-8 bg-gray-50 dark:bg-gray-900/30 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
-                <p className="text-sm text-gray-500 dark:text-gray-400">No draft orders found.</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No draft orders found.</p>
+                <button
+                  onClick={handleCreateOrder}
+                  disabled={creating}
+                  className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl shadow-md transition-all active:scale-[0.98]"
+                >
+                  {creating ? 'Creating...' : 'Create Order'}
+                </button>
               </div>
             ) : (
               <div className="space-y-2">
@@ -206,13 +286,15 @@ export default function AddToOrderModal({
           >
             Cancel
           </button>
-          <button
-            onClick={handleAddToOrder}
-            disabled={!selectedOrderId || adding}
-            className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
-          >
-            {adding ? "Adding..." : "Add to Order"}
-          </button>
+          {!loading && orders.length > 0 && (
+            <button
+              onClick={handleAddToOrder}
+              disabled={!selectedOrderId || adding}
+              className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
+            >
+              {adding ? "Adding..." : "Add to Order"}
+            </button>
+          )}
         </div>
       </div>
     </div>

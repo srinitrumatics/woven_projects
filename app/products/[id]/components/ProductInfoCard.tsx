@@ -4,6 +4,7 @@ import { useState } from "react";
 import { formatCurrency } from "@/lib/utils/formatting";
 import { useUserSession } from "@/components/UserSessionContext";
 import AddToOrderModal from "./AddToOrderModal";
+import PermissionGate from "@/components/PermissionGate";
 
 interface ProductInfoCardProps {
   product: any;
@@ -92,12 +93,14 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
           </div>
         </div>
 
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="w-full py-2 font-bold rounded-xl shadow-md transform transition-all duration-200 bg-blue-600 hover:bg-blue-700 text-white text-sm active:scale-[0.98]"
-        >
-          Add to Order
-        </button>
+        <PermissionGate requiredPermissions={['order-create']} fallback={null}>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="w-full py-2 font-bold rounded-xl shadow-md transform transition-all duration-200 bg-blue-600 hover:bg-blue-700 text-white text-sm active:scale-[0.98]"
+          >
+            Add to Order
+          </button>
+        </PermissionGate>
       </div>
 
       {/* Grid Stats */}
