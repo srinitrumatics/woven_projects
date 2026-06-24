@@ -1,131 +1,57 @@
 // lib/api-auth.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { authenticateUser, getUserPermissions } from './auth-service';
-import { getUserRoles } from './auth-service';
+// Session-cookie-based auth guards for API routes.
+// Usage:
+//   const auth = await requireApiAuth();
+//   if (auth instanceof NextResponse) return auth;   // 401
+//   const { user } = auth;
 
-// Wrapper function for API route protection
-export async function withAuth(
-  handler: (req: NextRequest, user: any) => Promise<Response>,
-  options?: {
-    roles?: string[];
-    permissions?: string[]
+import { NextResponse } from 'next/server';
+import { getCurrentUser, CurrentUser } from './session';
+
+type AuthResult = { user: CurrentUser } | NextResponse;
+
+/** Require a valid Salesforce session. Returns the user or a 401 NextResponse. */
+export async function requireApiAuth(): Promise<AuthResult> {
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-) {
-  return async (req: NextRequest) => {
-    // Extract user ID from headers (this would come from the session validation)
-    const userIdHeader = req.headers.get('user-id');
+  return { user };
+}
 
-    if (!userIdHeader) {
-      return NextResponse.json(
-        { error: 'Unauthorized - no user ID provided' },
-        { status: 401 }
-      );
-    }
+/** Require a Super Admin or Admin session. Returns the user or a 401/403 NextResponse. */
+export async function requireAdminAuth(): Promise<AuthResult> {
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const isAdmin =
+    user.permissions.includes('ALL_ACCESS') ||
+    user.role === 'Super Admin' ||
+    user.role === 'Admin';
+  if (!isAdmin) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+  return { user };
+}
 
-    // Basic UUID validation - check if it's a valid UUID format
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(userIdHeader)) {
-      return NextResponse.json(
-        { error: 'Unauthorized - invalid user ID' },
-        { status: 401 }
-      );
-    }
-
-    const userId: string = userIdHeader;
-
-    try {
-      // Get user permissions for validation
-      const userPermissions = await getUserPermissions(userId);
-      const userRoles = await getUserRoles(userId);
-
-      // Create a mock user object for the handler
-      const user = {
-        id: userId,
-        permissions: userPermissions,
-        roles: userRoles
-      };
-
-      // Check roles if specified
-      if (options?.roles) {
-        const hasRequiredRole = options.roles.some(requiredRole =>
-          user.roles.some((role: any) => role.name === requiredRole)
-        );
-
-        if (!hasRequiredRole) {
-          // Check if user is a super admin (they can access everything)
-          const isSuperAdmin = user.roles.some((role: any) =>
-            role.name?.toLowerCase() === 'super admin' ||
-            role.name?.toLowerCase() === 'super_admin'
-          );
-
-          if (!isSuperAdmin) {
-            return NextResponse.json(
-              { error: 'Forbidden - insufficient role' },
-              { status: 403 }
-            );
-          }
-        }
+/**
+ * Require a valid session AND verify that `accountId` belongs to the current user's
+ * organizations (admins bypass the ownership check).
+ */
+export async function requireAccountAccess(accountId: string | null): Promise<AuthResult> {
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  if (accountId) {
+    const isAdmin = user.permissions.includes('ALL_ACCESS');
+    if (!isAdmin) {
+      const allowedIds = user.organizations.map((o: any) => o.id);
+      if (!allowedIds.includes(accountId)) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
       }
-
-      // Check permissions if specified
-      if (options?.permissions) {
-        // Super admin has all permissions
-        const isSuperAdmin = user.roles.some((role: any) =>
-          role.name?.toLowerCase() === 'super admin' ||
-          role.name?.toLowerCase() === 'super_admin'
-        );
-
-        if (!isSuperAdmin) {
-          const hasPermission = options.permissions.some(perm =>
-            user.permissions.includes(perm)
-          );
-
-          if (!hasPermission) {
-            return NextResponse.json(
-              { error: 'Forbidden - insufficient permissions' },
-              { status: 403 }
-            );
-          }
-        }
-      }
-
-      // Call the original handler with validated user
-      return handler(req, user);
-
-    } catch (error) {
-      console.error('API authentication error:', error);
-      return NextResponse.json(
-        { error: 'Internal server error' },
-        { status: 500 }
-      );
     }
-  };
-}
-
-// Higher-order function specifically for GET requests
-export function withGetAuth(options?: { roles?: string[]; permissions?: string[] }) {
-  return (handler: (req: NextRequest, user: any) => Promise<Response>) => {
-    return withAuth(handler, options);
-  };
-}
-
-// Higher-order function specifically for POST requests
-export function withPostAuth(options?: { roles?: string[]; permissions?: string[] }) {
-  return (handler: (req: NextRequest, user: any) => Promise<Response>) => {
-    return withAuth(handler, options);
-  };
-}
-
-// Higher-order function specifically for PUT requests
-export function withPutAuth(options?: { roles?: string[]; permissions?: string[] }) {
-  return (handler: (req: NextRequest, user: any) => Promise<Response>) => {
-    return withAuth(handler, options);
-  };
-}
-
-// Higher-order function specifically for DELETE requests
-export function withDeleteAuth(options?: { roles?: string[]; permissions?: string[] }) {
-  return (handler: (req: NextRequest, user: any) => Promise<Response>) => {
-    return withAuth(handler, options);
-  };
+  }
+  return { user };
 }

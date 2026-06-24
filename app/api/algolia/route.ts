@@ -2,8 +2,12 @@ import { NextResponse } from "next/server";
 import algoliasearch from "algoliasearch";
 import { mockProducts } from "../../products/mockData";
 import { getOrgConfig } from "@/lib/org-config";
+import { requireAdminAuth } from "@/lib/api-auth";
 
 export async function POST() {
+  const auth = await requireAdminAuth();
+  if (auth instanceof NextResponse) return auth;
+
   try {
     // Verify environment variables
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
@@ -94,6 +98,9 @@ export async function POST() {
 }
 
 export async function GET() {
+  const auth = await requireAdminAuth();
+  if (auth instanceof NextResponse) return auth;
+
   try {
     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
     const searchKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY;

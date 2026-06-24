@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getInventoryFromSalesforce } from "@/lib/inventory-service";
+import { requireAccountAccess } from "@/lib/api-auth";
 
 export async function GET(req: Request) {
     try {
@@ -12,6 +13,9 @@ export async function GET(req: Request) {
         if (!accountId || !contactId) {
             return NextResponse.json({ error: "Missing required parameters (accountId, contactId)" }, { status: 400 });
         }
+
+        const auth = await requireAccountAccess(accountId);
+        if (auth instanceof NextResponse) return auth;
 
         const result = await getInventoryFromSalesforce(
             accountId, 

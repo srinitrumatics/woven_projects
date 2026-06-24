@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPurchaseOrdersFromSalesforce, getPurchaseOrderFilesFromSalesforce } from "@/lib/purchase-order-service";
 import { uploadFilesToSalesforce, getFileUrl } from "@/lib/salesforce-service";
+import { requireAccountAccess } from "@/lib/api-auth";
 
 export async function GET(req: NextRequest) {
     try {
@@ -17,6 +18,9 @@ export async function GET(req: NextRequest) {
                 { status: 400 }
             );
         }
+
+        const auth = await requireAccountAccess(accountId);
+        if (auth instanceof NextResponse) return auth;
 
         let data;
 

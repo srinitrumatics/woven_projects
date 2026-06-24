@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { salesforceGetPicklists } from "@/lib/salesforce-auth";
+import { requireAccountAccess } from "@/lib/api-auth";
 
 export async function GET(request: NextRequest) {
     try {
@@ -10,6 +11,9 @@ export async function GET(request: NextRequest) {
         if (!accountId || !contactId) {
             return NextResponse.json({ error: "AccountId and ContactId are required" }, { status: 400 });
         }
+
+        const auth = await requireAccountAccess(accountId);
+        if (auth instanceof NextResponse) return auth;
 
         const result = await salesforceGetPicklists(accountId, contactId);
 

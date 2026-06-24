@@ -1,11 +1,21 @@
 // app/api/auth/register/route.ts
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '@/db';
 import { users } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
+import { requireAdminAuth } from '@/lib/api-auth';
 
 export async function POST(request: NextRequest) {
+  // Allow registration only when called by an admin, or when no users exist yet (first setup).
+  const existingCount = await db.select({ count: sql<number>`count(*)` }).from(users);
+  const isFirstSetup = Number(existingCount[0]?.count ?? 0) === 0;
+
+  if (!isFirstSetup) {
+    const auth = await requireAdminAuth();
+    if (auth instanceof NextResponse) return auth;
+  }
+
   try {
     const { name, email, password } = await request.json();
 

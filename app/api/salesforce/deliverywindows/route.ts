@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDeliveryWindowsFromSalesforce, createDeliveryWindowInSalesforce, updateDeliveryWindowInSalesforce, deleteDeliveryWindowFromSalesforce } from "@/lib/authorized-location-service";
+import { requireAccountAccess } from "@/lib/api-auth";
 
 export async function GET(request: NextRequest) {
     try {
@@ -14,6 +15,9 @@ export async function GET(request: NextRequest) {
                 { status: 400 }
             );
         }
+
+        const auth = await requireAccountAccess(accountId);
+        if (auth instanceof NextResponse) return auth;
 
         const data = await getDeliveryWindowsFromSalesforce(accountId, contactId, locationId);
         return NextResponse.json(data);

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getFilesFromSalesforce, getGenericTabDataFromSalesforce } from "@/lib/proposal-service";
 import { uploadFilesToSalesforce, getFileUrl } from "@/lib/salesforce-service";
+import { requireAccountAccess } from "@/lib/api-auth";
 
 
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
         const accountId = searchParams.get("accountId");
-        const contactId = searchParams.get("contactId"); // Default placeholder
+        const contactId = searchParams.get("contactId");
         const proposalId = searchParams.get("proposalId") || ""
         const action = searchParams.get("action") || "";
         const objectName = searchParams.get("objectName");
@@ -18,6 +19,9 @@ export async function GET(req: NextRequest) {
                 { status: 400 }
             );
         }
+
+        const auth = await requireAccountAccess(accountId);
+        if (auth instanceof NextResponse) return auth;
 
         let data;
 

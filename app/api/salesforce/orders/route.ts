@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSalesforceSession, getOrderslistFromSalesforce, getOrderFromSalesforce, getOrderslocationsFromSalesforce, getContactsFromSalesforce, createOrderFromSalesforce, updateOrderFromSalesforce, cloneOrderFromSalesforce, deleteOrderFromSalesforce, deleteFullOrderFromSalesforce, getFilesFromSalesforce, deleteFileFromSalesforce, uploadFilesToSalesforce, downloadFileFromSalesforce, getFileUrl, getOrderLinesFromSalesforce, getAccountFromSalesforce } from '@/lib/salesforce-service';
 import { getProductsFromSalesforce } from '@/lib/product-salesforce-service';
+import { requireApiAuth } from '@/lib/api-auth';
 
 
 export async function GET(req: Request) {
+  const auth = await requireApiAuth();
+  if (auth instanceof NextResponse) return auth;
+  const { user } = auth;
+
   try {
     const { searchParams } = new URL(req.url);
     const accountId = searchParams.get("accountId");
@@ -16,6 +21,15 @@ export async function GET(req: Request) {
 
     if (!accountId || !contactId) {
       return NextResponse.json({ error: "Missing accountId or contactId" }, { status: 400 });
+    }
+
+    // Verify the caller can only access their own accounts (admins are exempt)
+    const isAdmin = user.permissions.includes('ALL_ACCESS');
+    if (!isAdmin) {
+      const allowedIds = user.organizations.map((o: any) => o.id);
+      if (!allowedIds.includes(accountId)) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
     }
 
     // Get Salesforce session (uses org config from organizations table, falls back to .env)

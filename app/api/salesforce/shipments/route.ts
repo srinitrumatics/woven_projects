@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getShipmentsFromSalesforce, getShipmentFilesFromSalesforce } from "@/lib/shipment-service";
 import { getFileUrl } from "@/lib/salesforce-service";
+import { requireAccountAccess } from "@/lib/api-auth";
 
 export async function GET(req: Request) {
     try {
@@ -17,6 +18,9 @@ export async function GET(req: Request) {
         if (!contactId) {
             return NextResponse.json({ error: "Missing contactId" }, { status: 400 });
         }
+
+        const auth = await requireAccountAccess(accountId);
+        if (auth instanceof NextResponse) return auth;
 
         if (action === "files") {
             if (!objectId) {
