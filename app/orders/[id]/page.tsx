@@ -53,7 +53,7 @@ interface AuthorizedLocation {
   Authorized_Ship_To_Location_Delivery_Notes__c?: string;
   Delivery_Notes__c?: string;
   Site_Name?: string;
-  Site__c?: string;
+
 }
 
 interface LocationResponse {
@@ -180,8 +180,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     sku: 200,
     name: 200,
     manufacturer: 120,
-    productFamily: 150,
-    productGrouping: 140,
+    productFamily: 120,
     listPrice: 100,
     unitPrice: 120,
     orderQty: 180,
@@ -339,8 +338,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     liftGateRequired: false,
     insideDelivery: false,
     deliveryNotes: "",
-    site: "",      // display name only
-    siteId: "",    // Salesforce Site__c lookup ID
+    site: "",
     shippingMethod: "",
     incoterms: "",
 
@@ -607,10 +605,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           sku: item.StockKeepingUnit || item.SKU || item.sku || item.Name || "",
           manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.Manufacturer_Name || item.Manufacturer_Name__c || "",
           brand: item.Brand__c || item.brand || item.Brand || item['Manufacturer_Name__r.Name'] || "",
-          availableQty: item.Available_To_Sell__c ?? item.availableQty ?? 0,
-          moq: item.MOQ__c ?? item.moq ?? 1,
-          listPrice: item.List_Price__c ?? item.listPrice ?? 0,
-          unitPrice: item.Unit_Price__c ?? item.unitPrice ?? 0,
+          availableQty: item.Available_To_Sell__c || item.availableQty || 0,
+          moq: item.MOQ__c || item.moq || 1,
+          listPrice: item.List_Price__c || item.listPrice || 0,
+          unitPrice: item.Unit_Price__c || item.unitPrice || 0,
           orderQty: 0,
           subtotal: 0
         }));
@@ -706,7 +704,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             setOrderProducts(newLineItems);
           }
         }
-      } catch (e) {
+      } catch(e) {
         console.error("Error loading configured order", e);
       }
     }
@@ -756,7 +754,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       ...prev,
       shipTo: location.Id,
       site: location.Site_Name || "",
-      siteId: location.Site__c || "", // Make sure to capture the Site ID from the location as well
       shipToAccountId: location.Account_Name__c || "",
       shipToAccountName: accName,
       shippingAddress: formattedAddress,
@@ -917,12 +914,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 }
 
                 if (lines && Array.isArray(lines)) {
-                  // Capture the site ID from the first line that has one (all lines share same site)
-                  const firstSiteId = lines.find((l: any) => l.Site__c)?.Site__c || "";
-                  if (firstSiteId) {
-                    setFormData(prev => ({ ...prev, siteId: firstSiteId }));
-                  }
-
                   const mappedProducts: Product[] = lines.map((item: any, index: number) => ({
                     id: item.Product_Name__c || item.Id, // Use Product_Name__c as product ID if available
                     name: item.Product_Name || "",
@@ -933,15 +924,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                     brand: "", // Not in API response
                     manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__r?.Name || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
                     productFamily: item.Product_Family__c || "", // Not in API response
-                    productGrouping: item.Grouping__c || item.Product_Grouping__c || "",
-                    availableQty: item.Available_To_Sell__c ?? item['Product_Name__r.Available_To_Sell__c'] ?? item.availableQty ?? 0,
-                    moq: item.MOQ__c ?? 1,
+                    productGrouping: item.Product_Grouping__c || item.Grouping__c || "",
+                    availableQty: 999,
+                    moq: item.MOQ__c || 1,
                     orderQty: item.Order_Qty__c,
                     subtotal: item.Total_Price__c,
                     // Store the original order line ID for updates
                     orderLineId: item.Id,
-                    // Store the Salesforce Site__c lookup ID per line
-                    siteId: item.Site__c || "",
                     // Add unique lineItemKey for proper tracking and deletion
                     lineItemKey: `${item.Id}-${Date.now()}-${index}-${Math.random()}`
                   }));
@@ -961,7 +950,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             orderNotes: order.Customer_Order_Notes__c || prev.orderNotes || "",
             priceBook: order.Assigned_Price_Book_Name || prev.priceBook || "",
             dropShip: order.Drop_Ship__c || prev.dropShip || false,
-            siteId: order.Site__c || prev.siteId || "",
             // Set Bill To and Ship To from order data
             billTo: order.Authorized_Bill_To_Location__c || prev.billTo || "",
             site: order.Site_Name || prev.site || "",
@@ -1343,9 +1331,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             Unit_Price__c: product.unitPrice,
             Inventory_Account__c: SF_ACCOUNT_ID,
             IsTaxable__c: true,
-            Grouping__c: product.productGrouping || "",
-            // Site__c is a lookup field — must be a SF Record ID, not a display name
-            Site__c: product.siteId || formData.siteId || undefined,
           })),
 
         accountId: SF_ACCOUNT_ID,
@@ -1353,7 +1338,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       };
 
       // Submit to API (always PATCH for edit mode)
-      console.log("[handleSubmitOrder] Payload being sent to SF:", JSON.stringify(orderPayload, null, 2));
       const endpoint = "/api/salesforce/orders";
       const method = "PATCH";
       const url = `${endpoint}?orderId=${id}`;
@@ -1448,9 +1432,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               Unit_Price__c: product.unitPrice,
               Inventory_Account__c: SF_ACCOUNT_ID,
               IsTaxable__c: true,
-              Grouping__c: product.productGrouping || "",
-              // Site__c is a lookup field — must be a SF Record ID, not a display name
-              Site__c: product.siteId || formData.siteId || undefined,
             })),
 
           accountId: SF_ACCOUNT_ID,

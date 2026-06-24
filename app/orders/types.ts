@@ -17,7 +17,6 @@ export interface Product {
   subtotal: number;
   orderLineId?: string; // Salesforce order line ID for updates
   lineItemKey?: string; // Unique identifier for each line item in the order
-  siteId?: string; // Salesforce Site__c lookup ID for the order line
 }
 
 export interface Order {

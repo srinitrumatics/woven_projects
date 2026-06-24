@@ -90,7 +90,6 @@ export default function MyOrderTable({
                                 <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
                                 <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
                                 <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
-                                <SortableHeader label="Grouping" field="productGrouping" sortConfig={sortConfig} requestSort={requestSort} width={widths.productGrouping} onResize={onResize} />
                                 <SortableHeader label="Unit Price" field="unitPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
                                 <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
                                 <SortableHeader label="Total Price" field="subtotal" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.subtotal} onResize={onResize} />
@@ -136,15 +135,6 @@ export default function MyOrderTable({
                                         <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
                                             {product.productFamily}
                                         </span>
-                                    </td>
-                                    <td className="px-2 py-3 text-left" title={product.productGrouping}>
-                                        {product.productGrouping ? (
-                                            <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300">
-                                                {product.productGrouping}
-                                            </span>
-                                        ) : (
-                                            <span className="text-sm text-gray-400 dark:text-gray-500">—</span>
-                                        )}
                                     </td>
                                     <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">{formatCurrency(product.unitPrice)}</td>
                                     <td className="px-2 py-3 text-left w-[150px]">

@@ -166,11 +166,7 @@ export default function OrderLineDetailPage({
           setOrderStatus(order.Status__c || "Draft");
         }
 
-        // Capture Site_Name from the order header as fallback for all lines
-        const orderSiteName: string = order?.Site_Name || "";
-
         if (linesData && linesData.length > 0) {
-          console.log("[OrderLines] Raw API response (first line):", JSON.stringify(linesData[0], null, 2));
           const orderlines = linesData;
 
           // Map Order Lines to products
@@ -190,7 +186,7 @@ export default function OrderLineDetailPage({
               subtotal: item.Total_Price__c || 0,
               productGrouping: item.Product_Grouping__c || "",
               grouping: item.Grouping__c || "",
-              site: item.Site_Name || item.Site__c || orderSiteName || "",
+              site: item.Site_Name || item.Site__c || "",
               inventoryAccount: item.Inventory_Account_Name || item.Inventory_Account__c || "",
               isTaxable: item.IsTaxable__c === true ? "Yes" : "No",
               availableToSell: item.Available_To_Sell__c || 0,
