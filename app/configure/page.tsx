@@ -195,6 +195,7 @@ export default function ConfigureOrderPage() {
     const nl = { id, type: 'group', grpName: name, grpColor: color || 'gc-misc', lv: 1, seq: 0, pid: null, exp: true, dirty: true, sel: false, sku: '', name: '', desc: '', mfr: '', sell: 0, qty: 0 };
     setLines(prev => reseq([...prev, nl]));
     setGrpDDOpen(false);
+    setCustomGrpName('');
   };
 
   const shiftKids = (pid: number, d: number, curLines: any[]) => {

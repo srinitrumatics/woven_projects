@@ -51,11 +51,11 @@ export default function AddToOrderModal({
       setError(null);
       const res = await fetch(`/api/salesforce/orders?accountId=${accountId}&contactId=${contactId}&action=list`);
       if (!res.ok) throw new Error("Failed to fetch orders");
-      
+
       const data = await res.json();
       const responseData = Array.isArray(data) ? data[0] : data;
       const rawItems = responseData?.Customer_Order__c || [];
-      
+
       const draftOrders = rawItems
         .filter((o: any) => o.Status__c === "Draft")
         .map((o: any) => ({
@@ -65,7 +65,7 @@ export default function AddToOrderModal({
           proposal_name: o.Proposal_Name__c || o.Proposal_Name || "",
           total: Number(o.Total_Price__c || 0),
         }));
-      
+
       setOrders(draftOrders);
       if (draftOrders.length > 0) {
         setSelectedOrderId(draftOrders[0].id);
@@ -227,7 +227,7 @@ export default function AddToOrderModal({
             <label className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-3 block">
               Select Draft Order
             </label>
-            
+
             {loading ? (
               <div className="flex justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -235,13 +235,6 @@ export default function AddToOrderModal({
             ) : orders.length === 0 ? (
               <div className="text-center py-8 bg-gray-50 dark:bg-gray-900/30 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No draft orders found.</p>
-                <button
-                  onClick={handleCreateOrder}
-                  disabled={creating}
-                  className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl shadow-md transition-all active:scale-[0.98]"
-                >
-                  {creating ? 'Creating...' : 'Create Order'}
-                </button>
               </div>
             ) : (
               <div className="space-y-2">
@@ -249,11 +242,10 @@ export default function AddToOrderModal({
                   <button
                     key={order.id}
                     onClick={() => setSelectedOrderId(order.id)}
-                    className={`w-full p-4 rounded-xl border transition-all text-left flex justify-between items-center ${
-                      selectedOrderId === order.id
-                        ? "border-primary bg-primary/5 ring-1 ring-primary"
-                        : "border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800"
-                    }`}
+                    className={`w-full p-4 rounded-xl border transition-all text-left flex justify-between items-center ${selectedOrderId === order.id
+                      ? "border-primary bg-primary/5 ring-1 ring-primary"
+                      : "border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800"
+                      }`}
                   >
                     <div>
                       <p className="text-sm font-bold text-gray-900 dark:text-white">{order.name}</p>
@@ -279,13 +271,22 @@ export default function AddToOrderModal({
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 flex gap-3">
+        <div className="p-6 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 flex flex-wrap gap-3">
           <button
             onClick={onClose}
             className="flex-1 py-3 px-4 border border-gray-200 dark:border-gray-700 rounded-xl font-bold text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-800 transition-colors"
           >
             Cancel
           </button>
+          {!loading && orders.length === 0 && (
+            <button
+              onClick={handleCreateOrder}
+              disabled={creating}
+              className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
+            >
+              {creating ? "Creating..." : "Create Order"}
+            </button>
+          )}
           {!loading && orders.length > 0 && (
             <button
               onClick={handleAddToOrder}
