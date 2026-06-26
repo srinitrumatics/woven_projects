@@ -249,7 +249,7 @@ export default function QuoteLineReturnsTab({
         return rmalData;
     }, [activeSubTab, dmliData, rtvlData, cmliData, rmalData]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(activeData);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(activeData, { key: 'name', direction: 'desc' });
     const { widths, handleResize } = useResizableColumns({
         lineName: 180,
         status: 120,

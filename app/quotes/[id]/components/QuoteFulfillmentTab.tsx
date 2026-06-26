@@ -23,15 +23,15 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
 
     // Sales Orders State
     const [salesSortField, setSalesSortField] = useState<keyof QuoteSalesOrder>("salesOrderNumber");
-    const [salesSortDirection, setSalesSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [salesSortDirection, setSalesSortDirection] = useState<'asc' | 'desc'>('desc');
 
     // Shipping Manifests State
     const [manifestSortField, setManifestSortField] = useState<keyof QuoteShippingManifest>("manifestNumber");
-    const [manifestSortDirection, setManifestSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [manifestSortDirection, setManifestSortDirection] = useState<'asc' | 'desc'>('desc');
 
     // Invoices State
     const [invoiceSortField, setInvoiceSortField] = useState<keyof QuoteInvoice>("invoiceNumber");
-    const [invoiceSortDirection, setInvoiceSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [invoiceSortDirection, setInvoiceSortDirection] = useState<'asc' | 'desc'>('desc');
 
     // Setup resizable columns for Sales Orders
     const { widths: salesWidths, handleResize: handleSalesResize } = useResizableColumns({

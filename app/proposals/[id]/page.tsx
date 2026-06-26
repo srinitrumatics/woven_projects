@@ -962,19 +962,19 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   // Sorting states
   const [elementSortField, setElementSortField] = useState<keyof ProposalElement>("wbs");
-  const [elementSortDirection, setElementSortDirection] = useState<SortDirection>("asc");
+  const [elementSortDirection, setElementSortDirection] = useState<SortDirection>("desc");
 
   const [productSortField, setProductSortField] = useState<keyof ProposedProduct>("productName");
-  const [productSortDirection, setProductSortDirection] = useState<SortDirection>("asc");
+  const [productSortDirection, setProductSortDirection] = useState<SortDirection>("desc");
 
   const [fileSortField, setFileSortField] = useState<keyof ProposalFile>("fileName");
-  const [fileSortDirection, setFileSortDirection] = useState<SortDirection>("asc");
+  const [fileSortDirection, setFileSortDirection] = useState<SortDirection>("desc");
 
   const [projectSortField, setProjectSortField] = useState<keyof Project>("projectNumber");
-  const [projectSortDirection, setProjectSortDirection] = useState<SortDirection>("asc");
+  const [projectSortDirection, setProjectSortDirection] = useState<SortDirection>("desc");
 
   const [orderSortField, setOrderSortField] = useState<keyof Order>("name");
-  const [orderSortDirection, setOrderSortDirection] = useState<SortDirection>("asc");
+  const [orderSortDirection, setOrderSortDirection] = useState<SortDirection>("desc");
 
   // Generic Sort Function
   const sortData = <T,>(data: T[], field: keyof T, direction: SortDirection): T[] => {
@@ -1360,7 +1360,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             proposalNumber={proposal.proposalNumber}
             status={proposal.status}
             description={proposal.description}
-            onBack={() => router.push("/proposals")}
           />
 
           <ProposalDetails

@@ -22,7 +22,7 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
     const params = useParams();
     const id = params.id as string;
     const [currentPage, setCurrentPage] = useState(1);
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<SupplierBillLine>(lines);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<SupplierBillLine>(lines, { key: 'name', direction: 'desc' });
 
     const initialWidths = {
         name: 180,

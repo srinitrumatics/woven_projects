@@ -54,7 +54,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
         status: d.Status__c,
     })), [debitMemos]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData, { key: 'name', direction: 'desc' });
 
     const initialWidths = {
         name: 180,

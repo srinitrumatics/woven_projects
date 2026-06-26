@@ -24,11 +24,11 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
 
     // Purchases State
     const [purchaseSortField, setPurchaseSortField] = useState<keyof QuotePurchase>("purchaseOrderNumber");
-    const [purchaseSortDirection, setPurchaseSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [purchaseSortDirection, setPurchaseSortDirection] = useState<'asc' | 'desc'>('desc');
 
     // Supplier Bills State
     const [billSortField, setBillSortField] = useState<keyof QuoteSupplierBill>("billNumber");
-    const [billSortDirection, setBillSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [billSortDirection, setBillSortDirection] = useState<'asc' | 'desc'>('desc');
 
     // Pagination State
     const [currentPagePurchases, setCurrentPagePurchases] = useState(1);

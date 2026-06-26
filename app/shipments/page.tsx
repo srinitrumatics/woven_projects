@@ -177,7 +177,7 @@ export default function ShipmentsPage() {
   }, [uiShipments, activeTab, searchQuery]);
 
   // Sorting
-  const { items: sortedShipments, requestSort, sortConfig } = useSortableData(filteredShipments);
+  const { items: sortedShipments, requestSort, sortConfig } = useSortableData(filteredShipments, { key: 'name', direction: 'desc' });
 
   const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
 

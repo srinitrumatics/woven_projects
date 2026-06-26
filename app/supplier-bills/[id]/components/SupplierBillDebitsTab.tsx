@@ -31,7 +31,7 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
         settledDate: 150
     };
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<DebitMemo>(debitMemos);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<DebitMemo>(debitMemos, { key: 'name', direction: 'desc' });
     const { widths: columnWidths, handleResize } = useResizableColumns(initialWidths);
 
     const paginatedData = useMemo(() => {

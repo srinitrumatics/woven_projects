@@ -47,7 +47,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
     };
 
     const activeData = getActiveData();
-    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<RMA | RTV | CreditMemo | DebitMemo>(activeData);
+    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<RMA | RTV | CreditMemo | DebitMemo>(activeData, { key: 'name', direction: 'desc' });
 
     const requestSort = (key: string) => {
         originalRequestSort(key as any);

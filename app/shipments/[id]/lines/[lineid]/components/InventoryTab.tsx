@@ -76,7 +76,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
         }
     }, [accountId, contactId, lineId]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(inventoryData);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(inventoryData, { key: 'Name', direction: 'desc' });
 
     const { widths, handleResize } = useResizableColumns({
         name: 180,

@@ -25,8 +25,8 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
     }, [activeTab]);
 
     // Use separate sort states for each tab
-    const { items: sortedPurchases, requestSort: originalRequestSortPurchases, sortConfig: sortConfigPurchases } = useSortableData<PurchaseOrderLine>(purchaseOrders);
-    const { items: sortedBills, requestSort: originalRequestSortBills, sortConfig: sortConfigBills } = useSortableData<SupplierBillLine>(supplierBills);
+    const { items: sortedPurchases, requestSort: originalRequestSortPurchases, sortConfig: sortConfigPurchases } = useSortableData<PurchaseOrderLine>(purchaseOrders, { key: 'name', direction: 'desc' });
+    const { items: sortedBills, requestSort: originalRequestSortBills, sortConfig: sortConfigBills } = useSortableData<SupplierBillLine>(supplierBills, { key: 'name', direction: 'desc' });
 
     const requestSortPurchases = (key: string) => {
         originalRequestSortPurchases(key as any);

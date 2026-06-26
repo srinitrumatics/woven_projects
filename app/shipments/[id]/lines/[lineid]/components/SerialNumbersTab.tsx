@@ -66,7 +66,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
         }
     }, [accountId, contactId, lineId]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(serialData);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(serialData, { key: 'Name', direction: 'desc' });
 
     const { widths, handleResize } = useResizableColumns({
         name: 180,

@@ -147,7 +147,7 @@ export default function QuoteLinePurchasesTab({
         return activeSubTab ==="Orders"? poliData : sbliData;
     }, [activeSubTab, poliData, sbliData]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(activeData);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(activeData, { key: 'name', direction: 'desc' });
     const { widths, handleResize } = useResizableColumns({
         name: 180,
         status: 120,

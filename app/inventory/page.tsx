@@ -130,7 +130,7 @@ export default function InventoryPage() {
         );
     }, [mappedInventory, searchQuery]);
 
-    const { items: sortedInventory, requestSort, sortConfig } = useSortableData<InventoryPosition>(filteredInventory);
+    const { items: sortedInventory, requestSort, sortConfig } = useSortableData<InventoryPosition>(filteredInventory, { key: 'name', direction: 'desc' });
 
     // Pagination
     const totalPages = Math.ceil(sortedInventory.length / ITEMS_PER_PAGE);

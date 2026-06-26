@@ -38,7 +38,7 @@ export default function LineFulfillmentsTab({
         }
     }, [activeTab, fulfillmentData]);
 
-    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<Invoice | ShippingManifest | SalesOrder | CustomerQuote>(activeData);
+    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<Invoice | ShippingManifest | SalesOrder | CustomerQuote>(activeData, { key: 'name', direction: 'desc' });
 
     const requestSort = (key: string) => {
         originalRequestSort(key as any);

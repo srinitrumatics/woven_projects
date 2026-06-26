@@ -42,7 +42,7 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
         productName: s.Product_Name,
     })), [serialNumbers]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData, { key: 'name', direction: 'desc' });
 
     const initialWidths = {
         name: 180,

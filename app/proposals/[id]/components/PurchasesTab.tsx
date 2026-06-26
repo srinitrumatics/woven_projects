@@ -37,8 +37,8 @@ export default function PurchasesTab({
     const isRestricted = accountType === 'Customer' || accountType === 'NSO';
 
     // Use separate sort states for each tab to avoid type conflicts and preserve state
-    const { items: sortedPurchases, requestSort: requestSortPurchases, sortConfig: sortConfigPurchases } = useSortableData<PurchaseOrder>(purchases);
-    const { items: sortedBills, requestSort: requestSortBills, sortConfig: sortConfigBills } = useSortableData<SupplierBill>(supplierBills);
+    const { items: sortedPurchases, requestSort: requestSortPurchases, sortConfig: sortConfigPurchases } = useSortableData<PurchaseOrder>(purchases, { key: 'name', direction: 'desc' });
+    const { items: sortedBills, requestSort: requestSortBills, sortConfig: sortConfigBills } = useSortableData<SupplierBill>(supplierBills, { key: 'name', direction: 'desc' });
 
     const paginatedPurchases = useMemo(() => {
         const startIndex = (currentPageOrders - 1) * ITEMS_PER_PAGE;

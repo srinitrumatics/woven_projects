@@ -199,7 +199,7 @@ export default function OrdersPage() {
   }, [uiOrders, activeTab, searchQuery]);
 
   // Sorting
-  const { items: sortedOrders, requestSort, sortConfig } = useSortableData(filteredAndSearchedOrders);
+  const { items: sortedOrders, requestSort, sortConfig } = useSortableData(filteredAndSearchedOrders, { key: 'name', direction: 'desc' });
 
   const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
 

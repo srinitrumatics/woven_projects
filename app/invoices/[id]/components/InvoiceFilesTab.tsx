@@ -18,7 +18,7 @@ interface InvoiceFilesProps {
 export default function InvoiceFiles({ files, invoiceId, accountId, contactId }: InvoiceFilesProps) {
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
     const { error } = useToast();
-    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<InvoiceFile>(files);
+    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<InvoiceFile>(files, { key: 'fileName', direction: 'desc' });
     const { widths, handleResize } = useResizableColumns({
         name: 300,
         type: 120,

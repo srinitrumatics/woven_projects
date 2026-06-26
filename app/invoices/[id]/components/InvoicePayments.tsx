@@ -22,8 +22,8 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
     const [currentPagePayments, setCurrentPagePayments] = useState(1);
     const [currentPageMemos, setCurrentPageMemos] = useState(1);
 
-    const { items: sortedPayments, requestSort: requestSortPayments, sortConfig: sortConfigPayments } = useSortableData<ReceivePayment>(receivePayments);
-    const { items: sortedMemos, requestSort: requestSortMemos, sortConfig: sortConfigMemos } = useSortableData<AppliedCreditMemo>(creditMemos);
+    const { items: sortedPayments, requestSort: requestSortPayments, sortConfig: sortConfigPayments } = useSortableData<ReceivePayment>(receivePayments, { key: 'name', direction: 'desc' });
+    const { items: sortedMemos, requestSort: requestSortMemos, sortConfig: sortConfigMemos } = useSortableData<AppliedCreditMemo>(creditMemos, { key: 'name', direction: 'desc' });
 
     const paginatedPayments = useMemo(() => {
         const startIndex = (currentPagePayments - 1) * ITEMS_PER_PAGE;

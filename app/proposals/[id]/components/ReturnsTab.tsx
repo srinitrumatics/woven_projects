@@ -44,7 +44,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
     };
 
     const activeData = getActiveData();
-    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<RMA | RTV | CreditMemo | DebitMemo>(activeData);
+    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<RMA | RTV | CreditMemo | DebitMemo>(activeData, { key: 'name', direction: 'desc' });
 
     const requestSort = (key: string) => {
         originalRequestSort(key as any);

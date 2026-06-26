@@ -29,7 +29,7 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
     const [currentPage, setCurrentPage] = useState(1);
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
     const { error: toastError } = useToast();
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<BillFile>(files);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<BillFile>(files, { key: 'fileName', direction: 'desc' });
 
     const { user, selectedAccount } = useUserSession();
     const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";

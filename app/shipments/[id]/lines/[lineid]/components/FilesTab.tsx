@@ -67,7 +67,7 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
         }
     }, [accountId, contactId, lineId]);
 
-    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<FileData>(files);
+    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<FileData>(files, { key: 'Name', direction: 'desc' });
 
     const { widths, handleResize } = useResizableColumns({
         fileName: 300,

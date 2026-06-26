@@ -41,7 +41,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
         );
     }, [files, searchQuery]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<POFile>(filteredData);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<POFile>(filteredData, { key: 'fileName', direction: 'desc' });
 
     const { user, selectedAccount } = useUserSession();
     const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";

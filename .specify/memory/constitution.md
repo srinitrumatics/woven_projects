@@ -1,24 +1,34 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: 1.0.1 → 1.0.2 (PATCH)
+Version change: 1.0.1 → 1.0.2 (PATCH) — unchanged at 1.0.2 after 2026-06-26 validation run
 
-Bump rationale: Propagated Next.js App Router path conventions from Principle III into
+Bump rationale (1.0.2): Propagated Next.js App Router path conventions from Principle III into
   tasks-template.md so that generated task lists reflect the project's actual directory
   structure (app/, app/api/, components/, lib/, db/) rather than the generic
   single-project / web-app / mobile defaults. No principle semantics changed.
 
+2026-06-26 Validation run (no version bump):
+  - All five Core Principles validated against current codebase state. No drift detected.
+  - No unreplaced placeholder tokens remaining.
+  - No agent-specific (CLAUDE-only) references found in any template.
+  - plan-template.md Constitution Check section verified present and aligned.
+  - tasks-template.md Next.js App Router path convention verified present.
+  - spec-template.md structure verified consistent with constitution scope/requirements.
+  - No new commits (recent: fix Create Order button, group dropdown improvements)
+    warrant constitution amendments — implementation-level fixes only.
+
 Modified principles: None
 
-Added content:
+Added content (1.0.2):
   - .specify/templates/tasks-template.md — "Next.js App Router (this project)" bullet
     added to Path Conventions section
 
 Removed sections: None
 
 Templates requiring updates:
-  ✅ .specify/templates/tasks-template.md — Next.js App Router path convention added
-  ✅ .specify/templates/plan-template.md — no changes needed (paths filled per-feature)
+  ✅ .specify/templates/tasks-template.md — Next.js App Router path convention present
+  ✅ .specify/templates/plan-template.md — Constitution Check gate present; no changes needed
   ✅ .specify/templates/spec-template.md — no outdated references
   ✅ .specify/memory/constitution.md — this file
 

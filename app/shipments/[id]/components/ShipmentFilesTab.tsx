@@ -56,7 +56,7 @@ export default function ShipmentFilesTab({ shipmentId, accountId, contactId, isE
         }
     }, [shipmentId, accountId, contactId]);
 
-    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<FileData>(files);
+    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<FileData>(files, { key: 'Title', direction: 'desc' });
 
     // helpers
     function decodeHtmlEntities(s: string) {

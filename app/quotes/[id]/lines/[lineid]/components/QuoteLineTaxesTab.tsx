@@ -62,7 +62,7 @@ export default function QuoteLineTaxesTab({ product }: QuoteLineTaxesTabProps) {
         }
     ];
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<TaxData>(taxData);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<TaxData>(taxData, { key: 'id', direction: 'desc' });
 
     const { widths, handleResize } = useResizableColumns({
         salesRate: 140,

@@ -55,7 +55,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
         dueDate: b.Due_Date__c,
     })), [bills]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedBills);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedBills, { key: 'name', direction: 'desc' });
 
     const initialWidths = {
         name: 180,

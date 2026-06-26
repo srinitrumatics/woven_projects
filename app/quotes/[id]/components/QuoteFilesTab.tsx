@@ -15,7 +15,7 @@ interface QuoteFilesTabProps {
 
 export default function QuoteFilesTab({ quoteId, accountId, contactId, files, loading }: QuoteFilesTabProps): JSX.Element {
     const [sortField, setSortField] = useState<keyof QuoteFile>("fileName");
-    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
     const { error } = useToast();
 

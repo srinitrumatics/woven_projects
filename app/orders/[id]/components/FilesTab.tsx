@@ -44,7 +44,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
         fetchFiles();
     }, [orderId, accountId, contactId]);
 
-    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<FileData>(files);
+    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<FileData>(files, { key: 'Title', direction: 'desc' });
 
     // helpers
     function decodeHtmlEntities(s: string) {

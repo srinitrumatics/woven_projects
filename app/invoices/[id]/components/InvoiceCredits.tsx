@@ -16,7 +16,7 @@ interface InvoiceCreditsProps {
 export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
     const [currentPage, setCurrentPage] = useState(1);
 
-    const { items: sortedCredits, requestSort, sortConfig } = useSortableData<CreditMemo>(credits);
+    const { items: sortedCredits, requestSort, sortConfig } = useSortableData<CreditMemo>(credits, { key: 'name', direction: 'desc' });
 
     const paginatedCredits = useMemo(() => {
         const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;

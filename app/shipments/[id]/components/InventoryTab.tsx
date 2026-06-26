@@ -107,7 +107,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
     const [error, setError] = useState<string | null>(null);
 
     const [sortField, setSortField] = useState<SortField>("name");
-    const [sortDir, setSortDir] = useState<SortDir>("asc");
+    const [sortDir, setSortDir] = useState<SortDir>("desc");
 
     const { widths, handleResize } = useResizableColumns(DEFAULT_WIDTHS);
 

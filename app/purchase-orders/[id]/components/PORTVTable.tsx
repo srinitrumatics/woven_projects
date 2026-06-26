@@ -52,7 +52,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
         status: r.Status__c,
     })), [rtv]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData, { key: 'name', direction: 'desc' });
 
     const initialWidths = {
         name: 180,

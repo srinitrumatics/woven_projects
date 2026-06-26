@@ -27,7 +27,7 @@ const ITEMS_PER_PAGE = 10;
 
 export default function QuoteLineFilesTab({ lineId, accountId, contactId, files, loading }: QuoteLineFilesTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
-    const [sortConfig, setSortConfig] = useState<{ key: keyof QuoteLineFile; direction: 'asc' | 'desc' } | null>({ key: 'fileName', direction: 'asc' });
+    const [sortConfig, setSortConfig] = useState<{ key: keyof QuoteLineFile; direction: 'asc' | 'desc' } | null>({ key: 'fileName', direction: 'desc' });
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
 
     const { widths, handleResize } = useResizableColumns({

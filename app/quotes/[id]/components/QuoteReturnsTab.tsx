@@ -38,19 +38,19 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
 
     // RMA State
     const [rmaSortField, setRmaSortField] = useState<keyof QuoteRMA>("rmaNumber");
-    const [rmaSortDirection, setRmaSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [rmaSortDirection, setRmaSortDirection] = useState<'asc' | 'desc'>('desc');
 
     // Credit Memo State
     const [cmSortField, setCmSortField] = useState<keyof QuoteCreditMemo>("memoNumber");
-    const [cmSortDirection, setCmSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [cmSortDirection, setCmSortDirection] = useState<'asc' | 'desc'>('desc');
 
     // RTV State
     const [rtvSortField, setRtvSortField] = useState<keyof QuoteRTV>("rtvNumber");
-    const [rtvSortDirection, setRtvSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [rtvSortDirection, setRtvSortDirection] = useState<'asc' | 'desc'>('desc');
 
     // Debit Memo State
     const [dmSortField, setDmSortField] = useState<keyof QuoteDebitMemo>("memoNumber");
-    const [dmSortDirection, setDmSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [dmSortDirection, setDmSortDirection] = useState<'asc' | 'desc'>('desc');
 
     // Resizable Columns for RMA (23 fields)
     const { widths: rmaWidths, handleResize: handleRmaResize } = useResizableColumns({

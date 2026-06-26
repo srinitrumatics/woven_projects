@@ -40,7 +40,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
 
   const [activeTab, setActiveTab] = useState<QuoteTabType>("quotelines");
   const [sortField, setSortField] = useState<keyof QuoteLine>("productName");
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const [quote, setQuote] = useState<QuoteDetails | null>(null);
   const [quoteLines, setQuoteLines] = useState<QuoteLine[]>([]);
@@ -605,7 +605,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
 
   // --- Taxes Tab Logic ---
   const [taxSortField, setTaxSortField] = useState<keyof QuoteTax>("salesTaxRate");
-  const [taxSortDirection, setTaxSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [taxSortDirection, setTaxSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const { widths: taxWidths, handleResize: handleTaxResize } = useResizableColumns({
     salesTaxRate: 150,
@@ -676,7 +676,6 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
         quoteNumber={quote.quoteNumber}
         status={quote.status}
         description={quote.description || ''}
-        onBack={() => router.push("/quotes")}
       />
 
       <QuoteDetailsSection

@@ -4,14 +4,13 @@ interface QuoteHeaderProps {
     quoteNumber: string;
     status: QuoteStatus;
     description: string;
-    onBack: () => void;
 }
 
-export default function QuoteHeader({ quoteNumber, status, description, onBack }: QuoteHeaderProps): JSX.Element {
+export default function QuoteHeader({ quoteNumber, status, description }: QuoteHeaderProps): JSX.Element {
     return (
         <div className="mb-6">
             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2 min-w-0">
-                <button onClick={onBack} className="hover:text-gray-700 dark:hover:text-gray-300">Quotes</button>
+                <span>Quotes</span>
                 <span>&gt;</span>
                 <span className="hover:text-gray-700 dark:text-gray-300">Quote Details</span>
                 <span>&gt;</span>

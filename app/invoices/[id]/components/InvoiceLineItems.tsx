@@ -11,7 +11,7 @@ interface InvoiceLineItemsProps {
 }
 
 export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsProps) {
-    const { items: sortedLines, requestSort, sortConfig } = useSortableData<InvoiceLine>(lines);
+    const { items: sortedLines, requestSort, sortConfig } = useSortableData<InvoiceLine>(lines, { key: 'invoiceLineName', direction: 'desc' });
     const { widths, handleResize } = useResizableColumns({
         lineName: 160,
         status: 120,

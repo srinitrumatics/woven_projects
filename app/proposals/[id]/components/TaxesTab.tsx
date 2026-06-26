@@ -34,7 +34,7 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
         vatAmount: 0
     } as TaxDetail];
 
-    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<TaxDetail>(displayTaxes);
+    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<TaxDetail>(displayTaxes, { key: 'id', direction: 'desc' });
 
     const requestSort = (key: string) => {
         originalRequestSort(key as keyof TaxDetail);

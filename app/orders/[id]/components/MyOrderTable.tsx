@@ -41,7 +41,7 @@ export default function MyOrderTable({
     // overwriting local state when switching tabs.
     // Order lines are passed down via filteredOrderProducts.
 
-    const { items: sortedProducts, requestSort, sortConfig } = useSortableData<Product>(filteredOrderProducts);
+    const { items: sortedProducts, requestSort, sortConfig } = useSortableData<Product>(filteredOrderProducts, { key: 'name', direction: 'desc' });
     const [currentPage, setCurrentPage] = useState(1);
 
     // Reset pagination when search or products change

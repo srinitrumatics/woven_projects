@@ -50,7 +50,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
 
     const [currentPage, setCurrentPage] = useState(1);
 
-    const { items: sortedLines, requestSort, sortConfig } = useSortableData(mappedLines);
+    const { items: sortedLines, requestSort, sortConfig } = useSortableData(mappedLines, { key: 'name', direction: 'desc' });
 
     const totalPages = Math.ceil(sortedLines.length / ITEMS_PER_PAGE);
     const paginatedLines = useMemo(() => {

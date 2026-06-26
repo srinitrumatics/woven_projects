@@ -41,7 +41,7 @@ export default function InvoiceTaxes(props: InvoiceTaxesProps) {
         }
     ];
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData(taxData);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData(taxData, { key: 'id', direction: 'desc' });
 
     const { widths, handleResize } = useResizableColumns({
         salesRate: 140,

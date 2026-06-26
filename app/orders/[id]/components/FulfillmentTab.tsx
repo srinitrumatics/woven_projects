@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { formatDate, formatCurrency } from "@/lib/utils/formatting";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import { useResizableColumns } from "../../../../hooks/useResizableColumns";
+import { useUserSession } from "@/components/UserSessionContext";
+import { usePermissions } from "@/components/PermissionContext";
 
 interface FulfillmentTabProps {
     orderId: string;
@@ -116,11 +119,19 @@ export default function FulfillmentTab({ orderId, accountId, contactId }: Fulfil
     const [loading, setLoading] = useState(true);
     const [activeSubTab, setActiveSubTab] = useState<"proposals" | "customerQuotes" | "salesOrders" | "manifests" | "invoices">("proposals");
 
-    const { items: sortedProposals, requestSort: requestSortProposals, sortConfig: sortConfigProposals } = useSortableData(proposals);
-    const { items: sortedCustomerQuotes, requestSort: requestSortCustomerQuotes, sortConfig: sortConfigCustomerQuotes } = useSortableData(customerQuotes);
-    const { items: sortedSalesOrders, requestSort: requestSortSalesOrders, sortConfig: sortConfigSalesOrders } = useSortableData(salesOrders);
-    const { items: sortedManifests, requestSort: requestSortManifests, sortConfig: sortConfigManifests } = useSortableData(manifests);
-    const { items: sortedInvoices, requestSort: requestSortInvoices, sortConfig: sortConfigInvoices } = useSortableData(invoices);
+    const { selectedAccount } = useUserSession();
+    const { isSuperAdmin } = usePermissions();
+    const accountType = selectedAccount?.Account_Record_Type__c || '';
+    const canLinkProposals = isSuperAdmin || accountType === 'Customer' || accountType === 'NSO' || accountType === 'Hybrid';
+    const canLinkQuotes = isSuperAdmin || accountType === 'Customer' || accountType === 'NSO' || accountType === 'Hybrid';
+    const canLinkShipments = isSuperAdmin || accountType === 'Customer' || accountType === 'Hybrid';
+    const canLinkInvoices = isSuperAdmin || accountType === 'Customer' || accountType === 'Hybrid';
+
+    const { items: sortedProposals, requestSort: requestSortProposals, sortConfig: sortConfigProposals } = useSortableData(proposals, { key: 'Proposal_Number__c', direction: 'desc' });
+    const { items: sortedCustomerQuotes, requestSort: requestSortCustomerQuotes, sortConfig: sortConfigCustomerQuotes } = useSortableData(customerQuotes, { key: 'Name', direction: 'desc' });
+    const { items: sortedSalesOrders, requestSort: requestSortSalesOrders, sortConfig: sortConfigSalesOrders } = useSortableData(salesOrders, { key: 'Name', direction: 'desc' });
+    const { items: sortedManifests, requestSort: requestSortManifests, sortConfig: sortConfigManifests } = useSortableData(manifests, { key: 'Name', direction: 'desc' });
+    const { items: sortedInvoices, requestSort: requestSortInvoices, sortConfig: sortConfigInvoices } = useSortableData(invoices, { key: 'Name', direction: 'desc' });
 
     const { widths, handleResize } = useResizableColumns({});
 
@@ -265,7 +276,13 @@ export default function FulfillmentTab({ orderId, accountId, contactId }: Fulfil
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 {sortedProposals.map((prop) => (
                                     <tr key={prop.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <td className={tdBoldClass}>{prop.Proposal_Number__c || "—"}</td>
+                                        <td className={tdBoldClass}>
+                                            {canLinkProposals && prop.Id ? (
+                                                <Link href={`/proposals/${prop.Id}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    {prop.Proposal_Number__c || "—"}
+                                                </Link>
+                                            ) : (prop.Proposal_Number__c || "—")}
+                                        </td>
                                         <td className="px-4 py-3">{statusBadge(prop.Status__c)}</td>
                                         <td className={tdClass}>{prop.Name || "—"}</td>
                                         <td className={tdClass}>{prop.Customer_Order_Name || "—"}</td>
@@ -317,7 +334,13 @@ export default function FulfillmentTab({ orderId, accountId, contactId }: Fulfil
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 {sortedCustomerQuotes.map((cq) => (
                                     <tr key={cq.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <td className={tdBoldClass}>{cq.Name || "—"}</td>
+                                        <td className={tdBoldClass}>
+                                            {canLinkQuotes && cq.Id ? (
+                                                <Link href={`/quotes/${cq.Id}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    {cq.Name || "—"}
+                                                </Link>
+                                            ) : (cq.Name || "—")}
+                                        </td>
                                         <td className="px-4 py-3">{statusBadge(cq.Status__c)}</td>
                                         <td className={tdClass}>{cq.Customer_Order_Name || "—"}</td>
                                         <td className={tdClass}>{cq.Customer_PO__c || "—"}</td>
@@ -402,7 +425,13 @@ export default function FulfillmentTab({ orderId, accountId, contactId }: Fulfil
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 {sortedManifests.map((sm) => (
                                     <tr key={sm.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <td className={tdBoldClass}>{sm.Name || "—"}</td>
+                                        <td className={tdBoldClass}>
+                                            {canLinkShipments && sm.Id ? (
+                                                <Link href={`/shipments/${sm.Id}`} className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                                                    {sm.Name || "—"}
+                                                </Link>
+                                            ) : (sm.Name || "—")}
+                                        </td>
                                         <td className="px-4 py-3">{statusBadge(sm.Status__c)}</td>
                                         <td className={tdClass}>{formatDate(sm.Ship_Date__c, "numeric-dash") || "—"}</td>
                                         <td className={tdClass}>{formatDate(sm.Estimated_Delivery_Date__c, "numeric-dash") || "—"}</td>
@@ -448,7 +477,13 @@ export default function FulfillmentTab({ orderId, accountId, contactId }: Fulfil
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 {sortedInvoices.map((inv) => (
                                     <tr key={inv.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <td className={tdBoldClass}>{inv.Name || "—"}</td>
+                                        <td className={tdBoldClass}>
+                                            {canLinkInvoices && inv.Id ? (
+                                                <Link href={`/invoices/${inv.Id}`} className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                                                    {inv.Name || "—"}
+                                                </Link>
+                                            ) : (inv.Name || "—")}
+                                        </td>
                                         <td className="px-4 py-3">{statusBadge(inv.Status__c)}</td>
                                         <td className={tdClass}>{formatDate(inv.Issued_Date__c, "numeric-dash") || "—"}</td>
                                         <td className={tdClass}>{formatDate(inv.Due_Date__c, "numeric-dash") || "—"}</td>

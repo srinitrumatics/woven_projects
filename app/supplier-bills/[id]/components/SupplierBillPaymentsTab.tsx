@@ -34,7 +34,7 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
         failedDate: 160,
         postedDate: 160
     };
-    const { items: sortedPayments, requestSort: requestSortPayments, sortConfig: sortConfigPayments } = useSortableData<BillPayment>(billPayments);
+    const { items: sortedPayments, requestSort: requestSortPayments, sortConfig: sortConfigPayments } = useSortableData<BillPayment>(billPayments, { key: 'name', direction: 'desc' });
     const { widths: columnWidthsPayments, handleResize: handleResizePayments } = useResizableColumns(initialPaymentWidths);
 
     const paginatedPayments = useMemo(() => {
@@ -56,7 +56,7 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
         availableDebitBalance: 180,
         notes: 300
     };
-    const { items: sortedDebits, requestSort: requestSortDebits, sortConfig: sortConfigDebits } = useSortableData<AppliedDebitMemo>(appliedDebits);
+    const { items: sortedDebits, requestSort: requestSortDebits, sortConfig: sortConfigDebits } = useSortableData<AppliedDebitMemo>(appliedDebits, { key: 'name', direction: 'desc' });
     const { widths: columnWidthsDebits, handleResize: handleResizeDebits } = useResizableColumns(initialDebitWidths);
 
     const paginatedDebits = useMemo(() => {
