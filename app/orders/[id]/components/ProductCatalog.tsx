@@ -169,17 +169,17 @@ export default function ProductCatalog({
                                     </td>*/}
                                     <td className="px-3 py-2 text-left truncate">
                                         <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.name}>{truncateText(product.name, 50)}</div>
-                                        <div className="text-sm text-gray-500 dark:text-gray-400 truncate break-words" title={product.description || ""}>
-                                            {product.description ? truncateText(product.description, 50) : <span className="invisible truncate">Empty Description</span>}
+                                        <div className="text-sm text-gray-500 dark:text-gray-400 truncate break-words" title={product.description || "—"}>
+                                            {product.description ? truncateText(product.description, 50) : "—"}
                                         </div>
                                     </td>
                                     <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
-                                        <div className="truncate" title={product.manufacturer}>{product.manufacturer}</div>
+                                        <div className="truncate" title={product.manufacturer || "—"}>{product.manufacturer || "—"}</div>
                                     </td>
                                     <td className="px-3 py-2 text-left truncate">
-                                        <div className="truncate" title={product.productFamily}>
+                                        <div className="truncate" title={product.productFamily || "—"}>
                                             <span className="inline-block px-2 py-0.5 text-sm font-medium rounded bg-primary/10 text-primary  tracking-wider whitespace-normal truncate">
-                                                {product.productFamily}
+                                                {product.productFamily || "—"}
                                             </span>
                                         </div>
                                     </td>

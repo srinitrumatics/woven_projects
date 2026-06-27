@@ -3,11 +3,23 @@
 import React, { useEffect, useState } from "react";
 import { formatDate, formatCurrency } from "@/lib/utils/formatting";
 import { useUserSession } from "@/components/UserSessionContext";
+import { SortableHeader } from "../../../../components/ui/SortableHeader";
+import { useSortableData } from "../../../../hooks/useSortableData";
+import { useResizableColumns } from "../../../../hooks/useResizableColumns";
+
+export interface ReturnsPreloadedData {
+    rmaList: RMA[];
+    creditMemos: CreditMemo[];
+    debitMemos: DebitMemo[];
+    rtvList: RTV[];
+}
 
 interface ReturnsTabProps {
     orderId: string;
     accountId: string;
     contactId: string;
+    onCountChange?: (count: number) => void;
+    preloadedData?: ReturnsPreloadedData | null;
 }
 
 interface RMA {
@@ -83,7 +95,7 @@ interface RTV {
     Ship_from_Account_Name: string;
 }
 
-export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTabProps) {
+export default function ReturnsTab({ orderId, accountId, contactId, onCountChange, preloadedData }: ReturnsTabProps) {
     const { user, selectedAccount } = useUserSession();
     const isCustomerOrNSO = (
         selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'customer' ||
@@ -101,7 +113,26 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
     const [loading, setLoading] = useState(true);
     const [activeSubTab, setActiveSubTab] = useState<"rma" | "credits" | "debits" | "rtv">("rma");
 
+    const { items: sortedRmaList, requestSort: requestSortRma, sortConfig: sortConfigRma } = useSortableData(rmaList, { key: 'Name', direction: 'desc' });
+    const { items: sortedCreditMemos, requestSort: requestSortCm, sortConfig: sortConfigCm } = useSortableData(creditMemos, { key: 'Name', direction: 'desc' });
+    const { items: sortedDebitMemos, requestSort: requestSortDm, sortConfig: sortConfigDm } = useSortableData(debitMemos, { key: 'Name', direction: 'desc' });
+    const { items: sortedRtvList, requestSort: requestSortRtv, sortConfig: sortConfigRtv } = useSortableData(rtvList, { key: 'Name', direction: 'desc' });
+
+    const { widths, handleResize } = useResizableColumns({});
+
+    // When preloadedData arrives from the parent, populate state without fetching again
     useEffect(() => {
+        if (preloadedData == null) return;
+        setRmaList(preloadedData.rmaList);
+        setCreditMemos(preloadedData.creditMemos);
+        setDebitMemos(preloadedData.debitMemos);
+        setRtvList(preloadedData.rtvList);
+        setLoading(false);
+    }, [preloadedData]);
+
+    // Self-fetch only when no parent is providing preloadedData (preloadedData === undefined)
+    useEffect(() => {
+        if (preloadedData !== undefined) return;
         async function fetchReturns() {
             if (!orderId || !accountId) return;
             try {
@@ -112,10 +143,15 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
                 if (!res.ok) return;
                 const data = await res.json();
                 // API returns the whole data object for Returns tab
-                setRmaList(data.RMA__c || []);
-                setCreditMemos(data.Credit_Memo__c || []);
-                setDebitMemos(data.Debit_Memo__c || []);
-                setRtvList(data.RTV__c || []);
+                const rmaData = data.RMA__c || [];
+                const creditData = data.Credit_Memo__c || [];
+                const debitData = data.Debit_Memo__c || [];
+                const rtvData = data.RTV__c || [];
+                setRmaList(rmaData);
+                setCreditMemos(creditData);
+                setDebitMemos(debitData);
+                setRtvList(rtvData);
+                onCountChange?.(rmaData.length + creditData.length + (isCustomerOrNSO ? 0 : debitData.length + rtvData.length));
             } catch (e) {
                 console.error("Error fetching returns:", e);
             } finally {
@@ -169,6 +205,7 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
     const tbodyClass = "bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700";
     const wrapClass = "overflow-auto rounded-lg border border-gray-200 dark:border-gray-700";
 
+
     const tabs = [
         { id: "rma" as const, label: "RMA", count: rmaList.length },
         { id: "credits" as const, label: "Credit Memos", count: creditMemos.length },
@@ -187,8 +224,8 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
                         key={tab.id}
                         onClick={() => setActiveSubTab(tab.id)}
                         className={`pb-2 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px ${activeSubTab === tab.id
-                                ? "border-primary text-primary"
-                                : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                             }`}
                     >
                         {tab.label} {tab.count > 0 && `(${tab.count})`}
@@ -203,20 +240,20 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
                         <table className={tableClass}>
                             <thead className={theadClass}>
                                 <tr>
-                                    <th className={thClass}>RMA #</th>
-                                    <th className={thClass}>Status</th>
-                                    <th className={thClass}>Type</th>
-                                    <th className={thClass}>Issued Date</th>
-                                    <th className={thClass}>Return By</th>
-                                    <th className={thClass}>Shipping Method</th>
-                                    <th className={thClass}>Tracking #</th>
-                                    <th className={thClass}>Customer Order</th>
-                                    <th className={thClass}>Sales Order</th>
-                                    <th className={`${thClass} text-right`}>Total Price</th>
+                                    <SortableHeader label="RMA #" field="Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaName || 160} onResize={handleResize} />
+                                    <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaStatus || 120} onResize={handleResize} />
+                                    <SortableHeader label="Type" field="RMA_Type__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaType || 120} onResize={handleResize} />
+                                    <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaIssuedDate || 130} onResize={handleResize} />
+                                    <SortableHeader label="Return By" field="Return_by_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaReturnBy || 130} onResize={handleResize} />
+                                    <SortableHeader label="Shipping Method" field="Shipping_Method__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShippingMethod || 150} onResize={handleResize} />
+                                    <SortableHeader label="Tracking #" field="Tracking_Number__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTracking || 130} onResize={handleResize} />
+                                    <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaCustomerOrder || 150} onResize={handleResize} />
+                                    <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaSalesOrder || 150} onResize={handleResize} />
+                                    <SortableHeader label="Total Price" field="Total_Price__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTotal || 120} onResize={handleResize} />
                                 </tr>
                             </thead>
                             <tbody className={tbodyClass}>
-                                {rmaList.map((rma) => (
+                                {sortedRmaList.map((rma) => (
                                     <tr key={rma.Id} className={trClass}>
                                         <td className={tdBoldClass}>{rma.Name || "—"}</td>
                                         <td className="px-4 py-3">{statusBadge(rma.Status__c)}</td>
@@ -243,19 +280,19 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
                         <table className={tableClass}>
                             <thead className={theadClass}>
                                 <tr>
-                                    <th className={thClass}>Credit Memo #</th>
-                                    <th className={thClass}>Status</th>
-                                    <th className={thClass}>Issued Date</th>
-                                    <th className={thClass}>Expiry Date</th>
-                                    <th className={thClass}>Credit To</th>
-                                    <th className={thClass}>Invoice</th>
-                                    <th className={thClass}>Customer Order</th>
-                                    <th className={`${thClass} text-right`}>Credit Amount</th>
-                                    <th className={`${thClass} text-right`}>Available Balance</th>
+                                    <SortableHeader label="Credit Memo #" field="Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmName || 160} onResize={handleResize} />
+                                    <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmStatus || 120} onResize={handleResize} />
+                                    <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmIssuedDate || 130} onResize={handleResize} />
+                                    <SortableHeader label="Expiry Date" field="Expiration_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmExpiry || 130} onResize={handleResize} />
+                                    <SortableHeader label="Credit To" field="Credit_to_Account_Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmCreditTo || 150} onResize={handleResize} />
+                                    <SortableHeader label="Invoice" field="Invoice_Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmInvoice || 150} onResize={handleResize} />
+                                    <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmCustomerOrder || 150} onResize={handleResize} />
+                                    <SortableHeader label="Credit Amount" field="Total_Credit_Amount__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmCreditAmount || 130} onResize={handleResize} />
+                                    <SortableHeader label="Available Balance" field="Available_Credit_Balance__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmAvailBalance || 140} onResize={handleResize} />
                                 </tr>
                             </thead>
                             <tbody className={tbodyClass}>
-                                {creditMemos.map((cm) => (
+                                {sortedCreditMemos.map((cm) => (
                                     <tr key={cm.Id} className={trClass}>
                                         <td className={tdBoldClass}>{cm.Name || "—"}</td>
                                         <td className="px-4 py-3">{statusBadge(cm.Status__c)}</td>
@@ -281,20 +318,20 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
                         <table className={tableClass}>
                             <thead className={theadClass}>
                                 <tr>
-                                    <th className={thClass}>Debit Memo #</th>
-                                    <th className={thClass}>Status</th>
-                                    <th className={thClass}>Issued Date</th>
-                                    <th className={thClass}>Settled Date</th>
-                                    <th className={thClass}>Debit To</th>
-                                    <th className={thClass}>Customer Order</th>
-                                    <th className={thClass}>Purchase Order</th>
-                                    <th className={thClass}>Supplier Bill</th>
-                                    <th className={`${thClass} text-right`}>Debit Amount</th>
-                                    <th className={`${thClass} text-right`}>Available Balance</th>
+                                    <SortableHeader label="Debit Memo #" field="Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmName || 160} onResize={handleResize} />
+                                    <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmStatus || 120} onResize={handleResize} />
+                                    <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmIssuedDate || 130} onResize={handleResize} />
+                                    <SortableHeader label="Settled Date" field="Settled_Date__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmSettled || 130} onResize={handleResize} />
+                                    <SortableHeader label="Debit To" field="Debit_to_Account_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmDebitTo || 150} onResize={handleResize} />
+                                    <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmCustomerOrder || 150} onResize={handleResize} />
+                                    <SortableHeader label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmPurchaseOrder || 150} onResize={handleResize} />
+                                    <SortableHeader label="Supplier Bill" field="Supplier_Bill_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmSupplierBill || 150} onResize={handleResize} />
+                                    <SortableHeader label="Debit Amount" field="Total_Debit_Amount__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmDebitAmount || 130} onResize={handleResize} />
+                                    <SortableHeader label="Available Balance" field="Available_Debit_Balance__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmAvailBalance || 140} onResize={handleResize} />
                                 </tr>
                             </thead>
                             <tbody className={tbodyClass}>
-                                {debitMemos.map((dm) => (
+                                {sortedDebitMemos.map((dm) => (
                                     <tr key={dm.Id} className={trClass}>
                                         <td className={tdBoldClass}>{dm.Name || "—"}</td>
                                         <td className="px-4 py-3">{statusBadge(dm.Status__c)}</td>
@@ -321,20 +358,20 @@ export default function ReturnsTab({ orderId, accountId, contactId }: ReturnsTab
                         <table className={tableClass}>
                             <thead className={theadClass}>
                                 <tr>
-                                    <th className={thClass}>RTV #</th>
-                                    <th className={thClass}>Status</th>
-                                    <th className={thClass}>Type</th>
-                                    <th className={thClass}>Issued Date</th>
-                                    <th className={thClass}>Return By</th>
-                                    <th className={thClass}>Supplier</th>
-                                    <th className={thClass}>Supplier RMA #</th>
-                                    <th className={thClass}>Customer Order</th>
-                                    <th className={thClass}>Purchase Order</th>
-                                    <th className={`${thClass} text-right`}>Total Cost</th>
+                                    <SortableHeader label="RTV #" field="Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvName || 160} onResize={handleResize} />
+                                    <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvStatus || 120} onResize={handleResize} />
+                                    <SortableHeader label="Type" field="RTV_Type__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvType || 120} onResize={handleResize} />
+                                    <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvIssuedDate || 130} onResize={handleResize} />
+                                    <SortableHeader label="Return By" field="Return_by_Date__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvReturnBy || 130} onResize={handleResize} />
+                                    <SortableHeader label="Supplier" field="Supplier_Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvSupplier || 150} onResize={handleResize} />
+                                    <SortableHeader label="Supplier RMA #" field="Supplier_RMA_Number__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvSupplierRma || 150} onResize={handleResize} />
+                                    <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvCustomerOrder || 150} onResize={handleResize} />
+                                    <SortableHeader label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvPurchaseOrder || 150} onResize={handleResize} />
+                                    <SortableHeader label="Total Cost" field="Total_Cost__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvTotal || 120} onResize={handleResize} />
                                 </tr>
                             </thead>
                             <tbody className={tbodyClass}>
-                                {rtvList.map((rtv) => (
+                                {sortedRtvList.map((rtv) => (
                                     <tr key={rtv.Id} className={trClass}>
                                         <td className={tdBoldClass}>{rtv.Name || "—"}</td>
                                         <td className="px-4 py-3">{statusBadge(rtv.Status__c)}</td>

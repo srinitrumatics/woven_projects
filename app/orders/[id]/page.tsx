@@ -22,8 +22,8 @@ import ProductCatalog from "./components/ProductCatalog";
 import MyOrderTable from "./components/MyOrderTable";
 import PDFTemplate from "./components/PDFTemplate";
 import TaxesTab from "./components/TaxesTab";
-import FulfillmentTab from "./components/FulfillmentTab";
-import ReturnsTab from "./components/ReturnsTab";
+import FulfillmentTab, { FulfillmentPreloadedData } from "./components/FulfillmentTab";
+import ReturnsTab, { ReturnsPreloadedData } from "./components/ReturnsTab";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
@@ -173,6 +173,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [loadingOrder, setLoadingOrder] = useState(true);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [filesCount, setFilesCount] = useState(0);
+  const [fulfillmentCount, setFulfillmentCount] = useState(0);
+  const [returnsCount, setReturnsCount] = useState(0);
+  const [fulfillmentData, setFulfillmentData] = useState<FulfillmentPreloadedData | null>(null);
+  const [returnsData, setReturnsData] = useState<ReturnsPreloadedData | null>(null);
 
   // Initialize resizable columns for My Order Table
   const myOrderColumns = useResizableColumns({
@@ -1040,6 +1044,57 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     fetchFilesCount();
   }, [id, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
+  // Eager fetch fulfillment data so tab count shows on page load and tab opens without a second spinner
+  useEffect(() => {
+    if (!id || id === "new" || !SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
+    async function fetchFulfillmentEager() {
+      try {
+        const res = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&orderId=${encodeURIComponent(id)}&action=fulfillment`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const parsed: FulfillmentPreloadedData = {
+          invoices: data.Invoice__c || [],
+          manifests: data.Shipping_Manifest__c || [],
+          salesOrders: data.Sales_Order__c || [],
+          proposals: data.Proposal__c || [],
+          customerQuotes: data.Customer_Quote__c || [],
+        };
+        setFulfillmentData(parsed);
+        setFulfillmentCount(parsed.invoices.length + parsed.manifests.length + parsed.salesOrders.length + parsed.proposals.length + parsed.customerQuotes.length);
+      } catch { /* silent — count stays 0 */ }
+    }
+    fetchFulfillmentEager();
+  }, [id, SF_ACCOUNT_ID, SF_CONTACT_ID]);
+
+  // Eager fetch returns data so tab count shows on page load and tab opens without a second spinner
+  useEffect(() => {
+    if (!id || id === "new" || !SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
+    async function fetchReturnsEager() {
+      try {
+        const res = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&orderId=${encodeURIComponent(id)}&action=returns`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const parsed: ReturnsPreloadedData = {
+          rmaList: data.RMA__c || [],
+          creditMemos: data.Credit_Memo__c || [],
+          debitMemos: data.Debit_Memo__c || [],
+          rtvList: data.RTV__c || [],
+        };
+        setReturnsData(parsed);
+        const isCustomerOrNSO = (
+          selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'customer' ||
+          selectedAccount?.Account_Type__c?.toLowerCase() === 'customer' ||
+          user?.role?.toLowerCase() === 'customer' ||
+          selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'nso' ||
+          selectedAccount?.Account_Type__c?.toLowerCase() === 'nso' ||
+          user?.role?.toLowerCase() === 'nso'
+        );
+        setReturnsCount(parsed.rmaList.length + parsed.creditMemos.length + (isCustomerOrNSO ? 0 : parsed.debitMemos.length + parsed.rtvList.length));
+      } catch { /* silent — count stays 0 */ }
+    }
+    fetchReturnsEager();
+  }, [id, SF_ACCOUNT_ID, SF_CONTACT_ID]);
+
   // Calculate dynamic order totals based on actual products in the order
   // Always calculate from orderProducts to ensure real-time updates when products are added/removed
   const productsSubtotal = orderProducts.reduce((sum, product) => sum + product.subtotal, 0);
@@ -1654,7 +1709,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
               >
-                Taxes
+                Taxes {(!loadingOrder && !!orderData) && "(1)"}
               </button>
               <button
                 onClick={() => setViewMode("fulfillment")}
@@ -1663,7 +1718,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
               >
-                Fulfillment
+                Fulfillment {fulfillmentCount > 0 && `(${fulfillmentCount})`}
               </button>
               <button
                 onClick={() => setViewMode("returns")}
@@ -1672,7 +1727,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                   }`}
               >
-                Returns
+                Returns {returnsCount > 0 && `(${returnsCount})`}
               </button>
               <button
                 onClick={() => setViewMode("files")}
@@ -1750,11 +1805,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             )}
 
             {viewMode === "fulfillment" && (
-              <FulfillmentTab orderId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} />
+              <FulfillmentTab orderId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountChange={setFulfillmentCount} preloadedData={fulfillmentData} />
             )}
 
             {viewMode === "returns" && (
-              <ReturnsTab orderId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} />
+              <ReturnsTab orderId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountChange={setReturnsCount} preloadedData={returnsData} />
             )}
           </div>
         </div>

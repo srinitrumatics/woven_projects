@@ -9,10 +9,20 @@ import { useResizableColumns } from "../../../../hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
 import { usePermissions } from "@/components/PermissionContext";
 
+export interface FulfillmentPreloadedData {
+    invoices: Invoice[];
+    manifests: ShippingManifest[];
+    salesOrders: SalesOrder[];
+    proposals: Proposal[];
+    customerQuotes: CustomerQuote[];
+}
+
 interface FulfillmentTabProps {
     orderId: string;
     accountId: string;
     contactId: string;
+    onCountChange?: (count: number) => void;
+    preloadedData?: FulfillmentPreloadedData | null;
 }
 
 interface Invoice {
@@ -110,7 +120,7 @@ interface CustomerQuote {
 }
 
 
-export default function FulfillmentTab({ orderId, accountId, contactId }: FulfillmentTabProps) {
+export default function FulfillmentTab({ orderId, accountId, contactId, onCountChange, preloadedData }: FulfillmentTabProps) {
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [manifests, setManifests] = useState<ShippingManifest[]>([]);
     const [salesOrders, setSalesOrders] = useState<SalesOrder[]>([]);
@@ -135,7 +145,20 @@ export default function FulfillmentTab({ orderId, accountId, contactId }: Fulfil
 
     const { widths, handleResize } = useResizableColumns({});
 
+    // When preloadedData arrives from the parent, populate state without fetching again
     useEffect(() => {
+        if (preloadedData == null) return;
+        setInvoices(preloadedData.invoices);
+        setManifests(preloadedData.manifests);
+        setSalesOrders(preloadedData.salesOrders);
+        setProposals(preloadedData.proposals);
+        setCustomerQuotes(preloadedData.customerQuotes);
+        setLoading(false);
+    }, [preloadedData]);
+
+    // Self-fetch only when no parent is providing preloadedData (preloadedData === undefined)
+    useEffect(() => {
+        if (preloadedData !== undefined) return;
         async function fetchFulfillment() {
             if (!orderId || !accountId) return;
             try {
@@ -147,11 +170,17 @@ export default function FulfillmentTab({ orderId, accountId, contactId }: Fulfil
                 const data = await res.json();
                 console.log("Fulfillment data:", data);
                 // API returns the whole data object for Fulfillment tab
-                setInvoices(data.Invoice__c || []);
-                setManifests(data.Shipping_Manifest__c || []);
-                setSalesOrders(data.Sales_Order__c || []);
-                setProposals(data.Proposal__c || []);
-                setCustomerQuotes(data.Customer_Quote__c || []);
+                const invoiceData = data.Invoice__c || [];
+                const manifestData = data.Shipping_Manifest__c || [];
+                const salesOrderData = data.Sales_Order__c || [];
+                const proposalData = data.Proposal__c || [];
+                const customerQuoteData = data.Customer_Quote__c || [];
+                setInvoices(invoiceData);
+                setManifests(manifestData);
+                setSalesOrders(salesOrderData);
+                setProposals(proposalData);
+                setCustomerQuotes(customerQuoteData);
+                onCountChange?.(invoiceData.length + manifestData.length + salesOrderData.length + proposalData.length + customerQuoteData.length);
             } catch (e) {
                 console.error("Error fetching fulfillment:", e);
             } finally {
