@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
-import { formatFileSize } from "@/lib/utils/formatting";
+import { formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
 
 export interface FileData {
@@ -338,11 +338,11 @@ export default function ShipmentFilesTab({ shipmentId, accountId, contactId, isE
                                             />
                                         </td>
                                     )}
-                                    <td className="px-2 py-3 text-sm font-medium text-gray-900 dark:text-white truncate" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white truncate">{file.Title}</div></td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{file.FileExtension}</td>
+                                    <td className="px-2 py-3 text-sm font-medium text-gray-900 dark:text-white truncate" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white truncate">{displayCell(file.Title)}</div></td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{displayCell(file.FileExtension)}</td>
                                     <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{formatFileSize(file.FileSize)}</td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{file.CreatedBy}</td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{file.CreatedDate}</td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{displayCell(file.CreatedBy)}</td>
+                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{displayCell(file.CreatedDate)}</td>
                                     <td className="px-2 py-3 truncate">
                                         <div>
                                             <button

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, displayCell } from "@/lib/utils/formatting";
 import { useUserSession } from "@/components/UserSessionContext";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
@@ -255,15 +255,15 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                             <tbody className={tbodyClass}>
                                 {sortedRmaList.map((rma) => (
                                     <tr key={rma.Id} className={trClass}>
-                                        <td className={tdBoldClass}>{rma.Name || "—"}</td>
+                                        <td className={tdBoldClass}>{displayCell(rma.Name)}</td>
                                         <td className="px-4 py-3">{statusBadge(rma.Status__c)}</td>
-                                        <td className={tdClass}>{rma.RMA_Type__c || "—"}</td>
+                                        <td className={tdClass}>{displayCell(rma.RMA_Type__c)}</td>
                                         <td className={tdClass}>{formatDate(rma.Issued_Date__c, "numeric-dash") || "—"}</td>
                                         <td className={tdClass}>{formatDate(rma.Return_by_Date__c, "numeric-dash") || "—"}</td>
-                                        <td className={tdClass}>{rma.Shipping_Method__c || "—"}</td>
-                                        <td className={tdClass}>{rma.Tracking_Number__c || "—"}</td>
-                                        <td className={tdClass}>{rma.Customer_Order_Name || "—"}</td>
-                                        <td className={tdClass}>{rma.Sales_Order_Name || "—"}</td>
+                                        <td className={tdClass}>{displayCell(rma.Shipping_Method__c)}</td>
+                                        <td className={tdClass}>{displayCell(rma.Tracking_Number__c)}</td>
+                                        <td className={tdClass}>{displayCell(rma.Customer_Order_Name)}</td>
+                                        <td className={tdClass}>{displayCell(rma.Sales_Order_Name)}</td>
                                         <td className={`${tdBoldClass} text-right`}>{formatCurrency(rma.Total_Price__c ?? 0)}</td>
                                     </tr>
                                 ))}
@@ -294,13 +294,13 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                             <tbody className={tbodyClass}>
                                 {sortedCreditMemos.map((cm) => (
                                     <tr key={cm.Id} className={trClass}>
-                                        <td className={tdBoldClass}>{cm.Name || "—"}</td>
+                                        <td className={tdBoldClass}>{displayCell(cm.Name)}</td>
                                         <td className="px-4 py-3">{statusBadge(cm.Status__c)}</td>
                                         <td className={tdClass}>{formatDate(cm.Issued_Date__c, "numeric-dash") || "—"}</td>
                                         <td className={tdClass}>{formatDate(cm.Expiration_Date__c, "numeric-dash") || "—"}</td>
-                                        <td className={tdClass}>{cm.Credit_to_Account_Name || "—"}</td>
-                                        <td className={tdClass}>{cm.Invoice_Name || "—"}</td>
-                                        <td className={tdClass}>{cm.Customer_Order_Name || "—"}</td>
+                                        <td className={tdClass}>{displayCell(cm.Credit_to_Account_Name)}</td>
+                                        <td className={tdClass}>{displayCell(cm.Invoice_Name)}</td>
+                                        <td className={tdClass}>{displayCell(cm.Customer_Order_Name)}</td>
                                         <td className={`${tdBoldClass} text-right`}>{formatCurrency(cm.Total_Credit_Amount__c ?? 0)}</td>
                                         <td className={`${tdBoldClass} text-right`}>{formatCurrency(cm.Available_Credit_Balance__c ?? 0)}</td>
                                     </tr>
@@ -333,14 +333,14 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                             <tbody className={tbodyClass}>
                                 {sortedDebitMemos.map((dm) => (
                                     <tr key={dm.Id} className={trClass}>
-                                        <td className={tdBoldClass}>{dm.Name || "—"}</td>
+                                        <td className={tdBoldClass}>{displayCell(dm.Name)}</td>
                                         <td className="px-4 py-3">{statusBadge(dm.Status__c)}</td>
                                         <td className={tdClass}>{formatDate(dm.Issued_Date__c, "numeric-dash") || "—"}</td>
                                         <td className={tdClass}>{formatDate(dm.Settled_Date__c, "numeric-dash") || "—"}</td>
-                                        <td className={tdClass}>{dm.Debit_to_Account_Name || "—"}</td>
-                                        <td className={tdClass}>{dm.Customer_Order_Name || "—"}</td>
-                                        <td className={tdClass}>{dm.Purchase_Order_Name || "—"}</td>
-                                        <td className={tdClass}>{dm.Supplier_Bill_Name || "—"}</td>
+                                        <td className={tdClass}>{displayCell(dm.Debit_to_Account_Name)}</td>
+                                        <td className={tdClass}>{displayCell(dm.Customer_Order_Name)}</td>
+                                        <td className={tdClass}>{displayCell(dm.Purchase_Order_Name)}</td>
+                                        <td className={tdClass}>{displayCell(dm.Supplier_Bill_Name)}</td>
                                         <td className={`${tdBoldClass} text-right`}>{formatCurrency(dm.Total_Debit_Amount__c ?? 0)}</td>
                                         <td className={`${tdBoldClass} text-right`}>{formatCurrency(dm.Available_Debit_Balance__c ?? 0)}</td>
                                     </tr>
@@ -373,15 +373,15 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                             <tbody className={tbodyClass}>
                                 {sortedRtvList.map((rtv) => (
                                     <tr key={rtv.Id} className={trClass}>
-                                        <td className={tdBoldClass}>{rtv.Name || "—"}</td>
+                                        <td className={tdBoldClass}>{displayCell(rtv.Name)}</td>
                                         <td className="px-4 py-3">{statusBadge(rtv.Status__c)}</td>
-                                        <td className={tdClass}>{rtv.RTV_Type__c || "—"}</td>
+                                        <td className={tdClass}>{displayCell(rtv.RTV_Type__c)}</td>
                                         <td className={tdClass}>{formatDate(rtv.Issued_Date__c, "numeric-dash") || "—"}</td>
                                         <td className={tdClass}>{formatDate(rtv.Return_by_Date__c, "numeric-dash") || "—"}</td>
-                                        <td className={tdClass}>{rtv.Supplier_Name || "—"}</td>
-                                        <td className={tdClass}>{rtv.Supplier_RMA_Number__c || "—"}</td>
-                                        <td className={tdClass}>{rtv.Customer_Order_Name || "—"}</td>
-                                        <td className={tdClass}>{rtv.Purchase_Order_Name || "—"}</td>
+                                        <td className={tdClass}>{displayCell(rtv.Supplier_Name)}</td>
+                                        <td className={tdClass}>{displayCell(rtv.Supplier_RMA_Number__c)}</td>
+                                        <td className={tdClass}>{displayCell(rtv.Customer_Order_Name)}</td>
+                                        <td className={tdClass}>{displayCell(rtv.Purchase_Order_Name)}</td>
                                         <td className={`${tdBoldClass} text-right`}>{formatCurrency(rtv.Total_Cost__c ?? 0)}</td>
                                     </tr>
                                 ))}

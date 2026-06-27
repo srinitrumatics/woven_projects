@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { ReturnsData, ReturnsTabType, Return, RMA, RTV, CreditMemo, DebitMemo } from "../../../types";
+import { formatNumber, displayCell } from "@/lib/utils/formatting";
 import { useSortableData } from "../../../../../../hooks/useSortableData";
 import { SortableHeader } from "../../../../../../components/ui/SortableHeader";
 import { useResizableColumns } from "../../../../../../hooks/useResizableColumns";
@@ -229,7 +230,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             return (
                                                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                                     <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={rma.name}>
-                                                        <div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate" title={rma.name}>{rma.name}</div>
+                                                        <div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate" title={rma.name}>{displayCell(rma.name)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-left truncate">
                                                         <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${rma.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
@@ -240,39 +241,39 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                         </span>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate">
-                                                        <div className="text-sm truncate" title={rma.rmaName}>{rma.rmaName}</div>
+                                                        <div className="text-sm truncate" title={rma.rmaName}>{displayCell(rma.rmaName)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rma.salesOrderLineName}
+                                                        {displayCell(rma.salesOrderLineName)}
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {rma.customerQuoteLineName}
+                                                        {displayCell(rma.customerQuoteLineName)}
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        <div className="text-sm truncate" title={rma.reason}>{rma.reason}</div>
+                                                        <div className="text-sm truncate" title={rma.reason}>{displayCell(rma.reason)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        <div className="text-sm truncate" title={rma.productName}>{rma.productName}</div>
+                                                        <div className="text-sm truncate" title={rma.productName}>{displayCell(rma.productName)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        <div className="text-sm max-w-xs truncate" title={rma.productDescription}>{rma.productDescription}</div>
+                                                        <div className="text-sm max-w-xs truncate" title={rma.productDescription}>{displayCell(rma.productDescription)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate">
-                                                        <div className="text-sm truncate" title={rma.manufacturerDBA}>{rma.manufacturerDBA}</div>
+                                                        <div className="text-sm truncate" title={rma.manufacturerDBA}>{displayCell(rma.manufacturerDBA)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                         ${rma.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                     </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[112px] truncate">{rma.returnQty}</td>
+                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[112px] truncate">{formatNumber(rma.returnQty)}</td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                         ${rma.totalAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                     </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[160px] truncate">{rma.openBalanceQty}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{rma.trackingNumber}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[203px] truncate">{rma.estimatedDeliveryDate}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{rma.trackingStatus}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[173px] truncate">{rma.actualDeliveryDate}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[192px] truncate">{rma.goodsReceiptDate}</td>
+                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[160px] truncate">{formatNumber(rma.openBalanceQty)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(rma.trackingNumber)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[203px] truncate">{displayCell(rma.estimatedDeliveryDate)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(rma.trackingStatus)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[173px] truncate">{displayCell(rma.actualDeliveryDate)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[192px] truncate">{displayCell(rma.goodsReceiptDate)}</td>
                                                 </tr>
                                             );
                                         })}
@@ -321,7 +322,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             return (
                                                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                                     <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800  truncate" title={rtv.name}>
-                                                        <div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate">{rtv.name}</div></td>
+                                                        <div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate">{displayCell(rtv.name)}</div></td>
                                                     <td className="px-3 py-2 truncate">
                                                         <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${rtv.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                             'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -329,20 +330,20 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                             {rtv.status}
                                                         </span>
                                                     </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.rtvName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.rtvName}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.purchaseOrderLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.purchaseOrderLineName}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.customerQuoteLineName}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.reason}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.reason}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.productName}><div className="text-sm text-gray-900 dark:text-white truncate">{rtv.productName}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={rtv.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{rtv.productDescription}</div></td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.rtvName}><div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.rtvName)}</div></td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.purchaseOrderLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.purchaseOrderLineName)}</div></td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.customerQuoteLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.customerQuoteLineName)}</div></td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.reason}><div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.reason)}</div></td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.productName}><div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.productName)}</div></td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={rtv.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(rtv.productDescription)}</div></td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate" title={rtv.manufacturerDBA}>
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate">{rtv.manufacturerDBA}
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.manufacturerDBA)}
                                                         </div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                         ${rtv.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                     </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[111px] truncate">{rtv.returnQty}</td>
+                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[111px] truncate">{formatNumber(rtv.returnQty)}</td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                         ${rtv.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                     </td>
@@ -395,7 +396,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             const credit = item as CreditMemo;
                                             return (
                                                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                    <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800 truncate">{credit.name}</td>
+                                                    <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800 truncate">{displayCell(credit.name)}</td>
                                                     <td className="px-3 py-2 truncate">
                                                         <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${credit.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                             'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -403,16 +404,16 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                             {credit.status}
                                                         </span>
                                                     </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.creditMemoName}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.invoiceLineName}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.salesOrderLineName}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{credit.productName}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={credit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{credit.productDescription}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[161px] truncate">{credit.manufacturerDBA}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(credit.creditMemoName)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(credit.invoiceLineName)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(credit.salesOrderLineName)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(credit.productName)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={credit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(credit.productDescription)}</div></td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[161px] truncate">{displayCell(credit.manufacturerDBA)}</td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                         ${credit.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                     </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[116px] truncate">{credit.creditQty}</td>
+                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[116px] truncate">{formatNumber(credit.creditQty)}</td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                         ${credit.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                     </td>
@@ -473,7 +474,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             const debit = item as DebitMemo;
                                             return (
                                                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                    <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate">{debit.name}</td>
+                                                    <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate">{displayCell(debit.name)}</td>
                                                     <td className="px-3 py-2 truncate">
                                                         <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${debit.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                             'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -481,16 +482,16 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                             {debit.status}
                                                         </span>
                                                     </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.debitMemoName}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.supplierBillLineName}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.purchaseOrderLineName}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{debit.productName}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={debit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{debit.productDescription}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate">{debit.manufacturerDBA}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(debit.debitMemoName)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(debit.supplierBillLineName)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(debit.purchaseOrderLineName)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(debit.productName)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={debit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(debit.productDescription)}</div></td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate">{displayCell(debit.manufacturerDBA)}</td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                         ${debit.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                     </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">{debit.debitQty}</td>
+                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">{formatNumber(debit.debitQty)}</td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                         ${debit.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                     </td>
@@ -533,7 +534,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             const r = item as Return;
                                             return (
                                                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                                    <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white font-medium truncate">{item.name}</td>
+                                                    <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white font-medium truncate">{displayCell(item.name)}</td>
                                                     <td className="px-3 py-2 text-left truncate">
                                                         <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
                                                             item.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
@@ -542,7 +543,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                             {item.status}
                                                         </span>
                                                     </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{r.requestDate}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(r.requestDate)}</td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
                                                         ${r.totalAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </td>

@@ -5,6 +5,7 @@ import { useSortableData } from "../../../../hooks/useSortableData";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import Pagination from "../../../../components/ui/Pagination";
 import { useUserSession } from "@/components/UserSessionContext";
+import { displayCell } from "@/lib/utils/formatting";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -212,7 +213,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                 return (
                                     <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate z-10" title={item.name}>
-                                            {item.name}
+                                            {displayCell(item.name)}
                                         </td>
                                         <td className="px-3 py-2 truncate">
                                             <StatusBadge status={item.status} />
@@ -224,28 +225,28 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                     {rma.salesOrderName && rma.salesOrderId && !isRestricted ? (
                                                         <Link href={`/orders/${rma.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.salesOrderName}>{rma.salesOrderName}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.salesOrderName}>{rma.salesOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.salesOrderName}>{displayCell(rma.salesOrderName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {rma.customerQuoteName && rma.customerQuoteId ? (
                                                         <Link href={`/quotes/${rma.customerQuoteId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.customerQuoteName}>{rma.customerQuoteName}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.customerQuoteName}>{rma.customerQuoteName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.customerQuoteName}>{displayCell(rma.customerQuoteName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {rma.customerOrderName && rma.customerOrderId ? (
                                                         <Link href={`/orders/${rma.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.customerOrderName}>{rma.customerOrderName}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.customerOrderName}>{rma.customerOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.customerOrderName}>{displayCell(rma.customerOrderName)}</div>
                                                     )}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.rmaType}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.rmaType}</div></td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.shipFromAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.shipFromAccountName}</div></td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.shipFromContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.shipFromContactName}</div></td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.returnToAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.returnToAccountName}</div></td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.returnToContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{rma.returnToContactName}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.rmaType}><div className="text-sm text-gray-900 dark:text-white truncate ">{displayCell(rma.rmaType)}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.shipFromAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{displayCell(rma.shipFromAccountName)}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.shipFromContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{displayCell(rma.shipFromContactName)}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.returnToAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{displayCell(rma.returnToAccountName)}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.returnToContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{displayCell(rma.returnToContactName)}</div></td>
                                                 <td className="px-3 py-2 min-w-[103px] truncate">
                                                     <span className={`inline-flex text-sm font-medium rounded ${rma.dropShip
                                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
@@ -262,16 +263,16 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
                                                     ${rma.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.issuedDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.returnByDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.shippingMethod}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.logisticsPartner}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.logisticsContact}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.trackingNumber}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[198px] truncate">{rma.estimatedDeliveryDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rma.trackingStatus}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[173px] truncate">{rma.actualDeliveryDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[199px] truncate">{rma.goodsReceiptDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rma.issuedDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rma.returnByDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rma.shippingMethod)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rma.logisticsPartner)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rma.logisticsContact)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rma.trackingNumber)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[198px] truncate">{displayCell(rma.estimatedDeliveryDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rma.trackingStatus)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[173px] truncate">{displayCell(rma.actualDeliveryDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[199px] truncate">{displayCell(rma.goodsReceiptDate)}</td>
                                             </>
                                         ) : activeTab === 'rtv' ? (
                                             <>
@@ -279,29 +280,29 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                     {rtv.purchaseOrderName && rtv.purchaseOrderId ? (
                                                         <Link href={`/purchase-orders/${rtv.purchaseOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.purchaseOrderName}>{rtv.purchaseOrderName}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rtv.purchaseOrderName}>{rtv.purchaseOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rtv.purchaseOrderName}>{displayCell(rtv.purchaseOrderName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {rtv.customerQuoteName && rtv.customerQuoteId ? (
                                                         <Link href={`/quotes/${rtv.customerQuoteId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.customerQuoteName}>{rtv.customerQuoteName}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rtv.customerQuoteName}>{rtv.customerQuoteName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rtv.customerQuoteName}>{displayCell(rtv.customerQuoteName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {rtv.customerOrderName && rtv.customerOrderId ? (
                                                         <Link href={`/orders/${rtv.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rtv.customerOrderName}>{rtv.customerOrderName}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rtv.customerOrderName}>{rtv.customerOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rtv.customerOrderName}>{displayCell(rtv.customerOrderName)}</div>
                                                     )}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.rtvType}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.rmaNumber}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.shipFromAccountName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.shipFromContactName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.supplierName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{rtv.supplierContact}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(rtv.rtvType)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(rtv.rmaNumber)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(rtv.shipFromAccountName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(rtv.shipFromContactName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(rtv.supplierName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(rtv.supplierContact)}</td>
                                                 <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[115px] truncate">
                                                     <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
                                                         {(rtv.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -310,9 +311,9 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
                                                     ${rtv.totalCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rtv.issuedDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rtv.approvalDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{rtv.returnByDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rtv.issuedDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rtv.approvalDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rtv.returnByDate)}</td>
                                             </>
                                         ) : activeTab === 'credit' ? (
                                             <>
@@ -320,25 +321,25 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                     {credit.invoiceName && credit.invoiceId ? (
                                                         <Link href={`/invoices/${credit.invoiceId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.invoiceName}>{credit.invoiceName}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.invoiceName}>{credit.invoiceName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.invoiceName}>{displayCell(credit.invoiceName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {credit.customerQuoteName && credit.customerQuoteId ? (
                                                         <Link href={`/quotes/${credit.customerQuoteId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.customerQuoteName}>{credit.customerQuoteName}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.customerQuoteName}>{credit.customerQuoteName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.customerQuoteName}>{displayCell(credit.customerQuoteName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {credit.customerOrderName && credit.customerOrderId ? (
                                                         <Link href={`/orders/${credit.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.customerOrderName}>{credit.customerOrderName}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.customerOrderName}>{credit.customerOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.customerOrderName}>{displayCell(credit.customerOrderName)}</div>
                                                     )}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{credit.creditToAccountName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{credit.creditToContactName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(credit.creditToAccountName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(credit.creditToContactName)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[125px] truncate">
                                                     <span className="inline-flex items-center justify-center h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
                                                         {(credit.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -356,12 +357,12 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold min-w-[176px] truncate">
                                                     ${credit.totalCreditAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{credit.issuedDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{credit.expirationDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(credit.issuedDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(credit.expirationDate)}</td>
                                                 <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[201px] truncate">
                                                     ${credit.availableCreditBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{credit.settledDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(credit.settledDate)}</td>
                                             </>
                                         ) : (
                                             <>
@@ -371,27 +372,27 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                             {debit.supplierBillName && debit.supplierBillId ? (
                                                                 <Link href={`/supplier-bills/${debit.supplierBillId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.supplierBillName}>{debit.supplierBillName}</Link>
                                                             ) : (
-                                                                <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.supplierBillName}>{debit.supplierBillName}</div>
+                                                                <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.supplierBillName}>{displayCell(debit.supplierBillName)}</div>
                                                             )}
                                                         </td>
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                             {debit.purchaseOrderName && debit.purchaseOrderId ? (
                                                                 <Link href={`/purchase-orders/${debit.purchaseOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.purchaseOrderName}>{debit.purchaseOrderName}</Link>
                                                             ) : (
-                                                                <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.purchaseOrderName}>{debit.purchaseOrderName}</div>
+                                                                <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.purchaseOrderName}>{displayCell(debit.purchaseOrderName)}</div>
                                                             )}
                                                         </td>
                                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                             {debit.customerOrderName && debit.customerOrderId ? (
                                                                 <Link href={`/orders/${debit.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={debit.customerOrderName}>{debit.customerOrderName}</Link>
                                                             ) : (
-                                                                <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.customerOrderName}>{debit.customerOrderName}</div>
+                                                                <div className="text-sm text-gray-900 dark:text-white truncate" title={debit.customerOrderName}>{displayCell(debit.customerOrderName)}</div>
                                                             )}
                                                         </td>
 
-                                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[190px] truncate">{debit.supplierCreditMemoName}</td>
-                                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{debit.debitToAccountName}</td>
-                                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{debit.debitToContactName}</td>
+                                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[190px] truncate">{displayCell(debit.supplierCreditMemoName)}</td>
+                                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(debit.debitToAccountName)}</td>
+                                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(debit.debitToContactName)}</td>
                                                         <td className="px-3 py-2  text-sm text-gray-900 dark:text-white min-w-[110px] truncate">
                                                             <span className="inline-flex items-center justify-center min-w-[32px] px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
                                                                 {(debit.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -406,12 +407,12 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                         <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold min-w-[171px] truncate">
                                                             ${debit.totalDebitAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                         </td>
-                                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{debit.issuedDate}</td>
-                                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{debit.approvalDate}</td>
+                                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(debit.issuedDate)}</td>
+                                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(debit.approvalDate)}</td>
                                                         <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[199px] truncate">
                                                             ${debit.availableDebitBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                         </td>
-                                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{debit.settledDate}</td>
+                                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(debit.settledDate)}</td>
                                                     </>
                                                 )}
                                             </>

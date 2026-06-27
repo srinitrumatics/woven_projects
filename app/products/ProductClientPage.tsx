@@ -18,7 +18,7 @@ import {
   useInstantSearch,
   usePagination
 } from "react-instantsearch";
-import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
+import { formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 import { Product } from "../orders/types";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
@@ -678,14 +678,14 @@ function ListView({ products, canEditProduct, onEdit }: ViewProps) {
                     <td className="px-4 py-3 overflow-hidden" style={{ width: widths.name, minWidth: widths.name, maxWidth: widths.name }}>
                       <Link href={`/products/${p.objectID || product.id}`} className="block" title={product.name}>
                         <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">{product.name}</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400 font-mono truncate">{product.sku}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400 font-mono truncate">{displayCell(product.sku)}</div>
                       </Link>
                     </td>
                     <td className="px-4 py-3 overflow-hidden" style={{ width: widths.category, minWidth: widths.category, maxWidth: widths.category }}>
                       <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary max-w-full truncate" title={category}>{category}</span>
                     </td>
                     <td className="px-4 py-3 overflow-hidden hidden md:table-cell" style={{ width: widths.description, minWidth: widths.description, maxWidth: widths.description }}>
-                      <div className="text-sm text-gray-600 dark:text-gray-400 truncate" title={product.description || ''}>{product.description}</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400 truncate" title={displayCell(product.description)}>{displayCell(product.description)}</div>
                     </td>
                     <td className="px-4 py-3 text-sm text-left text-gray-500 dark:text-gray-400 line-through hidden sm:table-cell" style={{ width: widths.listPrice, minWidth: widths.listPrice }}>{formatCurrency(listPrice)}</td>
                     <td className="px-4 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold" style={{ width: widths.sellingPrice, minWidth: widths.sellingPrice }}>{formatCurrency(sellingPrice)}</td>

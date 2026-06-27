@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { QuoteFile } from "@/app/quotes/types";
-import { formatDate, formatFileSize } from "@/lib/utils/formatting";
+import { formatDate, formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useToast } from "@/components/ui/Toast";
@@ -243,14 +243,14 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
                                     </div>
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.fileType }}>
-                                    {file.fileType?.toUpperCase() || 'N/A'}
+                                    {displayCell(file.fileType?.toUpperCase())}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.fileSize }}>
                                     {formatFileSize(file.sizeInBytes)}
                                 </td>
                                 <td className="px-3 py-2 truncate" style={{ width: widths.uploadedBy }}>
                                     <div className="text-sm text-gray-900 dark:text-white"title={file.uploadedBy}>
-                                        {file.uploadedBy}
+                                        {displayCell(file.uploadedBy)}
                                     </div>
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.uploadedDate }}>

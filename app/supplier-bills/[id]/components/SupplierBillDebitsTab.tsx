@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { DebitMemo } from '../../types';
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -72,7 +72,7 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                         {paginatedData.map((debit) => (
                             <tr key={debit.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={debit.name}>
-                                    {debit.name}
+                                    {displayCell(debit.name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm truncate">
                                     <StatusBadge status={debit.status} />

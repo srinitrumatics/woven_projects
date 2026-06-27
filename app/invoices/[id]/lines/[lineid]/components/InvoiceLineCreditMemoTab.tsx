@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatCurrency } from "@/lib/utils/formatting";
+import { formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 
 interface CreditMemoLine {
     id: string;
@@ -136,21 +136,21 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                         {sortedData.map((item) => (
                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700">
                                 {/* Sticky column — z-10, inherits row bg */}
-                                <td className="px-3 py-2 text-sm text-left sticky left-0 bg-white dark:bg-gray-800  truncate">{item.lineName}</td>
+                                <td className="px-3 py-2 text-sm text-left sticky left-0 bg-white dark:bg-gray-800  truncate">{displayCell(item.lineName)}</td>
                                 <td className="px-3 py-2 text-sm truncate">
                                     <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
                                         {item.status}
                                     </span>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.creditMemoName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.invoiceLine}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.salesOrderLine}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.customerQuoteLine}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.productName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{item.description}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.manufacturerDBA}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.creditMemoName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.invoiceLine)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.salesOrderLine)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.customerQuoteLine)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.productName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{displayCell(item.description)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.manufacturerDBA)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate ">{formatCurrency(item.unitPrice)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.creditQty}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatNumber(item.creditQty)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalPrice)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>

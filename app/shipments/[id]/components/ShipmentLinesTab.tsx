@@ -4,7 +4,7 @@ import { useEffect, useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { SortableHeader } from "@/components/ui/SortableHeader";
-import { formatCurrency, formatDate, formatNumber } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 
@@ -251,20 +251,20 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                             </td>
                             <TextCell v={<StatusBadge status={line.status} />} w={widths.status} title={line.status} />
                             <TextCell
-                                v={line.shippingManifestName || " "}
+                                v={displayCell(line.shippingManifestName)}
                                 w={widths.shippingManifestName}
                             />
                             <TextCell
-                                v={line.salesOrderLineName || " "}
+                                v={displayCell(line.salesOrderLineName)}
                                 w={widths.salesOrderLineName}
                             />
                             <TextCell
-                                v={line.customerQuoteLineName || " "}
+                                v={displayCell(line.customerQuoteLineName)}
                                 w={widths.customerQuoteLineName}
                             />
-                            <TextCell v={line.productName} w={widths.productName} />
-                            <TextCell v={line.productDescription} w={widths.productDescription} />
-                            <TextCell v={line.manufacturerDBA} w={widths.manufacturerDBA} />
+                            <TextCell v={displayCell(line.productName)} w={widths.productName} />
+                            <TextCell v={displayCell(line.productDescription)} w={widths.productDescription} />
+                            <TextCell v={displayCell(line.manufacturerDBA)} w={widths.manufacturerDBA} />
                             <NumCell v={formatCurrency(line.unitPrice)} w={widths.unitPrice} />
                             <NumCell v={fmt(line.totalOrderQty, 0)} w={widths.totalOrderQty} />
                             <NumCell v={formatCurrency(line.totalPrice)} w={widths.totalPrice} />
@@ -275,10 +275,10 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                             <NumCell v={fmt(line.boxHeight)} w={widths.boxHeight} />
                             <NumCell v={fmt(line.boxNetWeight)} w={widths.boxNetWeight} />
                             <NumCell v={fmt(line.boxGrossWeight)} w={widths.boxGrossWeight} />
-                            <TextCell v={line.trackingNumber ?? ""} w={widths.trackingNumber} />
-                            <TextCell v={line.trackingStatus ?? ""} w={widths.trackingStatus} />
-                            <TextCell v={fmtDate(line.estimatedDeliveryDate)} w={widths.estimatedDeliveryDate} />
-                            <TextCell v={fmtDate(line.actualDeliveryDate)} w={widths.actualDeliveryDate} />
+                            <TextCell v={displayCell(line.trackingNumber)} w={widths.trackingNumber} />
+                            <TextCell v={displayCell(line.trackingStatus)} w={widths.trackingStatus} />
+                            <TextCell v={displayCell(fmtDate(line.estimatedDeliveryDate))} w={widths.estimatedDeliveryDate} />
+                            <TextCell v={displayCell(fmtDate(line.actualDeliveryDate))} w={widths.actualDeliveryDate} />
                             {/* Action */}
                             <td className="px-3 py-2 text-center" style={{ width: widths.action }}>
                                 <Link

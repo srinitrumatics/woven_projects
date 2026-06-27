@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { SupplierBillLine } from "../../types";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -93,17 +93,17 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                                     <StatusBadge status={line.status} />
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.supplierBillName}>
-                                    {line.supplierBillName || '-'}
+                                    {displayCell(line.supplierBillName)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.customerQuoteLineName}>
-                                    {line.customerQuoteLineName || ''}
+                                    {displayCell(line.customerQuoteLineName)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.purchaseOrderLineName}>
-                                    {line.purchaseOrderLineName || ''}
+                                    {displayCell(line.purchaseOrderLineName)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{line.productName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{line.productDescription}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{line.manufacturerDBA || '-'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(line.productName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{displayCell(line.productDescription)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(line.manufacturerDBA)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.unitCost)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{line.billedQty}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.billAmount)}</td>

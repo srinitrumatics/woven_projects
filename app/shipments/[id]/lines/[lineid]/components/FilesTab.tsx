@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatDate, formatFileSize } from "@/lib/utils/formatting";
+import { formatDate, formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
 
 interface FileData {
@@ -194,19 +194,19 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
                     {sortedFiles.map((file) => (
                         <tr key={file.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate" title={file.Title}>
-                                {file.Title}
+                                {displayCell(file.Title)}
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.FileExtension}>
-                                {file.FileExtension}
+                                {displayCell(file.FileExtension)}
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                                 {formatFileSize(file.FileSize)}
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.CreatedBy}>
-                                {file.CreatedBy}
+                                {displayCell(file.CreatedBy)}
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.CreatedDate ? formatDate(file.CreatedDate) : ""}>
-                                {file.CreatedDate ? formatDate(file.CreatedDate) : ""}
+                                {displayCell(file.CreatedDate ? formatDate(file.CreatedDate) : "")}
                             </td>
                             <td className="px-3 py-2 text-sm truncate">
                                 <div className="flex items-center gap-2 min-w-0">

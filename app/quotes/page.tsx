@@ -5,7 +5,7 @@ import Link from"next/link";
 import { useRouter } from"next/navigation";
 import Sidebar from"@/components/layouts/Sidebar";
 import Pagination from"@/components/ui/Pagination";
-import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import { formatCurrency, formatDate, displayCell } from"@/lib/utils/formatting";
 import { Quote, QuoteStatus } from"./types";
 import { SortableHeader } from"@/components/ui/SortableHeader";
 import { useSortableData } from"@/hooks/useSortableData";
@@ -507,10 +507,10 @@ export default function QuotesPage() {
                               {quote.proposalName}
                             </Link>
                           ) : (
-                            <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{quote.proposalName}</div>
+                            <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{displayCell(quote.proposalName)}</div>
                           )
                         ) : (
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{quote.proposalName}</div>
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{displayCell(quote.proposalName)}</div>
                         )}
                       </td>
                       <td className="px-3 py-2  text-left truncate">
@@ -527,10 +527,10 @@ export default function QuotesPage() {
                               {quote.customerOrder}
                             </Link>
                           ) : (
-                            <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerOrder}>{quote.customerOrder}</div>
+                            <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerOrder}>{displayCell(quote.customerOrder)}</div>
                           )
                         ) : (
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerOrder}>{quote.customerOrder}</div>
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerOrder}>{displayCell(quote.customerOrder)}</div>
                         )}
                       </td>
                       <td className="px-3 py-2  text-left truncate">
@@ -547,17 +547,17 @@ export default function QuotesPage() {
                               {quote.customerPO}
                             </Link>
                           ) : (
-                            <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerPO}>{quote.customerPO}</div>
+                            <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerPO}>{displayCell(quote.customerPO)}</div>
                           )
                         ) : (
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerPO}>{quote.customerPO}</div>
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerPO}>{displayCell(quote.customerPO)}</div>
                         )}
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400"title={quote.billToAccountName}>{quote.billToAccountName}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400"title={quote.billToAccountName}>{displayCell(quote.billToAccountName)}</div>
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400"title={quote.shipToAccountName}>{quote.shipToAccountName}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400"title={quote.shipToAccountName}>{displayCell(quote.shipToAccountName)}</div>
                       </td>
                       <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{quote.totalLines}</td>
                       <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(quote.totalAmount)}</td>

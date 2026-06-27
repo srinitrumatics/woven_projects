@@ -1,5 +1,6 @@
 import { Project, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
+import { displayCell } from "@/lib/utils/formatting";
 
 interface ProjectsTabProps {
     projects: Project[];
@@ -55,7 +56,7 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                             {projects.map((project) => (
                                 <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate">
-                                        {project.projectNumber}
+                                        {displayCell(project.projectNumber)}
                                     </td>
                                     <td className="px-3 py-2 truncate">
                                         <span className={`inline-block px-2 py-0.5 text-xs font-bold rounded-full ${project.status === 'New' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
@@ -67,15 +68,15 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                                             {project.status}
                                         </span>
                                     </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.name}>{project.name}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.customerAccountName}>{project.customerAccountName}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.customerContactName}>{project.customerContactName}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.name}>{displayCell(project.name)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.customerAccountName}>{displayCell(project.customerAccountName)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.customerContactName}>{displayCell(project.customerContactName)}</td>
                                     <td className="px-3 py-2 truncate">
                                         <span className="inline-block px-2 py-0.5 text-xs font-bold rounded-full bg-primary/10 text-primary truncate">
                                             {project.billingType}
                                         </span>
                                     </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.projectManagerName}>{project.projectManagerName}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={project.projectManagerName}>{displayCell(project.projectManagerName)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">
                                         ${project.estimatedBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
@@ -104,8 +105,8 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                                             <span className="text-xs text-gray-400 truncate font-medium">-</span>
                                         )}
                                     </td>
-                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{project.estimatedStartDate}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{project.estimatedEndDate}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(project.estimatedStartDate)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(project.estimatedEndDate)}</td>
                                 </tr>
                             ))}
                         </tbody>

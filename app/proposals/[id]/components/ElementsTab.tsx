@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { ProposalElement, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import Pagination from "../../../../components/ui/Pagination";
+import { displayCell } from "@/lib/utils/formatting";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -66,14 +67,14 @@ export default function ElementsTab({ elements, sortField, sortDirection, onSort
                             <tr key={element.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                 <td className="px-3 py-2 text-left truncate">
                                     <span className="inline-block px-2 py-0.5 text-xs font-bold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 truncate">
-                                        {element.wbs}
+                                        {displayCell(element.wbs)}
                                     </span>
                                 </td>
                                 <td className="px-3 py-2 truncate" title={element.proposalElement}>
-                                    <div className="text-sm font-medium text-gray-900 dark:text-white truncate">{element.proposalElement}</div>
+                                    <div className="text-sm font-medium text-gray-900 dark:text-white truncate">{displayCell(element.proposalElement)}</div>
                                 </td>
                                 <td className="px-3 py-2 truncate" title={element.description}>
-                                    <div className="text-sm text-gray-600 dark:text-gray-400 truncate">{element.description}</div>
+                                    <div className="text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(element.description)}</div>
                                 </td>
                             </tr>
                         ))}

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { SortableHeader } from "@/components/ui/SortableHeader";
-import { formatDate } from "@/lib/utils/formatting";
+import { formatDate, displayCell } from "@/lib/utils/formatting";
 import Link from "next/link";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -182,23 +182,23 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                             <td className="px-3 py-2 font-medium text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }} title={log.name}>
                                 {log.name}
                             </td>
-                            <TextCell v={log.serialNumber} w={widths.serialNumber} />
-                            <TextCell v={log.productSerialNumber} w={widths.productSerialNumber} />
-                            <TextCell v={log.productName} w={widths.productName} />
-                            <TextCell v={log.productDescription} w={widths.productDescription} />
+                            <TextCell v={displayCell(log.serialNumber)} w={widths.serialNumber} />
+                            <TextCell v={displayCell(log.productSerialNumber)} w={widths.productSerialNumber} />
+                            <TextCell v={displayCell(log.productName)} w={widths.productName} />
+                            <TextCell v={displayCell(log.productDescription)} w={widths.productDescription} />
                             <TextCell
                                 v={log.shippingManifestId ? (
                                     <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
                                         {log.shippingManifest || "View Manifest"}
                                     </Link>
                                 ) : (
-                                    log.shippingManifest || " "
+                                    displayCell(log.shippingManifest)
                                 )}
                                 w={widths.shippingManifest}
                             />
-                            <TextCell v={log.shippingManifestLine} w={widths.shippingManifestLine} />
-                            <TextCell v={formatDate(log.shipDate, "numeric-dash")} w={widths.shipDate} />
-                            <TextCell v={log.shipToAccount || ""} w={widths.shipToAccount} />
+                            <TextCell v={displayCell(log.shippingManifestLine)} w={widths.shippingManifestLine} />
+                            <TextCell v={displayCell(formatDate(log.shipDate, "numeric-dash"))} w={widths.shipDate} />
+                            <TextCell v={displayCell(log.shipToAccount)} w={widths.shipToAccount} />
                             <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: widths.active }}>
                                 {log.active === true || log.active === "true" || log.active === "True" ? (
                                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 truncate">

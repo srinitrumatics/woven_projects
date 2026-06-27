@@ -1,6 +1,6 @@
 import { QuoteShippingManifest } from"@/app/quotes/types";
 import { SortableHeader } from"@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 import Link from"next/link";
 import Pagination from"@/components/ui/Pagination";
 import { useState, useMemo } from "react";
@@ -103,7 +103,7 @@ export default function QuoteShippingManifestsSubTab({
                                             <StatusBadge status={manifest.status} />
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>
-                                            {manifest.salesOrder}
+                                            {displayCell(manifest.salesOrder)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {manifest.customerQuoteId ? (
@@ -111,8 +111,8 @@ export default function QuoteShippingManifestsSubTab({
                                                     <Link href={`/quotes/${manifest.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {manifest.customerQuote}
                                                     </Link>
-                                                ) : manifest.customerQuote
-                                            ) : manifest.customerQuote}
+                                                ) : displayCell(manifest.customerQuote)
+                                            ) : displayCell(manifest.customerQuote)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {manifest.customerOrderId ? (
@@ -120,25 +120,25 @@ export default function QuoteShippingManifestsSubTab({
                                                     <Link href={`/orders/${manifest.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {manifest.customerOrder}
                                                     </Link>
-                                                ) : manifest.customerOrder
-                                            ) : manifest.customerOrder}
+                                                ) : displayCell(manifest.customerOrder)
+                                            ) : displayCell(manifest.customerOrder)}
                                         </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{manifest.customerPO}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToAccount }}>{manifest.shipToAccount}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToLocation }}>{manifest.shipToLocation}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToContact }}>{manifest.shipToContact}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{displayCell(manifest.customerPO)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToAccount }}>{displayCell(manifest.shipToAccount)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToLocation }}>{displayCell(manifest.shipToLocation)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToContact }}>{displayCell(manifest.shipToContact)}</td>
                                         <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.dropShip }}>{manifest.dropShip ? 'Yes' : 'No'}</td>
-                                        <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.boxCount }}>{manifest.boxCount}</td>
+                                        <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.boxCount }}>{formatNumber(manifest.boxCount)}</td>
                                         <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.boxNetWeight }}>{manifest.boxNetWeight} kg</td>
                                         <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.boxGrossWeight }}>{manifest.boxGrossWeight} kg</td>
-                                        <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{manifest.totalLines}</td>
+                                        <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{formatNumber(manifest.totalLines)}</td>
                                         <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(manifest.totalPrice)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.plannedShipDate }}>{formatDate(manifest.plannedShipDate, 'numeric-dash')}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipConfirmedDate }}>{formatDate(manifest.shipConfirmedDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shippingMethod }}>{manifest.shippingMethod}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsPartner }}>{manifest.logisticsPartner}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsContact }}>{manifest.logisticsContact}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingNumber }}>{manifest.trackingNumber}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shippingMethod }}>{displayCell(manifest.shippingMethod)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsPartner }}>{displayCell(manifest.logisticsPartner)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsContact }}>{displayCell(manifest.logisticsContact)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingNumber }}>{displayCell(manifest.trackingNumber)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(manifest.estimatedDeliveryDate, 'numeric-dash')}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingStatus }}>
                                             <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${manifest.trackingStatus === 'Delivered' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'

@@ -1,5 +1,5 @@
 import { useState, useMemo } from"react";
-import { formatDate, formatFileSize } from"@/lib/utils/formatting";
+import { formatDate, formatFileSize, displayCell } from"@/lib/utils/formatting";
 import { SortableHeader } from"@/components/ui/SortableHeader";
 import { useResizableColumns } from"@/hooks/useResizableColumns";
 import Pagination from"@/components/ui/Pagination";
@@ -204,14 +204,14 @@ export default function QuoteLineFilesTab({ lineId, accountId, contactId, files,
                                         </div>
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.fileType }}>
-                                        {file.fileType?.toUpperCase() || 'N/A'}
+                                        {displayCell(file.fileType?.toUpperCase())}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.fileSize }}>
                                         {formatFileSize(file.sizeInBytes)}
                                     </td>
                                     <td className="px-3 py-2 truncate" style={{ width: widths.uploadedBy }}>
                                         <div className="text-sm text-gray-900 dark:text-white"title={file.uploadedBy}>
-                                            {file.uploadedBy}
+                                            {displayCell(file.uploadedBy)}
                                         </div>
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.uploadedDate }}>

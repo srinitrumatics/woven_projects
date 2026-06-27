@@ -5,7 +5,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, displayCell } from "@/lib/utils/formatting";
 import Link from 'next/link';
 
 interface SupplierBillLine {
@@ -137,29 +137,29 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                         <Link href={`/supplier-bills/${line.Supplier_Bill__c}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {line.Supplier_Bill_Name || ''}
                                         </Link>
-                                    ) : (line.Supplier_Bill_Name || '-')}
+                                    ) : displayCell(line.Supplier_Bill_Name)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || '-'}>
-                                    {line.Customer_Quote_Line_Name || ''}
+                                    {displayCell(line.Customer_Quote_Line_Name)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Purchase_Order_Line_Name || '-'}>
-                                    {line.Purchase_Order_Line_Name || ''}
+                                    {displayCell(line.Purchase_Order_Line_Name)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>
-                                    {line.Product_Name || '-'}
+                                    {displayCell(line.Product_Name)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || '-'}>
-                                    {line.Product_Description__c || '-'}
+                                    {displayCell(line.Product_Description__c)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Manufacturer_DBA__c || '-'}>
-                                    {line.Manufacturer_DBA__c || '-'}
+                                    {displayCell(line.Manufacturer_DBA__c)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={String(line.Billed_Qty__c || 0)}>{line.Billed_Qty__c || 0}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left truncate" title={formatCurrency(line.BillAmount__c || 0)}>{formatCurrency(line.BillAmount__c || 0)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Shipping_Charges__c || 0)}>{formatCurrency(line.Shipping_Charges__c || 0)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left truncate" title={formatCurrency(line.Total_Bill_Amount__c || 0)}>{formatCurrency(line.Total_Bill_Amount__c || 0)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Goods_Receipt_Date__c ? formatDate(line.Goods_Receipt_Date__c, 'numeric-dash') : ' '}>{line.Goods_Receipt_Date__c ? formatDate(line.Goods_Receipt_Date__c, 'numeric-dash') : ' '}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Goods_Receipt_Date__c ? formatDate(line.Goods_Receipt_Date__c, 'numeric-dash') : '-'}>{line.Goods_Receipt_Date__c ? formatDate(line.Goods_Receipt_Date__c, 'numeric-dash') : displayCell(undefined)}</td>
                             </tr>
                         ))}
                     </tbody>

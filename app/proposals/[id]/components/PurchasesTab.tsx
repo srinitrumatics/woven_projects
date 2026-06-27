@@ -5,6 +5,7 @@ import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import Pagination from "../../../../components/ui/Pagination";
 import { useUserSession } from "../../../../components/UserSessionContext";
+import { displayCell } from "@/lib/utils/formatting";
 
 interface PurchasesTabProps {
     purchases: PurchaseOrder[];
@@ -169,7 +170,7 @@ export default function PurchasesTab({
                                                             {purchase.customerQuoteName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.customerQuoteName}>{purchase.customerQuoteName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.customerQuoteName}>{displayCell(purchase.customerQuoteName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
@@ -184,7 +185,7 @@ export default function PurchasesTab({
                                                             {purchase.customerOrderName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.customerOrderName}>{purchase.customerOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.customerOrderName}>{displayCell(purchase.customerOrderName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
@@ -199,15 +200,15 @@ export default function PurchasesTab({
                                                             {purchase.customerPO}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.customerPO}>{purchase.customerPO}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.customerPO}>{displayCell(purchase.customerPO)}</div>
                                                     )}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.supplierName}>{purchase.supplierName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.supplierDBA}>{purchase.supplierDBA}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.supplierContact}>{purchase.supplierContact}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.shipToAccountName}>{purchase.shipToAccountName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.shipToLocationName}>{purchase.shipToLocationName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.shipToContactName}>{purchase.shipToContactName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.supplierName}>{displayCell(purchase.supplierName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.supplierDBA}>{displayCell(purchase.supplierDBA)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.supplierContact}>{displayCell(purchase.supplierContact)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.shipToAccountName}>{displayCell(purchase.shipToAccountName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.shipToLocationName}>{displayCell(purchase.shipToLocationName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.shipToContactName}>{displayCell(purchase.shipToContactName)}</td>
                                                 <td className="px-3 py-2 truncate">
                                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${purchase.dropShip
                                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
@@ -230,18 +231,18 @@ export default function PurchasesTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
                                                     ${purchase.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.issuedDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.acknowledgedDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.requestDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.promiseDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.shippingMethod}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.logisticsPartner}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.logisticsContact}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.trackingNumber}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.estimatedDeliveryDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.trackingStatus}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.actualDeliveryDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{purchase.goodsReceiptsDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.issuedDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.acknowledgedDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.requestDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.promiseDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.shippingMethod)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.logisticsPartner)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.logisticsContact)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.trackingNumber)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.estimatedDeliveryDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.trackingStatus)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.actualDeliveryDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.goodsReceiptsDate)}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -320,7 +321,7 @@ export default function PurchasesTab({
                                                             {bill.purchaseOrderName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.purchaseOrderName}>{bill.purchaseOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.purchaseOrderName}>{displayCell(bill.purchaseOrderName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
@@ -335,7 +336,7 @@ export default function PurchasesTab({
                                                             {bill.customerQuoteName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.customerQuoteName}>{bill.customerQuoteName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.customerQuoteName}>{displayCell(bill.customerQuoteName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
@@ -350,12 +351,12 @@ export default function PurchasesTab({
                                                             {bill.customerOrderName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.customerOrderName}>{bill.customerOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.customerOrderName}>{displayCell(bill.customerOrderName)}</div>
                                                     )}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={bill.supplierName}>{bill.supplierName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={bill.supplierDBA}>{bill.supplierDBA}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={bill.supplierContact}>{bill.supplierContact}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={bill.supplierName}>{displayCell(bill.supplierName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={bill.supplierDBA}>{displayCell(bill.supplierDBA)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={bill.supplierContact}>{displayCell(bill.supplierContact)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
                                                         {bill.totalLines}
@@ -370,15 +371,15 @@ export default function PurchasesTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
                                                     ${bill.totalAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{bill.billedDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{bill.paymentTerms}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{bill.dueDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{bill.remittanceStatus}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.billedDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(bill.paymentTerms)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.dueDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.remittanceStatus)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
                                                     ${bill.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 py-2 text-center text-sm text-gray-600 dark:text-gray-400 truncate">{bill.daysOutstanding}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{bill.settledDate}</td>
+                                                <td className="px-3 py-2 text-center text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(String(bill.daysOutstanding ?? ''))}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.settledDate)}</td>
                                             </tr>
                                         ))}
                                     </tbody>

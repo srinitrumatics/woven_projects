@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
 import { PurchaseOrder, POStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
@@ -370,8 +370,8 @@ export default function PurchaseOrdersPage() {
                                                     po.shipmentName || '-'
                                                 )}
                                             </td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.shipToAccountName || '-'}>{po.shipToAccountName || '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.shipToLocationName || '-'}>{po.shipToLocationName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.shipToAccountName)}>{displayCell(po.shipToAccountName)}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.shipToLocationName)}>{displayCell(po.shipToLocationName)}</td>
                                             <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-medium truncate" title={String(po.totalLines || 0)}>{po.totalLines || 0}</td>
                                             <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" title={formatCurrency(po.totalCost)}>{formatCurrency(po.totalCost)}</td>
                                             <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}>{po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}</td>

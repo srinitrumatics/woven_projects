@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { SortableHeader } from "@/components/ui/SortableHeader";
-import { formatCurrency, formatDate, formatNumber } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -231,31 +231,31 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                             <td className="px-3 py-2 text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
                                 <span className="truncate block" title={item.name}>{item.name}</span>
                             </td>
-                            <TC v={fmtDate(item.receivedDate)} w={widths.receivedDate} />
+                            <TC v={displayCell(fmtDate(item.receivedDate))} w={widths.receivedDate} />
                             <TC v={`${formatNumber(item.daysInInventory, 0)} Days`} w={widths.daysInInventory} />
-                            <TC v={item.productName} w={widths.productName} />
-                            <TC v={item.productDescription} w={widths.productDescription} />
-                            <TC v={item.manufacturerDBA} w={widths.manufacturerDBA} />
-                            <TC v={item.supplierName} w={widths.supplierName} />
+                            <TC v={displayCell(item.productName)} w={widths.productName} />
+                            <TC v={displayCell(item.productDescription)} w={widths.productDescription} />
+                            <TC v={displayCell(item.manufacturerDBA)} w={widths.manufacturerDBA} />
+                            <TC v={displayCell(item.supplierName)} w={widths.supplierName} />
                             <TC
                                 v={item.purchaseOrderId ? (
                                     <Link href={`/purchase-orders/${item.purchaseOrderId}`} className="text-primary hover:underline font-medium" target="_blank">
                                         {item.purchaseOrderName || "View PO"}
                                     </Link>
                                 ) : (
-                                    item.purchaseOrderName || " "
+                                    displayCell(item.purchaseOrderName)
                                 )}
                                 w={widths.purchaseOrderName}
                             />
                             <TC v={formatNumber(item.qtyOnHand, 2)} w={widths.qtyOnHand} />
                             <TC v={formatNumber(item.qtyAvailable, 2)} w={widths.qtyAvailable} />
                             <TC v={formatCurrency(item.unitCost)} w={widths.unitCost} />
-                            <TC v={item.inventoryLocation || " "} w={widths.inventoryLocation} />
-                            <TC v={item.rack} w={widths.rack} />
-                            <TC v={item.bay} w={widths.bay} />
-                            <TC v={item.levelPosition} w={widths.levelPosition} />
+                            <TC v={displayCell(item.inventoryLocation)} w={widths.inventoryLocation} />
+                            <TC v={displayCell(item.rack)} w={widths.rack} />
+                            <TC v={displayCell(item.bay)} w={widths.bay} />
+                            <TC v={displayCell(item.levelPosition)} w={widths.levelPosition} />
                             <TC
-                                v={item.salesOrderName || " "}
+                                v={displayCell(item.salesOrderName)}
                                 w={widths.salesOrderName}
                             />
                             <TC
@@ -264,11 +264,11 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                                         {item.shippingManifestName || "View Manifest"}
                                     </Link>
                                 ) : (
-                                    item.shippingManifestName || " "
+                                    displayCell(item.shippingManifestName)
                                 )}
                                 w={widths.shippingManifestName}
                             />
-                            <TC v={fmtDate(item.shipConfirmed)} w={widths.shipConfirmed} />
+                            <TC v={displayCell(fmtDate(item.shipConfirmed))} w={widths.shipConfirmed} />
                         </tr>
                     ))}
                 </tbody>

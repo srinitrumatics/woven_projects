@@ -5,7 +5,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
-import { formatFileSize, formatDate } from "@/lib/utils/formatting";
+import { formatFileSize, formatDate, displayCell } from "@/lib/utils/formatting";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
 
@@ -207,7 +207,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                         {paginatedData.map((file) => (
                             <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={file.fileName}>
-                                    {file.fileName}
+                                    {displayCell(file.fileName)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>
                                     {file.fileType.toLowerCase()}
@@ -216,7 +216,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                     {formatFileSize(file.sizeInBytes)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>
-                                    {file.uploadedBy}
+                                    {displayCell(file.uploadedBy)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? file.uploadedDate.split('T')[0] : '-'}>
                                     {file.uploadedDate ? file.uploadedDate.split('T')[0] : '-'}

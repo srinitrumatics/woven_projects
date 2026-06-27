@@ -6,7 +6,7 @@ import Link from "next/link";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
 import { ShippingManifest, ShipmentStatus } from "./types";
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useSortableData } from "@/hooks/useSortableData";
@@ -506,13 +506,13 @@ export default function ShipmentsPage() {
                         className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
                       >
                         <td className="px-3 py-2 text-sm font-semibold text-primary sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">
-                          {shipment.name}
+                          {displayCell(shipment.name)}
                         </td>
                         <td className="px-3 py-2 truncate">
                           <StatusBadge status={shipment.status} />
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 truncate">
-                          {shipment.salesOrder || " "}
+                          {displayCell(shipment.salesOrder)}
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                           {shipment.customerQuoteId ? (
@@ -526,10 +526,10 @@ export default function ShipmentsPage() {
                                 {shipment.customerQuote || "View Quote"}
                               </Link>
                             ) : (
-                              <span className="font-medium">{shipment.customerQuote || " "}</span>
+                              <span className="font-medium">{displayCell(shipment.customerQuote)}</span>
                             )
                           ) : (
-                            shipment.customerQuote || " "
+                            displayCell(shipment.customerQuote)
                           )}
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
@@ -544,10 +544,10 @@ export default function ShipmentsPage() {
                                 {shipment.proposal || "View Proposal"}
                               </Link>
                             ) : (
-                              <span className="font-medium">{shipment.proposal || " "}</span>
+                              <span className="font-medium">{displayCell(shipment.proposal)}</span>
                             )
                           ) : (
-                            shipment.proposal || " "
+                            displayCell(shipment.proposal)
                           )}
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
@@ -562,21 +562,21 @@ export default function ShipmentsPage() {
                                 {shipment.customerOrder || "View Order"}
                               </Link>
                             ) : (
-                              <span className="font-medium">{shipment.customerOrder || " "}</span>
+                              <span className="font-medium">{displayCell(shipment.customerOrder)}</span>
                             )
                           ) : (
-                            shipment.customerOrder || " "
+                            displayCell(shipment.customerOrder)
                           )}
                         </td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.customerPO}</td>
-                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 truncate">{shipment.shipToAccount}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.shipToLocation}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.customerPO)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 truncate">{displayCell(shipment.shipToAccount)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.shipToLocation)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{shipment.totalLines}</td>
                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 font-semibold text-left truncate">{formatCurrency(shipment.totalPrice)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.logisticsPartner}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.logisticsPartner)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.shipDate, 'numeric-dash')}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.trackingNumber}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.trackingStatus}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingNumber)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingStatus)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.deliveredDate, 'numeric-dash')}</td>
                         <td className="px-3 py-2 text-left truncate" onClick={(e) => e.stopPropagation()}>
                           <button

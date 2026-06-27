@@ -5,6 +5,7 @@ import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import Pagination from "../../../../components/ui/Pagination";
 import { useUserSession } from "../../../../components/UserSessionContext";
+import { displayCell } from "@/lib/utils/formatting";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -162,7 +163,7 @@ export default function FulfillmentsTab({
                                                             title={quote.name}
                                                         >{quote.name}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.name}>{quote.name}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.name}>{displayCell(quote.name)}</div>
 
                                                     )}
 
@@ -182,18 +183,18 @@ export default function FulfillmentsTab({
                                                             {quote.customerOrderName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.customerOrderName}>{quote.customerOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.customerOrderName}>{displayCell(quote.customerOrderName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.customerPO}>{quote.customerPO}</div>
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.customerPO}>{displayCell(quote.customerPO)}</div>
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.billToAccountName}>{quote.billToAccountName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.billToLocationName}>{quote.billToLocationName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.billToContactName}>{quote.billToContactName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.shipToAccountName}>{quote.shipToAccountName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.shipToLocationName}>{quote.shipToLocationName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.shipToContactName}>{quote.shipToContactName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.billToAccountName}>{displayCell(quote.billToAccountName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.billToLocationName}>{displayCell(quote.billToLocationName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.billToContactName}>{displayCell(quote.billToContactName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.shipToAccountName}>{displayCell(quote.shipToAccountName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.shipToLocationName}>{displayCell(quote.shipToLocationName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.shipToContactName}>{displayCell(quote.shipToContactName)}</td>
                                                 <td className="px-3 py-2 truncate">
                                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${quote.dropShip
                                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
@@ -219,11 +220,11 @@ export default function FulfillmentsTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
                                                     ${quote.grandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{quote.issuedDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{quote.expirationDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{quote.requestDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{quote.shipDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{quote.deliveredDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.issuedDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.expirationDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.requestDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.shipDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.deliveredDate)}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -295,7 +296,7 @@ export default function FulfillmentsTab({
                                                             {order.name}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.name}>{order.name}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.name}>{displayCell(order.name)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 truncate">
@@ -313,7 +314,7 @@ export default function FulfillmentsTab({
                                                             {order.customerQuoteName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerQuoteName}>{order.customerQuoteName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerQuoteName}>{displayCell(order.customerQuoteName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
@@ -328,18 +329,18 @@ export default function FulfillmentsTab({
                                                             {order.customerOrderName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerOrderName}>{order.customerOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerOrderName}>{displayCell(order.customerOrderName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerPO}>{order.customerPO}</div>
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerPO}>{displayCell(order.customerPO)}</div>
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToAccountName}>{order.billToAccountName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToLocationName}>{order.billToLocationName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToContactName}>{order.billToContactName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToAccountName}>{order.shipToAccountName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToLocationName}>{order.shipToLocationName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToContactName}>{order.shipToContactName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToAccountName}>{displayCell(order.billToAccountName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToLocationName}>{displayCell(order.billToLocationName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToContactName}>{displayCell(order.billToContactName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToAccountName}>{displayCell(order.shipToAccountName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToLocationName}>{displayCell(order.shipToLocationName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToContactName}>{displayCell(order.shipToContactName)}</td>
                                                 <td className="px-3 py-2 truncate">
                                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.dropShip
                                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
@@ -365,11 +366,11 @@ export default function FulfillmentsTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
                                                     ${order.grandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{order.requestDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{order.pickDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{order.pickCompleteDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{order.shipDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{order.deliveredDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.requestDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.pickDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.pickCompleteDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.shipDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.deliveredDate)}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -441,14 +442,14 @@ export default function FulfillmentsTab({
                                                             {invoice.name}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.name}>{invoice.name}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.name}>{displayCell(invoice.name)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 truncate">
                                                     <StatusBadge status={invoice.status as any} />
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.salesOrderName}>{invoice.salesOrderName}</div>
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.salesOrderName}>{displayCell(invoice.salesOrderName)}</div>
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {invoice.customerQuoteName && invoice.customerQuoteId ? (
@@ -462,7 +463,7 @@ export default function FulfillmentsTab({
                                                             {invoice.customerQuoteName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerQuoteName}>{invoice.customerQuoteName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerQuoteName}>{displayCell(invoice.customerQuoteName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
@@ -477,15 +478,15 @@ export default function FulfillmentsTab({
                                                             {invoice.customerOrderName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerOrderName}>{invoice.customerOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerOrderName}>{displayCell(invoice.customerOrderName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerPO}>{invoice.customerPO}</div>
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerPO}>{displayCell(invoice.customerPO)}</div>
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.billToAccountName}>{invoice.billToAccountName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.billToLocationName}>{invoice.billToLocationName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.billToContactName}>{invoice.billToContactName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.billToAccountName}>{displayCell(invoice.billToAccountName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.billToLocationName}>{displayCell(invoice.billToLocationName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.billToContactName}>{displayCell(invoice.billToContactName)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
                                                         {invoice.totalLines}
@@ -503,16 +504,16 @@ export default function FulfillmentsTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
                                                     ${invoice.grandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{invoice.issuedDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{invoice.paymentTerms}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{invoice.dueDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(invoice.issuedDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(invoice.paymentTerms)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(invoice.dueDate)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     <StatusBadge status={invoice.collectionStatus as any} /></td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
                                                     ${invoice.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{invoice.daysOutstanding}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{invoice.settledDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(invoice.daysOutstanding ?? ''))}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(invoice.settledDate)}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -586,7 +587,7 @@ export default function FulfillmentsTab({
                                                             {manifest.name}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.name}>{manifest.name}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.name}>{displayCell(manifest.name)}</div>
                                                     )}
 
                                                 </td>
@@ -594,7 +595,7 @@ export default function FulfillmentsTab({
                                                     <StatusBadge status={manifest.status as any} />
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.salesOrderName}>{manifest.salesOrderName}</div>
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.salesOrderName}>{displayCell(manifest.salesOrderName)}</div>
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.customerQuoteName && manifest.customerQuoteId ? (
@@ -608,7 +609,7 @@ export default function FulfillmentsTab({
                                                             {manifest.customerQuoteName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.customerQuoteName}>{manifest.customerQuoteName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.customerQuoteName}>{displayCell(manifest.customerQuoteName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
@@ -623,15 +624,15 @@ export default function FulfillmentsTab({
                                                             {manifest.customerOrderName}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.customerOrderName}>{manifest.customerOrderName}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.customerOrderName}>{displayCell(manifest.customerOrderName)}</div>
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.customerPO}>{manifest.customerPO}</div>
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.customerPO}>{displayCell(manifest.customerPO)}</div>
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shipToAccountName}>{manifest.shipToAccountName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shipToLocationName}>{manifest.shipToLocationName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shipToContactName}>{manifest.shipToContactName}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shipToAccountName}>{displayCell(manifest.shipToAccountName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shipToLocationName}>{displayCell(manifest.shipToLocationName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shipToContactName}>{displayCell(manifest.shipToContactName)}</td>
                                                 <td className="px-3 py-2 truncate">
                                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${manifest.dropShip
                                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
@@ -640,9 +641,9 @@ export default function FulfillmentsTab({
                                                         {manifest.dropShip ? 'Yes' : 'No'}
                                                     </span>
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{manifest.boxCount}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{manifest.boxNetWeight}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{manifest.boxGrossWeight}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxCount ?? ''))}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxNetWeight ?? ''))}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxGrossWeight ?? ''))}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
                                                         {manifest.totalLines}
@@ -651,15 +652,15 @@ export default function FulfillmentsTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
                                                     ${manifest.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{manifest.shipDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{manifest.deliveredDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{manifest.shippingMethod}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{manifest.logisticsPartnerName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{manifest.logisticsContactName}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{manifest.trackingNumber || '-'}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{manifest.estimatedDeliveryDate}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{manifest.trackingStatus}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{manifest.actualDeliveryDate}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.shipDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.deliveredDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.shippingMethod)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.logisticsPartnerName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.logisticsContactName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.trackingNumber)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.estimatedDeliveryDate)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.trackingStatus)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.actualDeliveryDate)}</td>
                                             </tr>
                                         ))}
                                     </tbody>

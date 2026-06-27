@@ -1,6 +1,6 @@
 import { QuoteRMA } from"@/app/quotes/types";
 import { SortableHeader } from"@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 import Pagination from"@/components/ui/Pagination";
 
 import Link from"next/link";
@@ -102,7 +102,7 @@ export default function QuoteRMASubTab({
                                             <StatusBadge status={rma.status} />
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }} title={rma.salesOrder}>
-                                            {rma.salesOrder}
+                                            {displayCell(rma.salesOrder)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }} title={rma.customerQuote}>
                                             {rma.customerQuoteId ? (
@@ -110,8 +110,8 @@ export default function QuoteRMASubTab({
                                                     <Link href={`/quotes/${rma.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {rma.customerQuote}
                                                     </Link>
-                                                ) : rma.customerQuote
-                                            ) : rma.customerQuote}
+                                                ) : displayCell(rma.customerQuote)
+                                            ) : displayCell(rma.customerQuote)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }} title={rma.customerOrder}>
                                             {rma.customerOrderId ? (
@@ -119,25 +119,25 @@ export default function QuoteRMASubTab({
                                                     <Link href={`/orders/${rma.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {rma.customerOrder}
                                                     </Link>
-                                                ) : rma.customerOrder
-                                            ) : rma.customerOrder}
+                                                ) : displayCell(rma.customerOrder)
+                                            ) : displayCell(rma.customerOrder)}
                                         </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.rmaType }} title={rma.rmaType}>{rma.rmaType}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipFromAccount }} title={rma.shipFromAccount}>{rma.shipFromAccount}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipFromContact }} title={rma.shipFromContact}>{rma.shipFromContact}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.returnToAccount }} title={rma.returnToAccount}>{rma.returnToAccount}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.returnToContact }} title={rma.returnToContact}>{rma.returnToContact}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.rmaType }} title={rma.rmaType}>{displayCell(rma.rmaType)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipFromAccount }} title={rma.shipFromAccount}>{displayCell(rma.shipFromAccount)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipFromContact }} title={rma.shipFromContact}>{displayCell(rma.shipFromContact)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.returnToAccount }} title={rma.returnToAccount}>{displayCell(rma.returnToAccount)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.returnToContact }} title={rma.returnToContact}>{displayCell(rma.returnToContact)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.dropShip }} title={rma.dropShip ? 'Yes' : 'No'}>{rma.dropShip ? 'Yes' : 'No'}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }} title={String(rma.totalLines)}>{rma.totalLines}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }} title={String(rma.totalLines)}>{formatNumber(rma.totalLines)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  font-bold truncate" style={{ width: widths.totalPrice }} title={formatCurrency(rma.totalPrice)}>{formatCurrency(rma.totalPrice)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.issuedDate }} title={formatDate(rma.issuedDate, 'numeric-dash')}>{formatDate(rma.issuedDate, 'numeric-dash')}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.returnByDate }} title={formatDate(rma.returnByDate, 'numeric-dash')}>{formatDate(rma.returnByDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shippingMethod }} title={rma.shippingMethod}>{rma.shippingMethod}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsPartner }} title={rma.logisticsPartner}>{rma.logisticsPartner}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsContact }} title={rma.logisticsContact}>{rma.logisticsContact}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingNumber }} title={rma.trackingNumber}>{rma.trackingNumber}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shippingMethod }} title={rma.shippingMethod}>{displayCell(rma.shippingMethod)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsPartner }} title={rma.logisticsPartner}>{displayCell(rma.logisticsPartner)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsContact }} title={rma.logisticsContact}>{displayCell(rma.logisticsContact)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingNumber }} title={rma.trackingNumber}>{displayCell(rma.trackingNumber)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.estimatedDeliveryDate }} title={formatDate(rma.estimatedDeliveryDate, 'numeric-dash')}>{formatDate(rma.estimatedDeliveryDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingStatus }} title={rma.trackingStatus}>{rma.trackingStatus}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingStatus }} title={rma.trackingStatus}>{displayCell(rma.trackingStatus)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.actualDeliveryDate }} title={formatDate(rma.actualDeliveryDate, 'numeric-dash')}>{formatDate(rma.actualDeliveryDate, 'numeric-dash')}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.goodsReceiptsDate }} title={formatDate(rma.goodsReceiptsDate, 'numeric-dash')}>{formatDate(rma.goodsReceiptsDate, 'numeric-dash')}</td>
                                     </tr>

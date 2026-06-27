@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
 import { SupplierBill } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
@@ -338,11 +338,11 @@ export default function SupplierBillsPage() {
                                                     bill.customerOrderName || '-'
                                                 )}
                                             </td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.supplierName}>{bill.supplierName || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.supplierName}>{displayCell(bill.supplierName)}</td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 font-medium truncate" >{bill.totalLines}</td>
                                             <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(bill.totalAmount)}</td>
                                             <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.billedDate}>{bill.billedDate ? formatDate(bill.billedDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.paymentTerms || '-'}>{bill.paymentTerms || '-'}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={displayCell(bill.paymentTerms)}>{displayCell(bill.paymentTerms)}</td>
                                             <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}>{bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}</td>
                                             <td className="px-2 py-2 text-sm truncate" title={bill.remittanceStatus}><RemittanceBadge status={bill.remittanceStatus} /></td>
                                             <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(bill.openBalance)}</td>

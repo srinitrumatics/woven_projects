@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ProposalFile, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
-import { formatFileSize } from "@/lib/utils/formatting";
+import { formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
 
 interface FilesTabProps {
@@ -254,10 +254,10 @@ export default function FilesTab({
                                             <span className="text-sm font-medium text-gray-900 dark:text-white truncate" title={file.fileName}>{file.fileName}</span>
                                         </div>
                                     </td>
-                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{file.fileType}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(file.fileType)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatFileSize(file.sizeInBytes)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium" title={file.uploadedBy}>{file.uploadedBy}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{file.uploadedDate}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium" title={file.uploadedBy}>{displayCell(file.uploadedBy)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(file.uploadedDate)}</td>
                                     <td className="px-3 py-2 truncate" onClick={(e) => e.stopPropagation()}>
                                         <div className="flex items-center gap-2">
                                             <button

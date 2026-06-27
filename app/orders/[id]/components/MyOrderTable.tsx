@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "@/app/orders/types";
-import { formatCurrency, truncateText } from "@/lib/utils/formatting";
+import { formatCurrency, truncateText, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import Pagination from "@/components/ui/Pagination";
@@ -128,12 +128,12 @@ export default function MyOrderTable({
                                             </div>
                                         )}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left" title={product.manufacturer || "—"}>
-                                        <div className="text-sm text-gray-900 dark:text-white">{product.manufacturer || "—"}</div>
+                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left" title={displayCell(product.manufacturer)}>
+                                        <div className="text-sm text-gray-900 dark:text-white">{displayCell(product.manufacturer)}</div>
                                     </td>
-                                    <td className="px-2 py-3 text-left" title={product.productFamily || "—"}>
+                                    <td className="px-2 py-3 text-left" title={displayCell(product.productFamily)}>
                                         <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
-                                            {product.productFamily || "—"}
+                                            {displayCell(product.productFamily)}
                                         </span>
                                     </td>
                                     <td className="px-2 py-3 text-sm text-left text-gray-900 dark:text-white">{formatCurrency(product.unitPrice)}</td>

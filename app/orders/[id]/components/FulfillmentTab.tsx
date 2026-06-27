@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import { useResizableColumns } from "../../../../hooks/useResizableColumns";
@@ -313,12 +313,12 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             ) : (prop.Proposal_Number__c || "—")}
                                         </td>
                                         <td className="px-4 py-3">{statusBadge(prop.Status__c)}</td>
-                                        <td className={tdClass}>{prop.Name || "—"}</td>
-                                        <td className={tdClass}>{prop.Customer_Order_Name || "—"}</td>
-                                        <td className={tdClass}>{prop.Customer_PO__c || "—"}</td>
-                                        <td className={tdClass}>{prop.Bill_to_Account_Name || "—"}</td>
-                                        <td className={tdClass}>{prop.Ship_to_Account_Name || "—"}</td>
-                                        <td className={`${tdClass} `}>{prop.Total_Lines__c || "0"}</td>
+                                        <td className={tdClass}>{displayCell(prop.Name)}</td>
+                                        <td className={tdClass}>{displayCell(prop.Customer_Order_Name)}</td>
+                                        <td className={tdClass}>{displayCell(prop.Customer_PO__c)}</td>
+                                        <td className={tdClass}>{displayCell(prop.Bill_to_Account_Name)}</td>
+                                        <td className={tdClass}>{displayCell(prop.Ship_to_Account_Name)}</td>
+                                        <td className={`${tdClass} `}>{formatNumber(prop.Total_Lines__c)}</td>
                                         <td className={`${tdBoldClass} `}>{formatCurrency(prop.Total_Price__c ?? 0)}</td>
                                         <td className={tdClass}>{formatDate(prop.Expiration_Date__c, "numeric-dash") || "—"}</td>
                                         <td className={tdClass}>{formatDate(prop.Request_Date__c, "numeric-dash") || "—"}</td>
@@ -371,16 +371,16 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             ) : (cq.Name || "—")}
                                         </td>
                                         <td className="px-4 py-3">{statusBadge(cq.Status__c)}</td>
-                                        <td className={tdClass}>{cq.Customer_Order_Name || "—"}</td>
-                                        <td className={tdClass}>{cq.Customer_PO__c || "—"}</td>
-                                        <td className={tdClass}>{cq.Bill_to_Account_Name || "—"}</td>
-                                        <td className={tdClass}>{cq.Bill_to_Location_Name || "—"}</td>
-                                        <td className={tdClass}>{cq.Bill_to_Contact_Name || "—"}</td>
-                                        <td className={tdClass}>{cq.Ship_to_Account_Name || "—"}</td>
-                                        <td className={tdClass}>{cq.Ship_to_Location_Name || "—"}</td>
-                                        <td className={tdClass}>{cq.Ship_to_Contact_Name || "—"}</td>
+                                        <td className={tdClass}>{displayCell(cq.Customer_Order_Name)}</td>
+                                        <td className={tdClass}>{displayCell(cq.Customer_PO__c)}</td>
+                                        <td className={tdClass}>{displayCell(cq.Bill_to_Account_Name)}</td>
+                                        <td className={tdClass}>{displayCell(cq.Bill_to_Location_Name)}</td>
+                                        <td className={tdClass}>{displayCell(cq.Bill_to_Contact_Name)}</td>
+                                        <td className={tdClass}>{displayCell(cq.Ship_to_Account_Name)}</td>
+                                        <td className={tdClass}>{displayCell(cq.Ship_to_Location_Name)}</td>
+                                        <td className={tdClass}>{displayCell(cq.Ship_to_Contact_Name)}</td>
                                         <td className={tdClass}>{cq.Drop_Ship__c ? "Yes" : "No"}</td>
-                                        <td className={`${tdClass} `}>{cq.Total_Lines__c || "0"}</td>
+                                        <td className={`${tdClass} `}>{formatNumber(cq.Total_Lines__c)}</td>
                                         <td className={`${tdClass} `}>{formatCurrency(cq.Total_Price__c ?? 0)}</td>
                                         <td className={`${tdClass} `}>{formatCurrency(cq.Total_Shipping_Charges__c ?? 0)}</td>
                                         <td className={`${tdClass} `}>{formatCurrency(cq.Total_Taxes_Amount__c ?? 0)}</td>
@@ -417,12 +417,12 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 {sortedSalesOrders.map((so) => (
                                     <tr key={so.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                        <td className={tdBoldClass}>{so.Name || "—"}</td>
+                                        <td className={tdBoldClass}>{displayCell(so.Name)}</td>
                                         <td className="px-4 py-3">{statusBadge(so.Status__c)}</td>
-                                        <td className={tdClass}>{so.Customer_Order_Name || "—"}</td>
-                                        <td className={tdClass}>{so.Customer_Quote_Name || "—"}</td>
+                                        <td className={tdClass}>{displayCell(so.Customer_Order_Name)}</td>
+                                        <td className={tdClass}>{displayCell(so.Customer_Quote_Name)}</td>
                                         <td className={tdClass}>{formatDate(so.Ship_Date__c, "numeric-dash") || "—"}</td>
-                                        <td className={tdClass}>{so.Ship_to_Account_Name || "—"}</td>
+                                        <td className={tdClass}>{displayCell(so.Ship_to_Account_Name)}</td>
                                         <td className={`${tdBoldClass} `}>{formatCurrency(so.Total_Price__c ?? 0)}</td>
                                     </tr>
                                 ))}
@@ -465,7 +465,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                         <td className={tdClass}>{formatDate(sm.Ship_Date__c, "numeric-dash") || "—"}</td>
                                         <td className={tdClass}>{formatDate(sm.Estimated_Delivery_Date__c, "numeric-dash") || "—"}</td>
                                         <td className={tdClass}>{formatDate(sm.Actual_Delivery_Date__c, "numeric-dash") || "—"}</td>
-                                        <td className={tdClass}>{sm.Shipping_Method__c || "—"}</td>
+                                        <td className={tdClass}>{displayCell(sm.Shipping_Method__c)}</td>
                                         <td className={tdClass}>
                                             {sm.Tracking_URL__c ? (
                                                 <a href={sm.Tracking_URL__c} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
@@ -474,7 +474,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             ) : (sm.Tracking_Number__c || "—")}
                                         </td>
                                         <td className="px-4 py-3">{sm.Tracking_Status__c ? statusBadge(sm.Tracking_Status__c) : "—"}</td>
-                                        <td className={tdClass}>{sm.Ship_to_Account_Name || "—"}</td>
+                                        <td className={tdClass}>{displayCell(sm.Ship_to_Account_Name)}</td>
                                         <td className={`${tdBoldClass} `}>{formatCurrency(sm.Total_Price__c ?? 0)}</td>
                                     </tr>
                                 ))}
@@ -516,10 +516,10 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                         <td className="px-4 py-3">{statusBadge(inv.Status__c)}</td>
                                         <td className={tdClass}>{formatDate(inv.Issued_Date__c, "numeric-dash") || "—"}</td>
                                         <td className={tdClass}>{formatDate(inv.Due_Date__c, "numeric-dash") || "—"}</td>
-                                        <td className={tdClass}>{inv.Payment_Terms__c || "—"}</td>
+                                        <td className={tdClass}>{displayCell(inv.Payment_Terms__c)}</td>
                                         <td className="px-4 py-3">{inv.Collection_Status__c ? statusBadge(inv.Collection_Status__c) : "—"}</td>
-                                        <td className={tdClass}>{inv.Customer_Order_Name || "—"}</td>
-                                        <td className={tdClass}>{inv.Sales_Order_Name || "—"}</td>
+                                        <td className={tdClass}>{displayCell(inv.Customer_Order_Name)}</td>
+                                        <td className={tdClass}>{displayCell(inv.Sales_Order_Name)}</td>
                                         <td className={`${tdBoldClass} `}>{formatCurrency(inv.Grand_Total__c ?? 0)}</td>
                                         <td className={`${tdBoldClass} `}>{formatCurrency(inv.Open_Balance__c ?? 0)}</td>
                                     </tr>

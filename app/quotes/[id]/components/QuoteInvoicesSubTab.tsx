@@ -1,6 +1,6 @@
 import { QuoteInvoice } from"@/app/quotes/types";
 import { SortableHeader } from"@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 import Link from"next/link";
 import Pagination from"@/components/ui/Pagination";
 import { useState, useMemo } from "react";
@@ -100,7 +100,7 @@ export default function QuoteInvoicesSubTab({
                                             <StatusBadge status={invoice.status} />
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>
-                                            {invoice.salesOrder}
+                                            {displayCell(invoice.salesOrder)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {invoice.customerQuoteId ? (
@@ -108,8 +108,8 @@ export default function QuoteInvoicesSubTab({
                                                     <Link href={`/quotes/${invoice.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {invoice.customerQuote}
                                                     </Link>
-                                                ) : invoice.customerQuote
-                                            ) : invoice.customerQuote}
+                                                ) : displayCell(invoice.customerQuote)
+                                            ) : displayCell(invoice.customerQuote)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {invoice.customerOrderId ? (
@@ -117,24 +117,24 @@ export default function QuoteInvoicesSubTab({
                                                     <Link href={`/orders/${invoice.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {invoice.customerOrder}
                                                     </Link>
-                                                ) : invoice.customerOrder
-                                            ) : invoice.customerOrder}
+                                                ) : displayCell(invoice.customerOrder)
+                                            ) : displayCell(invoice.customerOrder)}
                                         </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{invoice.customerPO}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToAccount }}>{invoice.billToAccount}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToLocation }}>{invoice.billToLocation}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToContact }}>{invoice.billToContact}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{invoice.totalLines}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{displayCell(invoice.customerPO)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToAccount }}>{displayCell(invoice.billToAccount)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToLocation }}>{displayCell(invoice.billToLocation)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToContact }}>{displayCell(invoice.billToContact)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{formatNumber(invoice.totalLines)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(invoice.totalPrice)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(invoice.shipping)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }}>{formatCurrency(invoice.taxes)}</td>
                                         <td className="px-3 py-2 text-sm text-primary font-bold truncate" style={{ width: widths.grandTotal }}>{formatCurrency(invoice.grandTotal)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.issuedDate }}>{formatDate(invoice.issuedDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.paymentTerms }}>{invoice.paymentTerms}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.paymentTerms }}>{displayCell(invoice.paymentTerms)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.dueDate }}>{formatDate(invoice.dueDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.collectionStatus }}>{invoice.collectionStatus}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.collectionStatus }}>{displayCell(invoice.collectionStatus)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.openBalance }}>{formatCurrency(invoice.openBalance)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.daysOutstanding }}>{invoice.daysOutstanding}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.daysOutstanding }}>{formatNumber(invoice.daysOutstanding)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.settledDate }}>{formatDate(invoice.settledDate, 'numeric-dash')}</td>
                                     </tr>
                                 ))}

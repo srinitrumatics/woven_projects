@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { CreditMemo } from "../../types";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -82,7 +82,7 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                         {paginatedCredits.map((cm) => (
                             <tr key={cm.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                 <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-white truncate">
-                                    {cm.name}
+                                    {displayCell(cm.name)}
                                 </td>
                                 <td className="px-3 py-2 truncate">
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${cm.status === 'Posted' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
@@ -95,7 +95,7 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                             {cm.customerQuoteName && cm.customerQuoteName !== 'N/A' ? cm.customerQuoteName : cm.customerQuoteId}
                                         </Link>
                                     ) : (
-                                        cm.customerQuoteName && cm.customerQuoteName !== 'N/A' ? cm.customerQuoteName : '-'
+                                        displayCell(cm.customerQuoteName)
                                     )}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
@@ -104,17 +104,17 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                             {cm.customerOrderName && cm.customerOrderName !== 'N/A' ? cm.customerOrderName : cm.customerOrderId}
                                         </Link>
                                     ) : (
-                                        cm.customerOrderName && cm.customerOrderName !== 'N/A' ? cm.customerOrderName : '-'
+                                        displayCell(cm.customerOrderName)
                                     )}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                    {cm.creditToAccountName}
+                                    {displayCell(cm.creditToAccountName)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                    {cm.creditToContactName}
+                                    {displayCell(cm.creditToContactName)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-center truncate">
-                                    {cm.totalLines}
+                                    {formatNumber(cm.totalLines)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate">
                                     {formatCurrency(cm.totalPrice)}

@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { BillPayment, AppliedDebitMemo } from '../../types';
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -121,14 +121,14 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                                         {paginatedPayments.map((payment) => (
                                             <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                                                 <td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 border-r border-gray-100 dark:border-gray-700">
-                                                    {payment.name}
+                                                    {displayCell(payment.name)}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm truncate">
                                                     <StatusBadge status={payment.status} />
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(payment.amount)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.paymentMethod || '-'}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.referenceNo || '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(payment.paymentMethod)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(payment.referenceNo)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.transactionDate ? formatDate(payment.transactionDate, 'numeric-dash') : '-'}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.scheduledDate ? formatDate(payment.scheduledDate, 'numeric-dash') : '-'}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.failedDate ? formatDate(payment.failedDate, 'numeric-dash') : '-'}</td>
@@ -178,22 +178,22 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                                         {paginatedDebits.map((debit) => (
                                             <tr key={debit.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                                                 <td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 border-r border-gray-100 dark:border-gray-700">
-                                                    {debit.name || ''}
+                                                    {displayCell(debit.name)}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm truncate">
                                                     <StatusBadge status={debit.status} />
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.appliedAmount)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
-                                                    {debit.debitMemoName || ' '}
+                                                    {displayCell(debit.debitMemoName)}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
-                                                    {debit.supplierBillName || ''}
+                                                    {displayCell(debit.supplierBillName)}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.appliedDate ? formatDate(debit.appliedDate, 'numeric-dash') : '-'}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.postedDate ? formatDate(debit.postedDate, 'numeric-dash') : '-'}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.availableDebitBalance)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={debit.notes}>{debit.notes || '-'}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={debit.notes}>{displayCell(debit.notes)}</td>
                                             </tr>
                                         ))}
                                     </tbody>

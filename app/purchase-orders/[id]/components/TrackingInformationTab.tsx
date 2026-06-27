@@ -4,7 +4,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import Pagination from "@/components/ui/Pagination";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { useState, useMemo } from 'react';
-import { formatDate } from "@/lib/utils/formatting";
+import { formatDate, displayCell } from "@/lib/utils/formatting";
 
 interface TrackingInfo {
     Logistics_Partner__c: string;
@@ -92,14 +92,14 @@ export default function TrackingInformationTab({ data }: TrackingInformationTabP
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {paginatedData.map((item) => (
                             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Logistics_Partner__c || '-'}>{item.Logistics_Partner__c || '-'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Logistics_Contact__c || '-'}>{item.Logistics_Contact__c || '-'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Shipping_Method__c || '-'}>{item.Shipping_Method__c || '-'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Service_Level__c || '-'}>{item.Service_Level__c || '-'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Logistics_Partner__c || '-'}>{displayCell(item.Logistics_Partner__c)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Logistics_Contact__c || '-'}>{displayCell(item.Logistics_Contact__c)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Shipping_Method__c || '-'}>{displayCell(item.Shipping_Method__c)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Service_Level__c || '-'}>{displayCell(item.Service_Level__c)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Tracking_URL__c || '-'}>
-                                    {item.Tracking_URL__c || ''}
+                                    {displayCell(item.Tracking_URL__c)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Tracking_Number__c || '-'}>{item.Tracking_Number__c || '-'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Tracking_Number__c || '-'}>{displayCell(item.Tracking_Number__c)}</td>
                                 <td className="px-3 py-2 text-sm truncate">
                                     <StatusBadge status={item.Tracking_Status__c || '-'} />
                                 </td>

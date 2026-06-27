@@ -1,6 +1,6 @@
 import { QuoteCreditMemo } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 import Link from "next/link";
 import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
@@ -99,8 +99,8 @@ export default function QuoteCreditMemoSubTab({
                                                     <Link href={`/invoices/${memo.invoiceId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {memo.invoice}
                                                     </Link>
-                                                ) : memo.invoice
-                                            ) : memo.invoice}
+                                                ) : displayCell(memo.invoice)
+                                            ) : displayCell(memo.invoice)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {memo.customerQuoteId ? (
@@ -108,8 +108,8 @@ export default function QuoteCreditMemoSubTab({
                                                     <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {memo.customerQuote}
                                                     </Link>
-                                                ) : memo.customerQuote
-                                            ) : memo.customerQuote}
+                                                ) : displayCell(memo.customerQuote)
+                                            ) : displayCell(memo.customerQuote)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
 
@@ -117,9 +117,9 @@ export default function QuoteCreditMemoSubTab({
                                                 {memo.customerOrder}
                                             </Link>
                                         </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.creditToAccount }}>{memo.creditToAccount}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.creditToContact }}>{memo.creditToContact}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{memo.totalLines}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.creditToAccount }}>{displayCell(memo.creditToAccount)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.creditToContact }}>{displayCell(memo.creditToContact)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{formatNumber(memo.totalLines)}</td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(memo.totalPrice)}</td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(memo.shipping)}</td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }}>{formatCurrency(memo.taxes)}</td>

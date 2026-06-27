@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
 
-import { formatCurrency, formatNumber, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatNumber, formatDate, displayCell } from "@/lib/utils/formatting";
 import { OrderStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
@@ -906,20 +906,20 @@ export default function OrdersPage() {
                               {order.proposal_name}
                             </Link>
                           ) : (
-                            <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{order.proposal_name}</div>
+                            <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{displayCell(order.proposal_name)}</div>
                           )
                         ) : (
-                          <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{order.proposal_name}</div>
+                          <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{displayCell(order.proposal_name)}</div>
                         )}
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.customerPO}>{order.customerPO}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.customerPO}>{displayCell(order.customerPO)}</div>
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billTo}>{order.billTo}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billTo}>{displayCell(order.billTo)}</div>
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipTo}>{order.shipTo}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipTo}>{displayCell(order.shipTo)}</div>
                       </td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-white truncate">{formatNumber(order.items, 0)}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(order.total)}</td>

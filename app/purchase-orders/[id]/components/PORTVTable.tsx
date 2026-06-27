@@ -5,7 +5,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
-import { formatDate } from "@/lib/utils/formatting";
+import { formatDate, displayCell } from "@/lib/utils/formatting";
 
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import Link from 'next/link';
@@ -133,7 +133,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                         ) : (
                                             <span className="font-medium">{r.Purchase_Order_Name || 'View PO'}</span>
                                         )
-                                    ) : r.Purchase_Order_Name || '-'}
+                                    ) : displayCell(r.Purchase_Order_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Customer_Quote_Name || '-'}>
                                     {r.Customer_Quote__c ? (
@@ -144,7 +144,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                         ) : (
                                             <span className="font-medium">{r.Customer_Quote_Name || 'View Quote'}</span>
                                         )
-                                    ) : r.Customer_Quote_Name || '-'}
+                                    ) : displayCell(r.Customer_Quote_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Customer_Order_Name || '-'}>
                                     {r.Customer_Order__c ? (
@@ -155,25 +155,25 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                         ) : (
                                             <span className="font-medium">{r.Customer_Order_Name || 'View Order'}</span>
                                         )
-                                    ) : r.Customer_Order_Name || '-'}
+                                    ) : displayCell(r.Customer_Order_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.RTV_Type__c || '-'}>
-                                    {r.RTV_Type__c || '-'}
+                                    {displayCell(r.RTV_Type__c)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Supplier_RMA_Number__c || '-'}>
-                                    {r.Supplier_RMA_Number__c || '-'}
+                                    {displayCell(r.Supplier_RMA_Number__c)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Ship_from_Account_Name || '-'}>
-                                    {r.Ship_from_Account_Name || '-'}
+                                    {displayCell(r.Ship_from_Account_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Ship_from_Contact_Name || '-'}>
-                                    {r.Ship_from_Contact_Name || '-'}
+                                    {displayCell(r.Ship_from_Contact_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Supplier_Name || '-'}>
-                                    {r.Supplier_Name || '-'}
+                                    {displayCell(r.Supplier_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Supplier_Contact_Name || '-'}>
-                                    {r.Supplier_Contact_Name || '-'}
+                                    {displayCell(r.Supplier_Contact_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(r.Total_Lines__c || 0)}>
                                     <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium truncate">

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatFileSize } from "@/lib/utils/formatting";
+import { formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
 
 interface LineFile {
@@ -192,10 +192,10 @@ export default function InvoiceLineFilesTab({ lineId, accountId, contactId }: In
                                     <span className="truncate" title={file.fileName}>{file.fileName}</span>
                                 </div>
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{file.fileType}</td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(file.fileType)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatFileSize(file.sizeInBytes)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>{file.uploadedBy}</td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{file.uploadedDate}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>{displayCell(file.uploadedBy)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(file.uploadedDate)}</td>
                             <td className="px-3 py-2 text-left truncate">
                                 <div className="flex items-center gap-2 min-w-0">
                                     <button onClick={() => handlePreview(file)} className="text-blue-600 hover:text-blue-800 p-1" title="Preview">

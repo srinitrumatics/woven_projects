@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Product } from "@/app/orders/types";
 import Pagination from "@/components/ui/Pagination";
-import { formatCurrency, formatNumber, truncateText } from "@/lib/utils/formatting";
+import { formatCurrency, formatNumber, truncateText, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { SortConfig } from "../../../../hooks/useSortableData"; // Import SortConfig type
 
@@ -174,12 +174,12 @@ export default function ProductCatalog({
                                         </div>
                                     </td>
                                     <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
-                                        <div className="truncate" title={product.manufacturer || "—"}>{product.manufacturer || "—"}</div>
+                                        <div className="truncate" title={displayCell(product.manufacturer)}>{displayCell(product.manufacturer)}</div>
                                     </td>
                                     <td className="px-3 py-2 text-left truncate">
-                                        <div className="truncate" title={product.productFamily || "—"}>
+                                        <div className="truncate" title={displayCell(product.productFamily)}>
                                             <span className="inline-block px-2 py-0.5 text-sm font-medium rounded bg-primary/10 text-primary  tracking-wider whitespace-normal truncate">
-                                                {product.productFamily || "—"}
+                                                {displayCell(product.productFamily)}
                                             </span>
                                         </div>
                                     </td>

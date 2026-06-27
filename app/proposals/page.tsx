@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 import { Proposal, ProposalStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
@@ -564,7 +564,7 @@ export default function ProposalsPage() {
                         <StatusBadge status={proposal.status} />
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.proposalName}>{proposal.proposalName}</div>
+                        <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.proposalName}>{displayCell(proposal.proposalName)}</div>
                       </td>
                       <td className="px-3 py-2 truncate text-left">
                         {proposal.orderId && proposal.customerOrder !== 'N/A' ? (
@@ -579,10 +579,10 @@ export default function ProposalsPage() {
                               {proposal.customerOrder}
                             </Link>
                           ) : (
-                            <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerOrder}>{proposal.customerOrder}</div>
+                            <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerOrder}>{displayCell(proposal.customerOrder)}</div>
                           )
                         ) : (
-                          <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerOrder}>{proposal.customerOrder}</div>
+                          <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerOrder}>{displayCell(proposal.customerOrder)}</div>
                         )}
                       </td>
                       <td className="px-3 py-2 truncate text-left">
@@ -598,19 +598,19 @@ export default function ProposalsPage() {
                               {proposal.customerPO}
                             </Link>
                           ) : (
-                            <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerPO}>{proposal.customerPO}</div>
+                            <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerPO}>{displayCell(proposal.customerPO)}</div>
                           )
                         ) : (
-                          <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerPO}>{proposal.customerPO}</div>
+                          <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerPO}>{displayCell(proposal.customerPO)}</div>
                         )}
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billTo}>{proposal.billTo}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billTo}>{displayCell(proposal.billTo)}</div>
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipTo}>{proposal.shipTo}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipTo}>{displayCell(proposal.shipTo)}</div>
                       </td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[130px] truncate">{proposal.productCount}</td>
+                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[130px] truncate">{formatNumber(proposal.productCount)}</td>
                       <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(proposal.totalAmount)}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[150px] truncate">{formatDate(proposal.proposalDate, 'numeric-dash')}</td>

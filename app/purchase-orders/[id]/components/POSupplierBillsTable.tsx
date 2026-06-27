@@ -5,7 +5,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, displayCell } from "@/lib/utils/formatting";
 import Link from 'next/link';
 
 import { StatusBadge, RemittanceBadge } from "@/components/ui/StatusBadge";
@@ -143,30 +143,30 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                         <Link href={`/purchase-orders/${b.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {b.Purchase_Order_Name || 'View PO'}
                                         </Link>
-                                    ) : b.Purchase_Order_Name || '-'}
+                                    ) : displayCell(b.Purchase_Order_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Quote_Name || '-'}>
                                     {b.Customer_Quote__c ? (
                                         <Link href={`/quotes/${b.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {b.Customer_Quote_Name || 'View Quote'}
                                         </Link>
-                                    ) : b.Customer_Quote_Name || '-'}
+                                    ) : displayCell(b.Customer_Quote_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Order_Name || '-'}>
                                     {b.Customer_Order__c ? (
                                         <Link href={`/orders/${b.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {b.Customer_Order_Name || 'View Order'}
                                         </Link>
-                                    ) : b.Customer_Order_Name || '-'}
+                                    ) : displayCell(b.Customer_Order_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Supplier_Name || '-'}>
-                                    {b.Supplier_Name || '-'}
+                                    {displayCell(b.Supplier_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Supplier_DBA__c || '-'}>
-                                    {b.Supplier_DBA__c || '-'}
+                                    {displayCell(b.Supplier_DBA__c)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Supplier_Contact_Name || '-'}>
-                                    {b.Supplier_Contact_Name || '-'}
+                                    {displayCell(b.Supplier_Contact_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(b.Total_Lines__c || 0)}>
                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 text-xs font-semibold truncate">
@@ -186,7 +186,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                     {b.Billed_Date__c ? formatDate(b.Billed_Date__c, 'numeric-dash') : '-'}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Payment_Terms__c || '-'}>
-                                    {b.Payment_Terms__c || '-'}
+                                    {displayCell(b.Payment_Terms__c)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={b.Due_Date__c ? formatDate(b.Due_Date__c, 'numeric-dash') : '-'}>
                                     {b.Due_Date__c ? formatDate(b.Due_Date__c, 'numeric-dash') : '-'}

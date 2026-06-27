@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatDate, formatCurrency, formatNumber } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 import Link from "next/link";
 
 interface InventoryTabProps {
@@ -147,30 +147,30 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={pos.name}>
                                 {pos.name}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : ""}>{pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : ""}</td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : ""}>{displayCell(pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : "")}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={`${formatNumber(pos.daysInInventory, 0)} Days`}>{formatNumber(pos.daysInInventory, 0)} Days</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productName}>{pos.productName}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productDescription}>{pos.productDescription}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.manufacturerDBA}>{pos.manufacturerDBA}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.supplierName}>{pos.supplierName}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productName}>{displayCell(pos.productName)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productDescription}>{displayCell(pos.productDescription)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.manufacturerDBA}>{displayCell(pos.manufacturerDBA)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.supplierName}>{displayCell(pos.supplierName)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.purchaseOrderName}>
                                 {pos.purchaseOrderId ? (
                                     <Link href={`/purchase-orders/${pos.purchaseOrderId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
                                         {pos.purchaseOrderName || "View PO"}
                                     </Link>
                                 ) : (
-                                    pos.purchaseOrderName || " "
+                                    displayCell(pos.purchaseOrderName)
                                 )}
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.qtyOnHand.toLocaleString()}>{pos.qtyOnHand.toLocaleString()}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.qtyAvailable.toLocaleString()}>{pos.qtyAvailable.toLocaleString()}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(pos.unitCost)}>{formatCurrency(pos.unitCost)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.inventoryLocation}>{pos.inventoryLocation}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.rack}>{pos.rack}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.bay}>{pos.bay}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.levelPosition}>{pos.levelPosition}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.inventoryLocation}>{displayCell(pos.inventoryLocation)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.rack}>{displayCell(pos.rack)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.bay}>{displayCell(pos.bay)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.levelPosition}>{displayCell(pos.levelPosition)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.salesOrderName}>
-                                {pos.salesOrderName || " "}
+                                {displayCell(pos.salesOrderName)}
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.shippingManifestName}>
                                 {pos.shippingManifestId ? (
@@ -178,10 +178,10 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                                         {pos.shippingManifestName || "View Manifest"}
                                     </Link>
                                 ) : (
-                                    pos.shippingManifestName || " "
+                                    displayCell(pos.shippingManifestName)
                                 )}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : ""}>{pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : ""}</td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : ""}>{displayCell(pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : "")}</td>
                         </tr>
                     ))}
                 </tbody>

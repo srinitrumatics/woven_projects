@@ -1,10 +1,5 @@
-/**
- * Format a number as currency with consistent formatting
- * @param amount The amount to format
- * @param currency Currency code (default: USD)
- * @returns Formatted currency string (e.g., "$1,234.56")
- */
-export function formatCurrency(amount: number, currency: string = 'USD', decimals: number = 2): string {
+export function formatCurrency(amount: number | null | undefined, currency: string = 'USD', decimals: number = 2): string {
+  if (amount == null || isNaN(amount as number)) return '-';
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
@@ -13,33 +8,22 @@ export function formatCurrency(amount: number, currency: string = 'USD', decimal
   }).format(amount);
 }
 
-/**
- * Format a number with consistent thousand separators
- * @param value The number to format
- * @param decimals Number of decimal places (default: 0)
- * @returns Formatted number string (e.g., "1,234" or "1,234.56")
- */
-export function formatNumber(value: number, decimals: number = 0): string {
+export function formatNumber(value: number | null | undefined, decimals: number = 0): string {
+  if (value == null || isNaN(value as number)) return '-';
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   }).format(value);
 }
 
-/**
- * Format a date string consistently
- * @param dateString ISO date string or date object
- * @param format Format type: 'short' | 'medium' | 'long'
- * @returns Formatted date string
- */
 export function formatDate(
   dateString: string | Date | null | undefined,
   format: 'short' | 'medium' | 'long' | 'numeric-dash' = 'medium'
 ): string {
-  if (!dateString) return '';
+  if (!dateString) return '-';
   const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
 
-  if (isNaN(date.getTime())) return '';
+  if (isNaN(date.getTime())) return '-';
 
   let options: Intl.DateTimeFormatOptions;
   switch (format) {
@@ -65,22 +49,11 @@ export function formatDate(
   return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 
-/**
- * Truncate text to specified length with ellipsis
- * @param text Text to truncate
- * @param maxLength Maximum length before truncation
- * @returns Truncated text with ellipsis if needed
- */
 export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength) + '...';
 }
 
-/**
- * Format file size from bytes to human readable string (KB/MB)
- * @param bytes Size in bytes
- * @returns Formatted size string
- */
 export function formatFileSize(bytes: number | string | undefined | null): string {
   const b = typeof bytes === 'string' ? parseInt(bytes) : bytes;
   if (!b || isNaN(b)) return '0 KB';
@@ -91,15 +64,9 @@ export function formatFileSize(bytes: number | string | undefined | null): strin
   return (b / (1024 * 1024)).toFixed(2) + ' MB';
 }
 
-/**
- * Format a time string from HH:mm:ss or HH:mm into h:mm A
- * @param timeString Time string (e.g., "14:30:00" or "09:00:00")
- * @returns Formatted time string (e.g., "2:30 PM" or "9:00 AM")
- */
 export function formatTime(timeString: string | null | undefined): string {
-  if (!timeString) return '';
+  if (!timeString) return '-';
 
-  // Extract only HH:mm part from strings like "14:30:00" or "14:30:00.000Z"
   const match = timeString.match(/^(\d{1,2}):(\d{2})/);
   if (!match) return timeString;
 
@@ -108,7 +75,12 @@ export function formatTime(timeString: string | null | undefined): string {
   const ampm = hours >= 12 ? 'PM' : 'AM';
 
   hours = hours % 12;
-  hours = hours ? hours : 12; // transition from 0 to 12
+  hours = hours ? hours : 12;
 
   return `${hours}:${minutes} ${ampm}`;
+}
+
+export function displayCell(value: string | null | undefined): string {
+  if (value == null || value.trim() === '') return '-';
+  return value;
 }

@@ -1,5 +1,5 @@
 import { SortableHeader } from"@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import { formatCurrency, formatDate, displayCell } from"@/lib/utils/formatting";
 import Pagination from"@/components/ui/Pagination";
 import { useState, useMemo } from"react";
 import Link from"next/link";
@@ -95,7 +95,7 @@ export default function QuoteLineInvoiceLinesSubTab({
                         <tbody className="bg-white dark:bg-gray-800">
                             {paginatedData.map((item) => (
                                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.lineName }}>{item.lineName}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.lineName }}>{displayCell(item.lineName)}</td>
                                     <td className="px-3 py-2 text-sm truncate" style={{ width: widths.status }}>
                                         <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                             {item.status}
@@ -106,20 +106,20 @@ export default function QuoteLineInvoiceLinesSubTab({
                                             <Link href={`/invoices/${item.invoiceId}`} target="_blank"className="text-primary hover:underline font-medium">
                                                 {item.invoiceName}
                                             </Link>
-                                        ) : item.invoiceName}
+                                        ) : displayCell(item.invoiceName)}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrderLine }}>
-                                        {item.salesOrderLine}
+                                        {displayCell(item.salesOrderLine)}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuoteLine }}>
-                                        {item.customerQuoteLine}
+                                        {displayCell(item.customerQuoteLine)}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrderLine }}>
-                                        {item.purchaseOrderLine}
+                                        {displayCell(item.purchaseOrderLine)}
                                     </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{item.productName}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{item.description}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{item.manufacturerDBA}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{displayCell(item.productName)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{displayCell(item.description)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{displayCell(item.manufacturerDBA)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.unitPrice }}>{formatCurrency(item.unitPrice)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.invoiceQty }}>{item.invoiceQty}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(item.totalPrice)}</td>

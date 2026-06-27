@@ -6,7 +6,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
-import { formatDate } from "@/lib/utils/formatting";
+import { formatDate, displayCell } from "@/lib/utils/formatting";
 
 import { StatusBadge } from "@/components/ui/StatusBadge";
 
@@ -98,16 +98,16 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
                                     {s.Name}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={s.Serial_Number_Name || '-'}>
-                                    {s.Serial_Number_Name || '-'}
+                                    {displayCell(s.Serial_Number_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={s.Product_Serial_Number__c || '-'}>
-                                    {s.Product_Serial_Number__c || '-'}
+                                    {displayCell(s.Product_Serial_Number__c)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Name || '-'}>
-                                    {s.Product_Name || '-'}
+                                    {displayCell(s.Product_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Description__c || '-'}>
-                                    {s.Product_Description__c || '-'}
+                                    {displayCell(s.Product_Description__c)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Name || '-'}>
                                     {s.Purchase_Order__c ? (
@@ -115,11 +115,11 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
                                             {s.Purchase_Order_Name || 'View PO'}
                                         </Link>
                                     ) : (
-                                        s.Purchase_Order_Name || '-'
+                                        displayCell(s.Purchase_Order_Name)
                                     )}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={s.RMA_Name || '-'}>
-                                    {s.RMA_Name || '-'}
+                                    {displayCell(s.RMA_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : '-'}>
                                     {s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : '-'}

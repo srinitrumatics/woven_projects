@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatCurrency } from "@/lib/utils/formatting";
+import { formatCurrency, displayCell } from "@/lib/utils/formatting";
 import { QuoteLine, QuoteStatus } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import Pagination from "@/components/ui/Pagination";
@@ -96,13 +96,13 @@ export default function QuoteLinesTab({
                                     <StatusBadge status={line.status as QuoteStatus} />
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[160px] truncate" style={{ width: widths.productName }} title={line.productName}>
-                                    {line.productName}
+                                    {displayCell(line.productName)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.description }} title={line.description}>
-                                    {line.description}
+                                    {displayCell(line.description)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.manufacturerDBA }} title={line.manufacturerDBA}>
-                                    {line.manufacturerDBA}
+                                    {displayCell(line.manufacturerDBA)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.unitPrice }} title={formatCurrency(line.unitPrice)}>
                                     {formatCurrency(line.unitPrice)}

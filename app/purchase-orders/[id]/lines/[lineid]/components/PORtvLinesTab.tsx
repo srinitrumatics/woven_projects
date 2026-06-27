@@ -5,7 +5,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, displayCell } from "@/lib/utils/formatting";
 import Link from 'next/link';
 
 interface RtvLine {
@@ -128,19 +128,19 @@ export default function PORtvLinesTab({ lines }: PORtvLinesTabProps) {
                                     {line.Name}
                                 </td>
                                 <td className="px-4 py-3 truncate"><StatusBadge status={line.Status__c} /></td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.RTV_Name || ' '}>
-                                    {line.RTV_Name || ''}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.RTV_Name || '-'}>
+                                    {displayCell(line.RTV_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Purchase_Order_Line_Name || ' '}>
-                                    {line.Purchase_Order_Line_Name || ''}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Purchase_Order_Line_Name || '-'}>
+                                    {displayCell(line.Purchase_Order_Line_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || ' '}>
-                                    {line.Customer_Quote_Line_Name || ''}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || '-'}>
+                                    {displayCell(line.Customer_Quote_Line_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Reason_Code__c || ' '}>{line.Reason_Code__c || ' '}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || ' '}>{line.Product_Name || ' '}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || ' '}>{line.Product_Description__c || ' '}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Manufacturer_DBA__c || ' '}>{line.Manufacturer_DBA__c || ' '}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Reason_Code__c || '-'}>{displayCell(line.Reason_Code__c)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>{displayCell(line.Product_Name)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || '-'}>{displayCell(line.Product_Description__c)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Manufacturer_DBA__c || '-'}>{displayCell(line.Manufacturer_DBA__c)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={String(line.Return_Qty__c || 0)}>{line.Return_Qty__c || 0}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left truncate" title={formatCurrency(line.Total_Cost__c || 0)}>{formatCurrency(line.Total_Cost__c || 0)}</td>

@@ -1,5 +1,5 @@
 import { SortableHeader } from"@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import { formatCurrency, formatDate, displayCell } from"@/lib/utils/formatting";
 import Pagination from"@/components/ui/Pagination";
 import { useState, useMemo } from"react";
 import Link from"next/link";
@@ -102,7 +102,7 @@ export default function QuoteLineShippingManifestLinesSubTab({
                         <tbody className="bg-white dark:bg-gray-800">
                             {paginatedData.map((item) => (
                                 <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.lineName }}>{item.lineName}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.lineName }}>{displayCell(item.lineName)}</td>
                                     <td className="px-3 py-2 text-sm truncate" style={{ width: widths.status }}>
                                         <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                             {item.status}
@@ -113,17 +113,17 @@ export default function QuoteLineShippingManifestLinesSubTab({
                                             <Link href={`/shipments/${item.manifestId}`} target="_blank"className="text-primary hover:underline font-bold">
                                                 {item.manifestName}
                                             </Link>
-                                        ) : item.manifestName}
+                                        ) : displayCell(item.manifestName)}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrderLine }}>
-                                        {item.salesOrderLine}
+                                        {displayCell(item.salesOrderLine)}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuoteLine }}>
-                                        {item.customerQuoteLine}
+                                        {displayCell(item.customerQuoteLine)}
                                     </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{item.productName}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{item.description}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{item.manufacturerDBA}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{displayCell(item.productName)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{displayCell(item.description)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{displayCell(item.manufacturerDBA)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.boxCount }}>{item.boxCount}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.boxNetWeight }}>{item.boxNetWeight}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.boxGrossWeight }}>{item.boxGrossWeight}</td>
@@ -131,9 +131,9 @@ export default function QuoteLineShippingManifestLinesSubTab({
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalOrderQty }}>{item.totalOrderQty}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(item.totalPrice)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.qtyShipped }}>{item.qtyShipped}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingNumber }}>{item.trackingNumber}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingNumber }}>{displayCell(item.trackingNumber)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatDate(item.estimatedDeliveryDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{item.trackingStatus}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.trackingStatus)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatDate(item.actualDeliveryDate, 'numeric-dash')}</td>
                                 </tr>
                             ))}

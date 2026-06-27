@@ -4,6 +4,7 @@ import { Order, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import Pagination from "../../../../components/ui/Pagination";
 import { useUserSession } from "../../../../components/UserSessionContext";
+import { displayCell } from "@/lib/utils/formatting";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -101,15 +102,15 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                                     <StatusBadge status={order.status} />
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerPO}>{order.customerPO}</div>
+                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerPO}>{displayCell(order.customerPO)}</div>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{order.customerPODate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToAccountName}>{order.billToAccountName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToLocationName}>{order.billToLocationName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToContactName}>{order.billToContactName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToAccountName}>{order.shipToAccountName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToLocationName}>{order.shipToLocationName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToContactName}>{order.shipToContactName}</td>
+                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.customerPODate)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToAccountName}>{displayCell(order.billToAccountName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToLocationName}>{displayCell(order.billToLocationName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToContactName}>{displayCell(order.billToContactName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToAccountName}>{displayCell(order.shipToAccountName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToLocationName}>{displayCell(order.shipToLocationName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToContactName}>{displayCell(order.shipToContactName)}</td>
                                 <td className="px-3 py-2 truncate">
                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.dropShip
                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
@@ -135,9 +136,9 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">
                                     ${order.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{order.requestDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{order.shipDate}</td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{order.deliveredDate}</td>
+                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.requestDate)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.shipDate)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.deliveredDate)}</td>
                             </tr>
                         ))}
                     </tbody>

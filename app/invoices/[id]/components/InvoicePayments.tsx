@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { ReceivePayment, AppliedCreditMemo } from "../../types";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -118,8 +118,8 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(payment.status)}`} title={payment.status}>{payment.status}</span>
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(payment.amount)}>{formatCurrency(payment.amount)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={payment.paymentMethod}>{payment.paymentMethod}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={payment.referenceNo}>{payment.referenceNo}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={payment.paymentMethod}>{displayCell(payment.paymentMethod)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={payment.referenceNo}>{displayCell(payment.referenceNo)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.transactionDate, 'numeric-dash')}>{formatDate(payment.transactionDate, 'numeric-dash')}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.scheduledDate, 'numeric-dash')}>{formatDate(payment.scheduledDate, 'numeric-dash')}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.failedDate, 'numeric-dash')}>{formatDate(payment.failedDate, 'numeric-dash')}</td>
@@ -177,12 +177,12 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(memo.status)}`}>{memo.status}</span>
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(memo.appliedAmount)}>{formatCurrency(memo.appliedAmount)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={memo.creditMemoName}>{memo.creditMemoName}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={memo.creditMemoName}>{displayCell(memo.creditMemoName)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.appliedDate, 'numeric-dash')}>{formatDate(memo.appliedDate, 'numeric-dash')}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.postedDate, 'numeric-dash')}>{formatDate(memo.postedDate, 'numeric-dash')}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(memo.availableCreditBalance)}>{formatCurrency(memo.availableCreditBalance)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
-                                        <div className="truncate" title={memo.notes}>{memo.notes}</div>
+                                        <div className="truncate" title={memo.notes}>{displayCell(memo.notes)}</div>
                                     </td>
                                 </tr>
                             ))}

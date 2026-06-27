@@ -5,7 +5,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
-import { formatDate } from "@/lib/utils/formatting";
+import { formatDate, displayCell } from "@/lib/utils/formatting";
 
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import Link from 'next/link';
@@ -137,7 +137,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                         ) : (
                                             <span className="font-medium">{d.Supplier_Bill_Name || 'View Bill'}</span>
                                         )
-                                    ) : d.Supplier_Bill_Name || '-'}
+                                    ) : displayCell(d.Supplier_Bill_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Purchase_Order_Name || '-'}>
                                     {d.Purchase_Order__c ? (
@@ -148,7 +148,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                         ) : (
                                             <span className="font-medium">{d.Purchase_Order_Name || 'View PO'}</span>
                                         )
-                                    ) : d.Purchase_Order_Name || '-'}
+                                    ) : displayCell(d.Purchase_Order_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Quote_Name || '-'}>
                                     {d.Customer_Quote__c ? (
@@ -159,7 +159,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                         ) : (
                                             <span className="font-medium">{d.Customer_Quote_Name || 'View Quote'}</span>
                                         )
-                                    ) : d.Customer_Quote_Name || '-'}
+                                    ) : displayCell(d.Customer_Quote_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Order_Name || '-'}>
                                     {d.Customer_Order__c ? (
@@ -170,16 +170,16 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                         ) : (
                                             <span className="font-medium">{d.Customer_Order_Name || 'View Order'}</span>
                                         )
-                                    ) : d.Customer_Order_Name || '-'}
+                                    ) : displayCell(d.Customer_Order_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Supplier_Credit_Memo__c || '-'}>
-                                    {d.Supplier_Credit_Memo__c || '-'}
+                                    {displayCell(d.Supplier_Credit_Memo__c)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Debit_to_Account_Name || '-'}>
-                                    {d.Debit_to_Account_Name || '-'}
+                                    {displayCell(d.Debit_to_Account_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Debit_to_Contact_Name || '-'}>
-                                    {d.Debit_to_Contact_Name || '-'}
+                                    {displayCell(d.Debit_to_Contact_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(d.Total_Lines__c || 0)}>
                                     <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium truncate">

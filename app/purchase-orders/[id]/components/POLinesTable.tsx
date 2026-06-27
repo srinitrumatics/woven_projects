@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, displayCell } from "@/lib/utils/formatting";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
@@ -130,7 +130,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                             {line.purchaseOrder || 'View PO'}
                                         </Link>
                                     ) : (
-                                        line.purchaseOrder || '-'
+                                        displayCell(line.purchaseOrder)
                                     )}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.customerQuoteLine}>
@@ -139,24 +139,24 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                             {line.customerQuoteLine || 'View Quote Line'}
                                         </Link>
                                     ) : (
-                                        line.customerQuoteLine || '-'
+                                        displayCell(line.customerQuoteLine)
                                     )}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productName}>{line.productName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{line.productDescription}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.manufacturerDBA}>{line.manufacturerDBA}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productName}>{displayCell(line.productName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{displayCell(line.productDescription)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.manufacturerDBA}>{displayCell(line.manufacturerDBA)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={String(line.totalOrderQty)}>{line.totalOrderQty}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(line.productCost)}>{formatCurrency(line.productCost)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(line.shippingCost)}>{formatCurrency(line.shippingCost)}</td>
                                 <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white truncate" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={String(line.openBalanceQty)}>{line.openBalanceQty}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.trackingNumber}>{line.trackingNumber}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.trackingNumber}>{displayCell(line.trackingNumber)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}>{line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.trackingStatus}>{line.trackingStatus}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.trackingStatus}>{displayCell(line.trackingStatus)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}>{line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}>{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.invoiceStatus}>{line.invoiceStatus}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.invoiceStatus}>{displayCell(line.invoiceStatus)}</td>
                             </tr>
                         ))}
                     </tbody>

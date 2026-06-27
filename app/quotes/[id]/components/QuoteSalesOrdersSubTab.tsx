@@ -1,6 +1,6 @@
 import { QuoteSalesOrder } from"@/app/quotes/types";
 import { SortableHeader } from"@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 import Link from"next/link";
 import Pagination from"@/components/ui/Pagination";
 import { useState, useMemo } from "react";
@@ -104,8 +104,8 @@ export default function QuoteSalesOrdersSubTab({
                                                     <Link href={`/quotes/${order.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {order.customerQuote}
                                                     </Link>
-                                                ) : order.customerQuote
-                                            ) : order.customerQuote}
+                                                ) : displayCell(order.customerQuote)
+                                            ) : displayCell(order.customerQuote)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {order.customerOrderId ? (
@@ -113,18 +113,18 @@ export default function QuoteSalesOrdersSubTab({
                                                     <Link href={`/orders/${order.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {order.customerOrder}
                                                     </Link>
-                                                ) : order.customerOrder
-                                            ) : order.customerOrder}
+                                                ) : displayCell(order.customerOrder)
+                                            ) : displayCell(order.customerOrder)}
                                         </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{order.customerPO}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToAccount }}>{order.billToAccount}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToLocation }}>{order.billToLocation}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToContact }}>{order.billToContact}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToAccount }}>{order.shipToAccount}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToLocation }}>{order.shipToLocation}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToContact }}>{order.shipToContact}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{displayCell(order.customerPO)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToAccount }}>{displayCell(order.billToAccount)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToLocation }}>{displayCell(order.billToLocation)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToContact }}>{displayCell(order.billToContact)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToAccount }}>{displayCell(order.shipToAccount)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToLocation }}>{displayCell(order.shipToLocation)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToContact }}>{displayCell(order.shipToContact)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.dropShip }}>{order.dropShip ? 'Yes' : 'No'}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{order.totalLines}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{formatNumber(order.totalLines)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(order.totalPrice)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(order.shipping)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }}>{formatCurrency(order.taxes)}</td>

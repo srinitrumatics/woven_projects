@@ -6,7 +6,7 @@ import Pagination from "@/components/ui/Pagination";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
+import { formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 import { InventoryPosition, InventoryStatus } from "./types";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
@@ -653,20 +653,19 @@ export default function InventoryPage() {
                                             </td>
                                             <td className={`px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky text-left truncate shadow-[1px_0_0_0_#f3f4f6] dark:shadow-[1px_0_0_0_#374151] z-20 ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.productName, minWidth: widths.productName, maxWidth: widths.productName, left: widths.checkbox }}>
                                                 <button onClick={() => router.push(`/inventory/${item.productId || item.id}`)} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
-
-                                                    {item.productName}
+                                                    {displayCell(item.productName)}
                                                 </button>
 
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.description, maxWidth: widths.description }}>
-                                                <div className="truncate" title={item.productDescription}>{item.productDescription}</div>
+                                                <div className="truncate" title={item.productDescription}>{displayCell(item.productDescription)}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.manufacturer, maxWidth: widths.manufacturer }}>
-                                                <div className="truncate" title={item.manufacturerDBA}>{item.manufacturerDBA}</div>
+                                                <div className="truncate" title={item.manufacturerDBA}>{displayCell(item.manufacturerDBA)}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                                                 <div className="truncate">
-                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">{item.productFamily}</span>
+                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">{displayCell(item.productFamily)}</span>
                                                 </div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.qtyOnHand)}</td>

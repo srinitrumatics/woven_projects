@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
 import { Invoice, InvoiceStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -519,7 +519,7 @@ export default function InvoicesPage() {
                           <StatusBadge status={invoice.status} />
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">{invoice.salesOrderNumber || ''}</div>
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">{displayCell(invoice.salesOrderNumber)}</div>
                         </td>
                         <td className="px-3 py-2 truncate">
                           <div className="text-sm font-medium text-gray-900 dark:text-white">
@@ -533,10 +533,10 @@ export default function InvoicesPage() {
                                   {invoice.purchaseOrderNumber || 'N/A'}
                                 </Link>
                               ) : (
-                                <span className="font-medium">{invoice.purchaseOrderNumber || 'N/A'}</span>
+                                <span className="font-medium">{displayCell(invoice.purchaseOrderNumber)}</span>
                               )
                             ) : (
-                              invoice.purchaseOrderNumber || 'N/A'
+                              displayCell(invoice.purchaseOrderNumber)
                             )}
                           </div>
                         </td>
@@ -553,10 +553,10 @@ export default function InvoicesPage() {
                                   {invoice.proposalName || 'N/A'}
                                 </Link>
                               ) : (
-                                <span className="font-medium">{invoice.proposalName || 'N/A'}</span>
+                                <span className="font-medium">{displayCell(invoice.proposalName)}</span>
                               )
                             ) : (
-                              invoice.proposalName || 'N/A'
+                              displayCell(invoice.proposalName)
                             )}
                           </div>
                         </td>
@@ -573,27 +573,27 @@ export default function InvoicesPage() {
                                   {invoice.customerOrder || 'N/A'}
                                 </Link>
                               ) : (
-                                <span className="font-medium">{invoice.customerOrder || 'N/A'}</span>
+                                <span className="font-medium">{displayCell(invoice.customerOrder)}</span>
                               )
                             ) : (
-                              invoice.customerOrder || 'N/A'
+                              displayCell(invoice.customerOrder)
                             )}
                           </div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerPO}>{invoice.customerPO || 'N/A'}</div>
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerPO}>{displayCell(invoice.customerPO)}</div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm font-medium">{invoice.accountName}</div>
+                          <div className="text-sm font-medium">{displayCell(invoice.accountName)}</div>
                         </td>
                         <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{invoice.lineItemCount}</td>
                         <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(invoice.totalAmount)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(invoice.invoiceDate, 'numeric-dash')}</td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm text-gray-600 dark:text-white font-medium" title={invoice.paymentTerms}>{invoice.paymentTerms || 'N/A'}</div>
+                          <div className="text-sm text-gray-600 dark:text-white font-medium" title={invoice.paymentTerms}>{displayCell(invoice.paymentTerms)}</div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm text-gray-600 dark:text-white font-medium" title={invoice.collectionStatus}>{invoice.collectionStatus || 'N/A'}</div>
+                          <div className="text-sm text-gray-600 dark:text-white font-medium" title={invoice.collectionStatus}>{displayCell(invoice.collectionStatus)}</div>
                         </td>
                         <td className="px-3 py-2 text-sm text-left truncate">
                           <span className={`font-semibold ${invoice.amountDue > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>

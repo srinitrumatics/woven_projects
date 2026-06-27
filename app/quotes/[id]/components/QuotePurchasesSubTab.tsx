@@ -1,6 +1,6 @@
 import { QuotePurchase, QuoteStatus } from "@/app/quotes/types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
 import Link from "next/link";
 import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
@@ -110,22 +110,22 @@ export default function QuotePurchasesSubTab({
                                             <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {po.customerQuote}
                                             </Link>
-                                        ) : po.customerQuote}
+                                        ) : displayCell(po.customerQuote)}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                         {po.customerOrderId ? (
                                             <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {po.customerOrder}
                                             </Link>
-                                        ) : po.customerOrder}
+                                        ) : displayCell(po.customerOrder)}
                                     </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{po.customerPO}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierName }}>{po.supplierName}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierDBA }}>{po.supplierDBA}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierContact }}>{po.supplierContact}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToAccount }}>{po.shipToAccount}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToLocation }}>{po.shipToLocation}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToContact }}>{po.shipToContact}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{displayCell(po.customerPO)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierName }}>{displayCell(po.supplierName)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierDBA }}>{displayCell(po.supplierDBA)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierContact }}>{displayCell(po.supplierContact)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToAccount }}>{displayCell(po.shipToAccount)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToLocation }}>{displayCell(po.shipToLocation)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToContact }}>{displayCell(po.shipToContact)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.dropShip }}>{po.dropShip ? 'Yes' : 'No'}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{po.totalLines}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.productCost }}>{formatCurrency(po.productCost)}</td>
@@ -135,12 +135,12 @@ export default function QuotePurchasesSubTab({
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.acknowledgedDate }}>{formatDate(po.acknowledgedDate, 'numeric-dash')}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.requestDate }}>{formatDate(po.requestDate, 'numeric-dash')}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.promiseDate }}>{formatDate(po.promiseDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shippingMethod }}>{po.shippingMethod}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsPartner }}>{po.logisticsPartner}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsContact }}>{po.logisticsContact}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingNumber }}>{po.trackingNumber}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shippingMethod }}>{displayCell(po.shippingMethod)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsPartner }}>{displayCell(po.logisticsPartner)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsContact }}>{displayCell(po.logisticsContact)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingNumber }}>{displayCell(po.trackingNumber)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(po.estimatedDeliveryDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingStatus }}>{po.trackingStatus}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingStatus }}>{displayCell(po.trackingStatus)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.actualDeliveryDate }}>{formatDate(po.actualDeliveryDate, 'numeric-dash')}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.goodsReceiptDate }}>{formatDate(po.goodsReceiptDate, 'numeric-dash')}</td>
                                 </tr>

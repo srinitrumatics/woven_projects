@@ -5,7 +5,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
-import { formatDate } from "@/lib/utils/formatting";
+import { formatDate, displayCell } from "@/lib/utils/formatting";
 
 interface SerialNumberLog {
     Id: string;
@@ -90,32 +90,32 @@ export default function POSerialNumberLogLinesTab({ serialNumbers }: POSerialNum
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={s.Name}>
                                     {s.Name}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Serial_Number_Name || ' '}>
-                                    {s.Serial_Number_Name || ' '}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Serial_Number_Name || '-'}>
+                                    {displayCell(s.Serial_Number_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Serial_Number__c || ' '}>
-                                    {s.Product_Serial_Number__c || ' '}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Serial_Number__c || '-'}>
+                                    {displayCell(s.Product_Serial_Number__c)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate" title={s.Product_Name || ' '}>
-                                    {s.Product_Name || ' '}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate" title={s.Product_Name || '-'}>
+                                    {displayCell(s.Product_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Description__c || ' '}>
-                                    {s.Product_Description__c || ' '}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Description__c || '-'}>
+                                    {displayCell(s.Product_Description__c)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Name || ' '}>
-                                    {s.Purchase_Order_Name || ' '}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Name || '-'}>
+                                    {displayCell(s.Purchase_Order_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Line_Name || ' '}>
-                                    {s.Purchase_Order_Line_Name || ' '}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Line_Name || '-'}>
+                                    {displayCell(s.Purchase_Order_Line_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.RMA_Name || ' '}>
-                                    {s.RMA_Name || ' '}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.RMA_Name || '-'}>
+                                    {displayCell(s.RMA_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.RMA_Line_Name || ' '}>
-                                    {s.RMA_Line_Name || ' '}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.RMA_Line_Name || '-'}>
+                                    {displayCell(s.RMA_Line_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : ' '}>
-                                    {s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : ' '}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : '-'}>
+                                    {s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : displayCell(undefined)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={s.Active__c ? 'Yes' : 'No'}>
                                     <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full truncate ${s.Active__c ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'

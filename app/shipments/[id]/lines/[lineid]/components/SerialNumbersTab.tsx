@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatDate } from "@/lib/utils/formatting";
+import { formatDate, displayCell } from "@/lib/utils/formatting";
 import Link from "next/link";
 
 interface SerialNumbersTabProps {
@@ -121,22 +121,22 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={log.name}>
                                 {log.name}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.serialNumber}>{log.serialNumber}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productSerialNumber}>{log.productSerialNumber}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productName}>{log.productName}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productDescription}>{log.productDescription}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.serialNumber}>{displayCell(log.serialNumber)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productSerialNumber}>{displayCell(log.productSerialNumber)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productName}>{displayCell(log.productName)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productDescription}>{displayCell(log.productDescription)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={log.shippingManifestName}>
                                 {log.shippingManifestId ? (
                                     <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
                                         {log.shippingManifestName || "View Manifest"}
                                     </Link>
                                 ) : (
-                                    log.shippingManifestName || " "
+                                    displayCell(log.shippingManifestName)
                                 )}
                             </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shippingManifestLine}>{log.shippingManifestLine}</td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={log.shipDate ? formatDate(log.shipDate, "numeric-dash") : ""}>{log.shipDate ? formatDate(log.shipDate, "numeric-dash") : ""}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shipToAccount}>{log.shipToAccount}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shippingManifestLine}>{displayCell(log.shippingManifestLine)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={log.shipDate ? formatDate(log.shipDate, "numeric-dash") : ""}>{displayCell(log.shipDate ? formatDate(log.shipDate, "numeric-dash") : "")}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.shipToAccount}>{displayCell(log.shipToAccount)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.active }}>
                                 {log.active === true || log.active === "true" || log.active === "True" ? (
                                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 truncate">

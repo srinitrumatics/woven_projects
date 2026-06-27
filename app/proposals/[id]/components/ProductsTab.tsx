@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ProposedProduct, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import Pagination from "../../../../components/ui/Pagination";
+import { displayCell } from "@/lib/utils/formatting";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -87,10 +88,10 @@ export default function ProductsTab({
                                         {product.Name}
                                     </Link>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.productName }} title={product.productName || ''}>{product.productName}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.description }} title={product.description || ''}>{product.description || '-'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.manufacturerDBA }} title={product.manufacturerDBA || ''}>{product.manufacturerDBA || '-'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.grouping }} title={product.grouping || ''}>{product.grouping || '-'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.productName }} title={product.productName || ''}>{displayCell(product.productName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.description }} title={product.description || ''}>{displayCell(product.description)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.manufacturerDBA }} title={product.manufacturerDBA || ''}>{displayCell(product.manufacturerDBA)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.grouping }} title={product.grouping || ''}>{displayCell(product.grouping)}</td>
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate font-medium" style={{ width: widths.unitPrice }} title={`$${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>

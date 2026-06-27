@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
-import { formatCurrency } from "@/lib/utils/formatting";
+import { formatCurrency, displayCell } from "@/lib/utils/formatting";
 import Link from 'next/link';
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
@@ -105,26 +105,26 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
                         {paginatedData.map((line) => (
 
                             <tr key={line.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate">{line.Name}</td>
+                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate">{displayCell(line.Name)}</td>
                                 <td className="px-3 py-2 text-sm truncate">
                                     <StatusBadge status={line.Status__c || "-"} />
 
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
-                                    {line.Debit_Memo_Name || " "}
+                                    {displayCell(line.Debit_Memo_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
-                                    {line.Supplier_Bill_Line_Name || " "}
+                                    {displayCell(line.Supplier_Bill_Line_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
-                                    {line.Customer_Quote_Line_Name || " "}
+                                    {displayCell(line.Customer_Quote_Line_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
-                                    {line.Purchase_Order_Line_Name || " "}
+                                    {displayCell(line.Purchase_Order_Line_Name)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{line.Product_Name || " "}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate" title={line.Product_Description__c}>{line.Product_Description__c || " "}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{line.Manufacturer_DBA__c || " "}</td>
+                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{displayCell(line.Product_Name)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate" title={line.Product_Description__c}>{displayCell(line.Product_Description__c)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{displayCell(line.Manufacturer_DBA__c)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Unit_Cost__c || line.UnitCost__c || 0)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{line.Debit_Qty__c ?? line.DebitQty__c ?? 0}</td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Total_Cost__c || line.TotalCost__c || 0)}</td>

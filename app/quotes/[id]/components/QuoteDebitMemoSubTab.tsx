@@ -1,6 +1,6 @@
 import { QuoteDebitMemo } from"@/app/quotes/types";
 import { SortableHeader } from"@/components/ui/SortableHeader";
-import { formatCurrency, formatDate } from"@/lib/utils/formatting";
+import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 import Link from"next/link";
 import Pagination from"@/components/ui/Pagination";
 import { useState, useMemo } from "react";
@@ -100,8 +100,8 @@ export default function QuoteDebitMemoSubTab({
                                                     <Link href={`/supplier-bills/${memo.supplierBillId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {memo.supplierBill}
                                                     </Link>
-                                                ) : memo.supplierBill
-                                            ) : memo.supplierBill}
+                                                ) : displayCell(memo.supplierBill)
+                                            ) : displayCell(memo.supplierBill)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
                                             {memo.purchaseOrderId ? (
@@ -109,8 +109,8 @@ export default function QuoteDebitMemoSubTab({
                                                     <Link href={`/purchase-orders/${memo.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {memo.purchaseOrder}
                                                     </Link>
-                                                ) : memo.purchaseOrder
-                                            ) : memo.purchaseOrder}
+                                                ) : displayCell(memo.purchaseOrder)
+                                            ) : displayCell(memo.purchaseOrder)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {memo.customerQuoteId ? (
@@ -118,8 +118,8 @@ export default function QuoteDebitMemoSubTab({
                                                     <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {memo.customerQuote}
                                                     </Link>
-                                                ) : memo.customerQuote
-                                            ) : memo.customerQuote}
+                                                ) : displayCell(memo.customerQuote)
+                                            ) : displayCell(memo.customerQuote)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {memo.customerOrderId ? (
@@ -127,13 +127,13 @@ export default function QuoteDebitMemoSubTab({
                                                     <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                         {memo.customerOrder}
                                                     </Link>
-                                                ) : memo.customerOrder
-                                            ) : memo.customerOrder}
+                                                ) : displayCell(memo.customerOrder)
+                                            ) : displayCell(memo.customerOrder)}
                                         </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierCredit }}>{memo.supplierCredit}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.debitToAccount }}>{memo.debitToAccount}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.debitToContact }}>{memo.debitToContact}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{memo.totalLines}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierCredit }}>{displayCell(memo.supplierCredit)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.debitToAccount }}>{displayCell(memo.debitToAccount)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.debitToContact }}>{displayCell(memo.debitToContact)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{formatNumber(memo.totalLines)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalCost }}>{formatCurrency(memo.totalCost)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(memo.shipping)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalDebitAmount }}>{formatCurrency(memo.totalDebitAmount)}</td>
