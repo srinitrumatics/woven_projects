@@ -69,7 +69,7 @@ export function SortableHeader({
             >
                 <div className="flex-1 min-w-0">
                     <span
-                        className={`text-${align} block w-full ${truncate ? 'truncate' : ''}`}
+                        className={`text-${align} block w-full ${truncate ? 'truncate' : 'whitespace-nowrap'}`}
                         title={label}
                     >
                         {label}
