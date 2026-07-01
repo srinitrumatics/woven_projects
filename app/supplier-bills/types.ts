@@ -60,6 +60,7 @@ export interface SupplierBillLine {
   productName: string;
   productDescription: string;
   manufacturerDBA: string;
+  brand?: string;
   unitCost: number;
   billedQty: number;
   billAmount: number;

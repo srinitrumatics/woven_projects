@@ -16,8 +16,13 @@ export interface Proposal {
   productCount: number;
   billTo: string;
   billToAccount?: string;
+  billToLocation?: string;
+  billToContact?: string;
   shipTo: string;
   shipToAccount?: string;
+  shipToLocation?: string;
+  shipToContact?: string;
+  grandTotal?: number;
   opportunityName?: string;
   submittedBy?: string;
   accountExecutive?: string;

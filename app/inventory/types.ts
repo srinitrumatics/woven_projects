@@ -12,6 +12,7 @@ export interface InventoryPosition {
     productFamily?: string;
     manufacturerDBA: string;
     manufacturerName?: string;
+    brand?: string;
     supplierName: string;
     purchaseOrder: string;
     qtyOnHand: number;

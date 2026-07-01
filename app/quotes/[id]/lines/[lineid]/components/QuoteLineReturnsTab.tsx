@@ -21,6 +21,7 @@ interface DebitMemoLine {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     debitQty: number;
     unitCost: number;
     totalCost: number;
@@ -41,6 +42,7 @@ interface RTVLine {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     returnQty: number;
     unitCost: number;
     totalCost: number;
@@ -62,6 +64,7 @@ interface CreditMemoLine {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     creditQty: number;
     unitPrice: number;
     totalPrice: number;
@@ -83,6 +86,7 @@ interface RMALine {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     returnQty: number;
     unitPrice: number;
     totalPrice: number;
@@ -148,6 +152,7 @@ export default function QuoteLineReturnsTab({
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
+                            brand: undefined,
                             debitQty: item.Debit_Qty__c || 0,
                             unitCost: item.Unit_Cost__c || 0,
                             totalCost: item.Total_Cost__c || 0,
@@ -171,6 +176,7 @@ export default function QuoteLineReturnsTab({
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
+                            brand: undefined,
                             returnQty: item.Return_Qty__c || 0,
                             unitCost: item.Unit_Cost__c || 0,
                             totalCost: item.Total_Cost__c || 0,
@@ -195,6 +201,7 @@ export default function QuoteLineReturnsTab({
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
+                            brand: undefined,
                             creditQty: item.Credit_Qty__c || 0,
                             unitPrice: item.Unit_Price__c || 0,
                             totalPrice: item.Total_Price__c || 0,
@@ -219,6 +226,7 @@ export default function QuoteLineReturnsTab({
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
+                            brand: undefined,
                             returnQty: item.Return_Qty__c || 0,
                             unitPrice: item.Unit_Price__c || 0,
                             totalPrice: item.Total_Price__c || 0,

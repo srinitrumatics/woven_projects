@@ -28,6 +28,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
             productName: line.Product_Name || '',
             productDescription: line.Product_Description__c || '',
             manufacturerDBA: line.Manufacturer_DBA__c || '',
+            brand: undefined,
             unitCost: line.Unit_Cost__c || 0,
             totalOrderQty: line.Total_Order_Qty__c || 0,
             productCost: line.Total_Product_Cost__c || 0,
@@ -67,7 +68,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
         customerQuoteLine: 181,
         productName: 201,
         productDescription: 251,
-        manufacturerDBA: 181,
+        brand: 181,
         unitCost: 121,
         totalOrderQty: 121,
         productCost: 151,
@@ -94,7 +95,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                             <SortableHeader truncate={false} label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.productDescription} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.brand} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitCost} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalOrderQty} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Total Cost" field="productCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCost} onResize={handleResize} />
@@ -144,7 +145,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productName}>{displayCell(line.productName)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{displayCell(line.productDescription)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.manufacturerDBA}>{displayCell(line.manufacturerDBA)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.brand}>{displayCell(line.brand)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={String(line.totalOrderQty)}>{line.totalOrderQty}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(line.productCost)}>{formatCurrency(line.productCost)}</td>

@@ -49,6 +49,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           productSku: line.Product_Name || 'N/A',
           description: line.Product_Description__c || '',
           manufacturerDBA: line.Manufacturer_DBA__c || 'N/A',
+          brand: undefined,
           quantity: line.Total_Order_Qty__c || 0,
           unitPrice: line.Unit_Price__c || 0,
           discount: 0,

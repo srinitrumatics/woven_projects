@@ -146,7 +146,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                             <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.customerQuoteLineName} onResize={handlePurchaseResize} truncate={false} />
                                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.productName} onResize={handlePurchaseResize} truncate={false} />
                                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.productDescription} onResize={handlePurchaseResize} truncate={false} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.manufacturerDBA} onResize={handlePurchaseResize} truncate={false} />
+                                            <SortableHeader label="Brand" field="brand" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.manufacturerDBA} onResize={handlePurchaseResize} truncate={false} />
                                             <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.unitCost} onResize={handlePurchaseResize} truncate={false} />
                                             <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.totalOrderQty} onResize={handlePurchaseResize} truncate={false} />
                                             <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.totalCost} onResize={handlePurchaseResize} truncate={false} />
@@ -189,7 +189,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                                         <div className="text-sm max-w-xs truncate" title={p.productDescription}>{displayCell(p.productDescription)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 min-w-[174px] truncate">
-                                                        <div className="text-sm truncate" title={p.manufacturerDBA}>{displayCell(p.manufacturerDBA)}</div>
+                                                        <div className="text-sm truncate" title={p.brand}>{displayCell(p.brand)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">
                                                         ${p.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
@@ -247,7 +247,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                             <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.purchaseOrderLineName} onResize={handleBillResize} truncate={false} />
                                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.productName} onResize={handleBillResize} truncate={false} />
                                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.productDescription} onResize={handleBillResize} truncate={false} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.manufacturerDBA} onResize={handleBillResize} truncate={false} />
+                                            <SortableHeader label="Brand" field="brand" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.manufacturerDBA} onResize={handleBillResize} truncate={false} />
                                             <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.unitCost} onResize={handleBillResize} truncate={false} />
                                             <SortableHeader label="Billed Qty" field="billedQty" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.billedQty} onResize={handleBillResize} truncate={false} />
                                             <SortableHeader label="Bill Amount" field="billAmount" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.billAmount} onResize={handleBillResize} truncate={false} />
@@ -291,7 +291,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                                         <div className="text-sm max-w-xs truncate" title={b.productDescription}>{displayCell(b.productDescription)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[170px] truncate">
-                                                        <div className="text-sm truncate" title={b.manufacturerDBA}>{displayCell(b.manufacturerDBA)}</div>
+                                                        <div className="text-sm truncate" title={b.brand}>{displayCell(b.brand)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                         ${b.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}

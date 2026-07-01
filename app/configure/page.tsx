@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUserSession } from '@/components/UserSessionContext';
 import { useToast } from "@/components/ui/Toast";
+
 // Formatter
 const fmt = (n: number) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const trn = (s: string, m: number) => s.length > m ? s.substring(0, m) + '\u2026' : s;
@@ -32,6 +33,7 @@ export default function ConfigureOrderPage() {
   const [customGrpName, setCustomGrpName] = useState('');
   const [grpLabels, setGrpLabels] = useState<string[]>([]);
   const [grpSearch, setGrpSearch] = useState<string>('');
+  const [grpNameError, setGrpNameError] = useState(false);
 
   // DnD state refs (to avoid re-renders during drag)
   const dragSrcRef = useRef<{ type: string, id: string | number } | null>(null);
@@ -191,6 +193,12 @@ export default function ConfigureOrderPage() {
   };
 
   const addGroup = (name: string, color: string) => {
+    if (!name || !name.trim()) {
+      setGrpNameError(true);
+      toastError('Please enter a group name');
+      return;
+    }
+    setGrpNameError(false);
     const id = nextId; setNextId(id + 1);
     const nl = { id, type: 'group', grpName: name, grpColor: color || 'gc-misc', lv: 1, seq: 0, pid: null, exp: true, dirty: true, sel: false, sku: '', name: '', desc: '', mfr: '', sell: 0, qty: 0 };
     setLines(prev => reseq([...prev, nl]));
@@ -585,7 +593,10 @@ export default function ConfigureOrderPage() {
                     )}
                     <div className="px-3 py-2 text-xs font-bold text-gray-500 tracking-wider bg-gray-50 dark:bg-gray-800/80 border-y border-gray-100 dark:border-gray-700 mt-1">Custom</div>
                     <div className="p-2 flex gap-2">
-                      <input type="text" placeholder="Group name..." value={customGrpName} onChange={e => setCustomGrpName(e.target.value)} onKeyDown={e => e.key === 'Enter' && addGroup(customGrpName, 'bg-gray-500')} className="flex-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 focus:outline-none focus:border-purple-500 text-gray-900 dark:text-white" />
+                      <input type="text" placeholder="Group name..." value={customGrpName}
+                        onChange={e => { setCustomGrpName(e.target.value); setGrpNameError(false); }}
+                        onKeyDown={e => e.key === 'Enter' && addGroup(customGrpName, 'bg-gray-500')}
+                        className={`flex-1 min-w-0 px-3 h-7 text-sm border rounded-md bg-white dark:bg-gray-700 focus:outline-none focus:border-purple-500 transition-colors ${grpNameError ? 'border-red-500 focus:border-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'}`} />
                       <button onClick={() => addGroup(customGrpName, 'bg-gray-500')} className="px-2 py-1 text-xs bg-purple-600 text-white rounded hover:bg-purple-700">Add</button>
                     </div>
                   </div>
@@ -625,7 +636,7 @@ export default function ConfigureOrderPage() {
                   <th className="px-3 py-3 text-sm font-semibold truncate">Seq</th>
                   <th className="px-3 py-3 text-sm font-semibold truncate">Product / Sku</th>
                   <th className="px-3 py-3 text-sm font-semibold truncate">Description</th>
-                  <th className="px-3 py-3 text-sm font-semibold truncate">Manufacturer</th>
+                  <th className="px-3 py-3 text-sm font-semibold truncate">Brand</th>
                   <th className="px-3 py-3 text-sm font-semibold text-right truncate">Sell Price</th>
                   <th className="px-3 py-3 text-sm font-semibold text-center truncate w-24">Qty</th>
                   <th className="px-3 py-3 text-sm font-semibold text-right truncate">Ext. Price</th>
@@ -682,7 +693,7 @@ export default function ConfigureOrderPage() {
                         <td className="px-3 py-2 text-sm text-gray-500">{l.seq}</td>
                         <td className="px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:underline cursor-pointer truncate max-w-[200px]" title={`${l.sku} - ${l.name}`}>{l.name}</td>
                         <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate max-w-[150px]" title={l.desc}>{l.desc}</td>
-                        <td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px]" title={l.mfr}>{trn(l.mfr, 18)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px]">-</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-right">{fmt(l.sell)}</td>
                         <td className="px-3 py-2 text-center">
                           <input type="text" value={l.qty} readOnly className="w-16 text-right py-1 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white cursor-default focus:outline-none mx-auto block" />

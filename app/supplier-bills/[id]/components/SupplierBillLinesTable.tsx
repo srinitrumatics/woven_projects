@@ -33,6 +33,7 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
         productName: 200,
         productDescription: 250,
         manufacturerDBA: 180,
+        brand: 180,
         unitCost: 120,
         billedQty: 160,
         billAmount: 180,
@@ -72,7 +73,7 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                             <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrderLineName} onResize={handleResize} />
                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productDescription} onResize={handleResize} />
-                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.manufacturerDBA} onResize={handleResize} />
+                            <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.brand} onResize={handleResize} />
                             <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.unitCost} onResize={handleResize} />
                             <SortableHeader label="Billed Qty" field="billedQty" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billedQty} onResize={handleResize} />
                             <SortableHeader label="Bill Amount" field="billAmount" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billAmount} onResize={handleResize} />
@@ -103,7 +104,7 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(line.productName)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{displayCell(line.productDescription)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(line.manufacturerDBA)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(line.brand)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.unitCost)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{line.billedQty}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.billAmount)}</td>

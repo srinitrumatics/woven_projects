@@ -24,6 +24,7 @@ interface ShipmentLine {
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     unitPrice: number;
     totalOrderQty: number;
     totalPrice: number;
@@ -87,6 +88,7 @@ function mapLine(raw: any): ShipmentLine {
         productName: raw.Product_Name || "",
         productDescription: raw.Product_Description__c || "",
         manufacturerDBA: raw.Manufacturer_DBA__c || "",
+        brand: undefined,
         unitPrice: raw.Unit_Price__c ?? 0,
         totalOrderQty: raw.Total_Order_Qty__c ?? 0,
         totalPrice: raw.Total_Price__c ?? 0,
@@ -218,7 +220,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                         <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={handleSort} width={widths.customerQuoteLineName} onResize={handleResize} align="left" />
                         <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" />
                         <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" />
-                        <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" />
+                        <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" />
                         <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={handleSort} width={widths.unitPrice} onResize={handleResize} align="left" />
                         <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={handleSort} width={widths.totalOrderQty} onResize={handleResize} align="left" />
                         <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={handleSort} width={widths.totalPrice} onResize={handleResize} align="left" />
@@ -264,7 +266,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                             />
                             <TextCell v={displayCell(line.productName)} w={widths.productName} />
                             <TextCell v={displayCell(line.productDescription)} w={widths.productDescription} />
-                            <TextCell v={displayCell(line.manufacturerDBA)} w={widths.manufacturerDBA} />
+                            <TextCell v={displayCell(line.brand)} w={widths.manufacturerDBA} />
                             <NumCell v={formatCurrency(line.unitPrice)} w={widths.unitPrice} />
                             <NumCell v={fmt(line.totalOrderQty, 0)} w={widths.totalOrderQty} />
                             <NumCell v={formatCurrency(line.totalPrice)} w={widths.totalPrice} />

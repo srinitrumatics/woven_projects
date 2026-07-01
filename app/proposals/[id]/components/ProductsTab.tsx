@@ -66,10 +66,11 @@ export default function ProductsTab({
                 <table className="w-full border-separate border-spacing-0 table-fixed text-left">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="Proposed Product" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.Name} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" truncate={false} />
+                            <SortableHeader label="Proposed Products" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.Name} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" truncate={false} />
+                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={onResize} align="left" truncate={false} />
-                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={onResize} align="left" truncate={false} />
+                            <SortableHeader label="Brand Name" field="brandName" sortConfig={sortConfig} requestSort={requestSort} width={widths.brandName} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Grouping" field="grouping" sortConfig={sortConfig} requestSort={requestSort} width={widths.grouping} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Total Order Qty" field="quantity" sortConfig={sortConfig} requestSort={requestSort} width={widths.quantity} onResize={onResize} align="left" truncate={false} />
@@ -77,6 +78,7 @@ export default function ProductsTab({
                             <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Line Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={onResize} align="left" truncate={false} />
+                            <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyShipped} onResize={onResize} align="left" truncate={false} />
                             <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.actions }}>Action</th>
                         </tr>
                     </thead>
@@ -88,9 +90,18 @@ export default function ProductsTab({
                                         {product.Name}
                                     </Link>
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.productName }} title={product.productName || ''}>{displayCell(product.productName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.status }}>
+                                    <StatusBadge status={product.status || ''} />
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.productName }} title={product.productName || ''}>
+                                    {product.productName ? (
+                                        <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary hover:underline truncate">
+                                            {product.productName}
+                                        </Link>
+                                    ) : displayCell(product.productName)}
+                                </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.description }} title={product.description || ''}>{displayCell(product.description)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.manufacturerDBA }} title={product.manufacturerDBA || ''}>{displayCell(product.manufacturerDBA)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.brandName }} title={product.brandName || ''}>{displayCell(product.brandName)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.grouping }} title={product.grouping || ''}>{displayCell(product.grouping)}</td>
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate font-medium" style={{ width: widths.unitPrice }} title={`$${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${product.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -108,6 +119,7 @@ export default function ProductsTab({
                                 <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.grandTotal }} title={`$${product.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${product.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.qtyShipped }}>{displayCell(String(product.qtyShipped ?? ''))}</td>
                                 <td className="px-3 py-2 text-left truncate" style={{ width: widths.actions }}>
                                     <Link href={`/proposals/${proposalId}/lines/${product.id}`} target="_blank" className="text-primary hover:text-primary-dark transition-colors inline-block">
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,5 +144,20 @@ export default function ProductsTab({
                 />
             </div>
         </div>
+    );
+}
+
+function StatusBadge({ status }: { status: string }) {
+    if (!status) return <span className="text-gray-400">-</span>;
+    const colorMap: Record<string, string> = {
+        'Active': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+        'Inactive': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+        'Draft': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+    };
+    const color = colorMap[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+    return (
+        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${color}`}>
+            {status}
+        </span>
     );
 }

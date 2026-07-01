@@ -17,6 +17,7 @@ interface SMLI {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     boxCount: number;
     boxNetWeight: number;
     boxGrossWeight: number;
@@ -85,7 +86,7 @@ export default function QuoteLineShippingManifestLinesSubTab({
                                 <SortableHeader label="Customer Quote Line"field="customerQuoteLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
                                 <SortableHeader label="Product Name"field="productName"sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
                                 <SortableHeader label="Product Description"field="description"sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                <SortableHeader label="Manufacturer DBA"field="manufacturerDBA"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
+                                <SortableHeader label="Brand"field="brand"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
                                 <SortableHeader label="Box Count"field="boxCount"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxCount} onResize={handleResize} />
                                 <SortableHeader label="Box Net Weight"field="boxNetWeight"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxNetWeight} onResize={handleResize} />
                                 <SortableHeader label="Box Gross Weight"field="boxGrossWeight"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxGrossWeight} onResize={handleResize} />
@@ -123,7 +124,7 @@ export default function QuoteLineShippingManifestLinesSubTab({
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{displayCell(item.productName)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{displayCell(item.description)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{displayCell(item.manufacturerDBA)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{displayCell(item.brand)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.boxCount }}>{item.boxCount}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.boxNetWeight }}>{item.boxNetWeight}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.boxGrossWeight }}>{item.boxGrossWeight}</td>

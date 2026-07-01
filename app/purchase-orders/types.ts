@@ -82,6 +82,7 @@ export interface PurchaseOrderLine {
     productFamily: string;
     productRecordType: string;
     manufacturerDBA: string;
+    brand?: string;
     unitCost: number;
     totalProductCost: number;
     shippingCharges: number;

@@ -19,6 +19,7 @@ interface INLI {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     unitPrice: number;
     invoiceQty: number;
     totalPrice: number;
@@ -83,7 +84,7 @@ export default function QuoteLineInvoiceLinesSubTab({
                                 <SortableHeader label="Purchase Order Line"field="purchaseOrderLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderLine} onResize={handleResize} />
                                 <SortableHeader label="Product Name"field="productName"sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
                                 <SortableHeader label="Product Description"field="description"sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                <SortableHeader label="Manufacturer DBA"field="manufacturerDBA"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
+                                <SortableHeader label="Brand"field="brand"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
                                 <SortableHeader label="Unit Price"field="unitPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
                                 <SortableHeader label="Invoice Qty"field="invoiceQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceQty} onResize={handleResize} />
                                 <SortableHeader label="Total Price"field="totalPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
@@ -119,7 +120,7 @@ export default function QuoteLineInvoiceLinesSubTab({
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{displayCell(item.productName)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{displayCell(item.description)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{displayCell(item.manufacturerDBA)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{displayCell(item.brand)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.unitPrice }}>{formatCurrency(item.unitPrice)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.invoiceQty }}>{item.invoiceQty}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(item.totalPrice)}</td>

@@ -128,7 +128,7 @@ export default function ProductCatalog({
                             style={{ width: widths.image, minWidth: widths.image, maxWidth: widths.image }}
                             >Image</th>*/}
                                 <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
-                                <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
+                                <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
                                 <SortableHeader label="Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
                                 <SortableHeader label="List Price" field="listPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={onResize} />
                                 <SortableHeader label="Unit Price" field="unitPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
@@ -174,7 +174,7 @@ export default function ProductCatalog({
                                         </div>
                                     </td>
                                     <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
-                                        <div className="truncate" title={displayCell(product.manufacturer)}>{displayCell(product.manufacturer)}</div>
+                                        <div className="truncate" title={displayCell(product.brand)}>{displayCell(product.brand)}</div>
                                     </td>
                                     <td className="px-3 py-2 text-left truncate">
                                         <div className="truncate" title={displayCell(product.productFamily)}>
@@ -287,8 +287,8 @@ export default function ProductCatalog({
 
                                 <div className="w-full grid grid-cols-2 gap-4 mb-6">
                                     <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                                        <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Manufacturer</span>
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{popupProduct.manufacturer}</span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Brand</span>
+                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{popupProduct.brand}</span>
                                     </div>
                                     <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
                                         <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Family</span>

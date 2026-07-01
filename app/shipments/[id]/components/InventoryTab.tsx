@@ -16,6 +16,7 @@ interface InventoryPosition {
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     supplierName: string;
     purchaseOrderName: string;
     purchaseOrderId?: string;
@@ -69,6 +70,7 @@ function mapItem(raw: any): InventoryPosition {
         productName: raw.Product_Name || "",
         productDescription: raw.Product_Description__c || "",
         manufacturerDBA: raw.Manufacturer_DBA__c || "",
+        brand: undefined,
         supplierName: raw.Supplier_Name__c || "",
         purchaseOrderName: raw.Purchase_Order_Name || "",
         purchaseOrderId: raw.Purchase_Order__c || "",
@@ -197,7 +199,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                         {/* 5 */}
                         <SortableHeader label="Product Description" field="productDescription" sortConfig={sc} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" />
                         {/* 6 */}
-                        <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sc} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" />
+                        <SortableHeader label="Brand" field="brand" sortConfig={sc} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" />
                         {/* 7 */}
                         <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sc} requestSort={handleSort} width={widths.supplierName} onResize={handleResize} align="left" />
                         {/* 8 */}
@@ -235,7 +237,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                             <TC v={`${formatNumber(item.daysInInventory, 0)} Days`} w={widths.daysInInventory} />
                             <TC v={displayCell(item.productName)} w={widths.productName} />
                             <TC v={displayCell(item.productDescription)} w={widths.productDescription} />
-                            <TC v={displayCell(item.manufacturerDBA)} w={widths.manufacturerDBA} />
+                            <TC v={displayCell(item.brand)} w={widths.manufacturerDBA} />
                             <TC v={displayCell(item.supplierName)} w={widths.supplierName} />
                             <TC
                                 v={item.purchaseOrderId ? (

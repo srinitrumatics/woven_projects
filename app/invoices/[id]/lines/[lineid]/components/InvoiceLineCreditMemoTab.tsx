@@ -17,6 +17,7 @@ interface CreditMemoLine {
     productName: string;       // Product Name
     description: string;       // Product Description
     manufacturerDBA: string;   // Manufacturer DBA
+    brand?: string;            // Brand
     unitPrice: number;         // Unit Price
     creditQty: number;         // Credit Qty
     totalPrice: number;        // Total Price
@@ -56,6 +57,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                         productName: item.Product_Name || "",
                         description: item.Product_Description__c || "",
                         manufacturerDBA: item.Manufacturer_DBA__c || "",
+                        brand: undefined,
                         unitPrice: item.Unit_Price__c || 0,
                         creditQty: item.Credit_Qty__c || 0,
                         totalPrice: item.Total_Price__c || 0,
@@ -123,7 +125,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                             <SortableHeader truncate={false} label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader truncate={false} label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader truncate={false} label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader truncate={false} label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                            <SortableHeader truncate={false} label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader truncate={false} label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader truncate={false} label="Credit Qty" field="creditQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditQty} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader truncate={false} label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
@@ -148,7 +150,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.customerQuoteLine)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.productName)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{displayCell(item.description)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.manufacturerDBA)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.brand)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate ">{formatCurrency(item.unitPrice)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatNumber(item.creditQty)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalPrice)}</td>

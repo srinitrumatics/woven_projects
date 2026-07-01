@@ -60,16 +60,18 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                 <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="Customer Order" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" truncate={false} />
+                            <SortableHeader label="Customer Order #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" truncate={false} />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={onResize} align="left" truncate={false} />
-                            <SortableHeader label="CPO Date" field="customerPODate" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPODate} onResize={onResize} align="left" truncate={false} />
+                            <SortableHeader label="Customer PO Date" field="customerPODate" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPODate} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToAccountName} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocationName} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Bill to Contact" field="billToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContactName} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccountName} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocationName} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContactName} onResize={onResize} align="left" truncate={false} />
+                            <SortableHeader label="Proposal Requested" field="proposalRequested" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalRequested} onResize={onResize} align="left" truncate={false} />
+                            <SortableHeader label="Transfer Order" field="transferOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.transferOrder} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left" truncate={false} />
@@ -111,6 +113,22 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToAccountName}>{displayCell(order.shipToAccountName)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToLocationName}>{displayCell(order.shipToLocationName)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToContactName}>{displayCell(order.shipToContactName)}</td>
+                                <td className="px-3 py-2 truncate">
+                                    <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.proposalRequested
+                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                        : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                        }`}>
+                                        {order.proposalRequested ? 'Yes' : 'No'}
+                                    </span>
+                                </td>
+                                <td className="px-3 py-2 truncate">
+                                    <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.transferOrder
+                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                        : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                        }`}>
+                                        {order.transferOrder ? 'Yes' : 'No'}
+                                    </span>
+                                </td>
                                 <td className="px-3 py-2 truncate">
                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.dropShip
                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'

@@ -48,7 +48,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
     };
 
     const activeData = getActiveData();
-    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<RMA | RTV | CreditMemo | DebitMemo>(activeData, { key: 'name', direction: 'desc' });
+    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<RMA | RTV | CreditMemo | DebitMemo>(activeData, { key: 'name', direction: 'asc' });
 
     const requestSort = (key: string) => {
         originalRequestSort(key as any);
@@ -85,10 +85,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
         returnQty: 100,
         totalAmount: 120,
         openBalanceQty: 150,
-        trackingNumber: 180,
-        estimatedDeliveryDate: 150,
-        trackingStatus: 150,
-        actualDeliveryDate: 150,
         goodsReceiptDate: 150
     });
 
@@ -116,8 +112,9 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
         name: 180,
         status: 120,
         creditMemoName: 180,
-        invoiceLineName: 180,
         salesOrderLineName: 180,
+        customerQuoteLineName: 180,
+        customerQuoteLineId: 180,
         customerOrderName: 160,
         customerQuoteName: 160,
         salesOrderName: 160,
@@ -206,22 +203,18 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                 truncate={false}
                                             />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.status} onResize={handleRmaResize} truncate={false} />
-                                            <SortableHeader label="RMA" field="rmaName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.rmaName} onResize={handleRmaResize} truncate={false} />
-                                            <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.salesOrderLineName} onResize={handleRmaResize} truncate={false} />
+                                            <SortableHeader label="RMA #" field="rmaName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.rmaName} onResize={handleRmaResize} truncate={false} />
+                                            <SortableHeader label="Sales Order Lines" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.salesOrderLineName} onResize={handleRmaResize} truncate={false} />
                                             <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.customerQuoteLineName} onResize={handleRmaResize} truncate={false} />
                                             <SortableHeader label="Reason Code" field="reason" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.reason} onResize={handleRmaResize} truncate={false} />
                                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.productName} onResize={handleRmaResize} truncate={false} />
                                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.productDescription} onResize={handleRmaResize} truncate={false} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.manufacturerDBA} onResize={handleRmaResize} truncate={false} />
+                                            <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.manufacturerDBA} onResize={handleRmaResize} truncate={false} />
                                             <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.unitPrice} onResize={handleRmaResize} truncate={false} />
                                             <SortableHeader label="Return Qty" field="returnQty" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.returnQty} onResize={handleRmaResize} truncate={false} />
                                             <SortableHeader label="Total Price" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.totalAmount} onResize={handleRmaResize} truncate={false} />
                                             <SortableHeader label="Open Balance Qty" field="openBalanceQty" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.openBalanceQty} onResize={handleRmaResize} truncate={false} />
-                                            <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.trackingNumber} onResize={handleRmaResize} truncate={false} />
-                                            <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.estimatedDeliveryDate} onResize={handleRmaResize} truncate={false} />
-                                            <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.trackingStatus} onResize={handleRmaResize} truncate={false} />
-                                            <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.actualDeliveryDate} onResize={handleRmaResize} truncate={false} />
-                                            <SortableHeader label="Goods Receipts Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.goodsReceiptDate} onResize={handleRmaResize} truncate={false} />
+                                            <SortableHeader label="Goods Receipt Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.goodsReceiptDate} onResize={handleRmaResize} truncate={false} />
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -247,7 +240,9 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                         {displayCell(rma.salesOrderLineName)}
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {displayCell(rma.customerQuoteLineName)}
+                                                        {rma.customerQuoteLineName && rma.customerQuoteLineId ? (
+                                                            <Link href={`/quotes/${rma.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{rma.customerQuoteLineName}</Link>
+                                                        ) : displayCell(rma.customerQuoteLineName)}
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                         <div className="text-sm truncate" title={rma.reason}>{displayCell(rma.reason)}</div>
@@ -259,7 +254,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                         <div className="text-sm max-w-xs truncate" title={rma.productDescription}>{displayCell(rma.productDescription)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate">
-                                                        <div className="text-sm truncate" title={rma.manufacturerDBA}>{displayCell(rma.manufacturerDBA)}</div>
+                                                        <div className="text-sm truncate" title={rma.brand}>{displayCell(rma.brand)}</div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                         ${rma.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
@@ -269,10 +264,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                         ${rma.totalAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                     </td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[160px] truncate">{formatNumber(rma.openBalanceQty)}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(rma.trackingNumber)}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[203px] truncate">{displayCell(rma.estimatedDeliveryDate)}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(rma.trackingStatus)}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[173px] truncate">{displayCell(rma.actualDeliveryDate)}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[192px] truncate">{displayCell(rma.goodsReceiptDate)}</td>
                                                 </tr>
                                             );
@@ -310,7 +301,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             <SortableHeader label="Reason Code" field="reason" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.reason} onResize={handleRtvResize} truncate={false} />
                                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.productName} onResize={handleRtvResize} truncate={false} />
                                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.productDescription} onResize={handleRtvResize} truncate={false} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.manufacturerDBA} onResize={handleRtvResize} truncate={false} />
+                                            <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.manufacturerDBA} onResize={handleRtvResize} truncate={false} />
                                             <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.unitCost} onResize={handleRtvResize} truncate={false} />
                                             <SortableHeader label="Return Qty" field="returnQty" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.returnQty} onResize={handleRtvResize} truncate={false} />
                                             <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.totalCost} onResize={handleRtvResize} truncate={false} />
@@ -336,8 +327,8 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.reason}><div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.reason)}</div></td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rtv.productName}><div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.productName)}</div></td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={rtv.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(rtv.productDescription)}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate" title={rtv.manufacturerDBA}>
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.manufacturerDBA)}
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate" title={rtv.brand}>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.brand)}
                                                         </div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
@@ -377,12 +368,12 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                 truncate={false}
                                             />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.status} onResize={handleCreditResize} truncate={false} />
-                                            <SortableHeader label="Credit Memo" field="creditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.creditMemoName} onResize={handleCreditResize} truncate={false} />
-                                            <SortableHeader label="Invoice Line" field="invoiceLineName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.invoiceLineName} onResize={handleCreditResize} truncate={false} />
+                                            <SortableHeader label="Credit Memo #" field="creditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.creditMemoName} onResize={handleCreditResize} truncate={false} />
                                             <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.salesOrderLineName} onResize={handleCreditResize} truncate={false} />
+                                            <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.customerQuoteLineName} onResize={handleCreditResize} truncate={false} />
                                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.productName} onResize={handleCreditResize} truncate={false} />
                                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.productDescription} onResize={handleCreditResize} truncate={false} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.manufacturerDBA} onResize={handleCreditResize} truncate={false} />
+                                            <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.manufacturerDBA} onResize={handleCreditResize} truncate={false} />
                                             <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.unitPrice} onResize={handleCreditResize} truncate={false} />
                                             <SortableHeader label="Credit Qty" field="creditQty" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.creditQty} onResize={handleCreditResize} truncate={false} />
                                             <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.totalPrice} onResize={handleCreditResize} truncate={false} />
@@ -405,11 +396,15 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                         </span>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(credit.creditMemoName)}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(credit.invoiceLineName)}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(credit.salesOrderLineName)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                        {credit.customerQuoteLineName && credit.customerQuoteLineId ? (
+                                                            <Link href={`/quotes/${credit.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{credit.customerQuoteLineName}</Link>
+                                                        ) : displayCell(credit.customerQuoteLineName)}
+                                                    </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(credit.productName)}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={credit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(credit.productDescription)}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[161px] truncate">{displayCell(credit.manufacturerDBA)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[161px] truncate">{displayCell(credit.brand)}</td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                         ${credit.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                     </td>
@@ -461,7 +456,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.purchaseOrderLineName} onResize={handleDebitResize} truncate={false} />
                                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.productName} onResize={handleDebitResize} truncate={false} />
                                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.productDescription} onResize={handleDebitResize} truncate={false} />
-                                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.manufacturerDBA} onResize={handleDebitResize} truncate={false} />
+                                            <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.manufacturerDBA} onResize={handleDebitResize} truncate={false} />
                                             <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.unitCost} onResize={handleDebitResize} truncate={false} />
                                             <SortableHeader label="Debit Qty" field="debitQty" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.debitQty} onResize={handleDebitResize} truncate={false} />
                                             <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.totalCost} onResize={handleDebitResize} truncate={false} />
@@ -487,7 +482,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(debit.purchaseOrderLineName)}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(debit.productName)}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={debit.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(debit.productDescription)}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate">{displayCell(debit.manufacturerDBA)}</td>
+                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate">{displayCell(debit.brand)}</td>
                                                     <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
                                                         ${debit.unitCost?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                                                     </td>

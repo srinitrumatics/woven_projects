@@ -45,7 +45,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
     };
 
     const activeData = getActiveData();
-    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<RMA | RTV | CreditMemo | DebitMemo>(activeData, { key: 'name', direction: 'desc' });
+    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<RMA | RTV | CreditMemo | DebitMemo>(activeData, { key: 'name', direction: 'asc' });
 
     const requestSort = (key: string) => {
         originalRequestSort(key as any);
@@ -114,12 +114,15 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
 
                                 {activeTab === 'rma' ? (
                                     <>
-                                        <SortableHeader label="RMA" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                                        <SortableHeader label="RMA #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
                                         <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].salesOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="RMA Type" field="rmaType" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rmaType} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Type" field="rmaType" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rmaType} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Sales Order #" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].salesOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].proposalId} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].proposalName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerPO} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Ship from Account" field="shipFromAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromAccountName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Ship from Contact" field="shipFromContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromContactName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Return to Account" field="returnToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].returnToAccountName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
@@ -128,15 +131,15 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                         <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalPrice} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].issuedDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="Return by Date" field="returnByDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].returnByDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Return By Date" field="returnByDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].returnByDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shippingMethod} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].logisticsPartner} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Logistics Contact" field="logisticsContact" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].logisticsContact} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].trackingNumber} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].estimatedDeliveryDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].trackingStatus} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].estimatedDeliveryDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].actualDeliveryDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="Goods Receipts Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].goodsReceiptDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Goods Receipt Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].goodsReceiptDate} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                     </>
                                 ) : activeTab === 'rtv' ? (
                                     <>
@@ -159,13 +162,14 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                     </>
                                 ) : activeTab === 'credit' ? (
                                     <>
-                                        <SortableHeader label="Credit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                                        <SortableHeader label="Credit Memo #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].name} onResize={(f, w) => onResize(activeTab, f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
                                         <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].status} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="Invoice" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].invoiceName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="Credit to Account" field="creditToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].creditToAccountName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
-                                        <SortableHeader label="Credit to Contact" field="creditToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].creditToContactName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Invoice #" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].invoiceName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Sales Order #" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].salesOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].proposalId} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].proposalName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
+                                        <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalPrice} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
                                         <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalShippingCharges} onResize={(f, w) => onResize(activeTab, f, w)} truncate={false} />
@@ -221,6 +225,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
 
                                         {activeTab === 'rma' ? (
                                             <>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.rmaType}><div className="text-sm text-gray-900 dark:text-white truncate ">{displayCell(rma.rmaType)}</div></td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {rma.salesOrderName && rma.salesOrderId && !isRestricted ? (
                                                         <Link href={`/orders/${rma.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.salesOrderName}>{rma.salesOrderName}</Link>
@@ -236,13 +241,21 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                    {rma.proposalName && rma.proposalId ? (
+                                                        <Link href={`/proposals/${rma.proposalId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.proposalName}>{rma.proposalName}</Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.proposalName}>{displayCell(rma.proposalName)}</div>
+                                                    )}
+                                                </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.proposalName}>{displayCell(rma.proposalName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {rma.customerOrderName && rma.customerOrderId ? (
                                                         <Link href={`/orders/${rma.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.customerOrderName}>{rma.customerOrderName}</Link>
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.customerOrderName}>{displayCell(rma.customerOrderName)}</div>
                                                     )}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.rmaType}><div className="text-sm text-gray-900 dark:text-white truncate ">{displayCell(rma.rmaType)}</div></td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.customerPO}><div className="text-sm text-gray-900 dark:text-white truncate ">{displayCell(rma.customerPO)}</div></td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.shipFromAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{displayCell(rma.shipFromAccountName)}</div></td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.shipFromContactName}><div className="text-sm text-gray-900 dark:text-white truncate ">{displayCell(rma.shipFromContactName)}</div></td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={rma.returnToAccountName}><div className="text-sm text-gray-900 dark:text-white truncate ">{displayCell(rma.returnToAccountName)}</div></td>
@@ -269,8 +282,8 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rma.logisticsPartner)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rma.logisticsContact)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rma.trackingNumber)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[198px] truncate">{displayCell(rma.estimatedDeliveryDate)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(rma.trackingStatus)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[198px] truncate">{displayCell(rma.estimatedDeliveryDate)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[173px] truncate">{displayCell(rma.actualDeliveryDate)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[199px] truncate">{displayCell(rma.goodsReceiptDate)}</td>
                                             </>
@@ -324,6 +337,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.invoiceName}>{displayCell(credit.invoiceName)}</div>
                                                     )}
                                                 </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={credit.salesOrderName}>{displayCell(credit.salesOrderName)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {credit.customerQuoteName && credit.customerQuoteId ? (
                                                         <Link href={`/quotes/${credit.customerQuoteId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.customerQuoteName}>{credit.customerQuoteName}</Link>
@@ -332,14 +346,20 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                    {credit.proposalName && credit.proposalId ? (
+                                                        <Link href={`/proposals/${credit.proposalId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.proposalName}>{credit.proposalName}</Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.proposalName}>{displayCell(credit.proposalName)}</div>
+                                                    )}
+                                                </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={credit.proposalName}>{displayCell(credit.proposalName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {credit.customerOrderName && credit.customerOrderId ? (
                                                         <Link href={`/orders/${credit.customerOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.customerOrderName}>{credit.customerOrderName}</Link>
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.customerOrderName}>{displayCell(credit.customerOrderName)}</div>
                                                     )}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(credit.creditToAccountName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  truncate">{displayCell(credit.creditToContactName)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[125px] truncate">
                                                     <span className="inline-flex items-center justify-center h-8 px-2 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 font-semibold truncate">
                                                         {(credit.totalLines ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

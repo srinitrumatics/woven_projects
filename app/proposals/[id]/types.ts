@@ -43,6 +43,9 @@ export interface ProposedProduct {
     taxes: number;
     grandTotal: number;
     product_record_type?: string;
+    status?: string;
+    brandName?: string;
+    qtyShipped?: number;
 }
 
 export interface Project {
@@ -84,6 +87,8 @@ export interface Order {
     requestDate: string;
     shipDate: string;
     deliveredDate: string;
+    proposalRequested?: boolean;
+    transferOrder?: boolean;
 }
 
 export interface Invoice {
@@ -100,8 +105,10 @@ export interface Invoice {
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     unitPrice: number;
     invoiceQty: number;
+    totalOrderQty?: number; // gtherp__Total_Order_Qty__c — distinct from invoiceQty
     totalPrice: number; // Invoiced Amount
     shipping: number;
     taxes: number;
@@ -115,6 +122,9 @@ export interface Invoice {
     customerOrderId?: string;
     purchaseOrderId?: string;
     purchaseOrderLineId?: string;
+    purchaseOrderName?: string;
+    proposalId?: string;
+    proposalName?: string;
     // Keeping old fields just in case, but they might not be used in the new table view
     customerPO?: string;
     billToAccountName?: string;
@@ -143,9 +153,13 @@ export interface ShippingManifest {
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     boxCount: number;
     boxNetWeight: number;
     boxGrossWeight: number;
+    boxLength?: number;
+    boxWidth?: number;
+    boxHeight?: number;
     unitPrice: number;
     totalOrderQty: number;
     totalPrice: number;
@@ -178,6 +192,8 @@ export interface ShippingManifest {
     customerQuoteLineId?: string;
     customerOrderId?: string;
     purchaseOrderId?: string;
+    proposalId?: string;
+    proposalName?: string;
 }
 
 export interface SalesOrder {
@@ -189,6 +205,7 @@ export interface SalesOrder {
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     unitPrice: number;
     totalOrderQty: number;
     totalPrice: number;
@@ -224,6 +241,8 @@ export interface SalesOrder {
     customerOrderId?: string;
     purchaseOrderId?: string;
     salesOrderId?: string;
+    proposalId?: string;
+    proposalName?: string;
 }
 
 export interface CustomerQuote {
@@ -234,6 +253,7 @@ export interface CustomerQuote {
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     unitPrice: number;
     totalOrderQty: number;
     totalPrice: number;
@@ -264,6 +284,8 @@ export interface CustomerQuote {
     customerOrderId?: string;
     purchaseOrderId?: string;
     customerQuoteId?: string;
+    proposalId?: string;
+    proposalName?: string;
 }
 
 export interface PurchaseOrder {
@@ -315,6 +337,7 @@ export interface PurchaseOrderLine {
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     unitCost: number;
     totalOrderQty: number;
     totalCost: number; // Total Product Cost
@@ -396,6 +419,7 @@ export interface SupplierBillLine {
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     unitCost: number;
     billedQty: number;
     billAmount: number;
@@ -456,6 +480,7 @@ export interface DebitMemo extends Return {
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     unitCost: number;
     debitQty: number;
     totalCost: number;
@@ -490,10 +515,15 @@ export interface DebitMemo extends Return {
 export interface CreditMemo extends Return {
     creditMemoName: string; // Parent Credit Memo
     invoiceLineName: string;
+    invoiceLineId?: string;
     salesOrderLineName: string;
+    salesOrderLineId?: string;
+    customerQuoteLineName?: string;
+    customerQuoteLineId?: string;
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     unitPrice: number;
     creditQty: number;
     totalPrice: number;
@@ -526,6 +556,8 @@ export interface CreditMemo extends Return {
     supplierBillName?: string;
     supplierBillId?: string;
     shipmentName?: string;
+    proposalId?: string;
+    proposalName?: string;
 }
 
 export interface RMA extends Return {
@@ -535,6 +567,7 @@ export interface RMA extends Return {
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     unitPrice: number;
     returnQty: number;
     openBalanceQty: number;
@@ -572,6 +605,8 @@ export interface RMA extends Return {
     supplierBillName?: string;
     supplierBillId?: string;
     shipmentName?: string;
+    proposalId?: string;
+    proposalName?: string;
 }
 
 export interface RTV extends Return {
@@ -581,6 +616,7 @@ export interface RTV extends Return {
     productName: string;
     productDescription: string;
     manufacturerDBA: string;
+    brand?: string;
     unitCost: number;
     returnQty: number;
     totalCost: number;

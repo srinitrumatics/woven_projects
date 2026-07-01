@@ -28,6 +28,7 @@ interface DebitMemoLine {
     Product_Name: string;
     Product_Description__c: string;
     Manufacturer_DBA__c: string;
+    brand?: string;
     Unit_Cost__c: number;
     Debit_Qty__c: number;
     Total_Cost__c: number;
@@ -121,7 +122,7 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                             <SortableHeader truncate={false} label="Purchase Order Line" field="Purchase_Order_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.poLine} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Name" field="Product_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Description" field="Product_Description__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.description} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Manufacturer DBA" field="Manufacturer_DBA__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.manufacturer} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.manufacturer} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Unit Cost" field="Unit_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.unitCost} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Debit Qty" field="Debit_Qty__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.qty} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.total} onResize={handleResize} />
@@ -150,7 +151,7 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>{displayCell(line.Product_Name)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || '-'}>{displayCell(line.Product_Description__c)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Manufacturer_DBA__c || '-'}>{displayCell(line.Manufacturer_DBA__c)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.brand || '-'}>{displayCell(line.brand)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={String(line.Debit_Qty__c || 0)}>{line.Debit_Qty__c || 0}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left truncate" title={formatCurrency(line.Total_Cost__c || 0)}>{formatCurrency(line.Total_Cost__c || 0)}</td>

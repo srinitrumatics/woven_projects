@@ -69,7 +69,7 @@ export default function QuoteLinesTab({
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={onResize} align="left" truncate={false} />
-                            <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={onResize} align="left" truncate={false} />
+                            <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Total Qty" field="quantity" sortConfig={sortConfig} requestSort={requestSort} width={widths.quantity} onResize={onResize} align="left" truncate={false} />
                             <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left" truncate={false} />
@@ -101,8 +101,8 @@ export default function QuoteLinesTab({
                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.description }} title={line.description}>
                                     {displayCell(line.description)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.manufacturerDBA }} title={line.manufacturerDBA}>
-                                    {displayCell(line.manufacturerDBA)}
+                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.manufacturerDBA }} title={line.brand}>
+                                    {displayCell(line.brand)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.unitPrice }} title={formatCurrency(line.unitPrice)}>
                                     {formatCurrency(line.unitPrice)}

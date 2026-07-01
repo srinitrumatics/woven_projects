@@ -17,6 +17,7 @@ interface RTVLine {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     returnQty: number;
     unitCost: number;
     totalCost: number;
@@ -86,7 +87,7 @@ export default function QuoteLineRTVLinesSubTab({
                                 <SortableHeader label="Customer Quote Line"field="customerQuoteLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
                                 <SortableHeader label="Product Name"field="productName"sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
                                 <SortableHeader label="Product Description"field="description"sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                <SortableHeader label="Manufacturer DBA"field="manufacturerDBA"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
+                                <SortableHeader label="Brand"field="brand"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
                                 <SortableHeader label="Reason Code"field="reasonCode"sortConfig={sortConfig} requestSort={requestSort} width={widths.reasonCode} onResize={handleResize} />
                                 <SortableHeader label="Unit Cost"field="unitCost"sortConfig={sortConfig} requestSort={requestSort} width={widths.unitCost} onResize={handleResize} />
                                 <SortableHeader label="Return Qty"field="returnQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.returnQty} onResize={handleResize} />
@@ -113,7 +114,7 @@ export default function QuoteLineRTVLinesSubTab({
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{displayCell(item.productName)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{displayCell(item.description)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{displayCell(item.manufacturerDBA)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{displayCell(item.brand)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.reasonCode }}>{displayCell(item.reasonCode)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.unitCost }}>{formatCurrency(item.unitCost)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.returnQty }}>{item.returnQty}</td>

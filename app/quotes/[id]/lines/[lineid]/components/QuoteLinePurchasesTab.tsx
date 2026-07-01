@@ -15,6 +15,7 @@ interface POLI {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     unitCost: number;
     orderQty: number;
     productCost: number;
@@ -42,6 +43,7 @@ interface SBLI {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     unitCost: number;
     billedQty: number;
     billAmount: number;
@@ -94,6 +96,7 @@ export default function QuoteLinePurchasesTab({
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
+                            brand: undefined,
                             unitCost: item.Unit_Cost__c || 0,
                             orderQty: item.Total_Order_Qty__c || 0,
                             productCost: item.Total_Product_Cost__c || 0,
@@ -124,6 +127,7 @@ export default function QuoteLinePurchasesTab({
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
+                            brand: undefined,
                             unitCost: item.Unit_Cost__c || 0,
                             billedQty: item.Billed_Qty__c || 0,
                             billAmount: item.BillAmount__c || 0,

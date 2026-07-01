@@ -45,7 +45,7 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                         <SortableHeader truncate={false} label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
                         <SortableHeader truncate={false} label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.product} onResize={handleResize} />
                         <SortableHeader truncate={false} label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                        <SortableHeader truncate={false} label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} />
+                        <SortableHeader truncate={false} label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} />
                         <SortableHeader truncate={false} label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
                         <SortableHeader truncate={false} label="Total Qty" field="quantity" sortConfig={sortConfig} requestSort={requestSort} width={widths.quantity} onResize={handleResize} />
                         <SortableHeader truncate={false} label="Total Price" field="subtotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
@@ -86,7 +86,7 @@ export default function InvoiceLineItems({ lines, invoiceId }: InvoiceLineItemsP
                                 <div className="truncate" title={line.description}>{displayCell(line.description)}</div>
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">
-                                {displayCell(line.manufacturerDBA)}
+                                {displayCell(line.brand)}
                             </td>
                             <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                 {formatCurrency(line.unitPrice)}

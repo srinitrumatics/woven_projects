@@ -18,6 +18,7 @@ interface SupplierBillLine {
     Product_Name: string;
     Product_Description__c: string;
     Manufacturer_DBA__c: string;
+    brand?: string;
     Unit_Cost__c: number;
     Billed_Qty__c: number;
     BillAmount__c: number;
@@ -116,7 +117,7 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                             <SortableHeader truncate={false} label="Purchase Order Line" field="Purchase_Order_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrderLine} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Name" field="Product_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Description" field="Product_Description__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.description} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Manufacturer DBA" field="Manufacturer_DBA__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.manufacturer} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.manufacturer} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Unit Cost" field="Unit_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.unitCost} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Billed Qty" field="Billed_Qty__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billedQty} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Bill Amount" field="BillAmount__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billAmount} onResize={handleResize} />
@@ -151,8 +152,8 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || '-'}>
                                     {displayCell(line.Product_Description__c)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Manufacturer_DBA__c || '-'}>
-                                    {displayCell(line.Manufacturer_DBA__c)}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.brand || '-'}>
+                                    {displayCell(line.brand)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={String(line.Billed_Qty__c || 0)}>{line.Billed_Qty__c || 0}</td>

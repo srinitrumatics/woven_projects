@@ -93,9 +93,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   // Resizable Columns hooks
   const { widths: productWidths, handleResize: handleProductResize } = useResizableColumns({
     Name: 200,
+    status: 120,
     productName: 200,
     description: 200,
-    manufacturerDBA: 170,
+    brandName: 170,
     grouping: 150,
     unitPrice: 130,
     quantity: 150,
@@ -103,6 +104,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     shipping: 130,
     taxes: 120,
     grandTotal: 160,
+    qtyShipped: 130,
     actions: 80
   });
 
@@ -139,6 +141,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     shipToAccountName: 180,
     shipToLocationName: 180,
     shipToContactName: 180,
+    proposalRequested: 160,
+    transferOrder: 160,
     dropShip: 180,
     totalLines: 180,
     totalPrice: 160,
@@ -209,29 +213,33 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   const [fulfillmentWidths, setFulfillmentWidths] = useState({
     invoices: {
-      name: 180, status: 180, salesOrderName: 200, customerQuoteName: 200, customerOrderName: 200, customerPO: 150,
+      name: 180, status: 180, salesOrderName: 200, purchaseOrderName: 180, customerQuoteName: 200,
+      proposalId: 180, proposalName: 180, customerOrderName: 200, customerPO: 150,
       billToAccountName: 180, billToLocationName: 180, billToContactName: 180, totalLines: 160,
       totalPrice: 160, totalShippingCharges: 120, totalTaxesAmount: 120, grandTotal: 150,
       issuedDate: 160, paymentTerms: 150, dueDate: 150, collectionStatus: 180, openBalance: 180,
-      daysOutstanding: 180, settledDate: 180
+      settledDate: 180
     },
     shipping: {
-      name: 180, status: 180, salesOrderName: 180, customerQuoteName: 180, customerOrderName: 180,
+      name: 180, status: 180, salesOrderName: 180, customerQuoteName: 180,
+      proposalId: 180, proposalName: 180, customerOrderName: 180,
       customerPO: 150, shipToAccountName: 180, shipToLocationName: 180, shipToContactName: 180,
-      dropShip: 160, boxCount: 160, boxNetWeight: 160, boxGrossWeight: 160, totalLines: 160,
-      totalPrice: 120, requestDate: 150, shipDate: 190, deliveredDate: 190, shippingMethod: 150,
-      logisticsPartnerName: 180, logisticsContactName: 180, trackingNumber: 180,
-      estimatedDeliveryDate: 200, trackingStatus: 150, actualDeliveryDate: 190
+      dropShip: 160, totalLines: 160, totalPrice: 120,
+      boxCount: 160, boxLength: 130, boxWidth: 120, boxHeight: 120, boxNetWeight: 160, boxGrossWeight: 160,
+      logisticsPartnerName: 180, shipDate: 190, deliveredDate: 190, trackingNumber: 180,
+      trackingStatus: 150, estimatedDeliveryDate: 200, actualDeliveryDate: 190
     },
     sales: {
-      name: 180, status: 180, customerQuoteName: 180, customerOrderName: 180, customerPO: 150,
+      name: 180, status: 180, customerQuoteName: 180, proposalId: 180, proposalName: 180,
+      customerOrderName: 180, customerPO: 150,
       billToAccountName: 180, billToLocationName: 180, billToContactName: 180, shipToAccountName: 180,
       shipToLocationName: 180, shipToContactName: 180, dropShip: 160, totalLines: 160, totalPrice: 120,
       totalShippingCharges: 120, totalTaxesAmount: 120, grandTotal: 150, requestDate: 190,
-      pickDate: 190, pickCompleteDate: 190, shipDate: 180, deliveredDate: 180
+      shipDate: 180, deliveredDate: 180
     },
     quotes: {
-      name: 180, status: 180, customerOrderName: 180, customerPO: 150, billToAccountName: 180,
+      name: 180, status: 180, proposalId: 180, proposalName: 180, customerOrderName: 180,
+      customerPO: 150, billToAccountName: 180,
       billToLocationName: 180, billToContactName: 180, shipToAccountName: 180, shipToLocationName: 180,
       shipToContactName: 180, dropShip: 150, totalLines: 150, totalPrice: 120, totalShippingCharges: 120,
       totalTaxesAmount: 120, grandTotal: 150, issuedDate: 150, expirationDate: 180, requestDate: 150,
@@ -251,12 +259,13 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
   const [returnsWidths, setReturnsWidths] = useState({
     rma: {
-      name: 180, status: 120, salesOrderName: 180, customerQuoteName: 180, customerOrderName: 180,
-      rmaType: 150, shipFromAccountName: 180, shipFromContactName: 180, returnToAccountName: 180,
+      name: 180, status: 120, rmaType: 150, salesOrderName: 180, customerQuoteName: 180,
+      proposalId: 180, proposalName: 180, customerOrderName: 180, customerPO: 150,
+      shipFromAccountName: 180, shipFromContactName: 180, returnToAccountName: 180,
       returnToContactName: 180, dropShip: 100, totalLines: 100, totalPrice: 120, issuedDate: 150,
       returnByDate: 150, shippingMethod: 150, logisticsPartner: 180, logisticsContact: 180,
-      trackingNumber: 180, estimatedDeliveryDate: 150, trackingStatus: 150, actualDeliveryDate: 150,
-      goodsReceiptDate: 150, customerPO: 150, supplierBillName: 180, shipmentName: 180
+      trackingNumber: 180, trackingStatus: 150, estimatedDeliveryDate: 150, actualDeliveryDate: 150,
+      goodsReceiptDate: 150, supplierBillName: 180, shipmentName: 180
     },
     rtv: {
       purchaseOrderName: 180, customerQuoteName: 180, customerOrderName: 180, rtvType: 150,
@@ -265,11 +274,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       returnByDate: 150, name: 180, status: 120, salesOrderName: 180, supplierBillName: 180, shipmentName: 180
     },
     credit: {
-      invoiceName: 180, customerQuoteName: 180, customerOrderName: 180, creditToAccountName: 180,
-      creditToContactName: 180, totalLines: 100, totalPrice: 120, totalShippingCharges: 120,
+      name: 180, status: 120, invoiceName: 180, salesOrderName: 180, customerQuoteName: 180,
+      proposalId: 180, proposalName: 180, customerOrderName: 180,
+      totalLines: 100, totalPrice: 120, totalShippingCharges: 120,
       totalTaxesAmount: 120, totalCreditAmount: 150, issuedDate: 150, expirationDate: 150,
-      availableCreditBalance: 150, settledDate: 150, name: 180, status: 120,
-      salesOrderName: 180, purchaseOrderName: 180, supplierBillName: 180, shipmentName: 180
+      availableCreditBalance: 150, settledDate: 150,
+      purchaseOrderName: 180, supplierBillName: 180, shipmentName: 180
     },
     debit: {
       supplierBillName: 180, purchaseOrderName: 180, customerOrderName: 180, supplierCreditMemoName: 180,
@@ -461,6 +471,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               manufacturerDBA: item.Manufacturer_DBA__c || item.Manufacturer_Name__c || '',
               productFamily: item.Product_Family__c || 'General',
               grouping: item.Groupings__c || '',
+              status: item.Status__c || '',
+              brandName: item.gtherp__Brand_Name__c || '',
+              qtyShipped: item.Qty_Shipped__c || 0,
               category: item.Category__c || item.Product_Family__c || 'General',
               quantity: item.Total_Order_Qty__c || 0,
               unitPrice: item.Unit_Price__c || 0,
@@ -534,7 +547,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               grandTotal: order.Grand_Total__c || 0,
               requestDate: formatDate(order.Request_Date__c, 'numeric-dash'),
               shipDate: formatDate(order.Ship_Date__c, 'numeric-dash'),
-              deliveredDate: formatDate(order.Delivered_Date__c, 'numeric-dash')
+              deliveredDate: formatDate(order.Delivered_Date__c, 'numeric-dash'),
+              proposalRequested: order.Proposal_Requested__c || false,
+              transferOrder: order.Transfer_Order__c || false
             })));
           } else {
             setOrders([]);
@@ -658,6 +673,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               totalAmount: r.Total_Price__c || 0,
               customerQuoteId: r.Customer_Quote__c || '',
               customerOrderId: r.Customer_Order__c || '',
+              salesOrderId: r.Sales_Order__c || '',
+              proposalId: r.Proposal__c || '',
+              proposalName: r.Proposal_Name || r.Proposal__r?.Name || ''
             })),
             rtv: (json.RTV__c || []).map((r: any) => ({
               id: r.Id,
@@ -715,7 +733,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               customerQuoteId: c.Customer_Quote__c || '',
               customerOrderId: c.Customer_Order__c || '',
               salesOrderId: c.Sales_Order__c || '',
-              shipmentId: c.Shipment__c || ''
+              shipmentId: c.Shipment__c || '',
+              salesOrderName: c.Sales_Order_Name || '',
+              proposalId: c.Proposal__c || '',
+              proposalName: c.Proposal_Name || c.Proposal__r?.Name || ''
             })),
             debitMemos: (json.Debit_Memo__c || []).map((d: any) => ({
               id: d.Id,
@@ -821,7 +842,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               collectionStatus: inv.Collection_Status__c || '',
               openBalance: inv.Open_Balance__c || 0,
               daysOutstanding: inv.Days_Outstanding__c || 0,
-              settledDate: formatDate(inv.Settled_Date__c, 'numeric-dash')
+              settledDate: formatDate(inv.Settled_Date__c, 'numeric-dash'),
+              purchaseOrderName: inv.Purchase_Order_Name || inv.Purchase_Order__r?.Name || '',
+              proposalId: inv.Proposal__c || '',
+              proposalName: inv.Proposal_Name || inv.Proposal__r?.Name || ''
             })),
             shippingManifests: (json.Shipping_Manifest__c || []).map((sm: any) => ({
               id: sm.Id,
@@ -853,7 +877,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               boxCount: sm.Box__c || 0,
               boxNetWeight: sm.Case_Net_Weight__c || 0,
               boxGrossWeight: sm.Case_Gross_Weight__c || 0,
-              requestDate: formatDate(sm.Request_Date__c, 'numeric-dash')
+              boxLength: sm.Case_Length__c || 0,
+              boxWidth: sm.Case_Width__c || 0,
+              boxHeight: sm.Case_Height__c || 0,
+              requestDate: formatDate(sm.Request_Date__c, 'numeric-dash'),
+              proposalId: sm.Proposal__c || '',
+              proposalName: sm.Proposal_Name || sm.Proposal__r?.Name || ''
             })),
             salesOrders: (json.Sales_Order__c || []).map((so: any) => ({
               id: so.Id,
@@ -881,7 +910,10 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               pickDate: formatDate(so.Pick_Date__c, 'numeric-dash'),
               pickCompleteDate: formatDate(so.Pick_Complete_Date__c, 'numeric-dash'),
               shipDate: formatDate(so.Ship_Date__c, 'numeric-dash'),
-              deliveredDate: formatDate(so.Delivered_Date__c, 'numeric-dash')
+              deliveredDate: formatDate(so.Delivered_Date__c, 'numeric-dash'),
+              salesOrderId: so.Id || '',
+              proposalId: so.Proposal__c || '',
+              proposalName: so.Proposal_Name || so.Proposal__r?.Name || ''
             })),
             customerQuotes: (json.Customer_Quote__c || []).map((cq: any) => ({
               id: cq.Id,
@@ -907,7 +939,9 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               expirationDate: formatDate(cq.Expiration_Date__c, 'numeric-dash'),
               requestDate: formatDate(cq.Request_Date__c, 'numeric-dash'),
               shipDate: formatDate(cq.Ship_Date__c, 'numeric-dash'),
-              deliveredDate: formatDate(cq.Delivered_Date__c, 'numeric-dash')
+              deliveredDate: formatDate(cq.Delivered_Date__c, 'numeric-dash'),
+              proposalId: cq.Proposal__c || '',
+              proposalName: cq.Proposal_Name || cq.Proposal__r?.Name || ''
             }))
           });
           break;
@@ -964,8 +998,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const [elementSortField, setElementSortField] = useState<keyof ProposalElement>("wbs");
   const [elementSortDirection, setElementSortDirection] = useState<SortDirection>("desc");
 
-  const [productSortField, setProductSortField] = useState<keyof ProposedProduct>("productName");
-  const [productSortDirection, setProductSortDirection] = useState<SortDirection>("desc");
+  const [productSortField, setProductSortField] = useState<keyof ProposedProduct>("Name");
+  const [productSortDirection, setProductSortDirection] = useState<SortDirection>("asc");
 
   const [fileSortField, setFileSortField] = useState<keyof ProposalFile>("fileName");
   const [fileSortDirection, setFileSortDirection] = useState<SortDirection>("desc");
@@ -974,7 +1008,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const [projectSortDirection, setProjectSortDirection] = useState<SortDirection>("desc");
 
   const [orderSortField, setOrderSortField] = useState<keyof Order>("name");
-  const [orderSortDirection, setOrderSortDirection] = useState<SortDirection>("desc");
+  const [orderSortDirection, setOrderSortDirection] = useState<SortDirection>("asc");
 
   // Generic Sort Function
   const sortData = <T,>(data: T[], field: keyof T, direction: SortDirection): T[] => {

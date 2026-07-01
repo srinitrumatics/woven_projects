@@ -40,13 +40,20 @@ export default function OrdersPage() {
   const { widths, handleResize } = useResizableColumns({
     name: 200,
     status: 120,
+    proposalId: 160,
     proposal_name: 180,
     customerPO: 150,
-    billTo: 180,
-    shipTo: 180,
+    billToAccountName: 180,
+    billToLocationName: 180,
+    billToContactName: 180,
+    shipToAccountName: 180,
+    shipToLocationName: 180,
+    shipToContactName: 180,
+    dropShip: 130,
     items: 120,
     total: 140,
     requestedDate: 170,
+    createdDate: 170,
     actions: 150
   });
 
@@ -100,7 +107,7 @@ export default function OrdersPage() {
         setSfOrders(rawItems);
 
         // DEBUG: log first order to verify field names
-        if (rawItems.length > 0) {} else {
+        if (rawItems.length > 0) { } else {
           console.warn('[Orders DEBUG] Customer_Order__c is empty or missing. Full response:', JSON.stringify(data, null, 2)?.slice(0, 500));
         }
       } catch (err: any) {
@@ -126,11 +133,17 @@ export default function OrdersPage() {
       proposal_name: o.Proposal_Name ?? "",
       proposal_id: o.Proposal__c ?? "",
       customerPO: o.Customer_PO__c ?? "",
-      shipTo: o.Authorized_Ship_To_Location_Name ?? "",
-      billTo: o.Authorized_Bill_To_Location_Name ?? "",
+      billToAccountName: o.Bill_to_Account_Name ?? "",
+      billToLocationName: o.Authorized_Bill_To_Location_Name ?? "",
+      billToContactName: o.Bill_to_Contact_Name ?? "",
+      shipToAccountName: o.Ship_to_Account_Name ?? "",
+      shipToLocationName: o.Authorized_Ship_To_Location_Name ?? "",
+      shipToContactName: o.Ship_to_Contact_Name ?? "",
+      dropShip: o.Drop_Ship__c ?? false,
       items: o.Total_Lines__c ?? 0,
       total: Number(o.Total_Price__c ?? 0),
       requestedDate: o.Request_Date__c ?? "",
+      createdDate: formatDate(o.Create_Date__c, 'numeric-dash') ?? "",
       raw: o,
     }));
   }, [sfOrders]);
@@ -190,8 +203,8 @@ export default function OrdersPage() {
         String(order.status || "").toLowerCase().includes(q) ||
         String(order.proposal_name || "").toLowerCase().includes(q) ||
         String(order.customerPO || "").toLowerCase().includes(q) ||
-        String(order.shipTo || "").toLowerCase().includes(q) ||
-        String(order.billTo || "").toLowerCase().includes(q)
+        String(order.shipToLocationName || "").toLowerCase().includes(q) ||
+        String(order.billToLocationName || "").toLowerCase().includes(q)
       );
     }
 
@@ -853,20 +866,27 @@ export default function OrdersPage() {
             <table className="w-full table-fixed">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Order Number" field="name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-20" />
-                  <SortableHeader label="Status" field="status" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                  <SortableHeader label="Proposal Name" field="proposal_name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal_name} onResize={handleResize} />
-                  <SortableHeader label="Customer PO" field="customerPO" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
-                  <SortableHeader label="Bill to Account" field="billTo" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} />
-                  <SortableHeader label="Ship to Account" field="shipTo" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} />
-                  <SortableHeader label="Total Lines" field="items" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
-                  <SortableHeader label="Total Price" field="total" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
-                  <SortableHeader label="Request Date" field="requestedDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestedDate} onResize={handleResize} />
+                  <SortableHeader label="Customer Order #" field="name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-20" truncate={false} />
+                  <SortableHeader label="Status" field="status" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Proposal #" field="proposal_id" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalId} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Proposal Name" field="proposal_name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal_name} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Customer PO" field="customerPO" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Bill to Account" field="billToAccountName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToAccountName} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Bill to Location" field="billToLocationName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocationName} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Bill to Contact" field="billToContactName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContactName} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Ship to Account" field="shipToAccountName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccountName} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Ship to Location" field="shipToLocationName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocationName} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Ship to Contact" field="shipToContactName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContactName} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Drop Ship" field="dropShip" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Total Lines" field="items" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Total Price" field="total" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Request Date" field="requestedDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestedDate} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Create Date" field="createdDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.createdDate} onResize={handleResize} truncate={false} />
                   <th
-                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 truncate"
+                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 whitespace-nowrap"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
-                    Actions
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -874,7 +894,7 @@ export default function OrdersPage() {
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {paginatedOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={10} className="px-6 py-12 text-center truncate">
+                    <td colSpan={17} className="px-6 py-12 text-center truncate">
                       <div className="flex flex-col items-center justify-center min-w-0">
                         <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -913,17 +933,41 @@ export default function OrdersPage() {
                         )}
                       </td>
                       <td className="px-3 py-2 truncate">
+                        <div className="text-sm text-gray-600 dark:text-white font-medium" title={order.proposal_name}>{displayCell(order.proposal_name)}</div>
+                      </td>
+                      <td className="px-3 py-2 truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={order.customerPO}>{displayCell(order.customerPO)}</div>
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billTo}>{displayCell(order.billTo)}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billToAccountName}>{displayCell(order.billToAccountName)}</div>
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipTo}>{displayCell(order.shipTo)}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billToLocationName}>{displayCell(order.billToLocationName)}</div>
+                      </td>
+                      <td className="px-3 py-2 truncate">
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billToContactName}>{displayCell(order.billToContactName)}</div>
+                      </td>
+                      <td className="px-3 py-2 truncate">
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipToAccountName}>{displayCell(order.shipToAccountName)}</div>
+                      </td>
+                      <td className="px-3 py-2 truncate">
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipToLocationName}>{displayCell(order.shipToLocationName)}</div>
+                      </td>
+                      <td className="px-3 py-2 truncate">
+                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipToContactName}>{displayCell(order.shipToContactName)}</div>
+                      </td>
+                      <td className="px-3 py-2 truncate">
+                        <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.dropShip
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                          : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                          }`}>
+                          {order.dropShip ? 'Yes' : 'No'}
+                        </span>
                       </td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-white truncate">{formatNumber(order.items, 0)}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(order.total)}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(order.requestedDate, 'numeric-dash')}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.createdDate)}</td>
                       <td className="px-3 py-2">
                         <div className="flex gap-2">
                           {order.status !== "Canceled" && order.status !== "Cancelled" && (

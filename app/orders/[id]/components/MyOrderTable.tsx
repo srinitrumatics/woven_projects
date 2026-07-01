@@ -88,7 +88,7 @@ export default function MyOrderTable({
                             <tr>
                                 <SortableHeader label="Order Line " field="sku" sortConfig={sortConfig} requestSort={requestSort} width={widths.sku} onResize={onResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-20" />
                                 <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
-                                <SortableHeader label="Manufacturer" field="manufacturer" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
+                                <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
                                 <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
                                 <SortableHeader label="Unit Price" field="unitPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
                                 <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
@@ -128,8 +128,8 @@ export default function MyOrderTable({
                                             </div>
                                         )}
                                     </td>
-                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left" title={displayCell(product.manufacturer)}>
-                                        <div className="text-sm text-gray-900 dark:text-white">{displayCell(product.manufacturer)}</div>
+                                    <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left" title={displayCell(product.brand)}>
+                                        <div className="text-sm text-gray-900 dark:text-white">{displayCell(product.brand)}</div>
                                     </td>
                                     <td className="px-2 py-3 text-left" title={displayCell(product.productFamily)}>
                                         <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">

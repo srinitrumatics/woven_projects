@@ -45,6 +45,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             productName: item.gtherp__Product_Name__c || item.Product_Name || "",
                             productDescription: item.gtherp__Product_Description__c || item.Product_Description__c || "",
                             manufacturerDBA: item.gtherp__Manufacturer_DBA__c || item.Manufacturer_DBA__c || "",
+                            brand: undefined,
                             supplierName: item.gtherp__Supplier_Name__c || item.Supplier_Name__c || "",
                             purchaseOrderName: item.Purchase_Order_Name || item.gtherp__Purchase_Order__r?.Name || item.Purchase_Order__r?.Name || "",
                             purchaseOrderId: item.gtherp__Purchase_Order__c || item.Purchase_Order__c || "",
@@ -126,7 +127,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                         <SortableHeader label="Days in Inventory" field="daysInInventory" sortConfig={sortConfig} requestSort={requestSort} width={widths.daysInInventory} onResize={handleResize} />
                         <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
                         <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.productDescription} onResize={handleResize} />
-                        <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
+                        <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
                         <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierName} onResize={handleResize} />
                         <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderName} onResize={handleResize} />
                         <SortableHeader label="Qty on Hand" field="qtyOnHand" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} />
@@ -151,7 +152,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={`${formatNumber(pos.daysInInventory, 0)} Days`}>{formatNumber(pos.daysInInventory, 0)} Days</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productName}>{displayCell(pos.productName)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productDescription}>{displayCell(pos.productDescription)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.manufacturerDBA}>{displayCell(pos.manufacturerDBA)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.brand}>{displayCell(pos.brand)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.supplierName}>{displayCell(pos.supplierName)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.purchaseOrderName}>
                                 {pos.purchaseOrderId ? (

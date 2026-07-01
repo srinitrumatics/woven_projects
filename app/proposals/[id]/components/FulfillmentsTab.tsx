@@ -45,7 +45,7 @@ export default function FulfillmentsTab({
         }
     }, [activeTab, fulfillmentData]);
 
-    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<Invoice | ShippingManifest | SalesOrder | CustomerQuote>(activeData, { key: 'name', direction: 'desc' });
+    const { items: sortedData, requestSort: originalRequestSort, sortConfig } = useSortableData<Invoice | ShippingManifest | SalesOrder | CustomerQuote>(activeData, { key: 'name', direction: 'asc' });
 
     const requestSort = (key: string) => {
         originalRequestSort(key as any);
@@ -93,15 +93,6 @@ export default function FulfillmentsTab({
                         Sales Orders {fulfillmentData.salesOrders.length > 0 && `(${fulfillmentData.salesOrders.length})`}
                     </button>
                     <button
-                        onClick={() => onTabChange("invoices")}
-                        className={`truncate py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "invoices"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`}
-                    >
-                        Invoices {fulfillmentData.invoices.length > 0 && `(${fulfillmentData.invoices.length})`}
-                    </button>
-                    <button
                         onClick={() => onTabChange("shipping")}
                         className={`truncate py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "shipping"
                             ? "border-primary text-primary"
@@ -109,6 +100,15 @@ export default function FulfillmentsTab({
                             }`}
                     >
                         Shipping Manifests {fulfillmentData.shippingManifests.length > 0 && `(${fulfillmentData.shippingManifests.length})`}
+                    </button>
+                    <button
+                        onClick={() => onTabChange("invoices")}
+                        className={`truncate py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "invoices"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+                            }`}
+                    >
+                        Invoices {fulfillmentData.invoices.length > 0 && `(${fulfillmentData.invoices.length})`}
                     </button>
                 </nav>
             </div>
@@ -129,7 +129,9 @@ export default function FulfillmentsTab({
                                         <tr>
                                             <SortableHeader label="Customer Quote" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.name} onResize={(f, w) => onResize('quotes', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" truncate={false} />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.status} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
-                                            <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.customerOrderName} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
+                                            <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.proposalId} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
+                                            <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.proposalName} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
+                                            <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.customerOrderName} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
                                             <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.customerPO} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
                                             <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.billToAccountName} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
                                             <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.billToLocationName} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
@@ -143,7 +145,7 @@ export default function FulfillmentsTab({
                                             <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.totalShippingCharges} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
                                             <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.totalTaxesAmount} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
                                             <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.grandTotal} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
-                                            <SortableHeader label="Issue Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.issuedDate} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
+                                            <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.issuedDate} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
                                             <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.expirationDate} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
                                             <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.requestDate} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
                                             <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.shipDate} onResize={(f, w) => onResize('quotes', f, w)} truncate={false} />
@@ -171,6 +173,22 @@ export default function FulfillmentsTab({
                                                 <td className="px-3 py-2 truncate">
                                                     <StatusBadge status={quote.status as any} />
                                                 </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                    {quote.proposalName && quote.proposalId ? (
+                                                        <Link
+                                                            href={`/proposals/${quote.proposalId}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-sm font-semibold text-primary hover:underline truncate"
+                                                            title={quote.proposalName}
+                                                        >
+                                                            {quote.proposalName}
+                                                        </Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.proposalName}>{displayCell(quote.proposalName)}</div>
+                                                    )}
+                                                </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.proposalName}>{displayCell(quote.proposalName)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {quote.customerOrderName && quote.customerOrderId ? (
                                                         <Link
@@ -257,10 +275,12 @@ export default function FulfillmentsTab({
                                 <table className="w-full border-separate border-spacing-0 table-fixed">
                                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                                         <tr>
-                                            <SortableHeader label="Sales Order" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.name} onResize={(f, w) => onResize('sales', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" truncate={false} />
+                                            <SortableHeader label="Sales Order #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.name} onResize={(f, w) => onResize('sales', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" truncate={false} />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.status} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
-                                            <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerQuoteName} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
-                                            <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerOrderName} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
+                                            <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerQuoteName} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
+                                            <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.proposalId} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
+                                            <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.proposalName} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
+                                            <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerOrderName} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
                                             <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerPO} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
                                             <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.billToAccountName} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
                                             <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.billToLocationName} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
@@ -275,8 +295,6 @@ export default function FulfillmentsTab({
                                             <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.totalTaxesAmount} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
                                             <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.grandTotal} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
                                             <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.requestDate} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
-                                            <SortableHeader label="Pick Date" field="pickDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.pickDate} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
-                                            <SortableHeader label="Pick Complete Date" field="pickCompleteDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.pickCompleteDate} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
                                             <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.shipDate} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
                                             <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.deliveredDate} onResize={(f, w) => onResize('sales', f, w)} truncate={false} />
                                         </tr>
@@ -317,6 +335,22 @@ export default function FulfillmentsTab({
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerQuoteName}>{displayCell(order.customerQuoteName)}</div>
                                                     )}
                                                 </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                    {order.proposalName && order.proposalId ? (
+                                                        <Link
+                                                            href={`/proposals/${order.proposalId}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-sm font-semibold text-primary hover:underline truncate"
+                                                            title={order.proposalName}
+                                                        >
+                                                            {order.proposalName}
+                                                        </Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.proposalName}>{displayCell(order.proposalName)}</div>
+                                                    )}
+                                                </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.proposalName}>{displayCell(order.proposalName)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {order.customerOrderName && order.customerOrderId ? (
                                                         <Link
@@ -367,8 +401,6 @@ export default function FulfillmentsTab({
                                                     ${order.grandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.requestDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.pickDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.pickCompleteDate)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.shipDate)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.deliveredDate)}</td>
                                             </tr>
@@ -403,11 +435,14 @@ export default function FulfillmentsTab({
                                 <table className="w-full border-separate border-spacing-0 table-fixed">
                                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                                         <tr>
-                                            <SortableHeader label="Invoice" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.name} onResize={(f, w) => onResize('invoices', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" truncate={false} />
+                                            <SortableHeader label="Invoice #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.name} onResize={(f, w) => onResize('invoices', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" truncate={false} />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.status} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
                                             <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.salesOrderName} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
-                                            <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerQuoteName} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
-                                            <SortableHeader label="Customer Orders" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerOrderName} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
+                                            <SortableHeader label="Purchase Order #" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.purchaseOrderName} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
+                                            <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerQuoteName} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
+                                            <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.proposalId} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
+                                            <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.proposalName} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
+                                            <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerOrderName} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
                                             <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerPO} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
                                             <SortableHeader label="Bill to Account" field="billToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.billToAccountName} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
                                             <SortableHeader label="Bill to Location" field="billToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.billToLocationName} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
@@ -422,7 +457,6 @@ export default function FulfillmentsTab({
                                             <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.dueDate} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
                                             <SortableHeader label="Collection Status" field="collectionStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.collectionStatus} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
                                             <SortableHeader label="Open Balance" field="openBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.openBalance} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
-                                            <SortableHeader label="Days Outstanding" field="daysOutstanding" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.daysOutstanding} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
                                             <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.settledDate} onResize={(f, w) => onResize('invoices', f, w)} truncate={false} />
                                         </tr>
                                     </thead>
@@ -451,6 +485,7 @@ export default function FulfillmentsTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.salesOrderName}>{displayCell(invoice.salesOrderName)}</div>
                                                 </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.purchaseOrderName}>{displayCell(invoice.purchaseOrderName)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {invoice.customerQuoteName && invoice.customerQuoteId ? (
                                                         <Link
@@ -466,6 +501,22 @@ export default function FulfillmentsTab({
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerQuoteName}>{displayCell(invoice.customerQuoteName)}</div>
                                                     )}
                                                 </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                    {invoice.proposalName && invoice.proposalId ? (
+                                                        <Link
+                                                            href={`/proposals/${invoice.proposalId}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-sm font-semibold text-primary hover:underline truncate"
+                                                            title={invoice.proposalName}
+                                                        >
+                                                            {invoice.proposalName}
+                                                        </Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.proposalName}>{displayCell(invoice.proposalName)}</div>
+                                                    )}
+                                                </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.proposalName}>{displayCell(invoice.proposalName)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {invoice.customerOrderName && invoice.customerOrderId ? (
                                                         <Link
@@ -512,7 +563,6 @@ export default function FulfillmentsTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
                                                     ${invoice.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(invoice.daysOutstanding ?? ''))}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(invoice.settledDate)}</td>
                                             </tr>
                                         ))}
@@ -546,29 +596,32 @@ export default function FulfillmentsTab({
                                 <table className="w-full border-separate border-spacing-0 table-fixed">
                                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                                         <tr>
-                                            <SortableHeader label="Shipping Manifest" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.name} onResize={(f, w) => onResize('shipping', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" truncate={false} />
+                                            <SortableHeader label="Shipping Manifest #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.name} onResize={(f, w) => onResize('shipping', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" truncate={false} />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.status} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
-                                            <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.salesOrderName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
-                                            <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.customerQuoteName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
-                                            <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.customerOrderName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Sales Order #" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.salesOrderName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.customerQuoteName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.proposalId} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.proposalName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.customerOrderName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.customerPO} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.shipToAccountName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.shipToLocationName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.shipToContactName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.dropShip} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
-                                            <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.boxCount} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
-                                            <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.boxNetWeight} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
-                                            <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.boxGrossWeight} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.totalLines} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.totalPrice} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.boxCount} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Box Length" field="boxLength" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.boxLength} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Box Width" field="boxWidth" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.boxWidth} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Box Height" field="boxHeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.boxHeight} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.boxNetWeight} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.boxGrossWeight} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Logistics Partner" field="logisticsPartnerName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.logisticsPartnerName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.shipDate} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.deliveredDate} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
-                                            <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.shippingMethod} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
-                                            <SortableHeader label="Logistics Partner" field="logisticsPartnerName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.logisticsPartnerName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
-                                            <SortableHeader label="Logistics Contact" field="logisticsContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.logisticsContactName} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.trackingNumber} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
-                                            <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.estimatedDeliveryDate} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.trackingStatus} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
+                                            <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.estimatedDeliveryDate} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                             <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.actualDeliveryDate} onResize={(f, w) => onResize('shipping', f, w)} truncate={false} />
                                         </tr>
                                     </thead>
@@ -613,6 +666,22 @@ export default function FulfillmentsTab({
                                                     )}
                                                 </td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                    {manifest.proposalName && manifest.proposalId ? (
+                                                        <Link
+                                                            href={`/proposals/${manifest.proposalId}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-sm font-semibold text-primary hover:underline truncate"
+                                                            title={manifest.proposalName}
+                                                        >
+                                                            {manifest.proposalName}
+                                                        </Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.proposalName}>{displayCell(manifest.proposalName)}</div>
+                                                    )}
+                                                </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.proposalName}>{displayCell(manifest.proposalName)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     {manifest.customerOrderName && manifest.customerOrderId ? (
                                                         <Link
                                                             href={`/orders/${manifest.customerOrderId}`}
@@ -641,9 +710,6 @@ export default function FulfillmentsTab({
                                                         {manifest.dropShip ? 'Yes' : 'No'}
                                                     </span>
                                                 </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxCount ?? ''))}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxNetWeight ?? ''))}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxGrossWeight ?? ''))}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
                                                         {manifest.totalLines}
@@ -652,14 +718,18 @@ export default function FulfillmentsTab({
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
                                                     ${manifest.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxCount ?? ''))}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxLength ?? ''))}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxWidth ?? ''))}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxHeight ?? ''))}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxNetWeight ?? ''))}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxGrossWeight ?? ''))}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.logisticsPartnerName)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.shipDate)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.deliveredDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.shippingMethod)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.logisticsPartnerName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.logisticsContactName)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.trackingNumber)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.estimatedDeliveryDate)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.trackingStatus)}</td>
+                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.estimatedDeliveryDate)}</td>
                                                 <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.actualDeliveryDate)}</td>
                                             </tr>
                                         ))}

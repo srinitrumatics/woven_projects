@@ -70,6 +70,7 @@ export interface QuoteLine {
   productName: string;
   description: string;
   manufacturerDBA: string;
+  brand?: string;
   unitPrice: number;
   quantity: number;
   totalPrice: number;

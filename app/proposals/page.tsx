@@ -33,12 +33,21 @@ export default function ProposalsPage() {
     proposalName: 200,
     customerOrder: 180,
     customerPO: 180,
-    billTo: 180,
-    shipTo: 180,
+    billToAccount: 180,
+    billToLocation: 180,
+    billToContact: 180,
+    shipToAccount: 180,
+    shipToLocation: 180,
+    shipToContact: 180,
+    dropShip: 130,
     productCount: 100,
     totalAmount: 120,
+    totalShippingCharges: 120,
+    totalTaxesAmount: 120,
+    grandTotal: 150,
     totalLines: 160,
-    expirationDate: 120,
+    issuedDate: 150,
+    expirationDate: 150,
     proposalDate: 160,
     actions: 100
   });
@@ -72,12 +81,21 @@ export default function ProposalsPage() {
           totalAmount: item.Total_Price__c || item.Total_Amount__c || 0,
           totalShippingCharges: item.Total_Shipping_Charges__c || 0,
           totalTaxesAmount: item.Total_Taxes_Amount__c || 0,
+          grandTotal: item.Grand_Total__c || item.gtherp__Grand_Total__c || ((item.Total_Price__c || item.Total_Amount__c || 0) + (item.Total_Shipping_Charges__c || 0) + (item.Total_Taxes_Amount__c || 0)),
+          issuedDate: formatDate(item.Issued_Date__c, 'numeric-dash'),
           proposalDate: item.Request_Date__c || (item.CreatedDate ? item.CreatedDate.split('T')[0] : new Date().toISOString().split('T')[0]),
           expirationDate: item.Expiration_Date__c || '',
           description: item.Description || '',
           productCount: item.Total_Lines__c || item.Product_Count__c || 0,
           billTo: item.Authorized_Bill_To_Location_Name || item.Bill_To_Address__c || '',
           shipTo: item.Authorized_Ship_To_Location_Name || item.Ship_To_Address__c || '',
+          billToAccount: item.Authorized_Bill_To_Account_Name || item.Bill_To_Account_Name || item.Inventory_Account_Name || '',
+          billToLocation: item.Authorized_Bill_To_Location_Name || item.Bill_To_Address__c || '',
+          billToContact: item.Bill_to_Contact_Name || '',
+          shipToAccount: item.Authorized_Ship_To_Account_Name || item.Ship_To_Account_Name || item.Inventory_Account_Name || '',
+          shipToLocation: item.Authorized_Ship_To_Location_Name || item.Ship_To_Address__c || '',
+          shipToContact: item.Ship_to_Contact_Name || '',
+          dropShip: item.Drop_Ship__c || false,
           opportunityName: item.Opportunity_Name__c || '',
           submittedBy: item.Owner_Name || item.Owner?.Name || 'System'
         }));
@@ -515,17 +533,26 @@ export default function ProposalsPage() {
             <table className="w-full">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Proposal Number" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                  <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
                   <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} truncate={false} />
                   <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} truncate={false} />
                   <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Bill to Account" field="billTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.billTo} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Ship to Account" field="shipTo" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipTo} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Bill to Account" field="billToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToAccount} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Bill to Location" field="billToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocation} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Bill to Contact" field="billToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContact} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={handleResize} truncate={false} />
                   <SortableHeader label="Total Lines" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCount} onResize={handleResize} truncate={false} />
                   <SortableHeader label="Total Price" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Expires" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Request Date" field="proposalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalShippingCharges} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalTaxesAmount} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Request Date" field="proposalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalDate} onResize={handleResize} truncate={false} />
 
                   <th
                     className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white"
@@ -538,7 +565,7 @@ export default function ProposalsPage() {
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {paginatedProposals.length === 0 ? (
                   <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <td colSpan={9} className="px-6 py-12 text-center truncate">
+                    <td colSpan={21} className="px-6 py-12 text-center truncate">
                       <div className="flex flex-col items-center justify-center min-w-0">
                         <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -605,13 +632,37 @@ export default function ProposalsPage() {
                         )}
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billTo}>{displayCell(proposal.billTo)}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billToAccount}>{displayCell(proposal.billToAccount)}</div>
                       </td>
                       <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipTo}>{displayCell(proposal.shipTo)}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billToLocation}>{displayCell(proposal.billToLocation)}</div>
+                      </td>
+                      <td className="px-3 py-2 truncate">
+                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billToContact}>{displayCell(proposal.billToContact)}</div>
+                      </td>
+                      <td className="px-3 py-2 truncate">
+                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipToAccount}>{displayCell(proposal.shipToAccount)}</div>
+                      </td>
+                      <td className="px-3 py-2 truncate">
+                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipToLocation}>{displayCell(proposal.shipToLocation)}</div>
+                      </td>
+                      <td className="px-3 py-2 truncate">
+                        <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipToContact}>{displayCell(proposal.shipToContact)}</div>
+                      </td>
+                      <td className="px-3 py-2 truncate">
+                        <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${proposal.dropShip
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                          : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                          }`}>
+                          {proposal.dropShip ? 'Yes' : 'No'}
+                        </span>
                       </td>
                       <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[130px] truncate">{formatNumber(proposal.productCount)}</td>
                       <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(proposal.totalAmount)}</td>
+                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{formatCurrency(proposal.totalShippingCharges)}</td>
+                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{formatCurrency(proposal.totalTaxesAmount)}</td>
+                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(proposal.grandTotal)}</td>
+                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(proposal.issuedDate)}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
                       <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[150px] truncate">{formatDate(proposal.proposalDate, 'numeric-dash')}</td>
                       <td className="px-3 py-2 truncate">

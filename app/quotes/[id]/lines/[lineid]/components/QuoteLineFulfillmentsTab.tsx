@@ -16,6 +16,7 @@ interface SOLI {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     unitPrice: number;
     totalOrderQty: number;
     totalPrice: number;
@@ -40,6 +41,7 @@ interface SMLI {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     boxCount: number;
     boxNetWeight: number;
     boxGrossWeight: number;
@@ -68,6 +70,7 @@ interface INLI {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     unitPrice: number;
     invoiceQty: number;
     totalPrice: number;
@@ -123,6 +126,7 @@ export default function QuoteLineFulfillmentsTab({
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
+                            brand: undefined,
                             unitPrice: item.Unit_Price__c || 0,
                             totalOrderQty: item.Total_Order_Qty__c || 0,
                             totalPrice: item.Total_Price__c || 0,
@@ -152,6 +156,7 @@ export default function QuoteLineFulfillmentsTab({
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
+                            brand: undefined,
                             unitPrice: item.Unit_Price__c || 0,
                             invoiceQty: item.Invoiced_Qty__c || 0,
                             totalPrice: item.Invoiced_Amount__c ?? item.Total_Price__c ?? 0,
@@ -176,6 +181,7 @@ export default function QuoteLineFulfillmentsTab({
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
+                            brand: undefined,
                             boxCount: item.Box__c || 0,
                             boxNetWeight: item.Case_Net_Weight__c || 0,
                             boxGrossWeight: item.Case_Gross_Weight__c || 0,

@@ -608,7 +608,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           productGrouping: item.Grouping__c || item.Product_Grouping__c || item.productGrouping || "",
           sku: item.StockKeepingUnit || item.SKU || item.sku || item.Name || "",
           manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.Manufacturer_Name || item.Manufacturer_Name__c || "",
-          brand: item.Brand__c || item.brand || item.Brand || item['Manufacturer_Name__r.Name'] || "",
+          brand: item.gtherp__Product_Brand_Name__c || item.Brand__c || item.brand || item.Brand || "",
           availableQty: item.Available_To_Sell__c || item.availableQty || 0,
           moq: item.MOQ__c || item.moq || 1,
           listPrice: item.List_Price__c || item.listPrice || 0,
@@ -1895,8 +1895,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{tooltipState.product.sku ?? "—"}</div>
 
                 <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-                  <div className="text-gray-500">Manufacturer</div>
-                  <div className="font-medium text-gray-900 dark:text-gray-100">{tooltipState.product.manufacturer ?? "—"}</div>
+                  <div className="text-gray-500">Brand</div>
+                  <div className="font-medium text-gray-900 dark:text-gray-100">{tooltipState.product.brand ?? "—"}</div>
                   <div className="text-gray-500">Family</div>
                   <div className="font-medium text-gray-900 dark:text-gray-100">{tooltipState.product.productFamily ?? "—"}</div>
                   <div className="text-gray-500">Unit Price</div>

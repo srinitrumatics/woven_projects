@@ -612,7 +612,7 @@ export default function InventoryPage() {
                                     </th>
                                     <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} truncate={false} className="sticky bg-primary-light dark:bg-gray-900 z-20" style={{ left: widths.checkbox }} />
                                     <SortableHeader label="Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Manufacturer DBA" field="manufacturerDBA" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.family} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} truncate={false} />
@@ -661,7 +661,7 @@ export default function InventoryPage() {
                                                 <div className="truncate" title={item.productDescription}>{displayCell(item.productDescription)}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.manufacturer, maxWidth: widths.manufacturer }}>
-                                                <div className="truncate" title={item.manufacturerDBA}>{displayCell(item.manufacturerDBA)}</div>
+                                                <div className="truncate" title={item.brand}>{displayCell(item.brand)}</div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                                                 <div className="truncate">

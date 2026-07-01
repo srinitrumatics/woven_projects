@@ -18,6 +18,7 @@ interface InvoiceLineData {
     productName: string;
     description: string;
     manufacturerDBA: string;
+    brand?: string;
     productFamily: string;
     site: string;
     siteId?: string;
@@ -99,6 +100,7 @@ export default function InvoiceLineDetailPage({
                         productName: item.Product_Name || "Unknown Product",
                         description: item.Product_Description__c || "",
                         manufacturerDBA: item.Manufacturer_DBA__c || "",
+                        brand: undefined,
                         productFamily: item.Product_Family__c || "",
                         site: item.Site_Name || item.Site__c || "",
                         siteId: item.Site__c || "",

@@ -46,6 +46,7 @@ export interface InvoiceLine {
   productSku: string;
   description: string;
   manufacturerDBA: string;
+  brand?: string;
   quantity: number; // Total_Order_Qty__c
   unitPrice: number;
   discount: number;
