@@ -68,6 +68,12 @@ export interface InvoiceLine {
   salesOrderId?: string;
   customerQuoteLineId?: string;
   customerQuoteId?: string;
+  salesOrderLine?: string;
+  purchaseOrderLine?: string;
+  customerQuoteLineName?: string;
+  proposedProduct?: string;
+  proposedProductId?: string;
+  productId?: string;
 }
 
 export interface ReceivePayment {
@@ -97,6 +103,7 @@ export interface CreditMemo {
   status: string; // Status__c
   invoiceName: string; // Invoice_Name
   invoiceId?: string;
+  salesOrderName?: string; // Sales_Order_Name
   customerQuoteName: string; // Customer_Quote_Name
   customerQuoteId?: string;
   customerOrderName: string; // Customer_Order_Name

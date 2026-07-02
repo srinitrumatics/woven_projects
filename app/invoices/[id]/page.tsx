@@ -49,8 +49,8 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           productSku: line.Product_Name || 'N/A',
           description: line.Product_Description__c || '',
           manufacturerDBA: line.Manufacturer_DBA__c || 'N/A',
-          brand: undefined,
-          quantity: line.Total_Order_Qty__c || 0,
+          brand: line.Brand_Name__c || line.gtherp__Brand_Name__c || '',
+          quantity: line.Total_Order_Qty__c || line.gtherp__Total_Order_Qty__c || 0,
           unitPrice: line.Unit_Price__c || 0,
           discount: 0,
           taxAmount: line.Total_Taxes_Amount__c || 0,
@@ -62,7 +62,13 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           salesOrderLineId: line.Sales_Order_Line__c || '',
           salesOrderId: line.Sales_Order__c || line.Sales_Order_Line__r?.Sales_Order__c || '',
           customerQuoteLineId: line.Customer_Quote_Line__c || '',
-          customerQuoteId: line.Customer_Quote__c || line.Customer_Quote_Line__r?.Customer_Quote__c || ''
+          customerQuoteId: line.Customer_Quote__c || line.Customer_Quote_Line__r?.Customer_Quote__c || '',
+          salesOrderLine: line.Sales_Order_Line_Name || '',
+          purchaseOrderLine: line.Purchase_Order_Line_Name || '',
+          customerQuoteLineName: line.Customer_Quote_Line_Name || '',
+          proposedProduct: line.Proposed_Product_Name || '',
+          proposedProductId: line.Proposed_Product__c || '',
+          productId: line.Product__c || ''
         }));
 
         // Fetch Payments separately
@@ -119,8 +125,11 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           name: cm.Name || 'N/A',
           status: cm.Status__c || 'N/A',
           invoiceName: cm.Invoice_Name || cm.Invoice__r?.Name || 'N/A',
+          salesOrderName: cm.Sales_Order_Name || '',
           customerQuoteName: cm.Customer_Quote_Name || cm.Customer_Quote__r?.Name || 'N/A',
           customerQuoteId: cm.Customer_Quote__c || '',
+          proposalName: cm.Proposal_Name || cm.Proposal__r?.Name || '',
+          proposalId: cm.Proposal__c || '',
           customerOrderName: cm.Customer_Order_Name || cm.Customer_Order__r?.Name || 'N/A',
           customerOrderId: cm.Customer_Order__c || '',
           creditToAccountName: cm.Credit_to_Account_Name || 'N/A',
@@ -285,7 +294,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
   const renderTabContent = () => {
     switch (activeTab) {
       case "products":
-        return <InvoiceLineItems lines={invoice.lines} invoiceId={invoice.id} />;
+        return <InvoiceLineItems lines={invoice.lines} invoiceId={invoice.id} invoiceNumber={invoice.invoiceNumber} />;
       case "taxes":
         return (
           <InvoiceTaxes

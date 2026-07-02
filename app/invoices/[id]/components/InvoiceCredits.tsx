@@ -16,7 +16,7 @@ interface InvoiceCreditsProps {
 export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
     const [currentPage, setCurrentPage] = useState(1);
 
-    const { items: sortedCredits, requestSort, sortConfig } = useSortableData<CreditMemo>(credits, { key: 'name', direction: 'desc' });
+    const { items: sortedCredits, requestSort, sortConfig } = useSortableData<CreditMemo>(credits, { key: 'name', direction: 'asc' });
 
     const paginatedCredits = useMemo(() => {
         const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -28,12 +28,12 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
     const { widths, handleResize } = useResizableColumns({
         name: 180,
         status: 120,
-        invoiceName: 160,
-        proposal: 160,
+        invoiceNumber: 140,
+        salesOrder: 150,
         customerQuote: 180,
+        proposal: 150,
+        proposalName: 180,
         customerOrder: 180,
-        creditAccount: 200,
-        creditContact: 180,
         totalLines: 120,
         totalPrice: 140,
         shipping: 140,
@@ -60,12 +60,14 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                 <table className="w-full table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
-                            <SortableHeader truncate={false} label="Credit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                            <SortableHeader truncate={false} label="Credit Memo #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                             <SortableHeader truncate={false} label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Credit to Account" field="creditToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditAccount} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Credit to Contact" field="creditToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditContact} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Invoice #" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Sales Order #" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Proposal #" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
@@ -89,6 +91,12 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                         {cm.status}
                                     </span>
                                 </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                    {displayCell(cm.invoiceName)}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                    {displayCell(cm.salesOrderName)}
+                                </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
                                     {cm.customerQuoteId && cm.customerQuoteId !== 'N/A' && cm.customerQuoteId !== '' ? (
                                         <Link href={`/quotes/${cm.customerQuoteId}`} target='_blank' className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
@@ -99,6 +107,18 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                     )}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
+                                    {cm.proposalId ? (
+                                        <Link href={`/proposals/${cm.proposalId}`} target='_blank' className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                            {displayCell(cm.proposalName)}
+                                        </Link>
+                                    ) : (
+                                        displayCell(cm.proposalName)
+                                    )}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                    {displayCell(cm.proposalName)}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
                                     {cm.customerOrderId && cm.customerOrderId !== 'N/A' && cm.customerOrderId !== '' ? (
                                         <Link href={`/orders/${cm.customerOrderId}`} target='_blank' className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                             {cm.customerOrderName && cm.customerOrderName !== 'N/A' ? cm.customerOrderName : cm.customerOrderId}
@@ -106,12 +126,6 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                     ) : (
                                         displayCell(cm.customerOrderName)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                    {displayCell(cm.creditToAccountName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                    {displayCell(cm.creditToContactName)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-center truncate">
                                     {formatNumber(cm.totalLines)}
