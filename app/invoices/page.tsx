@@ -29,16 +29,25 @@ export default function InvoicesPage() {
     status: 120,
     salesOrder: 150,
     purchaseOrder: 150,
+    customerQuote: 170,
+    proposalNumber: 150,
     proposalName: 200,
     customerOrder: 150,
     customerPO: 180,
     accountName: 200,
+    billToLocation: 180,
+    billToContact: 180,
     totalLines: 120,
+    totalPrice: 130,
+    shipping: 110,
+    taxes: 110,
     totalAmount: 140,
     invoiceDate: 140,
     paymentTerms: 160,
+    dueDate: 140,
     collectionStatus: 160,
     amountDue: 140,
+    settledDate: 140,
     actions: 100
   });
 
@@ -84,7 +93,15 @@ export default function InvoicesPage() {
           purchaseOrderId: item.Purchase_Order__c || '',
           proposalId: item.Proposal__c || '',
           customerOrderId: item.Customer_Order__c || '',
-          accountId: item.Bill_to_Account__c || ''
+          accountId: item.Bill_to_Account__c || '',
+          customerQuoteId: item.Customer_Quote__c || '',
+          customerQuoteName: item.Customer_Quote_Name || 'N/A',
+          proposalNumber: item.Proposal_Number || item.Proposal_Name || 'N/A',
+          billToLocation: item.Authorized_Bill_To_Location_Name || 'N/A',
+          totalPrice: item.Total_Price__c || 0,
+          shipping: item.Total_Shipping_Charges__c || 0,
+          taxes: item.Total_Taxes_Amount__c || 0,
+          settledDate: item.Settled_Date__c || ''
         }));
 
         setInvoices(mappedInvoices);
@@ -473,20 +490,29 @@ export default function InvoicesPage() {
               <table className="w-full text-sm">
                 <thead className="bg-primary-light dark:bg-gray-900">
                   <tr>
-                    <SortableHeader truncate={false} label="Invoice Number" field="invoiceNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                    <SortableHeader truncate={false} label="Invoice #" field="invoiceNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                     <SortableHeader truncate={false} label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                    <SortableHeader truncate={false} label="Sales Order" field="salesOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
-                    <SortableHeader truncate={false} label="Purchase Order" field="purchaseOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Sales Order #" field="salesOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Purchase Order #" field="purchaseOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
                     <SortableHeader truncate={false} label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
-                    <SortableHeader truncate={false} label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
                     <SortableHeader truncate={false} label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
                     <SortableHeader truncate={false} label="Bill to Account" field="accountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Bill to Location" field="billToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocation} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Bill to Contact" field="contactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContact} onResize={handleResize} />
                     <SortableHeader truncate={false} label="Total Lines" field="lineItemCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
                     <SortableHeader truncate={false} label="Grand Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
                     <SortableHeader truncate={false} label="Issued Date" field="invoiceDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceDate} onResize={handleResize} />
                     <SortableHeader truncate={false} label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Due Date" field="dueDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.dueDate} onResize={handleResize} />
                     <SortableHeader truncate={false} label="Collection Status" field="collectionStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.collectionStatus} onResize={handleResize} />
                     <SortableHeader truncate={false} label="Open Balance" field="amountDue" sortConfig={sortConfig} requestSort={requestSort} width={widths.amountDue} onResize={handleResize} />
+                    <SortableHeader truncate={false} label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={handleResize} />
                     <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                       Action
                     </th>
@@ -495,7 +521,7 @@ export default function InvoicesPage() {
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {paginatedInvoices.length === 0 ? (
                     <tr>
-                      <td colSpan={10} className="px-6 py-12 text-center truncate">
+                      <td colSpan={24} className="px-6 py-12 text-center truncate">
                         <div className="flex flex-col items-center justify-center min-w-0">
                           <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
@@ -513,7 +539,7 @@ export default function InvoicesPage() {
                         key={invoice.id}
                         className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer">
                         <td className="px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
-                          <div title={invoice.invoiceNumber} onClick={() => router.push(`/invoices/${invoice.id}`)}>{invoice.invoiceNumber}</div>
+                          <Link href={`/invoices/${invoice.id}`} title={invoice.invoiceNumber} onClick={(e: React.MouseEvent) => e.stopPropagation()}>{invoice.invoiceNumber}</Link>
                         </td>
                         <td className="px-3 py-2 text-gray-600 dark:text-gray-400 truncate">
                           <StatusBadge status={invoice.status} />
@@ -537,6 +563,46 @@ export default function InvoicesPage() {
                               )
                             ) : (
                               displayCell(invoice.purchaseOrderNumber)
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-3 py-2 truncate">
+                          <div>
+                            {invoice.customerQuoteId ? (
+                              !isManufacturer ? (
+                                <Link
+                                  href={`/quotes/${invoice.customerQuoteId}`}
+                                  target="_blank"
+                                  className="text-primary hover:underline font-medium"
+                                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                                >
+                                  {invoice.customerQuoteName || 'N/A'}
+                                </Link>
+                              ) : (
+                                <span className="font-medium">{displayCell(invoice.customerQuoteName)}</span>
+                              )
+                            ) : (
+                              displayCell(invoice.customerQuoteName)
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-3 py-2 truncate">
+                          <div>
+                            {invoice.proposalId ? (
+                              !isManufacturer ? (
+                                <Link
+                                  href={`/proposals/${invoice.proposalId}`}
+                                  target="_blank"
+                                  className="text-primary hover:underline font-medium"
+                                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                                >
+                                  {invoice.proposalNumber || 'N/A'}
+                                </Link>
+                              ) : (
+                                <span className="font-medium">{displayCell(invoice.proposalNumber)}</span>
+                              )
+                            ) : (
+                              displayCell(invoice.proposalNumber)
                             )}
                           </div>
                         </td>
@@ -586,20 +652,31 @@ export default function InvoicesPage() {
                         <td className="px-3 py-2 truncate">
                           <div className="text-sm font-medium">{displayCell(invoice.accountName)}</div>
                         </td>
+                        <td className="px-3 py-2 truncate">
+                          <div className="text-sm font-medium">{displayCell(invoice.billToLocation)}</div>
+                        </td>
+                        <td className="px-3 py-2 truncate">
+                          <div className="text-sm font-medium">{displayCell(invoice.contactName)}</div>
+                        </td>
                         <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{invoice.lineItemCount}</td>
+                        <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{formatCurrency(invoice.totalPrice || 0)}</td>
+                        <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{formatCurrency(invoice.shipping || 0)}</td>
+                        <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{formatCurrency(invoice.taxes || 0)}</td>
                         <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(invoice.totalAmount)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(invoice.invoiceDate, 'numeric-dash')}</td>
                         <td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-600 dark:text-white font-medium" title={invoice.paymentTerms}>{displayCell(invoice.paymentTerms)}</div>
                         </td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(invoice.dueDate, 'numeric-dash')}</td>
                         <td className="px-3 py-2 truncate">
-                          <div className="text-sm text-gray-600 dark:text-white font-medium" title={invoice.collectionStatus}>{displayCell(invoice.collectionStatus)}</div>
+                          <CollectionStatusBadge status={invoice.collectionStatus} />
                         </td>
                         <td className="px-3 py-2 text-sm text-left truncate">
                           <span className={`font-semibold ${invoice.amountDue > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
                             {formatCurrency(invoice.amountDue)}
                           </span>
                         </td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{invoice.settledDate ? formatDate(invoice.settledDate, 'numeric-dash') : '-'}</td>
                         <td className="px-3 py-2 truncate" onClick={(e) => e.stopPropagation()}>
                           <div className="flex gap-2">
                             <Link
@@ -667,6 +744,27 @@ function StatusBadge({ status }: { status: InvoiceStatus }) {
   return (
     <span className={`inline-flex items-center px-2.5 py-1.0 rounded-full text-sm ${getStyles()}`}>
       {status}
+    </span>
+  );
+}
+
+function CollectionStatusBadge({ status }: { status?: string }) {
+  const getStyles = () => {
+    switch (status) {
+      case "Paid":
+        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+      case "Pending":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+      case "Past Due":
+        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+    }
+  };
+
+  return (
+    <span className={`inline-flex items-center px-2.5 py-1.0 rounded-full text-sm ${getStyles()}`}>
+      {displayCell(status)}
     </span>
   );
 }

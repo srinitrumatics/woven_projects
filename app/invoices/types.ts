@@ -28,6 +28,14 @@ export interface Invoice {
   proposalId?: string;
   customerOrderId?: string;
   accountId?: string;
+  customerQuoteId?: string;
+  customerQuoteName?: string;
+  proposalNumber?: string;
+  billToLocation?: string;
+  totalPrice?: number;
+  shipping?: number;
+  taxes?: number;
+  settledDate?: string;
 }
 
 export interface InvoiceStats {
