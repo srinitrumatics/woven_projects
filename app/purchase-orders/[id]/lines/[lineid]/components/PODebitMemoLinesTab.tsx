@@ -7,6 +7,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { formatDate, formatCurrency, displayCell } from "@/lib/utils/formatting";
 import Link from 'next/link';
+import { useUserSession } from "@/components/UserSessionContext";
 
 interface DebitMemoLine {
     Id: string;
@@ -14,12 +15,11 @@ interface DebitMemoLine {
     Status__c: string;
     Debit_Memo__c: string;
     Debit_Memo_Name: string;
-    Supplier_Bill_Line__c: string;
-    Supplier_Bill_Line_Name: string;
     Customer_Order_Line__c: string;
+    Customer_Quote_Line__c?: string;
     Customer_Quote_Line_Name: string;
-    Purchase_Order_Line__c: string;
-    Purchase_Order_Line_Name: string;
+    Proposed_Product_Name?: string;
+    Proposed_Product__c?: string;
     Purchase_Order__c?: string;
     Customer_Quote__c?: string;
     Supplier_Bill__c?: string;
@@ -29,6 +29,7 @@ interface DebitMemoLine {
     Product_Description__c: string;
     Manufacturer_DBA__c: string;
     brand?: string;
+    Brand_Name__c?: string;
     Unit_Cost__c: number;
     Debit_Qty__c: number;
     Total_Cost__c: number;
@@ -44,15 +45,16 @@ const ITEMS_PER_PAGE = 10;
 
 export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
-    const { items: sortedData, requestSort, sortConfig } = useSortableData(lines);
+    const { selectedAccount } = useUserSession();
+    const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
+    const { items: sortedData, requestSort, sortConfig } = useSortableData(lines, { key: 'Name', direction: 'asc' });
 
     const initialWidths = {
         name: 180,
         status: 120,
         debitMemo: 150,
-        billLine: 180,
         quoteLine: 180,
-        poLine: 180,
+        proposedProduct: 180,
         productName: 180,
         description: 250,
         manufacturer: 180,
@@ -116,13 +118,12 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                         <tr>
                             <SortableHeader truncate={false} label="Debit Memo Line" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-[#e9f1f7] dark:bg-gray-900 z-30" />
                             <SortableHeader truncate={false} label="Status" field="Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Debit Memo" field="Debit_Memo__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.debitMemo} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Supplier Bill Line" field="Supplier_Bill_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billLine} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Customer Quote Line" field="Customer_Order_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.quoteLine} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Purchase Order Line" field="Purchase_Order_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.poLine} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Debit Memo #" field="Debit_Memo__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.debitMemo} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Customer Quote Line" field="Customer_Quote_Line_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.quoteLine} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Proposed Product" field="Proposed_Product_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.proposedProduct} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Name" field="Product_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Description" field="Product_Description__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.description} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.manufacturer} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.manufacturer} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Unit Cost" field="Unit_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.unitCost} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Debit Qty" field="Debit_Qty__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.qty} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.total} onResize={handleResize} />
@@ -140,18 +141,37 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Debit_Memo_Name || '-'}>
                                     {displayCell(line.Debit_Memo_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Supplier_Bill_Line_Name || '-'}>
-                                    {displayCell(line.Supplier_Bill_Line_Name)}
-                                </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || '-'}>
-                                    {displayCell(line.Customer_Quote_Line_Name)}
+                                    {line.Customer_Quote_Line__c ? (
+                                        !isManufacturer ? (
+                                            <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                {line.Customer_Quote_Line_Name || 'View Quote Line'}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{line.Customer_Quote_Line_Name || '-'}</span>
+                                        )
+                                    ) : displayCell(line.Customer_Quote_Line_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Purchase_Order_Line_Name || '-'}>
-                                    {displayCell(line.Purchase_Order_Line_Name)}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Proposed_Product_Name || '-'}>
+                                    {line.Proposed_Product__c ? (
+                                        !isManufacturer ? (
+                                            <Link href={`/products/${line.Proposed_Product__c}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                {line.Proposed_Product_Name || 'View Product'}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{line.Proposed_Product_Name || '-'}</span>
+                                        )
+                                    ) : displayCell(line.Proposed_Product_Name)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>{displayCell(line.Product_Name)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>
+                                    {line.Product_Name__c ? (
+                                        <Link href={`/products/${line.Product_Name__c}`} className="text-primary hover:underline font-medium">
+                                            {line.Product_Name}
+                                        </Link>
+                                    ) : displayCell(line.Product_Name)}
+                                </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || '-'}>{displayCell(line.Product_Description__c)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.brand || '-'}>{displayCell(line.brand)}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.brand || line.Brand_Name__c || '-'}>{displayCell(line.brand || line.Brand_Name__c)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={String(line.Debit_Qty__c || 0)}>{line.Debit_Qty__c || 0}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left truncate" title={formatCurrency(line.Total_Cost__c || 0)}>{formatCurrency(line.Total_Cost__c || 0)}</td>

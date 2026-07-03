@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -13,11 +14,12 @@ interface SerialNumberLog {
     Serial_Number_Name?: string;
     Product_Serial_Number__c?: string;
     Product_Name?: string;
+    Product_Name__c?: string;
     Product_Description__c?: string;
+    Brand_Name__c?: string;
     Purchase_Order_Name?: string;
-    Purchase_Order_Line_Name?: string;
+    Purchase_Order__c?: string;
     RMA_Name?: string;
-    RMA_Line_Name?: string;
     Received_Date__c?: string;
     Active__c?: boolean;
 }
@@ -31,7 +33,7 @@ const ITEMS_PER_PAGE = 10;
 export default function POSerialNumberLogLinesTab({ serialNumbers }: POSerialNumberLogLinesTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData(serialNumbers);
+    const { items: sortedData, requestSort, sortConfig } = useSortableData(serialNumbers, { key: 'Name', direction: 'asc' });
 
     const initialWidths = {
         name: 180,
@@ -39,10 +41,9 @@ export default function POSerialNumberLogLinesTab({ serialNumbers }: POSerialNum
         productSerialNumber: 190,
         productName: 150,
         productDescription: 200,
+        brandName: 170,
         purchaseOrder: 150,
-        purchaseOrderLines: 200,
         rma: 150,
-        rmaLine: 150,
         receivedDate: 150,
         active: 100
     };
@@ -72,14 +73,13 @@ export default function POSerialNumberLogLinesTab({ serialNumbers }: POSerialNum
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
                             <SortableHeader truncate={false} label="Serial Number Log" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-[#e9f1f7] dark:bg-gray-900 z-30" />
-                            <SortableHeader truncate={false} label="Serial Number" field="Serial_Number__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.serialNumber} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Serial Number #" field="Serial_Number_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.serialNumber} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Serial Number" field="Product_Serial_Number__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productSerialNumber} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Name" field="Product_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Description" field="Product_Description__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productDescription} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Purchase Order" field="Purchase_Order__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Purchase Order Lines" field="Purchase_Order_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrderLines} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="RMA" field="RMA__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rma} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="RMA Line" field="RMA_Line__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rmaLine} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Brand Name" field="Brand_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.brandName} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Purchase Order #" field="Purchase_Order__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="RMA #" field="RMA__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rma} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Received Date" field="Received_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.receivedDate} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Active" field="Active__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.active} onResize={handleResize} />
                         </tr>
@@ -97,22 +97,27 @@ export default function POSerialNumberLogLinesTab({ serialNumbers }: POSerialNum
                                     {displayCell(s.Product_Serial_Number__c)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate" title={s.Product_Name || '-'}>
-                                    {displayCell(s.Product_Name)}
+                                    {s.Product_Name__c ? (
+                                        <Link href={`/products/${s.Product_Name__c}`} className="text-primary hover:underline font-medium">
+                                            {s.Product_Name}
+                                        </Link>
+                                    ) : displayCell(s.Product_Name)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Description__c || '-'}>
                                     {displayCell(s.Product_Description__c)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Name || '-'}>
-                                    {displayCell(s.Purchase_Order_Name)}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Brand_Name__c || '-'}>
+                                    {displayCell(s.Brand_Name__c)}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Line_Name || '-'}>
-                                    {displayCell(s.Purchase_Order_Line_Name)}
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Name || '-'}>
+                                    {s.Purchase_Order__c ? (
+                                        <Link href={`/purchase-orders/${s.Purchase_Order__c}`} className="text-primary hover:underline font-medium">
+                                            {s.Purchase_Order_Name}
+                                        </Link>
+                                    ) : displayCell(s.Purchase_Order_Name)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.RMA_Name || '-'}>
                                     {displayCell(s.RMA_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.RMA_Line_Name || '-'}>
-                                    {displayCell(s.RMA_Line_Name)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : '-'}>
                                     {s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : displayCell(undefined)}
