@@ -48,6 +48,7 @@ export interface PurchaseOrder {
     goodsReceiptsDate?: string;
     poNotes?: string;
     proposalName?: string;
+    proposalNumber?: string;
     billingAddress?: any;
     shippingAddress?: any;
     paymentTerms?: string;
@@ -58,8 +59,6 @@ export interface PurchaseOrder {
     proposalId?: string;
     customerOrderId?: string;
     customerQuoteId?: string;
-    shipmentId?: string;
-    shipmentName?: string;
     accountId?: string;
     contactId?: string;
 }
