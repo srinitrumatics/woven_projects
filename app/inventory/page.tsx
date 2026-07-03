@@ -89,6 +89,7 @@ export default function InventoryPage() {
             name: item.Product_Name || "",
             productName: item.Product_Name || "",
             productDescription: item.Product_Description__c || "",
+            brand: item.Brand_Name__c || item.gtherp__Brand_Name__c || "",
             // API returns "Family" (not Product_Name_Family)
             productFamily: item.Family || "",
             manufacturerDBA: item.Manufacturer_DBA__c || "",
@@ -612,7 +613,7 @@ export default function InventoryPage() {
                                     </th>
                                     <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} truncate={false} className="sticky bg-primary-light dark:bg-gray-900 z-20" style={{ left: widths.checkbox }} />
                                     <SortableHeader label="Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.family} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} truncate={false} />
@@ -620,9 +621,9 @@ export default function InventoryPage() {
                                     <SortableHeader label="Total OH Value" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalValue} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Total CV (IN)" field="totalUnitCVInches" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvIn} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Total CV (SQFT)" field="totalUnitCVSQFT" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvSqft} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Avg Inventory Age" field="avgInventoryAge" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Avg Age (Days)" field="avgInventoryAge" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} truncate={false} />
                                     <SortableHeader label="Total Positions" field="totalPositions" sortConfig={sortConfig} requestSort={requestSort} width={widths.positions} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Count Sites" field="countSites" sortConfig={sortConfig} requestSort={requestSort} width={widths.sites} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Sites" field="countSites" sortConfig={sortConfig} requestSort={requestSort} width={widths.sites} onResize={handleResize} truncate={false} />
                                     <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.actions }}>Action</th>
                                 </tr>
                             </thead>
@@ -652,9 +653,9 @@ export default function InventoryPage() {
                                                 />
                                             </td>
                                             <td className={`px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky text-left truncate shadow-[1px_0_0_0_#f3f4f6] dark:shadow-[1px_0_0_0_#374151] z-20 ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.productName, minWidth: widths.productName, maxWidth: widths.productName, left: widths.checkbox }}>
-                                                <button onClick={() => router.push(`/inventory/${item.productId || item.id}`)} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
+                                                <Link href={`/inventory/${item.productId || item.id}`} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
                                                     {displayCell(item.productName)}
-                                                </button>
+                                                </Link>
 
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.description, maxWidth: widths.description }}>
@@ -669,9 +670,9 @@ export default function InventoryPage() {
                                                 </div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.qtyOnHand)}</td>
-                                            <td className="px-3 py-2 text-sm text-primary font-bold text-left truncate">{formatNumber(item.qtyAvailable)}</td>
+                                            <td className={`px-3 py-2 text-sm font-bold text-left truncate ${item.qtyAvailable === 0 ? 'text-red-600' : 'text-green-600'}`}>{formatNumber(item.qtyAvailable)}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-white text-left truncate">{formatCurrency(item.unitCost)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-semibold text-left truncate">{formatCurrency(item.totalPrice ?? 0)}</td>
+                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white text-left truncate">{formatCurrency(item.totalPrice ?? 0)}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{formatNumber(item.totalUnitCVInches ?? 0)}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{formatNumber(item.totalUnitCVSQFT ?? 0)}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-medium text-left truncate">{formatNumber(item.avgInventoryAge ?? 0)}</td>

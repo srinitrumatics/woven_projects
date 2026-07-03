@@ -6,7 +6,7 @@ import Link from "next/link";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
 import { ShippingManifest, ShipmentStatus } from "./types";
-import { formatDate, formatCurrency, displayCell } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useSortableData } from "@/hooks/useSortableData";
@@ -71,20 +71,31 @@ export default function ShipmentsPage() {
       salesOrderId: s.Sales_Order__c || "",
       customerQuote: s.Customer_Quote_Name || "",
       customerQuoteId: s.Customer_Quote__c || "",
-      proposal: s.Proposal_Name || "",
+      proposalNumber: s.Proposal_Number || s.Proposal_Name || "",
+      proposalName: s.Proposal_Name || "",
       proposalId: s.Proposal__c || "",
       customerOrder: s.Customer_Order_Name || "",
       customerOrderId: s.Customer_Order__c || "",
       customerPO: s.Customer_PO__c || "",
       shipToAccount: s.Ship_to_Account_Name || "",
       shipToLocation: s.Authorized_Ship_To_Location_Name || "",
+      shipToContact: s.Ship_to_Contact_Name || "",
+      dropShip: s.Drop_Ship__c || false,
       totalLines: s.Total_Lines__c || 0,
       totalPrice: s.Total_Price__c || 0,
+      boxCount: s.Box__c ?? s.gtherp__Box__c ?? null,
+      boxLength: s.Case_Length__c ?? s.gtherp__Case_Length__c ?? null,
+      boxWidth: s.Case_Width__c ?? s.gtherp__Case_Width__c ?? null,
+      boxHeight: s.Case_Height__c ?? s.gtherp__Case_Height__c ?? null,
+      boxNetWeight: s.Case_Net_Weight__c ?? s.gtherp__Case_Net_Weight__c ?? null,
+      boxGrossWeight: s.Case_Gross_Weight__c ?? s.gtherp__Case_Gross_Weight__c ?? null,
       logisticsPartner: s.Logistics_Partner_Name || "",
-      shipDate: s.Ship_Date__c || "",
+      shipDate: s.Ship_Date__c ?? s.gtherp__Ship_Date__c ?? "",
       trackingNumber: s.Tracking_Number__c || "",
       trackingStatus: s.Tracking_Status__c || "",
-      deliveredDate: s.Delivered_Date__c || ""
+      deliveredDate: s.Delivered_Date__c ?? s.gtherp__Delivered_Date__c ?? "",
+      estimatedDeliveryDate: s.Estimated_Delivery_Date__c || "",
+      actualDeliveryDate: s.Actual_Delivery_Date__c || ""
     }));
   }, [sfShipments]);
 
@@ -137,18 +148,29 @@ export default function ShipmentsPage() {
     status: 120,
     salesOrder: 150,
     customerQuote: 150,
-    proposal: 180,
+    proposalNumber: 150,
+    proposalName: 180,
     customerOrder: 150,
     customerPO: 150,
     shipToAccount: 180,
     shipToLocation: 180,
+    shipToContact: 180,
+    dropShip: 110,
     totalLines: 140,
     totalPrice: 130,
+    boxCount: 120,
+    boxLength: 120,
+    boxWidth: 130,
+    boxHeight: 130,
+    boxNetWeight: 140,
+    boxGrossWeight: 170,
     logisticsPartner: 160,
     shipDate: 180,
     trackingNumber: 170,
     trackingStatus: 170,
     deliveredDate: 180,
+    estimatedDeliveryDate: 200,
+    actualDeliveryDate: 190,
     actions: 80
   });
 
@@ -168,7 +190,7 @@ export default function ShipmentsPage() {
         s.name.toLowerCase().includes(q) ||
         s.salesOrder.toLowerCase().includes(q) ||
         s.customerQuote.toLowerCase().includes(q) ||
-        s.proposal.toLowerCase().includes(q) ||
+        s.proposalName.toLowerCase().includes(q) ||
         s.trackingNumber.toLowerCase().includes(q)
       );
     }
@@ -459,22 +481,33 @@ export default function ShipmentsPage() {
               <table className="w-full">
                 <thead className="bg-primary-light dark:bg-gray-900">
                   <tr>
-                    <SortableHeader label="Shipping Manifest" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                    <SortableHeader label="Sales Order" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
-                    <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} />
-                    <SortableHeader label="Proposal Name" field="proposal" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal} onResize={handleResize} />
-                    <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
-                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
-                    <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
-                    <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} />
-                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
-                    <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                    <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={widths.logisticsPartner} onResize={handleResize} />
-                    <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipDate} onResize={handleResize} />
-                    <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} />
-                    <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} />
-                    <SortableHeader label="Ship Confirmation" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveredDate} onResize={handleResize} />
+                    <SortableHeader label="Shipping Manifest #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Sales Order #" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Customer Quote #" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxCount} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Box Length" field="boxLength" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxLength} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Box Width" field="boxWidth" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxWidth} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Box Height" field="boxHeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxHeight} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxNetWeight} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxGrossWeight} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={widths.logisticsPartner} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipDate} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveredDate} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={handleResize} truncate={false} />
+                    <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={handleResize} truncate={false} />
                     <th
                       className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 truncate"
                       style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
@@ -486,7 +519,7 @@ export default function ShipmentsPage() {
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {paginatedShipments.length === 0 ? (
                     <tr>
-                      <td colSpan={17} className="px-6 py-16 text-center truncate">
+                      <td colSpan={28} className="px-6 py-16 text-center truncate">
                         <div className="flex flex-col items-center justify-center min-w-0">
                           <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
@@ -506,7 +539,13 @@ export default function ShipmentsPage() {
                         className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
                       >
                         <td className="px-3 py-2 text-sm font-semibold text-primary sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">
-                          {displayCell(shipment.name)}
+                          <Link
+                            href={`/shipments/${shipment.Id}`}
+                            className="text-primary font-semibold hover:underline"
+                            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                          >
+                            {displayCell(shipment.name)}
+                          </Link>
                         </td>
                         <td className="px-3 py-2 truncate">
                           <StatusBadge status={shipment.status} />
@@ -541,15 +580,16 @@ export default function ShipmentsPage() {
                                 className="text-primary hover:underline font-medium"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
-                                {shipment.proposal || "View Proposal"}
+                                {shipment.proposalNumber || "View Proposal"}
                               </Link>
                             ) : (
-                              <span className="font-medium">{displayCell(shipment.proposal)}</span>
+                              <span className="font-medium">{displayCell(shipment.proposalNumber)}</span>
                             )
                           ) : (
-                            displayCell(shipment.proposal)
+                            displayCell(shipment.proposalNumber)
                           )}
                         </td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.proposalName)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                           {shipment.customerOrderId ? (
                             !isManufacturer ? (
@@ -571,13 +611,23 @@ export default function ShipmentsPage() {
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.customerPO)}</td>
                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 truncate">{displayCell(shipment.shipToAccount)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.shipToLocation)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.shipToContact)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.dropShip ? "Yes" : "No"}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{shipment.totalLines}</td>
                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 font-semibold text-left truncate">{formatCurrency(shipment.totalPrice)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxCount, 0)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxLength)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxWidth)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxHeight)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxNetWeight)}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxGrossWeight)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.logisticsPartner)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.shipDate, 'numeric-dash')}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.deliveredDate, 'numeric-dash')}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingNumber)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingStatus)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.deliveredDate, 'numeric-dash')}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.estimatedDeliveryDate, 'numeric-dash')}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.actualDeliveryDate, 'numeric-dash')}</td>
                         <td className="px-3 py-2 text-left truncate" onClick={(e) => e.stopPropagation()}>
                           <button
                             onClick={() => router.push(`/shipments/${shipment.Id}`)}

@@ -207,23 +207,23 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                         <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200">
                             <tr>
                                 <SortableHeader label="Inventory Position ID" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} truncate={false} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                <SortableHeader label="Received" field="Received_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.receivedDate} onResize={handleResize} truncate={false} />
-                                <SortableHeader label="Age" field="Days_in_Inventory__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} truncate={false} />
-                                <SortableHeader label="PO | RMA" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.po} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Received Date" field="Received_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.receivedDate} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Age (Days)" field="Days_in_Inventory__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="PO # | RMA #" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.po} onResize={handleResize} truncate={false} />
                                 <SortableHeader label="Supplier Name" field="Supplier_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplier} onResize={handleResize} truncate={false} />
-                                <SortableHeader label="Qty On Hand" field="Qty_On_Hand__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Qty on Hand" field="Qty_On_Hand__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} truncate={false} />
                                 <SortableHeader label="Qty Available" field="Qty_Available__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} truncate={false} />
                                 <SortableHeader label="On Hold" field="On_Hold__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.onHold} onResize={handleResize} truncate={false} />
                                 <SortableHeader label="Unit Price" field="Unit_Price__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} truncate={false} />
-                                <SortableHeader label="Total Price" field="Total_Price__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} truncate={false} />
-                                <SortableHeader label="Location" field="Location" sortConfig={sortConfig} requestSort={requestSort} width={widths.location} onResize={handleResize} truncate={false} />
-                                <SortableHeader label="Site" field="Site_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.site} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Total OH Value" field="Total_Price__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} truncate={false} />
                                 <SortableHeader label="Total CV (IN)" field="Total_Unit_CV_Inches__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvIn} onResize={handleResize} truncate={false} />
                                 <SortableHeader label="Total CV (SQFT)" field="Total_Unit_CV_SQFT__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvSqft} onResize={handleResize} truncate={false} />
-                                <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} truncate={false} />
-                                <SortableHeader label="ShippingManifest" field="Shipping_Manifest_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifest} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Sales Order #" field="Sales_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Shipping Manifest" field="Shipping_Manifest_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifest} onResize={handleResize} truncate={false} />
                                 <SortableHeader label="Condition" field="Condition__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.condition} onResize={handleResize} truncate={false} />
                                 <SortableHeader label="Invoiced" field="Invoiced__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiced} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Location" field="Location" sortConfig={sortConfig} requestSort={requestSort} width={widths.location} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Site" field="Site_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.site} onResize={handleResize} truncate={false} />
 
                             </tr>
                         </thead>
@@ -237,7 +237,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{item.Received_Date__c ? formatDate(item.Received_Date__c, "numeric-dash") : 'N/A'}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Days_in_Inventory__c, 2)}</td>
 
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(item.Purchase_Order_Name)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(item.Purchase_Order_Name || item.RMA_Name)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Supplier_Name__c)}</td>
                                         <td className="px-3 py-2 text-sm  truncate">{formatNumber(item.Qty_On_Hand__c)}</td>
                                         <td className={`px-3 py-2 text-sm font-semibold ${item.Qty_Available__c < 1 ? 'text-red-600' : 'text-green-600'}`}>
@@ -245,15 +245,15 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                                         </td>
                                         <td className="px-3 py-2 text-sm  text-gray-600 dark:text-gray-400 truncate">{item.On_Hold__c ? 'Yes' : '-'}</td>
                                         <td className="px-3 py-2 text-sm  text-gray-600 dark:text-gray-400  truncate">{formatCurrency(item.Unit_Price__c)}</td>
-                                        <td className="px-3 py-2 text-sm  text-gray-600 dark:text-gray-400 font-bold truncate">{formatCurrency(item.Total_Price__c)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Location)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Site_Name)}</td>
+                                        <td className="px-3 py-2 text-sm  text-gray-600 dark:text-gray-400 truncate">{formatCurrency(item.Total_Price__c)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Total_Unit_CV_Inches__c)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Total_Unit_CV_SQFT__c)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Sales_Order_Name)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Shipping_Manifest_Name)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Condition__c)}</td>
                                         <td className="px-3 py-2 text-sm  truncate">{item.Invoiced__c ? 'Yes' : 'No'}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Location)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Site_Name)}</td>
                                     </tr>
                                 ))
                             )}

@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { SortableHeader } from "@/components/ui/SortableHeader";
-import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
+import { useSortableData } from "@/hooks/useSortableData";
+import { formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
+import Pagination from "@/components/ui/Pagination";
+
+const ITEMS_PER_PAGE = 10;
 
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -14,29 +18,17 @@ interface InventoryPosition {
     receivedDate: string | null;
     daysInInventory: number;
     productName: string;
+    productId?: string;
     productDescription: string;
     manufacturerDBA: string;
     brand?: string;
     supplierName: string;
-    purchaseOrderName: string;
-    purchaseOrderId?: string;
     qtyOnHand: number;
     qtyAvailable: number;
-    unitCost: number;
     inventoryLocation: string;
     inventoryLocationId?: string;
-    rack: string;
-    bay: string;   // Bin_Name
-    levelPosition: string;   // Rack_Level_Name
-    salesOrderName: string;
-    salesOrderId?: string;
-    shippingManifestName: string;
-    shippingManifestId?: string;
     shipConfirmed: string | null;  // Shipped_Date__c
 }
-
-type SortField = keyof InventoryPosition;
-type SortDir = "asc" | "desc";
 
 // ─── Column widths (order matches screenshot) ─────────────────────────────────
 const DEFAULT_WIDTHS: Record<string, number> = {
@@ -47,16 +39,9 @@ const DEFAULT_WIDTHS: Record<string, number> = {
     productDescription: 180,
     manufacturerDBA: 175,
     supplierName: 140,
-    purchaseOrderName: 170,
     qtyOnHand: 160,
     qtyAvailable: 160,
-    unitCost: 110,
     inventoryLocation: 195,
-    rack: 110,
-    bay: 100,
-    levelPosition: 170,
-    salesOrderName: 140,
-    shippingManifestName: 195,
     shipConfirmed: 200,
 };
 
@@ -68,24 +53,15 @@ function mapItem(raw: any): InventoryPosition {
         receivedDate: raw.Received_Date__c ?? null,
         daysInInventory: raw.Days_in_Inventory__c ?? 0,
         productName: raw.Product_Name || "",
+        productId: raw.Product_Name__c || raw.Product__c || "",
         productDescription: raw.Product_Description__c || "",
         manufacturerDBA: raw.Manufacturer_DBA__c || "",
-        brand: undefined,
+        brand: raw.Brand_Name__c || raw.gtherp__Brand_Name__c || "",
         supplierName: raw.Supplier_Name__c || "",
-        purchaseOrderName: raw.Purchase_Order_Name || "",
-        purchaseOrderId: raw.Purchase_Order__c || "",
         qtyOnHand: raw.Qty_On_Hand__c ?? 0,
         qtyAvailable: raw.Qty_Available__c ?? 0,
-        unitCost: raw.Unit_Cost__c ?? 0,
         inventoryLocation: raw.Inventory_Location_Name || "",
         inventoryLocationId: raw.Inventory_Location__c || "",
-        rack: raw.Rack_Name || "",
-        bay: raw.Bin_Name || "",
-        levelPosition: raw.Rack_Level_Name || "",
-        salesOrderName: raw.Sales_Order_Name || "",
-        salesOrderId: raw.Sales_Order__c || "",
-        shippingManifestName: raw.Shipping_Manifest_Name || "",
-        shippingManifestId: raw.Shipping_Manifest__c || "",
         shipConfirmed: raw.Shipped_Date__c ?? null,
     };
 }
@@ -108,8 +84,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const [sortField, setSortField] = useState<SortField>("name");
-    const [sortDir, setSortDir] = useState<SortDir>("desc");
+    const [currentPage, setCurrentPage] = useState(1);
 
     const { widths, handleResize } = useResizableColumns(DEFAULT_WIDTHS);
 
@@ -136,25 +111,13 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
         if (shipmentId && accountId && contactId) fetchInventory();
     }, [shipmentId, accountId, contactId]);
 
-    const handleSort = (field: string) => {
-        const f = field as SortField;
-        setSortDir(prev => sortField === f && prev === "asc" ? "desc" : "asc");
-        setSortField(f);
-    };
+    const { items: sorted, requestSort: handleSort, sortConfig: sc } = useSortableData<InventoryPosition>(items, { key: 'name', direction: 'asc' });
 
-    const sorted = [...items].sort((a, b) => {
-        const av = a[sortField];
-        const bv = b[sortField];
-        if (av === null || av === undefined) return 1;
-        if (bv === null || bv === undefined) return -1;
-        if (typeof av === "number" && typeof bv === "number")
-            return sortDir === "asc" ? av - bv : bv - av;
-        return sortDir === "asc"
-            ? String(av).localeCompare(String(bv))
-            : String(bv).localeCompare(String(av));
-    });
-
-    const sc = { key: sortField as string, direction: sortDir };
+    const totalPages = Math.max(1, Math.ceil(sorted.length / ITEMS_PER_PAGE));
+    const paginatedItems = useMemo(() => {
+        const start = (currentPage - 1) * ITEMS_PER_PAGE;
+        return sorted.slice(start, start + ITEMS_PER_PAGE);
+    }, [sorted, currentPage]);
 
     // ── States ──────────────────────────────────────────────────────────────
     if (loading) {
@@ -189,45 +152,31 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
                         {/* 1 – sticky */}
-                        <SortableHeader label="Inventory Position" field="name" sortConfig={sc} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                        <SortableHeader label="Inventory Position" field="name" sortConfig={sc} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
                         {/* 2 */}
-                        <SortableHeader label="Received Date" field="receivedDate" sortConfig={sc} requestSort={handleSort} width={widths.receivedDate} onResize={handleResize} align="left" />
+                        <SortableHeader label="Received Date" field="receivedDate" sortConfig={sc} requestSort={handleSort} width={widths.receivedDate} onResize={handleResize} align="left" truncate={false} />
                         {/* 3 */}
-                        <SortableHeader label="Days in Inventory" field="daysInInventory" sortConfig={sc} requestSort={handleSort} width={widths.daysInInventory} onResize={handleResize} align="left" />
+                        <SortableHeader label="Age (Days)" field="daysInInventory" sortConfig={sc} requestSort={handleSort} width={widths.daysInInventory} onResize={handleResize} align="left" truncate={false} />
                         {/* 4 */}
-                        <SortableHeader label="Product Name" field="productName" sortConfig={sc} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" />
+                        <SortableHeader label="Product Name" field="productName" sortConfig={sc} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" truncate={false} />
                         {/* 5 */}
-                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sc} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" />
+                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sc} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" truncate={false} />
                         {/* 6 */}
-                        <SortableHeader label="Brand" field="brand" sortConfig={sc} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" />
+                        <SortableHeader label="Brand Name" field="brand" sortConfig={sc} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" truncate={false} />
                         {/* 7 */}
-                        <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sc} requestSort={handleSort} width={widths.supplierName} onResize={handleResize} align="left" />
+                        <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sc} requestSort={handleSort} width={widths.supplierName} onResize={handleResize} align="left" truncate={false} />
                         {/* 8 */}
-                        <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sc} requestSort={handleSort} width={widths.purchaseOrderName} onResize={handleResize} align="left" />
+                        <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sc} requestSort={handleSort} width={widths.qtyOnHand} onResize={handleResize} align="left" truncate={false} />
                         {/* 9 */}
-                        <SortableHeader label="Qty on Hand" field="qtyOnHand" sortConfig={sc} requestSort={handleSort} width={widths.qtyOnHand} onResize={handleResize} align="left" />
+                        <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sc} requestSort={handleSort} width={widths.qtyAvailable} onResize={handleResize} align="left" truncate={false} />
                         {/* 10 */}
-                        <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sc} requestSort={handleSort} width={widths.qtyAvailable} onResize={handleResize} align="left" />
+                        <SortableHeader label="Location" field="inventoryLocation" sortConfig={sc} requestSort={handleSort} width={widths.inventoryLocation} onResize={handleResize} align="left" truncate={false} />
                         {/* 11 */}
-                        <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sc} requestSort={handleSort} width={widths.unitCost} onResize={handleResize} align="left" />
-                        {/* 12 */}
-                        <SortableHeader label="Inventory Location" field="inventoryLocation" sortConfig={sc} requestSort={handleSort} width={widths.inventoryLocation} onResize={handleResize} align="left" />
-                        {/* 13 */}
-                        <SortableHeader label="Rack" field="rack" sortConfig={sc} requestSort={handleSort} width={widths.rack} onResize={handleResize} align="left" />
-                        {/* 14 */}
-                        <SortableHeader label="Bay" field="bay" sortConfig={sc} requestSort={handleSort} width={widths.bay} onResize={handleResize} align="left" />
-                        {/* 15 */}
-                        <SortableHeader label="Level-Position" field="levelPosition" sortConfig={sc} requestSort={handleSort} width={widths.levelPosition} onResize={handleResize} align="left" />
-                        {/* 16 */}
-                        <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sc} requestSort={handleSort} width={widths.salesOrderName} onResize={handleResize} align="left" />
-                        {/* 17 */}
-                        <SortableHeader label="Shipping Manifest" field="shippingManifestName" sortConfig={sc} requestSort={handleSort} width={widths.shippingManifestName} onResize={handleResize} align="left" />
-                        {/* 18 */}
-                        <SortableHeader label="Ship Confirmed Date" field="shipConfirmed" sortConfig={sc} requestSort={handleSort} width={widths.shipConfirmed} onResize={handleResize} align="left" />
+                        <SortableHeader label="Ship Confirmed Date" field="shipConfirmed" sortConfig={sc} requestSort={handleSort} width={widths.shipConfirmed} onResize={handleResize} align="left" truncate={false} />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {sorted.map((item) => (
+                    {paginatedItems.map((item) => (
                         <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             {/* 1 – sticky */}
                             <td className="px-3 py-2 text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
@@ -235,46 +184,35 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                             </td>
                             <TC v={displayCell(fmtDate(item.receivedDate))} w={widths.receivedDate} />
                             <TC v={`${formatNumber(item.daysInInventory, 0)} Days`} w={widths.daysInInventory} />
-                            <TC v={displayCell(item.productName)} w={widths.productName} />
+                            <TC
+                                v={item.productId ? (
+                                    <Link href={`/inventory/${item.productId}`} className="text-primary hover:underline font-medium">
+                                        {item.productName}
+                                    </Link>
+                                ) : (
+                                    displayCell(item.productName)
+                                )}
+                                w={widths.productName}
+                            />
                             <TC v={displayCell(item.productDescription)} w={widths.productDescription} />
                             <TC v={displayCell(item.brand)} w={widths.manufacturerDBA} />
                             <TC v={displayCell(item.supplierName)} w={widths.supplierName} />
-                            <TC
-                                v={item.purchaseOrderId ? (
-                                    <Link href={`/purchase-orders/${item.purchaseOrderId}`} className="text-primary hover:underline font-medium" target="_blank">
-                                        {item.purchaseOrderName || "View PO"}
-                                    </Link>
-                                ) : (
-                                    displayCell(item.purchaseOrderName)
-                                )}
-                                w={widths.purchaseOrderName}
-                            />
                             <TC v={formatNumber(item.qtyOnHand, 2)} w={widths.qtyOnHand} />
                             <TC v={formatNumber(item.qtyAvailable, 2)} w={widths.qtyAvailable} />
-                            <TC v={formatCurrency(item.unitCost)} w={widths.unitCost} />
                             <TC v={displayCell(item.inventoryLocation)} w={widths.inventoryLocation} />
-                            <TC v={displayCell(item.rack)} w={widths.rack} />
-                            <TC v={displayCell(item.bay)} w={widths.bay} />
-                            <TC v={displayCell(item.levelPosition)} w={widths.levelPosition} />
-                            <TC
-                                v={displayCell(item.salesOrderName)}
-                                w={widths.salesOrderName}
-                            />
-                            <TC
-                                v={item.shippingManifestId ? (
-                                    <Link href={`/shipments/${item.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank">
-                                        {item.shippingManifestName || "View Manifest"}
-                                    </Link>
-                                ) : (
-                                    displayCell(item.shippingManifestName)
-                                )}
-                                w={widths.shippingManifestName}
-                            />
                             <TC v={displayCell(fmtDate(item.shipConfirmed))} w={widths.shipConfirmed} />
                         </tr>
                     ))}
                 </tbody>
             </table>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={sorted.length}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={setCurrentPage}
+                itemName="positions"
+            />
         </div>
     );
 }

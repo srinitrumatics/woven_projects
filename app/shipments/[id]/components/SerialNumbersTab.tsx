@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { SortableHeader } from "@/components/ui/SortableHeader";
-import { formatDate, displayCell } from "@/lib/utils/formatting";
+import { useSortableData } from "@/hooks/useSortableData";
+import { displayCell } from "@/lib/utils/formatting";
+import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
+
+const ITEMS_PER_PAGE = 10;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface SerialNumberLog {
@@ -13,17 +17,12 @@ interface SerialNumberLog {
     serialNumber: string;
     productSerialNumber: string;
     productName: string;
+    productId?: string;
     productDescription: string;
+    brand?: string;
     shippingManifest: string;
     shippingManifestId?: string;
-    shippingManifestLine: string;
-    shipDate: string | null;
-    shipToAccount: string | null;
-    active: any;
 }
-
-type SortField = keyof SerialNumberLog;
-type SortDir = "asc" | "desc";
 
 // ─── Column widths ────────────────────────────────────────────────────────────
 const DEFAULT_WIDTHS: Record<string, number> = {
@@ -32,11 +31,8 @@ const DEFAULT_WIDTHS: Record<string, number> = {
     productSerialNumber: 210,
     productName: 180,
     productDescription: 210,
+    brand: 170,
     shippingManifest: 220,
-    shippingManifestLine: 220,
-    shipDate: 150,
-    shipToAccount: 180,
-    active: 100,
 };
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
@@ -47,19 +43,12 @@ function mapLog(raw: any): SerialNumberLog {
         serialNumber: raw.Serial_Number_Name || raw.Serial_Number__c || "",
         productSerialNumber: raw.Product_Serial_Number__c || "",
         productName: raw.Product_Name || "",
+        productId: raw.Product__c || "",
         productDescription: raw.Product_Description__c || "",
+        brand: raw.Brand_Name__c || raw.gtherp__Brand_Name__c || "",
         shippingManifest: raw.Shipping_Manifest_Name || raw.Shipping_Manifest__r?.Name || "",
         shippingManifestId: raw.Shipping_Manifest__c || "",
-        shippingManifestLine: raw.Shipping_Manifest_Line_Name || raw.Shipping_Manifest_Line__c || "",
-        shipDate: raw.Ship_Date__c || null,
-        shipToAccount: raw.Ship_to_Account_Name || raw.Ship_to_Account__c || "",
-        active: raw.Active__c,
     };
-}
-
-function fmtDate(v: string | null | undefined): string {
-    if (!v) return "";
-    return formatDate(v, "numeric-dash");
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -75,8 +64,7 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const [sortField, setSortField] = useState<SortField>("name");
-    const [sortDir, setSortDir] = useState<SortDir>("desc");
+    const [currentPage, setCurrentPage] = useState(1);
 
     const { widths, handleResize } = useResizableColumns(DEFAULT_WIDTHS);
 
@@ -110,27 +98,13 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
         if (shipmentId && accountId && contactId) fetchLogs();
     }, [shipmentId, accountId, contactId, onCountLoaded]);
 
-    const handleSort = (field: string) => {
-        const f = field as SortField;
-        if (sortField === f) {
-            setSortDir(prev => prev === "asc" ? "desc" : "asc");
-        } else {
-            setSortField(f);
-            setSortDir("asc");
-        }
-    };
+    const { items: sorted, requestSort: handleSort, sortConfig } = useSortableData<SerialNumberLog>(logs, { key: 'name', direction: 'asc' });
 
-    const sorted = [...logs].sort((a, b) => {
-        const av = a[sortField];
-        const bv = b[sortField];
-        if (av === null || av === undefined) return 1;
-        if (bv === null || bv === undefined) return -1;
-        return sortDir === "asc"
-            ? String(av).localeCompare(String(bv))
-            : String(bv).localeCompare(String(av));
-    });
-
-    const sortConfig = { key: sortField as string, direction: sortDir };
+    const totalPages = Math.max(1, Math.ceil(sorted.length / ITEMS_PER_PAGE));
+    const paginatedLogs = useMemo(() => {
+        const start = (currentPage - 1) * ITEMS_PER_PAGE;
+        return sorted.slice(start, start + ITEMS_PER_PAGE);
+    }, [sorted, currentPage]);
 
     // ── States ─────────────────────────────────────────────────────────────
     if (loading) {
@@ -164,28 +138,35 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
             <table className="w-full text-sm table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
-                        <SortableHeader label="Serial Number Log" field="name" sortConfig={sortConfig} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                        <SortableHeader label="Serial Number" field="serialNumber" sortConfig={sortConfig} requestSort={handleSort} width={widths.serialNumber} onResize={handleResize} align="left" />
-                        <SortableHeader label="Product Serial Number" field="productSerialNumber" sortConfig={sortConfig} requestSort={handleSort} width={widths.productSerialNumber} onResize={handleResize} align="left" />
-                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" />
-                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" />
-                        <SortableHeader label="Shipping Manifest" field="shippingManifest" sortConfig={sortConfig} requestSort={handleSort} width={widths.shippingManifest} onResize={handleResize} align="left" />
-                        <SortableHeader label="Shipping Manifest Line" field="shippingManifestLine" sortConfig={sortConfig} requestSort={handleSort} width={widths.shippingManifestLine} onResize={handleResize} align="left" />
-                        <SortableHeader label="Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={handleSort} width={widths.shipDate} onResize={handleResize} align="left" />
-                        <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={handleSort} width={widths.shipToAccount} onResize={handleResize} align="left" />
-                        <SortableHeader label="Active" field="active" sortConfig={sortConfig} requestSort={handleSort} width={widths.active} onResize={handleResize} align="left" />
+                        <SortableHeader label="Serial Number Log" field="name" sortConfig={sortConfig} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                        <SortableHeader label="Serial Number #" field="serialNumber" sortConfig={sortConfig} requestSort={handleSort} width={widths.serialNumber} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Product Serial Number" field="productSerialNumber" sortConfig={sortConfig} requestSort={handleSort} width={widths.productSerialNumber} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={handleSort} width={widths.brand} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Shipping Manifest #" field="shippingManifest" sortConfig={sortConfig} requestSort={handleSort} width={widths.shippingManifest} onResize={handleResize} align="left" truncate={false} />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {sorted.map((log) => (
+                    {paginatedLogs.map((log) => (
                         <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td className="px-3 py-2 font-medium text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }} title={log.name}>
                                 {log.name}
                             </td>
                             <TextCell v={displayCell(log.serialNumber)} w={widths.serialNumber} />
                             <TextCell v={displayCell(log.productSerialNumber)} w={widths.productSerialNumber} />
-                            <TextCell v={displayCell(log.productName)} w={widths.productName} />
+                            <TextCell
+                                v={log.productId ? (
+                                    <Link href={`/products/${log.productId}`} className="text-primary hover:underline font-medium">
+                                        {log.productName}
+                                    </Link>
+                                ) : (
+                                    displayCell(log.productName)
+                                )}
+                                w={widths.productName}
+                            />
                             <TextCell v={displayCell(log.productDescription)} w={widths.productDescription} />
+                            <TextCell v={displayCell(log.brand)} w={widths.brand} />
                             <TextCell
                                 v={log.shippingManifestId ? (
                                     <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
@@ -196,26 +177,18 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                                 )}
                                 w={widths.shippingManifest}
                             />
-                            <TextCell v={displayCell(log.shippingManifestLine)} w={widths.shippingManifestLine} />
-                            <TextCell v={displayCell(formatDate(log.shipDate, "numeric-dash"))} w={widths.shipDate} />
-                            <TextCell v={displayCell(log.shipToAccount)} w={widths.shipToAccount} />
-                            <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: widths.active }}>
-                                {log.active === true || log.active === "true" || log.active === "True" ? (
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 truncate">
-                                        Active
-                                    </span>
-                                ) : log.active === false || log.active === "false" || log.active === "False" ? (
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 truncate">
-                                        Inactive
-                                    </span>
-                                ) : (
-                                    log.active?.toString() || ""
-                                )}
-                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={sorted.length}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={setCurrentPage}
+                itemName="logs"
+            />
         </div>
     );
 }

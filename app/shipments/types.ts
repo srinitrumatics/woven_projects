@@ -11,6 +11,7 @@ export interface ShippingManifest {
   Customer_Quote__c?: string;
   Proposal_Name?: string;
   Proposal__c?: string;
+  Proposal_Number?: string;
   Customer_Order_Name?: string;
   Customer_Order__c?: string;
   Customer_PO__c?: string;
@@ -18,14 +19,23 @@ export interface ShippingManifest {
   Ship_to_Account__c?: string;
   Authorized_Ship_To_Location_Name?: string;
   Authorized_Ship_To_Location__c?: string;
+  Ship_to_Contact_Name?: string;
+  Drop_Ship__c?: boolean;
   Total_Lines__c: number;
   Total_Price__c: number;
+  Box__c?: number;
+  Case_Length__c?: number;
+  Case_Width__c?: number;
+  Case_Height__c?: number;
+  Case_Net_Weight__c?: number;
+  Case_Gross_Weight__c?: number;
   Logistics_Partner_Name?: string;
   Logistics_Partner__c?: string;
   Ship_Date__c?: string;
   Tracking_Number__c?: string;
   Tracking_Status__c?: string;
   Delivered_Date__c?: string;
+  Estimated_Delivery_Date__c?: string;
   Actual_Delivery_Date__c?: string;
 }
 

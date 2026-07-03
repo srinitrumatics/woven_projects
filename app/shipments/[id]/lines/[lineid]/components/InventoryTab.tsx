@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { formatDate, formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
+import { formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
+import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
+
+const ITEMS_PER_PAGE = 10;
 
 interface InventoryTabProps {
     accountId: string;
@@ -14,6 +17,7 @@ interface InventoryTabProps {
 export default function InventoryTab({ accountId, contactId, lineId }: InventoryTabProps) {
     const [loading, setLoading] = useState(true);
     const [inventoryData, setInventoryData] = useState<any[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         async function fetchInventory() {
@@ -43,9 +47,10 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             receivedDate: item.gtherp__Received_Date__c || item.Received_Date__c || "",
                             daysInInventory: item.gtherp__Days_in_Inventory__c || item.Days_in_Inventory__c || 0,
                             productName: item.gtherp__Product_Name__c || item.Product_Name || "",
+                            productId: item.Product_Name__c || item.Product__c || "",
                             productDescription: item.gtherp__Product_Description__c || item.Product_Description__c || "",
                             manufacturerDBA: item.gtherp__Manufacturer_DBA__c || item.Manufacturer_DBA__c || "",
-                            brand: undefined,
+                            brand: item.gtherp__Brand_Name__c || item.Brand_Name__c || "",
                             supplierName: item.gtherp__Supplier_Name__c || item.Supplier_Name__c || "",
                             purchaseOrderName: item.Purchase_Order_Name || item.gtherp__Purchase_Order__r?.Name || item.Purchase_Order__r?.Name || "",
                             purchaseOrderId: item.gtherp__Purchase_Order__c || item.Purchase_Order__c || "",
@@ -77,7 +82,13 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
         }
     }, [accountId, contactId, lineId]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(inventoryData, { key: 'Name', direction: 'desc' });
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(inventoryData, { key: 'name', direction: 'asc' });
+
+    const totalPages = Math.max(1, Math.ceil(sortedData.length / ITEMS_PER_PAGE));
+    const paginatedData = useMemo(() => {
+        const start = (currentPage - 1) * ITEMS_PER_PAGE;
+        return sortedData.slice(start, start + ITEMS_PER_PAGE);
+    }, [sortedData, currentPage]);
 
     const { widths, handleResize } = useResizableColumns({
         name: 180,
@@ -87,16 +98,9 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
         productDescription: 250,
         manufacturerDBA: 180,
         supplierName: 180,
-        purchaseOrderName: 150,
         qtyOnHand: 130,
         qtyAvailable: 130,
-        unitCost: 130,
         inventoryLocation: 170,
-        rack: 150,
-        bay: 150,
-        levelPosition: 150,
-        salesOrderName: 150,
-        shippingManifestName: 180,
         shipConfirmedDate: 180
     });
 
@@ -122,71 +126,55 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
             <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
-                        <SortableHeader label="Inventory Position" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                        <SortableHeader label="Received Date" field="receivedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.receivedDate} onResize={handleResize} />
-                        <SortableHeader label="Days in Inventory" field="daysInInventory" sortConfig={sortConfig} requestSort={requestSort} width={widths.daysInInventory} onResize={handleResize} />
-                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
-                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.productDescription} onResize={handleResize} />
-                        <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
-                        <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierName} onResize={handleResize} />
-                        <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderName} onResize={handleResize} />
-                        <SortableHeader label="Qty on Hand" field="qtyOnHand" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} />
-                        <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} />
-                        <SortableHeader label="Unit Cost" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitCost} onResize={handleResize} />
-                        <SortableHeader label="Inventory Location" field="inventoryLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.inventoryLocation} onResize={handleResize} />
-                        <SortableHeader label="Rack" field="rack" sortConfig={sortConfig} requestSort={requestSort} width={widths.rack} onResize={handleResize} />
-                        <SortableHeader label="Bay" field="bay" sortConfig={sortConfig} requestSort={requestSort} width={widths.bay} onResize={handleResize} />
-                        <SortableHeader label="Level-Position" field="levelPosition" sortConfig={sortConfig} requestSort={requestSort} width={widths.levelPosition} onResize={handleResize} />
-                        <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderName} onResize={handleResize} />
-                        <SortableHeader label="Shipping Manifest" field="shippingManifestName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifestName} onResize={handleResize} />
-                        <SortableHeader label="Ship Confirmed Date" field="shipConfirmedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipConfirmedDate} onResize={handleResize} />
+                        <SortableHeader label="Inventory Position" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                        <SortableHeader label="Received Date" field="receivedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.receivedDate} onResize={handleResize} truncate={false} />
+                        <SortableHeader label="Age (Days)" field="daysInInventory" sortConfig={sortConfig} requestSort={requestSort} width={widths.daysInInventory} onResize={handleResize} truncate={false} />
+                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} truncate={false} />
+                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.productDescription} onResize={handleResize} truncate={false} />
+                        <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} truncate={false} />
+                        <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierName} onResize={handleResize} truncate={false} />
+                        <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} truncate={false} />
+                        <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} truncate={false} />
+                        <SortableHeader label="Location" field="inventoryLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.inventoryLocation} onResize={handleResize} truncate={false} />
+                        <SortableHeader label="Ship Confirmed Date" field="shipConfirmedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipConfirmedDate} onResize={handleResize} truncate={false} />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {sortedData.map((pos) => (
+                    {paginatedData.map((pos) => (
                         <tr key={pos.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={pos.name}>
                                 {pos.name}
                             </td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : ""}>{displayCell(pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : "")}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={`${formatNumber(pos.daysInInventory, 0)} Days`}>{formatNumber(pos.daysInInventory, 0)} Days</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productName}>{displayCell(pos.productName)}</td>
+                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productName}>
+                                {pos.productId ? (
+                                    <Link href={`/inventory/${pos.productId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                        {pos.productName}
+                                    </Link>
+                                ) : (
+                                    displayCell(pos.productName)
+                                )}
+                            </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productDescription}>{displayCell(pos.productDescription)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.brand}>{displayCell(pos.brand)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.supplierName}>{displayCell(pos.supplierName)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.purchaseOrderName}>
-                                {pos.purchaseOrderId ? (
-                                    <Link href={`/purchase-orders/${pos.purchaseOrderId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
-                                        {pos.purchaseOrderName || "View PO"}
-                                    </Link>
-                                ) : (
-                                    displayCell(pos.purchaseOrderName)
-                                )}
-                            </td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.qtyOnHand.toLocaleString()}>{pos.qtyOnHand.toLocaleString()}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.qtyAvailable.toLocaleString()}>{pos.qtyAvailable.toLocaleString()}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(pos.unitCost)}>{formatCurrency(pos.unitCost)}</td>
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.inventoryLocation}>{displayCell(pos.inventoryLocation)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.rack}>{displayCell(pos.rack)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.bay}>{displayCell(pos.bay)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.levelPosition}>{displayCell(pos.levelPosition)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.salesOrderName}>
-                                {displayCell(pos.salesOrderName)}
-                            </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={pos.shippingManifestName}>
-                                {pos.shippingManifestId ? (
-                                    <Link href={`/shipments/${pos.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
-                                        {pos.shippingManifestName || "View Manifest"}
-                                    </Link>
-                                ) : (
-                                    displayCell(pos.shippingManifestName)
-                                )}
-                            </td>
                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : ""}>{displayCell(pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : "")}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={sortedData.length}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={setCurrentPage}
+                itemName="positions"
+            />
         </div>
     );
 }
