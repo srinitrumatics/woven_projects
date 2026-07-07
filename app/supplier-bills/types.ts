@@ -13,6 +13,7 @@ export interface SupplierBill {
   customerOrderId?: string;
   proposalName: string;
   proposalId?: string;
+  proposalNumber?: string;
   supplierName: string;
   supplierId?: string;
   supplierDBA: string;
@@ -33,6 +34,7 @@ export interface SupplierBill {
   billingAddress: string;
   shipToAccount: string;
   shipToLocation: string;
+  shipToContact?: string;
   shippingAddress: string;
   site: string;
   goodsReceiptDate: string;

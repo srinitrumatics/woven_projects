@@ -28,16 +28,22 @@ export default function SupplierBillsPage() {
         status: 120,
         purchaseOrderName: 160,
         customerQuoteName: 160,
+        proposalNumber: 160,
         proposalName: 180,
         customerOrderName: 160,
-        supplierName: 200,
+        shipToAccount: 160,
+        shipToLocation: 160,
+        shipToContact: 160,
         totalLines: 150,
         totalAmount: 140,
+        shipping: 120,
+        grandTotal: 140,
         billedDate: 140,
         paymentTerms: 140,
         dueDate: 140,
         remittanceStatus: 160,
         openBalance: 140,
+        settledDate: 140,
         actions: 100
     });
 
@@ -66,6 +72,10 @@ export default function SupplierBillsPage() {
                     customerOrderId: b.Customer_Order__c || '',
                     proposalName: b.Proposal_Name || '',
                     proposalId: b.Proposal__c || '',
+                    proposalNumber: b.Proposal_Number || b.Proposal_Name || '',
+                    shipToAccount: b.Ship_to_Account_Name || '',
+                    shipToLocation: b.Authorized_Ship_To_Location_Name || '',
+                    shipToContact: b.Ship_to_Contact_Name || '',
                     supplierName: b.Supplier_Name || b.Supplier__r?.Name || '',
                     supplierDBA: b.Supplier_DBA__c || '',
                     supplierContact: b.Supplier_Contact_Name || '',
@@ -261,21 +271,27 @@ export default function SupplierBillsPage() {
                         <table className="w-full border-collapse">
                             <thead className="bg-primary-light dark:bg-gray-900">
                                 <tr>
-                                    <SortableHeader label="Supplier Bill" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                    <SortableHeader label="Purchase Order" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderName} onResize={handleResize} />
-                                    <SortableHeader label="Customer Quote" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteName} onResize={handleResize} />
-                                    <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
-                                    <SortableHeader label="Customer Order" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrderName} onResize={handleResize} />
-                                    <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierName} onResize={handleResize} />
-                                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
-                                    <SortableHeader label="Total Amount" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
-                                    <SortableHeader label="Billed Date" field="billedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.billedDate} onResize={handleResize} />
-                                    <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
-                                    <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.dueDate} onResize={handleResize} />
-                                    <SortableHeader label="Remittance Status" field="remittanceStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.remittanceStatus} onResize={handleResize} />
-                                    <SortableHeader label="Open Balance" field="openBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalance} onResize={handleResize} />
-                                    <SortableHeader label="Action" field="actions" sortConfig={sortConfig} requestSort={requestSort} width={widths.actions} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Supplier Bill #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                    <SortableHeader truncate={false} label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Purchase Order #" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderName} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteName} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrderName} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Total Amount" field="totalProductAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Grand Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Billed Date" field="billedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.billedDate} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Due Date" field="dueDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.dueDate} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Remittance Status" field="remittanceStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.remittanceStatus} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Open Balance" field="openBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalance} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={handleResize} />
+                                    <SortableHeader truncate={false} label="Action" field="actions" sortConfig={sortConfig} requestSort={requestSort} width={widths.actions} onResize={handleResize} />
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
@@ -284,17 +300,17 @@ export default function SupplierBillsPage() {
                                 ) : (
                                     paginatedBills.map(bill => (
                                         <tr key={bill.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onClick={() => router.push(`/supplier-bills/${bill.id}`)}>
-                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate sticky left-0 bg-white dark:bg-gray-800 z-10" title={bill.name}>{bill.name}</td>
+                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate sticky left-0 bg-white dark:bg-gray-800 z-10" title={bill.name}>
+                                                <Link href={`/supplier-bills/${bill.id}`} onClick={(e) => e.stopPropagation()}>
+                                                    {bill.name}
+                                                </Link>
+                                            </td>
                                             <td className="px-2 py-2 text-sm truncate" title={bill.status}><StatusBadge status={bill.status} /></td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.purchaseOrderName}>
                                                 {bill.purchaseOrderId && bill.purchaseOrderId !== 'N/A' && bill.purchaseOrderId !== '' ? (
-                                                    !isManufacturer ? (
-                                                        <Link href={`/purchase-orders/${bill.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                                            {bill.purchaseOrderName || bill.purchaseOrderId}
-                                                        </Link>
-                                                    ) : (
-                                                        <span className="font-medium">{bill.purchaseOrderName || bill.purchaseOrderId}</span>
-                                                    )
+                                                    <Link href={`/purchase-orders/${bill.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        {bill.purchaseOrderName || bill.purchaseOrderId}
+                                                    </Link>
                                                 ) : (
                                                     bill.purchaseOrderName || '-'
                                                 )}
@@ -312,19 +328,20 @@ export default function SupplierBillsPage() {
                                                     bill.customerQuoteName || '-'
                                                 )}
                                             </td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[180px]" title={bill.proposalName}>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.proposalNumber}>
                                                 {bill.proposalId && bill.proposalId !== 'N/A' && bill.proposalId !== '' ? (
                                                     !isManufacturer ? (
                                                         <Link href={`/proposals/${bill.proposalId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                                            {bill.proposalName || bill.proposalId}
+                                                            {bill.proposalNumber || bill.proposalId}
                                                         </Link>
                                                     ) : (
-                                                        <span className="font-medium">{bill.proposalName || bill.proposalId}</span>
+                                                        <span className="font-medium">{bill.proposalNumber || bill.proposalId}</span>
                                                     )
                                                 ) : (
-                                                    bill.proposalName || '-'
+                                                    bill.proposalNumber || '-'
                                                 )}
                                             </td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[180px]" title={bill.proposalName}>{displayCell(bill.proposalName)}</td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerOrderName}>
                                                 {bill.customerOrderId && bill.customerOrderId !== 'N/A' && bill.customerOrderId !== '' ? (
                                                     !isManufacturer ? (
@@ -338,14 +355,19 @@ export default function SupplierBillsPage() {
                                                     bill.customerOrderName || '-'
                                                 )}
                                             </td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.supplierName}>{displayCell(bill.supplierName)}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.shipToAccount}>{displayCell(bill.shipToAccount)}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.shipToLocation}>{displayCell(bill.shipToLocation)}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.shipToContact}>{displayCell(bill.shipToContact)}</td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 font-medium truncate" >{bill.totalLines}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(bill.totalProductAmount)}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(bill.totalShippingCharges)}</td>
                                             <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(bill.totalAmount)}</td>
                                             <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.billedDate}>{bill.billedDate ? formatDate(bill.billedDate, 'numeric-dash') : '-'}</td>
                                             <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={displayCell(bill.paymentTerms)}>{displayCell(bill.paymentTerms)}</td>
                                             <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}>{bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}</td>
                                             <td className="px-2 py-2 text-sm truncate" title={bill.remittanceStatus}><RemittanceBadge status={bill.remittanceStatus} /></td>
-                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(bill.openBalance)}</td>
+                                            <td className={`px-2 py-2 text-sm font-medium truncate ${bill.openBalance > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>{formatCurrency(bill.openBalance)}</td>
+                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.settledDate}>{bill.settledDate ? formatDate(bill.settledDate, 'numeric-dash') : '-'}</td>
                                             <td className="px-2 py-2 text-sm truncate">
                                                 <div className="flex items-center gap-2 min-w-0">
                                                     <button className="p-1.5 text-gray-400 hover:text-primary transition-colors hover:bg-primary/10 rounded-lg truncate" title="View Supplier Bill">
@@ -526,7 +548,7 @@ function LoadingState() {
 function EmptyState({ query }: { query: string }) {
     return (
         <tr>
-            <td colSpan={14} className="px-6 py-4 text-center truncate">
+            <td colSpan={21} className="px-6 py-4 text-center truncate">
                 <div className="flex flex-col items-center max-w-sm mx-auto min-w-0">
                     <p className="text-sm font-bold text-gray-900 dark:text-white mb-1 truncate" title="No Supplier Bills Found">No Supplier Bills Found</p>
                     <p className="text-gray-500 dark:text-gray-400 truncate">
