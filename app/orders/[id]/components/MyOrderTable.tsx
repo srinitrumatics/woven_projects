@@ -41,7 +41,7 @@ export default function MyOrderTable({
     // overwriting local state when switching tabs.
     // Order lines are passed down via filteredOrderProducts.
 
-    const { items: sortedProducts, requestSort, sortConfig } = useSortableData<Product>(filteredOrderProducts, { key: 'name', direction: 'desc' });
+    const { items: sortedProducts, requestSort, sortConfig } = useSortableData<Product>(filteredOrderProducts, { key: 'name', direction: 'asc' });
     const [currentPage, setCurrentPage] = useState(1);
 
     // Reset pagination when search or products change
@@ -129,7 +129,7 @@ export default function MyOrderTable({
                                         )}
                                     </td>
                                     <td className="px-2 py-3 text-sm text-gray-900 dark:text-white text-left" title={displayCell(product.brand)}>
-                                        <div className="text-sm text-gray-900 dark:text-white">{displayCell(product.brand)}</div>
+                                        <div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(product.brand)}</div>
                                     </td>
                                     <td className="px-2 py-3 text-left" title={displayCell(product.productFamily)}>
                                         <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">

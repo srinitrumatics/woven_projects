@@ -17,7 +17,7 @@ export default function POTabs({ activeTab, onTabChange, counts = {} }: POTabsPr
     const tabs = [
         { id: "lines", label: "Purchase Order Lines", count: counts.lines },
         { id: "bills", label: "Supplier Bills", count: counts.bills },
-        { id: "serialNumbers", label: "Serial Numbers", count: counts.serialNumbers },
+        { id: "serialNumbers", label: "Serial Number Logs", count: counts.serialNumbers },
         { id: "returns", label: "Returns", count: counts.returns },
         { id: "tracking", label: "Tracking Information", count: counts.tracking },
         { id: "files", label: "Files", count: counts.files },

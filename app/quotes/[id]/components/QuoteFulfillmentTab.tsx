@@ -23,21 +23,23 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
 
     // Sales Orders State
     const [salesSortField, setSalesSortField] = useState<keyof QuoteSalesOrder>("salesOrderNumber");
-    const [salesSortDirection, setSalesSortDirection] = useState<'asc' | 'desc'>('desc');
+    const [salesSortDirection, setSalesSortDirection] = useState<'asc' | 'desc'>('asc');
 
     // Shipping Manifests State
     const [manifestSortField, setManifestSortField] = useState<keyof QuoteShippingManifest>("manifestNumber");
-    const [manifestSortDirection, setManifestSortDirection] = useState<'asc' | 'desc'>('desc');
+    const [manifestSortDirection, setManifestSortDirection] = useState<'asc' | 'desc'>('asc');
 
     // Invoices State
     const [invoiceSortField, setInvoiceSortField] = useState<keyof QuoteInvoice>("invoiceNumber");
-    const [invoiceSortDirection, setInvoiceSortDirection] = useState<'asc' | 'desc'>('desc');
+    const [invoiceSortDirection, setInvoiceSortDirection] = useState<'asc' | 'desc'>('asc');
 
     // Setup resizable columns for Sales Orders
     const { widths: salesWidths, handleResize: handleSalesResize } = useResizableColumns({
         salesOrderNumber: 150,
         status: 100,
         customerQuote: 180,
+        proposalNumber: 180,
+        proposalName: 180,
         customerOrder: 180,
         customerPO: 180,
         billToAccount: 200,
@@ -53,8 +55,6 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
         taxes: 100,
         grandTotal: 120,
         requestDate: 180,
-        pickDate: 150,
-        pickCompleteDate: 200,
         plannedShipDate: 200,
         shipConfirmedDate: 200
     });
@@ -65,25 +65,28 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
         status: 100,
         salesOrder: 180,
         customerQuote: 180,
+        proposalNumber: 180,
+        proposalName: 180,
         customerOrder: 150,
         customerPO: 190,
         shipToAccount: 180,
         shipToLocation: 180,
         shipToContact: 180,
         dropShip: 150,
-        boxCount: 150,
-        boxNetWeight: 180,
-        boxGrossWeight: 180,
         totalLines: 180,
         totalPrice: 190,
+        boxCount: 150,
+        boxLength: 150,
+        boxWidth: 150,
+        boxHeight: 150,
+        boxNetWeight: 180,
+        boxGrossWeight: 180,
+        logisticsPartner: 180,
         plannedShipDate: 190,
         shipConfirmedDate: 190,
-        shippingMethod: 190,
-        logisticsPartner: 180,
-        logisticsContact: 190,
         trackingNumber: 160,
-        estimatedDeliveryDate: 190,
         trackingStatus: 120,
+        estimatedDeliveryDate: 190,
         actualDeliveryDate: 190
     });
 
@@ -92,7 +95,10 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
         invoiceNumber: 150,
         status: 100,
         salesOrder: 180,
+        purchaseOrder: 180,
         customerQuote: 180,
+        proposalNumber: 180,
+        proposalName: 180,
         customerOrder: 180,
         customerPO: 180,
         billToAccount: 180,
@@ -108,7 +114,6 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
         dueDate: 180,
         collectionStatus: 180,
         openBalance: 120,
-        daysOutstanding: 140,
         settledDate: 190
     });
 

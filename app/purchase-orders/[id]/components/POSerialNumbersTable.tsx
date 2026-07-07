@@ -16,7 +16,12 @@ interface SerialNumberLog {
     Serial_Number_Name?: string;
     Product_Serial_Number__c?: string;
     Product_Name?: string;
+    Product_Name__c?: string;
+    Product__c?: string;
     Product_Description__c?: string;
+    Brand_Name__c?: string;
+    gtherp__Brand_Name__c?: string;
+    Product_Brand_Name__c?: string;
     Purchase_Order_Name?: string;
     Purchase_Order__c?: string;
     RMA_Name?: string;
@@ -40,9 +45,11 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
         serialNumber: s.Serial_Number_Name,
         productSerialNumber: s.Product_Serial_Number__c,
         productName: s.Product_Name,
+        productId: s.Product_Name__c || s.Product__c || '',
+        brand: s.Product_Brand_Name__c || s.Brand_Name__c || s.gtherp__Brand_Name__c || '',
     })), [serialNumbers]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData, { key: 'name', direction: 'desc' });
+    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData, { key: 'name', direction: 'asc' });
 
     const initialWidths = {
         name: 180,
@@ -50,6 +57,7 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
         productSerialNumber: 190,
         productName: 150,
         productDescription: 200,
+        brand: 170,
         purchaseOrder: 150,
         rma: 150,
         receivedDate: 150,
@@ -81,12 +89,13 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
                             <SortableHeader truncate={false} label="Serial Number Log" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
-                            <SortableHeader truncate={false} label="Serial Number" field="serialNumber" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.serialNumber} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Serial Number #" field="serialNumber" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.serialNumber} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Serial Number" field="productSerialNumber" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productSerialNumber} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Product Description" field="Product_Description__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productDescription} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="RMA" field="RMA_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rma} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.brand} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Purchase Order #" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="RMA #" field="RMA_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rma} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Received Date" field="Received_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.receivedDate} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Active" field="Active__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.active} onResize={handleResize} />
                         </tr>
@@ -104,10 +113,19 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
                                     {displayCell(s.Product_Serial_Number__c)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Name || '-'}>
-                                    {displayCell(s.Product_Name)}
+                                    {(s.Product_Name__c || s.Product__c) ? (
+                                        <Link href={`/products/${s.Product_Name__c || s.Product__c}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                            {s.Product_Name}
+                                        </Link>
+                                    ) : (
+                                        displayCell(s.Product_Name)
+                                    )}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Description__c || '-'}>
                                     {displayCell(s.Product_Description__c)}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={s.brand || '-'}>
+                                    {displayCell(s.brand)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Name || '-'}>
                                     {s.Purchase_Order__c ? (

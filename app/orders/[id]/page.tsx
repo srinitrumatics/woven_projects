@@ -608,7 +608,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           productGrouping: item.Grouping__c || item.Product_Grouping__c || item.productGrouping || "",
           sku: item.StockKeepingUnit || item.SKU || item.sku || item.Name || "",
           manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.Manufacturer_Name || item.Manufacturer_Name__c || "",
-          brand: item.gtherp__Product_Brand_Name__c || item.Brand__c || item.brand || item.Brand || "",
+          brand: item.Product_Brand_Name__c || item.Brand__c || item.brand || item.Brand || "",
           availableQty: item.Available_To_Sell__c || item.availableQty || 0,
           moq: item.MOQ__c || item.moq || 1,
           listPrice: item.List_Price__c || item.listPrice || 0,
@@ -708,7 +708,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             setOrderProducts(newLineItems);
           }
         }
-      } catch(e) {
+      } catch (e) {
         console.error("Error loading configured order", e);
       }
     }
@@ -925,7 +925,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                     description: item.Product_Description__c || "",
                     unitPrice: item.Unit_Price__c,
                     listPrice: item.Unit_Price__c, // Assuming list price same as unit price for now
-                    brand: "", // Not in API response
+                    brand: item.Product_Brand_Name__c || "", // Not in API response
                     manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__r?.Name || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
                     productFamily: item.Product_Family__c || "", // Not in API response
                     productGrouping: item.Product_Grouping__c || item.Grouping__c || "",

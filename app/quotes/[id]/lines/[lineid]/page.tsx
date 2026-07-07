@@ -611,6 +611,7 @@ export default function QuoteLineDetailPage({
                     {activeTab === 'fulfillment' && (
                         <QuoteLineFulfillmentsTab
                             lineId={lineid}
+                            quoteId={id}
                             loading={false}
                             accountId={SF_ACCOUNT_ID}
                             contactId={SF_CONTACT_ID}
@@ -632,6 +633,7 @@ export default function QuoteLineDetailPage({
                     {activeTab === 'returns' && (
                         <QuoteLineReturnsTab
                             lineId={lineid}
+                            quoteId={id}
                             loading={false}
                             accountId={SF_ACCOUNT_ID}
                             contactId={SF_CONTACT_ID}

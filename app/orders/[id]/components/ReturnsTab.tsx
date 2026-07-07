@@ -43,18 +43,19 @@ interface RMA {
     Total_Lines__c: number;
     Customer_Order_Name: string;
     Customer_Quote_Name: string;
-    Customer_Quote_Id__c: string;
+    Customer_Quote__c: string;
     Sales_Order_Name: string;
     Ship_from_Account_Name: string;
     Ship_from_Contact_Name: string;
     Return_to_Account_Name: string;
     Return_to_Contact_Name: string;
     Drop_Ship__c: boolean;
-    Proposal_Number__c: string;
-    Proposal_Id__c: string;
-    Proposal_Name__c: string;
+    Proposal__c: string;
+    Proposal_Name: string;
     Logistics_Partner__c: string;
     Logistics_Contact__c: string;
+    Logistics_Partner_Name: string;
+    Logistics_Contact_Name: string;
     Goods_Receipt_Date__c: string;
 }
 
@@ -76,10 +77,11 @@ interface CreditMemo {
     Sales_Order_Name: string;
     Credit_to_Account_Name: string;
     Proposal_Number__c: string;
-    Proposal_Id__c: string;
-    Proposal_Name__c: string;
     Total_Lines__c: number;
     Settled_Date__c: string;
+    Proposal_Name: string;
+    Proposal__c: string;
+
 }
 
 interface DebitMemo {
@@ -319,20 +321,20 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                             <td className={tdClass}>{displayCell(rma.RMA_Type__c)}</td>
                                             <td className={tdClass}>{displayCell(rma.Sales_Order_Name)}</td>
                                             <td className={tdClass}>
-                                                {canLinkQuotes && rma.Customer_Quote_Id__c ? (
-                                                    <Link href={`/quotes/${rma.Customer_Quote_Id__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                {canLinkQuotes && rma.Customer_Quote__c ? (
+                                                    <Link href={`/quotes/${rma.Customer_Quote__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {rma.Customer_Quote_Name || "—"}
                                                     </Link>
                                                 ) : (rma.Customer_Quote_Name || "—")}
                                             </td>
                                             <td className={tdClass}>
-                                                {canLinkProposals && rma.Proposal_Id__c ? (
-                                                    <Link href={`/proposals/${rma.Proposal_Id__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                                                        {rma.Proposal_Number__c || "—"}
+                                                {canLinkProposals && rma.Proposal__c ? (
+                                                    <Link href={`/proposals/${rma.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} title={displayCell(rma.Proposal_Name)}>
+                                                        {rma.Proposal_Name || "—"}
                                                     </Link>
-                                                ) : (rma.Proposal_Number__c || "—")}
+                                                ) : (rma.Proposal_Name || "—")}
                                             </td>
-                                            <td className={tdClass}>{displayCell(rma.Proposal_Name__c)}</td>
+                                            <td title={displayCell(rma.Proposal_Name)} className={tdClass}>{displayCell(rma.Proposal_Name)}</td>
                                             <td className={tdClass}>{displayCell(rma.Ship_from_Account_Name)}</td>
                                             <td className={tdClass}>{displayCell(rma.Ship_from_Contact_Name)}</td>
                                             <td className={tdClass}>{displayCell(rma.Return_to_Account_Name)}</td>
@@ -343,10 +345,10 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                             <td className={tdClass}>{formatDate(rma.Issued_Date__c, "numeric-dash") || "—"}</td>
                                             <td className={tdClass}>{formatDate(rma.Return_by_Date__c, "numeric-dash") || "—"}</td>
                                             <td className={tdClass}>{displayCell(rma.Shipping_Method__c)}</td>
-                                            <td className={tdClass}>{displayCell(rma.Logistics_Partner__c)}</td>
-                                            <td className={tdClass}>{displayCell(rma.Logistics_Contact__c)}</td>
-                                            <td className={tdClass}>{displayCell(rma.Tracking_Number__c)}</td>
-                                            <td className="px-4 py-3">{rma.Tracking_Status__c ? statusBadge(rma.Tracking_Status__c) : "—"}</td>
+                                            <td title={rma.Logistics_Partner_Name} className={tdClass}>{displayCell(rma.Logistics_Partner_Name)}</td>
+                                            <td title={rma.Logistics_Contact_Name} className={tdClass}>{displayCell(rma.Logistics_Contact_Name)}</td>
+                                            <td title={rma.Tracking_Number__c} className={tdClass}>{displayCell(rma.Tracking_Number__c)}</td>
+                                            <td title={rma.Tracking_Status__c} className={tdClass}>{rma.Tracking_Status__c ? rma.Tracking_Status__c : "—"}</td>
                                             <td className={tdClass}>{formatDate(rma.Estimated_Delivery_Date__c, "numeric-dash") || "—"}</td>
                                             <td className={tdClass}>{formatDate(rma.Actual_Delivery_Date__c, "numeric-dash") || "—"}</td>
                                             <td className={tdClass}>{formatDate(rma.Goods_Receipt_Date__c, "numeric-dash") || "—"}</td>
@@ -410,13 +412,13 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                                 ) : (cm.Customer_Quote_Name || "—")}
                                             </td>
                                             <td className={tdClass}>
-                                                {canLinkProposals && cm.Proposal_Id__c ? (
-                                                    <Link href={`/proposals/${cm.Proposal_Id__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                                                        {cm.Proposal_Number__c || "—"}
+                                                {canLinkProposals && cm.Proposal__c ? (
+                                                    <Link href={`/proposals/${cm.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                        {cm.Proposal_Name || "—"}
                                                     </Link>
-                                                ) : (cm.Proposal_Number__c || "—")}
+                                                ) : (cm.Proposal_Name || "—")}
                                             </td>
-                                            <td className={tdClass}>{displayCell(cm.Proposal_Name__c)}</td>
+                                            <td className={tdClass}>{displayCell(cm.Proposal_Name)}</td>
                                             <td className={tdClass}>{formatNumber(cm.Total_Lines__c)}</td>
                                             <td className={tdClass}>{formatCurrency(cm.Total_Price__c ?? 0)}</td>
                                             <td className={tdClass}>{formatCurrency(cm.Total_Shipping_Charges__c ?? 0)}</td>

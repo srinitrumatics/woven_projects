@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from"react";
-import { useSortableData } from"@/hooks/useSortableData";
-import { useResizableColumns } from"@/hooks/useResizableColumns";
-import QuoteLineSalesOrderLinesSubTab from"./QuoteLineSalesOrderLinesSubTab";
-import QuoteLineInvoiceLinesSubTab from"./QuoteLineInvoiceLinesSubTab";
-import QuoteLineShippingManifestLinesSubTab from"./QuoteLineShippingManifestLinesSubTab";
+import { useEffect, useMemo, useState } from "react";
+import { useSortableData } from "@/hooks/useSortableData";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import QuoteLineSalesOrderLinesSubTab from "./QuoteLineSalesOrderLinesSubTab";
+import QuoteLineInvoiceLinesSubTab from "./QuoteLineInvoiceLinesSubTab";
+import QuoteLineShippingManifestLinesSubTab from "./QuoteLineShippingManifestLinesSubTab";
 
 interface SOLI {
     id: string;
@@ -13,6 +13,8 @@ interface SOLI {
     salesOrderId: string;
     customerQuoteLine: string;
     customerQuoteLineId: string;
+    proposedProductName?: string;
+    proposedProductId?: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -23,8 +25,6 @@ interface SOLI {
     shipping: number;
     taxes: number;
     grandTotal: number;
-    qtyPicked: number;
-    backOrderQty: number;
     qtyShipped: number;
 }
 
@@ -38,21 +38,22 @@ interface SMLI {
     salesOrderLineId: string;
     customerQuoteLine: string;
     customerQuoteLineId: string;
+    proposedProductName?: string;
+    proposedProductId?: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
     brand?: string;
     boxCount: number;
+    boxLength?: number;
+    boxWidth?: number;
+    boxHeight?: number;
     boxNetWeight: number;
     boxGrossWeight: number;
     unitPrice: number;
     totalOrderQty: number;
     totalPrice: number;
     qtyShipped: number;
-    trackingNumber: string;
-    estimatedDeliveryDate: string;
-    trackingStatus: string;
-    actualDeliveryDate: string;
 }
 
 interface INLI {
@@ -65,6 +66,8 @@ interface INLI {
     salesOrderLineId: string;
     customerQuoteLine: string;
     customerQuoteLineId: string;
+    proposedProductName?: string;
+    proposedProductId?: string;
     purchaseOrderLine: string;
     purchaseOrderLineId: string;
     productName: string;
@@ -72,7 +75,7 @@ interface INLI {
     manufacturerDBA: string;
     brand?: string;
     unitPrice: number;
-    invoiceQty: number;
+    totalOrderQty: number;
     totalPrice: number;
     shipping: number;
     taxes: number;
@@ -81,6 +84,7 @@ interface INLI {
 
 interface QuoteLineFulfillmentTabProps {
     lineId: string;
+    quoteId: string;
     loading: boolean;
     accountId?: string;
     contactId?: string;
@@ -89,12 +93,13 @@ interface QuoteLineFulfillmentTabProps {
 
 export default function QuoteLineFulfillmentsTab({
     lineId,
+    quoteId,
     loading: initialLoading,
     accountId,
     contactId,
     currentProduct
 }: QuoteLineFulfillmentTabProps) {
-    const [activeSubTab, setActiveSubTab] = useState<"Orders"|"Invoices"|"Manifests">("Orders");
+    const [activeSubTab, setActiveSubTab] = useState<"Orders" | "Invoices" | "Manifests">("Orders");
     const [loading, setLoading] = useState(initialLoading);
     const [soliData, setSoliData] = useState<SOLI[]>([]);
     const [inliData, setInliData] = useState<INLI[]>([]);
@@ -123,18 +128,18 @@ export default function QuoteLineFulfillmentsTab({
                             salesOrderId: item.Sales_Order__c,
                             customerQuoteLine: item.Customer_Quote_Line_Name,
                             customerQuoteLineId: item.Customer_Quote_Line__c,
+                            proposedProductName: item.Proposed_Product_Name || '',
+                            proposedProductId: item.Proposed_Product__c || '',
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
-                            brand: undefined,
+                            brand: item.Product_Brand_Name__c || '',
                             unitPrice: item.Unit_Price__c || 0,
                             totalOrderQty: item.Total_Order_Qty__c || 0,
                             totalPrice: item.Total_Price__c || 0,
                             shipping: item.Shipping_Charges__c || 0,
                             taxes: item.Total_Taxes_Amount__c || 0,
                             grandTotal: item.Line_Grand_Total__c || 0,
-                            qtyPicked: item.Qty_Picked__c || 0,
-                            backOrderQty: item.Back_Order_Qty__c || 0,
                             qtyShipped: item.Qty_Shipped__c || 0
                         })));
                     }
@@ -151,14 +156,16 @@ export default function QuoteLineFulfillmentsTab({
                             salesOrderLineId: item.Sales_Order_Line__c,
                             customerQuoteLine: item.Customer_Quote_Line_Name,
                             customerQuoteLineId: item.Customer_Quote_Line__c,
+                            proposedProductName: item.Proposed_Product_Name || '',
+                            proposedProductId: item.Proposed_Product__c || '',
                             purchaseOrderLine: item.Purchase_Order_Line_Name,
                             purchaseOrderLineId: item.Purchase_Order_Line__c,
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
-                            brand: undefined,
+                            brand: item.Product_Brand_Name__c || '',
                             unitPrice: item.Unit_Price__c || 0,
-                            invoiceQty: item.Invoiced_Qty__c || 0,
+                            totalOrderQty: item.Total_Order_Qty__c || 0,
                             totalPrice: item.Invoiced_Amount__c ?? item.Total_Price__c ?? 0,
                             shipping: item.Shipping_Charges__c || 0,
                             taxes: item.Total_Taxes_Amount__c || 0,
@@ -178,21 +185,22 @@ export default function QuoteLineFulfillmentsTab({
                             salesOrderLineId: item.Sales_Order_Line__c,
                             customerQuoteLine: item.Customer_Quote_Line_Name,
                             customerQuoteLineId: item.Customer_Quote_Line__c,
+                            proposedProductName: item.Proposed_Product_Name || '',
+                            proposedProductId: item.Proposed_Product__c || '',
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
-                            brand: undefined,
+                            brand: item.Product_Brand_Name__c || '',
                             boxCount: item.Box__c || 0,
+                            boxLength: item.Case_Length__c || 0,
+                            boxWidth: item.Case_Width__c || 0,
+                            boxHeight: item.Case_Height__c || 0,
                             boxNetWeight: item.Case_Net_Weight__c || 0,
                             boxGrossWeight: item.Case_Gross_Weight__c || 0,
                             unitPrice: item.Unit_Price__c || 0,
                             totalOrderQty: item.Total_Order_Qty__c || 0,
                             totalPrice: item.Total_Price__c || 0,
-                            qtyShipped: item.Qty_Shipped__c || 0,
-                            trackingNumber: item.Tracking_Number__c,
-                            estimatedDeliveryDate: item.Estimated_Delivery_Date__c,
-                            trackingStatus: item.Tracking_Status__c,
-                            actualDeliveryDate: item.Actual_Delivery_Date__c
+                            qtyShipped: item.Qty_Shipped__c || 0
                         })));
                     }
                 }
@@ -207,12 +215,12 @@ export default function QuoteLineFulfillmentsTab({
     }, [lineId, accountId, contactId]);
 
     const activeData = useMemo(() => {
-        if (activeSubTab ==="Orders") return soliData;
-        if (activeSubTab ==="Invoices") return inliData;
+        if (activeSubTab === "Orders") return soliData;
+        if (activeSubTab === "Invoices") return inliData;
         return smliData;
     }, [activeSubTab, soliData, inliData, smliData]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(activeData, { key: 'name', direction: 'desc' });
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(activeData, { key: 'lineName', direction: 'asc' });
     const { widths, handleResize } = useResizableColumns({
         lineName: 180,
         status: 120,
@@ -220,6 +228,7 @@ export default function QuoteLineFulfillmentsTab({
         salesOrderName: 150,
         salesOrderLine: 180,
         customerQuoteLine: 180,
+        proposedProductName: 180,
         purchaseOrderLine: 180,
         invoiceName: 150,
         manifestName: 150,
@@ -227,6 +236,9 @@ export default function QuoteLineFulfillmentsTab({
         description: 200,
         manufacturerDBA: 150,
         boxCount: 100,
+        boxLength: 120,
+        boxWidth: 120,
+        boxHeight: 120,
         boxNetWeight: 120,
         boxGrossWeight: 120,
         unitPrice: 120,
@@ -235,14 +247,7 @@ export default function QuoteLineFulfillmentsTab({
         shipping: 100,
         taxes: 100,
         grandTotal: 120,
-        qtyPicked: 120,
-        backOrderQty: 120,
-        qtyShipped: 120,
-        invoiceQty: 120,
-        trackingNumber: 150,
-        estimatedDeliveryDate: 150,
-        trackingStatus: 120,
-        actualDeliveryDate: 150
+        qtyShipped: 120
     });
 
     if (loading && activeData.length === 0) {
@@ -258,16 +263,16 @@ export default function QuoteLineFulfillmentsTab({
             {/* Sub Tabs */}
             <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-6">
                 {[
-                    { key:"Orders", label:"Sales Orders Lines", count: soliData.length },
-                    { key:"Invoices", label:"Invoices Lines", count: inliData.length },
-                    { key:"Manifests", label:"Shipping Manifests Lines", count: smliData.length }
+                    { key: "Orders", label: "Sales Orders Lines", count: soliData.length },
+                    { key: "Manifests", label: "Shipping Manifests Lines", count: smliData.length },
+                    { key: "Invoices", label: "Invoices Lines", count: inliData.length }
                 ].map((tab) => (
                     <button
                         key={tab.key}
                         onClick={() => setActiveSubTab(tab.key as any)}
                         className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeSubTab === tab.key
-                            ?"border-primary text-primary"
-                            :"border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                            ? "border-primary text-primary"
+                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                             }`}
                     >
                         {tab.label} {tab.count > 0 && `(${tab.count})`}
@@ -277,9 +282,10 @@ export default function QuoteLineFulfillmentsTab({
 
             {/* Table Area */}
             <div className="bg-white dark:bg-gray-800">
-                {activeSubTab ==="Orders"&& (
+                {activeSubTab === "Orders" && (
                     <QuoteLineSalesOrderLinesSubTab
                         data={soliData}
+                        quoteId={quoteId}
                         loading={loading}
                         sortConfig={sortConfig}
                         requestSort={requestSort}
@@ -287,9 +293,10 @@ export default function QuoteLineFulfillmentsTab({
                         handleResize={handleResize}
                     />
                 )}
-                {activeSubTab ==="Invoices"&& (
+                {activeSubTab === "Invoices" && (
                     <QuoteLineInvoiceLinesSubTab
                         data={inliData}
+                        quoteId={quoteId}
                         loading={loading}
                         sortConfig={sortConfig}
                         requestSort={requestSort}
@@ -297,9 +304,10 @@ export default function QuoteLineFulfillmentsTab({
                         handleResize={handleResize}
                     />
                 )}
-                {activeSubTab ==="Manifests"&& (
+                {activeSubTab === "Manifests" && (
                     <QuoteLineShippingManifestLinesSubTab
                         data={smliData}
+                        quoteId={quoteId}
                         loading={loading}
                         sortConfig={sortConfig}
                         requestSort={requestSort}

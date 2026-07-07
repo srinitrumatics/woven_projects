@@ -1,8 +1,8 @@
-import { QuoteSalesOrder } from"@/app/quotes/types";
-import { SortableHeader } from"@/components/ui/SortableHeader";
+import { QuoteSalesOrder } from "@/app/quotes/types";
+import { SortableHeader } from "@/components/ui/SortableHeader";
 import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
-import Link from"next/link";
-import Pagination from"@/components/ui/Pagination";
+import Link from "next/link";
+import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
 
@@ -33,7 +33,7 @@ export default function QuoteSalesOrdersSubTab({
     const { user, selectedAccount } = useUserSession();
     const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
     const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
-    const isRestricted = accountType === 'Customer' || accountType === 'NSO';
+    const isRestricted = '';
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => onSort(key as keyof QuoteSalesOrder);
 
@@ -57,36 +57,36 @@ export default function QuoteSalesOrdersSubTab({
             <div className="overflow-x-auto py-2">
                 {salesOrders.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium"title="No records found">No records found</p>
-                        <p className="text-sm"title="There are no sales orders associated with this quote.">There are no sales orders associated with this quote.</p>
+                        <p className="text-lg font-medium" title="No records found">No records found</p>
+                        <p className="text-sm" title="There are no sales orders associated with this quote.">There are no sales orders associated with this quote.</p>
                     </div>
                 ) : (
                     <>
                         <table className="w-full">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
-                                    <SortableHeader label="Sales Order"field="salesOrderNumber"sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderNumber} onResize={onResize} align="left"className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"truncate={false} />
-                                    <SortableHeader label="Status"field="status"sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Customer Quote"field="customerQuote"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Customer Order"field="customerOrder"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Customer PO"field="customerPO"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Bill to Account"field="billToAccount"sortConfig={sortConfig} requestSort={requestSort} width={widths.billToAccount} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Bill to Location"field="billToLocation"sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocation} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Bill to Contact"field="billToContact"sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContact} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Ship to Account"field="shipToAccount"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Ship to Location"field="shipToLocation"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Ship to Contact"field="shipToContact"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Drop Ship"field="dropShip"sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Total Lines"field="totalLines"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Total Price"field="totalPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Shipping"field="shipping"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Taxes"field="taxes"sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Grand Total"field="grandTotal"sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Request Date"field="requestDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.requestDate} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Pick Date"field="pickDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.pickDate} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Pick Complete Date"field="pickCompleteDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.pickCompleteDate} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Planned Ship Date"field="plannedShipDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.plannedShipDate} onResize={onResize} align="left"truncate={false} />
-                                    <SortableHeader label="Ship Confirmed Date"field="shipConfirmedDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipConfirmedDate} onResize={onResize} align="left"truncate={false} />
+                                    <SortableHeader label="Sales Order #" field="salesOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Customer Quote #" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Proposal #" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Bill to Account" field="billToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToAccount} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Bill to Location" field="billToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocation} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Bill to Contact" field="billToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContact} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestDate} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Planned Ship Date" field="plannedShipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.plannedShipDate} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Ship Confirmed Date" field="shipConfirmedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipConfirmedDate} onResize={onResize} align="left" truncate={false} />
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -106,6 +106,18 @@ export default function QuoteSalesOrdersSubTab({
                                                     </Link>
                                                 ) : displayCell(order.customerQuote)
                                             ) : displayCell(order.customerQuote)}
+                                        </td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposalNumber }}>
+                                            {order.proposalId ? (
+                                                !isManufacturer ? (
+                                                    <Link href={`/proposals/${order.proposalId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {order.proposalName}
+                                                    </Link>
+                                                ) : displayCell(order.proposalName)
+                                            ) : displayCell(order.proposalName)}
+                                        </td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposalName }}>
+                                            {displayCell(order.proposalName)}
                                         </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
                                             {order.customerOrderId ? (
@@ -130,8 +142,6 @@ export default function QuoteSalesOrdersSubTab({
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }}>{formatCurrency(order.taxes)}</td>
                                         <td className="px-3 py-2 text-sm text-primary font-bold truncate" style={{ width: widths.grandTotal }}>{formatCurrency(order.grandTotal)}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.requestDate }}>{formatDate(order.requestDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.pickDate }}>{formatDate(order.pickDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.pickCompleteDate }}>{formatDate(order.pickCompleteDate, 'numeric-dash')}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.plannedShipDate }}>{formatDate(order.plannedShipDate, 'numeric-dash')}</td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipConfirmedDate }}>{formatDate(order.shipConfirmedDate, 'numeric-dash')}</td>
                                     </tr>
@@ -159,34 +169,34 @@ export default function QuoteSalesOrdersSubTab({
 function StatusBadge({ status }: { status: string }) {
     const getStyles = () => {
         switch (status) {
-            case"Approved":
-            case"Paid":
-            case"Posted":
-            case"Delivered":
-            case"Completed":
-            case"Applied":
-                return"bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-            case"Open":
-            case"Shipped":
-            case"Converted":
-            case"Allocated":
-                return"bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-            case"Pending":
-            case"Partial Shipment":
-                return"bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-            case"Draft":
-                return"bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
-            case"Rejected":
-            case"Partial Rejected":
-            case"Cancelled":
-            case"Canceled":
-                return"bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-            case"Expired":
-                return"bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-            case"Closed":
-                return"bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+            case "Approved":
+            case "Paid":
+            case "Posted":
+            case "Delivered":
+            case "Completed":
+            case "Applied":
+                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+            case "Open":
+            case "Shipped":
+            case "Converted":
+            case "Allocated":
+                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+            case "Pending":
+            case "Partial Shipment":
+                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+            case "Draft":
+                return "bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
+            case "Rejected":
+            case "Partial Rejected":
+            case "Cancelled":
+            case "Canceled":
+                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+            case "Expired":
+                return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
+            case "Closed":
+                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
             default:
-                return"bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+                return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
         }
     };
 

@@ -82,9 +82,9 @@ export default function PurchaseOrdersPage() {
                     shipToContactName: p.Ship_to_Contact_Name || '',
                     dropShip: p.Drop_Ship__c || false,
                     totalLines: p.Total_Lines__c || 0,
-                    productCost: p.Total_Product_Cost__c || 0,
-                    shippingCost: p.Total_Shipping_Charges__c || 0,
-                    totalCost: p.Total_Cost__c || 0,
+                    productCost: p.Total_Product_Cost__c || p.gtherp__Total_Product_Cost__c || 0,
+                    shippingCost: p.Total_Shipping_Charges__c || p.gtherp__Total_Shipping_Charges__c || 0,
+                    totalCost: p.Total_Cost__c || p.gtherp__Total_Cost__c || 0,
                     issuedDate: p.Issued_Date__c || '',
                     acknowledgedDate: p.Acknowledged_Date__c || '',
                     requestDate: p.Request_Date__c || '',
@@ -322,7 +322,7 @@ export default function PurchaseOrdersPage() {
                                     <EmptyState query={searchQuery} />
                                 ) : (
                                     paginatedPOs.map(po => (
-                                        <tr key={po.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onClick={() => router.push(`/purchase-orders/${po.id}`)}>
+                                        <tr key={po.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group" >
                                             <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate max-w-[200px] sticky left-0 bg-white dark:bg-gray-800 z-10 " title={po.name}>
                                                 <Link href={`/purchase-orders/${po.id}`} className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                     {po.name}

@@ -264,8 +264,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       shipFromAccountName: 180, shipFromContactName: 180, returnToAccountName: 180,
       returnToContactName: 180, dropShip: 100, totalLines: 100, totalPrice: 120, issuedDate: 150,
       returnByDate: 150, shippingMethod: 150, logisticsPartner: 180, logisticsContact: 180,
-      trackingNumber: 180, trackingStatus: 150, estimatedDeliveryDate: 150, actualDeliveryDate: 150,
-      goodsReceiptDate: 150, supplierBillName: 180, shipmentName: 180
+      trackingNumber: 180, trackingStatus: 190, estimatedDeliveryDate: 190, actualDeliveryDate: 190,
+      goodsReceiptDate: 190, supplierBillName: 180, shipmentName: 180
     },
     rtv: {
       purchaseOrderName: 180, customerQuoteName: 180, customerOrderName: 180, rtvType: 150,
@@ -278,7 +278,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       proposalId: 180, proposalName: 180, customerOrderName: 180,
       totalLines: 100, totalPrice: 120, totalShippingCharges: 120,
       totalTaxesAmount: 120, totalCreditAmount: 150, issuedDate: 150, expirationDate: 150,
-      availableCreditBalance: 150, settledDate: 150,
+      availableCreditBalance: 190, settledDate: 190,
       purchaseOrderName: 180, supplierBillName: 180, shipmentName: 180
     },
     debit: {

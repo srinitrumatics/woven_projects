@@ -12,6 +12,8 @@ interface SOLI {
     salesOrderId: string;
     customerQuoteLine: string;
     customerQuoteLineId: string;
+    proposedProductName?: string;
+    proposedProductId?: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -22,13 +24,12 @@ interface SOLI {
     shipping: number;
     taxes: number;
     grandTotal: number;
-    qtyPicked: number;
-    backOrderQty: number;
     qtyShipped: number;
 }
 
 interface QuoteLineSalesOrderLinesSubTabProps {
     data: SOLI[];
+    quoteId: string;
     loading: boolean;
     sortConfig: { key: any; direction: 'asc' | 'desc' } | null;
     requestSort: (key: string) => void;
@@ -40,6 +41,7 @@ const ITEMS_PER_PAGE = 10;
 
 export default function QuoteLineSalesOrderLinesSubTab({
     data,
+    quoteId,
     loading,
     sortConfig,
     requestSort,
@@ -75,22 +77,21 @@ export default function QuoteLineSalesOrderLinesSubTab({
                     <table className="w-full text-sm table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                             <tr>
-                                <SortableHeader label="Sales Order Line"field="lineName"sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"/>
-                                <SortableHeader label="Status"field="status"sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                <SortableHeader label="Sales Order"field="salesOrderName"sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderName} onResize={handleResize} />
-                                <SortableHeader label="Customer Quote Line"field="customerQuoteLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
-                                <SortableHeader label="Product Name"field="productName"sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
-                                <SortableHeader label="Product Description"field="description"sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                <SortableHeader label="Brand"field="brand"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
-                                <SortableHeader label="Unit Price"field="unitPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
-                                <SortableHeader label="Total Order Qty"field="totalOrderQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalOrderQty} onResize={handleResize} />
-                                <SortableHeader label="Total Price"field="totalPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                                <SortableHeader label="Shipping"field="shipping"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
-                                <SortableHeader label="Taxes"field="taxes"sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
-                                <SortableHeader label="Line Grand Total"field="grandTotal"sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
-                                <SortableHeader label="Qty Picked"field="qtyPicked"sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyPicked} onResize={handleResize} />
-                                <SortableHeader label="Back Order Qty"field="backOrderQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.backOrderQty} onResize={handleResize} />
-                                <SortableHeader label="Qty Shipped"field="qtyShipped"sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyShipped} onResize={handleResize} />
+                                <SortableHeader label="Sales Order Line"field="lineName"sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false}/>
+                                <SortableHeader label="Status"field="status"sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Sales Order #"field="salesOrderName"sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderName} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Customer Quote Line"field="customerQuoteLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Proposed Product"field="proposedProductName"sortConfig={sortConfig} requestSort={requestSort} width={widths.proposedProductName} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Product Name"field="productName"sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Product Description"field="description"sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Brand Name"field="brand"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Unit Price"field="unitPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Total Order Qty"field="totalOrderQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalOrderQty} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Total Price"field="totalPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Shipping"field="shipping"sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Taxes"field="taxes"sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Line Grand Total"field="grandTotal"sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} truncate={false} />
+                                <SortableHeader label="Qty Shipped"field="qtyShipped"sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyShipped} onResize={handleResize} truncate={false} />
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800">
@@ -106,7 +107,18 @@ export default function QuoteLineSalesOrderLinesSubTab({
                                         {displayCell(item.salesOrderName)}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuoteLine }}>
-                                        {displayCell(item.customerQuoteLine)}
+                                        {item.customerQuoteLineId ? (
+                                            <Link href={`/quotes/${quoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                {item.customerQuoteLine}
+                                            </Link>
+                                        ) : displayCell(item.customerQuoteLine)}
+                                    </td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposedProductName }}>
+                                        {item.proposedProductId ? (
+                                            <Link href={`/products/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                {item.proposedProductName}
+                                            </Link>
+                                        ) : displayCell(item.proposedProductName)}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{displayCell(item.productName)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{displayCell(item.description)}</td>
@@ -117,8 +129,6 @@ export default function QuoteLineSalesOrderLinesSubTab({
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(item.shipping)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }}>{formatCurrency(item.taxes)}</td>
                                     <td className="px-3 py-2 text-sm font-bold text-primary truncate" style={{ width: widths.grandTotal }}>{formatCurrency(item.grandTotal)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.qtyPicked }}>{item.qtyPicked}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.backOrderQty }}>{item.backOrderQty}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.qtyShipped }}>{item.qtyShipped}</td>
                                 </tr>
                             ))}

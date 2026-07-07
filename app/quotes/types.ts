@@ -16,8 +16,6 @@ export interface QuoteCreditMemo {
   purchaseOrderId?: string;
   salesOrder?: string;
   salesOrderId?: string;
-  creditToAccount: string; // 6. gtherp__Credit_to_Account__c
-  creditToContact: string; // 7. gtherp__Credit_to_Contact__c
   totalLines: number; // 8. gtherp__Total_Lines__c
   totalPrice: number; // 9. gtherp__Total_Price__c
   shipping: number; // 10. gtherp__Total_Shipping_Charges__c
@@ -27,6 +25,8 @@ export interface QuoteCreditMemo {
   expirationDate: string; // 14. gtherp__Expiration_Date__c
   availableCreditBalance: number; // 15. gtherp__Available_Credit_Balance__c
   settledDate: string; // 16. gtherp__Settled_Date__c
+  proposalName?: string;
+  proposalId?: string;
 }
 
 export interface Quote {
@@ -44,9 +44,18 @@ export interface Quote {
   customerOrderId?: string;
   shipToAccountName?: string;
   billToAccountName?: string;
+  billToLocationName?: string;
+  billToContactName?: string;
+  shipToLocationName?: string;
+  shipToContactName?: string;
+  dropShip?: boolean;
   totalLines?: number;
+  shipping?: number;
+  taxes?: number;
+  grandTotal?: number;
   requestDate?: string;
   plannedShipDate?: string;
+  shipConfirmedDate?: string;
   expirationDate?: string;
   validUntil?: string;
   issuedDate?: string;
@@ -68,9 +77,13 @@ export interface QuoteLine {
   Name: string;
   status: string;
   productName: string;
+  productId?: string;
   description: string;
   manufacturerDBA: string;
   brand?: string;
+  grouping?: string;
+  proposedProductName?: string;
+  proposedProductId?: string;
   unitPrice: number;
   quantity: number;
   totalPrice: number;
@@ -114,6 +127,8 @@ export interface QuoteSalesOrder {
   status: string;
   customerQuote: string;
   customerQuoteId?: string;
+  proposalName?: string;
+  proposalId?: string;
   customerOrder: string;
   customerOrderId?: string;
   customerPO: string;
@@ -130,8 +145,6 @@ export interface QuoteSalesOrder {
   taxes: number;
   grandTotal: number;
   requestDate: string;
-  pickDate: string;
-  pickCompleteDate: string;
   plannedShipDate: string;
   shipConfirmedDate: string;
 }
@@ -144,6 +157,8 @@ export interface QuoteShippingManifest {
   salesOrderId?: string;
   customerQuote: string;
   customerQuoteId?: string;
+  proposalName?: string;
+  proposalId?: string;
   customerOrder: string;
   customerOrderId?: string;
   customerPO: string;
@@ -152,15 +167,16 @@ export interface QuoteShippingManifest {
   shipToContact: string;
   dropShip: boolean;
   boxCount: number;
+  boxLength?: number;
+  boxWidth?: number;
+  boxHeight?: number;
   boxNetWeight: number;
   boxGrossWeight: number;
   totalLines: number;
   totalPrice: number;
   plannedShipDate: string;
   shipConfirmedDate: string;
-  shippingMethod: string;
   logisticsPartner: string;
-  logisticsContact: string;
   trackingNumber: string;
   estimatedDeliveryDate: string;
   trackingStatus: string;
@@ -173,8 +189,12 @@ export interface QuoteInvoice {
   status: string;
   salesOrder: string;
   salesOrderId?: string;
+  purchaseOrder?: string;
+  purchaseOrderId?: string;
   customerQuote: string;
   customerQuoteId?: string;
+  proposalName?: string;
+  proposalId?: string;
   customerOrder: string;
   customerOrderId?: string;
   customerPO: string;
@@ -191,7 +211,6 @@ export interface QuoteInvoice {
   dueDate: string;
   collectionStatus: string;
   openBalance: number;
-  daysOutstanding: number;
   settledDate: string;
 }
 
@@ -263,6 +282,8 @@ export interface QuoteRMA {
   salesOrderId?: string;
   customerQuote: string;
   customerQuoteId?: string;
+  proposalName?: string;
+  proposalId?: string;
   customerOrder: string;
   customerOrderId?: string;
   supplierBill?: string;
@@ -286,7 +307,7 @@ export interface QuoteRMA {
   estimatedDeliveryDate: string;
   trackingStatus: string;
   actualDeliveryDate: string;
-  goodsReceiptsDate: string;
+  goodsReceiptDate: string;
 }
 
 

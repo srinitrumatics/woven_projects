@@ -152,7 +152,6 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                             <SortableHeader truncate={false} label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader truncate={false} label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader truncate={false} label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader truncate={false} label="Line Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800">
@@ -205,7 +204,6 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalPrice)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
-                                <td className="px-3 py-2 text-sm truncate font-bold text-primary">{formatCurrency(item.grandTotal)}</td>
                             </tr>
                         ))}
                     </tbody>

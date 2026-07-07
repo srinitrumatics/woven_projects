@@ -19,18 +19,18 @@ interface RTV {
     Purchase_Order__c?: string;
     Customer_Quote_Name?: string;
     Customer_Quote__c?: string;
+    Proposal_Name?: string;
+    Proposal_Number?: string;
+    Proposal__c?: string;
     Customer_Order_Name?: string;
     Customer_Order__c?: string;
     RTV_Type__c?: string;
     Supplier_RMA_Number__c?: string;
     Ship_from_Account_Name?: string;
     Ship_from_Contact_Name?: string;
-    Supplier_Name?: string;
-    Supplier_Contact_Name?: string;
     Total_Lines__c?: number;
     Total_Cost__c?: number;
     Issued_Date__c?: string;
-    Approval_Date__c?: string;
     Return_by_Date__c?: string;
 }
 
@@ -50,27 +50,28 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
         ...r,
         name: r.Name,
         status: r.Status__c,
+        proposalNumber: r.Proposal_Number || r.Proposal_Name || '',
+        proposalName: r.Proposal_Name || '',
     })), [rtv]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData, { key: 'name', direction: 'desc' });
+    const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData, { key: 'name', direction: 'asc' });
 
     const initialWidths = {
         name: 180,
         status: 120,
+        rtvType: 120,
         purchaseOrder: 150,
         customerQuote: 150,
+        proposalNumber: 150,
+        proposalName: 180,
         customerOrder: 150,
-        rtvType: 120,
-        rmaNumber: 150,
         shipFromAccount: 180,
         shipFromContact: 180,
-        supplierName: 180,
-        supplierContact: 180,
         totalLines: 140,
         totalCost: 120,
         issuedDate: 150,
-        approvalDate: 150,
-        returnByDate: 150
+        returnByDate: 150,
+        rmaNumber: 170
     };
 
     const { widths: columnWidths, handleResize } = useResizableColumns(initialWidths);
@@ -97,22 +98,21 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                 <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader truncate={false} label="RTV" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
+                            <SortableHeader truncate={false} label="RTV #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader truncate={false} label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Customer Quote" field="Customer_Quote_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuote} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerOrder} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="RTV Type" field="RTV_Type__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rtvType} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="RMA Number" field="Supplier_RMA_Number__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rmaNumber} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Type" field="RTV_Type__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rtvType} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Purchase Order #" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Customer Quote #" field="Customer_Quote_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuote} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.proposalNumber} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.proposalName} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Customer Order #" field="Customer_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerOrder} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Ship from Account" field="Ship_from_Account_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipFromAccount} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Ship from Contact" field="Ship_from_Contact_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipFromContact} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Supplier Name" field="Supplier_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierName} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Supplier Contact" field="Supplier_Contact_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierContact} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Total Lines" field="Total_Lines__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalLines} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalCost} onResize={handleResize} />
                             <SortableHeader truncate={false} label="Issued Date" field="Issued_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.issuedDate} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Approval Date" field="Approval_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.approvalDate} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Return by Date" field="Return_by_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.returnByDate} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Return By Date" field="Return_by_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.returnByDate} onResize={handleResize} />
+                            <SortableHeader truncate={false} label="Supplier RMA Number" field="Supplier_RMA_Number__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rmaNumber} onResize={handleResize} />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -124,15 +124,14 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                 <td className="px-3 py-2 truncate">
                                     <StatusBadge status={r.Status__c} />
                                 </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.RTV_Type__c || '-'}>
+                                    {displayCell(r.RTV_Type__c)}
+                                </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Purchase_Order_Name || '-'}>
                                     {r.Purchase_Order__c ? (
-                                        !isManufacturer ? (
-                                            <Link href={`/purchase-orders/${r.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                                {r.Purchase_Order_Name || 'View PO'}
-                                            </Link>
-                                        ) : (
-                                            <span className="font-medium">{r.Purchase_Order_Name || 'View PO'}</span>
-                                        )
+                                        <Link href={`/purchase-orders/${r.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {r.Purchase_Order_Name || 'View PO'}
+                                        </Link>
                                     ) : displayCell(r.Purchase_Order_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Customer_Quote_Name || '-'}>
@@ -142,10 +141,22 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                                 {r.Customer_Quote_Name || 'View Quote'}
                                             </Link>
                                         ) : (
-                                            <span className="font-medium">{r.Customer_Quote_Name || 'View Quote'}</span>
+                                            <span className="font-medium">{displayCell(r.Customer_Quote_Name)}</span>
                                         )
                                     ) : displayCell(r.Customer_Quote_Name)}
                                 </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Proposal_Name || '-'}>
+                                    {r.Proposal__c ? (
+                                        !isManufacturer ? (
+                                            <Link href={`/proposals/${r.Proposal__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {r.Proposal_Number || r.Proposal_Name || 'View Proposal'}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{displayCell(r.Proposal_Number || r.Proposal_Name)}</span>
+                                        )
+                                    ) : displayCell(r.Proposal_Number || r.Proposal_Name)}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Proposal_Name || '-'}>{displayCell(r.Proposal_Name)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Customer_Order_Name || '-'}>
                                     {r.Customer_Order__c ? (
                                         !isManufacturer ? (
@@ -153,27 +164,15 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                                 {r.Customer_Order_Name || 'View Order'}
                                             </Link>
                                         ) : (
-                                            <span className="font-medium">{r.Customer_Order_Name || 'View Order'}</span>
+                                            <span className="font-medium">{displayCell(r.Customer_Order_Name)}</span>
                                         )
                                     ) : displayCell(r.Customer_Order_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.RTV_Type__c || '-'}>
-                                    {displayCell(r.RTV_Type__c)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Supplier_RMA_Number__c || '-'}>
-                                    {displayCell(r.Supplier_RMA_Number__c)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Ship_from_Account_Name || '-'}>
                                     {displayCell(r.Ship_from_Account_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Ship_from_Contact_Name || '-'}>
                                     {displayCell(r.Ship_from_Contact_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Supplier_Name || '-'}>
-                                    {displayCell(r.Supplier_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Supplier_Contact_Name || '-'}>
-                                    {displayCell(r.Supplier_Contact_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(r.Total_Lines__c || 0)}>
                                     <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium truncate">
@@ -186,11 +185,11 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={r.Issued_Date__c ? formatDate(r.Issued_Date__c, 'numeric-dash') : '-'}>
                                     {r.Issued_Date__c ? formatDate(r.Issued_Date__c, 'numeric-dash') : '-'}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={r.Approval_Date__c ? formatDate(r.Approval_Date__c, 'numeric-dash') : '-'}>
-                                    {r.Approval_Date__c ? formatDate(r.Approval_Date__c, 'numeric-dash') : '-'}
-                                </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={r.Return_by_Date__c ? formatDate(r.Return_by_Date__c, 'numeric-dash') : '-'}>
                                     {r.Return_by_Date__c ? formatDate(r.Return_by_Date__c, 'numeric-dash') : '-'}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={r.Supplier_RMA_Number__c || '-'}>
+                                    {displayCell(r.Supplier_RMA_Number__c)}
                                 </td>
                             </tr>
                         ))}

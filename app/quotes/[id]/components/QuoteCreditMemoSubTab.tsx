@@ -65,13 +65,14 @@ export default function QuoteCreditMemoSubTab({
                         <table className="w-full table-fixed">
                             <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
-                                    <SortableHeader label="Credit Memo" field="memoNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.memoNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                                    <SortableHeader label="Credit Memo #" field="memoNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.memoNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
                                     <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" truncate={false} />
-                                    <SortableHeader label="Invoice" field="invoice" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoice} onResize={onResize} align="left" truncate={false} />
-                                    <SortableHeader label="Customer Quote" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" truncate={false} />
-                                    <SortableHeader label="Customer Order" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" truncate={false} />
-                                    <SortableHeader label="Credit to Account" field="creditToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditToAccount} onResize={onResize} align="left" truncate={false} />
-                                    <SortableHeader label="Credit to Contact" field="creditToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditToContact} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Invoice #" field="invoice" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoice} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Sales Order #" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Customer Quote #" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Proposal #" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={onResize} align="left" truncate={false} />
+                                    <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" truncate={false} />
                                     <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={onResize} align="left" truncate={false} />
                                     <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={onResize} align="left" truncate={false} />
                                     <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={onResize} align="left" truncate={false} />
@@ -102,6 +103,9 @@ export default function QuoteCreditMemoSubTab({
                                                 ) : displayCell(memo.invoice)
                                             ) : displayCell(memo.invoice)}
                                         </td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>
+                                            {displayCell(memo.salesOrder)}
+                                        </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
                                             {memo.customerQuoteId ? (
                                                 !isManufacturer ? (
@@ -111,14 +115,27 @@ export default function QuoteCreditMemoSubTab({
                                                 ) : displayCell(memo.customerQuote)
                                             ) : displayCell(memo.customerQuote)}
                                         </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
-
-                                            <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
-                                                {memo.customerOrder}
-                                            </Link>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposalNumber }}>
+                                            {memo.proposalId ? (
+                                                !isManufacturer ? (
+                                                    <Link href={`/proposals/${memo.proposalId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {memo.proposalName}
+                                                    </Link>
+                                                ) : displayCell(memo.proposalName)
+                                            ) : displayCell(memo.proposalName)}
                                         </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.creditToAccount }}>{displayCell(memo.creditToAccount)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.creditToContact }}>{displayCell(memo.creditToContact)}</td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposalName }}>
+                                            {displayCell(memo.proposalName)}
+                                        </td>
+                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
+                                            {memo.customerOrderId ? (
+                                                !isManufacturer && !isRestricted ? (
+                                                    <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        {memo.customerOrder}
+                                                    </Link>
+                                                ) : displayCell(memo.customerOrder)
+                                            ) : displayCell(memo.customerOrder)}
+                                        </td>
                                         <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{formatNumber(memo.totalLines)}</td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(memo.totalPrice)}</td>
                                         <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(memo.shipping)}</td>

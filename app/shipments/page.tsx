@@ -535,8 +535,7 @@ export default function ShipmentsPage() {
                     paginatedShipments.map((shipment) => (
                       <tr
                         key={shipment.Id}
-                        onClick={() => router.push(`/shipments/${shipment.Id}`)}
-                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                       >
                         <td className="px-3 py-2 text-sm font-semibold text-primary sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">
                           <Link

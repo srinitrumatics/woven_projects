@@ -22,7 +22,7 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
     const [currentPage, setCurrentPage] = useState(1);
     const { selectedAccount } = useUserSession();
     const accountType = selectedAccount?.Account_Record_Type__c || selectedAccount?.Type;
-    const isRestricted = accountType === 'Customer' || accountType === 'NSO';
+    const isRestricted = '';
 
     const sortConfig = { key: sortField as string, direction: sortDirection };
     const requestSort = (key: string) => {

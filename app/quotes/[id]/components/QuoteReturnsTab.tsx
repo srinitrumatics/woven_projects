@@ -38,11 +38,11 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
 
     // RMA State
     const [rmaSortField, setRmaSortField] = useState<keyof QuoteRMA>("rmaNumber");
-    const [rmaSortDirection, setRmaSortDirection] = useState<'asc' | 'desc'>('desc');
+    const [rmaSortDirection, setRmaSortDirection] = useState<'asc' | 'desc'>('asc');
 
     // Credit Memo State
     const [cmSortField, setCmSortField] = useState<keyof QuoteCreditMemo>("memoNumber");
-    const [cmSortDirection, setCmSortDirection] = useState<'asc' | 'desc'>('desc');
+    const [cmSortDirection, setCmSortDirection] = useState<'asc' | 'desc'>('asc');
 
     // RTV State
     const [rtvSortField, setRtvSortField] = useState<keyof QuoteRTV>("rtvNumber");
@@ -56,12 +56,14 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
     const { widths: rmaWidths, handleResize: handleRmaResize } = useResizableColumns({
         rmaNumber: 150,
         status: 100,
+        rmaType: 120,
         salesOrder: 150,
         customerQuote: 150,
+        proposalNumber: 150,
+        proposalName: 150,
         customerOrder: 150,
         supplierBill: 150,
         purchaseOrder: 150,
-        rmaType: 120,
         shipFromAccount: 150,
         shipFromContact: 150,
         returnToAccount: 150,
@@ -75,23 +77,23 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
         logisticsPartner: 150,
         logisticsContact: 150,
         trackingNumber: 150,
-        estimatedDeliveryDate: 160,
-        trackingStatus: 130,
+        trackingStatus: 200,
+        estimatedDeliveryDate: 200,
         actualDeliveryDate: 150,
-        goodsReceiptsDate: 150
+        goodsReceiptDate: 150
     });
 
     const { widths: cmWidths, handleResize: handleCmResize } = useResizableColumns({
         memoNumber: 150,
         status: 120,
         invoice: 150,
+        salesOrder: 150,
         customerQuote: 150,
+        proposalNumber: 150,
+        proposalName: 150,
         customerOrder: 150,
         supplierBill: 150,
         purchaseOrder: 150,
-        salesOrder: 150,
-        creditToAccount: 150,
-        creditToContact: 150,
         totalLines: 100,
         totalPrice: 120,
         shipping: 100,
@@ -99,7 +101,7 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
         totalCreditAmount: 140,
         issuedDate: 120,
         expirationDate: 120,
-        availableCreditBalance: 150,
+        availableCreditBalance: 190,
         settledDate: 120
     });
     const { widths: rtvWidths, handleResize: handleRtvResize } = useResizableColumns({
@@ -195,7 +197,7 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
     return (
         <div className="flex flex-col h-full min-w-0">
             <div className="border-b border-gray-200 dark:border-gray-700">
-                <nav className="-mb-px flex space-x-8 px-4"aria-label="Tabs">
+                <nav className="-mb-px flex space-x-8 px-4" aria-label="Tabs">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
@@ -203,23 +205,23 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
                             className={`
                                  py-4 px-1 border-b-2 font-medium text-sm transition-colors
                                 ${activeSubTab === tab.id
-                                    ?"border-primary text-primary"
-                                    :"border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+                                    ? "border-primary text-primary"
+                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
                                 }
                             `}
                         >
                             {tab.label}
-                            {tab.id ==="rmas"&& rma.length > 0 && ` (${rma.length})`}
-                            {tab.id ==="creditMemo"&& creditMemos.length > 0 && ` (${creditMemos.length})`}
-                            {tab.id ==="rtvs"&& rtv.length > 0 && ` (${rtv.length})`}
-                            {tab.id ==="debitMemo"&& debitMemos.length > 0 && ` (${debitMemos.length})`}
+                            {tab.id === "rmas" && rma.length > 0 && ` (${rma.length})`}
+                            {tab.id === "creditMemo" && creditMemos.length > 0 && ` (${creditMemos.length})`}
+                            {tab.id === "rtvs" && rtv.length > 0 && ` (${rtv.length})`}
+                            {tab.id === "debitMemo" && debitMemos.length > 0 && ` (${debitMemos.length})`}
                         </button>
                     ))}
                 </nav>
             </div>
 
             <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2">
-                {activeSubTab ==="rmas"&& (
+                {activeSubTab === "rmas" && (
                     <QuoteRMASubTab
                         rmas={sortedRMAs}
                         loading={false}
@@ -230,7 +232,7 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
                         onResize={handleRmaResize}
                     />
                 )}
-                {activeSubTab ==="creditMemo"&& (
+                {activeSubTab === "creditMemo" && (
                     <QuoteCreditMemoSubTab
                         memos={sortedCMs}
                         loading={false}
@@ -241,7 +243,7 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
                         onResize={handleCmResize}
                     />
                 )}
-                {activeSubTab ==="rtvs"&& (
+                {activeSubTab === "rtvs" && (
                     <QuoteRTVSubTab
                         rtvs={sortedRTVs}
                         loading={false}
@@ -252,7 +254,7 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
                         onResize={handleRtvResize}
                     />
                 )}
-                {activeSubTab ==="debitMemo"&& (
+                {activeSubTab === "debitMemo" && (
                     <QuoteDebitMemoSubTab
                         memos={sortedDMs}
                         loading={false}

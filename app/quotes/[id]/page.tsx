@@ -39,8 +39,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   const { success, error: toastError, warning } = useToast();
 
   const [activeTab, setActiveTab] = useState<QuoteTabType>("quotelines");
-  const [sortField, setSortField] = useState<keyof QuoteLine>("productName");
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [sortField, setSortField] = useState<keyof QuoteLine>("Name");
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   const [quote, setQuote] = useState<QuoteDetails | null>(null);
   const [quoteLines, setQuoteLines] = useState<QuoteLine[]>([]);
@@ -147,15 +147,17 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   const { widths, handleResize } = useResizableColumns({
     Name: 190,
     status: 120,
+    proposedProductName: 200,
     productName: 180,
     manufacturerDBA: 190,
     description: 200,
+    grouping: 150,
     customerQuote: 150,
     supplierBill: 150,
     purchaseOrder: 150,
     customerOrder: 150,
     salesOrder: 150,
-    quantity: 100,
+    quantity: 140,
     unitPrice: 140,
     totalPrice: 120,
     shipping: 100,
@@ -265,8 +267,13 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           Name: item.Name || 'N/A',
           status: item.Status__c || '',
           productName: item.Product_Name || 'N/A',
+          productId: item.Product_Name__c || '',
           description: item.Product_Description__c || '',
           manufacturerDBA: item.Manufacturer_DBA__c || '',
+          brand: item.Product_Brand_Name__c || '',
+          grouping: item.Product_Grouping__c || '',
+          proposedProductName: item.Proposed_Product_Name || '',
+          proposedProductId: item.Proposed_Product__c || '',
           unitPrice: item.Unit_Price__c || 0,
           quantity: item.Total_Order_Qty__c || 0,
           totalPrice: item.Total_Price__c || 0,
@@ -294,8 +301,12 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             status: inv.Status__c || '',
             customerQuote: inv.Customer_Quote_Name || '',
             customerQuoteId: inv.Customer_Quote__c || '',
+            proposalName: inv.Proposal_Name || '',
+            proposalId: inv.Proposal__c || '',
             salesOrder: inv.Sales_Order_Name || '',
             salesOrderId: inv.Sales_Order__c || '',
+            purchaseOrder: inv.Purchase_Order_Name || '',
+            purchaseOrderId: inv.Purchase_Order__c || '',
             customerOrder: inv.Customer_Order_Name || '',
             customerOrderId: inv.Customer_Order__c || '',
             customerPO: inv.Customer_PO__c || '',
@@ -312,7 +323,6 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             dueDate: formatDate(inv.Due_Date__c, 'numeric-dash') || '',
             collectionStatus: inv.Collection_Status__c || '',
             openBalance: inv.Open_Balance__c || 0,
-            daysOutstanding: inv.Days_Outstanding__c || 0,
             settledDate: formatDate(inv.Settled_Date__c, 'numeric-dash') || ''
           })),
           shippingManifests: (json.Shipping_Manifest__c || []).map((sm: any) => ({
@@ -323,6 +333,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             salesOrderId: sm.Sales_Order__c || '',
             customerQuote: sm.Customer_Quote_Name || '',
             customerQuoteId: sm.Customer_Quote__c || '',
+            proposalName: sm.Proposal_Name || '',
+            proposalId: sm.Proposal__c || '',
             customerOrder: sm.Customer_Order_Name || '',
             customerOrderId: sm.Customer_Order__c || '',
             customerPO: sm.Customer_PO__c || '',
@@ -331,15 +343,16 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             shipToContact: sm.Ship_to_Contact_Name || '',
             dropShip: sm.Drop_Ship__c || false,
             boxCount: sm.Box__c || 0,
+            boxLength: sm.Case_Length__c || 0,
+            boxWidth: sm.Case_Width__c || 0,
+            boxHeight: sm.Case_Height__c || 0,
             boxNetWeight: sm.Case_Net_Weight__c || 0,
             boxGrossWeight: sm.Case_Gross_Weight__c || 0,
             totalLines: sm.Total_Lines__c || 0,
             totalPrice: sm.Total_Price__c || 0,
             plannedShipDate: formatDate(sm.Ship_Date__c, 'numeric-dash') || '',
             shipConfirmedDate: formatDate(sm.Delivered_Date__c, 'numeric-dash') || '',
-            shippingMethod: sm.Shipping_Method__c || '',
             logisticsPartner: sm.Logistics_Partner_Name || '',
-            logisticsContact: sm.Logistics_Contact_Name || '',
             trackingNumber: sm.Tracking_Number__c || '',
             estimatedDeliveryDate: formatDate(sm.Estimated_Delivery_Date__c, 'numeric-dash') || '',
             trackingStatus: sm.Tracking_Status__c || '',
@@ -351,6 +364,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             status: so.Status__c || '',
             customerQuote: so.Customer_Quote_Name || '',
             customerQuoteId: so.Customer_Quote__c || '',
+            proposalName: so.Proposal_Name || '',
+            proposalId: so.Proposal__c || '',
             customerOrder: so.Customer_Order_Name || '',
             customerOrderId: so.Customer_Order__c || '',
             customerPO: so.Customer_PO__c || '',
@@ -367,8 +382,6 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             taxes: so.Total_Taxes_Amount__c || 0,
             grandTotal: so.Grand_Total__c || 0,
             requestDate: formatDate(so.Request_Date__c, 'numeric-dash') || '',
-            pickDate: formatDate(so.Pick_Date__c, 'numeric-dash') || '',
-            pickCompleteDate: formatDate(so.Pick_Complete_Date__c, 'numeric-dash') || '',
             plannedShipDate: formatDate(so.Ship_Date__c, 'numeric-dash') || '',
             shipConfirmedDate: formatDate(so.Delivered_Date__c, 'numeric-dash') || ''
           }))
@@ -444,6 +457,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             salesOrderId: r.Sales_Order__c || '',
             customerQuote: r.Customer_Quote_Name || '',
             customerQuoteId: r.Customer_Quote__c || '',
+            proposalName: r.Proposal_Name || '',
+            proposalId: r.Proposal__c || '',
             customerOrder: r.Customer_Order_Name || '',
             customerOrderId: r.Customer_Order__c || '',
             supplierBill: r.Supplier_Bill_Name || '',
@@ -467,7 +482,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             estimatedDeliveryDate: formatDate(r.Estimated_Delivery_Date__c, 'numeric-dash') || '',
             trackingStatus: r.Tracking_Status__c || '',
             actualDeliveryDate: formatDate(r.Actual_Delivery_Date__c, 'numeric-dash') || '',
-            goodsReceiptsDate: formatDate(r.Goods_Receipt_Date__c, 'numeric-dash') || ''
+            goodsReceiptDate: formatDate(r.Goods_Receipt_Date__c, 'numeric-dash') || ''
           })),
           rtv: (json.RTV__c || []).map((r: any) => ({
             id: r.Id,
@@ -503,6 +518,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             invoiceId: c.Invoice__c || '',
             customerQuote: c.Customer_Quote_Name || '',
             customerQuoteId: c.Customer_Quote__c || '',
+            proposalName: c.Proposal_Name || '',
+            proposalId: c.Proposal__c || '',
             customerOrder: c.Customer_Order_Name || '',
             customerOrderId: c.Customer_Order__c || '',
             supplierBill: c.Supplier_Bill_Name || '',
@@ -511,8 +528,6 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             purchaseOrderId: c.Purchase_Order__c || '',
             salesOrder: c.Sales_Order_Name || '',
             salesOrderId: c.Sales_Order__c || '',
-            creditToAccount: c.Credit_to_Account_Name || '',
-            creditToContact: c.Credit_to_Contact_Name || '',
             totalLines: c.Total_Lines__c || 0,
             totalPrice: c.Total_Price__c || 0,
             shipping: c.Total_Shipping_Charges__c || 0,

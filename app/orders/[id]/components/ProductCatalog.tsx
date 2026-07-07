@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import Link from "next/link";
 import { Product } from "@/app/orders/types";
 import Pagination from "@/components/ui/Pagination";
 import { formatCurrency, formatNumber, truncateText, displayCell } from "@/lib/utils/formatting";
@@ -168,7 +169,13 @@ export default function ProductCatalog({
                                         </div>
                                     </td>*/}
                                     <td className="px-3 py-2 text-left truncate">
-                                        <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.name}>{truncateText(product.name, 50)}</div>
+                                        <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.name}>
+                                            <Link href={`/products/${product.id}`}
+                                                className="text-gray-900 hover:text-primary dark:text-gray-600 dark:hover:text-primary transition-colors p-1"
+                                                title="Product Details" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                {truncateText(product.name, 50)}
+                                            </Link>
+                                        </div>
                                         <div className="text-sm text-gray-500 dark:text-gray-400 truncate break-words" title={product.description || "—"}>
                                             {product.description ? truncateText(product.description, 50) : "—"}
                                         </div>

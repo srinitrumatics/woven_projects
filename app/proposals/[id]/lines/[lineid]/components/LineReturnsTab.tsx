@@ -124,7 +124,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
         productDescription: 300,
         manufacturerDBA: 150,
         unitPrice: 120,
-        creditQty: 100,
+        creditQty: 120,
         totalPrice: 120,
         shipping: 120,
         taxes: 120,
@@ -375,7 +375,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.productDescription} onResize={handleCreditResize} truncate={false} />
                                             <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.manufacturerDBA} onResize={handleCreditResize} truncate={false} />
                                             <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.unitPrice} onResize={handleCreditResize} truncate={false} />
-                                            <SortableHeader label="Credit Qty" field="creditQty" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.creditQty} onResize={handleCreditResize} truncate={false} />
+                                            <SortableHeader label="Credited Qty" field="creditQty" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.creditQty} onResize={handleCreditResize} truncate={false} />
                                             <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.totalPrice} onResize={handleCreditResize} truncate={false} />
                                             <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.shipping} onResize={handleCreditResize} truncate={false} />
                                             <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.taxes} onResize={handleCreditResize} truncate={false} />

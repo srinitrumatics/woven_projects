@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from"react";
-import { useSortableData } from"@/hooks/useSortableData";
-import { useResizableColumns } from"@/hooks/useResizableColumns";
-import QuoteLineRMALinesSubTab from"./QuoteLineRMALinesSubTab";
-import QuoteLineCreditMemoLinesSubTab from"./QuoteLineCreditMemoLinesSubTab";
-import QuoteLineRTVLinesSubTab from"./QuoteLineRTVLinesSubTab";
-import QuoteLineDebitMemoLinesSubTab from"./QuoteLineDebitMemoLinesSubTab";
+import { useEffect, useMemo, useState } from "react";
+import { useSortableData } from "@/hooks/useSortableData";
+import { useResizableColumns } from "@/hooks/useResizableColumns";
+import QuoteLineRMALinesSubTab from "./QuoteLineRMALinesSubTab";
+import QuoteLineCreditMemoLinesSubTab from "./QuoteLineCreditMemoLinesSubTab";
+import QuoteLineRTVLinesSubTab from "./QuoteLineRTVLinesSubTab";
+import QuoteLineDebitMemoLinesSubTab from "./QuoteLineDebitMemoLinesSubTab";
 
 interface DebitMemoLine {
     id: string;
@@ -59,8 +59,8 @@ interface CreditMemoLine {
     salesOrderLineId: string;
     customerQuoteLine: string;
     customerQuoteLineId: string;
-    invoiceLine: string;
-    invoiceLineId: string;
+    proposedProductName?: string;
+    proposedProductId?: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -83,6 +83,8 @@ interface RMALine {
     salesOrderLineId: string;
     customerQuoteLine: string;
     customerQuoteLineId: string;
+    proposedProductName?: string;
+    proposedProductId?: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -92,15 +94,12 @@ interface RMALine {
     totalPrice: number;
     reasonCode: string;
     openBalanceQty: number;
-    trackingNumber: string;
-    estimatedDeliveryDate: string;
-    actualDeliveryDate: string;
-    trackingStatus: string;
     receiptDate: string;
 }
 
 interface QuoteLineReturnsTabProps {
     lineId: string;
+    quoteId: string;
     loading: boolean;
     accountId?: string;
     contactId?: string;
@@ -109,13 +108,14 @@ interface QuoteLineReturnsTabProps {
 
 export default function QuoteLineReturnsTab({
     lineId,
+    quoteId,
     loading: initialLoading,
     accountId,
     contactId,
     accountType
 }: QuoteLineReturnsTabProps) {
     const isCustomerOrNSO = accountType?.toLowerCase() === 'customer' || accountType?.toLowerCase() === 'nso';
-    const [activeSubTab, setActiveSubTab] = useState<"DebitMemos"|"RTVs"|"CreditMemos"|"RMAs">("RMAs");
+    const [activeSubTab, setActiveSubTab] = useState<"DebitMemos" | "RTVs" | "CreditMemos" | "RMAs">("RMAs");
     const [loading, setLoading] = useState(initialLoading);
     const [dmliData, setDmliData] = useState<DebitMemoLine[]>([]);
     const [rtvlData, setRtvlData] = useState<RTVLine[]>([]);
@@ -152,7 +152,7 @@ export default function QuoteLineReturnsTab({
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
-                            brand: undefined,
+                            brand: item.Product_Brand_Name__c,
                             debitQty: item.Debit_Qty__c || 0,
                             unitCost: item.Unit_Cost__c || 0,
                             totalCost: item.Total_Cost__c || 0,
@@ -176,7 +176,7 @@ export default function QuoteLineReturnsTab({
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
-                            brand: undefined,
+                            brand: item.Product_Brand_Name__c,
                             returnQty: item.Return_Qty__c || 0,
                             unitCost: item.Unit_Cost__c || 0,
                             totalCost: item.Total_Cost__c || 0,
@@ -196,12 +196,12 @@ export default function QuoteLineReturnsTab({
                             salesOrderLineId: item.Sales_Order_Line__c,
                             customerQuoteLine: item.Customer_Quote_Line_Name,
                             customerQuoteLineId: item.Customer_Quote_Line__c,
-                            invoiceLine: item.Invoice_Line_Name,
-                            invoiceLineId: item.Invoice_Line__c,
+                            proposedProductName: item.Proposed_Product_Name || '',
+                            proposedProductId: item.Proposed_Product__c || '',
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
-                            brand: undefined,
+                            brand: item.Product_Brand_Name__c || '',
                             creditQty: item.Credit_Qty__c || 0,
                             unitPrice: item.Unit_Price__c || 0,
                             totalPrice: item.Total_Price__c || 0,
@@ -223,19 +223,17 @@ export default function QuoteLineReturnsTab({
                             salesOrderLineId: item.Sales_Order_Line__c,
                             customerQuoteLine: item.Customer_Quote_Line_Name,
                             customerQuoteLineId: item.Customer_Quote_Line__c,
+                            proposedProductName: item.Proposed_Product_Name || '',
+                            proposedProductId: item.Proposed_Product__c || '',
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
-                            brand: undefined,
+                            brand: item.Product_Brand_Name__c || '',
                             returnQty: item.Return_Qty__c || 0,
                             unitPrice: item.Unit_Price__c || 0,
                             totalPrice: item.Total_Price__c || 0,
                             reasonCode: item.Reason_Code__c,
                             openBalanceQty: item.Open_Balance_Qty__c || 0,
-                            trackingNumber: item.Tracking_Number__c,
-                            estimatedDeliveryDate: item.Estimated_Delivery_Date__c,
-                            actualDeliveryDate: item.Actual_Delivery_Date__c,
-                            trackingStatus: item.Tracking_Status__c,
                             receiptDate: item.Goods_Receipt_Date__c
                         })));
                     }
@@ -251,13 +249,13 @@ export default function QuoteLineReturnsTab({
     }, [lineId, accountId, contactId]);
 
     const activeData = useMemo(() => {
-        if (activeSubTab ==="DebitMemos") return dmliData;
-        if (activeSubTab ==="RTVs") return rtvlData;
-        if (activeSubTab ==="CreditMemos") return cmliData;
+        if (activeSubTab === "DebitMemos") return dmliData;
+        if (activeSubTab === "RTVs") return rtvlData;
+        if (activeSubTab === "CreditMemos") return cmliData;
         return rmalData;
     }, [activeSubTab, dmliData, rtvlData, cmliData, rmalData]);
 
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(activeData, { key: 'name', direction: 'desc' });
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<any>(activeData, { key: 'lineName', direction: 'asc' });
     const { widths, handleResize } = useResizableColumns({
         lineName: 180,
         status: 120,
@@ -268,8 +266,8 @@ export default function QuoteLineReturnsTab({
         purchaseOrderLine: 180,
         salesOrderLine: 180,
         customerQuoteLine: 180,
+        proposedProductName: 180,
         supplierBillLine: 180,
-        invoiceLine: 180,
         productName: 150,
         description: 200,
         manufacturerDBA: 150,
@@ -282,13 +280,9 @@ export default function QuoteLineReturnsTab({
         totalPrice: 120,
         shipping: 100,
         taxes: 100,
-        grandTotal: 120,
+        grandTotal: 150,
         reasonCode: 150,
-        openBalanceQty: 120,
-        trackingNumber: 150,
-        estimatedDeliveryDate: 150,
-        actualDeliveryDate: 150,
-        trackingStatus: 120,
+        openBalanceQty: 150,
         receiptDate: 150
     });
 
@@ -309,7 +303,7 @@ export default function QuoteLineReturnsTab({
                     { key: "CreditMemos", label: "Credit Memos Lines", count: cmliData.length },
                     { key: "RTVs", label: "RTVs Lines", count: rtvlData.length },
                     { key: "DebitMemos", label: "Debit Memos Lines", count: dmliData.length },
-                ] as { key: "DebitMemos"|"RTVs"|"CreditMemos"|"RMAs"; label: string; count: number }[]).filter(tab => {
+                ] as { key: "DebitMemos" | "RTVs" | "CreditMemos" | "RMAs"; label: string; count: number }[]).filter(tab => {
                     if (isCustomerOrNSO && (tab.key === 'RTVs' || tab.key === 'DebitMemos')) return false;
                     return true;
                 })).map((tab) => (
@@ -328,9 +322,10 @@ export default function QuoteLineReturnsTab({
 
             {/* Table Area */}
             <div className="bg-white dark:bg-gray-800">
-                {activeSubTab ==="RMAs"&& (
+                {activeSubTab === "RMAs" && (
                     <QuoteLineRMALinesSubTab
                         data={rmalData}
+                        quoteId={quoteId}
                         loading={loading}
                         sortConfig={sortConfig}
                         requestSort={requestSort}
@@ -338,9 +333,10 @@ export default function QuoteLineReturnsTab({
                         handleResize={handleResize}
                     />
                 )}
-                {activeSubTab ==="CreditMemos"&& (
+                {activeSubTab === "CreditMemos" && (
                     <QuoteLineCreditMemoLinesSubTab
                         data={cmliData}
+                        quoteId={quoteId}
                         loading={loading}
                         sortConfig={sortConfig}
                         requestSort={requestSort}
@@ -348,7 +344,7 @@ export default function QuoteLineReturnsTab({
                         handleResize={handleResize}
                     />
                 )}
-                {activeSubTab ==="RTVs"&& (
+                {activeSubTab === "RTVs" && (
                     <QuoteLineRTVLinesSubTab
                         data={rtvlData}
                         loading={loading}
@@ -358,7 +354,7 @@ export default function QuoteLineReturnsTab({
                         handleResize={handleResize}
                     />
                 )}
-                {activeSubTab ==="DebitMemos"&& (
+                {activeSubTab === "DebitMemos" && (
                     <QuoteLineDebitMemoLinesSubTab
                         data={dmliData}
                         loading={loading}
