@@ -149,11 +149,15 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
     // Pagination state
     const [rmaPage, setRmaPage] = useState(1);
     const [cmPage, setCmPage] = useState(1);
+    const [dmPage, setDmPage] = useState(1);
+    const [rtvPage, setRtvPage] = useState(1);
 
     // Reset pages when switching sub-tabs
     useEffect(() => {
         setRmaPage(1);
         setCmPage(1);
+        setDmPage(1);
+        setRtvPage(1);
     }, [activeSubTab]);
 
     const { items: sortedRmaList, requestSort: requestSortRma, sortConfig: sortConfigRma } = useSortableData(rmaList, { key: 'Name', direction: 'desc' });
@@ -164,6 +168,8 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
     // Paged slices
     const pagedRmaList = useMemo(() => sortedRmaList.slice((rmaPage - 1) * ITEMS_PER_PAGE, rmaPage * ITEMS_PER_PAGE), [sortedRmaList, rmaPage]);
     const pagedCreditMemos = useMemo(() => sortedCreditMemos.slice((cmPage - 1) * ITEMS_PER_PAGE, cmPage * ITEMS_PER_PAGE), [sortedCreditMemos, cmPage]);
+    const pagedDebitMemos = useMemo(() => sortedDebitMemos.slice((dmPage - 1) * ITEMS_PER_PAGE, dmPage * ITEMS_PER_PAGE), [sortedDebitMemos, dmPage]);
+    const pagedRtvList = useMemo(() => sortedRtvList.slice((rtvPage - 1) * ITEMS_PER_PAGE, rtvPage * ITEMS_PER_PAGE), [sortedRtvList, rtvPage]);
 
     const { widths, handleResize } = useResizableColumns({});
 
@@ -468,7 +474,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                     </tr>
                                 </thead>
                                 <tbody className={tbodyClass}>
-                                    {sortedDebitMemos.map((dm) => (
+                                    {pagedDebitMemos.map((dm) => (
                                         <tr key={dm.Id} className="group hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                             <td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(dm.Name)}</td>
                                             <td className="px-4 py-3">{statusBadge(dm.Status__c)}</td>
@@ -491,6 +497,16 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                 </tbody>
                             </table>
                         </div>
+                        {sortedDebitMemos.length > ITEMS_PER_PAGE && (
+                            <Pagination
+                                currentPage={dmPage}
+                                totalPages={Math.ceil(sortedDebitMemos.length / ITEMS_PER_PAGE)}
+                                totalItems={sortedDebitMemos.length}
+                                itemsPerPage={ITEMS_PER_PAGE}
+                                onPageChange={setDmPage}
+                                itemName="debit memos"
+                            />
+                        )}
                     </div>
                 )
             )}
@@ -516,7 +532,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                     </tr>
                                 </thead>
                                 <tbody className={tbodyClass}>
-                                    {sortedRtvList.map((rtv) => (
+                                    {pagedRtvList.map((rtv) => (
                                         <tr key={rtv.Id} className="group hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                             <td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(rtv.Name)}</td>
                                             <td className="px-4 py-3">{statusBadge(rtv.Status__c)}</td>
@@ -539,6 +555,16 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                 </tbody>
                             </table>
                         </div>
+                        {sortedRtvList.length > ITEMS_PER_PAGE && (
+                            <Pagination
+                                currentPage={rtvPage}
+                                totalPages={Math.ceil(sortedRtvList.length / ITEMS_PER_PAGE)}
+                                totalItems={sortedRtvList.length}
+                                itemsPerPage={ITEMS_PER_PAGE}
+                                onPageChange={setRtvPage}
+                                itemName="RTVs"
+                            />
+                        )}
                     </div>
                 )
             )}

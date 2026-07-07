@@ -15,7 +15,7 @@ interface TaxesTabProps {
 
 export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     const displayTaxes = taxes && taxes.length > 0 ? taxes : [{
         id: 'default-tax',
         salesTaxRate: 0,
@@ -130,16 +130,7 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
                     </tbody>
                 </table>
             </div>
-            <div className="px-3 py-2">
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                    totalItems={displayTaxes.length}
-                    itemsPerPage={ITEMS_PER_PAGE}
-                    itemName=""
-                />
-            </div>
+
         </div>
     );
 }
