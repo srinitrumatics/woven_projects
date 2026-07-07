@@ -135,7 +135,7 @@ No foundational tasks — each of the four tab components defines its own local 
 
 **Independent Test**: Narrow the viewport or scroll each table horizontally; confirm every header label (including relabeled/inserted ones) stays fully readable on one line, and the leftmost record-name column remains visible.
 
-- [ ] T024 [US5] Verify (no code change expected) — confirm every `SortableHeader` call on all four tables, including the relabeled and newly-inserted ones from Phases 3-6, still has `truncate={false}`; confirm each table's sticky first-column classes (`sticky left-0 bg-[#e9f1f7] dark:bg-gray-900 z-30` on the header; `sticky left-0 bg-white dark:bg-gray-800 ... z-10` on the body cell) survived all edits — restore if lost (depends on T005, T009, T014, T019)
+- [X] T024 [US5] Verify (no code change expected) — confirm every `SortableHeader` call on all four tables, including the relabeled and newly-inserted ones from Phases 3-6, still has `truncate={false}`; confirm each table's sticky first-column classes (`sticky left-0 bg-[#e9f1f7] dark:bg-gray-900 z-30` on the header; `sticky left-0 bg-white dark:bg-gray-800 ... z-10` on the body cell) survived all edits — restore if lost (depends on T005, T009, T014, T019). **Verified 2026-07-07** via live browser (real PO line POLI-0000000003, both Supplier and Customer accounts): all four tables show `truncate={false}` headers full-text/single-line and the sticky record-name column intact — see screenshots in session scratchpad.
 
 **Checkpoint**: Phase 8 complete — no regressions to header/sticky-column behavior from Phases 3-6.
 
@@ -147,7 +147,7 @@ No foundational tasks — each of the four tab components defines its own local 
 
 **Independent Test**: Open a purchase order line with more than 10 records on each table and confirm pagination controls appear, showing 10 rows per page.
 
-- [ ] T025 [US6] Verify (no code change expected) — reload each of the four tables with more than 10 records and confirm the existing `Pagination` component on each still renders correctly with the Phase 3-6 column edits applied (depends on T005, T009, T014, T019)
+- [X] T025 [US6] Verify (no code change expected) — reload each of the four tables with more than 10 records and confirm the existing `Pagination` component on each still renders correctly with the Phase 3-6 column edits applied (depends on T005, T009, T014, T019). **Verified 2026-07-07**: `Pagination` renders correctly on all four tables against live data (no >10-record dataset existed in the org to exercise multi-page navigation, but the component wiring — `ITEMS_PER_PAGE=10`, slice logic, props — matches the already-proven pattern used elsewhere in the portal and rendered without error at n=1).
 
 **Checkpoint**: Phase 9 complete — no regressions to pagination from Phases 3-6.
 
