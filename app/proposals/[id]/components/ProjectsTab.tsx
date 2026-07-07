@@ -1,6 +1,10 @@
+import { useState, useMemo } from "react";
 import { Project, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
+import Pagination from "../../../../components/ui/Pagination";
 import { displayCell } from "@/lib/utils/formatting";
+
+const ITEMS_PER_PAGE = 10;
 
 interface ProjectsTabProps {
     projects: Project[];
@@ -13,9 +17,20 @@ interface ProjectsTabProps {
 }
 
 export default function ProjectsTab({ projects, loading, sortField, sortDirection, onSort, widths, onResize }: ProjectsTabProps) {
+    const [currentPage, setCurrentPage] = useState(1);
 
     const sortConfig = { key: sortField as string, direction: sortDirection };
-    const requestSort = (key: string) => onSort(key as keyof Project);
+    const requestSort = (key: string) => {
+        onSort(key as keyof Project);
+        setCurrentPage(1);
+    };
+
+    const paginatedProjects = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return projects.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [projects, currentPage]);
+
+    const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
 
     if (loading) {
         return (
@@ -53,7 +68,7 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            {projects.map((project) => (
+                            {paginatedProjects.map((project) => (
                                 <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate">
                                         {displayCell(project.projectNumber)}
@@ -112,6 +127,17 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                         </tbody>
                     </table>
                 )}
+            </div>
+
+            <div className="px-3 py-2">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={projects.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName="Projects"
+                />
             </div>
         </div>
     );

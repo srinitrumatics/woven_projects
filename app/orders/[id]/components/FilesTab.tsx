@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { FileData } from "@/app/orders/types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import { formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
+import Pagination from "../../../../components/ui/Pagination";
+
+const ITEMS_PER_PAGE = 10;
 
 interface FilesTabProps {
     orderId: string;
@@ -16,6 +19,7 @@ interface FilesTabProps {
 export default function FilesTab({ orderId, accountId, contactId, isEditing = false, onFilesCountChange }: FilesTabProps) {
     const [files, setFiles] = useState<FileData[]>([]);
     const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
     const [selectedFileIds, setSelectedFileIds] = useState<Set<string>>(new Set());
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
     const { success, error: toastError, confirm: confirmToast } = useToast();
@@ -44,7 +48,18 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
         fetchFiles();
     }, [orderId, accountId, contactId]);
 
-    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<FileData>(files, { key: 'Title', direction: 'desc' });
+    const { items: sortedFiles, requestSort: originalRequestSort, sortConfig } = useSortableData<FileData>(files, { key: 'Title', direction: 'desc' });
+    const requestSort = (key: string) => {
+        originalRequestSort(key as any);
+        setCurrentPage(1);
+    };
+
+    const paginatedFiles = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return sortedFiles.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [sortedFiles, currentPage]);
+
+    const totalPages = Math.ceil(files.length / ITEMS_PER_PAGE);
 
     // helpers
     function decodeHtmlEntities(s: string) {
@@ -318,7 +333,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            {sortedFiles.map(file => (
+                            {paginatedFiles.map(file => (
                                 <tr key={file.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                     {isEditing && (
                                         <td className="px-2 py-3 truncate">
@@ -387,6 +402,19 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                             ))}
                         </tbody>
                     </table>
+                </div>
+            )}
+
+            {!loading && files.length > ITEMS_PER_PAGE && (
+                <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-left">
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                        totalItems={files.length}
+                        itemsPerPage={ITEMS_PER_PAGE}
+                        itemName="Files"
+                    />
                 </div>
             )}
         </div>

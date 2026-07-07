@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatDate, formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
+import Pagination from "@/components/ui/Pagination";
+
+const ITEMS_PER_PAGE = 10;
 
 interface FileData {
     Id: string;
@@ -27,6 +30,7 @@ interface FilesTabProps {
 export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps) {
     const [loading, setLoading] = useState(true);
     const [files, setFiles] = useState<FileData[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
     const { error: toastError } = useToast();
 
@@ -67,7 +71,18 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
         }
     }, [accountId, contactId, lineId]);
 
-    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<FileData>(files, { key: 'Name', direction: 'desc' });
+    const { items: sortedFiles, requestSort: originalRequestSort, sortConfig } = useSortableData<FileData>(files, { key: 'Name', direction: 'desc' });
+    const requestSort = (key: string) => {
+        originalRequestSort(key as any);
+        setCurrentPage(1);
+    };
+
+    const paginatedFiles = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return sortedFiles.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [sortedFiles, currentPage]);
+
+    const totalPages = Math.ceil(files.length / ITEMS_PER_PAGE);
 
     const { widths, handleResize } = useResizableColumns({
         fileName: 300,
@@ -176,6 +191,7 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
     }
 
     return (
+        <>
         <div className="overflow-x-auto mt-4 border border-gray-200 dark:border-gray-700 rounded-lg">
             <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 font-medium">
@@ -191,7 +207,7 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {sortedFiles.map((file) => (
+                    {paginatedFiles.map((file) => (
                         <tr key={file.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate" title={file.Title}>
                                 {displayCell(file.Title)}
@@ -244,5 +260,19 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
                 </tbody>
             </table>
         </div>
+
+        {files.length > ITEMS_PER_PAGE && (
+            <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-left">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={files.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName="Files"
+                />
+            </div>
+        )}
+        </>
     );
 }

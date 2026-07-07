@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { InvoiceFile } from "@/app/invoices/types";
 import { formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useToast } from "@/components/ui/Toast";
+import Pagination from "@/components/ui/Pagination";
+
+const ITEMS_PER_PAGE = 10;
 
 interface InvoiceFilesProps {
     files: InvoiceFile[];
@@ -16,9 +19,21 @@ interface InvoiceFilesProps {
 }
 
 export default function InvoiceFiles({ files, invoiceId, accountId, contactId }: InvoiceFilesProps) {
+    const [currentPage, setCurrentPage] = useState(1);
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
     const { error } = useToast();
-    const { items: sortedFiles, requestSort, sortConfig } = useSortableData<InvoiceFile>(files, { key: 'fileName', direction: 'desc' });
+    const { items: sortedFiles, requestSort: originalRequestSort, sortConfig } = useSortableData<InvoiceFile>(files, { key: 'fileName', direction: 'desc' });
+    const requestSort = (key: string) => {
+        originalRequestSort(key as any);
+        setCurrentPage(1);
+    };
+
+    const paginatedFiles = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return sortedFiles.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [sortedFiles, currentPage]);
+
+    const totalPages = Math.ceil(files.length / ITEMS_PER_PAGE);
     const { widths, handleResize } = useResizableColumns({
         name: 300,
         type: 120,
@@ -130,6 +145,7 @@ export default function InvoiceFiles({ files, invoiceId, accountId, contactId }:
     }
 
     return (
+        <>
         <div className="overflow-x-auto">
             <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
@@ -143,7 +159,7 @@ export default function InvoiceFiles({ files, invoiceId, accountId, contactId }:
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {sortedFiles.map((file) => (
+                    {paginatedFiles.map((file) => (
                         <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">
                                 <div className="flex items-center gap-2 min-w-0">
@@ -180,5 +196,19 @@ export default function InvoiceFiles({ files, invoiceId, accountId, contactId }:
                 </tbody>
             </table>
         </div>
+
+        {files.length > ITEMS_PER_PAGE && (
+            <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-left">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={files.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName="Files"
+                />
+            </div>
+        )}
+        </>
     );
 }

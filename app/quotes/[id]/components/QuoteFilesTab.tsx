@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { QuoteFile } from "@/app/quotes/types";
 import { formatDate, formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useToast } from "@/components/ui/Toast";
+import Pagination from "@/components/ui/Pagination";
+
+const ITEMS_PER_PAGE = 10;
 
 interface QuoteFilesTabProps {
     quoteId: string;
@@ -16,6 +19,7 @@ interface QuoteFilesTabProps {
 export default function QuoteFilesTab({ quoteId, accountId, contactId, files, loading }: QuoteFilesTabProps): JSX.Element {
     const [sortField, setSortField] = useState<keyof QuoteFile>("fileName");
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+    const [currentPage, setCurrentPage] = useState(1);
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
     const { error } = useToast();
 
@@ -38,7 +42,10 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
     };
 
     const sortConfig = { key: sortField as string, direction: sortDirection };
-    const requestSort = (key: string) => handleSort(key as keyof QuoteFile);
+    const requestSort = (key: string) => {
+        handleSort(key as keyof QuoteFile);
+        setCurrentPage(1);
+    };
 
     // Helpers from orders/FilesTab.tsx
     function decodeHtmlEntities(s: string) {
@@ -198,6 +205,13 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
         return 0;
     });
 
+    const paginatedFiles = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return sortedFiles.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [sortedFiles, currentPage]);
+
+    const totalPages = Math.ceil(files.length / ITEMS_PER_PAGE);
+
     if (loading) {
         return (
             <div className="flex justify-center items-center py-12 min-w-0">
@@ -228,7 +242,7 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {sortedFiles.map((file) => (
+                        {paginatedFiles.map((file) => (
                             <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                 <td className="px-3 py-2 text-sm sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.fileName }}>
                                     <div className="flex items-center gap-3 min-w-0">
@@ -294,6 +308,19 @@ export default function QuoteFilesTab({ quoteId, accountId, contactId, files, lo
                         ))}
                     </tbody>
                 </table>
+            )}
+
+            {files.length > ITEMS_PER_PAGE && (
+                <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-left">
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                        totalItems={files.length}
+                        itemsPerPage={ITEMS_PER_PAGE}
+                        itemName="Files"
+                    />
+                </div>
             )}
         </div>
     );

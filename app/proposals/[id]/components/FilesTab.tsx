@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ProposalFile, SortDirection } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
+import Pagination from "../../../../components/ui/Pagination";
 import { formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
+
+const ITEMS_PER_PAGE = 10;
 
 interface FilesTabProps {
     files: ProposalFile[];
@@ -32,10 +35,21 @@ export default function FilesTab({
     contactId
 }: FilesTabProps) {
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
+    const [currentPage, setCurrentPage] = useState(1);
     const { error: toastError } = useToast();
 
     const sortConfig = { key: sortField as string, direction: sortDirection };
-    const requestSort = (key: string) => onSort(key as keyof ProposalFile);
+    const requestSort = (key: string) => {
+        onSort(key as keyof ProposalFile);
+        setCurrentPage(1);
+    };
+
+    const paginatedFiles = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return files.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [files, currentPage]);
+
+    const totalPages = Math.ceil(files.length / ITEMS_PER_PAGE);
 
     // helpers
     function decodeHtmlEntities(s: string) {
@@ -234,7 +248,7 @@ export default function FilesTab({
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            {files.map(file => (
+                            {paginatedFiles.map(file => (
                                 <tr
                                     key={file.id}
                                     className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors cursor-pointer ${selectedFiles.has(file.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}
@@ -297,6 +311,17 @@ export default function FilesTab({
                         </tbody>
                     </table>
                 )}
+            </div>
+
+            <div className="px-3 py-2">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={files.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName="Files"
+                />
             </div>
         </div>
     );
