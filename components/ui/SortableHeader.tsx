@@ -23,7 +23,7 @@ export function SortableHeader({
     align = "left",
     width,
     onResize,
-    truncate = true,
+    truncate = false,
     style = {}
 }: SortableHeaderProps) {
     const isSorted = sortConfig?.key === field;

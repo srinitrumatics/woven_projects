@@ -605,19 +605,19 @@ export default function InventoryPage() {
                                             onChange={toggleSelectAll}
                                         />
                                     </th>
-                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} truncate={false} className="sticky bg-primary-light dark:bg-gray-900 z-20" style={{ left: widths.checkbox }} />
-                                    <SortableHeader label="Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.family} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Avg Unit Price" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Total OH Value" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalValue} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Total CV (IN)" field="totalUnitCVInches" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvIn} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Total CV (SQFT)" field="totalUnitCVSQFT" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvSqft} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Avg Age (Days)" field="avgInventoryAge" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Total Positions" field="totalPositions" sortConfig={sortConfig} requestSort={requestSort} width={widths.positions} onResize={handleResize} truncate={false} />
-                                    <SortableHeader label="Sites" field="countSites" sortConfig={sortConfig} requestSort={requestSort} width={widths.sites} onResize={handleResize} truncate={false} />
+                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} className="sticky bg-primary-light dark:bg-gray-900 z-20" style={{ left: widths.checkbox }} />
+                                    <SortableHeader label="Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
+                                    <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} />
+                                    <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.family} onResize={handleResize} />
+                                    <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} />
+                                    <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} />
+                                    <SortableHeader label="Avg Unit Price" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
+                                    <SortableHeader label="Total OH Value" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalValue} onResize={handleResize} />
+                                    <SortableHeader label="Total CV (IN)" field="totalUnitCVInches" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvIn} onResize={handleResize} />
+                                    <SortableHeader label="Total CV (SQFT)" field="totalUnitCVSQFT" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvSqft} onResize={handleResize} />
+                                    <SortableHeader label="Avg Age (Days)" field="avgInventoryAge" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} />
+                                    <SortableHeader label="Total Positions" field="totalPositions" sortConfig={sortConfig} requestSort={requestSort} width={widths.positions} onResize={handleResize} />
+                                    <SortableHeader label="Sites" field="countSites" sortConfig={sortConfig} requestSort={requestSort} width={widths.sites} onResize={handleResize} />
                                     <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.actions }}>Action</th>
                                 </tr>
                             </thead>

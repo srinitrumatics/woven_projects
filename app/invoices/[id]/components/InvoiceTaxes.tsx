@@ -66,20 +66,20 @@ export default function InvoiceTaxes(props: InvoiceTaxesProps) {
                 <table className="w-full text-sm text-left table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
-                            <SortableHeader truncate={false} label="Sales Tax Rate" field="salesTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesRate} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Sales Tax Amount" field="salesTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesAmount} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Use Tax Rate" field="useTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.useRate} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Use Tax Amount" field="useTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.useAmount} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Local Tax Rate" field="localTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.localRate} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Local Tax Amount" field="localTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.localAmount} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Excise Tax Rate" field="exciseTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseRate} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Excise Tax Amount" field="exciseTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseAmount} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="GRT Rate" field="grtRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.grtRate} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="GRT Amount" field="grtAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.grtAmount} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="GST Rate" field="gstRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstRate} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="GST Amount" field="gstAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstAmount} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="VAT Rate" field="vatRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatRate} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="VAT Amount" field="vatAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatAmount} onResize={handleResize} />
+                            <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesRate} onResize={handleResize} />
+                            <SortableHeader label="Sales Tax Amount" field="salesTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesAmount} onResize={handleResize} />
+                            <SortableHeader label="Use Tax Rate" field="useTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.useRate} onResize={handleResize} />
+                            <SortableHeader label="Use Tax Amount" field="useTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.useAmount} onResize={handleResize} />
+                            <SortableHeader label="Local Tax Rate" field="localTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.localRate} onResize={handleResize} />
+                            <SortableHeader label="Local Tax Amount" field="localTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.localAmount} onResize={handleResize} />
+                            <SortableHeader label="Excise Tax Rate" field="exciseTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseRate} onResize={handleResize} />
+                            <SortableHeader label="Excise Tax Amount" field="exciseTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.exciseAmount} onResize={handleResize} />
+                            <SortableHeader label="GRT Rate" field="grtRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.grtRate} onResize={handleResize} />
+                            <SortableHeader label="GRT Amount" field="grtAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.grtAmount} onResize={handleResize} />
+                            <SortableHeader label="GST Rate" field="gstRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstRate} onResize={handleResize} />
+                            <SortableHeader label="GST Amount" field="gstAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.gstAmount} onResize={handleResize} />
+                            <SortableHeader label="VAT Rate" field="vatRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatRate} onResize={handleResize} />
+                            <SortableHeader label="VAT Amount" field="vatAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatAmount} onResize={handleResize} />
                         </tr>
                         <tr aria-hidden="true" className="h-0 border-none"></tr>
                     </thead>

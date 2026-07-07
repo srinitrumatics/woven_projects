@@ -113,26 +113,26 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                 <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader truncate={false} label="Supplier Bill #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
-                            <SortableHeader truncate={false} label="Status" field="Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Purchase Order #" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Customer Quote #" field="Customer_Quote_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuote} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.proposalNumber} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.proposalName} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Customer Order #" field="Customer_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerOrder} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipToAccount} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipToLocation} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipToContact} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Total Lines" field="Total_Lines__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalLines} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Total Amount" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalAmount} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Shipping" field="shippingCost" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipping} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.grandTotal} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Billed Date" field="Billed_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billedDate} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Payment Terms" field="Payment_Terms__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.paymentTerms} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Due Date" field="Due_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.dueDate} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Remittance Status" field="Remittance_Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.remittanceStatus} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Open Balance" field="Open_Balance__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.openBalance} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Settled Date" field="Settled_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.settledDate} onResize={handleResize} />
+                            <SortableHeader label="Supplier Bill #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
+                            <SortableHeader label="Status" field="Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
+                            <SortableHeader label="Purchase Order #" field="Purchase_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
+                            <SortableHeader label="Customer Quote #" field="Customer_Quote_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuote} onResize={handleResize} />
+                            <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.proposalNumber} onResize={handleResize} />
+                            <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.proposalName} onResize={handleResize} />
+                            <SortableHeader label="Customer Order #" field="Customer_Order_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerOrder} onResize={handleResize} />
+                            <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipToAccount} onResize={handleResize} />
+                            <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipToLocation} onResize={handleResize} />
+                            <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipToContact} onResize={handleResize} />
+                            <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalLines} onResize={handleResize} />
+                            <SortableHeader label="Total Amount" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalAmount} onResize={handleResize} />
+                            <SortableHeader label="Shipping" field="shippingCost" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipping} onResize={handleResize} />
+                            <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.grandTotal} onResize={handleResize} />
+                            <SortableHeader label="Billed Date" field="Billed_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.billedDate} onResize={handleResize} />
+                            <SortableHeader label="Payment Terms" field="Payment_Terms__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.paymentTerms} onResize={handleResize} />
+                            <SortableHeader label="Due Date" field="Due_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.dueDate} onResize={handleResize} />
+                            <SortableHeader label="Remittance Status" field="Remittance_Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.remittanceStatus} onResize={handleResize} />
+                            <SortableHeader label="Open Balance" field="Open_Balance__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.openBalance} onResize={handleResize} />
+                            <SortableHeader label="Settled Date" field="Settled_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.settledDate} onResize={handleResize} />
                             <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap" style={{ width: columnWidths.action }}>Action</th>
                         </tr>
                     </thead>

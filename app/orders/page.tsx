@@ -866,22 +866,22 @@ export default function OrdersPage() {
             <table className="w-full table-fixed">
               <thead className="bg-primary-light dark:bg-gray-900">
                 <tr>
-                  <SortableHeader label="Customer Order #" field="name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-20" truncate={false} />
-                  <SortableHeader label="Status" field="status" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Proposal #" field="proposal_id" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalId} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Proposal Name" field="proposal_name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal_name} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Customer PO" field="customerPO" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Bill to Account" field="billToAccountName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToAccountName} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Bill to Location" field="billToLocationName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocationName} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Bill to Contact" field="billToContactName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContactName} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Ship to Account" field="shipToAccountName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccountName} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Ship to Location" field="shipToLocationName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocationName} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Ship to Contact" field="shipToContactName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContactName} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Drop Ship" field="dropShip" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Total Lines" field="items" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Total Price" field="total" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Request Date" field="requestedDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestedDate} onResize={handleResize} truncate={false} />
-                  <SortableHeader label="Create Date" field="createdDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.createdDate} onResize={handleResize} truncate={false} />
+                  <SortableHeader label="Customer Order #" field="name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-20" />
+                  <SortableHeader label="Status" field="status" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                  <SortableHeader label="Proposal #" field="proposal_id" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalId} onResize={handleResize} />
+                  <SortableHeader label="Proposal Name" field="proposal_name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal_name} onResize={handleResize} />
+                  <SortableHeader label="Customer PO" field="customerPO" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
+                  <SortableHeader label="Bill to Account" field="billToAccountName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToAccountName} onResize={handleResize} />
+                  <SortableHeader label="Bill to Location" field="billToLocationName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocationName} onResize={handleResize} />
+                  <SortableHeader label="Bill to Contact" field="billToContactName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContactName} onResize={handleResize} />
+                  <SortableHeader label="Ship to Account" field="shipToAccountName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccountName} onResize={handleResize} />
+                  <SortableHeader label="Ship to Location" field="shipToLocationName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocationName} onResize={handleResize} />
+                  <SortableHeader label="Ship to Contact" field="shipToContactName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContactName} onResize={handleResize} />
+                  <SortableHeader label="Drop Ship" field="dropShip" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={handleResize} />
+                  <SortableHeader label="Total Lines" field="items" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.items} onResize={handleResize} />
+                  <SortableHeader label="Total Price" field="total" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
+                  <SortableHeader label="Request Date" field="requestedDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestedDate} onResize={handleResize} />
+                  <SortableHeader label="Create Date" field="createdDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.createdDate} onResize={handleResize} />
                   <th
                     className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 whitespace-nowrap"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}

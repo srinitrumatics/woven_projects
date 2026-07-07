@@ -287,30 +287,30 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                             <table className={tableClass}>
                                 <thead className={theadClass}>
                                     <tr>
-                                        <SortableHeader label="RMA #" field="Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaName || 160} onResize={handleResize} truncate={false} className={stickyThClass} />
-                                        <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaStatus || 120} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Type" field="RMA_Type__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaType || 120} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaSalesOrder || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Customer Quote #" field="Customer_Quote_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaCustomerQuote || 170} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Proposal #" field="Proposal_Number__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaProposalNum || 140} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Proposal Name" field="Proposal_Name__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaProposalName || 160} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Ship from Account" field="Ship_from_Account_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShipFromAccount || 160} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Ship from Contact" field="Ship_from_Contact_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShipFromContact || 160} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Return to Account" field="Return_to_Account_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaReturnToAccount || 160} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Return to Contact" field="Return_to_Contact_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaReturnToContact || 160} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Drop Ship" field="Drop_Ship__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaDropShip || 110} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTotalLines || 110} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Total Price" field="Total_Price__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTotalPrice || 120} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Issued" field="Issued_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaIssued || 120} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Return By" field="Return_by_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaReturnBy || 130} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Shipping Method" field="Shipping_Method__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShippingMethod || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Logistics Partner" field="Logistics_Partner__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaLogisticsPartner || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Logistics Contact" field="Logistics_Contact__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaLogisticsContact || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Tracking Number" field="Tracking_Number__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTrackingNumber || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Tracking Status" field="Tracking_Status__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTrackingStatus || 140} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Estimated Delivery Date" field="Estimated_Delivery_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaEstDelivery || 190} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Actual Delivery Date" field="Actual_Delivery_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaActualDelivery || 170} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Goods Receipt Date" field="Goods_Receipt_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaGoodsReceipt || 170} onResize={handleResize} truncate={false} />
+                                        <SortableHeader label="RMA #" field="Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaName || 160} onResize={handleResize} className={stickyThClass} />
+                                        <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaStatus || 120} onResize={handleResize} />
+                                        <SortableHeader label="Type" field="RMA_Type__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaType || 120} onResize={handleResize} />
+                                        <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaSalesOrder || 150} onResize={handleResize} />
+                                        <SortableHeader label="Customer Quote #" field="Customer_Quote_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaCustomerQuote || 170} onResize={handleResize} />
+                                        <SortableHeader label="Proposal #" field="Proposal_Number__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaProposalNum || 140} onResize={handleResize} />
+                                        <SortableHeader label="Proposal Name" field="Proposal_Name__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaProposalName || 160} onResize={handleResize} />
+                                        <SortableHeader label="Ship from Account" field="Ship_from_Account_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShipFromAccount || 160} onResize={handleResize} />
+                                        <SortableHeader label="Ship from Contact" field="Ship_from_Contact_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShipFromContact || 160} onResize={handleResize} />
+                                        <SortableHeader label="Return to Account" field="Return_to_Account_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaReturnToAccount || 160} onResize={handleResize} />
+                                        <SortableHeader label="Return to Contact" field="Return_to_Contact_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaReturnToContact || 160} onResize={handleResize} />
+                                        <SortableHeader label="Drop Ship" field="Drop_Ship__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaDropShip || 110} onResize={handleResize} />
+                                        <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTotalLines || 110} onResize={handleResize} />
+                                        <SortableHeader label="Total Price" field="Total_Price__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTotalPrice || 120} onResize={handleResize} />
+                                        <SortableHeader label="Issued" field="Issued_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaIssued || 120} onResize={handleResize} />
+                                        <SortableHeader label="Return By" field="Return_by_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaReturnBy || 130} onResize={handleResize} />
+                                        <SortableHeader label="Shipping Method" field="Shipping_Method__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShippingMethod || 150} onResize={handleResize} />
+                                        <SortableHeader label="Logistics Partner" field="Logistics_Partner__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaLogisticsPartner || 150} onResize={handleResize} />
+                                        <SortableHeader label="Logistics Contact" field="Logistics_Contact__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaLogisticsContact || 150} onResize={handleResize} />
+                                        <SortableHeader label="Tracking Number" field="Tracking_Number__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTrackingNumber || 150} onResize={handleResize} />
+                                        <SortableHeader label="Tracking Status" field="Tracking_Status__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTrackingStatus || 140} onResize={handleResize} />
+                                        <SortableHeader label="Estimated Delivery Date" field="Estimated_Delivery_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaEstDelivery || 190} onResize={handleResize} />
+                                        <SortableHeader label="Actual Delivery Date" field="Actual_Delivery_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaActualDelivery || 170} onResize={handleResize} />
+                                        <SortableHeader label="Goods Receipt Date" field="Goods_Receipt_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaGoodsReceipt || 170} onResize={handleResize} />
                                     </tr>
                                 </thead>
                                 <tbody className={tbodyClass}>
@@ -379,22 +379,22 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                             <table className={tableClass}>
                                 <thead className={theadClass}>
                                     <tr>
-                                        <SortableHeader label="Credit Memo #" field="Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmName || 160} onResize={handleResize} truncate={false} className={stickyThClass} />
-                                        <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmStatus || 120} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Invoice" field="Invoice_Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmInvoice || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmSalesOrder || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Customer Quote #" field="Customer_Quote_Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmCustomerQuote || 170} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Proposal #" field="Proposal_Number__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmProposalNum || 140} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Proposal Name" field="Proposal_Name__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmProposalName || 160} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmTotalLines || 110} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Total Price" field="Total_Price__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmTotalPrice || 120} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Shipping" field="Total_Shipping_Charges__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmShipping || 110} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Taxes" field="Total_Taxes_Amount__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmTaxes || 110} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Total Credit Amount" field="Total_Credit_Amount__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmCreditAmount || 170} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmIssuedDate || 130} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Expiration Date" field="Expiration_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmExpirationDate || 140} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Available Credit Balance" field="Available_Credit_Balance__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmAvailBalance || 190} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Settled Date" field="Settled_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmSettledDate || 130} onResize={handleResize} truncate={false} />
+                                        <SortableHeader label="Credit Memo #" field="Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmName || 160} onResize={handleResize} className={stickyThClass} />
+                                        <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmStatus || 120} onResize={handleResize} />
+                                        <SortableHeader label="Invoice" field="Invoice_Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmInvoice || 150} onResize={handleResize} />
+                                        <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmSalesOrder || 150} onResize={handleResize} />
+                                        <SortableHeader label="Customer Quote #" field="Customer_Quote_Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmCustomerQuote || 170} onResize={handleResize} />
+                                        <SortableHeader label="Proposal #" field="Proposal_Number__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmProposalNum || 140} onResize={handleResize} />
+                                        <SortableHeader label="Proposal Name" field="Proposal_Name__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmProposalName || 160} onResize={handleResize} />
+                                        <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmTotalLines || 110} onResize={handleResize} />
+                                        <SortableHeader label="Total Price" field="Total_Price__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmTotalPrice || 120} onResize={handleResize} />
+                                        <SortableHeader label="Shipping" field="Total_Shipping_Charges__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmShipping || 110} onResize={handleResize} />
+                                        <SortableHeader label="Taxes" field="Total_Taxes_Amount__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmTaxes || 110} onResize={handleResize} />
+                                        <SortableHeader label="Total Credit Amount" field="Total_Credit_Amount__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmCreditAmount || 170} onResize={handleResize} />
+                                        <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmIssuedDate || 130} onResize={handleResize} />
+                                        <SortableHeader label="Expiration Date" field="Expiration_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmExpirationDate || 140} onResize={handleResize} />
+                                        <SortableHeader label="Available Credit Balance" field="Available_Credit_Balance__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmAvailBalance || 190} onResize={handleResize} />
+                                        <SortableHeader label="Settled Date" field="Settled_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmSettledDate || 130} onResize={handleResize} />
                                     </tr>
                                 </thead>
                                 <tbody className={tbodyClass}>
@@ -455,16 +455,16 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                             <table className={tableClass}>
                                 <thead className={theadClass}>
                                     <tr>
-                                        <SortableHeader label="Debit Memo #" field="Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmName || 160} onResize={handleResize} truncate={false} className={stickyThClass} />
-                                        <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmStatus || 120} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmIssuedDate || 130} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Settled Date" field="Settled_Date__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmSettled || 130} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Debit To" field="Debit_to_Account_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmDebitTo || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmCustomerOrder || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmPurchaseOrder || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Supplier Bill" field="Supplier_Bill_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmSupplierBill || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Debit Amount" field="Total_Debit_Amount__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmDebitAmount || 130} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Available Balance" field="Available_Debit_Balance__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmAvailBalance || 160} onResize={handleResize} truncate={false} />
+                                        <SortableHeader label="Debit Memo #" field="Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmName || 160} onResize={handleResize} className={stickyThClass} />
+                                        <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmStatus || 120} onResize={handleResize} />
+                                        <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmIssuedDate || 130} onResize={handleResize} />
+                                        <SortableHeader label="Settled Date" field="Settled_Date__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmSettled || 130} onResize={handleResize} />
+                                        <SortableHeader label="Debit To" field="Debit_to_Account_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmDebitTo || 150} onResize={handleResize} />
+                                        <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmCustomerOrder || 150} onResize={handleResize} />
+                                        <SortableHeader label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmPurchaseOrder || 150} onResize={handleResize} />
+                                        <SortableHeader label="Supplier Bill" field="Supplier_Bill_Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmSupplierBill || 150} onResize={handleResize} />
+                                        <SortableHeader label="Debit Amount" field="Total_Debit_Amount__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmDebitAmount || 130} onResize={handleResize} />
+                                        <SortableHeader label="Available Balance" field="Available_Debit_Balance__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmAvailBalance || 160} onResize={handleResize} />
                                     </tr>
                                 </thead>
                                 <tbody className={tbodyClass}>
@@ -503,16 +503,16 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                             <table className={tableClass}>
                                 <thead className={theadClass}>
                                     <tr>
-                                        <SortableHeader label="RTV #" field="Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvName || 160} onResize={handleResize} truncate={false} className={stickyThClass} />
-                                        <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvStatus || 120} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Type" field="RTV_Type__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvType || 120} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvIssuedDate || 130} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Return By" field="Return_by_Date__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvReturnBy || 130} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Supplier" field="Supplier_Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvSupplier || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Supplier RMA #" field="Supplier_RMA_Number__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvSupplierRma || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvCustomerOrder || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvPurchaseOrder || 150} onResize={handleResize} truncate={false} />
-                                        <SortableHeader label="Total Cost" field="Total_Cost__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvTotal || 120} onResize={handleResize} truncate={false} />
+                                        <SortableHeader label="RTV #" field="Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvName || 160} onResize={handleResize} className={stickyThClass} />
+                                        <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvStatus || 120} onResize={handleResize} />
+                                        <SortableHeader label="Type" field="RTV_Type__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvType || 120} onResize={handleResize} />
+                                        <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvIssuedDate || 130} onResize={handleResize} />
+                                        <SortableHeader label="Return By" field="Return_by_Date__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvReturnBy || 130} onResize={handleResize} />
+                                        <SortableHeader label="Supplier" field="Supplier_Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvSupplier || 150} onResize={handleResize} />
+                                        <SortableHeader label="Supplier RMA #" field="Supplier_RMA_Number__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvSupplierRma || 150} onResize={handleResize} />
+                                        <SortableHeader label="Customer Order" field="Customer_Order_Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvCustomerOrder || 150} onResize={handleResize} />
+                                        <SortableHeader label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvPurchaseOrder || 150} onResize={handleResize} />
+                                        <SortableHeader label="Total Cost" field="Total_Cost__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvTotal || 120} onResize={handleResize} />
                                     </tr>
                                 </thead>
                                 <tbody className={tbodyClass}>

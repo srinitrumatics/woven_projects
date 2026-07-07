@@ -195,24 +195,24 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
                         {/* Sticky first column */}
-                        <SortableHeader label="Shipping Manifest Line #" field="name" sortConfig={sortConfig} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
-                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={handleSort} width={widths.status} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={handleSort} width={widths.salesOrderLineName} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={handleSort} width={widths.customerQuoteLineName} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Proposed Product" field="proposedProduct" sortConfig={sortConfig} requestSort={handleSort} width={widths.proposedProduct} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={handleSort} width={widths.unitPrice} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={handleSort} width={widths.totalOrderQty} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={handleSort} width={widths.totalPrice} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={handleSort} width={widths.qtyShipped} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxCount} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Box Length" field="boxLength" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxLength} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Box Width" field="boxWidth" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxWidth} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Box Height" field="boxHeight" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxHeight} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxNetWeight} onResize={handleResize} align="left" truncate={false} />
-                        <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxGrossWeight} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Shipping Manifest Line #" field="name" sortConfig={sortConfig} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={handleSort} width={widths.status} onResize={handleResize} align="left" />
+                        <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={handleSort} width={widths.salesOrderLineName} onResize={handleResize} align="left" />
+                        <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={handleSort} width={widths.customerQuoteLineName} onResize={handleResize} align="left" />
+                        <SortableHeader label="Proposed Product" field="proposedProduct" sortConfig={sortConfig} requestSort={handleSort} width={widths.proposedProduct} onResize={handleResize} align="left" />
+                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" />
+                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" />
+                        <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" />
+                        <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={handleSort} width={widths.unitPrice} onResize={handleResize} align="left" />
+                        <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={handleSort} width={widths.totalOrderQty} onResize={handleResize} align="left" />
+                        <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={handleSort} width={widths.totalPrice} onResize={handleResize} align="left" />
+                        <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={handleSort} width={widths.qtyShipped} onResize={handleResize} align="left" />
+                        <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxCount} onResize={handleResize} align="left" />
+                        <SortableHeader label="Box Length" field="boxLength" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxLength} onResize={handleResize} align="left" />
+                        <SortableHeader label="Box Width" field="boxWidth" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxWidth} onResize={handleResize} align="left" />
+                        <SortableHeader label="Box Height" field="boxHeight" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxHeight} onResize={handleResize} align="left" />
+                        <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxNetWeight} onResize={handleResize} align="left" />
+                        <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxGrossWeight} onResize={handleResize} align="left" />
                         {/* Action – non-sortable */}
                         <th className="px-3 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.action }}>
                             Action

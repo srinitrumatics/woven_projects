@@ -78,15 +78,15 @@ export default function TrackingInformationTab({ data }: TrackingInformationTabP
                 <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader truncate={false} label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.logisticsPartner} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Logistics Contact" field="logisticsContact" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.logisticsContact} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shippingMethod} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Service Level" field="serviceLevel" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.serviceLevel} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Tracking URL" field="Tracking_URL__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.trackingUrl} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.trackingNumber} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.trackingStatus} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Estimated Delivery Date" field="estimatedDelivery" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.estimatedDelivery} onResize={handleResize} />
-                            <SortableHeader truncate={false} label="Actual Delivery Date" field="actualDelivery" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.actualDelivery} onResize={handleResize} />
+                            <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.logisticsPartner} onResize={handleResize} />
+                            <SortableHeader label="Logistics Contact" field="logisticsContact" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.logisticsContact} onResize={handleResize} />
+                            <SortableHeader label="Shipping Method" field="shippingMethod" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shippingMethod} onResize={handleResize} />
+                            <SortableHeader label="Service Level" field="serviceLevel" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.serviceLevel} onResize={handleResize} />
+                            <SortableHeader label="Tracking URL" field="Tracking_URL__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.trackingUrl} onResize={handleResize} />
+                            <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.trackingNumber} onResize={handleResize} />
+                            <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.trackingStatus} onResize={handleResize} />
+                            <SortableHeader label="Estimated Delivery Date" field="estimatedDelivery" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.estimatedDelivery} onResize={handleResize} />
+                            <SortableHeader label="Actual Delivery Date" field="actualDelivery" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.actualDelivery} onResize={handleResize} />
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

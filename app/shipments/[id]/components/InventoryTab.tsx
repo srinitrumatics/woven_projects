@@ -153,27 +153,27 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
                         {/* 1 – sticky */}
-                        <SortableHeader label="Inventory Position" field="name" sortConfig={sc} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" truncate={false} />
+                        <SortableHeader label="Inventory Position" field="name" sortConfig={sc} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                         {/* 2 */}
-                        <SortableHeader label="Received Date" field="receivedDate" sortConfig={sc} requestSort={handleSort} width={widths.receivedDate} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Received Date" field="receivedDate" sortConfig={sc} requestSort={handleSort} width={widths.receivedDate} onResize={handleResize} align="left" />
                         {/* 3 */}
-                        <SortableHeader label="Age (Days)" field="daysInInventory" sortConfig={sc} requestSort={handleSort} width={widths.daysInInventory} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Age (Days)" field="daysInInventory" sortConfig={sc} requestSort={handleSort} width={widths.daysInInventory} onResize={handleResize} align="left" />
                         {/* 4 */}
-                        <SortableHeader label="Product Name" field="productName" sortConfig={sc} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Product Name" field="productName" sortConfig={sc} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" />
                         {/* 5 */}
-                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sc} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sc} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" />
                         {/* 6 */}
-                        <SortableHeader label="Brand Name" field="brand" sortConfig={sc} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Brand Name" field="brand" sortConfig={sc} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" />
                         {/* 7 */}
-                        <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sc} requestSort={handleSort} width={widths.supplierName} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sc} requestSort={handleSort} width={widths.supplierName} onResize={handleResize} align="left" />
                         {/* 8 */}
-                        <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sc} requestSort={handleSort} width={widths.qtyOnHand} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sc} requestSort={handleSort} width={widths.qtyOnHand} onResize={handleResize} align="left" />
                         {/* 9 */}
-                        <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sc} requestSort={handleSort} width={widths.qtyAvailable} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sc} requestSort={handleSort} width={widths.qtyAvailable} onResize={handleResize} align="left" />
                         {/* 10 */}
-                        <SortableHeader label="Location" field="inventoryLocation" sortConfig={sc} requestSort={handleSort} width={widths.inventoryLocation} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Location" field="inventoryLocation" sortConfig={sc} requestSort={handleSort} width={widths.inventoryLocation} onResize={handleResize} align="left" />
                         {/* 11 */}
-                        <SortableHeader label="Ship Confirmed Date" field="shipConfirmed" sortConfig={sc} requestSort={handleSort} width={widths.shipConfirmed} onResize={handleResize} align="left" truncate={false} />
+                        <SortableHeader label="Ship Confirmed Date" field="shipConfirmed" sortConfig={sc} requestSort={handleSort} width={widths.shipConfirmed} onResize={handleResize} align="left" />
                     </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

@@ -643,11 +643,11 @@ function ListView({ products, canEditProduct, onEdit }: ViewProps) {
           <thead className="bg-primary-light dark:bg-gray-900">
             <tr>
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: 80, minWidth: 80 }}>&nbsp;</th>
-              <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} truncate={false} />
-              <SortableHeader label="Category" field="category" sortConfig={sortConfig} requestSort={requestSort} width={widths.category} onResize={handleResize} truncate={false} />
-              <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} truncate={false} className="hidden md:table-cell" />
-              <SortableHeader label="List Price" field="listPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={handleResize} truncate={false} className="hidden sm:table-cell" />
-              <SortableHeader label="Selling Price" field="price" sortConfig={sortConfig} requestSort={requestSort} width={widths.sellingPrice} onResize={handleResize} truncate={false} />
+              <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
+              <SortableHeader label="Category" field="category" sortConfig={sortConfig} requestSort={requestSort} width={widths.category} onResize={handleResize} />
+              <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} className="hidden md:table-cell" />
+              <SortableHeader label="List Price" field="listPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={handleResize} className="hidden sm:table-cell" />
+              <SortableHeader label="Selling Price" field="price" sortConfig={sortConfig} requestSort={requestSort} width={widths.sellingPrice} onResize={handleResize} />
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Action</th>
             </tr>
           </thead>

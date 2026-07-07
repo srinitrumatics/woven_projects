@@ -134,11 +134,11 @@ export default function InvoiceFiles({ files, invoiceId, accountId, contactId }:
             <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
-                        <SortableHeader truncate={false} label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
-                        <SortableHeader truncate={false} label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={widths.type} onResize={handleResize} />
-                        <SortableHeader truncate={false} label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={widths.size} onResize={handleResize} />
-                        <SortableHeader truncate={false} label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedBy} onResize={handleResize} />
-                        <SortableHeader truncate={false} label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.date} onResize={handleResize} />
+                        <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
+                        <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={widths.type} onResize={handleResize} />
+                        <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={widths.size} onResize={handleResize} />
+                        <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedBy} onResize={handleResize} />
+                        <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.date} onResize={handleResize} />
                         <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.action }}>Action</th>
                     </tr>
                 </thead>

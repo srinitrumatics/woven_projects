@@ -632,14 +632,14 @@ export default function ConfigureOrderPage() {
                 <tr>
                   <th className="px-3 py-3 w-10 text-center"><input type="checkbox" checked={lines.length > 0 && lines.every(l => l.sel)} onChange={e => selAll(e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></th>
                   <th className="px-1 py-3 w-8"></th>
-                  <th className="px-3 py-3 text-sm font-semibold truncate">Level</th>
-                  <th className="px-3 py-3 text-sm font-semibold truncate">Seq</th>
-                  <th className="px-3 py-3 text-sm font-semibold truncate">Product / Sku</th>
-                  <th className="px-3 py-3 text-sm font-semibold truncate">Description</th>
-                  <th className="px-3 py-3 text-sm font-semibold truncate">Brand</th>
-                  <th className="px-3 py-3 text-sm font-semibold text-right truncate">Sell Price</th>
-                  <th className="px-3 py-3 text-sm font-semibold text-center truncate w-24">Qty</th>
-                  <th className="px-3 py-3 text-sm font-semibold text-right truncate">Ext. Price</th>
+                  <th className="px-3 py-3 text-sm font-semibold whitespace-nowrap">Level</th>
+                  <th className="px-3 py-3 text-sm font-semibold whitespace-nowrap">Seq</th>
+                  <th className="px-3 py-3 text-sm font-semibold whitespace-nowrap">Product / Sku</th>
+                  <th className="px-3 py-3 text-sm font-semibold whitespace-nowrap">Description</th>
+                  <th className="px-3 py-3 text-sm font-semibold whitespace-nowrap">Brand</th>
+                  <th className="px-3 py-3 text-sm font-semibold text-right whitespace-nowrap">Sell Price</th>
+                  <th className="px-3 py-3 text-sm font-semibold text-center whitespace-nowrap w-24">Qty</th>
+                  <th className="px-3 py-3 text-sm font-semibold text-right whitespace-nowrap">Ext. Price</th>
                   <th className="px-3 py-3 w-10"></th>
                 </tr>
               </thead>

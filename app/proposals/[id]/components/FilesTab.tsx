@@ -225,11 +225,11 @@ export default function FilesTab({
                                         onChange={onSelectAll}
                                     />
                                 </th>
-                                <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} truncate={false} />
-                                <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={100} truncate={false} />
-                                <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={100} truncate={false} />
-                                <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={180} truncate={false} />
-                                <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={150} truncate={false} />
+                                <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} />
+                                <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={100} />
+                                <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={100} />
+                                <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={180} />
+                                <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={150} />
                                 <th className="px-3 py-2 text-left text-xs font-bold text-gray-900 dark:text-white w-[100px] border-b border-gray-100 dark:border-gray-700 ">Action</th>
                             </tr>
                         </thead>

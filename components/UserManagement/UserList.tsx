@@ -274,12 +274,12 @@ const UserList: React.FC<UserListProps> = ({
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-primary-light dark:bg-gray-900">
               <tr>
-                <SortableHeader label="Contact Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} truncate={false} />
-                <SortableHeader label="Title" field="title" sortConfig={sortConfig} requestSort={requestSort} width={widths.title} onResize={handleResize} truncate={false} />
-                <SortableHeader label="Department" field="department" sortConfig={sortConfig} requestSort={requestSort} width={widths.department} onResize={handleResize} truncate={false} />
-                <SortableHeader label="Email" field="email" sortConfig={sortConfig} requestSort={requestSort} width={widths.email} onResize={handleResize} truncate={false} />
-                <SortableHeader label="Mobile" field="mobile" sortConfig={sortConfig} requestSort={requestSort} width={widths.mobile} onResize={handleResize} truncate={false} />
-                <SortableHeader label="Phone" field="phone" sortConfig={sortConfig} requestSort={requestSort} width={widths.phone} onResize={handleResize} truncate={false} />
+                <SortableHeader label="Contact Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
+                <SortableHeader label="Title" field="title" sortConfig={sortConfig} requestSort={requestSort} width={widths.title} onResize={handleResize} />
+                <SortableHeader label="Department" field="department" sortConfig={sortConfig} requestSort={requestSort} width={widths.department} onResize={handleResize} />
+                <SortableHeader label="Email" field="email" sortConfig={sortConfig} requestSort={requestSort} width={widths.email} onResize={handleResize} />
+                <SortableHeader label="Mobile" field="mobile" sortConfig={sortConfig} requestSort={requestSort} width={widths.mobile} onResize={handleResize} />
+                <SortableHeader label="Phone" field="phone" sortConfig={sortConfig} requestSort={requestSort} width={widths.phone} onResize={handleResize} />
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">

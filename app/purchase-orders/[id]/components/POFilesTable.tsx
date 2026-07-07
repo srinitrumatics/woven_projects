@@ -160,7 +160,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                 <table className="w-full">
                     <thead className="bg-primary-light dark:bg-gray-900">
                         <tr>
-                            <SortableHeader truncate={false}
+                            <SortableHeader
                                 label="File Name"
                                 field="fileName"
                                 sortConfig={sortConfig}
@@ -168,7 +168,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.fileName}
                                 onResize={handleResize}
                             />
-                            <SortableHeader truncate={false}
+                            <SortableHeader
                                 label="Type"
                                 field="fileType"
                                 sortConfig={sortConfig}
@@ -176,7 +176,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.fileType}
                                 onResize={handleResize}
                             />
-                            <SortableHeader truncate={false}
+                            <SortableHeader
                                 label="Size"
                                 field="sizeInBytes"
                                 sortConfig={sortConfig}
@@ -184,7 +184,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.sizeInBytes}
                                 onResize={handleResize}
                             />
-                            <SortableHeader truncate={false}
+                            <SortableHeader
                                 label="Uploaded By"
                                 field="uploadedBy"
                                 sortConfig={sortConfig}
@@ -192,7 +192,7 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                 width={columnWidths.uploadedBy}
                                 onResize={handleResize}
                             />
-                            <SortableHeader truncate={false}
+                            <SortableHeader
                                 label="Date"
                                 field="uploadedDate"
                                 sortConfig={sortConfig}
