@@ -424,16 +424,10 @@ export default function InventoryPage() {
                     <div className="p-4 flex flex-col h-full">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
-                                <Link href="#" className="hover:underline block">
-                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1" title="Average Days Aged">Average Days Aged</p>
-                                </Link>
-                                <div className="flex items-baseline gap-2 group/count">
-                                    <Link href="#" className="hover:underline block">
-                                        <span className="text-3xl font-bold text-gray-900 dark:text-white ">{stats.avgDaysAged.toFixed(2)}</span>
-                                    </Link>
-                                    <Link href="#" className="hover:underline block">
-                                        <span className="text-sm text-gray-500 dark:text-gray-400 ">Days</span>
-                                    </Link>
+                                <p className="text-sm font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1" title="Average Days Aged">Average Days Aged</p>
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-3xl font-bold text-gray-900 dark:text-white ">{stats.avgDaysAged.toFixed(2)}</span>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400 ">Days</span>
                                 </div>
                                 <p className="text-lg font-semibold text-slate-500 mt-1">{formatCurrency(stats.agedTotalValue)}</p>
 
@@ -630,7 +624,7 @@ export default function InventoryPage() {
                             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
                                 {paginatedInventory.length === 0 ? (
                                     <tr>
-                                        <td colSpan={16} className="px-6 py-16 text-center text-gray-500 rounded-b-lg truncate">
+                                        <td colSpan={15} className="px-6 py-16 text-center text-gray-500 rounded-b-lg truncate">
                                             <div className="flex flex-col items-center justify-center min-w-0">
                                                 <svg className="w-20 h-20 text-gray-200 dark:text-gray-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -670,7 +664,7 @@ export default function InventoryPage() {
                                                 </div>
                                             </td>
                                             <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.qtyOnHand)}</td>
-                                            <td className={`px-3 py-2 text-sm font-bold text-left truncate ${item.qtyAvailable === 0 ? 'text-red-600' : 'text-green-600'}`}>{formatNumber(item.qtyAvailable)}</td>
+                                            <td className={`px-3 py-2 text-sm font-bold text-left truncate ${item.qtyAvailable < 1 ? 'text-red-600' : 'text-green-600'}`}>{formatNumber(item.qtyAvailable)}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-white text-left truncate">{formatCurrency(item.unitCost)}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-white text-left truncate">{formatCurrency(item.totalPrice ?? 0)}</td>
                                             <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{formatNumber(item.totalUnitCVInches ?? 0)}</td>

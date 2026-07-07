@@ -142,7 +142,7 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                                     {displayCell(line.Debit_Memo_Name)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || '-'}>
-                                    {line.Customer_Quote_Line__c ? (
+                                    {line.Customer_Quote_Line__c && line.Customer_Quote__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {line.Customer_Quote_Line_Name || 'View Quote Line'}

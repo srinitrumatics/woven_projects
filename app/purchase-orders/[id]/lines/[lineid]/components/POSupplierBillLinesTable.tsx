@@ -135,9 +135,13 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                         {paginatedData.map((line) => (
                             <tr key={line.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={line.Name}>
-                                    <Link href={`/supplier-bills/${line.Supplier_Bill__c}/lines/${line.Id}`} className="text-primary hover:underline font-medium">
-                                        {line.Name}
-                                    </Link>
+                                    {line.Supplier_Bill__c ? (
+                                        <Link href={`/supplier-bills/${line.Supplier_Bill__c}/lines/${line.Id}`} className="text-primary hover:underline font-medium">
+                                            {line.Name}
+                                        </Link>
+                                    ) : (
+                                        <span className="font-medium">{line.Name}</span>
+                                    )}
                                 </td>
                                 <td className="px-4 py-3 truncate"><StatusBadge status={line.Status__c} /></td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Supplier_Bill_Name || '-'}>
@@ -148,7 +152,7 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                     ) : displayCell(line.Supplier_Bill_Name)}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || '-'}>
-                                    {line.Customer_Quote_Line__c ? (
+                                    {line.Customer_Quote_Line__c && line.Customer_Quote__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {line.Customer_Quote_Line_Name || 'View Quote Line'}
