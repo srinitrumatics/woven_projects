@@ -134,7 +134,8 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
 
     // ── Table ──────────────────────────────────────────────────────────────
     return (
-        <div className="overflow-x-auto py-2">
+        <div className="flex flex-col">
+            <div className="overflow-x-auto py-2">
             <table className="w-full text-sm table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
@@ -181,6 +182,7 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                     ))}
                 </tbody>
             </table>
+            </div>
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

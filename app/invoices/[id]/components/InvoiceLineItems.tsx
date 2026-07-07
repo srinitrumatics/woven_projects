@@ -38,8 +38,8 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
         description: 250,
         brand: 180,
         unitPrice: 120,
-        quantity: 100,
-        totalPrice: 120,
+        quantity: 180,
+        totalPrice: 150,
         shipping: 110,
         taxes: 110,
         grandTotal: 140,
@@ -56,7 +56,8 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
     }
 
     return (
-        <div className="overflow-x-auto">
+        <div className="flex flex-col">
+            <div className="overflow-x-auto">
             <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
@@ -191,6 +192,7 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                     ))}
                 </tbody>
             </table>
+            </div>
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

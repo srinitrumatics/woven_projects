@@ -49,7 +49,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                             productName: item.gtherp__Product_Name__c || item.Product_Name || item.Product_Name__c || "",
                             productId: item.Product_Name__c || item.Product__c || "",
                             productDescription: item.gtherp__Product_Description__c || item.Product_Description__c || "",
-                            brand: item.gtherp__Brand_Name__c || item.Brand_Name__c || "",
+                            brand: item.Product_Brand_Name__c || "",
                             shippingManifestName: item.Shipping_Manifest_Name || item.gtherp__Shipping_Manifest__r?.Name || item.Shipping_Manifest__r?.Name || "",
                             shippingManifestId: item.gtherp__Shipping_Manifest__c || item.Shipping_Manifest__c || "",
                             shippingManifestLine: item.gtherp__Shipping_Manifest_Line__c || item.Shipping_Manifest_Line_Name || item.Shipping_Manifest_Line__c || "",
@@ -108,7 +108,8 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
     }
 
     return (
-        <div className="overflow-x-auto mt-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+        <div className="flex flex-col mt-4">
+            <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
             <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
@@ -153,6 +154,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                     ))}
                 </tbody>
             </table>
+            </div>
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

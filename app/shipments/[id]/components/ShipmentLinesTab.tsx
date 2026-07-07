@@ -83,7 +83,7 @@ function mapLine(raw: any): ShipmentLine {
         salesOrderId: raw.Sales_Order_Line__c || "",
         salesOrderLineId: raw.Sales_Order_Line__c || "",
         customerQuoteLineName: raw.Customer_Quote_Line_Name || "",
-        customerQuoteId: raw.Customer_Quote_Line__c || "",
+        customerQuoteId: raw.Customer_Quote__c || "",
         customerQuoteLineId: raw.Customer_Quote_Line__c || "",
         proposedProduct: raw.Proposed_Product_Name || "",
         proposedProductId: raw.Proposed_Product__c || "",
@@ -189,7 +189,8 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
 
     // ── Table ──────────────────────────────────────────────────────────────
     return (
-        <div className="overflow-x-auto">
+        <div className="flex flex-col">
+            <div className="overflow-x-auto">
             <table className="w-full text-sm table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
@@ -234,8 +235,8 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 w={widths.salesOrderLineName}
                             />
                             <TextCell
-                                v={line.customerQuoteLineId ? (
-                                    <Link href={`/quotes/${line.customerQuoteLineId}`} className="text-primary hover:underline font-medium">
+                                v={line.customerQuoteId && line.customerQuoteLineId ? (
+                                    <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} className="text-primary hover:underline font-medium">
                                         {line.customerQuoteLineName}
                                     </Link>
                                 ) : (
@@ -289,6 +290,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                     ))}
                 </tbody>
             </table>
+            </div>
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

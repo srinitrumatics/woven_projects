@@ -60,7 +60,7 @@ function mapItem(raw: any): InventoryPosition {
         supplierName: raw.Supplier_Name__c || "",
         qtyOnHand: raw.Qty_On_Hand__c ?? 0,
         qtyAvailable: raw.Qty_Available__c ?? 0,
-        inventoryLocation: raw.Inventory_Location_Name || "",
+        inventoryLocation: raw.Location || raw.Inventory_Location_Name || "",
         inventoryLocationId: raw.Inventory_Location__c || "",
         shipConfirmed: raw.Shipped_Date__c ?? null,
     };
@@ -147,7 +147,8 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
 
     // ── Table ───────────────────────────────────────────────────────────────
     return (
-        <div className="overflow-x-auto py-2">
+        <div className="flex flex-col">
+            <div className="overflow-x-auto py-2">
             <table className="w-full text-sm table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
@@ -205,6 +206,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                     ))}
                 </tbody>
             </table>
+            </div>
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

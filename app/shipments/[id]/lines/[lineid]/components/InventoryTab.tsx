@@ -50,14 +50,14 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             productId: item.Product_Name__c || item.Product__c || "",
                             productDescription: item.gtherp__Product_Description__c || item.Product_Description__c || "",
                             manufacturerDBA: item.gtherp__Manufacturer_DBA__c || item.Manufacturer_DBA__c || "",
-                            brand: item.gtherp__Brand_Name__c || item.Brand_Name__c || "",
+                            brand: item.Product_Brand_Name__c || "",
                             supplierName: item.gtherp__Supplier_Name__c || item.Supplier_Name__c || "",
                             purchaseOrderName: item.Purchase_Order_Name || item.gtherp__Purchase_Order__r?.Name || item.Purchase_Order__r?.Name || "",
                             purchaseOrderId: item.gtherp__Purchase_Order__c || item.Purchase_Order__c || "",
                             qtyOnHand: item.gtherp__Qty_On_Hand__c || item.Qty_On_Hand__c || 0,
                             qtyAvailable: item.gtherp__Qty_Available__c || item.Qty_Available__c || 0,
                             unitCost: item.gtherp__Unit_Cost__c || item.Unit_Cost__c || 0,
-                            inventoryLocation: item.gtherp__Inventory_Location__c || item.Inventory_Location_Name || item.Inventory_Location__c || "",
+                            inventoryLocation: item.Location || item.gtherp__Inventory_Location__c || item.Inventory_Location_Name || item.Inventory_Location__c || "",
                             rack: item.gtherp__Rack__c || item.Rack_Name || item.Rack__c || "",
                             bay: item.gtherp__Rack_Level__c || item.Rack_Level_Name || item.Rack_Level__c || "",
                             levelPosition: item.gtherp__Bin__c || item.Bin_Name || item.Bin__c || "",
@@ -122,7 +122,8 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
     }
 
     return (
-        <div className="overflow-x-auto mt-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+        <div className="flex flex-col mt-4">
+            <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
             <table className="w-full table-fixed">
                 <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                     <tr>
@@ -167,6 +168,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                     ))}
                 </tbody>
             </table>
+            </div>
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
