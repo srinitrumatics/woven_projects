@@ -307,7 +307,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                         <SortableHeader label="Drop Ship" field="Drop_Ship__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaDropShip || 110} onResize={handleResize} />
                                         <SortableHeader label="Total Lines" field="Total_Lines__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTotalLines || 110} onResize={handleResize} />
                                         <SortableHeader label="Total Price" field="Total_Price__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaTotalPrice || 120} onResize={handleResize} />
-                                        <SortableHeader label="Issued" field="Issued_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaIssued || 120} onResize={handleResize} />
+                                        <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaIssued || 120} onResize={handleResize} />
                                         <SortableHeader label="Return By" field="Return_by_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaReturnBy || 130} onResize={handleResize} />
                                         <SortableHeader label="Shipping Method" field="Shipping_Method__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShippingMethod || 150} onResize={handleResize} />
                                         <SortableHeader label="Logistics Partner" field="Logistics_Partner__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaLogisticsPartner || 150} onResize={handleResize} />
@@ -400,7 +400,6 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                         <SortableHeader label="Issued Date" field="Issued_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmIssuedDate || 130} onResize={handleResize} />
                                         <SortableHeader label="Expiration Date" field="Expiration_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmExpirationDate || 140} onResize={handleResize} />
                                         <SortableHeader label="Available Credit Balance" field="Available_Credit_Balance__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmAvailBalance || 190} onResize={handleResize} />
-                                        <SortableHeader label="Settled Date" field="Settled_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmSettledDate || 130} onResize={handleResize} />
                                     </tr>
                                 </thead>
                                 <tbody className={tbodyClass}>
@@ -433,7 +432,6 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                             <td className={tdClass}>{formatDate(cm.Issued_Date__c, "numeric-dash") || "—"}</td>
                                             <td className={tdClass}>{formatDate(cm.Expiration_Date__c, "numeric-dash") || "—"}</td>
                                             <td className={tdBoldClass}>{formatCurrency(cm.Available_Credit_Balance__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatDate(cm.Settled_Date__c, "numeric-dash") || "—"}</td>
                                         </tr>
                                     ))}
                                 </tbody>

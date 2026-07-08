@@ -87,7 +87,7 @@ interface ShippingManifest {
     Case_Height__c: number;
     Case_Net_Weight__c: number;
     Case_Gross_Weight__c: number;
-    Logistics_Partner__c: string;
+    Logistics_Partner_Name: string;
 }
 
 interface SalesOrder {
@@ -125,10 +125,10 @@ interface Proposal {
     Customer_Order_Name: string;
     Customer_PO__c: string;
     Bill_to_Account_Name: string;
-    Bill_to_Location_Name: string;
+    Authorized_Bill_To_Location_Name: string;
     Bill_to_Contact_Name: string;
     Ship_to_Account_Name: string;
-    Ship_to_Location_Name: string;
+    Authorized_Ship_To_Location_Name: string;
     Ship_to_Contact_Name: string;
     Drop_Ship__c: boolean;
     Total_Lines__c: number;
@@ -398,10 +398,10 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             <td className="px-4 py-3">{statusBadge(prop.Status__c)}</td>
                                             <td className={tdClass}>{displayCell(prop.Name)}</td>
                                             <td className={tdClass}>{displayCell(prop.Bill_to_Account_Name)}</td>
-                                            <td className={tdClass}>{displayCell(prop.Bill_to_Location_Name)}</td>
+                                            <td className={tdClass}>{displayCell(prop.Authorized_Bill_To_Location_Name)}</td>
                                             <td className={tdClass}>{displayCell(prop.Bill_to_Contact_Name)}</td>
                                             <td className={tdClass}>{displayCell(prop.Ship_to_Account_Name)}</td>
-                                            <td className={tdClass}>{displayCell(prop.Ship_to_Location_Name)}</td>
+                                            <td className={tdClass}>{displayCell(prop.Authorized_Ship_To_Location_Name)}</td>
                                             <td className={tdClass}>{displayCell(prop.Ship_to_Contact_Name)}</td>
                                             <td className={tdClass}>{prop.Drop_Ship__c ? "Yes" : "No"}</td>
                                             <td className={tdClass}>{formatNumber(prop.Total_Lines__c)}</td>
@@ -678,7 +678,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                                 <td className={tdClass}>{displayCell(sm.Case_Height__c?.toString())}</td>
                                                 <td className={tdClass}>{displayCell(sm.Case_Net_Weight__c?.toString())}</td>
                                                 <td className={tdClass}>{displayCell(sm.Case_Gross_Weight__c?.toString())}</td>
-                                                <td className={tdClass}>{displayCell(sm.Logistics_Partner__c)}</td>
+                                                <td className={tdClass}>{displayCell(sm.Logistics_Partner_Name)}</td>
                                                 <td className={tdClass}>{formatDate(sm.Ship_Date__c, "numeric-dash") || "—"}</td>
                                                 <td className={tdClass}>{formatDate(sm.Delivered_Date__c, "numeric-dash") || "—"}</td>
                                                 <td className={tdClass}>{displayCell(sm.Tracking_Number__c)}</td>
