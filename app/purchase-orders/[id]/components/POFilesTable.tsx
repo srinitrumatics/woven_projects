@@ -258,18 +258,16 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                 </table>
             </div>
 
-            {files.length > ITEMS_PER_PAGE && (
-                <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-left">
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        totalItems={files.length}
-                        itemsPerPage={ITEMS_PER_PAGE}
-                        itemName="Files"
-                    />
-                </div>
-            )}
+            <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-left">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={files.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName="Files"
+                />
+            </div>
         </div>
     );
 }

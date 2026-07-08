@@ -363,16 +363,14 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                 </tbody>
                             </table>
                         </div>
-                        {sortedRmaList.length > ITEMS_PER_PAGE && (
-                            <Pagination
-                                currentPage={rmaPage}
-                                totalPages={Math.ceil(sortedRmaList.length / ITEMS_PER_PAGE)}
-                                totalItems={sortedRmaList.length}
-                                itemsPerPage={ITEMS_PER_PAGE}
-                                onPageChange={setRmaPage}
-                                itemName="RMAs"
-                            />
-                        )}
+                        <Pagination
+                            currentPage={rmaPage}
+                            totalPages={Math.ceil(sortedRmaList.length / ITEMS_PER_PAGE)}
+                            totalItems={sortedRmaList.length}
+                            itemsPerPage={ITEMS_PER_PAGE}
+                            onPageChange={setRmaPage}
+                            itemName="RMAs"
+                        />
                     </div>
                 )
             )}
@@ -437,16 +435,15 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                 </tbody>
                             </table>
                         </div>
-                        {sortedCreditMemos.length > ITEMS_PER_PAGE && (
-                            <Pagination
-                                currentPage={cmPage}
-                                totalPages={Math.ceil(sortedCreditMemos.length / ITEMS_PER_PAGE)}
-                                totalItems={sortedCreditMemos.length}
-                                itemsPerPage={ITEMS_PER_PAGE}
-                                onPageChange={setCmPage}
-                                itemName="credit memos"
-                            />
-                        )}
+
+                        <Pagination
+                            currentPage={cmPage}
+                            totalPages={Math.ceil(sortedCreditMemos.length / ITEMS_PER_PAGE)}
+                            totalItems={sortedCreditMemos.length}
+                            itemsPerPage={ITEMS_PER_PAGE}
+                            onPageChange={setCmPage}
+                            itemName="credit memos"
+                        />
                     </div>
                 )
             )}
@@ -495,16 +492,14 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                 </tbody>
                             </table>
                         </div>
-                        {sortedDebitMemos.length > ITEMS_PER_PAGE && (
-                            <Pagination
-                                currentPage={dmPage}
-                                totalPages={Math.ceil(sortedDebitMemos.length / ITEMS_PER_PAGE)}
-                                totalItems={sortedDebitMemos.length}
-                                itemsPerPage={ITEMS_PER_PAGE}
-                                onPageChange={setDmPage}
-                                itemName="debit memos"
-                            />
-                        )}
+                        <Pagination
+                            currentPage={dmPage}
+                            totalPages={Math.ceil(sortedDebitMemos.length / ITEMS_PER_PAGE)}
+                            totalItems={sortedDebitMemos.length}
+                            itemsPerPage={ITEMS_PER_PAGE}
+                            onPageChange={setDmPage}
+                            itemName="debit memos"
+                        />
                     </div>
                 )
             )}
@@ -553,16 +548,14 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                 </tbody>
                             </table>
                         </div>
-                        {sortedRtvList.length > ITEMS_PER_PAGE && (
-                            <Pagination
-                                currentPage={rtvPage}
-                                totalPages={Math.ceil(sortedRtvList.length / ITEMS_PER_PAGE)}
-                                totalItems={sortedRtvList.length}
-                                itemsPerPage={ITEMS_PER_PAGE}
-                                onPageChange={setRtvPage}
-                                itemName="RTVs"
-                            />
-                        )}
+                        <Pagination
+                            currentPage={rtvPage}
+                            totalPages={Math.ceil(sortedRtvList.length / ITEMS_PER_PAGE)}
+                            totalItems={sortedRtvList.length}
+                            itemsPerPage={ITEMS_PER_PAGE}
+                            onPageChange={setRtvPage}
+                            itemName="RTVs"
+                        />
                     </div>
                 )
             )}

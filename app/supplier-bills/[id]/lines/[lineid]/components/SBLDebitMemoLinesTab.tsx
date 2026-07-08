@@ -159,18 +159,16 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
                 </table>
             </div>
 
-            {debitMemos.length > ITEMS_PER_PAGE && (
-                <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700">
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        totalItems={debitMemos.length}
-                        itemsPerPage={ITEMS_PER_PAGE}
-                        itemName="Debit Memo Lines"
-                    />
-                </div>
-            )}
+            <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={debitMemos.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName="Debit Memo Lines"
+                />
+            </div>
         </div>
     );
 }

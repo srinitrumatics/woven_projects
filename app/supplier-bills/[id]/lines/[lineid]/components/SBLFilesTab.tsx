@@ -31,9 +31,9 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
     const { error: toastError } = useToast();
     const { items: sortedData, requestSort, sortConfig } = useSortableData<POFile>(files);
 
-  const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+    const { user, selectedAccount } = useUserSession();
+    const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+    const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     const initialWidths = {
         fileName: 300,
@@ -249,18 +249,16 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
                 </table>
             </div>
 
-            {files.length > ITEMS_PER_PAGE && (
-                <div className="mt-4 px-3 py-2 border-t border-gray-200 dark:border-gray-700 text-left">
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        totalItems={files.length}
-                        itemsPerPage={ITEMS_PER_PAGE}
-                        itemName="Files"
-                    />
-                </div>
-            )}
+            <div className="mt-4 px-3 py-2 border-t border-gray-200 dark:border-gray-700 text-left">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={files.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    itemName="Files"
+                />
+            </div>
         </div>
     );
 }

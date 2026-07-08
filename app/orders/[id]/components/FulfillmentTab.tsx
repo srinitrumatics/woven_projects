@@ -417,16 +417,14 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                 </tbody>
                             </table>
                         </div>
-                        {sortedProposals.length > ITEMS_PER_PAGE && (
-                            <Pagination
-                                currentPage={proposalPage}
-                                totalPages={Math.ceil(sortedProposals.length / ITEMS_PER_PAGE)}
-                                totalItems={sortedProposals.length}
-                                itemsPerPage={ITEMS_PER_PAGE}
-                                onPageChange={setProposalPage}
-                                itemName="proposals"
-                            />
-                        )}
+                        <Pagination
+                            currentPage={proposalPage}
+                            totalPages={Math.ceil(sortedProposals.length / ITEMS_PER_PAGE)}
+                            totalItems={sortedProposals.length}
+                            itemsPerPage={ITEMS_PER_PAGE}
+                            onPageChange={setProposalPage}
+                            itemName="proposals"
+                        />
                     </div>
                 )
             )}
@@ -503,16 +501,14 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                 </tbody>
                             </table>
                         </div>
-                        {sortedCustomerQuotes.length > ITEMS_PER_PAGE && (
-                            <Pagination
-                                currentPage={cqPage}
-                                totalPages={Math.ceil(sortedCustomerQuotes.length / ITEMS_PER_PAGE)}
-                                totalItems={sortedCustomerQuotes.length}
-                                itemsPerPage={ITEMS_PER_PAGE}
-                                onPageChange={setCqPage}
-                                itemName="customer quotes"
-                            />
-                        )}
+                        <Pagination
+                            currentPage={cqPage}
+                            totalPages={Math.ceil(sortedCustomerQuotes.length / ITEMS_PER_PAGE)}
+                            totalItems={sortedCustomerQuotes.length}
+                            itemsPerPage={ITEMS_PER_PAGE}
+                            onPageChange={setCqPage}
+                            itemName="customer quotes"
+                        />
                     </div>
                 )
             )}
@@ -587,16 +583,14 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                 </tbody>
                             </table>
                         </div>
-                        {sortedSalesOrders.length > ITEMS_PER_PAGE && (
-                            <Pagination
-                                currentPage={soPage}
-                                totalPages={Math.ceil(sortedSalesOrders.length / ITEMS_PER_PAGE)}
-                                totalItems={sortedSalesOrders.length}
-                                itemsPerPage={ITEMS_PER_PAGE}
-                                onPageChange={setSoPage}
-                                itemName="sales orders"
-                            />
-                        )}
+                        <Pagination
+                            currentPage={soPage}
+                            totalPages={Math.ceil(sortedSalesOrders.length / ITEMS_PER_PAGE)}
+                            totalItems={sortedSalesOrders.length}
+                            itemsPerPage={ITEMS_PER_PAGE}
+                            onPageChange={setSoPage}
+                            itemName="sales orders"
+                        />
                     </div>
                 )
             )
@@ -690,16 +684,14 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                     </tbody>
                                 </table>
                             </div>
-                            {sortedManifests.length > ITEMS_PER_PAGE && (
-                                <Pagination
-                                    currentPage={smPage}
-                                    totalPages={Math.ceil(sortedManifests.length / ITEMS_PER_PAGE)}
-                                    totalItems={sortedManifests.length}
-                                    itemsPerPage={ITEMS_PER_PAGE}
-                                    onPageChange={setSmPage}
-                                    itemName="shipping manifests"
-                                />
-                            )}
+                            <Pagination
+                                currentPage={smPage}
+                                totalPages={Math.ceil(sortedManifests.length / ITEMS_PER_PAGE)}
+                                totalItems={sortedManifests.length}
+                                itemsPerPage={ITEMS_PER_PAGE}
+                                onPageChange={setSmPage}
+                                itemName="shipping manifests"
+                            />
                         </div>
                     )
                 )
@@ -784,16 +776,14 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                     </tbody>
                                 </table>
                             </div>
-                            {sortedInvoices.length > ITEMS_PER_PAGE && (
-                                <Pagination
-                                    currentPage={invPage}
-                                    totalPages={Math.ceil(sortedInvoices.length / ITEMS_PER_PAGE)}
-                                    totalItems={sortedInvoices.length}
-                                    itemsPerPage={ITEMS_PER_PAGE}
-                                    onPageChange={setInvPage}
-                                    itemName="invoices"
-                                />
-                            )}
+                            <Pagination
+                                currentPage={invPage}
+                                totalPages={Math.ceil(sortedInvoices.length / ITEMS_PER_PAGE)}
+                                totalItems={sortedInvoices.length}
+                                itemsPerPage={ITEMS_PER_PAGE}
+                                onPageChange={setInvPage}
+                                itemName="invoices"
+                            />
                         </div>
                     )
                 )

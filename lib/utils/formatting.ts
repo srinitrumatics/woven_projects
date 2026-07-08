@@ -80,7 +80,9 @@ export function formatTime(timeString: string | null | undefined): string {
   return `${hours}:${minutes} ${ampm}`;
 }
 
-export function displayCell(value: string | null | undefined): string {
-  if (value == null || value.trim() === '') return '-';
-  return value;
+export function displayCell(value: any): string {
+  if (value == null) return '-';
+  const strValue = String(value);
+  if (strValue.trim() === '') return '-';
+  return strValue;
 }
