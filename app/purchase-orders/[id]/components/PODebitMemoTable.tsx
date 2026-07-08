@@ -6,7 +6,6 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { formatDate, displayCell } from "@/lib/utils/formatting";
-
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import Link from 'next/link';
 import { useUserSession } from "@/components/UserSessionContext";

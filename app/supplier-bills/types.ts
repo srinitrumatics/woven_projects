@@ -71,6 +71,7 @@ export interface SupplierBillLine {
   goodsReceiptDate: string;
   supplierBillLineNotes?: string;
   proposedProduct?: string;
+  proposedProductId?: string;
   site?: string;
   siteId?: string;
   inventoryAccount?: string;
@@ -122,15 +123,19 @@ export interface DebitMemo {
   customerQuoteId?: string;
   customerOrderName?: string;
   customerOrderId?: string;
+  proposalName?: string;
+  proposalNumber?: string;
+  proposalId?: string;
   supplierCreditMemo?: string;
   debitToAccountName?: string;
   debitToContactName?: string;
   totalLines?: number;
   totalCost?: number;
   totalShippingCharges?: number;
+  totalTaxes?: number;
   totalDebitAmount?: number;
   issuedDate?: string;
-  approvalDate?: string;
+  expirationDate?: string;
   availableDebitBalance?: number;
   settledDate?: string;
 }

@@ -174,6 +174,7 @@ export default function InvoicesPage() {
   const { items: sortedInvoices, requestSort, sortConfig } = useSortableData<Invoice>(filteredInvoices, { key: 'invoiceNumber', direction: 'desc' });
 
   const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
+  const isCustomerOrNSO = ['Customer', 'NSO'].includes(selectedAccount?.Account_Record_Type__c || '');
 
   // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedInvoices.length / ITEMS_PER_PAGE));
@@ -549,38 +550,20 @@ export default function InvoicesPage() {
                         </td>
                         <td className="px-3 py-2 truncate">
                           <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {invoice.purchaseOrderId ? (
-                              !isManufacturer ? (
-                                <Link
-                                  href={`/purchase-orders/${invoice.purchaseOrderId}`}
-                                  className="text-primary font-medium hover:underline"
-                                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                                >
-                                  {invoice.purchaseOrderNumber || 'N/A'}
-                                </Link>
-                              ) : (
-                                <span className="font-medium">{displayCell(invoice.purchaseOrderNumber)}</span>
-                              )
-                            ) : (
-                              displayCell(invoice.purchaseOrderNumber)
-                            )}
+                            <span className="font-medium">{displayCell(invoice.purchaseOrderNumber)}</span>
                           </div>
                         </td>
                         <td className="px-3 py-2 truncate">
                           <div>
                             {invoice.customerQuoteId ? (
-                              !isManufacturer ? (
-                                <Link
-                                  href={`/quotes/${invoice.customerQuoteId}`}
-                                  target="_blank"
-                                  className="text-primary hover:underline font-medium"
-                                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                                >
-                                  {invoice.customerQuoteName || 'N/A'}
-                                </Link>
-                              ) : (
-                                <span className="font-medium">{displayCell(invoice.customerQuoteName)}</span>
-                              )
+                              <Link
+                                href={`/quotes/${invoice.customerQuoteId}`}
+                                target="_blank"
+                                className="text-primary hover:underline font-medium"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {invoice.customerQuoteName || 'N/A'}
+                              </Link>
                             ) : (
                               displayCell(invoice.customerQuoteName)
                             )}
@@ -589,58 +572,33 @@ export default function InvoicesPage() {
                         <td className="px-3 py-2 truncate">
                           <div>
                             {invoice.proposalId ? (
-                              !isManufacturer ? (
-                                <Link
-                                  href={`/proposals/${invoice.proposalId}`}
-                                  target="_blank"
-                                  className="text-primary hover:underline font-medium"
-                                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                                >
-                                  {invoice.proposalNumber || 'N/A'}
-                                </Link>
-                              ) : (
-                                <span className="font-medium">{displayCell(invoice.proposalNumber)}</span>
-                              )
+                              <Link
+                                href={`/proposals/${invoice.proposalId}`}
+                                target="_blank"
+                                className="text-primary hover:underline font-medium"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {invoice.proposalNumber || 'N/A'}
+                              </Link>
                             ) : (
                               displayCell(invoice.proposalNumber)
                             )}
                           </div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          <div>
-                            {invoice.proposalId ? (
-                              !isManufacturer ? (
-                                <Link
-                                  href={`/proposals/${invoice.proposalId}`}
-                                  target="_blank"
-                                  className="text-primary hover:underline font-medium"
-                                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                                >
-                                  {invoice.proposalName || 'N/A'}
-                                </Link>
-                              ) : (
-                                <span className="font-medium">{displayCell(invoice.proposalName)}</span>
-                              )
-                            ) : (
-                              displayCell(invoice.proposalName)
-                            )}
-                          </div>
+                          displayCell(invoice.proposalName)
                         </td>
                         <td className="px-3 py-2 truncate">
                           <div>
                             {invoice.customerOrderId ? (
-                              !isManufacturer ? (
-                                <Link
-                                  href={`/orders/${invoice.customerOrderId}`}
-                                  target="_blank"
-                                  className="text-primary hover:underline font-medium"
-                                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                                >
-                                  {invoice.customerOrder || 'N/A'}
-                                </Link>
-                              ) : (
-                                <span className="font-medium">{displayCell(invoice.customerOrder)}</span>
-                              )
+                              <Link
+                                href={`/orders/${invoice.customerOrderId}`}
+                                target="_blank"
+                                className="text-primary hover:underline font-medium"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {invoice.customerOrder || 'N/A'}
+                              </Link>
                             ) : (
                               displayCell(invoice.customerOrder)
                             )}

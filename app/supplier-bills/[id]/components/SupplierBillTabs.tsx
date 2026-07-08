@@ -17,7 +17,7 @@ export default function SupplierBillTabs({ activeTab, onTabChange, counts = {} }
     const tabs = [
         { id: "lines", label: "Supplier Bill Lines", count: counts.lines },
         { id: "payments", label: "Payments", count: counts.payments },
-        { id: "debits", label: "Debits", count: counts.debits },
+        { id: "debits", label: "Debit Memos", count: counts.debits },
         { id: "files", label: "Files", count: counts.files },
     ];
 

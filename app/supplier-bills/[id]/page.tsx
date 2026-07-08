@@ -34,9 +34,9 @@ export default function SupplierBillDetailPage() {
     const { success, error: toastError } = useToast();
     const [isLoading, setIsLoading] = useState(true);
 
-  const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+    const { user, selectedAccount } = useUserSession();
+    const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+    const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     useEffect(() => {
         if (!id || !SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
@@ -114,11 +114,13 @@ export default function SupplierBillDetailPage() {
                         customerQuoteLineName: l.Customer_Quote_Line_Name || '',
                         customerQuoteId: l.Customer_Quote__c || l.Customer_Quote_Line__r?.Customer_Quote__c || '',
                         customerQuoteLineId: l.Customer_Quote_Line__c || '',
-                        purchaseOrderLineName: l.Purchase_Order_Line_Name || '',
+                        proposedProduct: l.Proposed_Product_Name || '',
+                        proposedProductId: l.Proposed_Product__c || '',
                         purchaseOrderId: l.Purchase_Order__c || l.Purchase_Order_Line__r?.Purchase_Order__c || '',
                         purchaseOrderLineId: l.Purchase_Order_Line__c || '',
                         productName: l.Product_Name || '',
                         productDescription: l.Product_Description__c || '',
+                        brand: l.Product_Brand_Name__c || '',
                         manufacturerDBA: l.Manufacturer_DBA__c || '',
                         unitCost: l.Unit_Cost__c || 0,
                         billedQty: l.Billed_Qty__c || 0,
@@ -135,13 +137,13 @@ export default function SupplierBillDetailPage() {
                             if (!prev) return null;
                             return {
                                 ...prev,
-                                productLineCount: Math.ceil(mappedLines.length / 2),
+                                productLineCount: 100,
                                 serviceLineCount: Math.floor(mappedLines.length / 2)
                             };
                         });
                     }
-                }
 
+                }
                 // 3. Fetch files
                 const filesRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&objectName=Supplier_Bill__c&action=files`);
                 const filesData = await filesRes.json();
@@ -211,7 +213,7 @@ export default function SupplierBillDetailPage() {
                                     supplierBillId: d.Supplier_Bill__c || '',
                                     appliedAmount: d.Applied_Amount__c || 0,
                                     availableDebitBalance: d.Available_Debit_Balance__c || 0,
-                                    appliedDate: d.Applied_Date__c || '',
+                                    expirationDate: d.expirationDate || '',
                                     postedDate: d.Posted_Date__c || '',
                                     notes: d.Applied_Debit_Memo_Notes__c || '',
                                 }))];
@@ -229,12 +231,16 @@ export default function SupplierBillDetailPage() {
                                     customerQuoteId: d.Customer_Quote__c || '',
                                     customerOrderName: d.Customer_Order_Name || '',
                                     customerOrderId: d.Customer_Order__c || '',
+                                    proposalName: d.Proposal_Name || '',
+                                    proposalNumber: d.Proposal_Number || '',
+                                    proposalId: d.Proposal__c || '',
                                     supplierCreditMemo: d.Supplier_Credit_Memo__c || '',
                                     debitToAccountName: d.Debit_to_Account_Name || '',
                                     debitToContactName: d.Debit_to_Contact_Name || '',
                                     totalLines: d.Total_Lines__c || 0,
                                     totalCost: d.Total_Cost__c || 0,
                                     totalShippingCharges: d.Total_Shipping_Charges__c || 0,
+                                    totalTaxes: d.Total_Taxes_Amount__c || 0,
                                     totalDebitAmount: d.Total_Debit_Amount__c || 0,
                                     issuedDate: d.Issued_Date__c || '',
                                     approvalDate: d.Approval_Date__c || '',

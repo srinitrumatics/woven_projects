@@ -8,6 +8,8 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import Link from 'next/link';
+import { useUserSession } from "@/components/UserSessionContext";
 
 interface SupplierBillDebitsTabProps {
     debitMemos: DebitMemo[];
@@ -17,16 +19,24 @@ const ITEMS_PER_PAGE = 10;
 
 export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebitsTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const { selectedAccount } = useUserSession();
+    const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
 
     const initialWidths = {
         name: 180,
         status: 120,
+        purchaseOrder: 150,
+        customerQuote: 150,
+        proposalNumber: 150,
+        proposalName: 180,
+        customerOrder: 150,
         totalLines: 120,
         totalCost: 140,
         shipping: 140,
+        taxes: 140,
         totalDebitAmount: 180,
         issuedDate: 150,
-        approvalDate: 150,
+        expirationDate: 150,
         availableDebitBalance: 180,
         settledDate: 150
     };
@@ -56,15 +66,21 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                 <table className="w-full border-separate border-spacing-0 table-fixed">
                     <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="Debit Memo" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
+                            <SortableHeader label="Debit Memo #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
+                            <SortableHeader label="Purchase Order #" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrder} onResize={handleResize} />
+                            <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuote} onResize={handleResize} />
+                            <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.proposalNumber} onResize={handleResize} />
+                            <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.proposalName} onResize={handleResize} />
+                            <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerOrder} onResize={handleResize} />
                             <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalLines} onResize={handleResize} />
                             <SortableHeader label="Total Cost" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalCost} onResize={handleResize} />
                             <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.shipping} onResize={handleResize} />
+                            <SortableHeader label="Taxes" field="totalTaxes" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.taxes} onResize={handleResize} />
                             <SortableHeader label="Total Debit Amount" field="totalDebitAmount" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalDebitAmount} onResize={handleResize} />
                             <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.issuedDate} onResize={handleResize} />
-                            <SortableHeader label="Approval Date" field="approvalDate" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.approvalDate} onResize={handleResize} />
-                            <SortableHeader label="Available Balance" field="availableDebitBalance" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.availableDebitBalance} onResize={handleResize} />
+                            <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.expirationDate} onResize={handleResize} />
+                            <SortableHeader label="Available Debit Balance" field="availableDebitBalance" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.availableDebitBalance} onResize={handleResize} />
                             <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.settledDate} onResize={handleResize} />
                         </tr>
                     </thead>
@@ -77,6 +93,47 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                                 <td className="px-3 py-2 text-sm truncate">
                                     <StatusBadge status={debit.status} />
                                 </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.purchaseOrderName || '-'}>
+                                    {debit.purchaseOrderId ? (
+                                        <Link href={`/purchase-orders/${debit.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            {displayCell(debit.purchaseOrderName)}
+                                        </Link>
+                                    ) : displayCell(debit.purchaseOrderName)}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.customerQuoteName || '-'}>
+                                    {debit.customerQuoteId ? (
+                                        !isManufacturer ? (
+                                            <Link href={`/quotes/${debit.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {displayCell(debit.customerQuoteName)}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{displayCell(debit.customerQuoteName)}</span>
+                                        )
+                                    ) : displayCell(debit.customerQuoteName)}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.proposalNumber || debit.proposalName || '-'}>
+                                    {debit.proposalId ? (
+                                        !isManufacturer ? (
+                                            <Link href={`/proposals/${debit.proposalId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {displayCell(debit.proposalNumber || debit.proposalName)}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{displayCell(debit.proposalNumber || debit.proposalName)}</span>
+                                        )
+                                    ) : displayCell(debit.proposalNumber || debit.proposalName)}
+                                </td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.proposalName || '-'}>{displayCell(debit.proposalName)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.customerOrderName || '-'}>
+                                    {debit.customerOrderId ? (
+                                        !isManufacturer ? (
+                                            <Link href={`/orders/${debit.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {displayCell(debit.customerOrderName)}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{displayCell(debit.customerOrderName)}</span>
+                                        )
+                                    ) : displayCell(debit.customerOrderName)}
+                                </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                     <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium">
                                         {debit.totalLines || 0}
@@ -84,9 +141,10 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.totalCost || 0)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{formatCurrency(debit.totalShippingCharges || 0)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{formatCurrency(debit.totalTaxes || 0)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.totalDebitAmount || 0)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.issuedDate ? formatDate(debit.issuedDate, 'numeric-dash') : '-'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.approvalDate ? formatDate(debit.approvalDate, 'numeric-dash') : '-'}</td>
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.expirationDate ? formatDate(debit.expirationDate, 'numeric-dash') : '-'}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.availableDebitBalance || 0)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.settledDate ? formatDate(debit.settledDate, 'numeric-dash') : '-'}</td>
                             </tr>

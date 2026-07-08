@@ -11,6 +11,8 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useUserSession } from "@/components/UserSessionContext";
+
 
 interface SupplierBillLinesTableProps {
     lines: SupplierBillLine[];
@@ -21,15 +23,17 @@ const ITEMS_PER_PAGE = 10;
 export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTableProps) {
     const params = useParams();
     const id = params.id as string;
+    const { user, selectedAccount } = useUserSession();
+    const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
+
     const [currentPage, setCurrentPage] = useState(1);
     const { items: sortedData, requestSort, sortConfig } = useSortableData<SupplierBillLine>(lines, { key: 'name', direction: 'desc' });
 
     const initialWidths = {
         name: 180,
         status: 120,
-        supplierBillName: 160,
         customerQuoteLineName: 180,
-        purchaseOrderLineName: 180,
+        proposedProduct: 180,
         productName: 200,
         productDescription: 250,
         manufacturerDBA: 180,
@@ -50,7 +54,6 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
     }, [sortedData, currentPage]);
 
     const totalPages = Math.ceil(lines.length / ITEMS_PER_PAGE);
-
     if (lines.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
@@ -59,8 +62,10 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
             </div>
         );
     }
+    console.log("lines data", lines);
 
     return (
+
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                 <table className="w-full border-separate border-spacing-0 table-fixed">
@@ -68,9 +73,8 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                         <tr>
                             <SortableHeader label="Supplier Bill Line" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
-                            <SortableHeader label="Supplier Bill" field="supplierBillName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierBillName} onResize={handleResize} />
                             <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuoteLineName} onResize={handleResize} />
-                            <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.purchaseOrderLineName} onResize={handleResize} />
+                            <SortableHeader label="Proposed Product" field="proposedProduct" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.proposedProduct} onResize={handleResize} />
                             <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
                             <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productDescription} onResize={handleResize} />
                             <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.brand} onResize={handleResize} />
@@ -93,14 +97,19 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                                 <td className="px-3 py-2 text-sm truncate">
                                     <StatusBadge status={line.status} />
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.supplierBillName}>
-                                    {displayCell(line.supplierBillName)}
-                                </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.customerQuoteLineName}>
                                     {displayCell(line.customerQuoteLineName)}
                                 </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.purchaseOrderLineName}>
-                                    {displayCell(line.purchaseOrderLineName)}
+                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.proposedProduct}>
+                                    {line.proposedProductId ? (
+                                        !isManufacturer ? (
+                                            <Link href={`/products/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                                {line.proposedProduct || 'View Product'}
+                                            </Link>
+                                        ) : (
+                                            <span className="font-medium">{displayCell(line.proposedProduct)}</span>
+                                        )
+                                    ) : displayCell(line.proposedProduct)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(line.productName)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{displayCell(line.productDescription)}</td>
