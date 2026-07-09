@@ -25,7 +25,7 @@ import {
   TaxDetail
 } from "./types";
 import { formatAddress } from "./utils";
-import { formatDate } from "@/lib/utils/formatting";
+import { formatDate, decodeHtmlEntities } from "@/lib/utils/formatting";
 import jsPDF from "jspdf";
 
 // Component Imports
@@ -365,7 +365,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             requestedDeliveryDate: formatDate(item.Request_Date__c, 'numeric-dash'),
             dropShip: item.Drop_Ship__c || false,
             site: item.Site_Name || '',
-            specialTerms: item.Scope__c?.replace(/<[^>]*>?/gm, '') || '',
+            specialTerms: decodeHtmlEntities(item.Scope__c?.replace(/<[^>]*>?/gm, '') || ''),
             internalNotes: '',
             clientSignedBy: item.Company_Signed_By_Name,
             clientSignedTitle: item.Client_Signed_Title__c,
@@ -385,7 +385,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               id: el.Id,
               wbs: el.WBS__c || '',
               proposalElement: el.Name || '',
-              description: el.Description__c || ''
+              description: decodeHtmlEntities(el.Description__c || '')
             }));
             setProposalElements(elements);
           }
@@ -454,7 +454,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               id: el.Id,
               wbs: el.WBS__c || '',
               proposalElement: el.Name || '',
-              description: el.Description__c || '',
+              description: decodeHtmlEntities(el.Description__c || ''),
               proposalId: el.Proposal__c
             })));
           }

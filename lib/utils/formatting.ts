@@ -86,3 +86,22 @@ export function displayCell(value: any): string {
   if (strValue.trim() === '') return '-';
   return strValue;
 }
+
+export function decodeHtmlEntities(text: string | null | undefined): string {
+  if (!text) return '';
+  const entities: Record<string, string> = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'",
+    '&#x27;': "'",
+    '&#x2F;': '/',
+    '&nbsp;': ' ',
+    '&#8216;': "'",
+    '&#8217;': "'",
+    '&#8220;': '"',
+    '&#8221;': '"',
+  };
+  return String(text).replace(/&[a-zA-Z0-9#]+;/g, (match) => entities[match] || match);
+}

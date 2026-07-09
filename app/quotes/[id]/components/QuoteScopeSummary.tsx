@@ -1,3 +1,5 @@
+import { decodeHtmlEntities } from "@/lib/utils/formatting";
+
 interface QuoteScopeSummaryProps {
     description: string;
 }
@@ -13,7 +15,7 @@ export default function QuoteScopeSummary({ description }: QuoteScopeSummaryProp
             <textarea
                 disabled
                 className="w-full p-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white leading-relaxed resize-none focus:ring-0 focus:border-gray-300"
-                value={description ||"No scope summary provided."}
+                value={decodeHtmlEntities(description) ||"No scope summary provided."}
 
             />
         </div>

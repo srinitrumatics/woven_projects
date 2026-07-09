@@ -4,7 +4,7 @@ import { use, useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import { PurchaseOrder } from "../types";
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, decodeHtmlEntities } from "@/lib/utils/formatting";
 
 // Component Imports
 import POHeader from "./components/POHeader";
@@ -234,7 +234,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                             <textarea
                                 readOnly
                                 className="w-full  p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white resize-none focus:ring-0"
-                                value={po.poNotes || "No special notes for this purchase order."}
+                                value={decodeHtmlEntities(po.poNotes) || "No special notes for this purchase order."}
                                 placeholder="No special notes."
                             />
                         </div>

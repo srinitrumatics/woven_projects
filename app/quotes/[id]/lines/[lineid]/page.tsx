@@ -4,7 +4,7 @@ import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
-import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, decodeHtmlEntities } from "@/lib/utils/formatting";
 import { QuoteLine } from "../../../types";
 import QuoteLineFulfillmentsTab from "./components/QuoteLineFulfillmentsTab";
 import QuoteLineTaxesTab from "./components/QuoteLineTaxesTab";
@@ -447,7 +447,7 @@ export default function QuoteLineDetailPage({
                         <textarea
                             readOnly
                             className="w-full flex-1 p-3 bg-gray-50/50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 outline-none cursor-default resize-none "
-                            value={product.notes || "No notes available."}
+                            value={decodeHtmlEntities(product.notes) || "No notes available."}
                             title="Quote Lines Note"
                         />
                     </div>

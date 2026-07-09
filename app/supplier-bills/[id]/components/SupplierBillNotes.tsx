@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { SupplierBill } from "../../types";
+import { decodeHtmlEntities } from "@/lib/utils/formatting";
 
 interface SupplierBillNotesProps {
     bill: SupplierBill;
@@ -26,7 +27,7 @@ export default function SupplierBillNotes({ bill }: SupplierBillNotesProps) {
                 <textarea
                     readOnly
                     className="w-full h-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white resize-none focus:ring-0 focus:border-gray-300 min-h-[90px]"
-                    value={bill.notes || "No special notes for this supplier bill."}
+                    value={decodeHtmlEntities(bill.notes) || "No special notes for this supplier bill."}
                 />
             </div>
         </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { decodeHtmlEntities } from "@/lib/utils/formatting";
+
 interface OrderLineNotesProps {
     isEditing: boolean;
     notes: string;
@@ -31,7 +33,7 @@ export default function OrderLineNotes({
                 <div className="flex-1">
                     {isEditing ? (
                         <textarea
-                            value={notes}
+                            value={decodeHtmlEntities(notes)}
                             onChange={(e) => onNotesChange(e.target.value)}
                             className="w-full h-full p-3 bg-white dark:bg-gray-700 rounded-md border border-gray-300 dark:border-gray-600 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none resize-none min-h-[200px]"
                             placeholder="Enter order line notes..."
@@ -43,7 +45,7 @@ export default function OrderLineNotes({
                                     originalNotes ? "text-gray-700 dark:text-white" : "text-gray-700 dark:text-white"
                                 }
                             >
-                                {originalNotes || "No notes available"}
+                                {decodeHtmlEntities(originalNotes) || "No notes available"}
                             </p>
                         </div>
                     )}

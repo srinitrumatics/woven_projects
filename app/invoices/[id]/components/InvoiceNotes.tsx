@@ -1,3 +1,5 @@
+import { decodeHtmlEntities } from "@/lib/utils/formatting";
+
 interface InvoiceNotesProps {
     notes: string;
     className?: string;
@@ -20,7 +22,7 @@ export default function InvoiceNotes({ notes, className = "" }: InvoiceNotesProp
             <textarea
                 disabled
                 className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white resize-none h-full focus:ring-0 focus:border-gray-300"
-                value={notes || "No special notes."}
+                value={decodeHtmlEntities(notes) || "No special notes."}
             />
         </div>
     );

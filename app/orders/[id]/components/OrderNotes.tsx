@@ -1,5 +1,7 @@
 "use client";
 
+import { decodeHtmlEntities } from "@/lib/utils/formatting";
+
 interface OrderNotesProps {
     formData: any;
     setFormData: (data: any) => void;
@@ -32,7 +34,7 @@ export default function OrderNotes({
             <div className="flex-1 flex flex-col min-w-0">
                 <textarea
                     placeholder="Add instructions or notes…"
-                    value={formData.orderNotes}
+                    value={decodeHtmlEntities(formData.orderNotes)}
                     onChange={(e) => setFormData({ ...formData, orderNotes: e.target.value })}
                     readOnly={!isEditing}
                     className={`w-full flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 resize-none ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
