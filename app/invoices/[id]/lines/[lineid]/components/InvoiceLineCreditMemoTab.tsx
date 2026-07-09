@@ -70,7 +70,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                         productId: item.Product__c || "",
                         description: item.Product_Description__c || "",
                         manufacturerDBA: item.Manufacturer_DBA__c || "",
-                        brand: item.Brand_Name__c || item.gtherp__Brand_Name__c || "",
+                        brand: item.Product_Brand_Name__c || "",
                         unitPrice: item.Unit_Price__c || 0,
                         creditQty: item.Credit_Qty__c || 0,
                         totalPrice: item.Total_Price__c || 0,

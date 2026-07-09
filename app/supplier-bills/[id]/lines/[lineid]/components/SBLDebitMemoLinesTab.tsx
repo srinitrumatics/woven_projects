@@ -147,7 +147,7 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
                                     ) : displayCell(line.Product_Name)}
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate" title={line.Product_Description__c}>{displayCell(line.Product_Description__c)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{displayCell(line.Product_Brand_Name__c || line.brand)}</td>
+                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{displayCell(line.Product_Brand_Name__c || '-')}</td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Unit_Cost__c || line.UnitCost__c || 0)}</td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{line.Debit_Qty__c ?? line.DebitQty__c ?? 0}</td>
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Total_Cost__c || line.TotalCost__c || 0)}</td>

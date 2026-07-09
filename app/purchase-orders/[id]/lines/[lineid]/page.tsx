@@ -56,7 +56,7 @@ export default function POLineDetailPage({
                         productFamily: item.Product_Family,
                         productRecordType: item.Product_Record_Type__c,
                         manufacturerDBA: item.Manufacturer_DBA__c,
-                        brand: item.Product_Brand_Name__c,
+                        brand: item.Product_Brand_Name__c || "-",
                         unitCost: item.Unit_Cost__c,
                         totalProductCost: item.Total_Product_Cost__c,
                         shippingCharges: item.Shipping_Charges__c,

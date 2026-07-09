@@ -89,7 +89,7 @@ export default function InventoryPage() {
             name: item.Product_Name || "",
             productName: item.Product_Name || "",
             productDescription: item.Product_Description__c || "",
-            brand: item.Brand_Name__c || item.gtherp__Brand_Name__c || "",
+            brand: item.Product_Brand_Name__c || "",
             // API returns "Family" (not Product_Name_Family)
             productFamily: item.Family || "",
             manufacturerDBA: item.Manufacturer_DBA__c || "",

@@ -46,7 +46,7 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
         productSerialNumber: s.Product_Serial_Number__c,
         productName: s.Product_Name,
         productId: s.Product_Name__c || s.Product__c || '',
-        brand: s.Product_Brand_Name__c || s.Brand_Name__c || s.gtherp__Brand_Name__c || '',
+        brand: s.Product_Brand_Name__c || '',
     })), [serialNumbers]);
 
     const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData, { key: 'name', direction: 'asc' });

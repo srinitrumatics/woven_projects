@@ -56,7 +56,7 @@ function mapItem(raw: any): InventoryPosition {
         productId: raw.Product_Name__c || raw.Product__c || "",
         productDescription: raw.Product_Description__c || "",
         manufacturerDBA: raw.Manufacturer_DBA__c || "",
-        brand: raw.Brand_Name__c || raw.gtherp__Brand_Name__c || "",
+        brand: raw.Product_Brand_Name__c || "",
         supplierName: raw.Supplier_Name__c || "",
         qtyOnHand: raw.Qty_On_Hand__c ?? 0,
         qtyAvailable: raw.Qty_Available__c ?? 0,
@@ -149,63 +149,63 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
     return (
         <div className="flex flex-col">
             <div className="overflow-x-auto py-2">
-            <table className="w-full text-sm table-fixed">
-                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                    <tr>
-                        {/* 1 – sticky */}
-                        <SortableHeader label="Inventory Position" field="name" sortConfig={sc} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                        {/* 2 */}
-                        <SortableHeader label="Received Date" field="receivedDate" sortConfig={sc} requestSort={handleSort} width={widths.receivedDate} onResize={handleResize} align="left" />
-                        {/* 3 */}
-                        <SortableHeader label="Age (Days)" field="daysInInventory" sortConfig={sc} requestSort={handleSort} width={widths.daysInInventory} onResize={handleResize} align="left" />
-                        {/* 4 */}
-                        <SortableHeader label="Product Name" field="productName" sortConfig={sc} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" />
-                        {/* 5 */}
-                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sc} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" />
-                        {/* 6 */}
-                        <SortableHeader label="Brand Name" field="brand" sortConfig={sc} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" />
-                        {/* 7 */}
-                        <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sc} requestSort={handleSort} width={widths.supplierName} onResize={handleResize} align="left" />
-                        {/* 8 */}
-                        <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sc} requestSort={handleSort} width={widths.qtyOnHand} onResize={handleResize} align="left" />
-                        {/* 9 */}
-                        <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sc} requestSort={handleSort} width={widths.qtyAvailable} onResize={handleResize} align="left" />
-                        {/* 10 */}
-                        <SortableHeader label="Location" field="inventoryLocation" sortConfig={sc} requestSort={handleSort} width={widths.inventoryLocation} onResize={handleResize} align="left" />
-                        {/* 11 */}
-                        <SortableHeader label="Ship Confirmed Date" field="shipConfirmed" sortConfig={sc} requestSort={handleSort} width={widths.shipConfirmed} onResize={handleResize} align="left" />
-                    </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {paginatedItems.map((item) => (
-                        <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                <table className="w-full text-sm table-fixed">
+                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                        <tr>
                             {/* 1 – sticky */}
-                            <td className="px-3 py-2 text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
-                                <span className="truncate block" title={item.name}>{item.name}</span>
-                            </td>
-                            <TC v={displayCell(fmtDate(item.receivedDate))} w={widths.receivedDate} />
-                            <TC v={`${formatNumber(item.daysInInventory, 0)} Days`} w={widths.daysInInventory} />
-                            <TC
-                                v={item.productId ? (
-                                    <Link href={`/inventory/${item.productId}`} className="text-primary hover:underline font-medium">
-                                        {item.productName}
-                                    </Link>
-                                ) : (
-                                    displayCell(item.productName)
-                                )}
-                                w={widths.productName}
-                            />
-                            <TC v={displayCell(item.productDescription)} w={widths.productDescription} />
-                            <TC v={displayCell(item.brand)} w={widths.manufacturerDBA} />
-                            <TC v={displayCell(item.supplierName)} w={widths.supplierName} />
-                            <TC v={formatNumber(item.qtyOnHand, 2)} w={widths.qtyOnHand} />
-                            <TC v={formatNumber(item.qtyAvailable, 2)} w={widths.qtyAvailable} />
-                            <TC v={displayCell(item.inventoryLocation)} w={widths.inventoryLocation} />
-                            <TC v={displayCell(fmtDate(item.shipConfirmed))} w={widths.shipConfirmed} />
+                            <SortableHeader label="Inventory Position" field="name" sortConfig={sc} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                            {/* 2 */}
+                            <SortableHeader label="Received Date" field="receivedDate" sortConfig={sc} requestSort={handleSort} width={widths.receivedDate} onResize={handleResize} align="left" />
+                            {/* 3 */}
+                            <SortableHeader label="Age (Days)" field="daysInInventory" sortConfig={sc} requestSort={handleSort} width={widths.daysInInventory} onResize={handleResize} align="left" />
+                            {/* 4 */}
+                            <SortableHeader label="Product Name" field="productName" sortConfig={sc} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" />
+                            {/* 5 */}
+                            <SortableHeader label="Product Description" field="productDescription" sortConfig={sc} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" />
+                            {/* 6 */}
+                            <SortableHeader label="Brand Name" field="brand" sortConfig={sc} requestSort={handleSort} width={widths.manufacturerDBA} onResize={handleResize} align="left" />
+                            {/* 7 */}
+                            <SortableHeader label="Supplier Name" field="supplierName" sortConfig={sc} requestSort={handleSort} width={widths.supplierName} onResize={handleResize} align="left" />
+                            {/* 8 */}
+                            <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sc} requestSort={handleSort} width={widths.qtyOnHand} onResize={handleResize} align="left" />
+                            {/* 9 */}
+                            <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sc} requestSort={handleSort} width={widths.qtyAvailable} onResize={handleResize} align="left" />
+                            {/* 10 */}
+                            <SortableHeader label="Location" field="inventoryLocation" sortConfig={sc} requestSort={handleSort} width={widths.inventoryLocation} onResize={handleResize} align="left" />
+                            {/* 11 */}
+                            <SortableHeader label="Ship Confirmed Date" field="shipConfirmed" sortConfig={sc} requestSort={handleSort} width={widths.shipConfirmed} onResize={handleResize} align="left" />
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {paginatedItems.map((item) => (
+                            <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                {/* 1 – sticky */}
+                                <td className="px-3 py-2 text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
+                                    <span className="truncate block" title={item.name}>{item.name}</span>
+                                </td>
+                                <TC v={displayCell(fmtDate(item.receivedDate))} w={widths.receivedDate} />
+                                <TC v={`${formatNumber(item.daysInInventory, 0)} Days`} w={widths.daysInInventory} />
+                                <TC
+                                    v={item.productId ? (
+                                        <Link href={`/inventory/${item.productId}`} className="text-primary hover:underline font-medium">
+                                            {item.productName}
+                                        </Link>
+                                    ) : (
+                                        displayCell(item.productName)
+                                    )}
+                                    w={widths.productName}
+                                />
+                                <TC v={displayCell(item.productDescription)} w={widths.productDescription} />
+                                <TC v={displayCell(item.brand)} w={widths.manufacturerDBA} />
+                                <TC v={displayCell(item.supplierName)} w={widths.supplierName} />
+                                <TC v={formatNumber(item.qtyOnHand, 2)} w={widths.qtyOnHand} />
+                                <TC v={formatNumber(item.qtyAvailable, 2)} w={widths.qtyAvailable} />
+                                <TC v={displayCell(item.inventoryLocation)} w={widths.inventoryLocation} />
+                                <TC v={displayCell(fmtDate(item.shipConfirmed))} w={widths.shipConfirmed} />
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
             <Pagination
                 currentPage={currentPage}

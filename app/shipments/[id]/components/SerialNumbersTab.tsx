@@ -45,7 +45,7 @@ function mapLog(raw: any): SerialNumberLog {
         productName: raw.Product_Name || "",
         productId: raw.Product__c || "",
         productDescription: raw.Product_Description__c || "",
-        brand: raw.Brand_Name__c || raw.gtherp__Brand_Name__c || "",
+        brand: raw.Product_Brand_Name__c || "",
         shippingManifest: raw.Shipping_Manifest_Name || raw.Shipping_Manifest__r?.Name || "",
         shippingManifestId: raw.Shipping_Manifest__c || "",
     };
@@ -136,52 +136,52 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
     return (
         <div className="flex flex-col">
             <div className="overflow-x-auto py-2">
-            <table className="w-full text-sm table-fixed">
-                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                    <tr>
-                        <SortableHeader label="Serial Number Log" field="name" sortConfig={sortConfig} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                        <SortableHeader label="Serial Number #" field="serialNumber" sortConfig={sortConfig} requestSort={handleSort} width={widths.serialNumber} onResize={handleResize} align="left" />
-                        <SortableHeader label="Product Serial Number" field="productSerialNumber" sortConfig={sortConfig} requestSort={handleSort} width={widths.productSerialNumber} onResize={handleResize} align="left" />
-                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" />
-                        <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" />
-                        <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={handleSort} width={widths.brand} onResize={handleResize} align="left" />
-                        <SortableHeader label="Shipping Manifest #" field="shippingManifest" sortConfig={sortConfig} requestSort={handleSort} width={widths.shippingManifest} onResize={handleResize} align="left" />
-                    </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {paginatedLogs.map((log) => (
-                        <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td className="px-3 py-2 font-medium text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }} title={log.name}>
-                                {log.name}
-                            </td>
-                            <TextCell v={displayCell(log.serialNumber)} w={widths.serialNumber} />
-                            <TextCell v={displayCell(log.productSerialNumber)} w={widths.productSerialNumber} />
-                            <TextCell
-                                v={log.productId ? (
-                                    <Link href={`/products/${log.productId}`} className="text-primary hover:underline font-medium">
-                                        {log.productName}
-                                    </Link>
-                                ) : (
-                                    displayCell(log.productName)
-                                )}
-                                w={widths.productName}
-                            />
-                            <TextCell v={displayCell(log.productDescription)} w={widths.productDescription} />
-                            <TextCell v={displayCell(log.brand)} w={widths.brand} />
-                            <TextCell
-                                v={log.shippingManifestId ? (
-                                    <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
-                                        {log.shippingManifest || "View Manifest"}
-                                    </Link>
-                                ) : (
-                                    displayCell(log.shippingManifest)
-                                )}
-                                w={widths.shippingManifest}
-                            />
+                <table className="w-full text-sm table-fixed">
+                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                        <tr>
+                            <SortableHeader label="Serial Number Log" field="name" sortConfig={sortConfig} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                            <SortableHeader label="Serial Number #" field="serialNumber" sortConfig={sortConfig} requestSort={handleSort} width={widths.serialNumber} onResize={handleResize} align="left" />
+                            <SortableHeader label="Product Serial Number" field="productSerialNumber" sortConfig={sortConfig} requestSort={handleSort} width={widths.productSerialNumber} onResize={handleResize} align="left" />
+                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={handleSort} width={widths.productName} onResize={handleResize} align="left" />
+                            <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={handleSort} width={widths.productDescription} onResize={handleResize} align="left" />
+                            <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={handleSort} width={widths.brand} onResize={handleResize} align="left" />
+                            <SortableHeader label="Shipping Manifest #" field="shippingManifest" sortConfig={sortConfig} requestSort={handleSort} width={widths.shippingManifest} onResize={handleResize} align="left" />
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {paginatedLogs.map((log) => (
+                            <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                <td className="px-3 py-2 font-medium text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }} title={log.name}>
+                                    {log.name}
+                                </td>
+                                <TextCell v={displayCell(log.serialNumber)} w={widths.serialNumber} />
+                                <TextCell v={displayCell(log.productSerialNumber)} w={widths.productSerialNumber} />
+                                <TextCell
+                                    v={log.productId ? (
+                                        <Link href={`/products/${log.productId}`} className="text-primary hover:underline font-medium">
+                                            {log.productName}
+                                        </Link>
+                                    ) : (
+                                        displayCell(log.productName)
+                                    )}
+                                    w={widths.productName}
+                                />
+                                <TextCell v={displayCell(log.productDescription)} w={widths.productDescription} />
+                                <TextCell v={displayCell(log.brand)} w={widths.brand} />
+                                <TextCell
+                                    v={log.shippingManifestId ? (
+                                        <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                            {log.shippingManifest || "View Manifest"}
+                                        </Link>
+                                    ) : (
+                                        displayCell(log.shippingManifest)
+                                    )}
+                                    w={widths.shippingManifest}
+                                />
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
             <Pagination
                 currentPage={currentPage}

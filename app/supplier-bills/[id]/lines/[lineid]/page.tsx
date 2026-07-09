@@ -57,7 +57,7 @@ export default function SupplierBillLineDetailPage({
                         productName: item.Product_Name,
                         productDescription: item.Product_Description__c,
                         manufacturerDBA: item.Manufacturer_DBA__c,
-                        brand: undefined,
+                        brand: item.Product_Brand_Name__c,
                         proposedProduct: item.Proposed_Product_Name,
                         site: item.Site_Name,
                         siteId: item.Site__c,

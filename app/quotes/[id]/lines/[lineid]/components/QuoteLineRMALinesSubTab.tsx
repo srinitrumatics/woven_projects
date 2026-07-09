@@ -1,8 +1,8 @@
-import { SortableHeader } from"@/components/ui/SortableHeader";
-import { formatCurrency, formatDate, displayCell } from"@/lib/utils/formatting";
-import Pagination from"@/components/ui/Pagination";
-import { useState, useMemo } from"react";
-import Link from"next/link";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
+import Pagination from "@/components/ui/Pagination";
+import { useState, useMemo } from "react";
+import Link from "next/link";
 
 interface RMALine {
     id: string;
@@ -71,7 +71,7 @@ export default function QuoteLineRMALinesSubTab({
             <div className="overflow-x-auto">
                 {data.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium"title="No records found">No records found</p>
+                        <p className="text-lg font-medium" title="No records found">No records found</p>
                         <p className="text-sm">There are no RMAs associated with this quote line.</p>
                     </div>
                 ) : (
@@ -86,22 +86,22 @@ export default function QuoteLineRMALinesSubTab({
                                     width={widths.lineName}
                                     onResize={handleResize}
                                     className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
-                                   
+
                                 />
-                                <SortableHeader label="Status"field="status"sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                <SortableHeader label="RMA #"field="rmaName"sortConfig={sortConfig} requestSort={requestSort} width={widths.rmaName} onResize={handleResize} />
-                                <SortableHeader label="Sales Order Lines"field="salesOrderLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} />
-                                <SortableHeader label="Customer Quote Line"field="customerQuoteLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
-                                <SortableHeader label="Proposed Product"field="proposedProductName"sortConfig={sortConfig} requestSort={requestSort} width={widths.proposedProductName} onResize={handleResize} />
-                                <SortableHeader label="Reason Code"field="reasonCode"sortConfig={sortConfig} requestSort={requestSort} width={widths.reasonCode} onResize={handleResize} />
-                                <SortableHeader label="Product Name"field="productName"sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
-                                <SortableHeader label="Product Description"field="description"sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                <SortableHeader label="Brand Name"field="brand"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
-                                <SortableHeader label="Unit Price"field="unitPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
-                                <SortableHeader label="Return Qty"field="returnQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.returnQty} onResize={handleResize} />
-                                <SortableHeader label="Total Price"field="totalPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                                <SortableHeader label="Open Balance Qty"field="openBalanceQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalanceQty} onResize={handleResize} />
-                                <SortableHeader label="Goods Receipt Date"field="receiptDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.receiptDate} onResize={handleResize} />
+                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                                <SortableHeader label="RMA #" field="rmaName" sortConfig={sortConfig} requestSort={requestSort} width={widths.rmaName} onResize={handleResize} />
+                                <SortableHeader label="Sales Order Lines" field="salesOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} />
+                                <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
+                                <SortableHeader label="Proposed Product" field="proposedProductName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposedProductName} onResize={handleResize} />
+                                <SortableHeader label="Reason Code" field="reasonCode" sortConfig={sortConfig} requestSort={requestSort} width={widths.reasonCode} onResize={handleResize} />
+                                <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
+                                <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
+                                <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
+                                <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
+                                <SortableHeader label="Return Qty" field="returnQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.returnQty} onResize={handleResize} />
+                                <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
+                                <SortableHeader label="Open Balance Qty" field="openBalanceQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalanceQty} onResize={handleResize} />
+                                <SortableHeader label="Goods Receipt Date" field="receiptDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.receiptDate} onResize={handleResize} />
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800">
@@ -136,7 +136,7 @@ export default function QuoteLineRMALinesSubTab({
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.reasonCode }}>{displayCell(item.reasonCode)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{displayCell(item.productName)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{displayCell(item.description)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{displayCell(item.brand)}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.brand }}>{displayCell(item.brand)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.unitPrice }}>{formatCurrency(item.unitPrice)}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.returnQty }}>{item.returnQty}</td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(item.totalPrice)}</td>
