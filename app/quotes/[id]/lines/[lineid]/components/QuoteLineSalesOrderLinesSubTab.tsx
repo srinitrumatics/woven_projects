@@ -14,6 +14,7 @@ interface SOLI {
     customerQuoteLineId: string;
     proposedProductName?: string;
     proposedProductId?: string;
+    proposalId?: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -115,7 +116,7 @@ export default function QuoteLineSalesOrderLinesSubTab({
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposedProductName }}>
                                         {item.proposedProductId ? (
-                                            <Link href={`/products/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {item.proposedProductName}
                                             </Link>
                                         ) : displayCell(item.proposedProductName)}

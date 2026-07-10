@@ -68,6 +68,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           customerQuoteLineName: line.Customer_Quote_Line_Name || '',
           proposedProduct: line.Proposed_Product_Name || '',
           proposedProductId: line.Proposed_Product__c || '',
+          proposalId: line.Proposal__c || '',
           productId: line.Product__c || ''
         }));
 

@@ -73,6 +73,7 @@ export interface InvoiceLine {
   customerQuoteLineName?: string;
   proposedProduct?: string;
   proposedProductId?: string;
+  proposalId?: string;
   productId?: string;
 }
 

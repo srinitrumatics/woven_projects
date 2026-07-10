@@ -116,6 +116,7 @@ export default function SupplierBillDetailPage() {
                         customerQuoteLineId: l.Customer_Quote_Line__c || '',
                         proposedProduct: l.Proposed_Product_Name || '',
                         proposedProductId: l.Proposed_Product__c || '',
+                        proposalId: l.Proposal__c || '',
                         purchaseOrderId: l.Purchase_Order__c || l.Purchase_Order_Line__r?.Purchase_Order__c || '',
                         purchaseOrderLineId: l.Purchase_Order_Line__c || '',
                         productName: l.Product_Name || '',

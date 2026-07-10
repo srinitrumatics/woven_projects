@@ -72,6 +72,7 @@ export interface SupplierBillLine {
   supplierBillLineNotes?: string;
   proposedProduct?: string;
   proposedProductId?: string;
+  proposalId?: string;
   site?: string;
   siteId?: string;
   inventoryAccount?: string;

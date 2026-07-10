@@ -61,6 +61,7 @@ interface CreditMemoLine {
     customerQuoteLineId: string;
     proposedProductName?: string;
     proposedProductId?: string;
+    proposalId?: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -85,6 +86,7 @@ interface RMALine {
     customerQuoteLineId: string;
     proposedProductName?: string;
     proposedProductId?: string;
+    proposalId?: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -198,6 +200,7 @@ export default function QuoteLineReturnsTab({
                             customerQuoteLineId: item.Customer_Quote_Line__c,
                             proposedProductName: item.Proposed_Product_Name || '-',
                             proposedProductId: item.Proposed_Product__c || '-',
+                            proposalId: item.Proposal__c || "-",
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
@@ -225,6 +228,7 @@ export default function QuoteLineReturnsTab({
                             customerQuoteLineId: item.Customer_Quote_Line__c,
                             proposedProductName: item.Proposed_Product_Name || '-',
                             proposedProductId: item.Proposed_Product__c || '-',
+                            proposalId: item.Proposal__c || "-",
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,

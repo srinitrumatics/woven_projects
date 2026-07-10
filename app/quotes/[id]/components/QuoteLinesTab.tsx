@@ -105,7 +105,7 @@ export default function QuoteLinesTab({
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[160px] truncate" style={{ width: widths.productName }} title={line.productName}>
                                     {line.productId ? (
-                                        <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                        <Link href={`/proposals/${line.proposalId}/lines/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {line.productName}
                                         </Link>
                                     ) : displayCell(line.productName)}

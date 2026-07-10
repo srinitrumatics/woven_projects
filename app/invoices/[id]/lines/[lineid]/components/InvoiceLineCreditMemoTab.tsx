@@ -21,6 +21,7 @@ interface CreditMemoLine {
     customerQuoteId: string;
     proposedProduct: string;   // Proposed Product
     proposedProductId: string;
+    proposalId?: string;
     productName: string;       // Product Name
     productId: string;
     description: string;       // Product Description
@@ -66,6 +67,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                         customerQuoteId: item.Customer_Quote__c || item.Customer_Quote_Line__r?.Customer_Quote__c || "",
                         proposedProduct: item.Proposed_Product_Name || "",
                         proposedProductId: item.Proposed_Product__c || "",
+                        proposalId: item.Proposal__c || "",
                         productName: item.Product_Name || "",
                         productId: item.Product__c || "",
                         description: item.Product_Description__c || "",
@@ -181,7 +183,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                     {item.proposedProductId ? (
-                                        <Link href={`/products/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                        <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                             {displayCell(item.proposedProduct)}
                                         </Link>
                                     ) : (

@@ -15,6 +15,7 @@ interface SOLI {
     customerQuoteLineId: string;
     proposedProductName?: string;
     proposedProductId?: string;
+    proposalId?: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -40,6 +41,7 @@ interface SMLI {
     customerQuoteLineId: string;
     proposedProductName?: string;
     proposedProductId?: string;
+    proposalId?: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -68,6 +70,7 @@ interface INLI {
     customerQuoteLineId: string;
     proposedProductName?: string;
     proposedProductId?: string;
+    proposalId?: string;
     purchaseOrderLine: string;
     purchaseOrderLineId: string;
     productName: string;
@@ -130,6 +133,7 @@ export default function QuoteLineFulfillmentsTab({
                             customerQuoteLineId: item.Customer_Quote_Line__c,
                             proposedProductName: item.Proposed_Product_Name || '',
                             proposedProductId: item.Proposed_Product__c || '',
+                            proposalId: item.Proposal__c || "",
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,
@@ -158,6 +162,7 @@ export default function QuoteLineFulfillmentsTab({
                             customerQuoteLineId: item.Customer_Quote_Line__c,
                             proposedProductName: item.Proposed_Product_Name || '',
                             proposedProductId: item.Proposed_Product__c || '',
+                            proposalId: item.Proposal__c || "",
                             purchaseOrderLine: item.Purchase_Order_Line_Name,
                             purchaseOrderLineId: item.Purchase_Order_Line__c,
                             productName: item.Product_Name,
@@ -187,6 +192,7 @@ export default function QuoteLineFulfillmentsTab({
                             customerQuoteLineId: item.Customer_Quote_Line__c,
                             proposedProductName: item.Proposed_Product_Name || '',
                             proposedProductId: item.Proposed_Product__c || '',
+                            proposalId: item.Proposal__c || "",
                             productName: item.Product_Name,
                             description: item.Product_Description__c,
                             manufacturerDBA: item.Manufacturer_DBA__c,

@@ -84,6 +84,7 @@ export interface QuoteLine {
   grouping?: string;
   proposedProductName?: string;
   proposedProductId?: string;
+  proposalId?: string;
   unitPrice: number;
   quantity: number;
   totalPrice: number;

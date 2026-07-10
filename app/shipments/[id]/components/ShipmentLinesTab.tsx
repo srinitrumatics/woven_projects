@@ -27,6 +27,7 @@ interface ShipmentLine {
     customerQuoteLineId?: string;
     proposedProduct?: string;
     proposedProductId?: string;
+    proposalId?: string;
     productName: string;
     productId?: string;
     productDescription: string;
@@ -87,6 +88,7 @@ function mapLine(raw: any): ShipmentLine {
         customerQuoteLineId: raw.Customer_Quote_Line__c || "",
         proposedProduct: raw.Proposed_Product_Name || "",
         proposedProductId: raw.Proposed_Product__c || "",
+        proposalId: raw.Proposal__c || "",
         productName: raw.Product_Name || "",
         productId: raw.Product__c || "",
         productDescription: raw.Product_Description__c || "",
@@ -236,7 +238,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 />
                                 <TextCell
                                     v={line.customerQuoteId && line.customerQuoteLineId ? (
-                                        <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {line.customerQuoteLineName}
                                         </Link>
                                     ) : (
@@ -246,7 +248,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 />
                                 <TextCell
                                     v={line.proposedProductId ? (
-                                        <Link href={`/products/${line.proposedProductId}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} className="text-primary hover:underline font-medium">
                                             {line.proposedProduct}
                                         </Link>
                                     ) : (

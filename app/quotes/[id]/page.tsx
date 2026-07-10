@@ -188,6 +188,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           contactName: item.Bill_to_Contact_Name || 'N/A',
           accountExecutive: item.Owner_Name || 'N/A',
           proposalName: item.Proposal_Name || 'N/A',
+          proposalId: item.Proposal__c || 'N/A',
           customerOrder: item.Customer_Order_Name || 'N/A',
           issuedDate: item.Issued_Date__c || '',
           expirationDate: item.Expiration_Date__c || '',

@@ -20,6 +20,7 @@ interface DebitMemoLine {
     Customer_Quote_Line_Name: string;
     Proposed_Product_Name?: string;
     Proposed_Product__c?: string;
+    Proposal__c?: string;
     Purchase_Order__c?: string;
     Customer_Quote__c?: string;
     Supplier_Bill__c?: string;
@@ -155,7 +156,7 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Proposed_Product_Name || '-'}>
                                     {line.Proposed_Product__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/products/${line.Proposed_Product__c}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/proposals/${line.Proposal__c}/lines/${line.Proposed_Product__c}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {line.Proposed_Product_Name || 'View Product'}
                                             </Link>
                                         ) : (
@@ -165,7 +166,7 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>
                                     {line.Product_Name__c ? (
-                                        <Link href={`/products/${line.Product_Name__c}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/products/${line.Product_Name__c}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {line.Product_Name}
                                         </Link>
                                     ) : displayCell(line.Product_Name)}

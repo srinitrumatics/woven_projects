@@ -1,8 +1,8 @@
-import { SortableHeader } from"@/components/ui/SortableHeader";
-import { formatCurrency, formatDate, formatNumber, displayCell } from"@/lib/utils/formatting";
-import Pagination from"@/components/ui/Pagination";
-import { useState, useMemo } from"react";
-import Link from"next/link";
+import { SortableHeader } from "@/components/ui/SortableHeader";
+import { formatCurrency, formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
+import Pagination from "@/components/ui/Pagination";
+import { useState, useMemo } from "react";
+import Link from "next/link";
 import { Eye } from "lucide-react";
 
 interface SMLI {
@@ -17,6 +17,7 @@ interface SMLI {
     customerQuoteLineId: string;
     proposedProductName?: string;
     proposedProductId?: string;
+    proposalId?: string;
     productName: string;
     description: string;
     manufacturerDBA: string;
@@ -76,32 +77,32 @@ export default function QuoteLineShippingManifestLinesSubTab({
             <div className="overflow-x-auto">
                 {data.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium"title="No records found">No records found</p>
+                        <p className="text-lg font-medium" title="No records found">No records found</p>
                         <p className="text-sm">There are no shipping manifests associated with this quote line.</p>
                     </div>
                 ) : (
                     <table className="w-full text-sm table-fixed">
                         <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                             <tr>
-                                <SortableHeader label="Shipping Manifest Line #"field="lineName"sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"/>
-                                <SortableHeader label="Status"field="status"sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                <SortableHeader label="Shipping Manifest #"field="manifestName"sortConfig={sortConfig} requestSort={requestSort} width={widths.manifestName} onResize={handleResize} />
-                                <SortableHeader label="Sales Order Line"field="salesOrderLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} />
-                                <SortableHeader label="Customer Quote Line"field="customerQuoteLine"sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
-                                <SortableHeader label="Proposed Product"field="proposedProductName"sortConfig={sortConfig} requestSort={requestSort} width={widths.proposedProductName} onResize={handleResize} />
-                                <SortableHeader label="Product Name"field="productName"sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
-                                <SortableHeader label="Product Description"field="description"sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                <SortableHeader label="Brand Name"field="brand"sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
-                                <SortableHeader label="Unit Price"field="unitPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
-                                <SortableHeader label="Total Order Qty"field="totalOrderQty"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalOrderQty} onResize={handleResize} />
-                                <SortableHeader label="Total Price"field="totalPrice"sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                                <SortableHeader label="Qty Shipped"field="qtyShipped"sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyShipped} onResize={handleResize} />
-                                <SortableHeader label="Box Count"field="boxCount"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxCount} onResize={handleResize} />
-                                <SortableHeader label="Box Length"field="boxLength"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxLength} onResize={handleResize} />
-                                <SortableHeader label="Box Width"field="boxWidth"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxWidth} onResize={handleResize} />
-                                <SortableHeader label="Box Height"field="boxHeight"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxHeight} onResize={handleResize} />
-                                <SortableHeader label="Box Net Weight"field="boxNetWeight"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxNetWeight} onResize={handleResize} />
-                                <SortableHeader label="Box Gross Weight"field="boxGrossWeight"sortConfig={sortConfig} requestSort={requestSort} width={widths.boxGrossWeight} onResize={handleResize} />
+                                <SortableHeader label="Shipping Manifest Line #" field="lineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                                <SortableHeader label="Shipping Manifest #" field="manifestName" sortConfig={sortConfig} requestSort={requestSort} width={widths.manifestName} onResize={handleResize} />
+                                <SortableHeader label="Sales Order Line" field="salesOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} />
+                                <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
+                                <SortableHeader label="Proposed Product" field="proposedProductName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposedProductName} onResize={handleResize} />
+                                <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} />
+                                <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
+                                <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} />
+                                <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
+                                <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalOrderQty} onResize={handleResize} />
+                                <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
+                                <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyShipped} onResize={handleResize} />
+                                <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxCount} onResize={handleResize} />
+                                <SortableHeader label="Box Length" field="boxLength" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxLength} onResize={handleResize} />
+                                <SortableHeader label="Box Width" field="boxWidth" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxWidth} onResize={handleResize} />
+                                <SortableHeader label="Box Height" field="boxHeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxHeight} onResize={handleResize} />
+                                <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxNetWeight} onResize={handleResize} />
+                                <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxGrossWeight} onResize={handleResize} />
                                 <th className="px-3 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white w-[80px]">Action</th>
                             </tr>
                         </thead>
@@ -135,7 +136,7 @@ export default function QuoteLineShippingManifestLinesSubTab({
                                     </td>
                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposedProductName }}>
                                         {item.proposedProductId ? (
-                                            <Link href={`/products/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {item.proposedProductName}
                                             </Link>
                                         ) : displayCell(item.proposedProductName)}

@@ -20,6 +20,7 @@ interface DebitMemoLine {
     Customer_Quote_Line_Name?: string;
     Proposed_Product_Name?: string;
     Proposed_Product__c?: string;
+    Proposal__c?: string;
     Purchase_Order__c?: string;
     Purchase_Order_Line__c?: string;
     Product_Name?: string;
@@ -131,7 +132,7 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
                                     {line.Proposed_Product__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/products/${line.Proposed_Product__c}`} className="text-primary hover:underline font-medium">
+                                            <Link href={`/proposals/${line.Proposal__c}/lines/${line.Proposed_Product__c}`} className="text-primary hover:underline font-medium">
                                                 {line.Proposed_Product_Name}
                                             </Link>
                                         ) : (

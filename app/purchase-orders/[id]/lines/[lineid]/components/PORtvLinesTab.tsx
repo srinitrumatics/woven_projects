@@ -17,6 +17,7 @@ interface RtvLine {
     RTV_Name: string;
     Proposed_Product_Name?: string;
     Proposed_Product__c?: string;
+    proposal__c: string;
     Purchase_Order__c?: string;
     Customer_Order_Line__c: string;
     Customer_Quote_Line__c?: string;
@@ -151,7 +152,7 @@ export default function PORtvLinesTab({ lines }: PORtvLinesTabProps) {
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Proposed_Product_Name || '-'}>
                                     {line.Proposed_Product__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/products/${line.Proposed_Product__c}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/proposals/${line.proposal__c}/lines/${line.Proposed_Product__c}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {line.Proposed_Product_Name || 'View Product'}
                                             </Link>
                                         ) : (
@@ -162,7 +163,7 @@ export default function PORtvLinesTab({ lines }: PORtvLinesTabProps) {
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Reason_Code__c || '-'}>{displayCell(line.Reason_Code__c)}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>
                                     {line.Product_Name__c ? (
-                                        <Link href={`/products/${line.Product_Name__c}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/products/${line.Product_Name__c}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {line.Product_Name}
                                         </Link>
                                     ) : displayCell(line.Product_Name)}
