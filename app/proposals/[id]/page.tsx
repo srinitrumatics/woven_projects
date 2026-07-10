@@ -472,7 +472,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               productFamily: item.Product_Family__c || 'General',
               grouping: item.Groupings__c || '',
               status: item.Status__c || '',
-              brandName: item.gtherp__Brand_Name__c || '',
+              brandName: item.Product_Brand_Name__c || '',
               qtyShipped: item.Qty_Shipped__c || 0,
               category: item.Category__c || item.Product_Family__c || 'General',
               quantity: item.Total_Order_Qty__c || 0,
