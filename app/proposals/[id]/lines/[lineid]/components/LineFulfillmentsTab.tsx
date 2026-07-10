@@ -184,7 +184,7 @@ export default function LineFulfillmentsTab({
                                                     width={quoteWidths.name}
                                                     onResize={handleQuoteResize}
                                                     className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
-                                                   
+
                                                 />
                                                 <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.status} onResize={handleQuoteResize} />
                                                 <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.customerQuoteName} onResize={handleQuoteResize} />
@@ -294,7 +294,7 @@ export default function LineFulfillmentsTab({
                                                     width={salesWidths.name}
                                                     onResize={handleSalesResize}
                                                     className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
-                                                   
+
                                                 />
                                                 <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.status} onResize={handleSalesResize} />
                                                 <SortableHeader label="Sales Order #" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.salesOrderName} onResize={handleSalesResize} />
@@ -331,7 +331,7 @@ export default function LineFulfillmentsTab({
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                         {order.customerQuoteLineName && order.customerQuoteLineId ? (
-                                                            <Link href={`/quotes/${order.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={order.customerQuoteLineName}>{order.customerQuoteLineName}</Link>
+                                                            <Link href={`/quotes/${order.customerQuoteId}/lines/${order.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={order.customerQuoteLineName}>{order.customerQuoteLineName}</Link>
                                                         ) : (
                                                             <div className="truncate" title={order.customerQuoteLineName}>{order.customerQuoteLineName}</div>
                                                         )}
@@ -402,7 +402,7 @@ export default function LineFulfillmentsTab({
                                                     width={invoiceWidths.name}
                                                     onResize={handleInvoiceResize}
                                                     className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
-                                                   
+
                                                 />
                                                 <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.status} onResize={handleInvoiceResize} />
                                                 <SortableHeader label="Invoice #" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.invoiceName} onResize={handleInvoiceResize} />
@@ -458,7 +458,7 @@ export default function LineFulfillmentsTab({
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                         {invoice.customerQuoteLineName && invoice.customerQuoteLineId ? (
-                                                            <Link href={`/quotes/${invoice.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.customerQuoteLineName}>{invoice.customerQuoteLineName}</Link>
+                                                            <Link href={`/quotes/${invoice.customerQuoteId}/lines/${invoice.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.customerQuoteLineName}>{invoice.customerQuoteLineName}</Link>
                                                         ) : (
                                                             <div className="truncate" title={invoice.customerQuoteLineName}>{invoice.customerQuoteLineName}</div>
                                                         )}
@@ -541,7 +541,7 @@ export default function LineFulfillmentsTab({
                                                     width={shippingWidths.name}
                                                     onResize={handleShippingResize}
                                                     className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
-                                                   
+
                                                 />
                                                 <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.status} onResize={handleShippingResize} />
                                                 <SortableHeader label="Shipping Manifest #" field="shippingManifestName" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.shippingManifestName} onResize={handleShippingResize} />
@@ -592,7 +592,7 @@ export default function LineFulfillmentsTab({
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.customerQuoteLineName}>
                                                         {manifest.customerQuoteLineName && manifest.customerQuoteLineId ? (
-                                                            <Link href={`/quotes/${manifest.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{manifest.customerQuoteLineName}</Link>
+                                                            <Link href={`/quotes/${manifest.customerQuoteId}/lines/${manifest.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{manifest.customerQuoteLineName}</Link>
                                                         ) : (
                                                             <div className="text-sm text-gray-900 dark:text-white truncate">{manifest.customerQuoteLineName}</div>
                                                         )}
@@ -648,6 +648,6 @@ export default function LineFulfillmentsTab({
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }

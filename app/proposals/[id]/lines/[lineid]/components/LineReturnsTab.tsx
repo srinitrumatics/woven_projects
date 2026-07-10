@@ -200,7 +200,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                 width={rmaWidths.name}
                                                 onResize={handleRmaResize}
                                                 className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
-                                               
+
                                             />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.status} onResize={handleRmaResize} />
                                             <SortableHeader label="RMA #" field="rmaName" sortConfig={sortConfig} requestSort={requestSort} width={rmaWidths.rmaName} onResize={handleRmaResize} />
@@ -241,7 +241,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                         {rma.customerQuoteLineName && rma.customerQuoteLineId ? (
-                                                            <Link href={`/quotes/${rma.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{rma.customerQuoteLineName}</Link>
+                                                            <Link href={`/quotes/${rma.customerQuoteId}/lines/${rma.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{rma.customerQuoteLineName}</Link>
                                                         ) : displayCell(rma.customerQuoteLineName)}
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
@@ -292,7 +292,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                 width={rtvWidths.name}
                                                 onResize={handleRtvResize}
                                                 className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
-                                               
+
                                             />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.status} onResize={handleRtvResize} />
                                             <SortableHeader label="RTV" field="rtvName" sortConfig={sortConfig} requestSort={requestSort} width={rtvWidths.rtvName} onResize={handleRtvResize} />
@@ -365,7 +365,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                 width={creditWidths.name}
                                                 onResize={handleCreditResize}
                                                 className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
-                                               
+
                                             />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.status} onResize={handleCreditResize} />
                                             <SortableHeader label="Credit Memo #" field="creditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={creditWidths.creditMemoName} onResize={handleCreditResize} />
@@ -399,7 +399,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(credit.salesOrderLineName)}</td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                                         {credit.customerQuoteLineName && credit.customerQuoteLineId ? (
-                                                            <Link href={`/quotes/${credit.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{credit.customerQuoteLineName}</Link>
+                                                            <Link href={`/quotes/${credit.customerQuoteId}/lines/${credit.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{credit.customerQuoteLineName}</Link>
                                                         ) : displayCell(credit.customerQuoteLineName)}
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(credit.productName)}</td>
@@ -448,7 +448,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                 width={debitWidths.name}
                                                 onResize={handleDebitResize}
                                                 className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
-                                               
+
                                             />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.status} onResize={handleDebitResize} />
                                             <SortableHeader label="Debit Memo" field="debitMemoName" sortConfig={sortConfig} requestSort={requestSort} width={debitWidths.debitMemoName} onResize={handleDebitResize} />

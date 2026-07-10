@@ -121,7 +121,7 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
                                 <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
                                     {line.Customer_Quote_Line__c && line.Customer_Quote__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} className="text-primary hover:underline font-medium">
+                                            <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">
                                                 {line.Customer_Quote_Line_Name}
                                             </Link>
                                         ) : (
