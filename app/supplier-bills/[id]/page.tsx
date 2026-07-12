@@ -214,7 +214,7 @@ export default function SupplierBillDetailPage() {
                                     supplierBillId: d.Supplier_Bill__c || '',
                                     appliedAmount: d.Applied_Amount__c || 0,
                                     availableDebitBalance: d.Available_Debit_Balance__c || 0,
-                                    expirationDate: d.expirationDate || '',
+                                    expirationDate: d.Expiration_Date__c || '',
                                     postedDate: d.Posted_Date__c || '',
                                     notes: d.Applied_Debit_Memo_Notes__c || '',
                                 }))];
@@ -244,6 +244,7 @@ export default function SupplierBillDetailPage() {
                                     totalTaxes: d.Total_Taxes_Amount__c || 0,
                                     totalDebitAmount: d.Total_Debit_Amount__c || 0,
                                     issuedDate: d.Issued_Date__c || '',
+                                    expirationDate: d.Expiration_Date__c || '',
                                     approvalDate: d.Approval_Date__c || '',
                                     availableDebitBalance: d.Available_Debit_Balance__c || 0,
                                     settledDate: d.Settled_Date__c || '',

@@ -94,8 +94,8 @@ export default function ProductsTab({
                                     <StatusBadge status={product.status || ''} />
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" style={{ width: widths.productName }} title={product.productName || ''}>
-                                    {product.productName ? (
-                                        <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary hover:underline truncate">
+                                    {product.productId ? (
+                                        <Link href={`/products/${product.productId}`} target="_blank" className="text-primary hover:underline truncate">
                                             {product.productName}
                                         </Link>
                                     ) : displayCell(product.productName)}

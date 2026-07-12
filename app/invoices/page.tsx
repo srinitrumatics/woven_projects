@@ -586,7 +586,7 @@ export default function InvoicesPage() {
                           </div>
                         </td>
                         <td className="px-3 py-2 truncate">
-                          displayCell(invoice.proposalName)
+                          {displayCell(invoice.proposalName)}
                         </td>
                         <td className="px-3 py-2 truncate">
                           <div>

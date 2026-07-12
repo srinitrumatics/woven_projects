@@ -51,7 +51,7 @@ interface ShipmentLine {
 
 // ─── Column widths ────────────────────────────────────────────────────────────
 const DEFAULT_WIDTHS: Record<string, number> = {
-    name: 190,
+    name: 200,
     status: 110,
     salesOrderLineName: 160,
     customerQuoteLineName: 185,
@@ -90,7 +90,7 @@ function mapLine(raw: any): ShipmentLine {
         proposedProductId: raw.Proposed_Product__c || "",
         proposalId: raw.Proposal__c || "",
         productName: raw.Product_Name || "",
-        productId: raw.Product__c || "",
+        productId: raw.Product_Name__c || "",
         productDescription: raw.Product_Description__c || "",
         manufacturerDBA: raw.Manufacturer_DBA__c || "",
         brand: raw.Product_Brand_Name__c || "",
@@ -248,7 +248,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 />
                                 <TextCell
                                     v={line.proposedProductId ? (
-                                        <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {line.proposedProduct}
                                         </Link>
                                     ) : (
@@ -258,7 +258,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 />
                                 <TextCell
                                     v={line.productId ? (
-                                        <Link href={`/products/${line.productId}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {line.productName}
                                         </Link>
                                     ) : (

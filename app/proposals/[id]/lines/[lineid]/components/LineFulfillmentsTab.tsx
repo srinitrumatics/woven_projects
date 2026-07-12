@@ -578,13 +578,7 @@ export default function LineFulfillmentsTab({
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shippingManifestName}>
                                                         <div className="text-sm text-gray-900 dark:text-white truncate">
-                                                            {manifest.shippingManifestName && manifest.shippingManifestId ? (
-                                                                <Link href={`/shipments/${manifest.shippingManifestId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{manifest.shippingManifestName}</Link>
-                                                            ) : (
-                                                                <div className="text-sm text-gray-900 dark:text-white truncate">
-                                                                    {manifest.shippingManifestName}
-                                                                </div>
-                                                            )}
+                                                            {manifest.shippingManifestName}
                                                         </div>
                                                     </td>
                                                     <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.salesOrderLineName}>

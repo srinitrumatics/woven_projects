@@ -27,7 +27,7 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
     const isManufacturer = ['Supplier', 'Manufacturer', 'Manufacturer Rep', 'Logistics Partner'].includes(selectedAccount?.Account_Record_Type__c || '');
 
     const [currentPage, setCurrentPage] = useState(1);
-    const { items: sortedData, requestSort, sortConfig } = useSortableData<SupplierBillLine>(lines, { key: 'name', direction: 'desc' });
+    const { items: sortedData, requestSort, sortConfig } = useSortableData<SupplierBillLine>(lines, { key: 'name', direction: 'asc' });
 
     const initialWidths = {
         name: 180,

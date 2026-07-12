@@ -28,6 +28,7 @@ export interface ProposedProduct {
     id: string;
     Name: string;
     productName: string;
+    productId: string;
     productSku: string;
     description: string;
     manufacturer: string;

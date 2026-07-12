@@ -29,7 +29,6 @@ interface DebitMemo {
     Total_Debit_Amount__c?: number;
     Issued_Date__c?: string;
     Expiration_Date__c?: string;
-    gtherp__Expiration_Date__c?: string;
     Available_Debit_Balance__c?: number;
     Settled_Date__c?: string;
 }
@@ -52,7 +51,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
         status: d.Status__c,
         proposalNumber: d.Proposal_Number || d.Proposal_Name || '',
         proposalName: d.Proposal_Name || '',
-        expirationDate: d.Expiration_Date__c || d.gtherp__Expiration_Date__c || '',
+        expirationDate: d.Expiration_Date__c || '',
     })), [debitMemos]);
 
     const { items: sortedData, requestSort, sortConfig } = useSortableData(mappedData, { key: 'name', direction: 'asc' });

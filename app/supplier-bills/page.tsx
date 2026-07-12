@@ -26,6 +26,7 @@ export default function SupplierBillsPage() {
     const { widths, handleResize } = useResizableColumns({
         name: 180,
         status: 120,
+        supplierName: 180,
         purchaseOrderName: 160,
         customerQuoteName: 160,
         proposalNumber: 160,
@@ -47,9 +48,9 @@ export default function SupplierBillsPage() {
         actions: 100
     });
 
-  const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.Id || user?.contact?.Id || "";
+    const { user, selectedAccount } = useUserSession();
+    const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+    const SF_CONTACT_ID = user?.Id || user?.contact?.Id || "";
 
     useEffect(() => {
         async function fetchSupplierBills() {
@@ -273,6 +274,7 @@ export default function SupplierBillsPage() {
                                 <tr>
                                     <SortableHeader label="Supplier Bill #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                     <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                                    <SortableHeader label="Supplier" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierName} onResize={handleResize} />
                                     <SortableHeader label="Purchase Order #" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderName} onResize={handleResize} />
                                     <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteName} onResize={handleResize} />
                                     <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
@@ -306,6 +308,7 @@ export default function SupplierBillsPage() {
                                                 </Link>
                                             </td>
                                             <td className="px-2 py-2 text-sm truncate" title={bill.status}><StatusBadge status={bill.status} /></td>
+                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.supplierName}>{displayCell(bill.supplierName)}</td>
                                             <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.purchaseOrderName}>
                                                 {bill.purchaseOrderId && bill.purchaseOrderId !== 'N/A' && bill.purchaseOrderId !== '' ? (
                                                     <Link href={`/purchase-orders/${bill.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
@@ -548,7 +551,7 @@ function LoadingState() {
 function EmptyState({ query }: { query: string }) {
     return (
         <tr>
-            <td colSpan={21} className="px-6 py-4 text-center truncate">
+            <td colSpan={22} className="px-6 py-4 text-center truncate">
                 <div className="flex flex-col items-center max-w-sm mx-auto min-w-0">
                     <p className="text-sm font-bold text-gray-900 dark:text-white mb-1 truncate" title="No Supplier Bills Found">No Supplier Bills Found</p>
                     <p className="text-gray-500 dark:text-gray-400 truncate">

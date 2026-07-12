@@ -465,6 +465,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               id: item.Id,
               Name: item.Name || 'N/A',
               productName: item.Product_Name || 'Unknown Product',
+              productId: item.Product_Name__c || "-",
               productSku: item.Name || 'N/A',
               description: item.Product_Description__c || '',
               manufacturer: item.Manufacturer_Name__c || '',

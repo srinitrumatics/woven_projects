@@ -150,7 +150,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.proposedProduct}>
                                     {line.proposedProductId ? (
                                         !isManufacturer ? (
-                                            <Link href={`/products/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {line.proposedProduct || 'View Product'}
                                             </Link>
                                         ) : (
@@ -162,7 +162,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                 </td>
                                 <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productName}>
                                     {line.productId ? (
-                                        <Link href={`/proposals/${line.proposalId}/lines/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {line.productName}
                                         </Link>
                                     ) : (

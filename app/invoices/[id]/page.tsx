@@ -69,7 +69,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           proposedProduct: line.Proposed_Product_Name || '',
           proposedProductId: line.Proposed_Product__c || '',
           proposalId: line.Proposal__c || '',
-          productId: line.Product__c || ''
+          productId: line.Product_Name__c || ''
         }));
 
         // Fetch Payments separately
