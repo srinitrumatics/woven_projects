@@ -275,7 +275,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           grouping: item.Product_Grouping__c || '-',
           proposedProductName: item.Proposed_Product_Name || '-',
           proposedProductId: item.Proposed_Product__c || '-',
-          proposedId: item.Proposed__c || '-',
+          proposedId: item.Proposal__c || '-',
           unitPrice: item.Unit_Price__c || 0,
           quantity: item.Total_Order_Qty__c || 0,
           totalPrice: item.Total_Price__c || 0,
