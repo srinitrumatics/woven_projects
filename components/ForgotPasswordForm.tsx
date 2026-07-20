@@ -129,7 +129,7 @@ export default function ForgotPasswordForm() {
           )}
 
           {step === 1 ? (
-            <form onSubmit={handleEmailSubmit} className="space-y-6">
+            <form method="POST" onSubmit={handleEmailSubmit} className="space-y-6">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                   Email Address
@@ -167,7 +167,7 @@ export default function ForgotPasswordForm() {
               </div>
             </form>
           ) : (
-            <form onSubmit={handleResetSubmit} className="space-y-4">
+            <form method="POST" onSubmit={handleResetSubmit} className="space-y-4">
               <div>
                 <label htmlFor="resetCode" className="block text-sm font-medium text-gray-700 mb-1">
                   Verification Code

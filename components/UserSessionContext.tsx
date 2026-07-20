@@ -126,15 +126,9 @@ export function UserSessionProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('isSuperAdmin');
 
     try {
-      // Fire and forget the server-side logout, or wait briefly
-      // We redirect anyway to ensure the user is moved
-      fetch('/api/auth/logout', { method: 'POST' }).catch(err => 
-        console.error('Background logout error:', err)
-      );
+      // Await the logout to ensure the cookie is deleted before redirecting
+      await fetch('/api/auth/logout', { method: 'POST' });
       
-      // Use window.location.href for logout to ensure a clean state, 
-      // but we could use router.push if we want it to be even faster.
-      // Given it's a logout, a full refresh is often safer to clear all memory states.
       window.location.href = '/signin'; 
     } catch (error) {
       console.error('Error during logout redirect:', error);

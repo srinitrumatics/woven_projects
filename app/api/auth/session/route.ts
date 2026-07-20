@@ -6,7 +6,7 @@ import { getCategoryFromAccountType, PERMISSIONS_BY_CATEGORY } from '@/lib/permi
 // Validates the session cookie and returns the Salesforce user data (contact + accounts)
 export async function GET(request: NextRequest) {
   try {
-    const sessionCookie = request.cookies.get('session')?.value;
+    const sessionCookie = request.cookies.get('wovn_main_session')?.value;
 
     if (!sessionCookie) {
       return NextResponse.json(

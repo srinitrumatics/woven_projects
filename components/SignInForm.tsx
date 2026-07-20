@@ -141,7 +141,7 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form method="POST" onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
                 {error}

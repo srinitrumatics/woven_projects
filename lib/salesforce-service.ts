@@ -367,7 +367,8 @@ export async function createOrderFromSalesforce(orderData: any): Promise<Salesfo
       return null;
     }
 
-    let Url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
+    const baseUrl = session.instanceUrl.replace(/\/$/, '');
+    let Url = `${baseUrl}/services/apexrest/gtherp/orders`;
 
     const response = await fetchWithLogging(Url, {
       method: 'POST',
@@ -403,7 +404,8 @@ export async function updateOrderFromSalesforce(orderId: string, orderData: any)
     }
 
     // Use the same custom Apex REST endpoint as create order
-    const url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
+    const baseUrl = session.instanceUrl.replace(/\/$/, '');
+    const url = `${baseUrl}/services/apexrest/gtherp/orders`;
 
     const response = await fetchWithLogging(url, {
       method: 'PATCH',
@@ -438,7 +440,8 @@ export async function cloneOrderFromSalesforce(orderData: any): Promise<any> {
     }
 
     // Use the same custom Apex REST endpoint as create order
-    const url = `${process.env.SF_DATA_URL}/services/apexrest/gtherp/orders`;
+    const baseUrl = session.instanceUrl.replace(/\/$/, '');
+    const url = `${baseUrl}/services/apexrest/gtherp/orders`;
 
     const response = await fetchWithLogging(url, {
       method: 'PATCH',

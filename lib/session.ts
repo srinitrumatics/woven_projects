@@ -40,7 +40,7 @@ export interface CurrentUser {
 // Get current user from session
 export async function getCurrentUser(): Promise<CurrentUser | null> {
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get('session')?.value;
+  const sessionCookie = cookieStore.get('wovn_main_session')?.value;
 
   if (!sessionCookie) {
     return null;
@@ -112,7 +112,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
 // Require authentication
 export async function requireAuth() {
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get('session')?.value;
+  const sessionCookie = cookieStore.get('wovn_main_session')?.value;
 
   if (!sessionCookie) {
     redirect('/auth');
@@ -156,7 +156,7 @@ export async function createSFSession(payload: any) {
   const session = await encrypt(minimizedPayload);
   const cookieStore = await cookies();
 
-  cookieStore.set('session', session, {
+  cookieStore.set('wovn_main_session', session, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
@@ -192,7 +192,7 @@ export async function getUserById(userId: string): Promise<CurrentUser | null> {
 // Delete a session (logout)
 export async function deleteSession() {
   const cookieStore = await cookies();
-  cookieStore.delete('session');
+  cookieStore.delete('wovn_main_session');
 }
 
 // Verify and decrypt the session JWT

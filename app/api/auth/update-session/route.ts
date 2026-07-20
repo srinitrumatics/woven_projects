@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
     // Get the current session
     const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get('session')?.value;
+    const sessionCookie = cookieStore.get('wovn_main_session')?.value;
 
     if (!sessionCookie) {
       return new Response(
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       expiresDate = currentSession.expires || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     }
 
-    cookieStore.set('session', encryptedSession, {
+    cookieStore.set('wovn_main_session', encryptedSession, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: expiresDate,

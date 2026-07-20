@@ -17,7 +17,7 @@ export async function PATCH(request: NextRequest) {
         if (result.success) {
             // Update the session cookie with new user_details
             const cookieStore = await cookies();
-            const sessionCookie = cookieStore.get('session')?.value;
+            const sessionCookie = cookieStore.get('wovn_main_session')?.value;
             
             if (sessionCookie) {
                 const currentSession = await decrypt(sessionCookie);
@@ -35,7 +35,7 @@ export async function PATCH(request: NextRequest) {
                     };
                     
                     const encryptedSession = await encrypt(updatedSession);
-                    cookieStore.set('session', encryptedSession, {
+                    cookieStore.set('wovn_main_session', encryptedSession, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production',
                         expires: currentSession.expires ? new Date(currentSession.expires) : undefined,

@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // --- Salesforce session protection for webapp routes ---
-  const sessionCookie = request.cookies.get('session')?.value;
+  const sessionCookie = request.cookies.get('wovn_main_session')?.value;
   const isAuthenticated = Boolean(sessionCookie);
 
   if (!isAuthenticated) {
