@@ -12,6 +12,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "test:rbac": "tsx lib/rbac-test.ts",
+    "test:product-sync": "tsx lib/product-sync-test.ts",
     "start:worker": "node workers/algolia-sync-worker.js"
   },
   "dependencies": {

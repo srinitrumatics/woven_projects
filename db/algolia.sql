@@ -10,12 +10,13 @@ CREATE TABLE IF NOT EXISTS sf_00dgk000007zmr7uam.algolia_sync_queue (
     record_id VARCHAR(255) NOT NULL, -- VARCHAR to support sf_00dgk000007zmr7uam IDs (18 chars)
     operation VARCHAR(10) NOT NULL CHECK (operation IN ('INSERT', 'UPDATE', 'DELETE')),
     payload JSONB,
-    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'failed')),
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'failed', 'dead')),
     retry_count INTEGER DEFAULT 0,
     error_message TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     processed_at TIMESTAMP,
-    last_retry_at TIMESTAMP
+    last_retry_at TIMESTAMP,
+    batch_id UUID -- NULL for rows enqueued outside an "Index Products" run (e.g. live single-product edits)
 );
 
 -- Indexes for efficient queue processing
@@ -24,6 +25,7 @@ CREATE INDEX IF NOT EXISTS idx_algolia_queue_status ON sf_00dgk000007zmr7uam.alg
 CREATE INDEX IF NOT EXISTS idx_algolia_queue_table_record ON sf_00dgk000007zmr7uam.algolia_sync_queue(table_name, record_id);
 CREATE INDEX IF NOT EXISTS idx_algolia_queue_cleanup ON sf_00dgk000007zmr7uam.algolia_sync_queue(status, processed_at) WHERE status = 'completed';
 CREATE INDEX IF NOT EXISTS idx_algolia_queue_retry ON sf_00dgk000007zmr7uam.algolia_sync_queue(status, last_retry_at) WHERE status = 'pending' AND retry_count > 0;
+CREATE INDEX IF NOT EXISTS idx_algolia_queue_batch ON sf_00dgk000007zmr7uam.algolia_sync_queue(batch_id) WHERE batch_id IS NOT NULL;
 
 -- ============================================
 -- 4. ALGOLIA SYNC LOG TABLE
@@ -75,6 +77,44 @@ ON CONFLICT (table_name) DO UPDATE SET
     transform_function = EXCLUDED.transform_function,
     filter_condition = EXCLUDED.filter_condition,
     batch_size = EXCLUDED.batch_size;
+
+-- ============================================
+-- 5B. PRODUCT SYNC RUN TRACKING (Load Products / Index Products)
+-- ============================================
+-- Tracks the split "Load Products" (Salesforce -> product2) and "Index Products"
+-- (product2 -> algolia_sync_queue) admin actions so the admin portal can show live
+-- progress and history for each, independent of one another.
+
+CREATE TABLE IF NOT EXISTS sf_00dgk000007zmr7uam.product_sync_runs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    status VARCHAR(20) NOT NULL DEFAULT 'running' CHECK (status IN ('running', 'completed', 'completed_with_errors', 'failed')),
+    salesforce_total INTEGER DEFAULT 0,
+    upserted_count INTEGER DEFAULT 0,
+    skipped_count INTEGER DEFAULT 0,
+    failed_count INTEGER DEFAULT 0,
+    error_message TEXT,
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP
+);
+
+-- At most one running Load run at a time for this org schema.
+CREATE UNIQUE INDEX IF NOT EXISTS unique_running_load_idx ON sf_00dgk000007zmr7uam.product_sync_runs ((1)) WHERE status = 'running';
+CREATE INDEX IF NOT EXISTS idx_product_sync_runs_started ON sf_00dgk000007zmr7uam.product_sync_runs(started_at DESC);
+
+CREATE TABLE IF NOT EXISTS sf_00dgk000007zmr7uam.algolia_index_runs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    status VARCHAR(20) NOT NULL DEFAULT 'running' CHECK (status IN ('running', 'completed', 'completed_with_errors', 'failed')),
+    total_enqueued INTEGER NOT NULL DEFAULT 0,
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP
+);
+
+-- At most one running Index run at a time for this org schema.
+CREATE UNIQUE INDEX IF NOT EXISTS unique_running_index_idx ON sf_00dgk000007zmr7uam.algolia_index_runs ((1)) WHERE status = 'running';
+CREATE INDEX IF NOT EXISTS idx_algolia_index_runs_started ON sf_00dgk000007zmr7uam.algolia_index_runs(started_at DESC);
+
+COMMENT ON TABLE sf_00dgk000007zmr7uam.product_sync_runs IS 'One row per "Load Products" (Salesforce -> product2) run, for progress/history reporting';
+COMMENT ON TABLE sf_00dgk000007zmr7uam.algolia_index_runs IS 'One row per "Index Products" (product2 -> algolia_sync_queue) run, grouping algolia_sync_queue rows by batch_id for progress/history reporting';
 
 -- ============================================
 -- 6. DATA TRANSFORMATION FUNCTIONS

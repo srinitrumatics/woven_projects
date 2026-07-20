@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   ArrowLeftIcon,
@@ -39,10 +39,27 @@ export default function CreateOrganizationPage() {
     indexName: ''
   });
 
-  const [syncing, setSyncing] = useState(false);
-  const [syncMessage, setSyncMessage] = useState('');
-  const [syncError, setSyncError] = useState('');
-  const [hasSynced, setHasSynced] = useState(false);
+  const [load, setLoad] = useState<{
+    status: 'idle' | 'running' | 'completed' | 'completed_with_errors' | 'failed';
+    runId: string | null;
+    upserted: number;
+    salesforceTotal: number;
+    skipped: number;
+    failed: number;
+    error: string;
+    completedAt: string | null;
+  }>({ status: 'idle', runId: null, upserted: 0, salesforceTotal: 0, skipped: 0, failed: 0, error: '', completedAt: null });
+
+  const [index, setIndex] = useState<{
+    status: 'idle' | 'running' | 'completed' | 'completed_with_errors' | 'failed';
+    runId: string | null;
+    totalEnqueued: number;
+    succeeded: number;
+    failed: number;
+    pending: number;
+    error: string;
+    completedAt: string | null;
+  }>({ status: 'idle', runId: null, totalEnqueued: 0, succeeded: 0, failed: 0, pending: 0, error: '', completedAt: null });
 
   // Derive schemaName from orgId using the sf_ convention (matches the sync worker)
   const deriveSchemaName = (orgId: string) =>
@@ -143,32 +160,101 @@ export default function CreateOrganizationPage() {
     }
   };
 
-  const handleSyncProducts = async () => {
+  const handleLoadProducts = async () => {
     if (!createdOrgId) return;
-    setSyncing(true);
-    setSyncMessage('Syncing from Salesforce...');
-    setSyncError('');
+    setLoad((prev) => ({ ...prev, status: 'running', error: '' }));
 
     try {
-      const res = await fetch(`/api/admin/organizations/${createdOrgId}/sync`, { method: 'POST' });
+      const res = await fetch(`/api/admin/organizations/${createdOrgId}/sync/load`, { method: 'POST' });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Failed to start Load Products');
+
+      setLoad((prev) => ({ ...prev, runId: data.runId, status: 'running' }));
+    } catch (err: any) {
+      setLoad((prev) => ({ ...prev, status: 'idle', error: err.message }));
+    }
+  };
+
+  // Poll load progress every 5s while a run is active (research.md §4).
+  useEffect(() => {
+    if (load.status !== 'running' || !load.runId || !createdOrgId) return;
+
+    let cancelled = false;
+    const poll = async () => {
+      try {
+        const res = await fetch(`/api/admin/organizations/${createdOrgId}/sync/status?type=load&runId=${load.runId}`);
+        const data = await res.json();
+        if (!res.ok || cancelled) return;
+
+        setLoad((prev) => ({
+          ...prev,
+          upserted: data.upserted,
+          salesforceTotal: data.salesforceTotal,
+          skipped: data.skipped,
+          failed: data.failed,
+          status: data.status,
+          completedAt: data.completedAt,
+          error: data.status === 'failed' ? (data.errorMessage || 'Load failed') : '',
+        }));
+      } catch {
+        // transient poll failure — try again on the next tick
+      }
+    };
+
+    poll();
+    const interval = setInterval(poll, 5000);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [load.status, load.runId, createdOrgId]);
+
+  const handleIndexProducts = async () => {
+    if (!createdOrgId) return;
+    setIndex((prev) => ({ ...prev, status: 'running', error: '' }));
+
+    try {
+      const res = await fetch(`/api/admin/organizations/${createdOrgId}/sync/index`, { method: 'POST' });
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Sync failed');
+        setIndex((prev) => ({ ...prev, status: 'idle', error: data.error || 'Failed to start indexing' }));
+        return;
       }
 
-      const { summary } = data;
-      setSyncMessage(`✅ ${summary.dbUpserted} products synced · ${summary.algoliaPushed} pushed to Algolia`);
-      setHasSynced(true);
-      setTimeout(() => setSyncMessage(''), 6000);
+      setIndex((prev) => ({ ...prev, runId: data.runId, status: 'running', totalEnqueued: data.totalEnqueued }));
     } catch (err: any) {
-      setSyncMessage('');
-      setSyncError(err.message);
-      setTimeout(() => setSyncError(''), 8000);
-    } finally {
-      setSyncing(false);
+      setIndex((prev) => ({ ...prev, status: 'idle', error: err.message }));
     }
   };
+
+  // Poll index progress every 5s while a run is active (research.md §4).
+  useEffect(() => {
+    if (index.status !== 'running' || !index.runId || !createdOrgId) return;
+
+    let cancelled = false;
+    const poll = async () => {
+      try {
+        const res = await fetch(`/api/admin/organizations/${createdOrgId}/sync/status?type=index&runId=${index.runId}`);
+        const data = await res.json();
+        if (!res.ok || cancelled) return;
+
+        setIndex((prev) => ({
+          ...prev,
+          totalEnqueued: data.totalEnqueued,
+          succeeded: data.succeeded,
+          failed: data.failed,
+          pending: data.pending,
+          status: data.status,
+          completedAt: data.completedAt,
+        }));
+      } catch {
+        // transient poll failure — try again on the next tick
+      }
+    };
+
+    poll();
+    const interval = setInterval(poll, 5000);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [index.status, index.runId, createdOrgId]);
 
   const handleLaunchWebapp = () => {
     const url = formData.siteUrl;
@@ -503,22 +589,35 @@ export default function CreateOrganizationPage() {
             <div className="space-y-4">
               <h3 className="text-lg font-medium text-gray-900 dark:text-white">Final Steps</h3>
               <p className="text-sm text-gray-500">
-                Sync the initial product catalog from Salesforce to your new index, and verify the storefront launches correctly.
+                First load the initial product catalog from Salesforce, then push it into the search index — these now run as two separate steps so large catalogs (22,000+ products) complete reliably.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 mt-6">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-6">
                 <button
                   type="button"
-                  onClick={handleSyncProducts}
-                  disabled={syncing}
+                  onClick={handleLoadProducts}
+                  disabled={load.status === 'running'}
                   className="inline-flex items-center justify-center rounded-md bg-indigo-50 dark:bg-indigo-900/30 px-6 py-3 text-sm font-semibold text-indigo-700 dark:text-indigo-300 shadow-sm border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 disabled:opacity-50 transition-all"
                 >
-                  {syncing ? (
+                  {load.status === 'running' ? (
                     <ArrowPathIcon className="animate-spin -ml-1 mr-2 h-5 w-5" />
                   ) : (
                     <ArrowPathIcon className="-ml-1 mr-2 h-5 w-5" />
                   )}
-                  {hasSynced ? 'Resync Products' : 'Add Products to Index'}
+                  1. Load Products
+                </button>
+                <button
+                  type="button"
+                  onClick={handleIndexProducts}
+                  disabled={index.status === 'running'}
+                  className="inline-flex items-center justify-center rounded-md bg-purple-50 dark:bg-purple-900/30 px-6 py-3 text-sm font-semibold text-purple-700 dark:text-purple-300 shadow-sm border border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900/50 disabled:opacity-50 transition-all"
+                >
+                  {index.status === 'running' ? (
+                    <ArrowPathIcon className="animate-spin -ml-1 mr-2 h-5 w-5" />
+                  ) : (
+                    <ArrowPathIcon className="-ml-1 mr-2 h-5 w-5" />
+                  )}
+                  2. Index Products
                 </button>
                 <button
                   type="button"
@@ -530,16 +629,51 @@ export default function CreateOrganizationPage() {
                 </button>
               </div>
 
-              {syncMessage && (
-                <div className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-md border border-green-200 text-sm w-fit mt-4">
-                  <CheckCircleIcon className="h-5 w-5" />
-                  {syncMessage}
+              {load.status === 'running' && (
+                <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-md border border-indigo-200 text-sm w-fit mt-4">
+                  {load.salesforceTotal > 0
+                    ? `${load.upserted.toLocaleString()} / ${load.salesforceTotal.toLocaleString()} loaded`
+                    : 'Fetching products from Salesforce…'}
                 </div>
               )}
-              {syncError && (
+              {(load.status === 'completed' || load.status === 'completed_with_errors') && (
+                <div className="flex flex-col gap-0.5">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-md border border-green-200 text-sm w-fit mt-4">
+                    <CheckCircleIcon className="h-5 w-5" />
+                    {load.upserted.toLocaleString()} products loaded{load.failed > 0 ? ` · ${load.failed} failed` : ''}
+                  </div>
+                  {load.completedAt && (
+                    <p className="text-xs text-gray-400 ml-1">Last loaded: {new Date(load.completedAt).toLocaleString()}</p>
+                  )}
+                </div>
+              )}
+              {load.error && (
                 <div className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 rounded-md border border-red-200 text-sm w-fit mt-4">
                   <XCircleIcon className="h-5 w-5" />
-                  {syncError}
+                  {load.error}
+                </div>
+              )}
+
+              {index.status === 'running' && (
+                <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 text-purple-700 rounded-md border border-purple-200 text-sm w-fit mt-2">
+                  {index.succeeded.toLocaleString()} / {index.totalEnqueued.toLocaleString()} indexed
+                </div>
+              )}
+              {(index.status === 'completed' || index.status === 'completed_with_errors') && (
+                <div className="flex flex-col gap-0.5">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-md border border-green-200 text-sm w-fit mt-2">
+                    <CheckCircleIcon className="h-5 w-5" />
+                    {index.succeeded.toLocaleString()} products indexed{index.failed > 0 ? ` · ${index.failed} failed` : ''}
+                  </div>
+                  {index.completedAt && (
+                    <p className="text-xs text-gray-400 ml-1">Last indexed: {new Date(index.completedAt).toLocaleString()}</p>
+                  )}
+                </div>
+              )}
+              {index.error && (
+                <div className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 rounded-md border border-red-200 text-sm w-fit mt-2">
+                  <XCircleIcon className="h-5 w-5" />
+                  {index.error}
                 </div>
               )}
             </div>
@@ -548,12 +682,13 @@ export default function CreateOrganizationPage() {
               <button
                 type="button"
                 onClick={() => {
-                  if (!hasSynced) {
-                    alert('Please click "Add Products to Index" to initialize your catalog before completing! (You can also do this later from the Organizations list card)');
+                  const hasIndexed = index.status === 'completed' || index.status === 'completed_with_errors';
+                  if (!hasIndexed) {
+                    alert('Please complete "Load Products" then "Index Products" to initialize your catalog before completing! (You can also do this later from the Organizations list card)');
                   }
                   router.push('/admin-portal/organizations');
                 }}
-                className={`inline-flex items-center rounded-md px-8 py-2.5 text-sm font-semibold text-white shadow-sm transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${hasSynced ? 'bg-primary hover:bg-primary/90' : 'bg-gray-400 hover:bg-gray-500'
+                className={`inline-flex items-center rounded-md px-8 py-2.5 text-sm font-semibold text-white shadow-sm transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${(index.status === 'completed' || index.status === 'completed_with_errors') ? 'bg-primary hover:bg-primary/90' : 'bg-gray-400 hover:bg-gray-500'
                   }`}
               >
                 Complete Setup
