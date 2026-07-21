@@ -723,7 +723,7 @@ export default function ConfigureOrderPage() {
                             >
                               &#8722;
                             </button>
-                            <span className="w-10 text-center text-sm font-medium text-gray-900 dark:text-white">{l.qty}</span>
+                            <span className="w-12 text-center text-sm font-medium text-gray-900 dark:text-white border">{l.qty}</span>
                             <button
                               type="button"
                               onClick={() => bumpQty(l.id, 1)}
