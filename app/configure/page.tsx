@@ -9,6 +9,14 @@ import { useToast } from "@/components/ui/Toast";
 const fmt = (n: number) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const trn = (s: string, m: number) => s.length > m ? s.substring(0, m) + '\u2026' : s;
 
+// MOQ-based quantity stepping helpers
+const resolveMoq = (product: any): number => {
+  const n = Number(product?.moq);
+  return Number.isFinite(n) && n > 0 ? n : 1;
+};
+const normalizeQty = (qty: number, moq: number): number => Math.max(moq, Math.round(qty / moq) * moq);
+const stepQty = (qty: number, moq: number, direction: 1 | -1): number => Math.max(moq, normalizeQty(qty, moq) + direction * moq);
+
 export default function ConfigureOrderPage() {
   const router = useRouter();
   const { user, selectedAccount } = useUserSession();
@@ -167,6 +175,13 @@ export default function ConfigureOrderPage() {
   const rowSel = (id: number, v: boolean) => setLines(prev => prev.map(l => l.id === id ? { ...l, sel: v } : l));
   const toggleExp = (id: number) => setLines(prev => prev.map(l => l.id === id ? { ...l, exp: !l.exp } : l));
   const renameGrp = (id: number, name: string) => setLines(prev => prev.map(l => l.id === id ? { ...l, grpName: name.trim() || 'Untitled Group', dirty: true } : l));
+
+  const bumpQty = (id: number, direction: 1 | -1) => setLines(prev => prev.map(l => {
+    if (l.id !== id || l.type !== 'product') return l;
+    const product = catalog.find(p => p.id === l.productId);
+    const moq = resolveMoq(product);
+    return { ...l, qty: stepQty(l.qty, moq, direction), dirty: true };
+  }));
 
   const rmTree = (id: number, currentLines: any[]) => {
     let toRemove = new Set([id]);
@@ -680,6 +695,8 @@ export default function ConfigureOrderPage() {
                     const indent = (l.lv - 1) * 20;
                     const lvColors = ['bg-gray-200 text-gray-700', 'bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-purple-100 text-purple-700'];
                     const lvCls = lvColors[Math.min(l.lv - 1, 3)];
+                    const lineMoq = resolveMoq(catalog.find(p => p.id === l.productId));
+                    const atMoqFloor = normalizeQty(l.qty, lineMoq) <= lineMoq;
                     return (
                       <tr key={l.id} draggable className={`border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${l.sel ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`} onDragStart={e => startDrag(e, 'row', l.id)} onDragOver={e => onDragOverRow(e, idx)} onDrop={e => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
                         <td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></td>
@@ -696,7 +713,26 @@ export default function ConfigureOrderPage() {
                         <td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px]">-</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-right">{fmt(l.sell)}</td>
                         <td className="px-3 py-2 text-center">
-                          <input type="text" value={l.qty} readOnly className="w-16 text-right py-1 px-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white cursor-default focus:outline-none mx-auto block" />
+                          <div className="flex items-center justify-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => bumpQty(l.id, -1)}
+                              disabled={atMoqFloor}
+                              aria-label="Decrease quantity"
+                              className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-gray-700"
+                            >
+                              &#8722;
+                            </button>
+                            <span className="w-10 text-center text-sm font-medium text-gray-900 dark:text-white">{l.qty}</span>
+                            <button
+                              type="button"
+                              onClick={() => bumpQty(l.id, 1)}
+                              aria-label="Increase quantity"
+                              className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
+                            >
+                              &#43;
+                            </button>
+                          </div>
                         </td>
                         <td className="px-3 py-2 text-sm font-semibold text-green-600 dark:text-green-400 text-right">{fmt(l.sell * l.qty)}</td>
                         <td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></td>
