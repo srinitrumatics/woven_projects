@@ -608,8 +608,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           productGrouping: item.Grouping__c || item.Product_Grouping__c || item.productGrouping || "",
           sku: item.StockKeepingUnit || item.SKU || item.sku || item.Name || "",
           manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.Manufacturer_Name || item.Manufacturer_Name__c || "",
-          brand: item.Product_Brand_Name__c || "",
-          availableQty: item.Available_To_Sell__c || item.availableQty || 0,
+          brand: item.gtherp__Brand_Name__c ?? item.Brand_Name__c ?? item.Product_Brand_Name__c ?? "",
+          availableQty: item.gtherp__Available_To_Sell__c ?? item.Available_To_Sell__c ?? item.availableQty ?? 0,
           moq: item.MOQ__c || item.moq || 1,
           listPrice: item.List_Price__c || item.listPrice || 0,
           unitPrice: item.Unit_Price__c || item.unitPrice || 0,
@@ -925,13 +925,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                     description: item.Product_Description__c || "",
                     unitPrice: item.Unit_Price__c,
                     listPrice: item.Unit_Price__c, // Assuming list price same as unit price for now
-                    brand: item.Product_Brand_Name__c || "", // Not in API response
+                    brand: item.gtherp__Brand_Name__c ?? item.Brand_Name__c ?? item.Product_Brand_Name__c ?? "",
                     manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__r?.Name || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
                     productFamily: item.Product_Family__c || "", // Not in API response
                     productGrouping: item.Product_Grouping__c || item.Grouping__c || "",
-                    availableQty: 999,
+                    availableQty: item.gtherp__Available_To_Sell__c ?? item.Available_To_Sell__c ?? 0,
                     moq: item.MOQ__c || 1,
-                    orderQty: item.Order_Qty__c,
+                    orderQty: (item.Order_Qty__c || 0) * (item.MOQ__c || 1),
                     subtotal: item.Total_Price__c,
                     // Store the original order line ID for updates
                     orderLineId: item.Id,
@@ -1381,7 +1381,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             ...(product.orderLineId ? { Id: product.orderLineId } : {}),
             Status__c: isDraft ? "Draft" : "Submitted",
             Product_Name__c: product.id,
-            Order_Qty__c: product.orderQty,
+            Order_Qty__c: product.orderQty / (product.moq || 1),
             MOQ__c: product.moq,
             Unit_Price__c: product.unitPrice,
             Inventory_Account__c: SF_ACCOUNT_ID,
@@ -1482,7 +1482,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               Status__c: "Draft",
               Customer_Order_Line_Notes__c: "",
               Product_Name__c: product.id,
-              Order_Qty__c: product.orderQty,
+              Order_Qty__c: product.orderQty / (product.moq || 1),
               MOQ__c: product.moq,
               Unit_Price__c: product.unitPrice,
               Inventory_Account__c: SF_ACCOUNT_ID,
@@ -1860,10 +1860,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               {orderStatus === "Submitted" && (
                 <button
                   onClick={() => {
-                    if (window.confirm("Are you sure you want to recall this order and set it back to Draft?")) {
+                    confirmToast("Are you sure you want to recall this order and set it back to Draft?", () => {
                       setOrderStatus("Draft");
                       handleSaveDraft();
-                    }
+                    });
                   }}
                   className="w-full sm:w-auto px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors"
                 >

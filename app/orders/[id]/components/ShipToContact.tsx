@@ -37,11 +37,11 @@ export default function ShipToContact({
                 </div>
             </div>
             <div className="text-sm">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Contact Selection Dropdown */}
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Select Contact">
-                            Select Contact
+                            Select Contact <span className="text-red-500 truncate">*</span>
                         </label>
                         <select
                             value={selectedContactId}
@@ -62,21 +62,6 @@ export default function ShipToContact({
                                 ))
                             )}
                         </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Contact Name">
-                            Contact Name <span className="text-red-500 truncate">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="Full name"
-                            value={formData.locationContact}
-                            onChange={(e) => setFormData({ ...formData, locationContact: e.target.value })}
-                            readOnly={true}
-                            title={formData.locationContact || ''}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
-                        />
                     </div>
 
                     <div>
