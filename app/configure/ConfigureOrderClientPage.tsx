@@ -189,7 +189,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
     const id = nextId; setNextId(id + 1);
     return {
       id: id, productId: p.id, type: 'product', sku: p.sku, name: p.name, desc: p.desc, mfr: p.mfr, brand: p.brand, groupingLabel: p.groupingLabel,
-      lv: 1, seq: 0, sell: p.sell, orderQty: 1, moq: p.moq, pid: null, exp: true, dirty: true, sel: false
+      lv: 1, seq: 0, sell: p.sell, orderQty: 1, moq: p.moq, avail: p.avail, pid: null, exp: true, dirty: true, sel: false
     };
   };
 
@@ -376,7 +376,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
       const id = nextId; setNextId(id + 1);
       const nl: any = {
         id: id, productId: enriched.id, type: 'product', sku: enriched.sku, name: enriched.name, desc: enriched.desc, mfr: enriched.mfr, brand: enriched.brand, groupingLabel: enriched.groupingLabel,
-        lv: 1, seq: 0, sell: enriched.sell, orderQty: 1, moq: enriched.moq, pid: null, exp: true, dirty: true, sel: false
+        lv: 1, seq: 0, sell: enriched.sell, orderQty: 1, moq: enriched.moq, avail: enriched.avail, pid: null, exp: true, dirty: true, sel: false
       };
       setLines(prev => {
         const ctx = resolveParentInList(prev, at);
@@ -809,34 +809,37 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                         <td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px]">{l.brand || '-'}</td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-right">{fmt(l.sell)}</td>
                         <td className="px-3 py-2 text-center">
-                          <div className="flex items-center justify-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => bumpQty(l.id, -1)}
-                              disabled={atFloor}
-                              aria-label="Decrease order quantity"
-                              className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-gray-700"
-                            >
-                              &#8722;
-                            </button>
-                            <input
-                              type="number"
-                              min={1}
-                              step={1}
-                              value={l.orderQty}
-                              onChange={e => setOrderQty(l.id, e.target.value)}
-                              onBlur={() => commitOrderQty(l.id)}
-                              aria-label="Order quantity"
-                              className="w-14 text-center text-sm font-medium text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-primary"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => bumpQty(l.id, 1)}
-                              aria-label="Increase order quantity"
-                              className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
-                            >
-                              &#43;
-                            </button>
+                          <div className="flex flex-col items-center gap-1">
+                            <div className="flex items-center justify-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() => bumpQty(l.id, -1)}
+                                disabled={atFloor}
+                                aria-label="Decrease order quantity"
+                                className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-gray-700"
+                              >
+                                &#8722;
+                              </button>
+                              <input
+                                type="number"
+                                min={1}
+                                step={1}
+                                value={l.orderQty}
+                                onChange={e => setOrderQty(l.id, e.target.value)}
+                                onBlur={() => commitOrderQty(l.id)}
+                                aria-label="Order quantity"
+                                className="w-14 text-center text-sm font-medium text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-primary"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => bumpQty(l.id, 1)}
+                                aria-label="Increase order quantity"
+                                className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
+                              >
+                                &#43;
+                              </button>
+                            </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {lineMoq} / Avail: {l.avail ?? 0}</div>
                           </div>
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">{lineMoq}</td>
