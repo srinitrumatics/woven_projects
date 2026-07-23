@@ -103,8 +103,8 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
           sku: h.sku || h.productcode || h.name || '',
           name: h.name || '-',
           desc: h.description || '',
-          mfr: h.manufacturer || h.brand || '-',
-          brand: h.brand || '-',
+          mfr: h.manufacturer || '-',
+          brand: h.brandName || '-',
           family: h.family || h.category || 'General',
           groupingLabel: h.groupingLabel || '',
           sell: h.price ?? h.listPrice ?? h.list_price__c ?? 0,
@@ -905,12 +905,10 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                     <div className="text-gray-300 group-hover:text-gray-400 mt-1">&#9776;</div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1 mb-1">
-                        <span className="text-xs font-bold text-blue-600 dark:text-blue-400 truncate">{p.sku}</span>
-                        <span className="text-gray-400">&middot;</span>
                         <span className="text-xs text-gray-700 dark:text-gray-300 truncate" title={p.name}>{p.name}</span>
                       </div>
                       <div className="flex items-center justify-between text-[11px]">
-                        <span className="font-semibold text-gray-600 dark:text-gray-400 truncate max-w-[80px]">{trn(p.mfr, 16)}</span>
+                        <span className="font-semibold text-gray-600 dark:text-gray-400 truncate max-w-[80px]">{trn(p.brand, 16)}</span>
                         <span className="text-gray-500">Sell <span className="font-bold text-gray-900 dark:text-white">{fmt(p.sell)}</span></span>
                         <span className={`px-1.5 py-0.5 rounded font-medium ${av.cls}`}>{av.text}</span>
                       </div>
