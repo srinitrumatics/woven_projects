@@ -10,7 +10,7 @@ import { useToast } from "@/components/ui/Toast";
 const fmt = (n: number) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const trn = (s: string, m: number) => s.length > m ? s.substring(0, m) + '…' : s;
 
-// MOQ helpers — Order Qty is a count of MOQ-units; Total Qty = Order Qty × MOQ.
+// MOQ helpers — Order Qty is the actual order quantity in units, defaulting to and never below MOQ.
 const resolveMoq = (product: any): number => {
   const n = Number(product?.moq);
   return Number.isFinite(n) && n > 0 ? n : 1;
@@ -168,7 +168,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
 
   const calcTotals = () => {
     let ts = 0, pc = 0;
-    lines.forEach(l => { if (l.type === 'product') { ts += l.sell * safeOrderQty(l) * resolveMoq(l); pc++; } });
+    lines.forEach(l => { if (l.type === 'product') { ts += l.sell * safeOrderQty(l); pc++; } });
     return { ts, pc };
   };
   const { ts: totalSell, pc: productCount } = calcTotals();
@@ -189,7 +189,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
     const id = nextId; setNextId(id + 1);
     return {
       id: id, productId: p.id, type: 'product', sku: p.sku, name: p.name, desc: p.desc, mfr: p.mfr, brand: p.brand, groupingLabel: p.groupingLabel,
-      lv: 1, seq: 0, sell: p.sell, orderQty: 1, moq: p.moq, avail: p.avail, pid: null, exp: true, dirty: true, sel: false
+      lv: 1, seq: 0, sell: p.sell, orderQty: resolveMoq(p), moq: p.moq, avail: p.avail, pid: null, exp: true, dirty: true, sel: false
     };
   };
 
@@ -246,15 +246,19 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
 
   const bumpQty = (id: number, direction: 1 | -1) => setLines(prev => prev.map(l => {
     if (l.id !== id || l.type !== 'product') return l;
-    return { ...l, orderQty: Math.max(1, safeOrderQty(l) + direction), dirty: true };
+    const moq = resolveMoq(l);
+    return { ...l, orderQty: Math.max(moq, safeOrderQty(l) + direction * moq), dirty: true };
   }));
 
-  const setOrderQty = (id: number, raw: string) => setLines(prev => prev.map(l =>
-    l.id === id ? { ...l, orderQty: raw === '' ? '' : Number(raw), dirty: true } : l
-  ));
+  const setOrderQty = (id: number, raw: string) => {
+    if (raw !== '' && !/^[0-9]+$/.test(raw)) return;
+    setLines(prev => prev.map(l =>
+      l.id === id ? { ...l, orderQty: raw === '' ? '' : Number(raw), dirty: true } : l
+    ));
+  };
 
   const commitOrderQty = (id: number) => setLines(prev => prev.map(l =>
-    l.id === id ? { ...l, orderQty: Math.max(1, Math.round(safeOrderQty(l))) } : l
+    l.id === id ? { ...l, orderQty: Math.max(resolveMoq(l), Math.round(safeOrderQty(l))) } : l
   ));
 
   const rmTree = (id: number, currentLines: any[]) => {
@@ -376,7 +380,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
       const id = nextId; setNextId(id + 1);
       const nl: any = {
         id: id, productId: enriched.id, type: 'product', sku: enriched.sku, name: enriched.name, desc: enriched.desc, mfr: enriched.mfr, brand: enriched.brand, groupingLabel: enriched.groupingLabel,
-        lv: 1, seq: 0, sell: enriched.sell, orderQty: 1, moq: enriched.moq, avail: enriched.avail, pid: null, exp: true, dirty: true, sel: false
+        lv: 1, seq: 0, sell: enriched.sell, orderQty: resolveMoq(enriched), moq: enriched.moq, avail: enriched.avail, pid: null, exp: true, dirty: true, sel: false
       };
       setLines(prev => {
         const ctx = resolveParentInList(prev, at);
@@ -494,7 +498,8 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
         const orderLines = productsOnly.map(l => ({
           Status__c: 'Draft',
           Product_Name__c: l.productId || l.id,
-          Order_Qty__c: safeOrderQty(l) * resolveMoq(l),
+          Order_Qty__c: safeOrderQty(l) / resolveMoq(l),
+          MOQ__c: resolveMoq(l),
           Unit_Price__c: l.sell,
           Inventory_Account__c: SF_ACCOUNT_ID,
           IsTaxable__c: true
@@ -746,7 +751,6 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                   <th className="px-3 py-3 text-sm font-semibold text-right whitespace-nowrap">Sell Price</th>
                   <th className="px-3 py-3 text-sm font-semibold text-center whitespace-nowrap w-28">Order Qty</th>
                   <th className="px-3 py-3 text-sm font-semibold text-center whitespace-nowrap">MOQ</th>
-                  <th className="px-3 py-3 text-sm font-semibold text-center whitespace-nowrap">Total Qty</th>
                   <th className="px-3 py-3 text-sm font-semibold text-right whitespace-nowrap">Total Price</th>
                   <th className="px-3 py-3 w-10"></th>
                 </tr>
@@ -764,7 +768,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
 
                   if (l.type === 'group') {
                     let s = { ts: 0, n: 0 };
-                    lines.forEach(c => { if (c.pid === l.id && c.type === 'product') { s.ts += c.sell * safeOrderQty(c) * resolveMoq(c); s.n++; } });
+                    lines.forEach(c => { if (c.pid === l.id && c.type === 'product') { s.ts += c.sell * safeOrderQty(c); s.n++; } });
                     const abbr = l.grpName.split(/[\s&]+/).map((w: string) => w[0]).join('').substring(0, 2).toUpperCase();
 
                     return (
@@ -779,7 +783,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                             <span className="text-xs text-gray-500 dark:text-gray-400">{s.n} item{s.n !== 1 ? 's' : ''}</span>
                           </div>
                         </td>
-                        <td colSpan={6}></td>
+                        <td colSpan={5}></td>
                         <td className="px-3 py-2 text-right font-bold text-indigo-600 dark:text-indigo-400 text-sm">{fmt(s.ts)}</td>
                         <td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></td>
                       </tr>
@@ -790,9 +794,8 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                     const lvCls = lvColors[Math.min(l.lv - 1, 3)];
                     const lineMoq = resolveMoq(l);
                     const orderQty = safeOrderQty(l);
-                    const totalQty = orderQty * lineMoq;
-                    const totalPrice = totalQty * l.sell;
-                    const atFloor = orderQty <= 1;
+                    const totalPrice = orderQty * l.sell;
+                    const atFloor = orderQty <= lineMoq;
                     return (
                       <tr key={l.id} draggable className={`border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${l.sel ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`} onDragStart={e => startDrag(e, 'row', l.id)} onDragOver={e => onDragOverRow(e, idx)} onDrop={e => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
                         <td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></td>
@@ -821,14 +824,12 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                                 &#8722;
                               </button>
                               <input
-                                type="number"
-                                min={1}
-                                step={1}
+                                type="text"
                                 value={l.orderQty}
                                 onChange={e => setOrderQty(l.id, e.target.value)}
                                 onBlur={() => commitOrderQty(l.id)}
                                 aria-label="Order quantity"
-                                className="w-14 text-center text-sm font-medium text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-primary"
+                                className="w-16 px-1 py-0.5 text-sm border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
                               />
                               <button
                                 type="button"
@@ -843,7 +844,6 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                           </div>
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">{lineMoq}</td>
-                        <td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 text-center">{totalQty}</td>
                         <td className="px-3 py-2 text-sm font-semibold text-green-600 dark:text-green-400 text-right">{fmt(totalPrice)}</td>
                         <td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></td>
                       </tr>

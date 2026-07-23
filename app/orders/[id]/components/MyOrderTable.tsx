@@ -161,7 +161,12 @@ export default function MyOrderTable({
                                                                 handleQuantityChange(product.lineItemKey!, numVal);
                                                             }
                                                         }}
-                                                        className="w-16 px-1 py-0.5 border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
+                                                        onBlur={() => {
+                                                            if ((product.orderQty || 0) < (product.moq || 1)) {
+                                                                handleQuantityChange(product.lineItemKey!, product.moq || 1);
+                                                            }
+                                                        }}
+                                                        className="w-16 px-1 py-0.5 text-sm border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
                                                         min={0}
                                                     />
                                                     <button

@@ -224,7 +224,13 @@ export default function ProductCatalog({
                                                                     handleCatalogQuantityChange(product.id, numVal, product.moq || 1);
                                                                 }
                                                             }}
-                                                            className="w-16 px-1 py-0.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-center"
+                                                            onBlur={() => {
+                                                                const moq = product.moq || 1;
+                                                                if ((catalogQuantities[product.id] ?? moq) < moq) {
+                                                                    handleCatalogQuantityChange(product.id, moq, moq);
+                                                                }
+                                                            }}
+                                                            className="w-16 px-1 py-0.5 text-sm border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
                                                         />
                                                         <button
                                                             onClick={() => {
