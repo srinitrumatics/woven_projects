@@ -38,6 +38,7 @@ export async function POST(request: Request) {
           gtherp__category__c VARCHAR(255),
           gtherp__sub_category__c VARCHAR(255),
           manufacturer_name__c VARCHAR(255),
+          gtherp__brand_name__c VARCHAR(255),
           product_availability__c VARCHAR(255),
           createddate TIMESTAMP,
           systemmodstamp TIMESTAMP

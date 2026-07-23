@@ -625,8 +625,8 @@ class SchemaWorker {
             const sinceDate = this.sfLastSyncTime || new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
             
             const query = `
-                SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp, 
-                       gtherp__Product_Availability__c, gtherp__Manufacturer_Name__c,  
+                SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp,
+                       gtherp__Product_Availability__c, gtherp__Manufacturer_Name__r.Name, gtherp__Brand_Name__r.Name,
                        gtherp__Available_To_Sell__c,
                        (SELECT Id, Name, UnitPrice, gtherp__Selling_Unit_Price__c FROM PricebookEntries)
                 FROM Product2
@@ -672,8 +672,8 @@ class SchemaWorker {
                             gtherp__price__c, list_price__c, gtherp__stock_quantity__c,
                             gtherp__available_quantity__c, gtherp__discount__c,
                             gtherp__category__c, gtherp__sub_category__c,
-                            manufacturer_name__c, product_availability__c, createddate, systemmodstamp
-                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+                            manufacturer_name__c, gtherp__brand_name__c, product_availability__c, createddate, systemmodstamp
+                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
                         ON CONFLICT (sfid) DO UPDATE SET
                             productcode = EXCLUDED.productcode,
                             name = EXCLUDED.name,
@@ -687,6 +687,7 @@ class SchemaWorker {
                             gtherp__category__c = EXCLUDED.gtherp__category__c,
                             gtherp__sub_category__c = EXCLUDED.gtherp__sub_category__c,
                             manufacturer_name__c = EXCLUDED.manufacturer_name__c,
+                            gtherp__brand_name__c = EXCLUDED.gtherp__brand_name__c,
                             product_availability__c = EXCLUDED.product_availability__c,
                             systemmodstamp = EXCLUDED.systemmodstamp
                     `, [
@@ -698,7 +699,8 @@ class SchemaWorker {
                         0,
                         p.Family || 'No Category',
                         '',
-                        p.gtherp__Manufacturer_Name__c || '',
+                        p.gtherp__Manufacturer_Name__r?.Name || '',
+                        p.gtherp__Brand_Name__r?.Name || '',
                         p.gtherp__Product_Availability__c || '',
                         p.CreatedDate, p.SystemModstamp || ''
                     ]);

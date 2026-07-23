@@ -2,6 +2,26 @@ import { pool } from '@/db';
 import algoliasearch from 'algoliasearch';
 import { getProductDetailsFromSalesforce } from './product-salesforce-service';
 import { getOrgConfig } from './org-config';
+
+/**
+ * gtherp__Manufacturer_Name__c and gtherp__Brand_Name__c are Salesforce lookup
+ * fields (to Account and a custom Brand object respectively), so the *__c key
+ * itself is just a record ID — the readable name lives on the related record.
+ * The Apex REST response flattens relationships inconsistently across
+ * endpoints, so check every shape already seen in this codebase (bracket-key
+ * dotted string, nested object, both with and without the gtherp__ namespace)
+ * before falling back to the raw field name.
+ */
+function resolveLookupName(productData: any, fieldBase: string): string | null {
+  return (
+    productData[`gtherp__${fieldBase}__r.Name`] ??
+    productData[`${fieldBase}__r.Name`] ??
+    productData[`gtherp__${fieldBase}__r`]?.Name ??
+    productData[`${fieldBase}__r`]?.Name ??
+    null
+  );
+}
+
 /**
  * Syncs a newly created or updated Salesforce product to PostgreSQL and Algolia immediately.
  */
@@ -60,6 +80,7 @@ export async function syncNewProductToPostgresAndAlgolia(
         family,
         description,
         manufacturer_name__c,
+        gtherp__brand_name__c,
         gtherp__price__c,
         list_price__c,
         gtherp__available_quantity__c,
@@ -69,7 +90,7 @@ export async function syncNewProductToPostgresAndAlgolia(
         createddate,
         systemmodstamp
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, COALESCE($14, NOW()), NOW()
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, COALESCE($15, NOW()), NOW()
       )
       ON CONFLICT (sfid) DO UPDATE SET
         name                          = EXCLUDED.name,
@@ -78,6 +99,7 @@ export async function syncNewProductToPostgresAndAlgolia(
         family                        = EXCLUDED.family,
         description                   = COALESCE(EXCLUDED.description, product2.description),
         manufacturer_name__c          = EXCLUDED.manufacturer_name__c,
+        gtherp__brand_name__c         = EXCLUDED.gtherp__brand_name__c,
         gtherp__price__c              = EXCLUDED.gtherp__price__c,
         list_price__c                 = EXCLUDED.list_price__c,
         gtherp__available_quantity__c = EXCLUDED.gtherp__available_quantity__c,
@@ -93,14 +115,15 @@ export async function syncNewProductToPostgresAndAlgolia(
         productData.IsActive === false ? false : true,                                        // $4  isactive
         productData.Family ?? productData.family ?? null,                                     // $5  family
         productData.Description ?? productData.description ?? null,                           // $6  description
-        accountId,                                                                            // $7  manufacturer_name__c
-        productData.gtherp__price__c ?? productData.gtherp__Selling_Unit_Price__c ?? 0,      // $8  gtherp__price__c (selling price)
-        productData.list_price__c ?? productData.List_Price__c ?? productData.UnitPrice ?? 0, // $9  list_price__c (list price)
-        productData.Available_To_Sell__c ?? 0,                                                // $10 gtherp__available_quantity__c
-        productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? null, // $11
-        productData.gtherp__category__c ?? productData.Category__c ?? productData.Family ?? productData.family ?? null, // $12
-        productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null,           // $13
-        productData.CreatedDate ? new Date(productData.CreatedDate).toISOString() : null,     // $14 createddate
+        resolveLookupName(productData, 'Manufacturer_Name') ?? productData.gtherp__Manufacturer_Name__c ?? productData.Manufacturer_Name__c ?? null, // $7  manufacturer_name__c
+        resolveLookupName(productData, 'Brand_Name') ?? productData.gtherp__Brand_Name__c ?? productData.Brand_Name__c ?? null,                       // $8  gtherp__brand_name__c
+        productData.gtherp__price__c ?? productData.gtherp__Selling_Unit_Price__c ?? 0,      // $9  gtherp__price__c (selling price)
+        productData.list_price__c ?? productData.List_Price__c ?? productData.UnitPrice ?? 0, // $10 list_price__c (list price)
+        productData.gtherp__Available_To_Sell__c ?? productData.Available_To_Sell__c ?? 0,     // $11 gtherp__available_quantity__c
+        productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? null, // $12
+        productData.gtherp__category__c ?? productData.Category__c ?? productData.Family ?? productData.family ?? null, // $13
+        productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null,           // $14
+        productData.CreatedDate ? new Date(productData.CreatedDate).toISOString() : null,     // $15 createddate
       ]
     );
   } catch (pgErr: any) {
@@ -141,14 +164,15 @@ export async function syncNewProductToPostgresAndAlgolia(
       listPrice: productData.list_price__c ?? productData.List_Price__c ?? productData.UnitPrice ?? productData.UnitPrice__c ?? 0,
       unitPrice: productData.gtherp__price__c ?? productData.gtherp__Selling_Unit_Price__c ?? productData.UnitPrice__c ?? 0,
       stock_quantity: 0,
-      available_quantity: productData.Available_To_Sell__c ?? 0,
+      available_quantity: productData.gtherp__Available_To_Sell__c ?? productData.Available_To_Sell__c ?? 0,
       discount: 0,
       image_url: productData.image_url ?? null,
       images: productData.images ?? [],
       category: productData.gtherp__category__c ?? productData.Category__c ?? productData.Family ?? productData.family ?? null,
       sub_category: productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null,
       family: productData.Product_Family__c ?? productData.product_family__c ?? productData.Family ?? productData.family ?? '',
-      manufacturer: accountId,
+      manufacturer: resolveLookupName(productData, 'Manufacturer_Name') ?? productData.gtherp__Manufacturer_Name__c ?? productData.Manufacturer_Name__c ?? '',
+      brand: resolveLookupName(productData, 'Brand_Name') ?? productData.gtherp__Brand_Name__c ?? productData.Brand_Name__c ?? '',
       status: productData.IsActive === false ? 'inactive' : 'active',
       is_active: productData.IsActive === false ? false : true,
       product_availability: productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? '',
@@ -163,7 +187,8 @@ export async function syncNewProductToPostgresAndAlgolia(
         productData.gtherp__category__c,
         productData.Sub_Category__c,
         productData.gtherp__sub_category__c,
-        accountId,
+        resolveLookupName(productData, 'Manufacturer_Name') ?? productData.gtherp__Manufacturer_Name__c ?? productData.Manufacturer_Name__c,
+        resolveLookupName(productData, 'Brand_Name') ?? productData.gtherp__Brand_Name__c ?? productData.Brand_Name__c,
         productData.Product_Availability__c ?? productData.product_availability__c
       ].filter(Boolean),
     });

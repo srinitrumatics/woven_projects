@@ -11,7 +11,7 @@ const COLUMNS = [
   'gtherp__price__c', 'list_price__c', 'gtherp__stock_quantity__c',
   'gtherp__available_quantity__c', 'gtherp__discount__c',
   'gtherp__category__c', 'gtherp__sub_category__c',
-  'manufacturer_name__c', 'product_availability__c',
+  'manufacturer_name__c', 'gtherp__brand_name__c', 'product_availability__c',
   'createddate', 'systemmodstamp',
 ] as const;
 
@@ -49,7 +49,7 @@ async function getSalesforceToken(org: Org) {
 async function fetchAllProducts(accessToken: string, instanceUrl: string) {
   const query = `
     SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp,
-           gtherp__Product_Availability__c, gtherp__Manufacturer_Name__c,
+           gtherp__Product_Availability__c, gtherp__Manufacturer_Name__r.Name, gtherp__Brand_Name__r.Name,
            gtherp__Available_To_Sell__c,
            (SELECT Id, Name, UnitPrice, gtherp__Selling_Unit_Price__c FROM PricebookEntries)
     FROM Product2
@@ -92,7 +92,8 @@ function toRow(p: any): any[] {
     p.gtherp__Available_To_Sell__c ?? 0,
     0,
     p.Family || 'No Category', '',
-    p.gtherp__Manufacturer_Name__c || '',
+    p.gtherp__Manufacturer_Name__r?.Name || '',
+    p.gtherp__Brand_Name__r?.Name || '',
     p.gtherp__Product_Availability__c || '',
     p.CreatedDate, p.SystemModstamp || null,
   ];
@@ -121,6 +122,7 @@ function buildUpsertQuery(schemaName: string, rowCount: number): string {
       gtherp__category__c = EXCLUDED.gtherp__category__c,
       gtherp__sub_category__c = EXCLUDED.gtherp__sub_category__c,
       manufacturer_name__c = EXCLUDED.manufacturer_name__c,
+      gtherp__brand_name__c = EXCLUDED.gtherp__brand_name__c,
       product_availability__c = EXCLUDED.product_availability__c,
       systemmodstamp = EXCLUDED.systemmodstamp
   `;

@@ -33,6 +33,7 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
         gtherp__category__c           VARCHAR(255),
         gtherp__sub_category__c       VARCHAR(255),
         manufacturer_name__c          VARCHAR(255),
+        gtherp__brand_name__c         VARCHAR(255),
         product_availability__c       VARCHAR(255),
         createddate                   TIMESTAMP,
         systemmodstamp                TIMESTAMP
@@ -137,6 +138,7 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
           'family',                product_row.family,
           'sub_category',          product_row.gtherp__sub_category__c,
           'manufacturer',          product_row.manufacturer_name__c,
+          'brand',                 product_row.gtherp__brand_name__c,
           'status',                CASE WHEN product_row.isactive THEN 'active' ELSE 'inactive' END,
           'is_active',             product_row.isactive,
           'product_availability',  product_row.product_availability__c,
@@ -148,6 +150,7 @@ export async function provisionTenantSchema(schemaName: string, algoliaIndexName
             product_row.gtherp__category__c,
             product_row.gtherp__sub_category__c,
             product_row.manufacturer_name__c,
+            product_row.gtherp__brand_name__c,
             product_row.product_availability__c
           ], NULL)
         ));
