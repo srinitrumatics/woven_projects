@@ -107,7 +107,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
           brand: h.brandName || '-',
           family: h.family || h.category || 'General',
           groupingLabel: h.groupingLabel || '',
-          sell: h.price ?? h.listPrice ?? h.list_price__c ?? 0,
+          sell: h.price ?? 0,
           avail: h.available_quantity ?? h.gtherp__available_quantity__c ?? h.stock_quantity ?? 0,
         }));
         setCatalog(cat);
@@ -205,7 +205,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
       if (!p) return null;
       return {
         moq: resolveMoq({ moq: p.MOQ__c ?? p.moq }),
-        sell: p.List_Price__c ?? p.listPrice ?? p.Unit_Price__c ?? p.unitPrice ?? null,
+        sell: p.UnitPrice ?? p.Unit_Price__c ?? p.unitPrice ?? null,
         avail: p.Available_To_Sell__c ?? p.availableQty ?? null,
       };
     } catch (e) {
