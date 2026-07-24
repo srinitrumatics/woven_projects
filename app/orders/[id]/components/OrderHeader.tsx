@@ -58,7 +58,7 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
                                     </svg>
                                     <span className="text-sm font-medium truncate">Clone</span>
                                 </button>
-                                {orderStatus !== "Approved" && (
+                                {orderStatus === "Draft" && (
                                     <button
                                         onClick={onEditToggle}
                                         className={`px-3 py-2 rounded-lg transition-colors ms-auto flex items-center gap-2 ${isEditing

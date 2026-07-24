@@ -6,15 +6,13 @@ interface ProductInfoProps {
     product: {
         name: string;
         description: string;
-        manufacturer: string;
-        manufacturerDBA: string;
         brand: string;
         productFamily: string;
+        grouping: string;
         isTaxable: string;
-        site: string;
-        inventoryAccount: string;
-        availableToSell: number;
-        productGrouping: string;
+        moq: number;
+        leadTimeWks?: number;
+        shippingDimensions: string;
     };
 }
 
@@ -49,20 +47,6 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                     />
                 </div>
 
-                {/* Manufacturer DBA */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Manufacturer DBA">
-                        Manufacturer DBA
-                    </label>
-                    <input
-                        type="text"
-                        readOnly
-                        value={product.manufacturerDBA || ''}
-                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.manufacturerDBA}
-                    />
-                </div>
-
                 {/* Description */}
                 <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Description">
@@ -91,24 +75,38 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                     />
                 </div>
 
-                {/* Manufacturer */}
+                {/* Brand Name */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Manufacturer">
-                        Manufacturer
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Brand Name">
+                        Brand Name
                     </label>
                     <input
                         type="text"
                         readOnly
-                        value={product.manufacturer || ''}
+                        value={product.brand || '—'}
                         className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.manufacturer}
+                        title={product.brand}
                     />
                 </div>
 
-                {/* Is Taxable */}
+                {/* Grouping */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="IsTaxable">
-                        IsTaxable
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Grouping">
+                        Grouping
+                    </label>
+                    <input
+                        type="text"
+                        readOnly
+                        value={product.grouping || '—'}
+                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                        title={product.grouping}
+                    />
+                </div>
+
+                {/* Taxable */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Taxable">
+                        Taxable
                     </label>
                     <input
                         type="text"
@@ -119,45 +117,45 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                     />
                 </div>
 
-                {/* Site */}
+                {/* MOQ */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Site">
-                        Site
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="MOQ">
+                        MOQ
                     </label>
                     <input
                         type="text"
                         readOnly
-                        value={product.site || ''}
+                        value={formatNumber(product.moq, 0)}
                         className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.site}
+                        title={formatNumber(product.moq, 0)}
                     />
                 </div>
 
-                {/* Inventory Account */}
+                {/* Lead-Time (Wks) */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Inventory Account">
-                        Inventory Account
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Lead-Time (Wks)">
+                        Lead-Time (Wks)
                     </label>
                     <input
                         type="text"
                         readOnly
-                        value={product.inventoryAccount || ''}
+                        value={product.leadTimeWks != null ? formatNumber(product.leadTimeWks, 0) : '—'}
                         className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.inventoryAccount}
+                        title={product.leadTimeWks != null ? String(product.leadTimeWks) : '—'}
                     />
                 </div>
 
-                {/* Available to Sell */}
+                {/* Shipping Dimensions */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Available to Sell">
-                        Available to Sell
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Shipping Dimensions">
+                        Shipping Dimensions
                     </label>
                     <input
                         type="text"
                         readOnly
-                        value={formatNumber(product.availableToSell, 0)}
-                        className={`w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate font-bold ${product.availableToSell > 0 ? 'text-green-600' : 'text-red-500'}`}
-                        title={formatNumber(product.availableToSell, 0)}
+                        value={product.shippingDimensions || '—'}
+                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                        title={product.shippingDimensions}
                     />
                 </div>
             </div>

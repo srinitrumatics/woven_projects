@@ -58,7 +58,7 @@ export default function LineHeader({
 
                 </div>
                 <div className="flex items-center gap-2 min-w-0">
-                    {!["Approved", "Delivered", "Canceled"].includes(orderStatus) && (
+                    {orderStatus === "Draft" && (
                         <button
                             onClick={onEditToggle}
                             disabled={isSubmitting}

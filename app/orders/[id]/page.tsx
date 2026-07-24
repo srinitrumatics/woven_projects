@@ -161,6 +161,12 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [orderStatus, setOrderStatus] = useState<string>("Draft");
   const [isEditing, setIsEditing] = useState(isNew);
 
+  // Editing is only allowed while the order is a Draft — force-exit edit mode if the
+  // status changes away from Draft (e.g. Submit) while the user is still editing.
+  useEffect(() => {
+    if (orderStatus !== "Draft") setIsEditing(false);
+  }, [orderStatus]);
+
   // State management for product tables
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"myOrder" | "catalog" | "files" | "taxes" | "fulfillment" | "returns">("myOrder"); // Default to My Order table

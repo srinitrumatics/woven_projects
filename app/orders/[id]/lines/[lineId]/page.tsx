@@ -29,6 +29,7 @@ interface OrderLineItem {
   Total_Price__c: number;
   MOQ__c?: number;
   Manufacturer_Name__c?: string;
+  Product_Brand_Name__c?: string;
   ProductFamily?: string;
   Product_Grouping__c?: string;
   Grouping__c?: string;
@@ -40,6 +41,8 @@ interface OrderLineItem {
   Unit_Cost__c?: number;
   Total_Cost__c?: number;
   Manufacturer_DBA__c?: string;
+  Lead_Time_Wks__c?: number;
+  Shipping_Dimensions__c?: string;
   Site_Name?: string;
   Inventory_Account_Name?: string;
   Customer_Order_Line_Notes__c?: string;
@@ -82,6 +85,8 @@ interface ProductData {
   inventoryAccount: string;
   isTaxable: string;
   availableToSell: number;
+  leadTimeWks?: number;
+  shippingDimensions: string;
   qtyShipped: number;
   unitCost: string;
   totalCost: string;
@@ -178,6 +183,7 @@ export default function OrderLineDetailPage({
               sku: item.Name || "",
               description: item.Product_Description__c || "",
               productFamily: item.ProductFamily || "General",
+              brand: item.Product_Brand_Name__c || "-",
               manufacturerDBA: item.Manufacturer_DBA__c || item.Manufacturer_Name__c || "",
               manufacturer: item.Manufacturer_Name__c || "",
               moq: item.MOQ__c || 1,
@@ -190,6 +196,8 @@ export default function OrderLineDetailPage({
               inventoryAccount: item.Inventory_Account_Name || item.Inventory_Account__c || "",
               isTaxable: item.IsTaxable__c === true ? "Yes" : "No",
               availableToSell: item.Available_To_Sell__c || 0,
+              leadTimeWks: item.Lead_Time_Wks__c,
+              shippingDimensions: item.Shipping_Dimensions__c || "",
               qtyShipped: item.Qty_Shipped__c || 0,
               unitCost: item.Unit_Cost__c != null ? `$${item.Unit_Cost__c.toFixed(2)}` : "Hide",
               totalCost: item.Total_Cost__c != null ? `$${item.Total_Cost__c.toFixed(2)}` : "Hide",
