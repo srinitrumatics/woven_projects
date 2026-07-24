@@ -54,16 +54,11 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       <div className="p-3 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl border border-gray-100 dark:border-gray-700 mb-3 relative group overflow-hidden">
         <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
         <div className="relative">
-          <div className="text-[10px] font-bold text-gray-400 mb-1">Unit Selling Price</div>
+          <div className="text-[10px] font-bold text-gray-400 mb-1">Unit Price</div>
           <div className="flex items-baseline gap-3">
             <span className="text-2xl font-black text-gray-900 dark:text-blue-400 tracking-tight">
               {formatCurrency(product.price)}
             </span>
-            {product.originalPrice && (
-              <span className="text-sm font-bold text-gray-400 line-through opacity-60">
-                {formatCurrency(product.originalPrice)}
-              </span>
-            )}
           </div>
         </div>
       </div>
@@ -71,8 +66,8 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       {/* Order Controls */}
       <div className="space-y-3 mb-3">
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold text-gray-400">Order Qty</label>
-          <div className="flex items-center gap-3">
+          <label className="text-[10px] font-bold text-gray-400">Total Order Qty</label>
+          <div className="flex flex-wrap items-center gap-3">
             <div className="inline-flex items-center gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-1.5 rounded-lg shadow-sm">
               <button
                 onClick={() => setQuantity(Math.max(0, quantity - moqValue))}
@@ -90,17 +85,18 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
                 +
               </button>
             </div>
+
+            <PermissionGate requiredPermissions={['order-create']} fallback={null}>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                disabled={quantity === 0}
+                className="flex-1 py-2 px-4 font-bold rounded-xl shadow-md transform transition-all duration-200 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-sm active:scale-[0.98]"
+              >
+                Add to Order
+              </button>
+            </PermissionGate>
           </div>
         </div>
-
-        <PermissionGate requiredPermissions={['order-create']} fallback={null}>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="w-full py-2 font-bold rounded-xl shadow-md transform transition-all duration-200 bg-blue-600 hover:bg-blue-700 text-white text-sm active:scale-[0.98]"
-          >
-            Add to Order
-          </button>
-        </PermissionGate>
       </div>
 
       {/* Grid Stats */}
@@ -114,8 +110,8 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
           <div className="text-xs font-bold text-gray-900 dark:text-white">{product.moq}</div>
         </div>
         <div className="bg-white dark:bg-gray-800 p-3.5">
-          <div className="text-[9px] font-bold text-gray-400 mb-1 opacity-60">Manufacturer</div>
-          <div className="text-xs font-bold text-gray-900 dark:text-white line-clamp-1">{product.manufacturer}</div>
+          <div className="text-[9px] font-bold text-gray-400 mb-1 opacity-60">Brand Name</div>
+          <div className="text-xs font-bold text-gray-900 dark:text-white line-clamp-1">{product.brand}</div>
         </div>
         <div className="bg-white dark:bg-gray-800 p-3.5">
           <div className="text-[9px] font-bold text-gray-400 mb-1 opacity-60">Warranty</div>
@@ -128,6 +124,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
         onClose={() => setIsModalOpen(false)}
         product={product}
         quantity={quantity}
+        moq={moqValue}
         accountId={accountId}
         contactId={contactId}
       />

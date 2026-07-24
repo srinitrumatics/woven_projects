@@ -18,6 +18,7 @@ interface AddToOrderModalProps {
   onClose: () => void;
   product: any;
   quantity: number;
+  moq: number;
   accountId: string;
   contactId: string;
 }
@@ -27,6 +28,7 @@ export default function AddToOrderModal({
   onClose,
   product,
   quantity,
+  moq,
   accountId,
   contactId,
 }: AddToOrderModalProps) {
@@ -96,7 +98,7 @@ export default function AddToOrderModal({
         orderLines: [{
           Status__c: 'Draft',
           Product_Name__c: product.id,
-          Order_Qty__c: quantity,
+          Order_Qty__c: quantity / (moq || 1),
           Unit_Price__c: product.price,
           Inventory_Account__c: accountId,
           IsTaxable__c: false,
