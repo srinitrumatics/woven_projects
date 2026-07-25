@@ -61,7 +61,7 @@ export default function FulfillmentsTab({
 
     if (loading) {
         return (
-            <div className="p-4">
+            <div className="px-4">
                 <div className="flex justify-center items-center py-12 min-w-0">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                 </div>
@@ -70,7 +70,7 @@ export default function FulfillmentsTab({
     }
 
     return (
-        <div className="p-4 space-y-4 h-full flex flex-col">
+        <div className="space-y-4 h-full flex flex-col">
             {/* Sub-tabs */}
             <div className="border-b border-gray-200 dark:border-gray-700">
                 <nav className="-mb-px flex space-x-8" aria-label="Tabs">
