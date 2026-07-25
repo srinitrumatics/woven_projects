@@ -5,6 +5,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { displayCell } from "@/lib/utils/formatting";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -91,27 +92,20 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
     });
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     if (serialData.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no Serial Numbers Logs associated with this shipping manifest line.">There are no Serial Numbers Logs associated with this shipping manifest line.</p>
-            </div>
+            <TableEmptyState message="No records found" description="There are no Serial Numbers Logs associated with this shipping manifest line." />
         );
     }
 
     return (
         <div className="flex flex-col mt-4">
             <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
-            <table className="w-full table-fixed">
-                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+            <Table className="table-fixed">
+                <THead>
                     <tr>
                         <SortableHeader label="Serial Number Log" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                         <SortableHeader label="Serial Number #" field="serialNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.serialNumber} onResize={handleResize} />
@@ -121,16 +115,16 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                         <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.brand} onResize={handleResize} />
                         <SortableHeader label="Shipping Manifest #" field="shippingManifestName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingManifestName} onResize={handleResize} />
                     </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                </THead>
+                <TBody>
                     {paginatedData.map((log) => (
-                        <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={log.name}>
+                        <Tr key={log.id}>
+                            <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={log.name}>
                                 {log.name}
-                            </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.serialNumber}>{displayCell(log.serialNumber)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productSerialNumber}>{displayCell(log.productSerialNumber)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productName}>
+                            </Td>
+                            <Td className="truncate" title={log.serialNumber}>{displayCell(log.serialNumber)}</Td>
+                            <Td className="truncate" title={log.productSerialNumber}>{displayCell(log.productSerialNumber)}</Td>
+                            <Td className="truncate" title={log.productName}>
                                 {log.productId ? (
                                     <Link href={`/products/${log.productId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                         {log.productName}
@@ -138,10 +132,10 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                                 ) : (
                                     displayCell(log.productName)
                                 )}
-                            </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.productDescription}>{displayCell(log.productDescription)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={log.brand}>{displayCell(log.brand)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={log.shippingManifestName}>
+                            </Td>
+                            <Td className="truncate" title={log.productDescription}>{displayCell(log.productDescription)}</Td>
+                            <Td className="truncate" title={log.brand}>{displayCell(log.brand)}</Td>
+                            <Td className="dark:text-gray-400 truncate" title={log.shippingManifestName}>
                                 {log.shippingManifestId ? (
                                     <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
                                         {log.shippingManifestName || "View Manifest"}
@@ -149,11 +143,11 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                                 ) : (
                                     displayCell(log.shippingManifestName)
                                 )}
-                            </td>
-                        </tr>
+                            </Td>
+                        </Tr>
                     ))}
-                </tbody>
-            </table>
+                </TBody>
+            </Table>
             </div>
             <Pagination
                 currentPage={currentPage}

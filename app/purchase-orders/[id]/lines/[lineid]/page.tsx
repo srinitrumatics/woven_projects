@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import { formatDate, formatCurrency } from "@/lib/utils/formatting";
+import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 import { PurchaseOrderLine } from "../../../types";
 import POSupplierBillLinesTable from "./components/POSupplierBillLinesTable";
 import POSerialNumberLogLinesTab from "./components/poserialnumberloglinestab";
@@ -368,37 +369,36 @@ export default function POLineDetailPage({
 
                 {/* Row 2: Standard Styled Table Layout */}
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 p-4">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-primary-light dark:bg-gray-900">
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Unit Cost">Unit Cost</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Order Qty">Order Qty</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="MOQ">MOQ</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Total Order Qty">Total Order Qty</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Total Product Cost">Total Product Cost</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Shipping">Shipping</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Total Cost">Total Cost</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="LT (Wks)">LT (Wks)</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Transit LT (Days)">Transit LT (Days)</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Open Balance Qty">Open Balance Qty</th>
+                    <Table className="text-left border-collapse">
+                        <THead>
+                            <tr>
+                                <Th>Unit Cost</Th>
+                                <Th>Order Qty</Th>
+                                <Th>MOQ</Th>
+                                <Th>Total Order Qty</Th>
+                                <Th>Total Product Cost</Th>
+                                <Th>Shipping</Th>
+                                <Th>Total Cost</Th>
+                                <Th>LT (Wks)</Th>
+                                <Th>Transit LT (Days)</Th>
+                                <Th>Open Balance Qty</Th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="text-gray-900 dark:text-white">
-                                <td className="px-4 py-3 text-sm font-medium truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={String(line.orderQty)}>{line.orderQty}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={String(line.moq)}>{line.moq}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={String(line.totalOrderQty)}>{line.totalOrderQty}</td>
-                                <td className="px-4 py-3 text-sm font-bold text-gray-700 truncate" title={formatCurrency(line.totalProductCost)}>{formatCurrency(line.totalProductCost)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={formatCurrency(line.shippingCharges)}>{formatCurrency(line.shippingCharges)}</td>
-                                <td className="px-4 py-3 text-sm font-bold text-primary truncate" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate">{line.leadTimeWks}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={String(line.transitLTDays || 0)}>{line.transitLTDays || 0} days</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 truncate" title={String(line.openBalanceQty || 0)}>{line.openBalanceQty || 0}</td>
-
-                            </tr>
-                        </tbody>
-                    </table>
+                        </THead>
+                        <TBody>
+                            <Tr>
+                                <Td className="font-medium truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</Td>
+                                <Td className="font-medium truncate" title={String(line.orderQty)}>{line.orderQty}</Td>
+                                <Td className="font-medium truncate" title={String(line.moq)}>{line.moq}</Td>
+                                <Td className="font-medium truncate" title={String(line.totalOrderQty)}>{line.totalOrderQty}</Td>
+                                <Td className="font-bold truncate" title={formatCurrency(line.totalProductCost)}>{formatCurrency(line.totalProductCost)}</Td>
+                                <Td className="font-medium truncate" title={formatCurrency(line.shippingCharges)}>{formatCurrency(line.shippingCharges)}</Td>
+                                <Td className="font-bold text-primary truncate" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</Td>
+                                <Td className="font-medium truncate">{line.leadTimeWks}</Td>
+                                <Td className="font-medium truncate" title={String(line.transitLTDays || 0)}>{line.transitLTDays || 0} days</Td>
+                                <Td className="font-medium truncate" title={String(line.openBalanceQty || 0)}>{line.openBalanceQty || 0}</Td>
+                            </Tr>
+                        </TBody>
+                    </Table>
                 </div>
 
 

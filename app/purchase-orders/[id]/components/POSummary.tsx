@@ -44,7 +44,7 @@ export default function POSummary({
                 </div>
             </div>
 
-            <div className="px-6 flex flex-col flex-1 divide-y divide-gray-300 dark:divide-gray-700 pt-6 text-[10px] w1025:text-sm">
+            <div className="px-6 flex flex-col flex-1 divide-y divide-gray-300 dark:divide-gray-700 pt-6 text-xs w1025:text-sm">
                 <div className="py-2 space-y-3">
                     <div className="flex justify-between min-w-0">
                         <span className="text-gray-900 dark:text-gray-700 mr-2 truncate" title={`(${productLinesCount}) Products - Subtotal`}>({productLinesCount}) Products - Subtotal</span>

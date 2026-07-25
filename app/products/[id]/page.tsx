@@ -235,14 +235,16 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </div>
 
             {/* Bottom Section: Tabs */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-              <ProductTabs
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                tabs={["Overview", "Specifications & Dims", "Datasheets", "Authorized Suppliers", "Compliance & Certs"]}
-              />
+            <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
+                <ProductTabs
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  tabs={["Overview", "Specifications & Dims", "Datasheets", "Authorized Suppliers", "Compliance & Certs"]}
+                />
+              </div>
 
-              <div className="p-8">
+              <div className="p-4">
                 {activeTab === "Overview" && <ProductOverviewTab product={product} />}
                 {activeTab === "Specifications & Dims" && <SpecificationsTab specifications={product.specifications} />}
                 {activeTab === "Datasheets" && <DatasheetsTab datasheets={datasheets} isLoading={datasheetsLoading} />}

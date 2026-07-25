@@ -6,6 +6,7 @@ import { useSortableData } from "../../../../hooks/useSortableData";
 import Pagination from "../../../../components/ui/Pagination";
 import { useUserSession } from "../../../../components/UserSessionContext";
 import { displayCell } from "@/lib/utils/formatting";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 interface PurchasesTabProps {
     purchases: PurchaseOrder[];
@@ -55,11 +56,7 @@ export default function PurchasesTab({
     const totalPagesBills = Math.ceil(supplierBills.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
@@ -98,15 +95,14 @@ export default function PurchasesTab({
             <div className="flex-1 min-h-0">
                 {activeTab === "orders" ? (
                     sortedPurchases.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-12 text-center text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium" title="No records found">No records found</p>
-                            <p className="text-sm" title="There are no Purchases Orders associated with this proposal.">There are no Purchases Orders associated with this proposal.</p>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                            <TableEmptyState message="No records found" description="There are no Purchases Orders associated with this proposal." />
                         </div>
                     ) : (
                         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-sm shadow-sm  overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                                <table className="w-full border-separate border-spacing-0 table-fixed">
-                                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                                <Table className="border-separate border-spacing-0 table-fixed">
+                                    <THead className="sticky top-0 z-20">
                                         <tr>
                                             <SortableHeader label="Purchase Order" field="name" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.name} onResize={onPurchaseResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.status} onResize={onPurchaseResize} />
@@ -137,11 +133,11 @@ export default function PurchasesTab({
                                             <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.actualDeliveryDate} onResize={onPurchaseResize} />
                                             <SortableHeader label="Goods Receipts Date" field="goodsReceiptsDate" sortConfig={sortConfigPurchases} requestSort={requestSortPurchases} width={purchaseWidths.goodsReceiptsDate} onResize={onPurchaseResize} />
                                         </tr>
-                                    </thead>
-                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    </THead>
+                                    <TBody>
                                         {paginatedPurchases.map((purchase) => (
-                                            <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={purchase.name}>
+                                            <Tr key={purchase.id} className="group transition-colors">
+                                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={purchase.name}>
                                                     {!isRestricted ? (
                                                         <Link
                                                             href={`/purchase-orders/${purchase.id}`}
@@ -154,11 +150,11 @@ export default function PurchasesTab({
                                                     ) : (
                                                         <span className="text-sm font-semibold truncate">{purchase.name}</span>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <StatusBadge status={purchase.status} />
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {purchase.customerQuoteName && purchase.customerQuoteId ? (
                                                         <Link
                                                             href={`/quotes/${purchase.customerQuoteId}`}
@@ -172,8 +168,8 @@ export default function PurchasesTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.customerQuoteName}>{displayCell(purchase.customerQuoteName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {purchase.customerOrderName && purchase.customerOrderId ? (
                                                         <Link
                                                             href={`/orders/${purchase.customerOrderId}`}
@@ -187,8 +183,8 @@ export default function PurchasesTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.customerOrderName}>{displayCell(purchase.customerOrderName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {purchase.customerPO && purchase.purchaseOrderId ? (
                                                         <Link
                                                             href={`/purchase-orders/${purchase.purchaseOrderId}`}
@@ -202,51 +198,51 @@ export default function PurchasesTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={purchase.customerPO}>{displayCell(purchase.customerPO)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.supplierName}>{displayCell(purchase.supplierName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.supplierDBA}>{displayCell(purchase.supplierDBA)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.supplierContact}>{displayCell(purchase.supplierContact)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.shipToAccountName}>{displayCell(purchase.shipToAccountName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.shipToLocationName}>{displayCell(purchase.shipToLocationName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={purchase.shipToContactName}>{displayCell(purchase.shipToContactName)}</td>
-                                                <td className="px-3 py-2 truncate">
+                                                </Td>
+                                                <Td className="truncate" title={purchase.supplierName}>{displayCell(purchase.supplierName)}</Td>
+                                                <Td className="truncate" title={purchase.supplierDBA}>{displayCell(purchase.supplierDBA)}</Td>
+                                                <Td className="truncate" title={purchase.supplierContact}>{displayCell(purchase.supplierContact)}</Td>
+                                                <Td className="truncate" title={purchase.shipToAccountName}>{displayCell(purchase.shipToAccountName)}</Td>
+                                                <Td className="truncate" title={purchase.shipToLocationName}>{displayCell(purchase.shipToLocationName)}</Td>
+                                                <Td className="truncate" title={purchase.shipToContactName}>{displayCell(purchase.shipToContactName)}</Td>
+                                                <Td className="truncate">
                                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${purchase.dropShip
                                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                         }`}>
                                                         {purchase.dropShip ? 'Yes' : 'No'}
                                                     </span>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
                                                         {purchase.totalLines}
                                                     </span>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
+                                                </Td>
+                                                <Td className="truncate font-medium">
                                                     ${(purchase.productCost ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     ${(purchase.shippingCost ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
+                                                </Td>
+                                                <Td className="truncate font-bold">
                                                     ${purchase.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.issuedDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.acknowledgedDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.requestDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.promiseDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.shippingMethod)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.logisticsPartner)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.logisticsContact)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.trackingNumber)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.estimatedDeliveryDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.trackingStatus)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.actualDeliveryDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.goodsReceiptsDate)}</td>
-                                            </tr>
+                                                </Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.issuedDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.acknowledgedDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.requestDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.promiseDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.shippingMethod)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.logisticsPartner)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.logisticsContact)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.trackingNumber)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.estimatedDeliveryDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.trackingStatus)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.actualDeliveryDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.goodsReceiptsDate)}</Td>
+                                            </Tr>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </TBody>
+                                </Table>
                             </div>
                             <div className="px-3 py-2">
                                 <Pagination
@@ -262,15 +258,14 @@ export default function PurchasesTab({
                     )
                 ) : (
                     sortedBills.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-12 text-center text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium" title="No records found">No records found</p>
-                            <p className="text-sm" title="There are no Supplier Bills associated with this proposal.">There are no Supplier Bills associated with this proposal.</p>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                            <TableEmptyState message="No records found" description="There are no Supplier Bills associated with this proposal." />
                         </div>
                     ) : (
                         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                                <table className="w-full border-separate border-spacing-0 table-fixed">
-                                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                                <Table className="border-separate border-spacing-0 table-fixed">
+                                    <THead className="sticky top-0 z-20">
                                         <tr>
                                             <SortableHeader label="Supplier Bill" field="name" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.name} onResize={onBillResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.status} onResize={onBillResize} />
@@ -292,11 +287,11 @@ export default function PurchasesTab({
                                             <SortableHeader label="Days Outstanding" field="daysOutstanding" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.daysOutstanding} onResize={onBillResize} />
                                             <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfigBills} requestSort={requestSortBills} width={billWidths.settledDate} onResize={onBillResize} />
                                         </tr>
-                                    </thead>
-                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    </THead>
+                                    <TBody>
                                         {paginatedBills.map((bill) => (
-                                            <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={bill.name}>
+                                            <Tr key={bill.id} className="group transition-colors">
+                                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={bill.name}>
                                                     <Link
                                                         href={`/supplier-bills/${bill.id}`}
                                                         target="_blank"
@@ -305,11 +300,11 @@ export default function PurchasesTab({
                                                     >
                                                         {bill.name}
                                                     </Link>
-                                                </td>
-                                                <td className="px-3 py-2 truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <StatusBadge status={bill.status || 'N/A'} />
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {bill.purchaseOrderName && bill.purchaseOrderId ? (
                                                         <Link
                                                             href={`/purchase-orders/${bill.purchaseOrderId}`}
@@ -323,8 +318,8 @@ export default function PurchasesTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.purchaseOrderName}>{displayCell(bill.purchaseOrderName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {bill.customerQuoteName && bill.customerQuoteId ? (
                                                         <Link
                                                             href={`/quotes/${bill.customerQuoteId}`}
@@ -338,8 +333,8 @@ export default function PurchasesTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.customerQuoteName}>{displayCell(bill.customerQuoteName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {bill.customerOrderName && bill.customerOrderId ? (
                                                         <Link
                                                             href={`/orders/${bill.customerOrderId}`}
@@ -353,37 +348,37 @@ export default function PurchasesTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={bill.customerOrderName}>{displayCell(bill.customerOrderName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={bill.supplierName}>{displayCell(bill.supplierName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={bill.supplierDBA}>{displayCell(bill.supplierDBA)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={bill.supplierContact}>{displayCell(bill.supplierContact)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate" title={bill.supplierName}>{displayCell(bill.supplierName)}</Td>
+                                                <Td className="truncate" title={bill.supplierDBA}>{displayCell(bill.supplierDBA)}</Td>
+                                                <Td className="truncate" title={bill.supplierContact}>{displayCell(bill.supplierContact)}</Td>
+                                                <Td className="truncate">
                                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
                                                         {bill.totalLines}
                                                     </span>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
+                                                </Td>
+                                                <Td className="truncate font-medium">
                                                     ${bill.totalProductAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     ${bill.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
+                                                </Td>
+                                                <Td className="truncate font-bold">
                                                     ${bill.totalAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.billedDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(bill.paymentTerms)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.dueDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.remittanceStatus)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
+                                                </Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.billedDate)}</Td>
+                                                <Td className="truncate">{displayCell(bill.paymentTerms)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.dueDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.remittanceStatus)}</Td>
+                                                <Td className="truncate font-medium">
                                                     ${bill.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-center text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(String(bill.daysOutstanding ?? ''))}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.settledDate)}</td>
-                                            </tr>
+                                                </Td>
+                                                <Td className="text-center text-gray-600 dark:text-gray-400 truncate">{displayCell(String(bill.daysOutstanding ?? ''))}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.settledDate)}</Td>
+                                            </Tr>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </TBody>
+                                </Table>
                             </div>
                             <div className="px-3 py-2">
                                 <Pagination

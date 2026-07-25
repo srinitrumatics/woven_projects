@@ -11,6 +11,7 @@ import Pagination from "@/components/ui/Pagination";
 import { useUserSession } from "@/components/UserSessionContext";
 
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface POLinesTableProps {
     lines: any[];
@@ -94,8 +95,8 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
     return (
         <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full text-left whitespace-nowrap text-sm table-fixed border-separate border-spacing-0">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="text-left whitespace-nowrap text-sm table-fixed border-separate border-spacing-0">
+                    <THead className="sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="Purchase Order Line #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
@@ -116,13 +117,13 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                             <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={handleResize} />
                             <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={handleResize} />
                             <SortableHeader label="Goods Receipt Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.goodsReceiptDate} onResize={handleResize} />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap" style={{ width: widths.action }}>Action</th>
+                            <Th className="whitespace-nowrap" style={{ width: widths.action }}>Action</Th>
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedLines.map((line: any) => (
-                            <tr key={line.Id || Math.random()} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={line.name}>
+                            <Tr key={line.Id || Math.random()} className="transition-colors group">
+                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={line.name}>
                                     <Link
                                         href={`/purchase-orders/${poId}/lines/${line.Id}`}
                                         className="text-primary hover:text-primary-dark hover:underline font-semibold block truncate"
@@ -130,11 +131,11 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                     >
                                         {line.name}
                                     </Link>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     <StatusBadge status={line.status} />
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.customerQuoteLine}>
+                                </Td>
+                                <Td className="truncate" title={line.customerQuoteLine}>
                                     {line.customerQuoteLineId && line.customerQuoteId ? (
                                         !isManufacturer ? (
                                             <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -146,8 +147,8 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                     ) : (
                                         displayCell(line.customerQuoteLine)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.proposedProduct}>
+                                </Td>
+                                <Td className="truncate" title={line.proposedProduct}>
                                     {line.proposedProductId ? (
                                         !isManufacturer ? (
                                             <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -159,8 +160,8 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                     ) : (
                                         displayCell(line.proposedProduct)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productName}>
+                                </Td>
+                                <Td className="truncate" title={line.productName}>
                                     {line.productId ? (
                                         <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {line.productName}
@@ -168,22 +169,22 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                     ) : (
                                         displayCell(line.productName)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{displayCell(line.productDescription)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.brand}>{displayCell(line.brand)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={String(line.totalOrderQty)}>{line.totalOrderQty}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(line.productCost)}>{formatCurrency(line.productCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(line.shippingCost)}>{formatCurrency(line.shippingCost)}</td>
-                                <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white truncate" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.needByDate ? formatDate(line.needByDate, 'numeric-dash') : ''}>{line.needByDate ? formatDate(line.needByDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.promiseDate ? formatDate(line.promiseDate, 'numeric-dash') : ''}>{line.promiseDate ? formatDate(line.promiseDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.trackingNumber}>{displayCell(line.trackingNumber)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.trackingStatus}>{displayCell(line.trackingStatus)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}>{line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}>{line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}>{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}</td>
-                                <td className="px-3 py-2 text-sm truncate" style={{ width: widths.action }} onClick={(e) => e.stopPropagation()}>
+                                </Td>
+                                <Td className="truncate" title={line.productDescription}>{displayCell(line.productDescription)}</Td>
+                                <Td className="truncate" title={line.brand}>{displayCell(line.brand)}</Td>
+                                <Td className="truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</Td>
+                                <Td className="truncate" title={String(line.totalOrderQty)}>{line.totalOrderQty}</Td>
+                                <Td className="truncate" title={formatCurrency(line.productCost)}>{formatCurrency(line.productCost)}</Td>
+                                <Td className="truncate" title={formatCurrency(line.shippingCost)}>{formatCurrency(line.shippingCost)}</Td>
+                                <Td className="font-bold truncate" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</Td>
+                                <Td className="truncate" title={line.needByDate ? formatDate(line.needByDate, 'numeric-dash') : ''}>{line.needByDate ? formatDate(line.needByDate, 'numeric-dash') : ''}</Td>
+                                <Td className="truncate" title={line.promiseDate ? formatDate(line.promiseDate, 'numeric-dash') : ''}>{line.promiseDate ? formatDate(line.promiseDate, 'numeric-dash') : ''}</Td>
+                                <Td className="truncate" title={line.trackingNumber}>{displayCell(line.trackingNumber)}</Td>
+                                <Td className="truncate" title={line.trackingStatus}>{displayCell(line.trackingStatus)}</Td>
+                                <Td className="truncate" title={line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}>{line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}</Td>
+                                <Td className="truncate" title={line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}>{line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}</Td>
+                                <Td className="truncate" title={line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}>{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}</Td>
+                                <Td className="truncate" style={{ width: widths.action }} onClick={(e) => e.stopPropagation()}>
                                     <Link
                                         href={`/purchase-orders/${poId}/lines/${line.Id}`}
                                         className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full inline-flex items-center justify-center transition-colors"
@@ -191,16 +192,16 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                     >
                                         <Eye className="w-5 h-5 text-primary" />
                                     </Link>
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
                 {paginatedLines.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                        <p className="text-sm truncate" title="There are no Purchase Order Lines associated with this purchase order.">There are no Purchase Order Lines associated with this purchase order.</p>
-                    </div>
+                    <TableEmptyState
+                        message="No records found"
+                        description="There are no Purchase Order Lines associated with this purchase order."
+                    />
                 )}
             </div>
 
@@ -217,4 +218,3 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
         </div>
     );
 }
-

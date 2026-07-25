@@ -8,7 +8,7 @@ interface ComplianceCertsTabProps {
 export const ComplianceCertsTab: React.FC<ComplianceCertsTabProps> = ({ certifications, isLoading }) => {
   return (
     <div className="space-y-8">
-      <h3 className="text-[11px] font-bold text-gray-400 mb-8  px-2">Certifications & Standards</h3>
+      <h3 className="text-xs font-bold text-gray-400 mb-8  px-2">Certifications & Standards</h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {isLoading ? (
@@ -39,25 +39,25 @@ export const ComplianceCertsTab: React.FC<ComplianceCertsTabProps> = ({ certific
               </div>
 
               {/* Title */}
-              <h4 className="text-[14px] font-black text-[#111827] dark:text-white mb-1  tracking-tight leading-tight">
+              <h4 className="text-sm font-black text-[#111827] dark:text-white mb-1  tracking-tight leading-tight">
                 {cert.Name}
               </h4>
 
               {/* Organizer/Issuer */}
-              <p className="text-[11px] font-bold text-[#6B7280] dark:text-gray-400 mb-1 leading-tight">
+              <p className="text-xs font-bold text-[#6B7280] dark:text-gray-400 mb-1 leading-tight">
                 {cert.Issuer_Name}
               </p>
 
               {/* Dates */}
               <div className="mb-6">
-                <p className="text-[11px] font-bold text-[#9CA3AF] dark:text-gray-500">
+                <p className="text-xs font-bold text-[#9CA3AF] dark:text-gray-500">
                   {cert.Expiry_Date__c ? `Expires: ${new Date(cert.Expiry_Date__c).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}` :
                     `Issued: ${new Date(cert.Issue_Date__c).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`}
                 </p>
               </div>
 
               {/* Status Badge at bottom */}
-              <div className={`mt-auto px-5 py-0.5 rounded-md text-[10px] font-bold  ${cert.Certification_Status__c === 'Valid' ? 'bg-[#ECFDF5] text-[#10B981]' :
+              <div className={`mt-auto px-5 py-0.5 rounded-md text-xs font-bold  ${cert.Certification_Status__c === 'Valid' ? 'bg-[#ECFDF5] text-[#10B981]' :
                 cert.Certification_Status__c === 'Pending' ? 'bg-yellow-50 text-yellow-600' :
                   'bg-red-50 text-red-600'
                 }`}>

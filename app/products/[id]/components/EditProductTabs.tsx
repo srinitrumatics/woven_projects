@@ -547,8 +547,8 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
                       <p><span className="font-semibold">EOL Date:</span> {ds.EOL_Date__c ? new Date(ds.EOL_Date__c).toISOString().split('T')[0] : 'N/A'}</p>
                     </div>
                     <div className="mt-3 flex gap-2">
-                      {ds.isOBS__c && <span className="px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-red-100 text-red-700 rounded-full">Obsolete</span>}
-                      {ds.isEOL__c && <span className="px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-orange-100 text-orange-700 rounded-full">EOL</span>}
+                      {ds.isOBS__c && <span className="px-2 py-0.5 text-xs font-bold tracking-wide uppercase bg-red-100 text-red-700 rounded-full">Obsolete</span>}
+                      {ds.isEOL__c && <span className="px-2 py-0.5 text-xs font-bold tracking-wide uppercase bg-orange-100 text-orange-700 rounded-full">EOL</span>}
                     </div>
                   </div>
                 ))}
@@ -601,7 +601,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
                     </div>
                     {cert.Certification_Status__c && (
                       <div className="mt-3">
-                        <span className={`px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase rounded-full ${cert.Certification_Status__c === 'Valid' ? 'bg-green-100 text-green-700' :
+                        <span className={`px-2 py-0.5 text-xs font-bold tracking-wide uppercase rounded-full ${cert.Certification_Status__c === 'Valid' ? 'bg-green-100 text-green-700' :
                           cert.Certification_Status__c === 'Expired' ? 'bg-red-100 text-red-700' :
                             cert.Certification_Status__c === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
                               'bg-gray-100 text-gray-700'

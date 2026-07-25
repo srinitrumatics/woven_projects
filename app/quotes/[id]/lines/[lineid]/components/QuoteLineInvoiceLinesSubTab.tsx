@@ -4,6 +4,7 @@ import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Eye } from "lucide-react";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 interface INLI {
     id: string;
@@ -63,24 +64,17 @@ export default function QuoteLineInvoiceLinesSubTab({
     const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
         <div>
             <div className="overflow-x-auto">
                 {data.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium" title="No records found">No records found</p>
-                        <p className="text-sm">There are no invoices associated with this quote line.</p>
-                    </div>
+                    <TableEmptyState message="No records found" description="There are no invoices associated with this quote line." />
                 ) : (
-                    <table className="w-full text-sm table-fixed">
-                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                    <Table className="text-sm table-fixed">
+                        <THead>
                             <tr>
                                 <SortableHeader label="Invoice Line" field="lineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                 <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
@@ -98,61 +92,61 @@ export default function QuoteLineInvoiceLinesSubTab({
                                 <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
                                 <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
                                 <SortableHeader label="Line Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
-                                <th className="px-3 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white w-[80px]">Action</th>
+                                <Th className="text-center w-[80px]">Action</Th>
                             </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800">
+                        </THead>
+                        <TBody>
                             {paginatedData.map((item) => (
-                                <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.lineName }}>
+                                <Tr key={item.id} className="border-b border-gray-200 dark:border-gray-700">
+                                    <Td className="sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.lineName }}>
                                         {item.invoiceId ? (
                                             <Link href={`/invoices/${item.invoiceId}/lines/${item.id}`} target="_blank" className="text-primary hover:underline font-bold">
                                                 {item.lineName}
                                             </Link>
                                         ) : displayCell(item.lineName)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm truncate" style={{ width: widths.status }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.status }}>
                                         <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                             {item.status}
                                         </span>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.invoiceName }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.invoiceName }}>
                                         {item.invoiceId ? (
                                             <Link href={`/invoices/${item.invoiceId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {item.invoiceName}
                                             </Link>
                                         ) : displayCell(item.invoiceName)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrderLine }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.salesOrderLine }}>
                                         {displayCell(item.salesOrderLine)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrderLine }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.purchaseOrderLine }}>
                                         {displayCell(item.purchaseOrderLine)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuoteLine }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.customerQuoteLine }}>
                                         {item.customerQuoteLineId ? (
                                             <Link href={`/quotes/${quoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {item.customerQuoteLine}
                                             </Link>
                                         ) : displayCell(item.customerQuoteLine)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposedProductName }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.proposedProductName }}>
                                         {item.proposedProductId ? (
                                             <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {item.proposedProductName}
                                             </Link>
                                         ) : displayCell(item.proposedProductName)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{displayCell(item.productName)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{displayCell(item.description)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.manufacturerDBA }}>{displayCell(item.brand)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.unitPrice }}>{formatCurrency(item.unitPrice)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalOrderQty }}>{item.totalOrderQty}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(item.totalPrice)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(item.shipping)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }}>{formatCurrency(item.taxes)}</td>
-                                    <td className="px-3 py-2 text-sm font-bold text-primary truncate" style={{ width: widths.grandTotal }}>{formatCurrency(item.grandTotal)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.productName }}>{displayCell(item.productName)}</Td>
+                                    <Td className="truncate" style={{ width: widths.description }} title={item.description}>{displayCell(item.description)}</Td>
+                                    <Td className="truncate" style={{ width: widths.manufacturerDBA }}>{displayCell(item.brand)}</Td>
+                                    <Td className="truncate" style={{ width: widths.unitPrice }}>{formatCurrency(item.unitPrice)}</Td>
+                                    <Td className="truncate" style={{ width: widths.totalOrderQty }}>{item.totalOrderQty}</Td>
+                                    <Td className="font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(item.totalPrice)}</Td>
+                                    <Td className="truncate" style={{ width: widths.shipping }}>{formatCurrency(item.shipping)}</Td>
+                                    <Td className="truncate" style={{ width: widths.taxes }}>{formatCurrency(item.taxes)}</Td>
+                                    <Td className="font-bold text-primary truncate" style={{ width: widths.grandTotal }}>{formatCurrency(item.grandTotal)}</Td>
+                                    <Td className="text-gray-600 dark:text-gray-400 text-center">
                                         {item.invoiceId ? (
                                             <Link
                                                 href={`/invoices/${item.invoiceId}/lines/${item.id}`}
@@ -163,11 +157,11 @@ export default function QuoteLineInvoiceLinesSubTab({
                                                 <Eye className="w-5 h-5 text-primary" />
                                             </Link>
                                         ) : null}
-                                    </td>
-                                </tr>
+                                    </Td>
+                                </Tr>
                             ))}
-                        </tbody>
-                    </table>
+                        </TBody>
+                    </Table>
                 )}
             </div>
             <div className="px-3 py-2">

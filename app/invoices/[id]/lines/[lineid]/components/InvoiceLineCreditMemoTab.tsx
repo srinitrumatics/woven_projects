@@ -7,6 +7,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -118,27 +119,23 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
     });
 
     if (loading) {
-        return (
-            <div className="flex justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     if (creditMemoLines.length === 0) {
         return (
-            <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There is no credit memo associated with this invoice line.">There is no credit memo associated with this invoice line.</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There is no credit memo associated with this invoice line."
+            />
         );
     }
 
     return (
         <div className="bg-white dark:bg-gray-800">
             <div className="overflow-auto ">
-                <table className="w-full text-sm table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                <Table className="text-sm table-fixed">
+                    <THead>
                         <tr>
                             <SortableHeader label="Credit Memo Line" field="lineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 top-0 z-20 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
@@ -155,20 +152,20 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                             <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                             <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((item) => (
-                            <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700">
+                            <Tr key={item.id} className="border-b border-gray-100 dark:border-gray-700">
                                 {/* Sticky column — z-10, inherits row bg */}
-                                <td className="px-3 py-2 text-sm text-left sticky left-0 bg-white dark:bg-gray-800  truncate">{displayCell(item.lineName)}</td>
-                                <td className="px-3 py-2 text-sm truncate">
+                                <Td className="text-left sticky left-0 bg-white dark:bg-gray-800 truncate">{displayCell(item.lineName)}</Td>
+                                <Td className="truncate">
                                     <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
                                         {item.status}
                                     </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.creditMemoName)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.salesOrderLine)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">{displayCell(item.creditMemoName)}</Td>
+                                <Td className="truncate">{displayCell(item.salesOrderLine)}</Td>
+                                <Td className="truncate">
                                     {item.customerQuoteId && item.customerQuoteLineId ? (
                                         <Link href={`/quotes/${item.customerQuoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                             {displayCell(item.customerQuoteLine)}
@@ -180,8 +177,8 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                                     ) : (
                                         displayCell(item.customerQuoteLine)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     {item.proposedProductId ? (
                                         <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                             {displayCell(item.proposedProduct)}
@@ -189,8 +186,8 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                                     ) : (
                                         displayCell(item.proposedProduct)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     {item.productId ? (
                                         <Link href={`/products/${item.productId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                             {displayCell(item.productName)}
@@ -198,18 +195,18 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                                     ) : (
                                         displayCell(item.productName)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[180px] truncate" title={item.description}>{displayCell(item.description)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(item.brand)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate ">{formatCurrency(item.unitPrice)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatNumber(item.creditQty)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">{formatCurrency(item.totalPrice)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.shipping)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(item.taxes)}</td>
-                            </tr>
+                                </Td>
+                                <Td className="min-w-[180px] truncate" title={item.description}>{displayCell(item.description)}</Td>
+                                <Td className="truncate">{displayCell(item.brand)}</Td>
+                                <Td className="truncate">{formatCurrency(item.unitPrice)}</Td>
+                                <Td className="truncate">{formatNumber(item.creditQty)}</Td>
+                                <Td className="truncate font-bold">{formatCurrency(item.totalPrice)}</Td>
+                                <Td className="truncate">{formatCurrency(item.shipping)}</Td>
+                                <Td className="truncate">{formatCurrency(item.taxes)}</Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
             <Pagination
                 currentPage={currentPage}

@@ -5,6 +5,7 @@ import Pagination from "@/components/ui/Pagination";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { useState, useMemo } from 'react';
 import { formatDate, displayCell } from "@/lib/utils/formatting";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface TrackingInfo {
     Logistics_Partner__c: string;
@@ -65,18 +66,18 @@ export default function TrackingInformationTab({ data }: TrackingInformationTabP
 
     if (!data || data.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There is no Tracking Information associated with this purchase order.">There is no Tracking Information associated with this purchase order.</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There is no Tracking Information associated with this purchase order."
+            />
         );
     }
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0 table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0 table-fixed">
+                    <THead className="sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.logisticsPartner} onResize={handleResize} />
                             <SortableHeader label="Logistics Contact" field="logisticsContact" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.logisticsContact} onResize={handleResize} />
@@ -88,27 +89,27 @@ export default function TrackingInformationTab({ data }: TrackingInformationTabP
                             <SortableHeader label="Estimated Delivery Date" field="estimatedDelivery" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.estimatedDelivery} onResize={handleResize} />
                             <SortableHeader label="Actual Delivery Date" field="actualDelivery" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.actualDelivery} onResize={handleResize} />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((item) => (
-                            <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Logistics_Partner__c || '-'}>{displayCell(item.Logistics_Partner__c)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Logistics_Contact__c || '-'}>{displayCell(item.Logistics_Contact__c)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Shipping_Method__c || '-'}>{displayCell(item.Shipping_Method__c)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Service_Level__c || '-'}>{displayCell(item.Service_Level__c)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Tracking_URL__c || '-'}>
+                            <Tr key={item.id}>
+                                <Td className="truncate" title={item.Logistics_Partner__c || '-'}>{displayCell(item.Logistics_Partner__c)}</Td>
+                                <Td className="truncate" title={item.Logistics_Contact__c || '-'}>{displayCell(item.Logistics_Contact__c)}</Td>
+                                <Td className="truncate" title={item.Shipping_Method__c || '-'}>{displayCell(item.Shipping_Method__c)}</Td>
+                                <Td className="truncate" title={item.Service_Level__c || '-'}>{displayCell(item.Service_Level__c)}</Td>
+                                <Td className="truncate" title={item.Tracking_URL__c || '-'}>
                                     {displayCell(item.Tracking_URL__c)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Tracking_Number__c || '-'}>{displayCell(item.Tracking_Number__c)}</td>
-                                <td className="px-3 py-2 text-sm truncate">
+                                </Td>
+                                <Td className="truncate" title={item.Tracking_Number__c || '-'}>{displayCell(item.Tracking_Number__c)}</Td>
+                                <Td className="truncate">
                                     <StatusBadge status={item.Tracking_Status__c || '-'} />
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Estimated_Delivery_Date__c ? formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') : '-'}>{item.Estimated_Delivery_Date__c ? formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') : '-'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={item.Actual_Delivery_Date__c ? formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') : '-'}>{item.Actual_Delivery_Date__c ? formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') : '-'}</td>
-                            </tr>
+                                </Td>
+                                <Td className="truncate" title={item.Estimated_Delivery_Date__c ? formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') : '-'}>{item.Estimated_Delivery_Date__c ? formatDate(item.Estimated_Delivery_Date__c, 'numeric-dash') : '-'}</Td>
+                                <Td className="truncate" title={item.Actual_Delivery_Date__c ? formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') : '-'}>{item.Actual_Delivery_Date__c ? formatDate(item.Actual_Delivery_Date__c, 'numeric-dash') : '-'}</Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="border-t border-gray-100 dark:border-gray-700">

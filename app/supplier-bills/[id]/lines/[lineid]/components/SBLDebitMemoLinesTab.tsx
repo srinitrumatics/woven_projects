@@ -8,6 +8,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface DebitMemoLine {
     Id: string;
@@ -78,18 +79,18 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
 
     if (!debitMemos || debitMemos.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate">No Debit Memo Lines</p>
-                <p className="text-sm truncate">There are no debit memo lines associated with this record.</p>
-            </div>
+            <TableEmptyState
+                message="No Debit Memo Lines"
+                description="There are no debit memo lines associated with this record."
+            />
         );
     }
 
     return (
         <div className="flex flex-col min-w-0">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0 table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0 table-fixed">
+                    <THead className="sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="Debit Memo Line" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Status__c} onResize={handleResize} />
@@ -105,20 +106,20 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
                             <SortableHeader label="Shipping" field="Shipping_Charges__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Shipping_Charges__c} onResize={handleResize} />
                             <SortableHeader label="Line Grand Total" field="Line_Grand_Total__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Line_Grand_Total__c} onResize={handleResize} />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((line) => (
 
-                            <tr key={line.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate">{displayCell(line.Name)}</td>
-                                <td className="px-3 py-2 text-sm truncate">
+                            <Tr key={line.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate">{displayCell(line.Name)}</Td>
+                                <Td className="px-3 py-2 text-sm truncate">
                                     <StatusBadge status={line.Status__c || "-"} />
 
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
                                     {displayCell(line.Debit_Memo_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
                                     {line.Customer_Quote_Line__c && line.Customer_Quote__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">
@@ -128,8 +129,8 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
                                             <span className="font-medium">{line.Customer_Quote_Line_Name}</span>
                                         )
                                     ) : displayCell(line.Customer_Quote_Line_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
                                     {line.Proposed_Product__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/proposals/${line.Proposal__c}/lines/${line.Proposed_Product__c}`} className="text-primary hover:underline font-medium">
@@ -139,25 +140,25 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
                                             <span className="font-medium">{line.Proposed_Product_Name}</span>
                                         )
                                     ) : displayCell(line.Proposed_Product_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">
                                     {line.Product_Name__c ? (
                                         <Link href={`/products/${line.Product_Name__c}`} className="text-primary hover:underline font-medium">
                                             {line.Product_Name}
                                         </Link>
                                     ) : displayCell(line.Product_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate" title={line.Product_Description__c}>{displayCell(line.Product_Description__c)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{displayCell(line.Product_Brand_Name__c || '-')}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Unit_Cost__c || line.UnitCost__c || 0)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{line.Debit_Qty__c ?? line.DebitQty__c ?? 0}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Total_Cost__c || line.TotalCost__c || 0)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Shipping_Charges__c || line.Shipping__c || 0)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-bold truncate">{formatCurrency(line.Line_Grand_Total__c || 0)}</td>
-                            </tr>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate" title={line.Product_Description__c}>{displayCell(line.Product_Description__c)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{displayCell(line.Product_Brand_Name__c || '-')}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Unit_Cost__c || line.UnitCost__c || 0)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{line.Debit_Qty__c ?? line.DebitQty__c ?? 0}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Total_Cost__c || line.TotalCost__c || 0)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Shipping_Charges__c || line.Shipping__c || 0)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-bold truncate">{formatCurrency(line.Line_Grand_Total__c || 0)}</Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700">

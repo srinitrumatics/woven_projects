@@ -15,6 +15,7 @@ import {
 
 import { useUserSession } from "@/components/UserSessionContext";
 import { useState } from "react";
+import { textStyles } from "@/lib/text-styles";
 
 interface StatItem {
   title: string;
@@ -208,7 +209,7 @@ export default function Program360Page() {
     {
       title: "Orders in Draft",
       count: data?.["Orders in Draft"]?.length || 0,
-      badgeStyle: { background: "#dbeafe", color: "#1d4ed8" },
+      badgeClass: "bg-blue-100 text-blue-700",
       href: "/orders",
       items: (data?.["Orders in Draft"] || []).slice(0, 3).map((item: any) => ({
         id: item.Name,
@@ -216,14 +217,14 @@ export default function Program360Page() {
         customerPo: item.Customer_PO__c || "N/A",
         info: `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
-        pillClass: "bg-[#fff7ed] text-[#9a3412]"
+        pillClass: "bg-orange-50 text-orange-800"
       })),
       footer: "View all draft orders"
     },
     {
       title: "Proposals",
       count: data?.["Proposals"]?.length || 0,
-      badgeStyle: { background: "#eff6ff", color: "#1e40af" },
+      badgeClass: "bg-blue-50 text-blue-800",
       href: "/proposals",
       items: (data?.["Proposals"] || []).slice(0, 3).map((item: any) => ({
         id: item.Proposal_Number__c || item.Name,
@@ -231,14 +232,14 @@ export default function Program360Page() {
         customerPo: item.Customer_PO__c || "N/A",
         info: `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
-        pillClass: "bg-[#eff6ff] text-[#1e40af]"
+        pillClass: "bg-blue-50 text-blue-800"
       })),
       footer: "View all proposals"
     },
     {
       title: "Quotes",
       count: data?.["Quotes"]?.length || 0,
-      badgeStyle: { background: "#fef3c7", color: "#92400e" },
+      badgeClass: "bg-amber-100 text-amber-800",
       href: "/quotes",
       items: (data?.["Quotes"] || []).slice(0, 3).map((item: any) => ({
         id: item.Quote_Number__c || item.Name,
@@ -246,14 +247,14 @@ export default function Program360Page() {
         customerPo: item.Customer_PO__c || "N/A",
         info: item.Expiration_Date__c ? `Expires: ${item.Expiration_Date__c}` : `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
-        pillClass: item.Status__c === 'Expiring' ? "bg-[#fff7ed] text-[#9a3412]" : "bg-[#edf7ee] text-[#05630b]"
+        pillClass: item.Status__c === 'Expiring' ? "bg-orange-50 text-orange-800" : "bg-green-50 text-green-800"
       })),
       footer: "View all submitted quotes"
     },
     {
       title: "Invoices",
       count: data?.["Invoices"]?.length || 0,
-      badgeStyle: { background: "#fee2e2", color: "#b91c1c" },
+      badgeClass: "bg-red-100 text-red-700",
       href: "/invoices",
       items: (data?.["Invoices"] || []).slice(0, 3).map((item: any) => ({
         id: item.Invoice_Number__c || item.Name,
@@ -261,14 +262,14 @@ export default function Program360Page() {
         customerPo: item.Customer_PO__c || "N/A",
         info: item.Days_Outstanding__c ? `${item.Days_Outstanding__c} days outstanding` : `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
-        pillClass: "bg-[#fef2f2] text-[#991b1b]"
+        pillClass: "bg-red-50 text-red-800"
       })),
       footer: "View all past due invoices"
     },
     {
       title: "Shipments",
       count: data?.["Shipments"]?.length || 0,
-      badgeStyle: { background: "#dcfce7", color: "#166534" },
+      badgeClass: "bg-green-100 text-green-800",
       href: "/shipments",
       items: (data?.["Shipments"] || []).slice(0, 3).map((item: any) => ({
         id: item.Shipping_Manifest_Number__c || item.Name,
@@ -276,7 +277,7 @@ export default function Program360Page() {
         customerPo: item.Customer_PO__c || "N/A",
         info: item.Estimated_Delivery_Date__c ? `ETA: ${new Date(item.Estimated_Delivery_Date__c).toLocaleDateString()}` : `Total: $${(item.Total_Price__c || 0).toLocaleString()}`,
         status: item.Status__c,
-        pillClass: item.Status__c === 'Delayed' ? "bg-[#fef2f2] text-[#991b1b]" : "bg-[#f0fdf4] text-[#166534]"
+        pillClass: item.Status__c === 'Delayed' ? "bg-red-50 text-red-800" : "bg-green-50 text-green-800"
       })),
       footer: "View all shipments"
     }
@@ -302,8 +303,8 @@ export default function Program360Page() {
                 <h3 className="text-gray-500 dark:text-gray-400 font-medium text-sm">{stat.title}</h3>
                 <div className="text-3xl font-bold text-gray-900 dark:text-white">{stat.value}</div>
                 <div className="flex flex-col pt-1">
-                  <span className={`text-[13px] font-semibold ${stat.color === 'blue' ? 'text-green-600' : 'text-gray-600'}`}>{stat.trend}</span>
-                  <span className={`text-[12px] font-medium ${stat.subtextColor || 'text-gray-400'}`}>{stat.subtext}</span>
+                  <span className={`text-sm font-semibold ${stat.color === 'blue' ? 'text-green-600' : 'text-gray-600'}`}>{stat.trend}</span>
+                  <span className={`text-xs font-medium ${stat.subtextColor || 'text-gray-400'}`}>{stat.subtext}</span>
                 </div>
               </div>
               <div className={`${stat.bgColor} p-3 rounded-xl`}>
@@ -337,10 +338,9 @@ export default function Program360Page() {
             {needsAttention.map((col, idx) => (
               <div key={idx} className="bg-white dark:bg-slate-900/50 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 flex flex-col h-full overflow-hidden">
                 <div className="p-5 flex justify-between items-center border-b border-gray-50 dark:border-slate-800/50">
-                  <h3 className="text-[15px] font-bold text-gray-800 dark:text-white">{col.title}</h3>
+                  <h3 className={textStyles.heading}>{col.title}</h3>
                   <span
-                    className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
-                    style={col.badgeStyle}
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${col.badgeClass}`}
                   >
                     {col.count}
                   </span>
@@ -350,20 +350,20 @@ export default function Program360Page() {
                     <div key={i} className="group cursor-pointer">
                       {!isManufacturer ? (
                         <Link href={item.href}>
-                          <div className="text-[13px] font-bold text-blue-600 hover:underline mb-1 flex items-center gap-1">
+                          <div className="text-sm font-bold text-blue-600 hover:underline mb-1 flex items-center gap-1">
                             {item.id}
                           </div>
                         </Link>
                       ) : (
-                        <div className="text-[13px] font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-1">
+                        <div className="text-sm font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-1">
                           {item.id}
                         </div>
                       )}
-                      <div className="text-[11px] text-gray-400 mb-1">
+                      <div className={`${textStyles.muted} mb-1`}>
                         {['Invoices', 'Shipments'].includes(col.title) ? item.info : `Total Price: ${item.info}`}
                       </div>
-                      <div className="text-[11px] text-gray-500 mb-2">Customer PO: {item.customerPo}</div>
-                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold  ${item.pillClass}`}>
+                      <div className={`${textStyles.muted} mb-2`}>Customer PO: {item.customerPo}</div>
+                      <span className={`px-2 py-0.5 rounded-md text-xs font-bold  ${item.pillClass}`}>
                         {item.status}
                       </span>
                     </div>
@@ -371,7 +371,7 @@ export default function Program360Page() {
                 </div>
                 <Link
                   href={col.href}
-                  className="py-4 border-t hover:underline border-gray-50 dark:border-slate-800/50 text-[11px] font-bold text-blue-500 hover:text-blue-700 transition-colors text-center bg-gray-50/10 dark:bg-slate-800/20"
+                  className="py-4 border-t hover:underline border-gray-50 dark:border-slate-800/50 text-xs font-bold text-blue-500 hover:text-blue-700 transition-colors text-center bg-gray-50/10 dark:bg-slate-800/20"
                 >
                   {col.footer}
                 </Link>
@@ -383,8 +383,8 @@ export default function Program360Page() {
         {/* Invoice Spend Section */}
         <div className="bg-white dark:bg-slate-900/50 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-slate-800 space-y-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <h2 className="text-[14px] font-bold text-gray-900 dark:text-white">Invoice Spend — Rolling 12 Months</h2>
-            <div className="flex items-center gap-6 text-[13px] font-semibold font-sans">
+            <h2 className={textStyles.heading}>Invoice Spend — Rolling 12 Months</h2>
+            <div className="flex items-center gap-6 text-sm font-semibold font-sans">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full" style={{ background: "#3b82f6" }}></div>
                 <span className="text-gray-600 dark:text-gray-400">Paid</span>

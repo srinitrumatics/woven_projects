@@ -5,6 +5,7 @@ import Link from "next/link";
 import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -45,24 +46,17 @@ export default function QuoteSupplierBillsSubTab({
     const totalPages = Math.ceil(bills.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
         <div className="overflow-x-auto py-2">
             {bills.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                    <p className="text-lg font-medium" title="No records found">No records found</p>
-                    <p className="text-sm" title="There are no supplier bills associated with this quote.">There are no supplier bills associated with this quote.</p>
-                </div>
+                <TableEmptyState message="No records found" description="There are no supplier bills associated with this quote." />
             ) : (
                 <>
-                    <table className="w-full">
-                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                    <Table>
+                        <THead>
                             <tr>
                                 <SortableHeader label="Bill Number" field="billNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.billNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                 <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
@@ -84,19 +78,19 @@ export default function QuoteSupplierBillsSubTab({
                                 <SortableHeader label="Days Outstanding" field="daysOutstanding" sortConfig={sortConfig} requestSort={requestSort} width={widths.daysOutstanding} onResize={onResize} align="left" />
                                 <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={onResize} align="left" />
                             </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        </THead>
+                        <TBody>
                             {paginatedBills.map((bill) => (
-                                <tr key={bill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                    <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.billNumber }}>
+                                <Tr key={bill.id}>
+                                    <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.billNumber }}>
                                         <Link href={`/supplier-bills/${bill.id}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {bill.billNumber}
                                         </Link>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.status }}>
                                         <StatusBadge status={bill.status as QuoteStatus} />
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.purchaseOrder }}>
                                         {bill.purchaseOrderId ? (
                                             !isManufacturer && !isRestricted ? (
                                                 <Link href={`/purchase-orders/${bill.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -104,39 +98,39 @@ export default function QuoteSupplierBillsSubTab({
                                                 </Link>
                                             ) : displayCell(bill.purchaseOrder)
                                         ) : displayCell(bill.purchaseOrder)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.customerQuote }}>
                                         {bill.customerQuoteId ? (
                                             <Link href={`/quotes/${bill.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {bill.customerQuote}
                                             </Link>
                                         ) : displayCell(bill.customerQuote)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.customerOrder }}>
                                         {bill.customerOrderId ? (
                                             <Link href={`/orders/${bill.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {bill.customerOrder}
                                             </Link>
                                         ) : displayCell(bill.customerOrder)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierName }}>{displayCell(bill.supplierName)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierDBA }}>{displayCell(bill.supplierDBA)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierContact }}>{displayCell(bill.supplierContact)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{formatNumber(bill.totalLines)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalCost }}>{formatCurrency(bill.totalCost)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(bill.shipping)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary truncate" style={{ width: widths.totalAmount }}>{formatCurrency(bill.totalAmount)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billedDate }}>{formatDate(bill.billedDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.paymentTerms }}>{displayCell(bill.paymentTerms)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.dueDate }}>{formatDate(bill.dueDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.remittanceStatus }}>{displayCell(bill.remittanceStatus)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.openBalance }}>{formatCurrency(bill.openBalance)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.daysOutstanding }}>{formatNumber(bill.daysOutstanding)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.settledDate }}>{formatDate(bill.settledDate, 'numeric-dash')}</td>
-                                </tr>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.supplierName }}>{displayCell(bill.supplierName)}</Td>
+                                    <Td className="truncate" style={{ width: widths.supplierDBA }}>{displayCell(bill.supplierDBA)}</Td>
+                                    <Td className="truncate" style={{ width: widths.supplierContact }}>{displayCell(bill.supplierContact)}</Td>
+                                    <Td className="truncate" style={{ width: widths.totalLines }}>{formatNumber(bill.totalLines)}</Td>
+                                    <Td className="font-bold truncate" style={{ width: widths.totalCost }}>{formatCurrency(bill.totalCost)}</Td>
+                                    <Td className="truncate" style={{ width: widths.shipping }}>{formatCurrency(bill.shipping)}</Td>
+                                    <Td className="font-bold text-primary truncate" style={{ width: widths.totalAmount }}>{formatCurrency(bill.totalAmount)}</Td>
+                                    <Td className="truncate" style={{ width: widths.billedDate }}>{formatDate(bill.billedDate, 'numeric-dash')}</Td>
+                                    <Td className="truncate" style={{ width: widths.paymentTerms }}>{displayCell(bill.paymentTerms)}</Td>
+                                    <Td className="truncate" style={{ width: widths.dueDate }}>{formatDate(bill.dueDate, 'numeric-dash')}</Td>
+                                    <Td className="truncate" style={{ width: widths.remittanceStatus }}>{displayCell(bill.remittanceStatus)}</Td>
+                                    <Td className="truncate" style={{ width: widths.openBalance }}>{formatCurrency(bill.openBalance)}</Td>
+                                    <Td className="truncate" style={{ width: widths.daysOutstanding }}>{formatNumber(bill.daysOutstanding)}</Td>
+                                    <Td className="truncate" style={{ width: widths.settledDate }}>{formatDate(bill.settledDate, 'numeric-dash')}</Td>
+                                </Tr>
                             ))}
-                        </tbody>
-                    </table>
+                        </TBody>
+                    </Table>
 
                 </>
             )}

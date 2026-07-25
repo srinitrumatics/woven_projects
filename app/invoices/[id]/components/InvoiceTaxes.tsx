@@ -2,6 +2,7 @@ import { formatCurrency } from "@/lib/utils/formatting";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
+import { Table, THead, TBody, Tr, Td } from "@/components/ui/DataTable";
 
 interface InvoiceTaxesProps {
     salesTaxRate?: number;
@@ -63,8 +64,8 @@ export default function InvoiceTaxes(props: InvoiceTaxesProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                <Table className="text-sm text-left table-fixed">
+                    <THead>
                         <tr>
                             <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesRate} onResize={handleResize} />
                             <SortableHeader label="Sales Tax Amount" field="salesTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesAmount} onResize={handleResize} />
@@ -82,28 +83,28 @@ export default function InvoiceTaxes(props: InvoiceTaxesProps) {
                             <SortableHeader label="VAT Amount" field="vatAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatAmount} onResize={handleResize} />
                         </tr>
                         <tr aria-hidden="true" className="h-0 border-none"></tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {sortedData.map((tax) => (
-                            <tr key={tax.id} className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{(tax.salesTaxRate || 0).toFixed(2)}%</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{formatCurrency(tax.salesTaxAmount || 0)}</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{(tax.useTaxRate || 0).toFixed(2)}%</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{formatCurrency(tax.useTaxAmount || 0)}</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{(tax.localTaxRate || 0).toFixed(2)}%</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{formatCurrency(tax.localTaxAmount || 0)}</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{(tax.exciseTaxRate || 0).toFixed(2)}%</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{formatCurrency(tax.exciseTaxAmount || 0)}</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{(tax.grtRate || 0).toFixed(2)}%</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{formatCurrency(tax.grtAmount || 0)}</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{(tax.gstRate || 0).toFixed(2)}%</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{formatCurrency(tax.gstAmount || 0)}</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{(tax.vatRate || 0).toFixed(2)}%</td>
-                                <td className="px-3 py-2 text-gray-900 dark:text-white font-medium truncate">{formatCurrency(tax.vatAmount || 0)}</td>
-                            </tr>
+                            <Tr key={tax.id}>
+                                <Td className="font-medium truncate">{(tax.salesTaxRate || 0).toFixed(2)}%</Td>
+                                <Td className="font-medium truncate">{formatCurrency(tax.salesTaxAmount || 0)}</Td>
+                                <Td className="font-medium truncate">{(tax.useTaxRate || 0).toFixed(2)}%</Td>
+                                <Td className="font-medium truncate">{formatCurrency(tax.useTaxAmount || 0)}</Td>
+                                <Td className="font-medium truncate">{(tax.localTaxRate || 0).toFixed(2)}%</Td>
+                                <Td className="font-medium truncate">{formatCurrency(tax.localTaxAmount || 0)}</Td>
+                                <Td className="font-medium truncate">{(tax.exciseTaxRate || 0).toFixed(2)}%</Td>
+                                <Td className="font-medium truncate">{formatCurrency(tax.exciseTaxAmount || 0)}</Td>
+                                <Td className="font-medium truncate">{(tax.grtRate || 0).toFixed(2)}%</Td>
+                                <Td className="font-medium truncate">{formatCurrency(tax.grtAmount || 0)}</Td>
+                                <Td className="font-medium truncate">{(tax.gstRate || 0).toFixed(2)}%</Td>
+                                <Td className="font-medium truncate">{formatCurrency(tax.gstAmount || 0)}</Td>
+                                <Td className="font-medium truncate">{(tax.vatRate || 0).toFixed(2)}%</Td>
+                                <Td className="font-medium truncate">{formatCurrency(tax.vatAmount || 0)}</Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
         </div>
     );

@@ -12,6 +12,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 type TabFilter = "Pipeline" | "Draft" | "Client Review" | "Won" | string;
 
@@ -225,7 +226,7 @@ export default function ProposalsPage() {
     <Sidebar>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Proposals</h1>
-        <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1" title="Manage and Track Sales Proposals">Manage and Track Sales Proposals</p>
+        <p className="text-gray-600 dark:text-gray-400 text-base mt-1" title="Manage and Track Sales Proposals">Manage and Track Sales Proposals</p>
       </div>
 
       {/* Stats Cards - Compact & Engaging Design */}
@@ -506,32 +507,10 @@ export default function ProposalsPage() {
         {/* Table */}
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-              <svg
-                className="animate-spin h-10 w-10 text-primary mb-4"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                ></path>
-              </svg>
-              <p className="text-sm truncate" title="Loading proposals...">Loading proposals...</p>
-            </div>
+            <TableLoadingState message="Loading proposals..." />
           ) : (
-            <table className="w-full">
-              <thead className="bg-primary-light dark:bg-gray-900">
+            <Table>
+              <THead>
                 <tr>
                   <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                   <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
@@ -561,39 +540,34 @@ export default function ProposalsPage() {
                     Action
                   </th>
                 </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              </THead>
+              <TBody>
                 {paginatedProposals.length === 0 ? (
-                  <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  <Tr>
                     <td colSpan={21} className="px-6 py-12 text-center truncate">
-                      <div className="flex flex-col items-center justify-center min-w-0">
-                        <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2 truncate" title="No proposals found">No proposals found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-sm truncate">
-                          {searchQuery || activeTab !== "All"
-                            ? "Try adjusting your filters"
-                            : "Get started by creating your first proposal"}
-                        </p>
-                      </div>
+                      <TableEmptyState
+                        message="No proposals found"
+                        description={searchQuery || activeTab !== "All"
+                          ? "Try adjusting your filters"
+                          : "Get started by creating your first proposal"}
+                      />
                     </td>
-                  </tr>
+                  </Tr>
                 ) : (
                   paginatedProposals.map((proposal, index) => (
-                    <tr key={proposal.id || index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-3 text-sm text-primary font-semibold sticky left-0 z-10 bg-white dark:bg-gray-800 text-left truncate">
+                    <Tr key={proposal.id || index}>
+                      <Td className="text-primary font-semibold py-3 sticky left-0 z-10 bg-white dark:bg-gray-800 text-left truncate">
                         <Link href={`/proposals/${proposal.id}`} className="text-primary hover:underline truncate">
                           <div title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
                         </Link>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <StatusBadge status={proposal.status} />
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.proposalName}>{displayCell(proposal.proposalName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate text-left">
+                      </Td>
+                      <Td className="truncate text-left">
                         {proposal.orderId && proposal.customerOrder !== 'N/A' ? (
                           !isManufacturer ? (
                             <Link
@@ -611,8 +585,8 @@ export default function ProposalsPage() {
                         ) : (
                           <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerOrder}>{displayCell(proposal.customerOrder)}</div>
                         )}
-                      </td>
-                      <td className="px-3 py-2 truncate text-left">
+                      </Td>
+                      <Td className="truncate text-left">
                         {proposal.purchaseOrderId && proposal.customerPO !== 'N/A' ? (
                           !isManufacturer && !isRestricted ? (
                             <Link
@@ -630,42 +604,42 @@ export default function ProposalsPage() {
                         ) : (
                           <div className="text-sm text-gray-900 dark:text-white font-medium " title={proposal.customerPO}>{displayCell(proposal.customerPO)}</div>
                         )}
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billToAccount}>{displayCell(proposal.billToAccount)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billToLocation}>{displayCell(proposal.billToLocation)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.billToContact}>{displayCell(proposal.billToContact)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipToAccount}>{displayCell(proposal.shipToAccount)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipToLocation}>{displayCell(proposal.shipToLocation)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400 " title={proposal.shipToContact}>{displayCell(proposal.shipToContact)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${proposal.dropShip
                           ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                           : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                           }`}>
                           {proposal.dropShip ? 'Yes' : 'No'}
                         </span>
-                      </td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[130px] truncate">{formatNumber(proposal.productCount)}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(proposal.totalAmount)}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{formatCurrency(proposal.totalShippingCharges)}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{formatCurrency(proposal.totalTaxesAmount)}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(proposal.grandTotal)}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(proposal.issuedDate)}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(proposal.expirationDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[150px] truncate">{formatDate(proposal.proposalDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="text-left min-w-[130px] truncate">{formatNumber(proposal.productCount)}</Td>
+                      <Td className="text-left font-semibold truncate">{formatCurrency(proposal.totalAmount)}</Td>
+                      <Td className="text-left truncate">{formatCurrency(proposal.totalShippingCharges)}</Td>
+                      <Td className="text-left truncate">{formatCurrency(proposal.totalTaxesAmount)}</Td>
+                      <Td className="text-left font-semibold truncate">{formatCurrency(proposal.grandTotal)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(proposal.issuedDate)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(proposal.expirationDate, 'numeric-dash')}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 min-w-[150px] truncate">{formatDate(proposal.proposalDate, 'numeric-dash')}</Td>
+                      <Td className="truncate">
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleViewProposal(proposal.id)}
@@ -679,12 +653,12 @@ export default function ProposalsPage() {
                           </button>
 
                         </div>
-                      </td>
-                    </tr>
+                      </Td>
+                    </Tr>
                   ))
                 )}
-              </tbody>
-            </table>
+              </TBody>
+            </Table>
           )}
         </div>
 

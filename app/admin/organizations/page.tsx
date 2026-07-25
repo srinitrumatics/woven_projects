@@ -9,6 +9,7 @@ import {
   ChevronLeft, ChevronRight, X, RefreshCw, ExternalLink,
   CheckCircle2, AlertCircle, Loader2,
 } from 'lucide-react';
+import { Table, THead, TBody, Th, Td } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -466,16 +467,16 @@ const OrganizationManagement: React.FC = () => {
 
             {/* Table */}
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50 dark:bg-gray-700">
+              <Table>
+                <THead>
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 tracking-wider">Organization Name</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 tracking-wider">Description</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 tracking-wider">Schema / Index</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 tracking-wider">Actions</th>
+                    <Th>Organization Name</Th>
+                    <Th>Description</Th>
+                    <Th>Schema / Index</Th>
+                    <Th>Actions</Th>
                   </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-100">
+                </THead>
+                <TBody>
                   {paginatedOrganizations.map((org, index) => {
                     const syncState = syncStates[org.id] || { status: 'idle', message: '' };
                     const isSyncing = syncState.status === 'loading';
@@ -489,24 +490,24 @@ const OrganizationManagement: React.FC = () => {
                         className="hover:bg-orange-50/50 transition-colors duration-150"
                       >
                         {/* Name */}
-                        <td className="px-6 py-4">
+                        <Td className="px-6 py-4">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center flex-shrink-0">
                               <Building2 className="w-5 h-5 text-white" />
                             </div>
                             <div className="text-sm font-semibold text-gray-900">{org.name}</div>
                           </div>
-                        </td>
+                        </Td>
 
                         {/* Description */}
-                        <td className="px-6 py-4">
+                        <Td className="px-6 py-4">
                           <div className="text-sm text-gray-600">
                             {org.description || <span className="italic text-gray-400">No description</span>}
                           </div>
-                        </td>
+                        </Td>
 
                         {/* Schema / Index */}
-                        <td className="px-6 py-4">
+                        <Td className="px-6 py-4">
                           <div className="space-y-1">
                             {org.algoliaSchema && (
                               <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono bg-blue-50 text-blue-700 border border-blue-200">
@@ -524,10 +525,10 @@ const OrganizationManagement: React.FC = () => {
                               <span className="text-xs italic text-gray-400">Not provisioned</span>
                             )}
                           </div>
-                        </td>
+                        </Td>
 
                         {/* Actions */}
-                        <td className="px-6 py-4">
+                        <Td className="px-6 py-4">
                           <div className="flex flex-col gap-2">
                             {/* Top row: core actions */}
                             <div className="flex items-center gap-2">
@@ -595,12 +596,12 @@ const OrganizationManagement: React.FC = () => {
                               )}
                             </AnimatePresence>
                           </div>
-                        </td>
+                        </Td>
                       </motion.tr>
                     );
                   })}
-                </tbody>
-              </table>
+                </TBody>
+              </Table>
             </div>
 
             {/* Pagination */}

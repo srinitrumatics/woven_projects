@@ -11,6 +11,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -196,7 +197,7 @@ export default function InvoicesPage() {
     <Sidebar>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Invoices</h1>
-        <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1" title="Manage Invoices and Track Payments">Manage Invoices and Track Payments</p>
+        <p className="text-gray-600 dark:text-gray-400 text-base mt-1" title="Manage Invoices and Track Payments">Manage Invoices and Track Payments</p>
       </div>
 
       {/* Stats Cards - Following Proposal Design */}
@@ -480,16 +481,15 @@ export default function InvoicesPage() {
         < div className="overflow-x-auto" >
           {
             loading ? (
-              <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400" >
-                <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                </svg>
-                <p className="text-sm" title="Loading invoices...">Loading invoices...</p>
-              </div>
+              <TableLoadingState message="Loading invoices..." />
+            ) : paginatedInvoices.length === 0 ? (
+              <TableEmptyState
+                message="No invoices found"
+                description={searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No invoices available"}
+              />
             ) : (
-              <table className="w-full text-sm">
-                <thead className="bg-primary-light dark:bg-gray-900">
+              <Table className="text-sm">
+                <THead>
                   <tr>
                     <SortableHeader label="Invoice #" field="invoiceNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                     <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
@@ -514,46 +514,31 @@ export default function InvoicesPage() {
                     <SortableHeader label="Collection Status" field="collectionStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.collectionStatus} onResize={handleResize} />
                     <SortableHeader label="Open Balance" field="amountDue" sortConfig={sortConfig} requestSort={requestSort} width={widths.amountDue} onResize={handleResize} />
                     <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={handleResize} />
-                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                    <Th className="whitespace-nowrap" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                       Action
-                    </th>
+                    </Th>
                   </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {paginatedInvoices.length === 0 ? (
-                    <tr>
-                      <td colSpan={24} className="px-6 py-12 text-center truncate">
-                        <div className="flex flex-col items-center justify-center min-w-0">
-                          <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
-                          </svg>
-                          <p className="text-gray-500 dark:text-gray-400 text-lg mb-2" title="No invoices found">No invoices found</p>
-                          <p className="text-gray-400 dark:text-gray-500 text-sm">
-                            {searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No invoices available"}
-                          </p>
-                        </div>
-                      </td>
-                    </tr>
-                  ) : (
-                    paginatedInvoices.map((invoice) => (
-                      <tr
+                </THead>
+                <TBody>
+                  {paginatedInvoices.map((invoice) => (
+                      <Tr
                         key={invoice.id}
-                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer">
-                        <td className="px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
+                        className="cursor-pointer">
+                        <Td className="px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
                           <Link href={`/invoices/${invoice.id}`} title={invoice.invoiceNumber} onClick={(e: React.MouseEvent) => e.stopPropagation()}>{invoice.invoiceNumber}</Link>
-                        </td>
-                        <td className="px-3 py-2 text-gray-600 dark:text-gray-400 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 text-gray-600 dark:text-gray-400 truncate">
                           <StatusBadge status={invoice.status} />
-                        </td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 truncate">
                           <div className="text-sm font-medium text-gray-900 dark:text-white">{displayCell(invoice.salesOrderNumber)}</div>
-                        </td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 truncate">
                           <div className="text-sm font-medium text-gray-900 dark:text-white">
                             <span className="font-medium">{displayCell(invoice.purchaseOrderNumber)}</span>
                           </div>
-                        </td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 truncate">
                           <div>
                             {invoice.customerQuoteId ? (
                               <Link
@@ -568,8 +553,8 @@ export default function InvoicesPage() {
                               displayCell(invoice.customerQuoteName)
                             )}
                           </div>
-                        </td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 truncate">
                           <div>
                             {invoice.proposalId ? (
                               <Link
@@ -584,11 +569,11 @@ export default function InvoicesPage() {
                               displayCell(invoice.proposalNumber)
                             )}
                           </div>
-                        </td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 truncate">
                           {displayCell(invoice.proposalName)}
-                        </td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 truncate">
                           <div>
                             {invoice.customerOrderId ? (
                               <Link
@@ -603,39 +588,39 @@ export default function InvoicesPage() {
                               displayCell(invoice.customerOrder)
                             )}
                           </div>
-                        </td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={invoice.customerPO}>{displayCell(invoice.customerPO)}</div>
-                        </td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 truncate">
                           <div className="text-sm font-medium">{displayCell(invoice.accountName)}</div>
-                        </td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 truncate">
                           <div className="text-sm font-medium">{displayCell(invoice.billToLocation)}</div>
-                        </td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 truncate">
                           <div className="text-sm font-medium">{displayCell(invoice.contactName)}</div>
-                        </td>
-                        <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{invoice.lineItemCount}</td>
-                        <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{formatCurrency(invoice.totalPrice || 0)}</td>
-                        <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{formatCurrency(invoice.shipping || 0)}</td>
-                        <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{formatCurrency(invoice.taxes || 0)}</td>
-                        <td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(invoice.totalAmount)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(invoice.invoiceDate, 'numeric-dash')}</td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{invoice.lineItemCount}</Td>
+                        <Td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{formatCurrency(invoice.totalPrice || 0)}</Td>
+                        <Td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{formatCurrency(invoice.shipping || 0)}</Td>
+                        <Td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white truncate">{formatCurrency(invoice.taxes || 0)}</Td>
+                        <Td className="px-3 py-2 text-sm text-left text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(invoice.totalAmount)}</Td>
+                        <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(invoice.invoiceDate, 'numeric-dash')}</Td>
+                        <Td className="px-3 py-2 truncate">
                           <div className="text-sm text-gray-600 dark:text-white font-medium" title={invoice.paymentTerms}>{displayCell(invoice.paymentTerms)}</div>
-                        </td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(invoice.dueDate, 'numeric-dash')}</td>
-                        <td className="px-3 py-2 truncate">
+                        </Td>
+                        <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(invoice.dueDate, 'numeric-dash')}</Td>
+                        <Td className="px-3 py-2 truncate">
                           <CollectionStatusBadge status={invoice.collectionStatus} />
-                        </td>
-                        <td className="px-3 py-2 text-sm text-left truncate">
+                        </Td>
+                        <Td className="px-3 py-2 text-sm text-left truncate">
                           <span className={`font-semibold ${invoice.amountDue > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
                             {formatCurrency(invoice.amountDue)}
                           </span>
-                        </td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{invoice.settledDate ? formatDate(invoice.settledDate, 'numeric-dash') : '-'}</td>
-                        <td className="px-3 py-2 truncate" onClick={(e) => e.stopPropagation()}>
+                        </Td>
+                        <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{invoice.settledDate ? formatDate(invoice.settledDate, 'numeric-dash') : '-'}</Td>
+                        <Td className="px-3 py-2 truncate" onClick={(e) => e.stopPropagation()}>
                           <div className="flex gap-2">
                             <Link
                               href={`/invoices/${invoice.id}`}
@@ -648,12 +633,11 @@ export default function InvoicesPage() {
                               </svg>
                             </Link>
                           </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                        </Td>
+                      </Tr>
+                  ))}
+                </TBody>
+              </Table>
             )
           }
         </div >

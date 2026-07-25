@@ -10,6 +10,7 @@ import InvoiceLineCreditMemoTab from "./components/InvoiceLineCreditMemoTab";
 import InvoiceLineFilesTab from "./components/InvoiceLineFilesTab";
 import { InvoiceStatus } from "@/app/invoices/types";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 
 interface InvoiceLineData {
     id: string;
@@ -382,32 +383,32 @@ export default function InvoiceLineDetailPage({
             <div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden p-4">
                     <div className="overflow-x-auto">
-                        <table className="w-full text-sm text-left table-fixed">
-                            <thead className="bg-primary-light dark:bg-gray-900">
+                        <Table className="text-sm text-left table-fixed">
+                            <THead>
                                 <tr>
-                                    <th className="px-3 py-2 font-bold text-gray-900 ">Unit Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 ">Order Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 ">MOQ</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 ">Total Order Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 ">Total Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 ">Shipping</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 ">Taxes</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 ">Grand Total</th>
+                                    <Th className="py-2 font-bold">Unit Price</Th>
+                                    <Th className="py-2 font-bold">Order Qty</Th>
+                                    <Th className="py-2 font-bold">MOQ</Th>
+                                    <Th className="py-2 font-bold">Total Order Qty</Th>
+                                    <Th className="py-2 font-bold">Total Price</Th>
+                                    <Th className="py-2 font-bold">Shipping</Th>
+                                    <Th className="py-2 font-bold">Taxes</Th>
+                                    <Th className="py-2 font-bold">Grand Total</Th>
                                 </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                                <tr>
-                                    <td className="px-3 py-2 text-gray-600 font-medium truncate">{formatCurrency(product.unitPrice)}</td>
-                                    <td className="px-3 py-2 text-gray-600 truncate">{product.orderQty}</td>
-                                    <td className="px-3 py-2 text-gray-600 truncate">{product.moq}</td>
-                                    <td className="px-3 py-2 text-gray-600 truncate">{product.totalOrderQty}</td>
-                                    <td className="px-3 py-2 text-gray-600 font-bold truncate">{formatCurrency(product.totalPrice)}</td>
-                                    <td className="px-3 py-2 text-gray-600 truncate">{formatCurrency(product.shipping)}</td>
-                                    <td className="px-3 py-2 text-gray-600 truncate">{formatCurrency(product.taxes)}</td>
-                                    <td className="px-3 py-2 text-primary font-bold truncate">{formatCurrency(product.grandTotal)}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            </THead>
+                            <TBody className="divide-gray-100">
+                                <Tr>
+                                    <Td className="text-gray-600 font-medium truncate">{formatCurrency(product.unitPrice)}</Td>
+                                    <Td className="text-gray-600 truncate">{product.orderQty}</Td>
+                                    <Td className="text-gray-600 truncate">{product.moq}</Td>
+                                    <Td className="text-gray-600 truncate">{product.totalOrderQty}</Td>
+                                    <Td className="text-gray-600 font-bold truncate">{formatCurrency(product.totalPrice)}</Td>
+                                    <Td className="text-gray-600 truncate">{formatCurrency(product.shipping)}</Td>
+                                    <Td className="text-gray-600 truncate">{formatCurrency(product.taxes)}</Td>
+                                    <Td className="text-primary font-bold truncate">{formatCurrency(product.grandTotal)}</Td>
+                                </Tr>
+                            </TBody>
+                        </Table>
                     </div>
                 </div>
             </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import InventoryTab from "./InventoryTab";
 import SerialNumbersTab from "./SerialNumbersTab";
 import FilesTab from "./FilesTab";
+import Tabs from "@/components/ui/Tabs";
 
 export default function BottomTabs({ activeTab, setActiveTab, accountId, contactId, lineId, initialCounts }: {
     activeTab: "inventory" | "serial" | "files";
@@ -82,26 +83,19 @@ export default function BottomTabs({ activeTab, setActiveTab, accountId, contact
         }
     }, [accountId, contactId, lineId, initialCounts]);
     return (
-        <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 items-center min-w-0">
-                {[
-                    { id: "inventory", label: `Inventory Positions${counts.inventory > 0 ? ` (${counts.inventory})` : ""}` },
-                    { id: "serial", label: `Serial Numbers Logs${counts.serial > 0 ? ` (${counts.serial})` : ""}` },
-                    { id: "files", label: `Files${counts.files > 0 ? ` (${counts.files})` : ""}` }
-                ].map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id as any)}
-                        className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${activeTab === tab.id
-                            ? "bg-primary text-white"
-                            : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                            }`}
-                    >
-                        {tab.label}
-                    </button>
-                ))}
+        <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
+                <Tabs
+                    tabs={[
+                        { key: "inventory", label: "Inventory Positions", count: counts.inventory },
+                        { key: "serial", label: "Serial Numbers Logs", count: counts.serial },
+                        { key: "files", label: "Files", count: counts.files },
+                    ]}
+                    activeKey={activeTab}
+                    onChange={(key) => setActiveTab(key as "inventory" | "serial" | "files")}
+                />
             </div>
-            <div className="mt-4">
+            <div className="p-4">
                 {activeTab === 'inventory' && (
                     <InventoryTab accountId={accountId} contactId={contactId} lineId={lineId} />
                 )}

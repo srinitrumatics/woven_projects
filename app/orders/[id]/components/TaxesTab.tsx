@@ -1,6 +1,7 @@
 import React from 'react';
 import { formatCurrency } from '@/lib/utils/formatting';
 import { SortableHeader } from '@/components/ui/SortableHeader';
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from '@/components/ui/DataTable';
 
 interface TaxesTabProps {
     order: any;
@@ -11,19 +12,12 @@ interface TaxesTabProps {
 
 export default function TaxesTab({ order, loading, widths, onResize }: TaxesTabProps) {
     if (loading) {
-        return (
-            <div className="flex items-center justify-center py-10 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     if (!order) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no taxes associated with this order.">There are no taxes associated with this order.</p>
-            </div>
+            <TableEmptyState message="No records found" description="There are no taxes associated with this order." />
         );
     }
 
@@ -44,8 +38,8 @@ export default function TaxesTab({ order, loading, widths, onResize }: TaxesTabP
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-auto">
-                <table className="w-full table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
+                <Table className="table-fixed">
+                    <THead className="sticky top-0 z-10">
                         <tr>
                             <SortableHeader label="Sales Tax Rate" field="salesRate" width={widths.salesRate} onResize={onResize} />
                             <SortableHeader label="Sales Tax Amount" field="salesAmount" width={widths.salesAmount} onResize={onResize} />
@@ -62,60 +56,60 @@ export default function TaxesTab({ order, loading, widths, onResize }: TaxesTabP
                             <SortableHeader label="VAT Rate" field="vatRate" width={widths.vatRate} onResize={onResize} />
                             <SortableHeader label="VAT Amount" field="vatAmount" width={widths.vatAmount} onResize={onResize} />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        <tr className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left truncate" title={formatPercent(order.Sales_Tax_Rate__c)}>
+                    </THead>
+                    <TBody>
+                        <Tr>
+                            <Td className="font-medium text-left truncate" title={formatPercent(order.Sales_Tax_Rate__c)}>
                                 {formatPercent(order.Sales_Tax_Rate__c)}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatTax(order.Total_Sales_Tax_Amount__c)}>
+                            </Td>
+                            <Td className="text-left truncate" title={formatTax(order.Total_Sales_Tax_Amount__c)}>
                                 {formatTax(order.Total_Sales_Tax_Amount__c)}
-                            </td>
+                            </Td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left truncate" title={formatPercent(order.Use_Tax_Rate__c)}>
+                            <Td className="font-medium text-left truncate" title={formatPercent(order.Use_Tax_Rate__c)}>
                                 {formatPercent(order.Use_Tax_Rate__c)}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatTax(order.Total_Use_Tax_Amount__c)}>
+                            </Td>
+                            <Td className="text-left truncate" title={formatTax(order.Total_Use_Tax_Amount__c)}>
                                 {formatTax(order.Total_Use_Tax_Amount__c)}
-                            </td>
+                            </Td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left truncate" title={formatPercent(order.Local_Tax_Rate__c)}>
+                            <Td className="font-medium text-left truncate" title={formatPercent(order.Local_Tax_Rate__c)}>
                                 {formatPercent(order.Local_Tax_Rate__c)}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatTax(order.Total_Local_Tax_Amount__c)}>
+                            </Td>
+                            <Td className="text-left truncate" title={formatTax(order.Total_Local_Tax_Amount__c)}>
                                 {formatTax(order.Total_Local_Tax_Amount__c)}
-                            </td>
+                            </Td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left truncate" title={formatPercent(order.Excise_Tax_Rate__c)}>
+                            <Td className="font-medium text-left truncate" title={formatPercent(order.Excise_Tax_Rate__c)}>
                                 {formatPercent(order.Excise_Tax_Rate__c)}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatTax(order.Total_Excise_Tax_Amount__c)}>
+                            </Td>
+                            <Td className="text-left truncate" title={formatTax(order.Total_Excise_Tax_Amount__c)}>
                                 {formatTax(order.Total_Excise_Tax_Amount__c)}
-                            </td>
+                            </Td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left truncate" title={formatPercent(order.Gross_Receipts_Tax_Rate__c)}>
+                            <Td className="font-medium text-left truncate" title={formatPercent(order.Gross_Receipts_Tax_Rate__c)}>
                                 {formatPercent(order.Gross_Receipts_Tax_Rate__c)}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatTax(order.Total_Gross_Receipts_Tax_Amount__c)}>
+                            </Td>
+                            <Td className="text-left truncate" title={formatTax(order.Total_Gross_Receipts_Tax_Amount__c)}>
                                 {formatTax(order.Total_Gross_Receipts_Tax_Amount__c)}
-                            </td>
+                            </Td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left truncate" title={formatPercent(order.GST_Rate__c)}>
+                            <Td className="font-medium text-left truncate" title={formatPercent(order.GST_Rate__c)}>
                                 {formatPercent(order.GST_Rate__c)}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatTax(order.Total_GST_Amount__c)}>
+                            </Td>
+                            <Td className="text-left truncate" title={formatTax(order.Total_GST_Amount__c)}>
                                 {formatTax(order.Total_GST_Amount__c)}
-                            </td>
+                            </Td>
 
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium text-left truncate" title={formatPercent(order.VAT_Rate__c)}>
+                            <Td className="font-medium text-left truncate" title={formatPercent(order.VAT_Rate__c)}>
                                 {formatPercent(order.VAT_Rate__c)}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatTax(order.Total_VAT_Amount__c)}>
+                            </Td>
+                            <Td className="text-left truncate" title={formatTax(order.Total_VAT_Amount__c)}>
                                 {formatTax(order.Total_VAT_Amount__c)}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </Td>
+                        </Tr>
+                    </TBody>
+                </Table>
             </div>
         </div>
     );

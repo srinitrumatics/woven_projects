@@ -5,6 +5,7 @@ import Link from "next/link";
 import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -45,24 +46,17 @@ export default function QuotePurchasesSubTab({
     const totalPages = Math.ceil(purchases.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
         <div className="overflow-x-auto py-2">
             {purchases.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                    <p className="text-lg font-medium" title="No records found">No records found</p>
-                    <p className="text-sm" title="There are no purchases associated with this quote.">There are no purchases associated with this quote.</p>
-                </div>
+                <TableEmptyState message="No records found" description="There are no purchases associated with this quote." />
             ) : (
                 <>
-                    <table className="w-full">
-                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                    <Table>
+                        <THead>
                             <tr>
                                 <SortableHeader label="Purchase Order" field="purchaseOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                 <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
@@ -93,60 +87,60 @@ export default function QuotePurchasesSubTab({
                                 <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={onResize} align="left" />
                                 <SortableHeader label="Goods Receipts Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.goodsReceiptDate} onResize={onResize} align="left" />
                             </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        </THead>
+                        <TBody>
                             {paginatedPurchases.map((po) => (
-                                <tr key={po.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                    <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.purchaseOrderNumber }}>
+                                <Tr key={po.id}>
+                                    <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.purchaseOrderNumber }}>
                                         <Link href={`/purchase-orders/${po.id}`} target="_blank" className="text-primary hover:underline font-bold">
                                             {po.purchaseOrderNumber}
                                         </Link>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.status }}>
                                         <StatusBadge status={po.status as QuoteStatus} />
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.customerQuote }}>
                                         {po.customerQuoteId ? (
                                             <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {po.customerQuote}
                                             </Link>
                                         ) : displayCell(po.customerQuote)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.customerOrder }}>
                                         {po.customerOrderId ? (
                                             <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {po.customerOrder}
                                             </Link>
                                         ) : displayCell(po.customerOrder)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{displayCell(po.customerPO)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierName }}>{displayCell(po.supplierName)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierDBA }}>{displayCell(po.supplierDBA)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.supplierContact }}>{displayCell(po.supplierContact)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToAccount }}>{displayCell(po.shipToAccount)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToLocation }}>{displayCell(po.shipToLocation)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToContact }}>{displayCell(po.shipToContact)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.dropShip }}>{po.dropShip ? 'Yes' : 'No'}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{po.totalLines}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.productCost }}>{formatCurrency(po.productCost)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(po.shipping)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary truncate" style={{ width: widths.totalCost }}>{formatCurrency(po.totalCost)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.issuedDate }}>{formatDate(po.issuedDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.acknowledgedDate }}>{formatDate(po.acknowledgedDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.requestDate }}>{formatDate(po.requestDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.promiseDate }}>{formatDate(po.promiseDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shippingMethod }}>{displayCell(po.shippingMethod)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsPartner }}>{displayCell(po.logisticsPartner)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.logisticsContact }}>{displayCell(po.logisticsContact)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingNumber }}>{displayCell(po.trackingNumber)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(po.estimatedDeliveryDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.trackingStatus }}>{displayCell(po.trackingStatus)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.actualDeliveryDate }}>{formatDate(po.actualDeliveryDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.goodsReceiptDate }}>{formatDate(po.goodsReceiptDate, 'numeric-dash')}</td>
-                                </tr>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.customerPO }}>{displayCell(po.customerPO)}</Td>
+                                    <Td className="truncate" style={{ width: widths.supplierName }}>{displayCell(po.supplierName)}</Td>
+                                    <Td className="truncate" style={{ width: widths.supplierDBA }}>{displayCell(po.supplierDBA)}</Td>
+                                    <Td className="truncate" style={{ width: widths.supplierContact }}>{displayCell(po.supplierContact)}</Td>
+                                    <Td className="truncate" style={{ width: widths.shipToAccount }}>{displayCell(po.shipToAccount)}</Td>
+                                    <Td className="truncate" style={{ width: widths.shipToLocation }}>{displayCell(po.shipToLocation)}</Td>
+                                    <Td className="truncate" style={{ width: widths.shipToContact }}>{displayCell(po.shipToContact)}</Td>
+                                    <Td className="truncate" style={{ width: widths.dropShip }}>{po.dropShip ? 'Yes' : 'No'}</Td>
+                                    <Td className="truncate" style={{ width: widths.totalLines }}>{po.totalLines}</Td>
+                                    <Td className="font-bold truncate" style={{ width: widths.productCost }}>{formatCurrency(po.productCost)}</Td>
+                                    <Td className="truncate" style={{ width: widths.shipping }}>{formatCurrency(po.shipping)}</Td>
+                                    <Td className="font-bold text-primary truncate" style={{ width: widths.totalCost }}>{formatCurrency(po.totalCost)}</Td>
+                                    <Td className="truncate" style={{ width: widths.issuedDate }}>{formatDate(po.issuedDate, 'numeric-dash')}</Td>
+                                    <Td className="truncate" style={{ width: widths.acknowledgedDate }}>{formatDate(po.acknowledgedDate, 'numeric-dash')}</Td>
+                                    <Td className="truncate" style={{ width: widths.requestDate }}>{formatDate(po.requestDate, 'numeric-dash')}</Td>
+                                    <Td className="truncate" style={{ width: widths.promiseDate }}>{formatDate(po.promiseDate, 'numeric-dash')}</Td>
+                                    <Td className="truncate" style={{ width: widths.shippingMethod }}>{displayCell(po.shippingMethod)}</Td>
+                                    <Td className="truncate" style={{ width: widths.logisticsPartner }}>{displayCell(po.logisticsPartner)}</Td>
+                                    <Td className="truncate" style={{ width: widths.logisticsContact }}>{displayCell(po.logisticsContact)}</Td>
+                                    <Td className="truncate" style={{ width: widths.trackingNumber }}>{displayCell(po.trackingNumber)}</Td>
+                                    <Td className="truncate" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(po.estimatedDeliveryDate, 'numeric-dash')}</Td>
+                                    <Td className="truncate" style={{ width: widths.trackingStatus }}>{displayCell(po.trackingStatus)}</Td>
+                                    <Td className="truncate" style={{ width: widths.actualDeliveryDate }}>{formatDate(po.actualDeliveryDate, 'numeric-dash')}</Td>
+                                    <Td className="truncate" style={{ width: widths.goodsReceiptDate }}>{formatDate(po.goodsReceiptDate, 'numeric-dash')}</Td>
+                                </Tr>
                             ))}
-                        </tbody>
-                    </table>
+                        </TBody>
+                    </Table>
 
                 </>
             )}

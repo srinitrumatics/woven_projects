@@ -79,7 +79,7 @@ export function SortableHeader({
                     {isSorted ? (
                         sortConfig?.direction === 'asc' ? '↑' : '↓'
                     ) : (
-                        <span className="opacity-0 group-hover:opacity-100 text-[10px]">↕</span>
+                        <span className="opacity-0 group-hover:opacity-100 text-xs">↕</span>
                     )}
                 </span>
             </div>

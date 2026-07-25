@@ -5,6 +5,7 @@ import Link from "next/link";
 import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -45,25 +46,18 @@ export default function QuoteSalesOrdersSubTab({
     const totalPages = Math.ceil(salesOrders.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
         <div>
             <div className="overflow-x-auto py-2">
                 {salesOrders.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium" title="No records found">No records found</p>
-                        <p className="text-sm" title="There are no sales orders associated with this quote.">There are no sales orders associated with this quote.</p>
-                    </div>
+                    <TableEmptyState message="No records found" description="There are no sales orders associated with this quote." />
                 ) : (
                     <>
-                        <table className="w-full">
-                            <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                        <Table>
+                            <THead>
                                 <tr>
                                     <SortableHeader label="Sales Order #" field="salesOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                     <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
@@ -88,17 +82,17 @@ export default function QuoteSalesOrdersSubTab({
                                     <SortableHeader label="Planned Ship Date" field="plannedShipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.plannedShipDate} onResize={onResize} align="left" />
                                     <SortableHeader label="Ship Confirmed Date" field="shipConfirmedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipConfirmedDate} onResize={onResize} align="left" />
                                 </tr>
-                            </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            </THead>
+                            <TBody>
                                 {paginatedOrders.map((order) => (
-                                    <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.salesOrderNumber }} title={order.salesOrderNumber}>
+                                    <Tr key={order.id}>
+                                        <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.salesOrderNumber }} title={order.salesOrderNumber}>
                                             {order.salesOrderNumber}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.status }}>
                                             <StatusBadge status={order.status} />
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.customerQuote }}>
                                             {order.customerQuoteId ? (
                                                 !isManufacturer ? (
                                                     <Link href={`/quotes/${order.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -106,8 +100,8 @@ export default function QuoteSalesOrdersSubTab({
                                                     </Link>
                                                 ) : displayCell(order.customerQuote)
                                             ) : displayCell(order.customerQuote)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposalNumber }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.proposalNumber }}>
                                             {order.proposalId ? (
                                                 !isManufacturer ? (
                                                     <Link href={`/proposals/${order.proposalId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -115,11 +109,11 @@ export default function QuoteSalesOrdersSubTab({
                                                     </Link>
                                                 ) : displayCell(order.proposalName)
                                             ) : displayCell(order.proposalName)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposalName }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.proposalName }}>
                                             {displayCell(order.proposalName)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.customerOrder }}>
                                             {order.customerOrderId ? (
                                                 !isManufacturer && !isRestricted ? (
                                                     <Link href={`/orders/${order.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -127,27 +121,27 @@ export default function QuoteSalesOrdersSubTab({
                                                     </Link>
                                                 ) : displayCell(order.customerOrder)
                                             ) : displayCell(order.customerOrder)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{displayCell(order.customerPO)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToAccount }}>{displayCell(order.billToAccount)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToLocation }}>{displayCell(order.billToLocation)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToContact }}>{displayCell(order.billToContact)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToAccount }}>{displayCell(order.shipToAccount)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToLocation }}>{displayCell(order.shipToLocation)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipToContact }}>{displayCell(order.shipToContact)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.dropShip }}>{order.dropShip ? 'Yes' : 'No'}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{formatNumber(order.totalLines)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(order.totalPrice)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(order.shipping)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }}>{formatCurrency(order.taxes)}</td>
-                                        <td className="px-3 py-2 text-sm text-primary font-bold truncate" style={{ width: widths.grandTotal }}>{formatCurrency(order.grandTotal)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.requestDate }}>{formatDate(order.requestDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.plannedShipDate }}>{formatDate(order.plannedShipDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipConfirmedDate }}>{formatDate(order.shipConfirmedDate, 'numeric-dash')}</td>
-                                    </tr>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.customerPO }}>{displayCell(order.customerPO)}</Td>
+                                        <Td className="truncate" style={{ width: widths.billToAccount }}>{displayCell(order.billToAccount)}</Td>
+                                        <Td className="truncate" style={{ width: widths.billToLocation }}>{displayCell(order.billToLocation)}</Td>
+                                        <Td className="truncate" style={{ width: widths.billToContact }}>{displayCell(order.billToContact)}</Td>
+                                        <Td className="truncate" style={{ width: widths.shipToAccount }}>{displayCell(order.shipToAccount)}</Td>
+                                        <Td className="truncate" style={{ width: widths.shipToLocation }}>{displayCell(order.shipToLocation)}</Td>
+                                        <Td className="truncate" style={{ width: widths.shipToContact }}>{displayCell(order.shipToContact)}</Td>
+                                        <Td className="truncate" style={{ width: widths.dropShip }}>{order.dropShip ? 'Yes' : 'No'}</Td>
+                                        <Td className="truncate" style={{ width: widths.totalLines }}>{formatNumber(order.totalLines)}</Td>
+                                        <Td className="font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(order.totalPrice)}</Td>
+                                        <Td className="truncate" style={{ width: widths.shipping }}>{formatCurrency(order.shipping)}</Td>
+                                        <Td className="truncate" style={{ width: widths.taxes }}>{formatCurrency(order.taxes)}</Td>
+                                        <Td className="text-primary font-bold truncate" style={{ width: widths.grandTotal }}>{formatCurrency(order.grandTotal)}</Td>
+                                        <Td className="truncate" style={{ width: widths.requestDate }}>{formatDate(order.requestDate, 'numeric-dash')}</Td>
+                                        <Td className="truncate" style={{ width: widths.plannedShipDate }}>{formatDate(order.plannedShipDate, 'numeric-dash')}</Td>
+                                        <Td className="truncate" style={{ width: widths.shipConfirmedDate }}>{formatDate(order.shipConfirmedDate, 'numeric-dash')}</Td>
+                                    </Tr>
                                 ))}
-                            </tbody>
-                        </table>
+                            </TBody>
+                        </Table>
 
                     </>
                 )}

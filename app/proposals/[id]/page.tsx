@@ -1407,32 +1407,29 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           />
 
           <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
-              {/* Tab buttons — left on desktop (>=1024px) */}
-              <div className="w-full lg:flex-1 min-w-0">
-                <ProposalTabs
-                  activeTab={activeTab}
-                  onTabChange={(tab) => {
-                    setActiveTab(tab);
-                  }}
-                  counts={{
-                    products: proposedProducts.length,
-                    elements: proposalElements.length,
-                    files: proposalFiles.length,
-                    projects: projects.length,
-                    orders: orders.length,
-                    fulfillment: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
-                    purchases: purchases.length + supplierBills.length,
-                    returns: isRestricted
-                      ? returnsData.rma.length + returnsData.creditMemos.length
-                      : returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length,
-                    taxes: taxesData.length
-                  }}
-                />
-              </div>
+            <div className="p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
+              <ProposalTabs
+                activeTab={activeTab}
+                onTabChange={(tab) => {
+                  setActiveTab(tab);
+                }}
+                counts={{
+                  products: proposedProducts.length,
+                  elements: proposalElements.length,
+                  files: proposalFiles.length,
+                  projects: projects.length,
+                  orders: orders.length,
+                  fulfillment: fulfillmentData.invoices.length + fulfillmentData.shippingManifests.length + fulfillmentData.salesOrders.length + fulfillmentData.customerQuotes.length,
+                  purchases: purchases.length + supplierBills.length,
+                  returns: isRestricted
+                    ? returnsData.rma.length + returnsData.creditMemos.length
+                    : returnsData.rma.length + returnsData.rtv.length + returnsData.creditMemos.length + returnsData.debitMemos.length,
+                  taxes: taxesData.length
+                }}
+              />
             </div>
 
-            <div className="px-4">
+            <div className="p-4">
               {activeTab === 'products' && (
                 <ProductsTab
                   products={sortData(proposedProducts, productSortField, productSortDirection)}

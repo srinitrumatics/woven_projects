@@ -4,6 +4,7 @@ import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import Pagination from "../../../../components/ui/Pagination";
 import { formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
+import { Table, THead, TBody, Tr, Th, Td, TableLoadingState, TableEmptyState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -212,67 +213,60 @@ export default function FilesTab({
     };
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                 {files.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium" title="No records found">No records found</p>
-                        <p className="text-sm" title="There are no files attached to this proposal.">There are no files attached to this proposal.</p>
-                    </div>
+                    <TableEmptyState message="No records found" description="There are no files attached to this proposal." />
                 ) : (
-                    <table className="w-full border-separate border-spacing-0 table-fixed">
-                        <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                    <Table className="border-separate border-spacing-0 table-fixed">
+                        <THead className="sticky top-0 z-20">
                             <tr>
-                                <th className="px-3 py-2 text-center text-xs font-bold text-gray-900 dark:text-white w-[50px] border-b border-gray-100 dark:border-gray-700">
+                                <Th className="text-center text-xs font-bold w-[50px] border-b border-gray-100 dark:border-gray-700">
                                     <input
                                         type="checkbox"
                                         className="rounded border-gray-300 text-primary focus:ring-primary h-3.5 w-3.5"
                                         checked={selectedFiles.size === files.length && files.length > 0}
                                         onChange={onSelectAll}
                                     />
-                                </th>
+                                </Th>
                                 <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} />
                                 <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={100} />
                                 <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={100} />
                                 <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={180} />
                                 <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={150} />
-                                <th className="px-3 py-2 text-left text-xs font-bold text-gray-900 dark:text-white w-[100px] border-b border-gray-100 dark:border-gray-700 ">Action</th>
+                                <Th className="text-xs font-bold w-[100px] border-b border-gray-100 dark:border-gray-700 ">Action</Th>
                             </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        </THead>
+                        <TBody>
                             {paginatedFiles.map(file => (
-                                <tr
+                                <Tr
                                     key={file.id}
-                                    className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors cursor-pointer ${selectedFiles.has(file.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}
+                                    className={`group transition-colors cursor-pointer ${selectedFiles.has(file.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}
                                     onClick={() => onFileSelect(file.id)}
                                 >
-                                    <td className="px-3 py-2 text-center border-r border-gray-100 dark:border-gray-700" onClick={(e) => e.stopPropagation()}>
+                                    <Td className="text-center border-r border-gray-100 dark:border-gray-700" onClick={(e) => e.stopPropagation()}>
                                         <input
                                             type="checkbox"
                                             className="rounded border-gray-300 text-primary focus:ring-primary h-3.5 w-3.5"
                                             checked={selectedFiles.has(file.id)}
                                             onChange={() => onFileSelect(file.id)}
                                         />
-                                    </td>
-                                    <td className="px-3 py-2 truncate">
+                                    </Td>
+                                    <Td className="truncate">
                                         <div className="flex items-center gap-3">
                                             {getFileIcon(file.fileType)}
                                             <span className="text-sm font-medium text-gray-900 dark:text-white truncate" title={file.fileName}>{file.fileName}</span>
                                         </div>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(file.fileType)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatFileSize(file.sizeInBytes)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium" title={file.uploadedBy}>{displayCell(file.uploadedBy)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(file.uploadedDate)}</td>
-                                    <td className="px-3 py-2 truncate" onClick={(e) => e.stopPropagation()}>
+                                    </Td>
+                                    <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(file.fileType)}</Td>
+                                    <Td className="truncate">{formatFileSize(file.sizeInBytes)}</Td>
+                                    <Td className="truncate font-medium" title={file.uploadedBy}>{displayCell(file.uploadedBy)}</Td>
+                                    <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(file.uploadedDate)}</Td>
+                                    <Td className="truncate" onClick={(e) => e.stopPropagation()}>
                                         <div className="flex items-center gap-2">
                                             <button
                                                 onClick={() => handlePreview(file)}
@@ -305,11 +299,11 @@ export default function FilesTab({
                                                 )}
                                             </button>
                                         </div>
-                                    </td>
-                                </tr>
+                                    </Td>
+                                </Tr>
                             ))}
-                        </tbody>
-                    </table>
+                        </TBody>
+                    </Table>
                 )}
             </div>
 

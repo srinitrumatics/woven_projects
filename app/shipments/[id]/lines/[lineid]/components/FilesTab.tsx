@@ -7,6 +7,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatDate, formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
 import Pagination from "@/components/ui/Pagination";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -174,57 +175,50 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
     };
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     if (files.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no Files associated with this Shipment manifest line">There are no Files associated with this Shipment manifest line</p>
-            </div>
+            <TableEmptyState message="No records found" description="There are no Files associated with this Shipment manifest line" />
         );
     }
 
     return (
         <>
         <div className="overflow-x-auto mt-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <table className="w-full table-fixed">
-                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 font-medium">
+            <Table className="table-fixed">
+                <THead className="font-medium">
                     <tr>
                         <SortableHeader label="File Name" field="Title" sortConfig={sortConfig} requestSort={requestSort} width={widths.fileName} onResize={handleResize} />
                         <SortableHeader label="Type" field="FileExtension" sortConfig={sortConfig} requestSort={requestSort} width={widths.type} onResize={handleResize} />
                         <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} width={widths.size} onResize={handleResize} />
                         <SortableHeader label="Uploaded By" field="CreatedBy" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedBy} onResize={handleResize} />
                         <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.date} onResize={handleResize} />
-                        <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.action }}>
+                        <Th style={{ width: widths.action }}>
                             Action
-                        </th>
+                        </Th>
                     </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                </THead>
+                <TBody>
                     {paginatedFiles.map((file) => (
-                        <tr key={file.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate" title={file.Title}>
+                        <Tr key={file.Id}>
+                            <Td className="font-medium truncate" title={file.Title}>
                                 {displayCell(file.Title)}
-                            </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.FileExtension}>
+                            </Td>
+                            <Td className="text-gray-600 dark:text-gray-400 truncate" title={file.FileExtension}>
                                 {displayCell(file.FileExtension)}
-                            </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
+                            </Td>
+                            <Td className="text-gray-600 dark:text-gray-400 truncate">
                                 {formatFileSize(file.FileSize)}
-                            </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.CreatedBy}>
+                            </Td>
+                            <Td className="text-gray-600 dark:text-gray-400 truncate" title={file.CreatedBy}>
                                 {displayCell(file.CreatedBy)}
-                            </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.CreatedDate ? formatDate(file.CreatedDate) : ""}>
+                            </Td>
+                            <Td className="text-gray-600 dark:text-gray-400 truncate" title={file.CreatedDate ? formatDate(file.CreatedDate) : ""}>
                                 {displayCell(file.CreatedDate ? formatDate(file.CreatedDate) : "")}
-                            </td>
-                            <td className="px-3 py-2 text-sm truncate">
+                            </Td>
+                            <Td className="truncate">
                                 <div className="flex items-center gap-2 min-w-0">
                                     <button
                                         onClick={() => handlePreview(file)}
@@ -254,11 +248,11 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
                                         )}
                                     </button>
                                 </div>
-                            </td>
-                        </tr>
+                            </Td>
+                        </Tr>
                     ))}
-                </tbody>
-            </table>
+                </TBody>
+            </Table>
         </div>
 
         {files.length > ITEMS_PER_PAGE && (

@@ -3,6 +3,7 @@ import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting"
 import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 interface RMALine {
     id: string;
@@ -60,24 +61,17 @@ export default function QuoteLineRMALinesSubTab({
     const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
         <div>
             <div className="overflow-x-auto">
                 {data.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium" title="No records found">No records found</p>
-                        <p className="text-sm">There are no RMAs associated with this quote line.</p>
-                    </div>
+                    <TableEmptyState message="No records found" description="There are no RMAs associated with this quote line." />
                 ) : (
-                    <table className="w-full text-sm table-fixed">
-                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                    <Table className="text-sm table-fixed">
+                        <THead>
                             <tr>
                                 <SortableHeader
                                     label="RMA Line"
@@ -104,49 +98,49 @@ export default function QuoteLineRMALinesSubTab({
                                 <SortableHeader label="Open Balance Qty" field="openBalanceQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalanceQty} onResize={handleResize} />
                                 <SortableHeader label="Goods Receipt Date" field="receiptDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.receiptDate} onResize={handleResize} />
                             </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800">
+                        </THead>
+                        <TBody>
                             {paginatedData.map((item) => (
-                                <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.lineName }}>{displayCell(item.lineName)}</td>
-                                    <td className="px-3 py-2 text-sm truncate" style={{ width: widths.status }}>
+                                <Tr key={item.id} className="border-b border-gray-200 dark:border-gray-700">
+                                    <Td className="sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.lineName }}>{displayCell(item.lineName)}</Td>
+                                    <Td className="truncate" style={{ width: widths.status }}>
                                         <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                             {item.status}
                                         </span>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.rmaName }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.rmaName }}>
                                         {displayCell(item.rmaName)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrderLine }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.salesOrderLine }}>
                                         {displayCell(item.salesOrderLine)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuoteLine }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.customerQuoteLine }}>
                                         {item.customerQuoteLineId ? (
                                             <Link href={`/quotes/${quoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {item.customerQuoteLine}
                                             </Link>
                                         ) : displayCell(item.customerQuoteLine)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposedProductName }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.proposedProductName }}>
                                         {item.proposedProductId ? (
                                             <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {item.proposedProductName}
                                             </Link>
                                         ) : displayCell(item.proposedProductName)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.reasonCode }}>{displayCell(item.reasonCode)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.productName }}>{displayCell(item.productName)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.description }} title={item.description}>{displayCell(item.description)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.brand }}>{displayCell(item.brand)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.unitPrice }}>{formatCurrency(item.unitPrice)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.returnQty }}>{item.returnQty}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white  font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(item.totalPrice)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.openBalanceQty }}>{item.openBalanceQty}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.receiptDate }}>{formatDate(item.receiptDate, 'numeric-dash')}</td>
-                                </tr>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.reasonCode }}>{displayCell(item.reasonCode)}</Td>
+                                    <Td className="truncate" style={{ width: widths.productName }}>{displayCell(item.productName)}</Td>
+                                    <Td className="truncate" style={{ width: widths.description }} title={item.description}>{displayCell(item.description)}</Td>
+                                    <Td className="truncate" style={{ width: widths.brand }}>{displayCell(item.brand)}</Td>
+                                    <Td className="truncate" style={{ width: widths.unitPrice }}>{formatCurrency(item.unitPrice)}</Td>
+                                    <Td className="truncate" style={{ width: widths.returnQty }}>{item.returnQty}</Td>
+                                    <Td className="font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(item.totalPrice)}</Td>
+                                    <Td className="truncate" style={{ width: widths.openBalanceQty }}>{item.openBalanceQty}</Td>
+                                    <Td className="truncate" style={{ width: widths.receiptDate }}>{formatDate(item.receiptDate, 'numeric-dash')}</Td>
+                                </Tr>
                             ))}
-                        </tbody>
-                    </table>
+                        </TBody>
+                    </Table>
                 )}
             </div>
             <div className="px-3 py-2">

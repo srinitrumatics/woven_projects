@@ -18,6 +18,7 @@ const ITEMS_PER_PAGE = 10;
 import DeliveryWindowModal from "./components/DeliveryWindowModal";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 export default function DeliveryWindowsPage() {
     const router = useRouter();
@@ -240,7 +241,7 @@ export default function DeliveryWindowsPage() {
                             <span className="text-gray-900 dark:text-white font-medium truncate">Delivery Windows</span>
                         </div>
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Delivery Windows</h1>
-                        <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and track delivery windows for this location">Manage and track delivery windows for this location</p>
+                        <p className="text-gray-600 dark:text-gray-400 text-base mt-1 truncate" title="Manage and track delivery windows for this location">Manage and track delivery windows for this location</p>
                     </div>
                     <div className="flex flex-col items-end gap-2 min-w-0">
                         <button
@@ -311,24 +312,15 @@ export default function DeliveryWindowsPage() {
                 {/* Table */}
                 <div className="overflow-x-auto">
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                            <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                            </svg>
-                            <p className="text-sm font-medium truncate" title="Loading delivery windows...">Loading delivery windows...</p>
-                        </div>
+                        <TableLoadingState message="Loading delivery windows..." />
                     ) : paginatedWindows.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-16 text-center min-w-0">
-                            <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 1V5a2 2 0 00-2-2H9a2 2 0 00-2 2v3m10 11V7a2 2 0 00-2-2h-3M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
-                            <p className="text-gray-500 dark:text-gray-400 text-lg font-medium mb-1 truncate" title="No delivery windows found">No delivery windows found</p>
-                            <p className="text-gray-400 dark:text-gray-500 text-sm truncate" title="There are no delivery window records for this location">There are no delivery window records for this location</p>
-                        </div>
+                        <TableEmptyState
+                            message="No delivery windows found"
+                            description="There are no delivery window records for this location"
+                        />
                     ) : (
-                        <table className="w-full border-collapse table-fixed" style={{ minWidth: Object.values(widths).reduce((a, b) => a + b, 0) }}>
-                            <thead className="bg-primary-light dark:bg-gray-900">
+                        <Table className="border-collapse table-fixed" style={{ minWidth: Object.values(widths).reduce((a, b) => a + b, 0) }}>
+                            <THead>
                                 <tr>
                                     <SortableHeader label="Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                     <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} />
@@ -340,29 +332,29 @@ export default function DeliveryWindowsPage() {
                                     <SortableHeader label="Closed for Deliveries" field="closedForDeliveries" sortConfig={sortConfig} requestSort={requestSort} width={widths.closedForDeliveries} onResize={handleResize} />
                                     <SortableHeader label="Delivery Notes" field="deliveryNotes" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveryNotes} onResize={handleResize} />
                                     <SortableHeader label="Active" field="active" sortConfig={sortConfig} requestSort={requestSort} width={widths.active} onResize={handleResize} />
-                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 " style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                                    <Th style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                         Action
-                                    </th>
+                                    </Th>
                                 </tr>
-                            </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            </THead>
+                            <TBody>
                                 {paginatedWindows.map((dw) => (
-                                    <tr key={dw.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                        <td className="px-3 py-3 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={dw.name} style={{ width: widths.name, minWidth: widths.name, maxWidth: widths.name }}>
+                                    <Tr key={dw.id}>
+                                        <Td className="text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={dw.name} style={{ width: widths.name, minWidth: widths.name, maxWidth: widths.name }}>
                                             {dw.name}
-                                        </td>
-                                        <td className="px-3 py-3 text-sm text-gray-900 dark:text-white truncate" title={dw.shipToLocation} style={{ width: widths.shipToLocation, minWidth: widths.shipToLocation, maxWidth: widths.shipToLocation }}>{dw.shipToLocation}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.dayOfWeek, minWidth: widths.dayOfWeek, maxWidth: widths.dayOfWeek }}>{dw.dayOfWeek}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-900 dark:text-white font-medium truncate" style={{ width: widths.windowStart, minWidth: widths.windowStart, maxWidth: widths.windowStart }}>{formatTime(dw.windowStart)}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.windowEnd, minWidth: widths.windowEnd, maxWidth: widths.windowEnd }}>{formatTime(dw.windowEnd)}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.open24Hours, minWidth: widths.open24Hours, maxWidth: widths.open24Hours }}>{dw.open24Hours ? 'Yes' : 'No'}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.receiveOnFederalHolidays, minWidth: widths.receiveOnFederalHolidays, maxWidth: widths.receiveOnFederalHolidays }}>{dw.receiveOnFederalHolidays ? 'Yes' : 'No'}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.closedForDeliveries, minWidth: widths.closedForDeliveries, maxWidth: widths.closedForDeliveries }}>{dw.closedForDeliveries ? 'Yes' : 'No'}</td>
-                                        <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={dw.deliveryNotes} style={{ width: widths.deliveryNotes, minWidth: widths.deliveryNotes, maxWidth: widths.deliveryNotes }}>{dw.deliveryNotes}</td>
-                                        <td className="px-3 py-3 truncate" style={{ width: widths.active, minWidth: widths.active, maxWidth: widths.active }}>
+                                        </Td>
+                                        <Td className="truncate" title={dw.shipToLocation} style={{ width: widths.shipToLocation, minWidth: widths.shipToLocation, maxWidth: widths.shipToLocation }}>{dw.shipToLocation}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.dayOfWeek, minWidth: widths.dayOfWeek, maxWidth: widths.dayOfWeek }}>{dw.dayOfWeek}</Td>
+                                        <Td className="font-medium truncate" style={{ width: widths.windowStart, minWidth: widths.windowStart, maxWidth: widths.windowStart }}>{formatTime(dw.windowStart)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.windowEnd, minWidth: widths.windowEnd, maxWidth: widths.windowEnd }}>{formatTime(dw.windowEnd)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.open24Hours, minWidth: widths.open24Hours, maxWidth: widths.open24Hours }}>{dw.open24Hours ? 'Yes' : 'No'}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.receiveOnFederalHolidays, minWidth: widths.receiveOnFederalHolidays, maxWidth: widths.receiveOnFederalHolidays }}>{dw.receiveOnFederalHolidays ? 'Yes' : 'No'}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.closedForDeliveries, minWidth: widths.closedForDeliveries, maxWidth: widths.closedForDeliveries }}>{dw.closedForDeliveries ? 'Yes' : 'No'}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={dw.deliveryNotes} style={{ width: widths.deliveryNotes, minWidth: widths.deliveryNotes, maxWidth: widths.deliveryNotes }}>{dw.deliveryNotes}</Td>
+                                        <Td className="truncate" style={{ width: widths.active, minWidth: widths.active, maxWidth: widths.active }}>
                                             <StatusBadge active={dw.active} />
-                                        </td>
-                                        <td className="px-3 py-3 truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                             <div className="flex gap-2">
                                                 <button
                                                     onClick={() => {
@@ -384,11 +376,11 @@ export default function DeliveryWindowsPage() {
                                                     </svg>
                                                 </button>
                                             </div>
-                                        </td>
-                                    </tr>
+                                        </Td>
+                                    </Tr>
                                 ))}
-                            </tbody>
-                        </table>
+                            </TBody>
+                        </Table>
                     )}
                 </div>
 

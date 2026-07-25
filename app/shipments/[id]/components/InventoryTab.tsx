@@ -7,6 +7,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 import Pagination from "@/components/ui/Pagination";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -121,11 +122,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
 
     // ── States ──────────────────────────────────────────────────────────────
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     if (error) {
@@ -138,10 +135,10 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
 
     if (items.length === 0) {
         return (
-            <div className="p-12 text-center bg-gray-50 dark:bg-gray-900/40 rounded-lg ">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no Inventory Positions associated with this shipment manifest.">There are no Inventory Positions associated with this shipment manifest.</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There are no Inventory Positions associated with this shipment manifest."
+            />
         );
     }
 
@@ -149,8 +146,8 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
     return (
         <div className="flex flex-col">
             <div className="overflow-x-auto py-2">
-                <table className="w-full text-sm table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                <Table className="text-sm table-fixed">
+                    <THead>
                         <tr>
                             {/* 1 – sticky */}
                             <SortableHeader label="Inventory Position" field="name" sortConfig={sc} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
@@ -175,14 +172,14 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                             {/* 11 */}
                             <SortableHeader label="Ship Confirmed Date" field="shipConfirmed" sortConfig={sc} requestSort={handleSort} width={widths.shipConfirmed} onResize={handleResize} align="left" />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedItems.map((item) => (
-                            <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <Tr key={item.id}>
                                 {/* 1 – sticky */}
-                                <td className="px-3 py-2 text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
+                                <Td className="text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
                                     <span className="truncate block" title={item.name}>{item.name}</span>
-                                </td>
+                                </Td>
                                 <TC v={displayCell(fmtDate(item.receivedDate))} w={widths.receivedDate} />
                                 <TC v={`${formatNumber(item.daysInInventory, 0)} Days`} w={widths.daysInInventory} />
                                 <TC
@@ -202,10 +199,10 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                                 <TC v={formatNumber(item.qtyAvailable, 2)} w={widths.qtyAvailable} />
                                 <TC v={displayCell(item.inventoryLocation)} w={widths.inventoryLocation} />
                                 <TC v={displayCell(fmtDate(item.shipConfirmed))} w={widths.shipConfirmed} />
-                            </tr>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
             <Pagination
                 currentPage={currentPage}
@@ -222,8 +219,8 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
 // ─── Cell helper ──────────────────────────────────────────────────────────────
 function TC({ v, w }: { v: React.ReactNode; w: number }) {
     return (
-        <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={typeof v === 'string' ? v : undefined}>
+        <Td className="text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={typeof v === 'string' ? v : undefined}>
             {v}
-        </td>
+        </Td>
     );
 }

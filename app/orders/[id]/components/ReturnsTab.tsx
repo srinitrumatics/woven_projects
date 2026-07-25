@@ -9,6 +9,7 @@ import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import { useResizableColumns } from "../../../../hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -218,11 +219,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
     }, [orderId, accountId, contactId]);
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center py-10">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     const statusBadge = (status: string) => {
@@ -243,20 +240,12 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
     };
 
     const emptyState = (label: string) => (
-        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-            <svg className="w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z" />
-            </svg>
-            <p className="text-base font-medium">No records found</p>
-            <p className="text-sm">There are no {label} associated with this order.</p>
-        </div>
+        <TableEmptyState message="No records found" description={`There are no ${label} associated with this order.`} />
     );
 
-    const tdClass = "px-4 py-3 text-sm text-gray-700 dark:text-gray-300 truncate";
-    const tdBoldClass = "px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate";
-    const tableClass = "w-full text-sm table-fixed";
-    const theadClass = "bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700";
-    const tbodyClass = "bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700";
+    const tdClass = "text-gray-700 dark:text-gray-300 truncate";
+    const tdBoldClass = "font-medium truncate";
+    const tableClass = "text-sm table-fixed";
 
     const tabs = [
         { id: "rma" as const, label: "RMAs", count: rmaList.length },
@@ -290,8 +279,8 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                 rmaList.length === 0 ? emptyState("RMAs") : (
                     <div className="rounded-lg border border-gray-200 dark:border-gray-700">
                         <div className="overflow-auto">
-                            <table className={tableClass}>
-                                <thead className={theadClass}>
+                            <Table className={tableClass}>
+                                <THead>
                                     <tr>
                                         <SortableHeader label="RMA #" field="Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaName || 160} onResize={handleResize} className={stickyThClass} />
                                         <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaStatus || 120} onResize={handleResize} />
@@ -318,50 +307,50 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                         <SortableHeader label="Actual Delivery Date" field="Actual_Delivery_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaActualDelivery || 170} onResize={handleResize} />
                                         <SortableHeader label="Goods Receipt Date" field="Goods_Receipt_Date__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaGoodsReceipt || 170} onResize={handleResize} />
                                     </tr>
-                                </thead>
-                                <tbody className={tbodyClass}>
+                                </THead>
+                                <TBody>
                                     {pagedRmaList.map((rma) => (
-                                        <tr key={rma.Id} className="group hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                            <td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(rma.Name)}</td>
-                                            <td className="px-4 py-3">{statusBadge(rma.Status__c)}</td>
-                                            <td className={tdClass}>{displayCell(rma.RMA_Type__c)}</td>
-                                            <td className={tdClass}>{displayCell(rma.Sales_Order_Name)}</td>
-                                            <td className={tdClass}>
+                                        <Tr key={rma.Id} className="group transition-colors">
+                                            <Td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(rma.Name)}</Td>
+                                            <Td>{statusBadge(rma.Status__c)}</Td>
+                                            <Td className={tdClass}>{displayCell(rma.RMA_Type__c)}</Td>
+                                            <Td className={tdClass}>{displayCell(rma.Sales_Order_Name)}</Td>
+                                            <Td className={tdClass}>
                                                 {canLinkQuotes && rma.Customer_Quote__c ? (
                                                     <Link href={`/quotes/${rma.Customer_Quote__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {rma.Customer_Quote_Name || "—"}
                                                     </Link>
                                                 ) : (rma.Customer_Quote_Name || "—")}
-                                            </td>
-                                            <td className={tdClass}>
+                                            </Td>
+                                            <Td className={tdClass}>
                                                 {canLinkProposals && rma.Proposal__c ? (
                                                     <Link href={`/proposals/${rma.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} title={displayCell(rma.Proposal_Name)}>
                                                         {rma.Proposal_Name || "—"}
                                                     </Link>
                                                 ) : (rma.Proposal_Name || "—")}
-                                            </td>
-                                            <td title={displayCell(rma.Proposal_Name)} className={tdClass}>{displayCell(rma.Proposal_Name)}</td>
-                                            <td className={tdClass}>{displayCell(rma.Ship_from_Account_Name)}</td>
-                                            <td className={tdClass}>{displayCell(rma.Ship_from_Contact_Name)}</td>
-                                            <td className={tdClass}>{displayCell(rma.Return_to_Account_Name)}</td>
-                                            <td className={tdClass}>{displayCell(rma.Return_to_Contact_Name)}</td>
-                                            <td className={tdClass}>{rma.Drop_Ship__c ? "Yes" : "No"}</td>
-                                            <td className={tdClass}>{formatNumber(rma.Total_Lines__c)}</td>
-                                            <td className={tdBoldClass}>{formatCurrency(rma.Total_Price__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatDate(rma.Issued_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(rma.Return_by_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{displayCell(rma.Shipping_Method__c)}</td>
-                                            <td title={rma.Logistics_Partner_Name} className={tdClass}>{displayCell(rma.Logistics_Partner_Name)}</td>
-                                            <td title={rma.Logistics_Contact_Name} className={tdClass}>{displayCell(rma.Logistics_Contact_Name)}</td>
-                                            <td title={rma.Tracking_Number__c} className={tdClass}>{displayCell(rma.Tracking_Number__c)}</td>
-                                            <td title={rma.Tracking_Status__c} className={tdClass}>{rma.Tracking_Status__c ? rma.Tracking_Status__c : "—"}</td>
-                                            <td className={tdClass}>{formatDate(rma.Estimated_Delivery_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(rma.Actual_Delivery_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(rma.Goods_Receipt_Date__c, "numeric-dash") || "—"}</td>
-                                        </tr>
+                                            </Td>
+                                            <Td title={displayCell(rma.Proposal_Name)} className={tdClass}>{displayCell(rma.Proposal_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(rma.Ship_from_Account_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(rma.Ship_from_Contact_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(rma.Return_to_Account_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(rma.Return_to_Contact_Name)}</Td>
+                                            <Td className={tdClass}>{rma.Drop_Ship__c ? "Yes" : "No"}</Td>
+                                            <Td className={tdClass}>{formatNumber(rma.Total_Lines__c)}</Td>
+                                            <Td className={tdBoldClass}>{formatCurrency(rma.Total_Price__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatDate(rma.Issued_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(rma.Return_by_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{displayCell(rma.Shipping_Method__c)}</Td>
+                                            <Td title={rma.Logistics_Partner_Name} className={tdClass}>{displayCell(rma.Logistics_Partner_Name)}</Td>
+                                            <Td title={rma.Logistics_Contact_Name} className={tdClass}>{displayCell(rma.Logistics_Contact_Name)}</Td>
+                                            <Td title={rma.Tracking_Number__c} className={tdClass}>{displayCell(rma.Tracking_Number__c)}</Td>
+                                            <Td title={rma.Tracking_Status__c} className={tdClass}>{rma.Tracking_Status__c ? rma.Tracking_Status__c : "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(rma.Estimated_Delivery_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(rma.Actual_Delivery_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(rma.Goods_Receipt_Date__c, "numeric-dash") || "—"}</Td>
+                                        </Tr>
                                     ))}
-                                </tbody>
-                            </table>
+                                </TBody>
+                            </Table>
                         </div>
                         <Pagination
                             currentPage={rmaPage}
@@ -380,8 +369,8 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                 creditMemos.length === 0 ? emptyState("credit memos") : (
                     <div className="rounded-lg border border-gray-200 dark:border-gray-700">
                         <div className="overflow-auto">
-                            <table className={tableClass}>
-                                <thead className={theadClass}>
+                            <Table className={tableClass}>
+                                <THead>
                                     <tr>
                                         <SortableHeader label="Credit Memo #" field="Name" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmName || 160} onResize={handleResize} className={stickyThClass} />
                                         <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmStatus || 120} onResize={handleResize} />
@@ -399,41 +388,41 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                         <SortableHeader label="Expiration Date" field="Expiration_Date__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmExpirationDate || 140} onResize={handleResize} />
                                         <SortableHeader label="Available Credit Balance" field="Available_Credit_Balance__c" sortConfig={sortConfigCm} requestSort={requestSortCm} width={widths.cmAvailBalance || 190} onResize={handleResize} />
                                     </tr>
-                                </thead>
-                                <tbody className={tbodyClass}>
+                                </THead>
+                                <TBody>
                                     {pagedCreditMemos.map((cm) => (
-                                        <tr key={cm.Id} className="group hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                            <td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(cm.Name)}</td>
-                                            <td className="px-4 py-3">{statusBadge(cm.Status__c)}</td>
-                                            <td className={tdClass}>{displayCell(cm.Invoice_Name)}</td>
-                                            <td className={tdClass}>{displayCell(cm.Sales_Order_Name)}</td>
-                                            <td className={tdClass}>
+                                        <Tr key={cm.Id} className="group transition-colors">
+                                            <Td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(cm.Name)}</Td>
+                                            <Td>{statusBadge(cm.Status__c)}</Td>
+                                            <Td className={tdClass}>{displayCell(cm.Invoice_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(cm.Sales_Order_Name)}</Td>
+                                            <Td className={tdClass}>
                                                 {canLinkQuotes && cm.Customer_Quote_Id__c ? (
                                                     <Link href={`/quotes/${cm.Customer_Quote_Id__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {cm.Customer_Quote_Name || "—"}
                                                     </Link>
                                                 ) : (cm.Customer_Quote_Name || "—")}
-                                            </td>
-                                            <td className={tdClass}>
+                                            </Td>
+                                            <Td className={tdClass}>
                                                 {canLinkProposals && cm.Proposal__c ? (
                                                     <Link href={`/proposals/${cm.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {cm.Proposal_Name || "—"}
                                                     </Link>
                                                 ) : (cm.Proposal_Name || "—")}
-                                            </td>
-                                            <td className={tdClass}>{displayCell(cm.Proposal_Name)}</td>
-                                            <td className={tdClass}>{formatNumber(cm.Total_Lines__c)}</td>
-                                            <td className={tdClass}>{formatCurrency(cm.Total_Price__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatCurrency(cm.Total_Shipping_Charges__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatCurrency(cm.Total_Taxes_Amount__c ?? 0)}</td>
-                                            <td className={tdBoldClass}>{formatCurrency(cm.Total_Credit_Amount__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatDate(cm.Issued_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(cm.Expiration_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdBoldClass}>{formatCurrency(cm.Available_Credit_Balance__c ?? 0)}</td>
-                                        </tr>
+                                            </Td>
+                                            <Td className={tdClass}>{displayCell(cm.Proposal_Name)}</Td>
+                                            <Td className={tdClass}>{formatNumber(cm.Total_Lines__c)}</Td>
+                                            <Td className={tdClass}>{formatCurrency(cm.Total_Price__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatCurrency(cm.Total_Shipping_Charges__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatCurrency(cm.Total_Taxes_Amount__c ?? 0)}</Td>
+                                            <Td className={tdBoldClass}>{formatCurrency(cm.Total_Credit_Amount__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatDate(cm.Issued_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(cm.Expiration_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdBoldClass}>{formatCurrency(cm.Available_Credit_Balance__c ?? 0)}</Td>
+                                        </Tr>
                                     ))}
-                                </tbody>
-                            </table>
+                                </TBody>
+                            </Table>
                         </div>
 
                         <Pagination
@@ -453,8 +442,8 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                 debitMemos.length === 0 ? emptyState("debit memos") : (
                     <div className="rounded-lg border border-gray-200 dark:border-gray-700">
                         <div className="overflow-auto">
-                            <table className={tableClass}>
-                                <thead className={theadClass}>
+                            <Table className={tableClass}>
+                                <THead>
                                     <tr>
                                         <SortableHeader label="Debit Memo #" field="Name" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmName || 160} onResize={handleResize} className={stickyThClass} />
                                         <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmStatus || 120} onResize={handleResize} />
@@ -467,30 +456,30 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                         <SortableHeader label="Debit Amount" field="Total_Debit_Amount__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmDebitAmount || 130} onResize={handleResize} />
                                         <SortableHeader label="Available Balance" field="Available_Debit_Balance__c" sortConfig={sortConfigDm} requestSort={requestSortDm} width={widths.dmAvailBalance || 160} onResize={handleResize} />
                                     </tr>
-                                </thead>
-                                <tbody className={tbodyClass}>
+                                </THead>
+                                <TBody>
                                     {pagedDebitMemos.map((dm) => (
-                                        <tr key={dm.Id} className="group hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                            <td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(dm.Name)}</td>
-                                            <td className="px-4 py-3">{statusBadge(dm.Status__c)}</td>
-                                            <td className={tdClass}>{formatDate(dm.Issued_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(dm.Settled_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{displayCell(dm.Debit_to_Account_Name)}</td>
-                                            <td className={tdClass}>
+                                        <Tr key={dm.Id} className="group transition-colors">
+                                            <Td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(dm.Name)}</Td>
+                                            <Td>{statusBadge(dm.Status__c)}</Td>
+                                            <Td className={tdClass}>{formatDate(dm.Issued_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(dm.Settled_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{displayCell(dm.Debit_to_Account_Name)}</Td>
+                                            <Td className={tdClass}>
                                                 {canLinkOrders && dm.Customer_Order_Id__c ? (
                                                     <Link href={`/orders/${dm.Customer_Order_Id__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {dm.Customer_Order_Name || "—"}
                                                     </Link>
                                                 ) : (dm.Customer_Order_Name || "—")}
-                                            </td>
-                                            <td className={tdClass}>{displayCell(dm.Purchase_Order_Name)}</td>
-                                            <td className={tdClass}>{displayCell(dm.Supplier_Bill_Name)}</td>
-                                            <td className={`${tdBoldClass} text-right`}>{formatCurrency(dm.Total_Debit_Amount__c ?? 0)}</td>
-                                            <td className={`${tdBoldClass} text-right`}>{formatCurrency(dm.Available_Debit_Balance__c ?? 0)}</td>
-                                        </tr>
+                                            </Td>
+                                            <Td className={tdClass}>{displayCell(dm.Purchase_Order_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(dm.Supplier_Bill_Name)}</Td>
+                                            <Td className={`${tdBoldClass} text-right`}>{formatCurrency(dm.Total_Debit_Amount__c ?? 0)}</Td>
+                                            <Td className={`${tdBoldClass} text-right`}>{formatCurrency(dm.Available_Debit_Balance__c ?? 0)}</Td>
+                                        </Tr>
                                     ))}
-                                </tbody>
-                            </table>
+                                </TBody>
+                            </Table>
                         </div>
                         <Pagination
                             currentPage={dmPage}
@@ -509,8 +498,8 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                 rtvList.length === 0 ? emptyState("RTVs") : (
                     <div className="rounded-lg border border-gray-200 dark:border-gray-700">
                         <div className="overflow-auto">
-                            <table className={tableClass}>
-                                <thead className={theadClass}>
+                            <Table className={tableClass}>
+                                <THead>
                                     <tr>
                                         <SortableHeader label="RTV #" field="Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvName || 160} onResize={handleResize} className={stickyThClass} />
                                         <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvStatus || 120} onResize={handleResize} />
@@ -523,30 +512,30 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                         <SortableHeader label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvPurchaseOrder || 150} onResize={handleResize} />
                                         <SortableHeader label="Total Cost" field="Total_Cost__c" sortConfig={sortConfigRtv} requestSort={requestSortRtv} width={widths.rtvTotal || 120} onResize={handleResize} />
                                     </tr>
-                                </thead>
-                                <tbody className={tbodyClass}>
+                                </THead>
+                                <TBody>
                                     {pagedRtvList.map((rtv) => (
-                                        <tr key={rtv.Id} className="group hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                            <td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(rtv.Name)}</td>
-                                            <td className="px-4 py-3">{statusBadge(rtv.Status__c)}</td>
-                                            <td className={tdClass}>{displayCell(rtv.RTV_Type__c)}</td>
-                                            <td className={tdClass}>{formatDate(rtv.Issued_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(rtv.Return_by_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{displayCell(rtv.Supplier_Name)}</td>
-                                            <td className={tdClass}>{displayCell(rtv.Supplier_RMA_Number__c)}</td>
-                                            <td className={tdClass}>
+                                        <Tr key={rtv.Id} className="group transition-colors">
+                                            <Td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(rtv.Name)}</Td>
+                                            <Td>{statusBadge(rtv.Status__c)}</Td>
+                                            <Td className={tdClass}>{displayCell(rtv.RTV_Type__c)}</Td>
+                                            <Td className={tdClass}>{formatDate(rtv.Issued_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(rtv.Return_by_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{displayCell(rtv.Supplier_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(rtv.Supplier_RMA_Number__c)}</Td>
+                                            <Td className={tdClass}>
                                                 {canLinkOrders && rtv.Customer_Order_Id__c ? (
                                                     <Link href={`/orders/${rtv.Customer_Order_Id__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {rtv.Customer_Order_Name || "—"}
                                                     </Link>
                                                 ) : (rtv.Customer_Order_Name || "—")}
-                                            </td>
-                                            <td className={tdClass}>{displayCell(rtv.Purchase_Order_Name)}</td>
-                                            <td className={`${tdBoldClass} text-right`}>{formatCurrency(rtv.Total_Cost__c ?? 0)}</td>
-                                        </tr>
+                                            </Td>
+                                            <Td className={tdClass}>{displayCell(rtv.Purchase_Order_Name)}</Td>
+                                            <Td className={`${tdBoldClass} text-right`}>{formatCurrency(rtv.Total_Cost__c ?? 0)}</Td>
+                                        </Tr>
                                     ))}
-                                </tbody>
-                            </table>
+                                </TBody>
+                            </Table>
                         </div>
                         <Pagination
                             currentPage={rtvPage}

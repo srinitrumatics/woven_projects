@@ -6,6 +6,7 @@ import { useSortableData } from "../../../../hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -85,19 +86,15 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
     const renderReceivePayments = () => {
         if (receivePayments.length === 0) {
             return (
-                <div className="text-center py-12">
-                    <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No record found">No record found</p>
-                    <p className="text-sm truncate" title="There are no recieved payments associated with this invoice.">There are no recieved payments associated with this invoice.</p>
-
-                </div>
+                <TableEmptyState message="No record found" description="There are no recieved payments associated with this invoice." />
             );
         }
 
         return (
             <div className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full table-fixed">
-                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                    <Table className="table-fixed">
+                        <THead>
                             <tr>
                                 <SortableHeader label="Receive Payment" field="name" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.name} onResize={handleReceiveResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                 <SortableHeader label="Status" field="status" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.status} onResize={handleReceiveResize} />
@@ -109,25 +106,25 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
                                 <SortableHeader label="Failed Date" field="failedDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.failedDate} onResize={handleReceiveResize} />
                                 <SortableHeader label="Posted Date" field="postedDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={receiveWidths.postedDate} onResize={handleReceiveResize} />
                             </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        </THead>
+                        <TBody>
                             {paginatedPayments.map((payment) => (
-                                <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={payment.name}>{payment.name}</td>
-                                    <td className="px-3 py-2 truncate">
+                                <Tr key={payment.id} className="transition-colors">
+                                    <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={payment.name}>{payment.name}</Td>
+                                    <Td className="truncate">
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(payment.status)}`} title={payment.status}>{payment.status}</span>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(payment.amount)}>{formatCurrency(payment.amount)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={payment.paymentMethod}>{displayCell(payment.paymentMethod)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={payment.referenceNo}>{displayCell(payment.referenceNo)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.transactionDate, 'numeric-dash')}>{formatDate(payment.transactionDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.scheduledDate, 'numeric-dash')}>{formatDate(payment.scheduledDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.failedDate, 'numeric-dash')}>{formatDate(payment.failedDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(payment.postedDate, 'numeric-dash')}>{formatDate(payment.postedDate, 'numeric-dash')}</td>
-                                </tr>
+                                    </Td>
+                                    <Td className="font-semibold truncate" title={formatCurrency(payment.amount)}>{formatCurrency(payment.amount)}</Td>
+                                    <Td className="truncate" title={payment.paymentMethod}>{displayCell(payment.paymentMethod)}</Td>
+                                    <Td className="truncate" title={payment.referenceNo}>{displayCell(payment.referenceNo)}</Td>
+                                    <Td className="truncate" title={formatDate(payment.transactionDate, 'numeric-dash')}>{formatDate(payment.transactionDate, 'numeric-dash')}</Td>
+                                    <Td className="truncate" title={formatDate(payment.scheduledDate, 'numeric-dash')}>{formatDate(payment.scheduledDate, 'numeric-dash')}</Td>
+                                    <Td className="truncate" title={formatDate(payment.failedDate, 'numeric-dash')}>{formatDate(payment.failedDate, 'numeric-dash')}</Td>
+                                    <Td className="truncate" title={formatDate(payment.postedDate, 'numeric-dash')}>{formatDate(payment.postedDate, 'numeric-dash')}</Td>
+                                </Tr>
                             ))}
-                        </tbody>
-                    </table>
+                        </TBody>
+                    </Table>
                 </div>
                 <div className="px-3 py-2">
                     <Pagination
@@ -146,18 +143,15 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
     const renderAppliedCredits = () => {
         if (creditMemos.length === 0) {
             return (
-                <div className="text-center py-12">
-                    <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No record found">No record found</p>
-                    <p className="text-sm truncate" title="These is no applied credit payments associated with this invoice.">These is no applied credit payments associated with this invoice.</p>
-                </div>
+                <TableEmptyState message="No record found" description="These is no applied credit payments associated with this invoice." />
             );
         }
 
         return (
             <div className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full table-fixed">
-                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                    <Table className="table-fixed">
+                        <THead>
                             <tr>
                                 <SortableHeader label="Applied Credit Payment" field="name" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.acpName} onResize={handleAppliedResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                 <SortableHeader label="Status" field="status" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.status} onResize={handleAppliedResize} />
@@ -168,26 +162,26 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
                                 <SortableHeader label="Available Credit Balance" field="availableCreditBalance" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.balance} onResize={handleAppliedResize} />
                                 <SortableHeader label="Applied Credit Notes" field="notes" sortConfig={sortConfigMemos} requestSort={requestSortMemos} width={appliedWidths.notes} onResize={handleAppliedResize} />
                             </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        </THead>
+                        <TBody>
                             {paginatedMemos.map((memo) => (
-                                <tr key={memo.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={memo.name}>{memo.name}</td>
-                                    <td className="px-3 py-2 truncate">
+                                <Tr key={memo.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                    <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={memo.name}>{memo.name}</Td>
+                                    <Td className="px-3 py-2 truncate">
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(memo.status)}`}>{memo.status}</span>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(memo.appliedAmount)}>{formatCurrency(memo.appliedAmount)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={memo.creditMemoName}>{displayCell(memo.creditMemoName)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.appliedDate, 'numeric-dash')}>{formatDate(memo.appliedDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.postedDate, 'numeric-dash')}>{formatDate(memo.postedDate, 'numeric-dash')}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(memo.availableCreditBalance)}>{formatCurrency(memo.availableCreditBalance)}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
+                                    </Td>
+                                    <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(memo.appliedAmount)}>{formatCurrency(memo.appliedAmount)}</Td>
+                                    <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={memo.creditMemoName}>{displayCell(memo.creditMemoName)}</Td>
+                                    <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.appliedDate, 'numeric-dash')}>{formatDate(memo.appliedDate, 'numeric-dash')}</Td>
+                                    <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatDate(memo.postedDate, 'numeric-dash')}>{formatDate(memo.postedDate, 'numeric-dash')}</Td>
+                                    <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(memo.availableCreditBalance)}>{formatCurrency(memo.availableCreditBalance)}</Td>
+                                    <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                                         <div className="truncate" title={memo.notes}>{displayCell(memo.notes)}</div>
-                                    </td>
-                                </tr>
+                                    </Td>
+                                </Tr>
                             ))}
-                        </tbody>
-                    </table>
+                        </TBody>
+                    </Table>
                 </div>
                 <div className="px-3 py-2 ">
                     <Pagination

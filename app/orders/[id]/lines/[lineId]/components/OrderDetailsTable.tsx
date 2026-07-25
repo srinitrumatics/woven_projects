@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
+import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 
 interface OrderDetailsTableProps {
     isEditing: boolean;
@@ -117,23 +118,23 @@ export default function OrderDetailsTable({
 
             {/* Desktop Table View */}
             <div className="hidden w1025:block overflow-x-auto">
-                <table className="w-full">
-                    <thead className="bg-primary-light dark:bg-gray-900">
+                <Table>
+                    <THead>
                         <tr>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Unit Price">Unit Price</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Order Qty">Order Qty</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="MOQ">MOQ</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Total Order Qty">Total Order Qty</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Total Price">Total Price</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Shipping">Shipping</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Taxes">Taxes</th>
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 dark:text-gray-400 " title="Grand Total">Grand Total</th>
+                            <Th className="font-bold text-gray-700 dark:text-gray-400">Unit Price</Th>
+                            <Th className="font-bold text-gray-700 dark:text-gray-400">Order Qty</Th>
+                            <Th className="font-bold text-gray-700 dark:text-gray-400">MOQ</Th>
+                            <Th className="font-bold text-gray-700 dark:text-gray-400">Total Order Qty</Th>
+                            <Th className="font-bold text-gray-700 dark:text-gray-400">Total Price</Th>
+                            <Th className="font-bold text-gray-700 dark:text-gray-400">Shipping</Th>
+                            <Th className="font-bold text-gray-700 dark:text-gray-400">Taxes</Th>
+                            <Th className="font-bold text-gray-700 dark:text-gray-400">Grand Total</Th>
                         </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                        <tr>
-                            <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(unitPrice)}>{formatCurrency(unitPrice)}</td>
-                            <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate">
+                    </THead>
+                    <TBody>
+                        <Tr>
+                            <Td className="truncate" title={formatCurrency(unitPrice)}>{formatCurrency(unitPrice)}</Td>
+                            <Td className="truncate">
                                 {isEditing ? (
                                     <div className="flex flex-col gap-1 min-w-0">
                                         <div className="flex items-center gap-2 min-w-0">
@@ -151,21 +152,21 @@ export default function OrderDetailsTable({
                                                 +
                                             </button>
                                         </div>
-                                        <div className="text-[10px] text-gray-700 dark:text-gray-400">MOQ: {moq} / Avail: {available}</div>
+                                        <div className="text-xs text-gray-700 dark:text-gray-400">MOQ: {moq} / Avail: {available}</div>
                                     </div>
                                 ) : (
                                     formatNumber(displayQty)
                                 )}
-                            </td>
-                            <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatNumber(product.moq)}>{formatNumber(product.moq)}</td>
-                            <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatNumber(displayQty, 0)}>{formatNumber(displayQty, 0)}</td>
-                            <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(subtotal)}>{formatCurrency(subtotal)}</td>
-                            <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(shippingCharges)}>{formatCurrency(shippingCharges)}</td>
-                            <td className="px-4 py-4 text-sm text-gray-900 dark:text-white truncate" title={formatCurrency(taxes)}>{formatCurrency(taxes)}</td>
-                            <td className="px-4 py-4 text-sm font-bold text-primary dark:text-primary-light truncate" title={formatCurrency(grandTotal)}>{formatCurrency(grandTotal)}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </Td>
+                            <Td className="truncate" title={formatNumber(product.moq)}>{formatNumber(product.moq)}</Td>
+                            <Td className="truncate" title={formatNumber(displayQty, 0)}>{formatNumber(displayQty, 0)}</Td>
+                            <Td className="truncate" title={formatCurrency(subtotal)}>{formatCurrency(subtotal)}</Td>
+                            <Td className="truncate" title={formatCurrency(shippingCharges)}>{formatCurrency(shippingCharges)}</Td>
+                            <Td className="truncate" title={formatCurrency(taxes)}>{formatCurrency(taxes)}</Td>
+                            <Td className="font-bold text-primary dark:text-primary-light truncate" title={formatCurrency(grandTotal)}>{formatCurrency(grandTotal)}</Td>
+                        </Tr>
+                    </TBody>
+                </Table>
             </div>
         </div>
     );

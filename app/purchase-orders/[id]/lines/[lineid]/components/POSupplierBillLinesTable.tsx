@@ -8,6 +8,7 @@ import Pagination from "@/components/ui/Pagination";
 import { formatDate, formatCurrency, displayCell } from "@/lib/utils/formatting";
 import Link from 'next/link';
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface SupplierBillLine {
     Id: string;
@@ -103,20 +104,20 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
 
     if (lines.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 min-w-0">
-                <p className="text-sm font-medium truncate" title="No Supplier Bill lines found">No Supplier Bill lines found</p>
-                <p className="text-xs mt-1 truncate" title="There are no bill lines associated with this record.">There are no bill lines associated with this record.</p>
-            </div>
+            <TableEmptyState
+                message="No Supplier Bill lines found"
+                description="There are no bill lines associated with this record."
+            />
         );
     }
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0 table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0 table-fixed">
+                    <THead className="sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="Supplier Bill Line" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-[#e9f1f7] dark:bg-gray-900 z-30" />
+                            <SortableHeader label="Supplier Bill Line" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
                             <SortableHeader label="Supplier Bill #" field="Supplier_Bill__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.supplierBill} onResize={handleResize} />
                             <SortableHeader label="Customer Quote Line" field="Customer_Quote_Line_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.customerQuoteLine} onResize={handleResize} />
@@ -131,11 +132,11 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                             <SortableHeader label="Total Bill Amount" field="Total_Bill_Amount__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalAmount} onResize={handleResize} />
                             <SortableHeader label="Goods Receipt Date" field="Goods_Receipt_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.receiptDate} onResize={handleResize} />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((line) => (
-                            <tr key={line.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={line.Name}>
+                            <Tr key={line.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={line.Name}>
                                     {line.Supplier_Bill__c ? (
                                         <Link href={`/supplier-bills/${line.Supplier_Bill__c}/lines/${line.Id}`} className="text-primary hover:underline font-medium">
                                             {line.Name}
@@ -143,16 +144,16 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                     ) : (
                                         <span className="font-medium">{line.Name}</span>
                                     )}
-                                </td>
-                                <td className="px-4 py-3 truncate"><StatusBadge status={line.Status__c} /></td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Supplier_Bill_Name || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 truncate"><StatusBadge status={line.Status__c} /></Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Supplier_Bill_Name || '-'}>
                                     {line.Supplier_Bill__c ? (
                                         <Link href={`/supplier-bills/${line.Supplier_Bill__c}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {line.Supplier_Bill_Name || ''}
                                         </Link>
                                     ) : displayCell(line.Supplier_Bill_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || '-'}>
                                     {line.Customer_Quote_Line__c && line.Customer_Quote__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -162,8 +163,8 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                             <span className="font-medium">{line.Customer_Quote_Line_Name || '-'}</span>
                                         )
                                     ) : displayCell(line.Customer_Quote_Line_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Proposed_Product_Name || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Proposed_Product_Name || '-'}>
                                     {line.Proposed_Product__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/products/${line.Proposed_Product__c}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -173,30 +174,30 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                             <span className="font-medium">{line.Proposed_Product_Name || '-'}</span>
                                         )
                                     ) : displayCell(line.Proposed_Product_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>
                                     {line.Product_Name__c ? (
                                         <Link href={`/products/${line.Product_Name__c}`} className="text-primary hover:underline font-medium">
                                             {line.Product_Name}
                                         </Link>
                                     ) : displayCell(line.Product_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || '-'}>
                                     {displayCell(line.Product_Description__c)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.brand || line.Product_Brand_Name__c || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.brand || line.Product_Brand_Name__c || '-'}>
                                     {displayCell(line.brand || line.Product_Brand_Name__c)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={String(line.Billed_Qty__c || 0)}>{line.Billed_Qty__c || 0}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left truncate" title={formatCurrency(line.BillAmount__c || 0)}>{formatCurrency(line.BillAmount__c || 0)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Shipping_Charges__c || 0)}>{formatCurrency(line.Shipping_Charges__c || 0)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left truncate" title={formatCurrency(line.Total_Bill_Amount__c || 0)}>{formatCurrency(line.Total_Bill_Amount__c || 0)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Goods_Receipt_Date__c ? formatDate(line.Goods_Receipt_Date__c, 'numeric-dash') : '-'}>{line.Goods_Receipt_Date__c ? formatDate(line.Goods_Receipt_Date__c, 'numeric-dash') : displayCell(undefined)}</td>
-                            </tr>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={String(line.Billed_Qty__c || 0)}>{line.Billed_Qty__c || 0}</Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left truncate" title={formatCurrency(line.BillAmount__c || 0)}>{formatCurrency(line.BillAmount__c || 0)}</Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Shipping_Charges__c || 0)}>{formatCurrency(line.Shipping_Charges__c || 0)}</Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left truncate" title={formatCurrency(line.Total_Bill_Amount__c || 0)}>{formatCurrency(line.Total_Bill_Amount__c || 0)}</Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Goods_Receipt_Date__c ? formatDate(line.Goods_Receipt_Date__c, 'numeric-dash') : '-'}>{line.Goods_Receipt_Date__c ? formatDate(line.Goods_Receipt_Date__c, 'numeric-dash') : displayCell(undefined)}</Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="border-t border-gray-100 dark:border-gray-700">

@@ -293,7 +293,7 @@ const UserManagement: React.FC = () => {
     <ProtectedRoute>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Account Contacts</h1>
-        <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage contacts assigned to your company account">
+        <p className="text-gray-600 dark:text-gray-400 text-base mt-1 truncate" title="Manage contacts assigned to your company account">
           Account contacts related to your company
         </p>
       </div>

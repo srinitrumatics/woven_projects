@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import algoliasearch from 'algoliasearch';
 import { useUserSession } from '@/components/UserSessionContext';
 import { useToast } from "@/components/ui/Toast";
+import { Table, THead, TBody, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 // Formatter
 const fmt = (n: number) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -580,7 +581,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Configure Order</h1>
-          <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Build a hierarchical list of products">Build a hierarchical list of products</p>
+          <p className="text-gray-600 dark:text-gray-400 text-base mt-1 truncate" title="Build a hierarchical list of products">Build a hierarchical list of products</p>
         </div>
         <div className="flex items-center gap-3 min-w-0">
           <button
@@ -738,24 +739,30 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
             }}
           >
             <div className="absolute left-0 right-0 h-0.5 bg-blue-500 pointer-events-none z-50 transition-all duration-75" style={insertLineStyle}></div>
-            <table className="w-full text-left border-collapse min-w-[800px]" style={{ display: lines.length ? 'table' : 'none' }}>
-              <thead className="bg-primary-light dark:bg-gray-900 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
+            {lines.length === 0 ? (
+              <TableEmptyState
+                message="No lines in configuration"
+                description="Search to add products or drag them from the catalog."
+              />
+            ) : (
+            <Table className="text-left border-collapse min-w-[800px]">
+              <THead className="text-gray-900 dark:text-white sticky top-0 z-10">
                 <tr>
-                  <th className="px-3 py-3 w-10 text-center"><input type="checkbox" checked={lines.length > 0 && lines.every(l => l.sel)} onChange={e => selAll(e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></th>
-                  <th className="px-1 py-3 w-8"></th>
-                  <th className="px-3 py-3 text-sm font-semibold whitespace-nowrap">Level</th>
-                  <th className="px-3 py-3 text-sm font-semibold whitespace-nowrap">Seq</th>
-                  <th className="px-3 py-3 text-sm font-semibold whitespace-nowrap">Product Name</th>
-                  <th className="px-3 py-3 text-sm font-semibold whitespace-nowrap">Description</th>
-                  <th className="px-3 py-3 text-sm font-semibold whitespace-nowrap">Brand Name</th>
-                  <th className="px-3 py-3 text-sm font-semibold text-right whitespace-nowrap">Sell Price</th>
-                  <th className="px-3 py-3 text-sm font-semibold text-center whitespace-nowrap w-28">Order Qty</th>
-                  <th className="px-3 py-3 text-sm font-semibold text-center whitespace-nowrap">MOQ</th>
-                  <th className="px-3 py-3 text-sm font-semibold text-right whitespace-nowrap">Total Price</th>
-                  <th className="px-3 py-3 w-10"></th>
+                  <Th className="w-10 text-center"><input type="checkbox" checked={lines.length > 0 && lines.every(l => l.sel)} onChange={e => selAll(e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Th>
+                  <Th className="px-1 w-8"></Th>
+                  <Th className="whitespace-nowrap">Level</Th>
+                  <Th className="whitespace-nowrap">Seq</Th>
+                  <Th className="whitespace-nowrap">Product Name</Th>
+                  <Th className="whitespace-nowrap">Description</Th>
+                  <Th className="whitespace-nowrap">Brand Name</Th>
+                  <Th className="text-right whitespace-nowrap">Sell Price</Th>
+                  <Th className="text-center whitespace-nowrap w-28">Order Qty</Th>
+                  <Th className="text-center whitespace-nowrap">MOQ</Th>
+                  <Th className="text-right whitespace-nowrap">Total Price</Th>
+                  <Th className="w-10"></Th>
                 </tr>
-              </thead>
-              <tbody>
+              </THead>
+              <TBody>
                 {lines.map((l, idx) => {
                   const hidden = isHidden(l);
                   const hasKids = lines.some(c => c.pid === l.id);
@@ -772,20 +779,20 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                     const abbr = l.grpName.split(/[\s&]+/).map((w: string) => w[0]).join('').substring(0, 2).toUpperCase();
 
                     return (
-                      <tr key={l.id} draggable className={`border-b border-gray-200 dark:border-gray-700 bg-indigo-50/50 dark:bg-indigo-900/10 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors ${l.sel ? 'bg-indigo-100/50 dark:bg-indigo-900/30' : ''}`} onDragStart={e => startDrag(e, 'row', l.id)} onDragOver={e => onDragOverRow(e, idx)} onDrop={e => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
-                        <td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></td>
-                        <td className="px-1 py-2 cursor-grab text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-center">&#9776;</td>
-                        <td colSpan={3} className="px-3 py-2">
+                      <tr key={l.id} draggable className={`border-b border-gray-200 dark:border-gray-700 bg-indigo-50/50 dark:bg-indigo-900/10 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors ${l.sel ? 'bg-indigo-100/50 dark:bg-indigo-900/30' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
+                        <Td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Td>
+                        <Td className="px-1 py-2 cursor-grab text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-center">&#9776;</Td>
+                        <Td colSpan={3} className="px-3 py-2">
                           <div className="flex items-center gap-2">
                             {hasKids ? <button className="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition-transform" onClick={() => toggleExp(l.id)} style={{ transform: l.exp ? 'rotate(0)' : 'rotate(-90deg)' }}>&#9660;</button> : <span className="w-5 inline-block"></span>}
-                            <span className={`w-6 h-6 rounded flex items-center justify-center text-[10px] font-bold text-white ${l.grpColor}`}>{abbr}</span>
+                            <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${l.grpColor}`}>{abbr}</span>
                             <input className="font-bold text-sm bg-transparent border border-transparent hover:border-gray-300 focus:border-purple-500 focus:bg-white dark:focus:bg-gray-800 rounded px-1 py-0.5 outline-none transition-colors w-48 text-gray-900 dark:text-white" value={l.grpName} onChange={e => setLines(prev => prev.map(x => x.id === l.id ? { ...x, grpName: e.target.value } : x))} />
                             <span className="text-xs text-gray-500 dark:text-gray-400">{s.n} item{s.n !== 1 ? 's' : ''}</span>
                           </div>
-                        </td>
-                        <td colSpan={5}></td>
-                        <td className="px-3 py-2 text-right font-bold text-indigo-600 dark:text-indigo-400 text-sm">{fmt(s.ts)}</td>
-                        <td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></td>
+                        </Td>
+                        <Td colSpan={5}></Td>
+                        <Td className="px-3 py-2 text-right font-bold text-indigo-600 dark:text-indigo-400 text-sm">{fmt(s.ts)}</Td>
+                        <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
                       </tr>
                     );
                   } else {
@@ -797,21 +804,21 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                     const totalPrice = orderQty * l.sell;
                     const atFloor = orderQty <= lineMoq;
                     return (
-                      <tr key={l.id} draggable className={`border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${l.sel ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`} onDragStart={e => startDrag(e, 'row', l.id)} onDragOver={e => onDragOverRow(e, idx)} onDrop={e => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
-                        <td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></td>
-                        <td className="px-1 py-2 cursor-grab text-gray-300 hover:text-gray-500 dark:hover:text-gray-400 text-center">&#9776;</td>
-                        <td className="px-3 py-2">
+                      <tr key={l.id} draggable className={`border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${l.sel ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
+                        <Td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Td>
+                        <Td className="px-1 py-2 cursor-grab text-gray-300 hover:text-gray-500 dark:hover:text-gray-400 text-center">&#9776;</Td>
+                        <Td className="px-3 py-2">
                           <div className="flex items-center" style={{ paddingLeft: `${indent}px` }}>
                             {hasKids ? <button className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-transform" onClick={() => toggleExp(l.id)} style={{ transform: l.exp ? 'rotate(0)' : 'rotate(-90deg)' }}>&#9660;</button> : <span className="w-5 inline-block"></span>}
-                            <span className={`ml-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${lvCls}`}>{l.lv}</span>
+                            <span className={`ml-1 px-1.5 py-0.5 rounded text-xs font-bold ${lvCls}`}>{l.lv}</span>
                           </div>
-                        </td>
-                        <td className="px-3 py-2 text-sm text-gray-500">{l.seq}</td>
-                        <td className="px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:underline cursor-pointer truncate max-w-[200px]" title={`${l.sku} - ${l.name}`}>{l.name}</td>
-                        <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate max-w-[150px]" title={l.desc}>{l.desc}</td>
-                        <td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px]">{l.brand || '-'}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-right">{fmt(l.sell)}</td>
-                        <td className="px-3 py-2 text-center">
+                        </Td>
+                        <Td className="px-3 py-2 text-sm text-gray-500">{l.seq}</Td>
+                        <Td className="px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:underline cursor-pointer truncate max-w-[200px]" title={`${l.sku} - ${l.name}`}>{l.name}</Td>
+                        <Td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate max-w-[150px]" title={l.desc}>{l.desc}</Td>
+                        <Td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px]">{l.brand || '-'}</Td>
+                        <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-right">{fmt(l.sell)}</Td>
+                        <Td className="px-3 py-2 text-center">
                           <div className="flex flex-col items-center gap-1">
                             <div className="flex items-center justify-center gap-1">
                               <button
@@ -842,30 +849,24 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                             </div>
                             <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {lineMoq} / Avail: {l.avail ?? 0}</div>
                           </div>
-                        </td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">{lineMoq}</td>
-                        <td className="px-3 py-2 text-sm font-semibold text-green-600 dark:text-green-400 text-right">{fmt(totalPrice)}</td>
-                        <td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></td>
+                        </Td>
+                        <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">{lineMoq}</Td>
+                        <Td className="px-3 py-2 text-sm font-semibold text-green-600 dark:text-green-400 text-right">{fmt(totalPrice)}</Td>
+                        <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
                       </tr>
                     );
                   }
                 })}
-              </tbody>
+              </TBody>
               <tfoot className="bg-gray-50 dark:bg-gray-800/80 border-t-2 border-gray-200 dark:border-gray-700">
                 <tr>
-                  <td colSpan={8}></td>
-                  <td colSpan={3} className="px-3 py-3 text-right text-sm font-bold text-gray-700 dark:text-gray-300  tracking-wider">Order Total</td>
-                  <td className="px-3 py-3 text-right text-lg font-bold text-green-600 dark:text-green-400">{fmt(totalSell)}</td>
-                  <td></td>
+                  <Td colSpan={8}></Td>
+                  <Td colSpan={3} className="px-3 py-3 text-right text-sm font-bold text-gray-700 dark:text-gray-300  tracking-wider">Order Total</Td>
+                  <Td className="px-3 py-3 text-right text-lg font-bold text-green-600 dark:text-green-400">{fmt(totalSell)}</Td>
+                  <Td></Td>
                 </tr>
               </tfoot>
-            </table>
-            {!lines.length && (
-              <div className="flex flex-col items-center justify-center h-64 text-gray-500 dark:text-gray-400">
-                <div className="text-4xl mb-3 opacity-50">&#128193;</div>
-                <div className="text-lg font-medium mb-1">No lines in configuration</div>
-                <div className="text-sm">Search to add products or drag them from the catalog.</div>
-              </div>
+            </Table>
             )}
           </div>
         </div>
@@ -876,7 +877,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-sm text-gray-900 dark:text-white">Product Catalog</span>
-                <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-[10px] px-1.5 py-0.5 rounded-full font-bold">{filteredCatalog.length}/{catalog.length}</span>
+                <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-1.5 py-0.5 rounded-full font-bold">{filteredCatalog.length}/{catalog.length}</span>
               </div>
               <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors" onClick={() => setPanelOpen(false)}>&#10005;</button>
             </div>
@@ -907,7 +908,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                       <div className="flex items-center gap-1 mb-1">
                         <span className="text-xs text-gray-700 dark:text-gray-300 truncate" title={p.name}>{p.name}</span>
                       </div>
-                      <div className="flex items-center justify-between text-[11px]">
+                      <div className="flex items-center justify-between text-xs">
                         <span className="font-semibold text-gray-600 dark:text-gray-400 truncate max-w-[80px]">{trn(p.brand, 16)}</span>
                         <span className="text-gray-500">Sell <span className="font-bold text-gray-900 dark:text-white">{fmt(p.sell)}</span></span>
                         <span className={`px-1.5 py-0.5 rounded font-medium ${av.cls}`}>{av.text}</span>

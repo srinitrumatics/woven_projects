@@ -1,0 +1,42 @@
+# Phase 0 Research: Consistent Tab, Table & Typography Styling
+
+No `[NEEDS CLARIFICATION]` markers remain in the spec or Technical Context, so this phase documents the design decisions needed to move from "9 divergent implementations" to "1 shared implementation," rather than resolving unknowns.
+
+## Decision 1: Shared `Tabs` component shape
+
+- **Decision**: Introduce a single `components/ui/Tabs.tsx` exporting a controlled `Tabs` component that accepts `tabs: { key: string; label: string; count?: number }[]`, `activeKey`, and `onChange`, and internally renders the pill-button style (the pattern already used by 8 of the 9 existing tab bars). It owns: container spacing, wrap/scroll behavior for overflow, pill padding, active/inactive/hover states, and font size/weight for tab labels.
+- **Rationale**: A controlled component (parent owns active-tab state) matches how all 9 existing tab bars already work (each page tracks `activeTab` in local state and passes a change handler) — so migration is a drop-in replacement of markup, not a state-management rewrite. Standardizing on the pill-button pattern (rather than `ProductTabs`' underline style) matches the spec's Assumptions and requires converting only one outlier instead of eight.
+- **Alternatives considered**:
+  - *Uncontrolled tabs owning their own state internally* — rejected because several host pages need to react to tab changes (e.g., lazy-loading tab content), so control must stay with the parent.
+  - *Two shared variants (pill + underline)* — rejected; the spec explicitly asks for tabs to be "the same across all pages," and keeping two patterns would preserve the exact inconsistency being fixed.
+
+## Decision 2: Shared table styling via primitives, not a monolithic `<DataTable data={...} columns={...} />`
+
+- **Decision**: Provide a set of thin wrapper primitives (`Table`, `THead`, `TBody`, `Tr`, `Th`, `Td`) in `components/ui/DataTable.tsx` that apply the unified header/cell/border/hover styling via `className`, rather than one generic data-driven table component that owns column definitions and rendering.
+- **Rationale**: Every existing table already has bespoke column sets, custom cell renderers (badges, links, currency formatting), and integrates `SortableHeader`/`useSortableData`/`useResizableColumns` per the Constitution's UI Component Conventions. A fully generic `columns`-driven table would require re-implementing all of that custom rendering logic per page anyway, which is a much larger, riskier change than the spec calls for ("visual styling only," FR-008). Thin wrapper primitives let each page keep its exact markup/structure and columns while guaranteeing identical CSS classes for headers, cells, borders, and hover states.
+- **Alternatives considered**:
+  - *Single generic `<DataTable columns={} rows={} />` component* — rejected as out of scope; it would touch business logic/rendering, not just styling, and risks regressions in sort/resize/link-guarding behavior that recent specs (`045-fix-broken-datatable-links`, `047-add-datatable-pagination`) already stabilized.
+  - *CSS-only fix (shared class names, no component)* — rejected because plain shared class-name constants (no component wrapper) are easy to drift from again the next time a page is edited; a component wrapper makes the unified styling the path of least resistance for future pages (spec SC-005).
+
+## Decision 3: Typography — semantic Tailwind tokens + fixing the `fontFamily` config bug
+
+- **Decision**: Move `fontFamily` in `tailwind.config.ts` from its current (incorrect) location nested under `theme.extend.colors` to the correct `theme.extend.fontFamily` location, so the intended `sans`/`mono` stack actually applies app-wide via the default `font-sans` utility already present in the app's root layout. Additionally, define a small set of semantic text-style class groupings (e.g., `text-body`, `text-muted`, `text-table-header`, `text-heading` — implemented as either Tailwind utility combinations documented in one place, or a tiny `lib/text-styles.ts` constants module) mapping to fixed size/color/weight per role, for both light and dark mode.
+- **Scope clarification (text vs. badge/chart color)**: `textStyles` roles cover plain text only (heading/body/muted/table-header). They explicitly do NOT cover: (a) status/pill badge colors (e.g., the ad-hoc `pillClass`/`badgeStyle` hex pairs in `app/home/page.tsx`'s "Needs Attention" cards), which should instead be converted to the existing `components/ui/StatusBadge.tsx` pattern or matching Tailwind color-token classes consistent with that file's own `bgColor`/`textColor` convention used elsewhere on the same page; or (b) Chart.js canvas configuration colors (`backgroundColor`, `ticks.color` in chart options), which are a charting-library requirement for raw color values and are out of scope for this feature entirely — they are not CSS/DOM text and have no Tailwind equivalent.
+- **Rationale**: The `fontFamily` misplacement is a straightforward, low-risk config fix that immediately unifies font-family app-wide with no page-level changes required. Semantic roles (rather than one flat font-size for all text) preserve necessary visual hierarchy (headings vs. body vs. captions) per the spec's Assumptions, while still guaranteeing that any two pages using the same role look identical.
+- **Alternatives considered**:
+  - *One single literal font-size/color for literally all text* — rejected per spec Assumptions; would flatten heading/body/caption hierarchy the user did not ask to remove.
+  - *CSS custom properties (`:root` variables) instead of Tailwind tokens* — rejected; the project has no existing CSS-variable-driven type system (only `--background`/`--foreground` for theme colors), and introducing a second styling mechanism alongside Tailwind utility classes would add complexity inconsistent with Principle V (Simplicity).
+
+## Decision 4: Migration approach — incremental page-by-page replacement, not a big-bang rewrite
+
+- **Decision**: Each of the 9 tab-bar files and each identified table file is edited in place to import and render the new shared primitives, removing its bespoke className strings. No new routes, no file deletions of page-owned files (labels/columns/data logic stay put).
+- **Rationale**: Matches Constitution Principle V (no half-finished implementations, no speculative scope) and keeps each migrated page independently testable/demonstrable, mirroring the spec's per-user-story independent-test structure.
+- **Alternatives considered**: *Codemod/automated find-replace across all files at once* — rejected; the differing bespoke markup (e.g., `ProposalTabs`' `truncate truncate` typo, `ProductTabs`' entirely different DOM structure) means a blind codemod would not safely converge on the shared component's API; manual per-file migration (still fast given the small, well-understood set of files) is safer.
+
+## Decision 5: Unify table empty/loading state via a shared primitive (FR-011)
+
+- **Decision**: Add `TableEmptyState`/`TableLoadingState` to `components/ui/DataTable.tsx`, each rendering a single `Tr`/`Td` pair sized via a caller-supplied `colSpan`, with a default message and unified spacing/typography/spinner styling (light + dark). Host tables render one of these inside `TBody` instead of their own bespoke "No records found" text or loading spinner.
+- **Rationale**: A repo scan confirmed real, differing empty/loading markup across tables today (e.g., `POLinesTable.tsx`, `QuoteLinesTab.tsx`, `InvoiceLineItems.tsx` each render their own wording/classes/spinner). The spec's Data Table entity and Edge Cases already call out empty/loading state as in-scope, so this closes that gap with the same thin-primitive approach as Decision 2 (host tables keep owning column count via `colSpan`, not a data-driven generic table).
+- **Alternatives considered**:
+  - *Leave empty/loading state unstandardized, scoped only to header/cell/border styling* — rejected; this would leave a confirmed, visible inconsistency unaddressed despite the spec explicitly listing it as a Data Table attribute and Edge Case.
+  - *A single component handling both empty and loading via a `loading?: boolean` prop* — considered acceptable as an implementation detail; two separate exports (`TableEmptyState`/`TableLoadingState`) were chosen for clarity at call sites, but a merged component satisfies the same contract if simpler in practice.

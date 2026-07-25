@@ -12,6 +12,7 @@ import QuoteLinePurchasesTab from "./components/QuoteLinePurchasesTab";
 import QuoteLineReturnsTab from "./components/QuoteLineReturnsTab";
 import QuoteLineFilesTab from "./components/QuoteLineFilesTab";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 
 // Interface for quote line item from Salesforce
 interface QuoteLineItem {
@@ -531,34 +532,34 @@ export default function QuoteLineDetailPage({
             <div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden p-4">
                     <div className="overflow-x-auto">
-                        <table className="w-full text-sm text-left">
-                            <thead className="bg-primary-light dark:bg-gray-900">
+                        <Table className="text-sm text-left">
+                            <THead>
                                 <tr>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white">Unit Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white">Order Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white">MOQ</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white">Total Order Qty</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white">Total Price</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white">Shipping</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white">Taxes</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white">Grand Total</th>
-                                    <th className="px-3 py-2 font-bold text-gray-900 dark:text-white">Qty Shipped</th>
+                                    <Th className="py-2 font-bold">Unit Price</Th>
+                                    <Th className="py-2 font-bold">Order Qty</Th>
+                                    <Th className="py-2 font-bold">MOQ</Th>
+                                    <Th className="py-2 font-bold">Total Order Qty</Th>
+                                    <Th className="py-2 font-bold">Total Price</Th>
+                                    <Th className="py-2 font-bold">Shipping</Th>
+                                    <Th className="py-2 font-bold">Taxes</Th>
+                                    <Th className="py-2 font-bold">Grand Total</Th>
+                                    <Th className="py-2 font-bold">Qty Shipped</Th>
                                 </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                                <tr>
-                                    <td className="px-3 py-2 text-gray-600 dark:text-gray-300 font-medium truncate">{formatCurrency(product.unitPrice)}</td>
-                                    <td className="px-3 py-2 text-gray-600 dark:text-gray-300 truncate">{product.orderQty}</td>
-                                    <td className="px-3 py-2 text-gray-600 dark:text-gray-300 truncate">{product.moq}</td>
-                                    <td className="px-3 py-2 text-gray-600 dark:text-gray-300 truncate">{product.totalOrderQty}</td>
-                                    <td className="px-3 py-2 text-gray-600 dark:text-gray-300 truncate">{formatCurrency(product.totalPrice)}</td>
-                                    <td className="px-3 py-2 text-gray-600 dark:text-gray-300 truncate">{formatCurrency(product.shipping)}</td>
-                                    <td className="px-3 py-2 text-gray-600 dark:text-gray-300 truncate">{formatCurrency(product.taxes)}</td>
-                                    <td className="px-3 py-2 font-bold text-primary truncate">{formatCurrency(product.grandTotal)}</td>
-                                    <td className="px-3 py-2 text-gray-600 dark:text-gray-300 truncate">{product.qtyShipped}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            </THead>
+                            <TBody className="divide-y divide-gray-100 dark:divide-gray-700">
+                                <Tr>
+                                    <Td className="text-gray-600 dark:text-gray-300 font-medium truncate">{formatCurrency(product.unitPrice)}</Td>
+                                    <Td className="text-gray-600 dark:text-gray-300 truncate">{product.orderQty}</Td>
+                                    <Td className="text-gray-600 dark:text-gray-300 truncate">{product.moq}</Td>
+                                    <Td className="text-gray-600 dark:text-gray-300 truncate">{product.totalOrderQty}</Td>
+                                    <Td className="text-gray-600 dark:text-gray-300 truncate">{formatCurrency(product.totalPrice)}</Td>
+                                    <Td className="text-gray-600 dark:text-gray-300 truncate">{formatCurrency(product.shipping)}</Td>
+                                    <Td className="text-gray-600 dark:text-gray-300 truncate">{formatCurrency(product.taxes)}</Td>
+                                    <Td className="font-bold text-primary truncate">{formatCurrency(product.grandTotal)}</Td>
+                                    <Td className="text-gray-600 dark:text-gray-300 truncate">{product.qtyShipped}</Td>
+                                </Tr>
+                            </TBody>
+                        </Table>
                     </div>
                 </div>
             </div>

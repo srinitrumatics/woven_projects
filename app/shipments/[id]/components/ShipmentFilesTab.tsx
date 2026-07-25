@@ -4,6 +4,7 @@ import { useSortableData } from "../../../../hooks/useSortableData";
 import { formatFileSize, displayCell } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
 import Pagination from "../../../../components/ui/Pagination";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -309,56 +310,54 @@ export default function ShipmentFilesTab({ shipmentId, accountId, contactId, isE
             </div>
 
             {loading ? (
-                <div className="flex justify-center items-center py-12 min-w-0">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                </div>
+                <TableLoadingState />
             ) : sortedFiles.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                    <p className="text-sm truncate" title="There are no Files associated with this shipment manifest">There are no Files associated with this shipment manifest</p>
-                </div>
+                <TableEmptyState
+                    message="No records found"
+                    description="There are no Files associated with this shipment manifest"
+                />
             ) : (
                 <div className="overflow-auto">
-                    <table className="w-full">
-                        <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
+                    <Table>
+                        <THead className="sticky top-0 z-10">
                             <tr>
                                 {isEditing && (
-                                    <th className="px-2 py-3 text-left w-10 ">
+                                    <Th className="px-2 w-10">
                                         <input
                                             type="checkbox"
                                             onChange={handleSelectAll}
                                             checked={files.length > 0 && files.every(f => selectedFileIds.has(f.Id))}
                                             className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
                                         />
-                                    </th>
+                                    </Th>
                                 )}
                                 <SortableHeader label="File Name" field="Title" sortConfig={sortConfig} requestSort={requestSort} />
                                 <SortableHeader label="Type" field="FileExtension" sortConfig={sortConfig} requestSort={requestSort} />
                                 <SortableHeader label="Size" field="FileSize" sortConfig={sortConfig} requestSort={requestSort} />
                                 <SortableHeader label="Uploaded By" field="CreatedBy" sortConfig={sortConfig} requestSort={requestSort} />
                                 <SortableHeader label="Date" field="CreatedDate" sortConfig={sortConfig} requestSort={requestSort} />
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white ">Actions</th>
+                                <Th className="px-2">Actions</Th>
                             </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        </THead>
+                        <TBody>
                             {paginatedFiles.map(file => (
-                                <tr key={file.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <Tr key={file.Id}>
                                     {isEditing && (
-                                        <td className="px-2 py-3 truncate">
+                                        <Td className="px-2 py-3 truncate">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedFileIds.has(file.Id)}
                                                 onChange={() => handleSelectFile(file.Id)}
                                                 className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
                                             />
-                                        </td>
+                                        </Td>
                                     )}
-                                    <td className="px-2 py-3 text-sm font-medium text-gray-900 dark:text-white truncate" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white truncate">{displayCell(file.Title)}</div></td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{displayCell(file.FileExtension)}</td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{formatFileSize(file.FileSize)}</td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{displayCell(file.CreatedBy)}</td>
-                                    <td className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 truncate">{displayCell(file.CreatedDate)}</td>
-                                    <td className="px-2 py-3 truncate">
+                                    <Td className="px-2 py-3 font-medium truncate" title={file.Title}><div className="text-sm font-medium text-gray-900 dark:text-white truncate">{displayCell(file.Title)}</div></Td>
+                                    <Td className="px-2 py-3 text-gray-500 dark:text-gray-400 truncate">{displayCell(file.FileExtension)}</Td>
+                                    <Td className="px-2 py-3 text-gray-500 dark:text-gray-400 truncate">{formatFileSize(file.FileSize)}</Td>
+                                    <Td className="px-2 py-3 text-gray-500 dark:text-gray-400 truncate">{displayCell(file.CreatedBy)}</Td>
+                                    <Td className="px-2 py-3 text-gray-500 dark:text-gray-400 truncate">{displayCell(file.CreatedDate)}</Td>
+                                    <Td className="px-2 py-3 truncate">
                                         <div>
                                             <button
                                                 onClick={() => handlePreview(file)}
@@ -402,11 +401,11 @@ export default function ShipmentFilesTab({ shipmentId, accountId, contactId, isE
                                                 </button>
                                             )}
                                         </div>
-                                    </td>
-                                </tr>
+                                    </Td>
+                                </Tr>
                             ))}
-                        </tbody>
-                    </table>
+                        </TBody>
+                    </Table>
                 </div>
             )}
 

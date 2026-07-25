@@ -9,6 +9,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 
 const ITEMS_PER_PAGE = 10;
@@ -159,7 +160,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 min-w-0">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white " title={productName}>{productName}</h1>
-                        <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Detailed inventory positions and tracking history">Detailed inventory positions and tracking history</p>
+                        <p className="text-gray-600 dark:text-gray-400 text-base mt-1 truncate" title="Detailed inventory positions and tracking history">Detailed inventory positions and tracking history</p>
                     </div>
                     <Link
                         href={`/inventory`}
@@ -203,8 +204,11 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                 </div>
 
                 <div className="overflow-x-auto">
-                    <table className="w-full border-collapse text-sm">
-                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200">
+                    {paginatedPositions.length === 0 ? (
+                        <TableEmptyState message="No positions found." />
+                    ) : (
+                    <Table className="border-collapse text-sm">
+                        <THead>
                             <tr>
                                 <SortableHeader label="Inventory Position ID" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                 <SortableHeader label="Received Date" field="Received_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={widths.receivedDate} onResize={handleResize} />
@@ -226,39 +230,35 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                                 <SortableHeader label="Site" field="Site_Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.site} onResize={handleResize} />
 
                             </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                            {paginatedPositions.length === 0 ? (
-                                <tr><td colSpan={18} className="px-6 py-12  text-gray-500 truncate">No positions found.</td></tr>
-                            ) : (
-                                paginatedPositions.map((item, idx) => (
-                                    <tr key={item.Id || idx} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                        <td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">{displayCell(item.Name)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{item.Received_Date__c ? formatDate(item.Received_Date__c, "numeric-dash") : 'N/A'}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Days_in_Inventory__c, 2)}</td>
-
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400  truncate">{displayCell(item.Purchase_Order_Name || item.RMA_Name)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Supplier_Name__c)}</td>
-                                        <td className="px-3 py-2 text-sm  truncate">{formatNumber(item.Qty_On_Hand__c)}</td>
-                                        <td className={`px-3 py-2 text-sm font-semibold ${item.Qty_Available__c < 1 ? 'text-red-600' : 'text-green-600'}`}>
+                        </THead>
+                        <TBody>
+                                {paginatedPositions.map((item, idx) => (
+                                    <Tr key={item.Id || idx}>
+                                        <Td className="font-semibold sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">{displayCell(item.Name)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{item.Received_Date__c ? formatDate(item.Received_Date__c, "numeric-dash") : 'N/A'}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Days_in_Inventory__c, 2)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Purchase_Order_Name || item.RMA_Name)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Supplier_Name__c)}</Td>
+                                        <Td className="truncate">{formatNumber(item.Qty_On_Hand__c)}</Td>
+                                        <Td className={`font-semibold ${item.Qty_Available__c < 1 ? 'text-red-600' : 'text-green-600'}`}>
                                             {formatNumber(item.Qty_Available__c)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm  text-gray-600 dark:text-gray-400 truncate">{item.On_Hold__c ? 'Yes' : '-'}</td>
-                                        <td className="px-3 py-2 text-sm  text-gray-600 dark:text-gray-400  truncate">{formatCurrency(item.Unit_Price__c)}</td>
-                                        <td className="px-3 py-2 text-sm  text-gray-600 dark:text-gray-400 truncate">{formatCurrency(item.Total_Price__c)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Total_Unit_CV_Inches__c)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Total_Unit_CV_SQFT__c)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Sales_Order_Name)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Shipping_Manifest_Name)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Condition__c)}</td>
-                                        <td className="px-3 py-2 text-sm  truncate">{item.Invoiced__c ? 'Yes' : 'No'}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Location)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Site_Name)}</td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                                        </Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{item.On_Hold__c ? 'Yes' : '-'}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatCurrency(item.Unit_Price__c)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatCurrency(item.Total_Price__c)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Total_Unit_CV_Inches__c)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(item.Total_Unit_CV_SQFT__c)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Sales_Order_Name)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Shipping_Manifest_Name)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Condition__c)}</Td>
+                                        <Td className="truncate">{item.Invoiced__c ? 'Yes' : 'No'}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Location)}</Td>
+                                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(item.Site_Name)}</Td>
+                                    </Tr>
+                                ))}
+                        </TBody>
+                    </Table>
+                    )}
                 </div>
 
 

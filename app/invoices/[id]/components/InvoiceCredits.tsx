@@ -6,6 +6,7 @@ import { useSortableData } from "../../../../hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -47,18 +48,15 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
 
     if (credits.length === 0) {
         return (
-            <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No record found">No record found</p>
-                <p className="text-sm truncate" title="There are no credit memos associated with this invoice.">There are no credit memos associated with this invoice.</p>
-            </div>
+            <TableEmptyState message="No record found" description="There are no credit memos associated with this invoice." />
         );
     }
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                <Table className="table-fixed">
+                    <THead>
                         <tr>
                             <SortableHeader label="Credit Memo #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
@@ -79,25 +77,25 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                             <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={handleResize} />
                         </tr>
                         <tr aria-hidden="true" className="h-0 border-none"></tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedCredits.map((cm) => (
-                            <tr key={cm.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm font-medium sticky left-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-white truncate">
+                            <Tr key={cm.id} className="transition-colors">
+                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate">
                                     {displayCell(cm.name)}
-                                </td>
-                                <td className="px-3 py-2 truncate">
+                                </Td>
+                                <Td className="truncate">
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${cm.status === 'Posted' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
                                         {cm.status}
                                     </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     {displayCell(cm.invoiceName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     {displayCell(cm.salesOrderName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
+                                </Td>
+                                <Td className="text-gray-900 dark:text-gray-400 truncate">
                                     {cm.customerQuoteId && cm.customerQuoteId !== 'N/A' && cm.customerQuoteId !== '' ? (
                                         <Link href={`/quotes/${cm.customerQuoteId}`} target='_blank' className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                             {cm.customerQuoteName && cm.customerQuoteName !== 'N/A' ? cm.customerQuoteName : cm.customerQuoteId}
@@ -105,8 +103,8 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                     ) : (
                                         displayCell(cm.customerQuoteName)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
+                                </Td>
+                                <Td className="text-gray-900 dark:text-gray-400 truncate">
                                     {cm.proposalId ? (
                                         <Link href={`/proposals/${cm.proposalId}`} target='_blank' className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                             {displayCell(cm.proposalName)}
@@ -114,11 +112,11 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                     ) : (
                                         displayCell(cm.proposalName)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     {displayCell(cm.proposalName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
+                                </Td>
+                                <Td className="text-gray-900 dark:text-gray-400 truncate">
                                     {cm.customerOrderId && cm.customerOrderId !== 'N/A' && cm.customerOrderId !== '' ? (
                                         <Link href={`/orders/${cm.customerOrderId}`} target='_blank' className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                             {cm.customerOrderName && cm.customerOrderName !== 'N/A' ? cm.customerOrderName : cm.customerOrderId}
@@ -126,38 +124,38 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                     ) : (
                                         displayCell(cm.customerOrderName)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-center truncate">
+                                </Td>
+                                <Td className="text-center truncate">
                                     {formatNumber(cm.totalLines)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate">
+                                </Td>
+                                <Td className="font-semibold truncate">
                                     {formatCurrency(cm.totalPrice)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     {formatCurrency(cm.shipping)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     {formatCurrency(cm.taxes)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold text-primary min-w-[160px] truncate">
+                                </Td>
+                                <Td className="font-bold text-primary min-w-[160px] truncate">
                                     {formatCurrency(cm.totalCreditAmount)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     {formatDate(cm.issuedDate, 'numeric-dash')}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     {formatDate(cm.expirationDate, 'numeric-dash')}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate">
+                                </Td>
+                                <Td className="font-semibold truncate">
                                     {formatCurrency(cm.availableCreditBalance)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     {formatDate(cm.settledDate, 'numeric-dash')}
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
             <div className="px-3 py-2">
                 <Pagination

@@ -17,7 +17,7 @@ export default function SignInPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#E5EDF1] text-[#2c3e50] light forced-light">
+    <div className="min-h-screen bg-primary-light text-gray-800 light forced-light">
       <Suspense fallback={<div className="flex bg-white h-screen items-center justify-center min-w-0">Loading...</div>}>
         <SignInForm />
       </Suspense>

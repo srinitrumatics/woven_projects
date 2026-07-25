@@ -1,4 +1,5 @@
 import { QuoteStatus } from "@/app/quotes/types";
+import Tabs from "@/components/ui/Tabs";
 
 export type QuoteTabType = "quotelines" | "taxes" | "fulfillment" | "purchases" | "returns" | "files";
 
@@ -32,22 +33,10 @@ export default function QuoteTabs({ activeTab, onTabChange, accountType, counts 
     }));
 
     return (
-        <div className="flex flex-nowrap gap-2 overflow-x-auto  w-full">
-            {tabs.map((tab) => (
-                <button
-                    key={tab.id}
-                    onClick={() => onTabChange(tab.id)}
-                    className={`px-4 py-2 rounded-lg transition-colors  flex-shrink-0 ${activeTab === tab.id
-                        ? "bg-primary text-white"
-                        : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                        }`}
-                >
-                    {tab.label}
-                    {tab.count !== undefined && tab.count > 0 && (
-                        "(" + tab.count + ")"
-                    )}
-                </button>
-            ))}
-        </div>
+        <Tabs
+            tabs={tabs.map((tab) => ({ key: tab.id, label: tab.label, count: tab.count }))}
+            activeKey={activeTab}
+            onChange={(key) => onTabChange(key as QuoteTabType)}
+        />
     );
 }

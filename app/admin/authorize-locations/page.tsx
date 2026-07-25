@@ -11,6 +11,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { AuthorizeLocation, LocationStatus } from "./types";
 import LocationModal from "./components/LocationModal";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 type TabFilter = "Active" | "Inactive" | "Pending" | "All";
 
@@ -246,7 +247,7 @@ export default function AuthorizeLocationsPage() {
         <>
             <div className="mb-6">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Authorized Locations</h1>
-                <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Authorized Locations">Manage and Track Authorized Locations</p>
+                <p className="text-gray-600 dark:text-gray-400 text-base mt-1 truncate" title="Manage and Track Authorized Locations">Manage and Track Authorized Locations</p>
             </div>
 
             {/* Table Section */}
@@ -395,9 +396,11 @@ export default function AuthorizeLocationsPage() {
                                 ))
                             )}
                         </div>
+                    ) : paginatedLocations.length === 0 ? (
+                        <TableEmptyState message="No locations found" />
                     ) : (
-                        <table className="w-full border-collapse table-fixed" style={{ minWidth: Object.values(widths).reduce((a, b) => a + b, 0) }}>
-                            <thead className="bg-primary-light dark:bg-gray-900">
+                        <Table className="border-collapse table-fixed" style={{ minWidth: Object.values(widths).reduce((a, b) => a + b, 0) }}>
+                            <THead>
                                 <tr>
                                     <SortableHeader label="Authorized Location" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                     <SortableHeader label="Account Name" field="accountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
@@ -413,45 +416,33 @@ export default function AuthorizeLocationsPage() {
                                     <SortableHeader label="Inside Delivery" field="insideDelivery" sortConfig={sortConfig} requestSort={requestSort} width={widths.insideDelivery} onResize={handleResize} />
                                     <SortableHeader label="Delivery Notes" field="deliveryNotes" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveryNotes} onResize={handleResize} />
                                     <SortableHeader label="Active" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                                    <Th style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                         Action
-                                    </th>
+                                    </Th>
                                 </tr>
-                            </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                {paginatedLocations.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={7} className="px-6 py-12 text-center truncate">
-                                            <div className="flex flex-col items-center justify-center min-w-0">
-                                                <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                </svg>
-                                                <p className="text-gray-500 dark:text-gray-400 text-lg mb-2 truncate" title="No locations found">No locations found</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    paginatedLocations.map((loc) => (
-                                        <tr key={loc.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                            <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={loc.name} style={{ width: widths.name, minWidth: widths.name, maxWidth: widths.name }}>
+                            </THead>
+                            <TBody>
+                                {paginatedLocations.map((loc) => (
+                                        <Tr key={loc.id}>
+                                            <Td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={loc.name} style={{ width: widths.name, minWidth: widths.name, maxWidth: widths.name }}>
                                                 {loc.name}
-                                            </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={loc.accountName} style={{ width: widths.accountName, minWidth: widths.accountName, maxWidth: widths.accountName }}>{loc.accountName}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.addressType, minWidth: widths.addressType, maxWidth: widths.addressType }}>{loc.addressType}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate" style={{ width: widths.locationId, minWidth: widths.locationId, maxWidth: widths.locationId }}>{loc.locationId}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.locationType, minWidth: widths.locationType, maxWidth: widths.locationType }}>{loc.locationType}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={loc.street} style={{ width: widths.street, minWidth: widths.street, maxWidth: widths.street }}>{loc.street}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.city, minWidth: widths.city, maxWidth: widths.city }}>{loc.city}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.state, minWidth: widths.state, maxWidth: widths.state }}>{loc.state}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.zipCode, minWidth: widths.zipCode, maxWidth: widths.zipCode }}>{loc.zipCode}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.country, minWidth: widths.country, maxWidth: widths.country }}>{loc.country}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.liftGate, minWidth: widths.liftGate, maxWidth: widths.liftGate }}>{loc.liftGate ? 'Yes' : 'No'}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.insideDelivery, minWidth: widths.insideDelivery, maxWidth: widths.insideDelivery }}>{loc.insideDelivery ? 'Yes' : 'No'}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={loc.deliveryNotes} style={{ width: widths.deliveryNotes, minWidth: widths.deliveryNotes, maxWidth: widths.deliveryNotes }}>{loc.deliveryNotes}</td>
-                                            <td className="px-3 py-2 truncate" style={{ width: widths.status, minWidth: widths.status, maxWidth: widths.status }}>
+                                            </Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={loc.accountName} style={{ width: widths.accountName, minWidth: widths.accountName, maxWidth: widths.accountName }}>{loc.accountName}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.addressType, minWidth: widths.addressType, maxWidth: widths.addressType }}>{loc.addressType}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate" style={{ width: widths.locationId, minWidth: widths.locationId, maxWidth: widths.locationId }}>{loc.locationId}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.locationType, minWidth: widths.locationType, maxWidth: widths.locationType }}>{loc.locationType}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={loc.street} style={{ width: widths.street, minWidth: widths.street, maxWidth: widths.street }}>{loc.street}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.city, minWidth: widths.city, maxWidth: widths.city }}>{loc.city}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.state, minWidth: widths.state, maxWidth: widths.state }}>{loc.state}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.zipCode, minWidth: widths.zipCode, maxWidth: widths.zipCode }}>{loc.zipCode}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.country, minWidth: widths.country, maxWidth: widths.country }}>{loc.country}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.liftGate, minWidth: widths.liftGate, maxWidth: widths.liftGate }}>{loc.liftGate ? 'Yes' : 'No'}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.insideDelivery, minWidth: widths.insideDelivery, maxWidth: widths.insideDelivery }}>{loc.insideDelivery ? 'Yes' : 'No'}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={loc.deliveryNotes} style={{ width: widths.deliveryNotes, minWidth: widths.deliveryNotes, maxWidth: widths.deliveryNotes }}>{loc.deliveryNotes}</Td>
+                                            <Td className="px-3 py-2 truncate" style={{ width: widths.status, minWidth: widths.status, maxWidth: widths.status }}>
                                                 <StatusBadge status={loc.status} />
-                                            </td>
-                                            <td className="px-3 py-2 truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                                            </Td>
+                                            <Td className="px-3 py-2 truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => openModal("view", loc)}
@@ -484,12 +475,11 @@ export default function AuthorizeLocationsPage() {
                                                         </svg>
                                                     </button>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
+                                            </Td>
+                                        </Tr>
+                                ))}
+                            </TBody>
+                        </Table>
                     )}
                 </div>
 

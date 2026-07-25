@@ -269,7 +269,7 @@ export default function ProfilePage() {
                                         <div>
                                             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Display Name</label>
                                             <p className="text-gray-900 dark:text-white font-medium px-4 py-2.5 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-transparent opacity-70">{details.Name}</p>
-                                            {isEditing && <p className="text-[10px] text-gray-400 mt-1 ml-1 italic">* Name cannot be modified</p>}
+                                            {isEditing && <p className="text-xs text-gray-400 mt-1 ml-1 italic">* Name cannot be modified</p>}
                                         </div>
 
                                         <div>
@@ -297,7 +297,7 @@ export default function ProfilePage() {
                                         <div>
                                             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
                                             <p className="text-gray-900 dark:text-white font-medium px-4 py-2.5 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-transparent opacity-70">{details.Email}</p>
-                                            <p className="text-[10px] text-gray-400 mt-1 ml-1 italic">* Email cannot be modified</p>
+                                            <p className="text-xs text-gray-400 mt-1 ml-1 italic">* Email cannot be modified</p>
                                         </div>
 
                                         <div>

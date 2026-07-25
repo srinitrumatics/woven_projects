@@ -24,6 +24,7 @@ import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
 import AddProductModal from "./components/AddProductModal";
 import { getCategoryFromAccountType, MANUFACTURER_GROUP } from "@/lib/permissions";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || "",
@@ -69,7 +70,7 @@ function CategoryHeader({ attribute, title }: { attribute: string, title: string
         )}
       </div>
       {selectedCount > 0 && (
-        <span className="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
+        <span className="bg-primary text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
           {selectedCount}
         </span>
       )}
@@ -639,23 +640,23 @@ function ListView({ products, canEditProduct, onEdit }: ViewProps) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px]">
-          <thead className="bg-primary-light dark:bg-gray-900">
+        {paginatedProducts.length === 0 ? (
+          <TableEmptyState message="No products found." />
+        ) : (
+        <Table className="min-w-[640px]">
+          <THead>
             <tr>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: 80, minWidth: 80 }}>&nbsp;</th>
+              <Th style={{ width: 80, minWidth: 80 }}>&nbsp;</Th>
               <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
               <SortableHeader label="Category" field="category" sortConfig={sortConfig} requestSort={requestSort} width={widths.category} onResize={handleResize} />
               <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} className="hidden md:table-cell" />
               <SortableHeader label="List Price" field="listPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={handleResize} className="hidden sm:table-cell" />
               <SortableHeader label="Selling Price" field="price" sortConfig={sortConfig} requestSort={requestSort} width={widths.sellingPrice} onResize={handleResize} />
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Action</th>
+              <Th>Action</Th>
             </tr>
-          </thead>
-          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            {paginatedProducts.length === 0 ? (
-              <tr key="no-matches"><td colSpan={7} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">No products found.</td></tr>
-            ) : (
-              paginatedProducts.map((product) => {
+          </THead>
+          <TBody>
+            {paginatedProducts.map((product) => {
                 const p = product as any;
                 const thumbnail = p.images?.[0]?.thumb || p.image_url;
                 const sellingPrice = typeof p.price === 'number' ? p.price : (product.unitPrice || 0);
@@ -663,8 +664,8 @@ function ListView({ products, canEditProduct, onEdit }: ViewProps) {
                 const category = p.category || p.family || product.productFamily || product.manufacturer || "No Category";
 
                 return (
-                  <tr key={p.objectID || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group">
-                    <td className="px-4 py-3" style={{ width: 80, minWidth: 80 }}>
+                  <Tr key={p.objectID || product.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group">
+                    <Td className="px-4 py-3" style={{ width: 80, minWidth: 80 }}>
                       <Link href={`/products/${p.objectID || product.id}`} className="block">
                         <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden">
                           {thumbnail ? (
@@ -674,22 +675,22 @@ function ListView({ products, canEditProduct, onEdit }: ViewProps) {
                           )}
                         </div>
                       </Link>
-                    </td>
-                    <td className="px-4 py-3 overflow-hidden" style={{ width: widths.name, minWidth: widths.name, maxWidth: widths.name }}>
+                    </Td>
+                    <Td className="px-4 py-3 overflow-hidden" style={{ width: widths.name, minWidth: widths.name, maxWidth: widths.name }}>
                       <Link href={`/products/${p.objectID || product.id}`} className="block" title={product.name}>
                         <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">{product.name}</div>
                         <div className="text-sm text-gray-500 dark:text-gray-400 font-mono truncate">{displayCell(product.sku)}</div>
                       </Link>
-                    </td>
-                    <td className="px-4 py-3 overflow-hidden" style={{ width: widths.category, minWidth: widths.category, maxWidth: widths.category }}>
+                    </Td>
+                    <Td className="px-4 py-3 overflow-hidden" style={{ width: widths.category, minWidth: widths.category, maxWidth: widths.category }}>
                       <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary max-w-full truncate" title={category}>{category}</span>
-                    </td>
-                    <td className="px-4 py-3 overflow-hidden hidden md:table-cell" style={{ width: widths.description, minWidth: widths.description, maxWidth: widths.description }}>
+                    </Td>
+                    <Td className="px-4 py-3 overflow-hidden hidden md:table-cell" style={{ width: widths.description, minWidth: widths.description, maxWidth: widths.description }}>
                       <div className="text-sm text-gray-600 dark:text-gray-400 truncate" title={displayCell(product.description)}>{displayCell(product.description)}</div>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-left text-gray-500 dark:text-gray-400 line-through hidden sm:table-cell" style={{ width: widths.listPrice, minWidth: widths.listPrice }}>{formatCurrency(listPrice)}</td>
-                    <td className="px-4 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold" style={{ width: widths.sellingPrice, minWidth: widths.sellingPrice }}>{formatCurrency(sellingPrice)}</td>
-                    <td className="px-4 py-3 text-left">
+                    </Td>
+                    <Td className="px-4 py-3 text-sm text-left text-gray-500 dark:text-gray-400 line-through hidden sm:table-cell" style={{ width: widths.listPrice, minWidth: widths.listPrice }}>{formatCurrency(listPrice)}</Td>
+                    <Td className="px-4 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold" style={{ width: widths.sellingPrice, minWidth: widths.sellingPrice }}>{formatCurrency(sellingPrice)}</Td>
+                    <Td className="px-4 py-3 text-left">
                       <div className="flex items-center gap-2">
                         <button
                           disabled={product.availableQty <= 0}
@@ -704,13 +705,13 @@ function ListView({ products, canEditProduct, onEdit }: ViewProps) {
                           </svg>
                         </button>
                       </div>
-                    </td>
-                  </tr>
+                    </Td>
+                  </Tr>
                 );
-              })
-            )}
-          </tbody>
-        </table>
+              })}
+          </TBody>
+        </Table>
+        )}
       </div>
       <Pagination
         currentPage={currentPage}

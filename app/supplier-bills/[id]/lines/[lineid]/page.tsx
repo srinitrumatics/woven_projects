@@ -9,6 +9,7 @@ import { SupplierBillLine } from "../../../types";
 import SBLFilesTab from "./components/SBLFilesTab";
 import SBLDebitMemoLinesTab from "./components/SBLDebitMemoLinesTab";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 
 export default function SupplierBillLineDetailPage({
     params,
@@ -348,26 +349,26 @@ export default function SupplierBillLineDetailPage({
 
                 {/* Row 2: Standard Styled Table Layout */}
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden p-4">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-primary-light dark:bg-gray-900">
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Unit Cost">Unit Cost</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Billed Qty">Billed Qty</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Product Amount">Product Amount</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Shipping">Shipping</th>
-                                <th className="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 " title="Total Bill Amount">Total Bill Amount</th>
+                    <Table className="text-left border-collapse">
+                        <THead>
+                            <tr>
+                                <Th>Unit Cost</Th>
+                                <Th>Billed Qty</Th>
+                                <Th>Product Amount</Th>
+                                <Th>Shipping</Th>
+                                <Th>Total Bill Amount</Th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="text-gray-900 dark:text-white">
-                                <td className="px-4 py-3 text-sm font-medium border-t border-gray-100 dark:border-gray-700 truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 truncate" title={String(line.billedQty)}>{line.billedQty}</td>
-                                <td className="px-4 py-3 text-sm font-bold text-gray-700 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 truncate" title={formatCurrency(line.billAmount)}>{formatCurrency(line.billAmount)}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 truncate" title={formatCurrency(line.shipping)}>{formatCurrency(line.shipping)}</td>
-                                <td className="px-4 py-3 text-sm font-bold text-primary border-t border-gray-100 dark:border-gray-700 truncate" title={formatCurrency(line.totalBillAmount)}>{formatCurrency(line.totalBillAmount)}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        </THead>
+                        <TBody>
+                            <Tr>
+                                <Td className="font-medium truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</Td>
+                                <Td className="font-medium truncate" title={String(line.billedQty)}>{line.billedQty}</Td>
+                                <Td className="font-bold truncate" title={formatCurrency(line.billAmount)}>{formatCurrency(line.billAmount)}</Td>
+                                <Td className="font-medium truncate" title={formatCurrency(line.shipping)}>{formatCurrency(line.shipping)}</Td>
+                                <Td className="font-bold text-primary truncate" title={formatCurrency(line.totalBillAmount)}>{formatCurrency(line.totalBillAmount)}</Td>
+                            </Tr>
+                        </TBody>
+                    </Table>
                 </div>
 
                 {/* Row 3: Related Items Tabs (Debit Memo Lines, Files) */}

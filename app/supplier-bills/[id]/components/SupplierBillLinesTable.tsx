@@ -12,6 +12,7 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 
 interface SupplierBillLinesTableProps {
@@ -56,20 +57,19 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
     const totalPages = Math.ceil(lines.length / ITEMS_PER_PAGE);
     if (lines.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no lines for this supplier bill.">There are no lines for this supplier bill.</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There are no lines for this supplier bill."
+            />
         );
     }
-    console.log("lines data", lines);
 
     return (
 
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0 table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0 table-fixed">
+                    <THead className="sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="Supplier Bill Line" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
@@ -85,22 +85,22 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                             <SortableHeader label="Total Bill Amount" field="totalBillAmount" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.totalBillAmount} onResize={handleResize} />
                             <SortableHeader label="Goods Receipt Date" field="goodsReceiptDate" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.goodsReceiptDate} onResize={handleResize} />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((line) => (
-                            <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate">
+                            <Tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate">
                                     <Link href={`/supplier-bills/${id}/lines/${line.id}`} target="_blank" className="hover:underline text-primary font-medium">
                                         {line.name}
                                     </Link>
-                                </td>
-                                <td className="px-3 py-2 text-sm truncate">
+                                </Td>
+                                <Td className="px-3 py-2 text-sm truncate">
                                     <StatusBadge status={line.status} />
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.customerQuoteLineName}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.customerQuoteLineName}>
                                     {displayCell(line.customerQuoteLineName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.proposedProduct}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={line.proposedProduct}>
                                     {line.proposedProductId ? (
                                         !isManufacturer ? (
                                             <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -110,20 +110,20 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                                             <span className="font-medium">{displayCell(line.proposedProduct)}</span>
                                         )
                                     ) : displayCell(line.proposedProduct)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(line.productName)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{displayCell(line.productDescription)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(line.brand)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.unitCost)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{line.billedQty}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.billAmount)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.shipping)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(line.totalBillAmount)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : '-'}</td>
-                            </tr>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(line.productName)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{displayCell(line.productDescription)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(line.brand)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.unitCost)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{line.billedQty}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.billAmount)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.shipping)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(line.totalBillAmount)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : '-'}</Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="border-t border-gray-100 dark:border-gray-700">

@@ -8,6 +8,7 @@ import Pagination from "@/components/ui/Pagination";
 import { ShippingManifest, ShipmentStatus } from "./types";
 import { formatDate, formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useUserSession } from "@/components/UserSessionContext";
@@ -218,7 +219,7 @@ export default function ShipmentsPage() {
     <Sidebar>
       <div className="mb-6 min-w-0">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Shipments</h1>
-        <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Track and manage your shipping manifests">Track and manage your shipping manifests</p>
+        <p className="text-gray-600 dark:text-gray-400 text-base mt-1 truncate" title="Track and manage your shipping manifests">Track and manage your shipping manifests</p>
       </div>
 
       {/* Stats Cards */}
@@ -470,16 +471,15 @@ export default function ShipmentsPage() {
         <div className="p-4">
           <div className="overflow-x-auto">
             {loading ? (
-              <div className="flex flex-col items-center justify-center py-20 text-gray-500 dark:text-gray-400 min-w-0">
-                <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                </svg>
-                <p className="text-sm font-medium truncate" title="Loading shipments...">Loading shipments...</p>
-              </div>
+              <TableLoadingState message="Loading shipments..." />
+            ) : paginatedShipments.length === 0 ? (
+              <TableEmptyState
+                message="No shipments found"
+                description={searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No shipping manifests available"}
+              />
             ) : (
-              <table className="w-full">
-                <thead className="bg-primary-light dark:bg-gray-900">
+              <Table>
+                <THead>
                   <tr>
                     <SortableHeader label="Shipping Manifest #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                     <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
@@ -508,141 +508,122 @@ export default function ShipmentsPage() {
                     <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} />
                     <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={handleResize} />
                     <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={handleResize} />
-                    <th
-                      className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 truncate"
+                    <Th
+                      className="border-b border-gray-200 dark:border-gray-700 truncate"
                       style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                     >
                       Action
-                    </th>
+                    </Th>
                   </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {paginatedShipments.length === 0 ? (
-                    <tr>
-                      <td colSpan={28} className="px-6 py-16 text-center truncate">
-                        <div className="flex flex-col items-center justify-center min-w-0">
-                          <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                </THead>
+                <TBody>
+                  {paginatedShipments.map((shipment) => (
+                    <Tr key={shipment.Id} className="transition-colors">
+                      <Td className="font-semibold text-primary sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">
+                        <Link
+                          href={`/shipments/${shipment.Id}`}
+                          className="text-primary font-semibold hover:underline"
+                          onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                        >
+                          {displayCell(shipment.name)}
+                        </Link>
+                      </Td>
+                      <Td className="truncate">
+                        <StatusBadge status={shipment.status} />
+                      </Td>
+                      <Td className="text-gray-900 dark:text-gray-300 truncate">
+                        {displayCell(shipment.salesOrder)}
+                      </Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">
+                        {shipment.customerQuoteId ? (
+                          !isManufacturer ? (
+                            <Link
+                              href={`/quotes/${shipment.customerQuoteId}`}
+                              target="_blank"
+                              className="text-primary hover:underline font-medium"
+                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                            >
+                              {shipment.customerQuote || "View Quote"}
+                            </Link>
+                          ) : (
+                            <span className="font-medium">{displayCell(shipment.customerQuote)}</span>
+                          )
+                        ) : (
+                          displayCell(shipment.customerQuote)
+                        )}
+                      </Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">
+                        {shipment.proposalId ? (
+                          !isManufacturer ? (
+                            <Link
+                              href={`/proposals/${shipment.proposalId}`}
+                              target="_blank"
+                              className="text-primary hover:underline font-medium"
+                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                            >
+                              {shipment.proposalNumber || "View Proposal"}
+                            </Link>
+                          ) : (
+                            <span className="font-medium">{displayCell(shipment.proposalNumber)}</span>
+                          )
+                        ) : (
+                          displayCell(shipment.proposalNumber)
+                        )}
+                      </Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.proposalName)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">
+                        {shipment.customerOrderId ? (
+                          !isManufacturer ? (
+                            <Link
+                              href={`/orders/${shipment.customerOrderId}`}
+                              target="_blank"
+                              className="text-primary hover:underline font-medium"
+                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                            >
+                              {shipment.customerOrder || "View Order"}
+                            </Link>
+                          ) : (
+                            <span className="font-medium">{displayCell(shipment.customerOrder)}</span>
+                          )
+                        ) : (
+                          displayCell(shipment.customerOrder)
+                        )}
+                      </Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.customerPO)}</Td>
+                      <Td className="text-gray-900 dark:text-gray-300 truncate">{displayCell(shipment.shipToAccount)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.shipToLocation)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.shipToContact)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{shipment.dropShip ? "Yes" : "No"}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 text-left truncate">{shipment.totalLines}</Td>
+                      <Td className="text-gray-900 dark:text-gray-300 font-semibold text-left truncate">{formatCurrency(shipment.totalPrice)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxCount, 0)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxLength)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxWidth)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxHeight)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxNetWeight)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxGrossWeight)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.logisticsPartner)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.shipDate, 'numeric-dash')}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.deliveredDate, 'numeric-dash')}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingNumber)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingStatus)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.estimatedDeliveryDate, 'numeric-dash')}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.actualDeliveryDate, 'numeric-dash')}</Td>
+                      <Td className="text-left truncate" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={() => router.push(`/shipments/${shipment.Id}`)}
+                          className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                          title="View shipment" >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                           </svg>
-                          <p className="text-gray-500 dark:text-gray-400 text-lg mb-2 truncate" title="No shipments found">No shipments found</p>
-                          <p className="text-gray-400 dark:text-gray-500 text-sm truncate">
-                            {searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No shipping manifests available"}
-                          </p>
-                        </div>
-                      </td>
-                    </tr>
-                  ) : (
-                    paginatedShipments.map((shipment) => (
-                      <tr
-                        key={shipment.Id}
-                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
-                      >
-                        <td className="px-3 py-2 text-sm font-semibold text-primary sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">
-                          <Link
-                            href={`/shipments/${shipment.Id}`}
-                            className="text-primary font-semibold hover:underline"
-                            onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                          >
-                            {displayCell(shipment.name)}
-                          </Link>
-                        </td>
-                        <td className="px-3 py-2 truncate">
-                          <StatusBadge status={shipment.status} />
-                        </td>
-                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 truncate">
-                          {displayCell(shipment.salesOrder)}
-                        </td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
-                          {shipment.customerQuoteId ? (
-                            !isManufacturer ? (
-                              <Link
-                                href={`/quotes/${shipment.customerQuoteId}`}
-                                target="_blank"
-                                className="text-primary hover:underline font-medium"
-                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                              >
-                                {shipment.customerQuote || "View Quote"}
-                              </Link>
-                            ) : (
-                              <span className="font-medium">{displayCell(shipment.customerQuote)}</span>
-                            )
-                          ) : (
-                            displayCell(shipment.customerQuote)
-                          )}
-                        </td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
-                          {shipment.proposalId ? (
-                            !isManufacturer ? (
-                              <Link
-                                href={`/proposals/${shipment.proposalId}`}
-                                target="_blank"
-                                className="text-primary hover:underline font-medium"
-                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                              >
-                                {shipment.proposalNumber || "View Proposal"}
-                              </Link>
-                            ) : (
-                              <span className="font-medium">{displayCell(shipment.proposalNumber)}</span>
-                            )
-                          ) : (
-                            displayCell(shipment.proposalNumber)
-                          )}
-                        </td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.proposalName)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
-                          {shipment.customerOrderId ? (
-                            !isManufacturer ? (
-                              <Link
-                                href={`/orders/${shipment.customerOrderId}`}
-                                target="_blank"
-                                className="text-primary hover:underline font-medium"
-                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                              >
-                                {shipment.customerOrder || "View Order"}
-                              </Link>
-                            ) : (
-                              <span className="font-medium">{displayCell(shipment.customerOrder)}</span>
-                            )
-                          ) : (
-                            displayCell(shipment.customerOrder)
-                          )}
-                        </td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.customerPO)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 truncate">{displayCell(shipment.shipToAccount)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.shipToLocation)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.shipToContact)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{shipment.dropShip ? "Yes" : "No"}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{shipment.totalLines}</td>
-                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 font-semibold text-left truncate">{formatCurrency(shipment.totalPrice)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxCount, 0)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxLength)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxWidth)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxHeight)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxNetWeight)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxGrossWeight)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.logisticsPartner)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.shipDate, 'numeric-dash')}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.deliveredDate, 'numeric-dash')}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingNumber)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingStatus)}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.estimatedDeliveryDate, 'numeric-dash')}</td>
-                        <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.actualDeliveryDate, 'numeric-dash')}</td>
-                        <td className="px-3 py-2 text-left truncate" onClick={(e) => e.stopPropagation()}>
-                          <button
-                            onClick={() => router.push(`/shipments/${shipment.Id}`)}
-                            className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
-                            title="View shipment" >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                        </button>
+                      </Td>
+                    </Tr>
+                  ))}
+                </TBody>
+              </Table>
             )}
           </div>
         </div>

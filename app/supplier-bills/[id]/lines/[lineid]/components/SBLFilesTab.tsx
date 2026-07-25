@@ -8,6 +8,7 @@ import Pagination from "@/components/ui/Pagination";
 import { formatFileSize, formatDate, displayCell } from "@/lib/utils/formatting";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface POFile {
     id: string;
@@ -134,18 +135,18 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
 
     if (files.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no files attached.">There are no files attached.</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There are no files attached."
+            />
         );
     }
 
     return (
         <div className="flex flex-col  bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900">
+                <Table className="table-fixed">
+                    <THead>
                         <tr>
                             <SortableHeader
                                 label="File Name"
@@ -188,31 +189,31 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
                                 width={columnWidths.uploadedDate}
                                 onResize={handleResize}
                             />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: columnWidths.action }}>Action</th>
+                            <Th style={{ width: columnWidths.action }}>Action</Th>
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((file) => (
-                            <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={file.fileName}>
+                            <Tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 border-r border-gray-100 dark:border-gray-700 truncate" title={file.fileName}>
                                     <div className="flex items-center gap-3 truncate min-w-0">
                                         {getFileIcon(file.fileType)}
                                         {file.fileName}
                                     </div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>
                                     {displayCell(file.fileType)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatFileSize(file.sizeInBytes)}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatFileSize(file.sizeInBytes)}>
                                     {formatFileSize(file.sizeInBytes)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>
                                     {displayCell(file.uploadedBy)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? formatDate(file.uploadedDate) : '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? formatDate(file.uploadedDate) : '-'}>
                                     {file.uploadedDate ? formatDate(file.uploadedDate, 'numeric-dash') : '-'}
-                                </td>
-                                <td className="px-3 py-2 truncate">
+                                </Td>
+                                <Td className="px-3 py-2 truncate">
                                     <div className="flex items-center gap-3 min-w-0">
                                         <button
                                             onClick={() => handleAction(file, 'preview')}
@@ -242,11 +243,11 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
                                             )}
                                         </button>
                                     </div>
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="mt-4 px-3 py-2 border-t border-gray-200 dark:border-gray-700 text-left">

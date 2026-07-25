@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 import { formatCurrency, formatNumber, formatDate, displayCell } from "@/lib/utils/formatting";
 import { OrderStatus } from "./types";
@@ -545,7 +546,7 @@ export default function OrdersPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Orders</h1>
-          <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Managed and Track Orders">Managed and Track Orders</p>
+          <p className="text-gray-600 dark:text-gray-400 text-base mt-1 truncate" title="Managed and Track Orders">Managed and Track Orders</p>
         </div>
         <div className="flex items-center gap-3 min-w-0">
           <button
@@ -855,16 +856,17 @@ export default function OrdersPage() {
         {/* Table */}
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-              <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-              </svg>
-              <p className="text-sm truncate" title="Loading orders...">Loading orders...</p>
-            </div>
+            <TableLoadingState message="Loading orders..." />
+          ) : paginatedOrders.length === 0 ? (
+            <TableEmptyState
+              message="No orders found"
+              description={searchQuery || activeTab !== "All"
+                ? "Try adjusting your filters"
+                : "Get started by creating your first order"}
+            />
           ) : (
-            <table className="w-full table-fixed">
-              <thead className="bg-primary-light dark:bg-gray-900">
+            <Table className="table-fixed">
+              <THead>
                 <tr>
                   <SortableHeader label="Customer Order #" field="name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-20" />
                   <SortableHeader label="Status" field="status" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
@@ -882,136 +884,118 @@ export default function OrdersPage() {
                   <SortableHeader label="Total Price" field="total" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.total} onResize={handleResize} />
                   <SortableHeader label="Request Date" field="requestedDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestedDate} onResize={handleResize} />
                   <SortableHeader label="Create Date" field="createdDate" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.createdDate} onResize={handleResize} />
-                  <th
-                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 whitespace-nowrap"
+                  <Th
+                    className="border-b border-gray-200 dark:border-gray-700 whitespace-nowrap"
                     style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
                   >
                     Action
-                  </th>
+                  </Th>
                 </tr>
-              </thead>
+              </THead>
 
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {paginatedOrders.length === 0 ? (
-                  <tr>
-                    <td colSpan={17} className="px-6 py-12 text-center truncate">
-                      <div className="flex flex-col items-center justify-center min-w-0">
-                        <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2 truncate" title="No orders found">No orders found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-sm truncate">
-                          {searchQuery || activeTab !== "All"
-                            ? "Try adjusting your filters"
-                            : "Get started by creating your first order"}
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  paginatedOrders.map((order) => (
-                    <tr key={`order-row-${order.Id ?? order.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 z-10 bg-white dark:bg-gray-800 text-left truncate">
-                        <Link href={`/orders/${order.id}`} className="text-sm font-semibold text-primary hover:underline truncate">
-                          <div title={order.name}>{order.name}</div>
-                        </Link>
-                      </td>
-                      <td className="px-3 py-2 truncate">
-                        <StatusBadge status={order.status as OrderStatus} />
-                      </td>
-                      <td className="px-3 py-2 truncate text-gray-600 dark:text-white font-medium ">
-                        {order.proposal_id && order.proposal_id !== '' ? (
-                          !isManufacturer ? (
-                            <Link href={`/proposals/${order.proposal_id}`} target="_blank" className="text-sm font-semibold text-primary hover:underline truncate">
-                              {order.proposal_name}
-                            </Link>
-                          ) : (
-                            <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{displayCell(order.proposal_name)}</div>
-                          )
+              <TBody>
+                {paginatedOrders.map((order) => (
+                  <Tr key={`order-row-${order.Id ?? order.id}`} className="transition-colors">
+                    <Td className="text-primary font-semibold sticky left-0 z-10 bg-white dark:bg-gray-800 text-left truncate">
+                      <Link href={`/orders/${order.id}`} className="text-sm font-semibold text-primary hover:underline truncate">
+                        <div title={order.name}>{order.name}</div>
+                      </Link>
+                    </Td>
+                    <Td className="truncate">
+                      <StatusBadge status={order.status as OrderStatus} />
+                    </Td>
+                    <Td className="truncate text-gray-600 dark:text-white font-medium">
+                      {order.proposal_id && order.proposal_id !== '' ? (
+                        !isManufacturer ? (
+                          <Link href={`/proposals/${order.proposal_id}`} target="_blank" className="text-sm font-semibold text-primary hover:underline truncate">
+                            {order.proposal_name}
+                          </Link>
                         ) : (
                           <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{displayCell(order.proposal_name)}</div>
-                        )}
-                      </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-white font-medium" title={order.proposal_name}>{displayCell(order.proposal_name)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.customerPO}>{displayCell(order.customerPO)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billToAccountName}>{displayCell(order.billToAccountName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billToLocationName}>{displayCell(order.billToLocationName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billToContactName}>{displayCell(order.billToContactName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipToAccountName}>{displayCell(order.shipToAccountName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipToLocationName}>{displayCell(order.shipToLocationName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
-                        <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipToContactName}>{displayCell(order.shipToContactName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
-                        <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.dropShip
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                          : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                          }`}>
-                          {order.dropShip ? 'Yes' : 'No'}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-white truncate">{formatNumber(order.items, 0)}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(order.total)}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(order.requestedDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.createdDate)}</td>
-                      <td className="px-3 py-2">
-                        <div className="flex gap-2">
-                          {order.status !== "Canceled" && order.status !== "Cancelled" && (
-                            <>
-                              {order.status !== "Approved" && (
-                                <button
-                                  onClick={() => handleEditOrder(order.Id)}
-                                  className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
-                                  title="Edit order"
-                                >
-                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                  </svg>
-                                </button>
-                              )}
+                        )
+                      ) : (
+                        <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{displayCell(order.proposal_name)}</div>
+                      )}
+                    </Td>
+                    <Td className="truncate">
+                      <div className="text-sm text-gray-600 dark:text-white font-medium" title={order.proposal_name}>{displayCell(order.proposal_name)}</div>
+                    </Td>
+                    <Td className="truncate">
+                      <div className="text-sm text-gray-600 dark:text-gray-400" title={order.customerPO}>{displayCell(order.customerPO)}</div>
+                    </Td>
+                    <Td className="truncate">
+                      <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billToAccountName}>{displayCell(order.billToAccountName)}</div>
+                    </Td>
+                    <Td className="truncate">
+                      <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billToLocationName}>{displayCell(order.billToLocationName)}</div>
+                    </Td>
+                    <Td className="truncate">
+                      <div className="text-sm text-gray-600 dark:text-gray-400" title={order.billToContactName}>{displayCell(order.billToContactName)}</div>
+                    </Td>
+                    <Td className="truncate">
+                      <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipToAccountName}>{displayCell(order.shipToAccountName)}</div>
+                    </Td>
+                    <Td className="truncate">
+                      <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipToLocationName}>{displayCell(order.shipToLocationName)}</div>
+                    </Td>
+                    <Td className="truncate">
+                      <div className="text-sm text-gray-600 dark:text-gray-400" title={order.shipToContactName}>{displayCell(order.shipToContactName)}</div>
+                    </Td>
+                    <Td className="truncate">
+                      <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.dropShip
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                        : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                        }`}>
+                        {order.dropShip ? 'Yes' : 'No'}
+                      </span>
+                    </Td>
+                    <Td className="text-gray-600 dark:text-white truncate">{formatNumber(order.items, 0)}</Td>
+                    <Td className="text-gray-600 dark:text-white font-semibold truncate">{formatCurrency(order.total)}</Td>
+                    <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(order.requestedDate, 'numeric-dash')}</Td>
+                    <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(order.createdDate)}</Td>
+                    <Td>
+                      <div className="flex gap-2">
+                        {order.status !== "Canceled" && order.status !== "Cancelled" && (
+                          <>
+                            {order.status !== "Approved" && (
                               <button
-                                onClick={() => handleCloneOrder(order.Id)}
-                                className="p-1.5 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-                                title="Clone order"
+                                onClick={() => handleEditOrder(order.Id)}
+                                className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                                title="Edit order"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                               </button>
-                            </>
-                          )}
-                          {order.status === "Draft" && (
+                            )}
                             <button
-                              onClick={() => handleDeleteOrder(order.Id, order.status)}
-                              className="p-1.5 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
-                              title="Delete order"
+                              onClick={() => handleCloneOrder(order.Id)}
+                              className="p-1.5 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+                              title="Clone order"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                               </svg>
                             </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                          </>
+                        )}
+                        {order.status === "Draft" && (
+                          <button
+                            onClick={() => handleDeleteOrder(order.Id, order.status)}
+                            className="p-1.5 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
+                            title="Delete order"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                    </Td>
+                  </Tr>
+                ))}
+              </TBody>
+            </Table>
           )}
         </div>
 

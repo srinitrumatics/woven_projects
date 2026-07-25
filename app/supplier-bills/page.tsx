@@ -11,6 +11,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -190,7 +191,7 @@ export default function SupplierBillsPage() {
         <Sidebar>
             <div className="mb-6">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Supplier Bills</h1>
-                <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Manage and Track Supplier Invoices and Payments">Manage and Track Supplier Invoices and Payments</p>
+                <p className="text-gray-600 dark:text-gray-400 text-base mt-1 truncate" title="Manage and Track Supplier Invoices and Payments">Manage and Track Supplier Invoices and Payments</p>
             </div>
 
             {/* Stats Cards */}
@@ -267,10 +268,15 @@ export default function SupplierBillsPage() {
 
                 <div className="overflow-x-auto ">
                     {loading ? (
-                        <LoadingState />
+                        <TableLoadingState message="Synchronizing data from Salesforce..." />
+                    ) : paginatedBills.length === 0 ? (
+                        <TableEmptyState
+                            message="No Supplier Bills Found"
+                            description={searchQuery ? `We couldn't find any results matching "${searchQuery}". Try a different search term.` : "There are currently no supplier bills in the system."}
+                        />
                     ) : (
-                        <table className="w-full border-collapse">
-                            <thead className="bg-primary-light dark:bg-gray-900">
+                        <Table className="border-collapse">
+                            <THead>
                                 <tr>
                                     <SortableHeader label="Supplier Bill #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                     <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
@@ -295,21 +301,18 @@ export default function SupplierBillsPage() {
                                     <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={handleResize} />
                                     <SortableHeader label="Action" field="actions" sortConfig={sortConfig} requestSort={requestSort} width={widths.actions} onResize={handleResize} />
                                 </tr>
-                            </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
-                                {paginatedBills.length === 0 ? (
-                                    <EmptyState query={searchQuery} />
-                                ) : (
-                                    paginatedBills.map(bill => (
-                                        <tr key={bill.id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onClick={() => router.push(`/supplier-bills/${bill.id}`)}>
-                                            <td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate sticky left-0 bg-white dark:bg-gray-800 z-10" title={bill.name}>
+                            </THead>
+                            <TBody>
+                                {paginatedBills.map(bill => (
+                                        <Tr key={bill.id} className="group cursor-pointer" onClick={() => router.push(`/supplier-bills/${bill.id}`)}>
+                                            <Td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate sticky left-0 bg-white dark:bg-gray-800 z-10" title={bill.name}>
                                                 <Link href={`/supplier-bills/${bill.id}`} onClick={(e) => e.stopPropagation()}>
                                                     {bill.name}
                                                 </Link>
-                                            </td>
-                                            <td className="px-2 py-2 text-sm truncate" title={bill.status}><StatusBadge status={bill.status} /></td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.supplierName}>{displayCell(bill.supplierName)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.purchaseOrderName}>
+                                            </Td>
+                                            <Td className="px-2 py-2 text-sm truncate" title={bill.status}><StatusBadge status={bill.status} /></Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.supplierName}>{displayCell(bill.supplierName)}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.purchaseOrderName}>
                                                 {bill.purchaseOrderId && bill.purchaseOrderId !== 'N/A' && bill.purchaseOrderId !== '' ? (
                                                     <Link href={`/purchase-orders/${bill.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                                         {bill.purchaseOrderName || bill.purchaseOrderId}
@@ -317,8 +320,8 @@ export default function SupplierBillsPage() {
                                                 ) : (
                                                     bill.purchaseOrderName || '-'
                                                 )}
-                                            </td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerQuoteName}>
+                                            </Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerQuoteName}>
                                                 {bill.customerQuoteId && bill.customerQuoteId !== 'N/A' && bill.customerQuoteId !== '' ? (
                                                     !isManufacturer ? (
                                                         <Link href={`/quotes/${bill.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
@@ -330,8 +333,8 @@ export default function SupplierBillsPage() {
                                                 ) : (
                                                     bill.customerQuoteName || '-'
                                                 )}
-                                            </td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.proposalNumber}>
+                                            </Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.proposalNumber}>
                                                 {bill.proposalId && bill.proposalId !== 'N/A' && bill.proposalId !== '' ? (
                                                     !isManufacturer ? (
                                                         <Link href={`/proposals/${bill.proposalId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
@@ -343,9 +346,9 @@ export default function SupplierBillsPage() {
                                                 ) : (
                                                     bill.proposalNumber || '-'
                                                 )}
-                                            </td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[180px]" title={bill.proposalName}>{displayCell(bill.proposalName)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerOrderName}>
+                                            </Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate max-w-[180px]" title={bill.proposalName}>{displayCell(bill.proposalName)}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerOrderName}>
                                                 {bill.customerOrderId && bill.customerOrderId !== 'N/A' && bill.customerOrderId !== '' ? (
                                                     !isManufacturer ? (
                                                         <Link href={`/orders/${bill.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
@@ -357,32 +360,31 @@ export default function SupplierBillsPage() {
                                                 ) : (
                                                     bill.customerOrderName || '-'
                                                 )}
-                                            </td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.shipToAccount}>{displayCell(bill.shipToAccount)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.shipToLocation}>{displayCell(bill.shipToLocation)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.shipToContact}>{displayCell(bill.shipToContact)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 font-medium truncate" >{bill.totalLines}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(bill.totalProductAmount)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(bill.totalShippingCharges)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(bill.totalAmount)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.billedDate}>{bill.billedDate ? formatDate(bill.billedDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={displayCell(bill.paymentTerms)}>{displayCell(bill.paymentTerms)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}>{bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-2 py-2 text-sm truncate" title={bill.remittanceStatus}><RemittanceBadge status={bill.remittanceStatus} /></td>
-                                            <td className={`px-2 py-2 text-sm font-medium truncate ${bill.openBalance > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>{formatCurrency(bill.openBalance)}</td>
-                                            <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.settledDate}>{bill.settledDate ? formatDate(bill.settledDate, 'numeric-dash') : '-'}</td>
-                                            <td className="px-2 py-2 text-sm truncate">
+                                            </Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.shipToAccount}>{displayCell(bill.shipToAccount)}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.shipToLocation}>{displayCell(bill.shipToLocation)}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.shipToContact}>{displayCell(bill.shipToContact)}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 font-medium truncate" >{bill.totalLines}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(bill.totalProductAmount)}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-900 dark:text-white truncate">{formatCurrency(bill.totalShippingCharges)}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(bill.totalAmount)}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.billedDate}>{bill.billedDate ? formatDate(bill.billedDate, 'numeric-dash') : '-'}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={displayCell(bill.paymentTerms)}>{displayCell(bill.paymentTerms)}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}>{bill.dueDate ? formatDate(bill.dueDate, 'numeric-dash') : '-'}</Td>
+                                            <Td className="px-2 py-2 text-sm truncate" title={bill.remittanceStatus}><RemittanceBadge status={bill.remittanceStatus} /></Td>
+                                            <Td className={`px-2 py-2 text-sm font-medium truncate ${bill.openBalance > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>{formatCurrency(bill.openBalance)}</Td>
+                                            <Td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={bill.settledDate}>{bill.settledDate ? formatDate(bill.settledDate, 'numeric-dash') : '-'}</Td>
+                                            <Td className="px-2 py-2 text-sm truncate">
                                                 <div className="flex items-center gap-2 min-w-0">
                                                     <button className="p-1.5 text-gray-400 hover:text-primary transition-colors hover:bg-primary/10 rounded-lg truncate" title="View Supplier Bill">
                                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                                     </button>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
+                                            </Td>
+                                        </Tr>
+                                ))}
+                            </TBody>
+                        </Table>
                     )}
                 </div>
 
@@ -539,26 +541,3 @@ function RemittanceBadge({ status }: { status: string }) {
     );
 }
 
-function LoadingState() {
-    return (
-        <div className="flex flex-col items-center justify-center py-20 animate-pulse min-w-0">
-            <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-500 dark:text-gray-400 font-medium tracking-wide truncate" title="Synchronizing data from Salesforce...">Synchronizing data from Salesforce...</p>
-        </div>
-    );
-}
-
-function EmptyState({ query }: { query: string }) {
-    return (
-        <tr>
-            <td colSpan={22} className="px-6 py-4 text-center truncate">
-                <div className="flex flex-col items-center max-w-sm mx-auto min-w-0">
-                    <p className="text-sm font-bold text-gray-900 dark:text-white mb-1 truncate" title="No Supplier Bills Found">No Supplier Bills Found</p>
-                    <p className="text-gray-500 dark:text-gray-400 truncate">
-                        {query ? `We couldn't find any results matching "${query}". Try a different search term.` : "There are currently no supplier bills in the system."}
-                    </p>
-                </div>
-            </td>
-        </tr>
-    );
-}

@@ -5,6 +5,7 @@ import Link from"next/link";
 import Pagination from"@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -45,25 +46,18 @@ export default function QuoteRTVSubTab({
     const totalPages = Math.ceil(rtvs.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
         <div>
             <div className="overflow-x-auto py-2">
                 {rtvs.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium"title="No records found">No records found</p>
-                        <p className="text-sm"title="There are no RTVs associated with this quote.">There are no RTVs associated with this quote.</p>
-                    </div>
+                    <TableEmptyState message="No records found" description="There are no RTVs associated with this quote." />
                 ) : (
                     <>
-                        <table className="w-full">
-                            <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                        <Table>
+                            <THead>
                                 <tr>
                                     <SortableHeader label="RTV"field="rtvNumber"sortConfig={sortConfig} requestSort={requestSort} width={widths.rtvNumber} onResize={onResize} align="left"className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                     <SortableHeader label="Status"field="status"sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
@@ -82,18 +76,18 @@ export default function QuoteRTVSubTab({
                                     <SortableHeader label="Approval Date"field="approvalDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.approvalDate} onResize={onResize} align="left" />
                                     <SortableHeader label="Return by Date"field="returnByDate"sortConfig={sortConfig} requestSort={requestSort} width={widths.returnByDate} onResize={onResize} align="left" />
                                 </tr>
-                            </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            </THead>
+                            <TBody>
                                 {paginatedRTVs.map((rtv) => (
-                                    <tr key={rtv.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.rtvNumber }}>
+                                    <Tr key={rtv.id}>
+                                        <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.rtvNumber }}>
                                             {/* No direct RTV module listed, but keeping it consistent */}
                                             {rtv.rtvNumber}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.status }}>
                                             <StatusBadge status={rtv.status} />
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
+                                        </Td>
+                                        <Td className="text-left truncate" style={{ width: widths.purchaseOrder }}>
                                             {rtv.purchaseOrderId ? (
                                                 !isManufacturer && !isRestricted ? (
                                                     <Link href={`/purchase-orders/${rtv.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -101,8 +95,8 @@ export default function QuoteRTVSubTab({
                                                     </Link>
                                                 ) : displayCell(rtv.purchaseOrder)
                                             ) : displayCell(rtv.purchaseOrder)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
+                                        </Td>
+                                        <Td className="text-left truncate" style={{ width: widths.customerQuote }}>
                                             {rtv.customerQuoteId ? (
                                                 !isManufacturer ? (
                                                     <Link href={`/quotes/${rtv.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -110,8 +104,8 @@ export default function QuoteRTVSubTab({
                                                     </Link>
                                                 ) : displayCell(rtv.customerQuote)
                                             ) : displayCell(rtv.customerQuote)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
+                                        </Td>
+                                        <Td className="text-left truncate" style={{ width: widths.customerOrder }}>
                                             {rtv.customerOrderId ? (
                                                 !isManufacturer && !isRestricted ? (
                                                     <Link href={`/orders/${rtv.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -119,25 +113,25 @@ export default function QuoteRTVSubTab({
                                                     </Link>
                                                 ) : displayCell(rtv.customerOrder)
                                             ) : displayCell(rtv.customerOrder)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.rtvType }}>{displayCell(rtv.rtvType)}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.rmaNumber }}>
+                                        </Td>
+                                        <Td className="text-left truncate" style={{ width: widths.rtvType }}>{displayCell(rtv.rtvType)}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.rmaNumber }}>
                                             {/* No direct RMA module listed, but keeping it consistent if we had rmaId */}
                                             {displayCell(rtv.rmaNumber)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.shipFromAccount }}>{displayCell(rtv.shipFromAccount)}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.shipFromContact }}>{displayCell(rtv.shipFromContact)}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.supplierName }}>{displayCell(rtv.supplierName)}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.supplierContact }}>{displayCell(rtv.supplierContact)}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{formatNumber(rtv.totalLines)}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalCost }}>{formatCurrency(rtv.totalCost)}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.issuedDate }}>{formatDate(rtv.issuedDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.approvalDate }}>{formatDate(rtv.approvalDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.returnByDate }}>{formatDate(rtv.returnByDate, 'numeric-dash')}</td>
-                                    </tr>
+                                        </Td>
+                                        <Td className="text-left truncate" style={{ width: widths.shipFromAccount }}>{displayCell(rtv.shipFromAccount)}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.shipFromContact }}>{displayCell(rtv.shipFromContact)}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.supplierName }}>{displayCell(rtv.supplierName)}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.supplierContact }}>{displayCell(rtv.supplierContact)}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.totalLines }}>{formatNumber(rtv.totalLines)}</Td>
+                                        <Td className="text-left font-bold truncate" style={{ width: widths.totalCost }}>{formatCurrency(rtv.totalCost)}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.issuedDate }}>{formatDate(rtv.issuedDate, 'numeric-dash')}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.approvalDate }}>{formatDate(rtv.approvalDate, 'numeric-dash')}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.returnByDate }}>{formatDate(rtv.returnByDate, 'numeric-dash')}</Td>
+                                    </Tr>
                                 ))}
-                            </tbody>
-                        </table>
+                            </TBody>
+                        </Table>
 
                     </>
                 )}

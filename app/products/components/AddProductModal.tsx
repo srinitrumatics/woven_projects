@@ -272,7 +272,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
           {required && <span className="text-red-500 mr-1">*</span>}
           {label}
           {(name.toLowerCase().includes('height') || name.toLowerCase().includes('width') || name.toLowerCase().includes('length') || name.toLowerCase().includes('moq') || name.toLowerCase().includes('dw')) && (
-            <span className="ml-1 text-blue-500 text-[10px] bg-blue-100 dark:bg-blue-900/30 w-3.5 h-3.5 inline-flex items-center justify-center rounded-full cursor-help">i</span>
+            <span className="ml-1 text-blue-500 text-xs bg-blue-100 dark:bg-blue-900/30 w-3.5 h-3.5 inline-flex items-center justify-center rounded-full cursor-help">i</span>
           )}
         </label>
         <div className="relative">
@@ -286,7 +286,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
           />
         </div>
         {isReadOnly && (
-          <div className="text-[10px] italic text-gray-400 capitalize">Read only field</div>
+          <div className="text-xs italic text-gray-400 capitalize">Read only field</div>
         )}
       </div>
     );

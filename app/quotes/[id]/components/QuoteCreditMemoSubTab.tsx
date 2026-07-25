@@ -5,6 +5,7 @@ import Link from "next/link";
 import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -45,25 +46,18 @@ export default function QuoteCreditMemoSubTab({
     const totalPages = Math.ceil(memos.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
         <div>
             <div className="overflow-x-auto py-2">
                 {memos.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium" title="No records found">No records found</p>
-                        <p className="text-sm" title="There are no credit memos associated with this quote.">There are no credit memos associated with this quote.</p>
-                    </div>
+                    <TableEmptyState message="No records found" description="There are no credit memos associated with this quote." />
                 ) : (
                     <>
-                        <table className="w-full table-fixed">
-                            <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                        <Table className="table-fixed">
+                            <THead>
                                 <tr>
                                     <SortableHeader label="Credit Memo #" field="memoNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.memoNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                     <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
@@ -83,18 +77,18 @@ export default function QuoteCreditMemoSubTab({
                                     <SortableHeader label="Available Credit Balance" field="availableCreditBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.availableCreditBalance} onResize={onResize} align="left" />
                                     <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={onResize} align="left" />
                                 </tr>
-                            </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            </THead>
+                            <TBody>
                                 {paginatedMemos.map((memo) => (
-                                    <tr key={memo.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.memoNumber }}>
+                                    <Tr key={memo.id}>
+                                        <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.memoNumber }}>
                                             {/* No direct Credit Memo module listed, but keeping it consistent */}
                                             {memo.memoNumber}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.status }}>
                                             <StatusBadge status={memo.status} />
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.invoice }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.invoice }}>
                                             {memo.invoiceId ? (
                                                 !isManufacturer ? (
                                                     <Link href={`/invoices/${memo.invoiceId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -102,11 +96,11 @@ export default function QuoteCreditMemoSubTab({
                                                     </Link>
                                                 ) : displayCell(memo.invoice)
                                             ) : displayCell(memo.invoice)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.salesOrder }}>
                                             {displayCell(memo.salesOrder)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.customerQuote }}>
                                             {memo.customerQuoteId ? (
                                                 !isManufacturer ? (
                                                     <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -114,8 +108,8 @@ export default function QuoteCreditMemoSubTab({
                                                     </Link>
                                                 ) : displayCell(memo.customerQuote)
                                             ) : displayCell(memo.customerQuote)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposalNumber }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.proposalNumber }}>
                                             {memo.proposalId ? (
                                                 !isManufacturer ? (
                                                     <Link href={`/proposals/${memo.proposalId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -123,11 +117,11 @@ export default function QuoteCreditMemoSubTab({
                                                     </Link>
                                                 ) : displayCell(memo.proposalName)
                                             ) : displayCell(memo.proposalName)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposalName }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.proposalName }}>
                                             {displayCell(memo.proposalName)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.customerOrder }}>
                                             {memo.customerOrderId ? (
                                                 !isManufacturer && !isRestricted ? (
                                                     <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -135,20 +129,20 @@ export default function QuoteCreditMemoSubTab({
                                                     </Link>
                                                 ) : displayCell(memo.customerOrder)
                                             ) : displayCell(memo.customerOrder)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{formatNumber(memo.totalLines)}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(memo.totalPrice)}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(memo.shipping)}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }}>{formatCurrency(memo.taxes)}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.totalCreditAmount }}>{formatCurrency(memo.totalCreditAmount)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.issuedDate }}>{formatDate(memo.issuedDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.expirationDate }}>{formatDate(memo.expirationDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate" style={{ width: widths.availableCreditBalance }}>{formatCurrency(memo.availableCreditBalance)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.settledDate }}>{formatDate(memo.settledDate, 'numeric-dash')}</td>
-                                    </tr>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.totalLines }}>{formatNumber(memo.totalLines)}</Td>
+                                        <Td className="text-left font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(memo.totalPrice)}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.shipping }}>{formatCurrency(memo.shipping)}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.taxes }}>{formatCurrency(memo.taxes)}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.totalCreditAmount }}>{formatCurrency(memo.totalCreditAmount)}</Td>
+                                        <Td className="truncate" style={{ width: widths.issuedDate }}>{formatDate(memo.issuedDate, 'numeric-dash')}</Td>
+                                        <Td className="truncate" style={{ width: widths.expirationDate }}>{formatDate(memo.expirationDate, 'numeric-dash')}</Td>
+                                        <Td className="text-left truncate" style={{ width: widths.availableCreditBalance }}>{formatCurrency(memo.availableCreditBalance)}</Td>
+                                        <Td className="truncate" style={{ width: widths.settledDate }}>{formatDate(memo.settledDate, 'numeric-dash')}</Td>
+                                    </Tr>
                                 ))}
-                            </tbody>
-                        </table>
+                            </TBody>
+                        </Table>
 
                     </>
                 )}

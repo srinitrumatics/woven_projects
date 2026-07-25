@@ -9,6 +9,7 @@ import { formatCurrency, formatNumber, displayCell } from "@/lib/utils/formattin
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
 import { Eye } from "lucide-react";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -165,11 +166,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
 
     // ── States ─────────────────────────────────────────────────────────────
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     if (error) {
@@ -182,10 +179,10 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
 
     if (lines.length === 0) {
         return (
-            <div className="p-12 text-center bg-gray-50 dark:bg-gray-900/40 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-700">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no Shipment Manifest Lines associated with this shipment manifest">There are no Shipment Manifest Lines associated with this shipment manifest</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There are no Shipment Manifest Lines associated with this shipment manifest"
+            />
         );
     }
 
@@ -193,8 +190,8 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
     return (
         <div className="flex flex-col">
             <div className="overflow-x-auto">
-                <table className="w-full text-sm table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                <Table className="text-sm table-fixed">
+                    <THead>
                         <tr>
                             {/* Sticky first column */}
                             <SortableHeader label="Shipping Manifest Line #" field="name" sortConfig={sortConfig} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
@@ -216,21 +213,21 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                             <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxNetWeight} onResize={handleResize} align="left" />
                             <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={handleSort} width={widths.boxGrossWeight} onResize={handleResize} align="left" />
                             {/* Action – non-sortable */}
-                            <th className="px-3 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.action }}>
+                            <Th className="text-center" style={{ width: widths.action }}>
                                 Action
-                            </th>
+                            </Th>
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedLines.map((line) => (
-                            <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <Tr key={line.id}>
                                 {/* Line name – sticky */}
-                                <td className="px-3 py-2 font-bold text-primary dark:text-primary-light sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
+                                <Td className="font-bold text-primary dark:text-primary-light sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
                                     <Link
                                         href={`/shipments/${shipmentId}/lines/${line.id}`}
                                         className="text-primary font-medium hover:underline truncate"
                                         title={line.name}>{line.name}</Link>
-                                </td>
+                                </Td>
                                 <TextCell v={<StatusBadge status={line.status} />} w={widths.status} title={line.status} />
                                 <TextCell
                                     v={displayCell(line.salesOrderLineName)}
@@ -279,7 +276,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 <NumCell v={fmt(line.boxNetWeight)} w={widths.boxNetWeight} />
                                 <NumCell v={fmt(line.boxGrossWeight)} w={widths.boxGrossWeight} />
                                 {/* Action */}
-                                <td className="px-3 py-2 text-center" style={{ width: widths.action }}>
+                                <Td className="text-center" style={{ width: widths.action }}>
                                     <Link
                                         href={`/shipments/${shipmentId}/lines/${line.id}`}
                                         className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full inline-flex items-center justify-center transition-colors"
@@ -287,11 +284,11 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                     >
                                         <Eye className="w-5 h-5 text-primary" />
                                     </Link>
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
             <Pagination
                 currentPage={currentPage}
@@ -308,16 +305,16 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
 // ─── Cell helpers ─────────────────────────────────────────────────────────────
 function TextCell({ v, w, title }: { v: ReactNode; w: number; title?: string }) {
     return (
-        <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={title || (typeof v === 'string' ? v : undefined)}>
+        <Td className="text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={title || (typeof v === 'string' ? v : undefined)}>
             {v}
-        </td>
+        </Td>
     );
 }
 function NumCell({ v, w }: { v: string; w: number }) {
     return (
-        <td className="px-3 py-2 text-gray-900 dark:text-white text-left font-medium truncate" style={{ width: w }} title={v}>
+        <Td className="text-left font-medium truncate" style={{ width: w }} title={v}>
             {v}
-        </td>
+        </Td>
     );
 }
 function StatusBadge({ status }: { status: string }) {

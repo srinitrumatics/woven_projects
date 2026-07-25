@@ -12,6 +12,7 @@ import { formatNumber, formatDate } from "@/lib/utils/formatting";
 import LineTaxesTab from "./components/LineTaxesTab";
 import { FulfillmentTabType, FulfillmentData, ReturnsData, SalesOrder, CustomerQuote, PurchaseOrderLine, SupplierBillLine, PurchasesData, TaxDetail } from "../../types";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 
 // Interface for proposal product item from Salesforce (matching what we saw in proposal list logic)
 interface ProposalProductItem {
@@ -930,44 +931,44 @@ export default function ProposalProductDetailPage({
                 {/* Details Card - Full width */}
                 < div className="w1025:col-span-5 bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden p-4" >
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm table-fixed">
-                            <thead className="bg-primary-light dark:bg-gray-900">
+                        <Table className="text-left text-sm table-fixed">
+                            <THead>
                                 <tr>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Unit Price</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Order Qty</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 ">MOQ</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Total Order Qty</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Total Price</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Shipping</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Taxes</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Grand Total</th>
-                                    <th className=" px-3 py-2 font-bold text-gray-900 ">Qty Shipped</th>
+                                    <Th className="py-2 font-bold">Unit Price</Th>
+                                    <Th className="py-2 font-bold">Order Qty</Th>
+                                    <Th className="py-2 font-bold">MOQ</Th>
+                                    <Th className="py-2 font-bold">Total Order Qty</Th>
+                                    <Th className="py-2 font-bold">Total Price</Th>
+                                    <Th className="py-2 font-bold">Shipping</Th>
+                                    <Th className="py-2 font-bold">Taxes</Th>
+                                    <Th className="py-2 font-bold">Grand Total</Th>
+                                    <Th className="py-2 font-bold">Qty Shipped</Th>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td className="px-3 py-2 text-gray-600 font-medium truncate">
+                            </THead>
+                            <TBody>
+                                <Tr>
+                                    <Td className="text-gray-600 font-medium truncate">
                                         ${unitPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                    </td>
-                                    <td className="px-3 py-2 text-gray-600  truncate">{quantity}</td>
-                                    <td className="px-3 py-2 text-gray-600  truncate">{product.moq}</td>
-                                    <td className="px-3 py-2 text-gray-600  truncate">{product.quantity}</td>
-                                    <td className="px-3 py-2 text-gray-600  truncate">
+                                    </Td>
+                                    <Td className="text-gray-600 truncate">{quantity}</Td>
+                                    <Td className="text-gray-600 truncate">{product.moq}</Td>
+                                    <Td className="text-gray-600 truncate">{product.quantity}</Td>
+                                    <Td className="text-gray-600 truncate">
                                         ${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                    </td>
-                                    <td className="px-3 py-2 text-gray-600  truncate">
+                                    </Td>
+                                    <Td className="text-gray-600 truncate">
                                         ${shippingCharges.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                    </td>
-                                    <td className="px-3 py-2 text-gray-600  truncate">
+                                    </Td>
+                                    <Td className="text-gray-600 truncate">
                                         ${taxes.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm font-bold text-primary dark:text-primary-light truncate">
+                                    </Td>
+                                    <Td className="font-bold text-primary dark:text-primary-light truncate">
                                         ${grandTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                    </td>
-                                    <td className="px-3 py-2 text-gray-600  truncate">{product.qtyShipped}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    </Td>
+                                    <Td className="text-gray-600 truncate">{product.qtyShipped}</Td>
+                                </Tr>
+                            </TBody>
+                        </Table>
                     </div>
                 </div >
             </div >

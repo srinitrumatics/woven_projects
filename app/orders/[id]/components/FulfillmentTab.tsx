@@ -9,6 +9,7 @@ import { useResizableColumns } from "../../../../hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
 import { usePermissions } from "@/components/PermissionContext";
 import Pagination from "@/components/ui/Pagination";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -267,11 +268,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
     }, [orderId, accountId, contactId]);
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center py-10">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     const statusBadge = (status: string) => {
@@ -294,17 +291,11 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
     };
 
     const emptyState = (label: string) => (
-        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-            <svg className="w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <p className="text-base font-medium">No records found</p>
-            <p className="text-sm">There are no {label} associated with this order.</p>
-        </div>
+        <TableEmptyState message="No records found" description={`There are no ${label} associated with this order.`} />
     );
 
-    const tdClass = "px-4 py-3 text-sm text-gray-700 dark:text-gray-300 truncate";
-    const tdBoldClass = "px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate";
+    const tdClass = "text-gray-700 dark:text-gray-300 truncate";
+    const tdBoldClass = "font-medium truncate";
 
     return (
         <div>
@@ -362,8 +353,8 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                 proposals.length === 0 ? emptyState("proposals") : (
                     <div className="rounded-lg border border-gray-200 dark:border-gray-700">
                         <div className="overflow-auto">
-                            <table className="w-full table-fixed text-sm">
-                                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                            <Table className="table-fixed text-sm">
+                                <THead>
                                     <tr>
                                         <SortableHeader label="Proposal" field="Proposal_Number__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propNum || 160} onResize={handleResize} className={stickyThClass} />
                                         <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propStatus || 120} onResize={handleResize} />
@@ -384,38 +375,38 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                         <SortableHeader label="Expiration Date" field="Expiration_Date__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propExpirationDate || 140} onResize={handleResize} />
                                         <SortableHeader label="Request Date" field="Request_Date__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propRequestDate || 130} onResize={handleResize} />
                                     </tr>
-                                </thead>
-                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                </THead>
+                                <TBody>
                                     {pagedProposals.map((prop) => (
-                                        <tr key={prop.Id} className="group hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                            <td className={`${tdBoldClass} ${stickyTdClass}`}>
+                                        <Tr key={prop.Id} className="group transition-colors">
+                                            <Td className={`${tdBoldClass} ${stickyTdClass}`}>
                                                 {canLinkProposals && prop.Id ? (
                                                     <Link href={`/proposals/${prop.Id}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {prop.Proposal_Number__c || "—"}
                                                     </Link>
                                                 ) : (prop.Proposal_Number__c || "—")}
-                                            </td>
-                                            <td className="px-4 py-3">{statusBadge(prop.Status__c)}</td>
-                                            <td className={tdClass}>{displayCell(prop.Name)}</td>
-                                            <td className={tdClass}>{displayCell(prop.Bill_to_Account_Name)}</td>
-                                            <td className={tdClass}>{displayCell(prop.Authorized_Bill_To_Location_Name)}</td>
-                                            <td className={tdClass}>{displayCell(prop.Bill_to_Contact_Name)}</td>
-                                            <td className={tdClass}>{displayCell(prop.Ship_to_Account_Name)}</td>
-                                            <td className={tdClass}>{displayCell(prop.Authorized_Ship_To_Location_Name)}</td>
-                                            <td className={tdClass}>{displayCell(prop.Ship_to_Contact_Name)}</td>
-                                            <td className={tdClass}>{prop.Drop_Ship__c ? "Yes" : "No"}</td>
-                                            <td className={tdClass}>{formatNumber(prop.Total_Lines__c)}</td>
-                                            <td className={tdBoldClass}>{formatCurrency(prop.Total_Price__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatCurrency(prop.Total_Shipping_Charges__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatCurrency(prop.Total_Taxes_Amount__c ?? 0)}</td>
-                                            <td className={tdBoldClass}>{formatCurrency(prop.Grand_Total__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatDate(prop.Issued_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(prop.Expiration_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(prop.Request_Date__c, "numeric-dash") || "—"}</td>
-                                        </tr>
+                                            </Td>
+                                            <Td>{statusBadge(prop.Status__c)}</Td>
+                                            <Td className={tdClass}>{displayCell(prop.Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(prop.Bill_to_Account_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(prop.Authorized_Bill_To_Location_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(prop.Bill_to_Contact_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(prop.Ship_to_Account_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(prop.Authorized_Ship_To_Location_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(prop.Ship_to_Contact_Name)}</Td>
+                                            <Td className={tdClass}>{prop.Drop_Ship__c ? "Yes" : "No"}</Td>
+                                            <Td className={tdClass}>{formatNumber(prop.Total_Lines__c)}</Td>
+                                            <Td className={tdBoldClass}>{formatCurrency(prop.Total_Price__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatCurrency(prop.Total_Shipping_Charges__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatCurrency(prop.Total_Taxes_Amount__c ?? 0)}</Td>
+                                            <Td className={tdBoldClass}>{formatCurrency(prop.Grand_Total__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatDate(prop.Issued_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(prop.Expiration_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(prop.Request_Date__c, "numeric-dash") || "—"}</Td>
+                                        </Tr>
                                     ))}
-                                </tbody>
-                            </table>
+                                </TBody>
+                            </Table>
                         </div>
                         <Pagination
                             currentPage={proposalPage}
@@ -434,8 +425,8 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                 customerQuotes.length === 0 ? emptyState("customer quotes") : (
                     <div className="rounded-lg border border-gray-200 dark:border-gray-700">
                         <div className="overflow-auto">
-                            <table className="w-full table-fixed text-sm">
-                                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                            <Table className="table-fixed text-sm">
+                                <THead>
                                     <tr>
                                         <SortableHeader label="Customer Quote" field="Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqName || 180} onResize={handleResize} className={stickyThClass} />
                                         <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqStatus || 120} onResize={handleResize} />
@@ -459,47 +450,47 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                         <SortableHeader label="Planned Ship Date" field="Planned_Ship_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqPlannedShipDate || 160} onResize={handleResize} />
                                         <SortableHeader label="Ship Confirmed Date" field="Ship_Confirmed_Date__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqShipConfirmedDate || 170} onResize={handleResize} />
                                     </tr>
-                                </thead>
-                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                </THead>
+                                <TBody>
                                     {pagedCustomerQuotes.map((cq) => (
-                                        <tr key={cq.Id} className="group hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                            <td className={`${tdBoldClass} ${stickyTdClass}`}>
+                                        <Tr key={cq.Id} className="group transition-colors">
+                                            <Td className={`${tdBoldClass} ${stickyTdClass}`}>
                                                 {canLinkQuotes && cq.Id ? (
                                                     <Link href={`/quotes/${cq.Id}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {cq.Name || "—"}
                                                     </Link>
                                                 ) : (cq.Name || "—")}
-                                            </td>
-                                            <td className="px-4 py-3">{statusBadge(cq.Status__c)}</td>
-                                            <td title={displayCell(cq.Proposal_Name)} className={tdClass}>
+                                            </Td>
+                                            <Td>{statusBadge(cq.Status__c)}</Td>
+                                            <Td title={displayCell(cq.Proposal_Name)} className={tdClass}>
                                                 {canLinkProposals && cq.Proposal__c ? (
                                                     <Link href={`/proposals/${cq.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {cq.Proposal_Name || "—"}
                                                     </Link>
                                                 ) : (cq.Proposal_Name || "—")}
-                                            </td>
-                                            <td title={displayCell(cq.Proposal_Name)} className={tdClass}>{displayCell(cq.Proposal_Name)}</td>
-                                            <td className={tdClass}>{displayCell(cq.Bill_to_Account_Name)}</td>
-                                            <td className={tdClass}>{displayCell(cq.Authorized_Bill_To_Location_Name)}</td>
-                                            <td className={tdClass}>{displayCell(cq.Bill_to_Contact_Name)}</td>
-                                            <td className={tdClass}>{displayCell(cq.Ship_to_Account_Name)}</td>
-                                            <td className={tdClass}>{displayCell(cq.Authorized_Ship_To_Location_Name)}</td>
-                                            <td className={tdClass}>{displayCell(cq.Ship_to_Contact_Name)}</td>
-                                            <td className={tdClass}>{cq.Drop_Ship__c ? "Yes" : "No"}</td>
-                                            <td className={tdClass}>{formatNumber(cq.Total_Lines__c)}</td>
-                                            <td className={tdClass}>{formatCurrency(cq.Total_Price__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatCurrency(cq.Total_Shipping_Charges__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatCurrency(cq.Total_Taxes_Amount__c ?? 0)}</td>
-                                            <td className={tdBoldClass}>{formatCurrency(cq.Grand_Total__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatDate(cq.Issued_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(cq.Expiration_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(cq.Request_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(cq.Ship_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(cq.Delivered_Date__c, "numeric-dash") || "—"}</td>
-                                        </tr>
+                                            </Td>
+                                            <Td title={displayCell(cq.Proposal_Name)} className={tdClass}>{displayCell(cq.Proposal_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(cq.Bill_to_Account_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(cq.Authorized_Bill_To_Location_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(cq.Bill_to_Contact_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(cq.Ship_to_Account_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(cq.Authorized_Ship_To_Location_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(cq.Ship_to_Contact_Name)}</Td>
+                                            <Td className={tdClass}>{cq.Drop_Ship__c ? "Yes" : "No"}</Td>
+                                            <Td className={tdClass}>{formatNumber(cq.Total_Lines__c)}</Td>
+                                            <Td className={tdClass}>{formatCurrency(cq.Total_Price__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatCurrency(cq.Total_Shipping_Charges__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatCurrency(cq.Total_Taxes_Amount__c ?? 0)}</Td>
+                                            <Td className={tdBoldClass}>{formatCurrency(cq.Grand_Total__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatDate(cq.Issued_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(cq.Expiration_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(cq.Request_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(cq.Ship_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(cq.Delivered_Date__c, "numeric-dash") || "—"}</Td>
+                                        </Tr>
                                     ))}
-                                </tbody>
-                            </table>
+                                </TBody>
+                            </Table>
                         </div>
                         <Pagination
                             currentPage={cqPage}
@@ -518,8 +509,8 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                 salesOrders.length === 0 ? emptyState("sales orders") : (
                     <div className="rounded-lg border border-gray-200 dark:border-gray-700">
                         <div className="overflow-auto">
-                            <table className="w-full table-fixed text-sm">
-                                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                            <Table className="table-fixed text-sm">
+                                <THead>
                                     <tr>
                                         <SortableHeader label="Sales Order" field="Name" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soName || 160} onResize={handleResize} className={stickyThClass} />
                                         <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soStatus || 120} onResize={handleResize} />
@@ -542,46 +533,46 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                         <SortableHeader label="Planned Ship Date" field="Ship_Date__c" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soPlannedShipDate || 160} onResize={handleResize} />
                                         <SortableHeader label="Ship Confirmed Date" field="Delivered_Date__c" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soShipConfirmedDate || 170} onResize={handleResize} />
                                     </tr>
-                                </thead>
-                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                </THead>
+                                <TBody>
                                     {pagedSalesOrders.map((so) => (
-                                        <tr key={so.Id} className="group hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                            <td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(so.Name)}</td>
-                                            <td className="px-4 py-3">{statusBadge(so.Status__c)}</td>
-                                            <td className={tdClass}>
+                                        <Tr key={so.Id} className="group transition-colors">
+                                            <Td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(so.Name)}</Td>
+                                            <Td>{statusBadge(so.Status__c)}</Td>
+                                            <Td className={tdClass}>
                                                 {canLinkQuotes && so.Customer_Quote__c ? (
                                                     <Link href={`/quotes/${so.Customer_Quote__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {so.Customer_Quote_Name || "—"}
                                                     </Link>
                                                 ) : (so.Customer_Quote_Name || "—")}
-                                            </td>
-                                            <td className={tdClass}>
+                                            </Td>
+                                            <Td className={tdClass}>
                                                 {canLinkProposals && so.Proposal__c ? (
                                                     <Link href={`/proposals/${so.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {so.Proposal_Name || "—"}
                                                     </Link>
                                                 ) : (so.Proposal_Name || "—")}
-                                            </td>
-                                            <td title={displayCell(so.Proposal_Name)} className={tdClass}>{displayCell(so.Proposal_Name)}</td>
-                                            <td className={tdClass}>{displayCell(so.Bill_to_Account_Name)}</td>
-                                            <td className={tdClass}>{displayCell(so.Authorized_Bill_To_Location_Name)}</td>
-                                            <td className={tdClass}>{displayCell(so.Bill_to_Contact_Name)}</td>
-                                            <td className={tdClass}>{displayCell(so.Ship_to_Account_Name)}</td>
-                                            <td className={tdClass}>{displayCell(so.Authorized_Ship_To_Location_Name)}</td>
-                                            <td className={tdClass}>{displayCell(so.Ship_to_Contact_Name)}</td>
-                                            <td className={tdClass}>{so.Drop_Ship__c ? "Yes" : "No"}</td>
-                                            <td className={tdClass}>{formatNumber(so.Total_Lines__c)}</td>
-                                            <td className={tdClass}>{formatCurrency(so.Total_Price__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatCurrency(so.Total_Shipping_Charges__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatCurrency(so.Total_Taxes_Amount__c ?? 0)}</td>
-                                            <td className={tdBoldClass}>{formatCurrency(so.Grand_Total__c ?? 0)}</td>
-                                            <td className={tdClass}>{formatDate(so.Request_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(so.Ship_Date__c, "numeric-dash") || "—"}</td>
-                                            <td className={tdClass}>{formatDate(so.Delivered_Date__c, "numeric-dash") || "—"}</td>
-                                        </tr>
+                                            </Td>
+                                            <Td title={displayCell(so.Proposal_Name)} className={tdClass}>{displayCell(so.Proposal_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(so.Bill_to_Account_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(so.Authorized_Bill_To_Location_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(so.Bill_to_Contact_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(so.Ship_to_Account_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(so.Authorized_Ship_To_Location_Name)}</Td>
+                                            <Td className={tdClass}>{displayCell(so.Ship_to_Contact_Name)}</Td>
+                                            <Td className={tdClass}>{so.Drop_Ship__c ? "Yes" : "No"}</Td>
+                                            <Td className={tdClass}>{formatNumber(so.Total_Lines__c)}</Td>
+                                            <Td className={tdClass}>{formatCurrency(so.Total_Price__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatCurrency(so.Total_Shipping_Charges__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatCurrency(so.Total_Taxes_Amount__c ?? 0)}</Td>
+                                            <Td className={tdBoldClass}>{formatCurrency(so.Grand_Total__c ?? 0)}</Td>
+                                            <Td className={tdClass}>{formatDate(so.Request_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(so.Ship_Date__c, "numeric-dash") || "—"}</Td>
+                                            <Td className={tdClass}>{formatDate(so.Delivered_Date__c, "numeric-dash") || "—"}</Td>
+                                        </Tr>
                                     ))}
-                                </tbody>
-                            </table>
+                                </TBody>
+                            </Table>
                         </div>
                         <Pagination
                             currentPage={soPage}
@@ -602,8 +593,8 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                     manifests.length === 0 ? emptyState("shipping manifests") : (
                         <div className="rounded-lg border border-gray-200 dark:border-gray-700">
                             <div className="overflow-auto">
-                                <table className="w-full table-fixed text-sm">
-                                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                                <Table className="table-fixed text-sm">
+                                    <THead>
                                         <tr>
                                             <SortableHeader label="Shipping Manifest" field="Name" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smName || 190} onResize={handleResize} className={stickyThClass} />
                                             <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smStatus || 120} onResize={handleResize} />
@@ -631,58 +622,58 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             <SortableHeader label="Estimated Delivery Date" field="Estimated_Delivery_Date__c" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smEstDelivery || 190} onResize={handleResize} />
                                             <SortableHeader label="Actual Delivery Date" field="Actual_Delivery_Date__c" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smActualDelivery || 170} onResize={handleResize} />
                                         </tr>
-                                    </thead>
-                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    </THead>
+                                    <TBody>
                                         {pagedManifests.map((sm) => (
-                                            <tr key={sm.Id} className="group hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                                <td className={`${tdBoldClass} ${stickyTdClass}`}>
+                                            <Tr key={sm.Id} className="group transition-colors">
+                                                <Td className={`${tdBoldClass} ${stickyTdClass}`}>
 
                                                     {canLinkShipments && sm.Id ? (
                                                         <Link href={`/shipments/${sm.Id}`} className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
                                                             {sm.Name || "—"}
                                                         </Link>
                                                     ) : (sm.Name || "—")}
-                                                </td>
-                                                <td className="px-4 py-3">{statusBadge(sm.Status__c)}</td>
-                                                <td className={tdClass}>{displayCell(sm.Sales_Order_Name)}</td>
-                                                <td className={tdClass}>
+                                                </Td>
+                                                <Td>{statusBadge(sm.Status__c)}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Sales_Order_Name)}</Td>
+                                                <Td className={tdClass}>
                                                     {canLinkQuotes && sm.Customer_Quote__c ? (
                                                         <Link href={`/quotes/${sm.Customer_Quote__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                             {sm.Customer_Quote_Name || "—"}
                                                         </Link>
                                                     ) : (sm.Customer_Quote_Name || "—")}
-                                                </td>
-                                                <td className={tdClass}>
+                                                </Td>
+                                                <Td className={tdClass}>
                                                     {canLinkProposals && sm.Proposal__c ? (
                                                         <Link href={`/proposals/${sm.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                             {sm.Proposal_Name || "—"}
                                                         </Link>
                                                     ) : (sm.Proposal_Name || "—")}
-                                                </td>
-                                                <td title={sm.Proposal_Name} className={tdClass}>{displayCell(sm.Proposal_Name)}</td>
-                                                <td className={tdClass}>{displayCell(sm.Ship_to_Account_Name)}</td>
-                                                <td className={tdClass}>{displayCell(sm.Authorized_Ship_To_Location_Name)}</td>
-                                                <td className={tdClass}>{displayCell(sm.Ship_to_Contact_Name)}</td>
-                                                <td className={tdClass}>{sm.Drop_Ship__c ? "Yes" : "No"}</td>
-                                                <td className={tdClass}>{formatNumber(sm.Total_Lines__c)}</td>
-                                                <td className={tdBoldClass}>{formatCurrency(sm.Total_Price__c ?? 0)}</td>
-                                                <td className={tdClass}>{displayCell(sm.Box__c?.toString())}</td>
-                                                <td className={tdClass}>{displayCell(sm.Case_Length__c?.toString())}</td>
-                                                <td className={tdClass}>{displayCell(sm.Case_Width__c?.toString())}</td>
-                                                <td className={tdClass}>{displayCell(sm.Case_Height__c?.toString())}</td>
-                                                <td className={tdClass}>{displayCell(sm.Case_Net_Weight__c?.toString())}</td>
-                                                <td className={tdClass}>{displayCell(sm.Case_Gross_Weight__c?.toString())}</td>
-                                                <td className={tdClass}>{displayCell(sm.Logistics_Partner_Name)}</td>
-                                                <td className={tdClass}>{formatDate(sm.Ship_Date__c, "numeric-dash") || "—"}</td>
-                                                <td className={tdClass}>{formatDate(sm.Delivered_Date__c, "numeric-dash") || "—"}</td>
-                                                <td className={tdClass}>{displayCell(sm.Tracking_Number__c)}</td>
-                                                <td className="px-4 py-3">{sm.Tracking_Status__c ? statusBadge(sm.Tracking_Status__c) : "—"}</td>
-                                                <td className={tdClass}>{formatDate(sm.Estimated_Delivery_Date__c, "numeric-dash") || "—"}</td>
-                                                <td className={tdClass}>{formatDate(sm.Actual_Delivery_Date__c, "numeric-dash") || "—"}</td>
-                                            </tr>
+                                                </Td>
+                                                <Td title={sm.Proposal_Name} className={tdClass}>{displayCell(sm.Proposal_Name)}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Ship_to_Account_Name)}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Authorized_Ship_To_Location_Name)}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Ship_to_Contact_Name)}</Td>
+                                                <Td className={tdClass}>{sm.Drop_Ship__c ? "Yes" : "No"}</Td>
+                                                <Td className={tdClass}>{formatNumber(sm.Total_Lines__c)}</Td>
+                                                <Td className={tdBoldClass}>{formatCurrency(sm.Total_Price__c ?? 0)}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Box__c?.toString())}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Case_Length__c?.toString())}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Case_Width__c?.toString())}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Case_Height__c?.toString())}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Case_Net_Weight__c?.toString())}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Case_Gross_Weight__c?.toString())}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Logistics_Partner_Name)}</Td>
+                                                <Td className={tdClass}>{formatDate(sm.Ship_Date__c, "numeric-dash") || "—"}</Td>
+                                                <Td className={tdClass}>{formatDate(sm.Delivered_Date__c, "numeric-dash") || "—"}</Td>
+                                                <Td className={tdClass}>{displayCell(sm.Tracking_Number__c)}</Td>
+                                                <Td>{sm.Tracking_Status__c ? statusBadge(sm.Tracking_Status__c) : "—"}</Td>
+                                                <Td className={tdClass}>{formatDate(sm.Estimated_Delivery_Date__c, "numeric-dash") || "—"}</Td>
+                                                <Td className={tdClass}>{formatDate(sm.Actual_Delivery_Date__c, "numeric-dash") || "—"}</Td>
+                                            </Tr>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </TBody>
+                                </Table>
                             </div>
                             <Pagination
                                 currentPage={smPage}
@@ -703,8 +694,8 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                     invoices.length === 0 ? emptyState("invoices") : (
                         <div className="rounded-lg border border-gray-200 dark:border-gray-700">
                             <div className="overflow-auto">
-                                <table className="w-full table-fixed text-sm">
-                                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                                <Table className="table-fixed text-sm">
+                                    <THead>
                                         <tr>
                                             <SortableHeader label="Invoice" field="Name" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invName || 150} onResize={handleResize} className={stickyThClass} />
                                             <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invStatus || 120} onResize={handleResize} />
@@ -728,53 +719,53 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             <SortableHeader label="Open Balance" field="Open_Balance__c" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invOpenBalance || 130} onResize={handleResize} />
                                             <SortableHeader label="Settled Date" field="Settled_Date__c" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invSettledDate || 130} onResize={handleResize} />
                                         </tr>
-                                    </thead>
-                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    </THead>
+                                    <TBody>
                                         {pagedInvoices.map((inv) => (
-                                            <tr key={inv.Id} className="group hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                                <td className={`${tdBoldClass} ${stickyTdClass}`}>
+                                            <Tr key={inv.Id} className="group transition-colors">
+                                                <Td className={`${tdBoldClass} ${stickyTdClass}`}>
                                                     {canLinkInvoices && inv.Id ? (
                                                         <Link href={`/invoices/${inv.Id}`} className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
                                                             {inv.Name || "—"}
                                                         </Link>
                                                     ) : (inv.Name || "—")}
-                                                </td>
-                                                <td className="px-4 py-3">{statusBadge(inv.Status__c)}</td>
-                                                <td className={tdClass}>{displayCell(inv.Sales_Order_Name)}</td>
-                                                <td className={tdClass}>{displayCell(inv.Purchase_Order_Name)}</td>
-                                                <td className={tdClass}>
+                                                </Td>
+                                                <Td>{statusBadge(inv.Status__c)}</Td>
+                                                <Td className={tdClass}>{displayCell(inv.Sales_Order_Name)}</Td>
+                                                <Td className={tdClass}>{displayCell(inv.Purchase_Order_Name)}</Td>
+                                                <Td className={tdClass}>
                                                     {canLinkQuotes && inv.Customer_Quote_Id__c ? (
                                                         <Link href={`/quotes/${inv.Customer_Quote_Id__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                             {inv.Customer_Quote_Name || "—"}
                                                         </Link>
                                                     ) : (inv.Customer_Quote_Name || "—")}
-                                                </td>
-                                                <td className={tdClass}>
+                                                </Td>
+                                                <Td className={tdClass}>
                                                     {canLinkProposals && inv.Proposal__c ? (
                                                         <Link href={`/proposals/${inv.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                             {inv.Proposal_Name || "—"}
                                                         </Link>
                                                     ) : (inv.Proposal_Name || "—")}
-                                                </td>
-                                                <td title={displayCell(inv.Proposal_Name)} className={tdClass}>{displayCell(inv.Proposal_Name)}</td>
-                                                <td className={tdClass}>{displayCell(inv.Bill_to_Account_Name)}</td>
-                                                <td className={tdClass}>{displayCell(inv.Authorized_Bill_To_Location_Name)}</td>
-                                                <td className={tdClass}>{displayCell(inv.Bill_to_Contact_Name)}</td>
-                                                <td className={tdClass}>{formatNumber(inv.Total_Lines__c)}</td>
-                                                <td className={tdClass}>{formatCurrency(inv.Total_Price__c ?? 0)}</td>
-                                                <td className={tdClass}>{formatCurrency(inv.Total_Shipping_Charges__c ?? 0)}</td>
-                                                <td className={tdClass}>{formatCurrency(inv.Total_Taxes_Amount__c ?? 0)}</td>
-                                                <td className={tdBoldClass}>{formatCurrency(inv.Grand_Total__c ?? 0)}</td>
-                                                <td className={tdClass}>{formatDate(inv.Issued_Date__c, "numeric-dash") || "—"}</td>
-                                                <td className={tdClass}>{displayCell(inv.Payment_Terms__c)}</td>
-                                                <td className={tdClass}>{formatDate(inv.Due_Date__c, "numeric-dash") || "—"}</td>
-                                                <td className="px-4 py-3">{inv.Collection_Status__c ? statusBadge(inv.Collection_Status__c) : "—"}</td>
-                                                <td className={tdBoldClass}>{formatCurrency(inv.Open_Balance__c ?? 0)}</td>
-                                                <td className={tdClass}>{formatDate(inv.Settled_Date__c, "numeric-dash") || "—"}</td>
-                                            </tr>
+                                                </Td>
+                                                <Td title={displayCell(inv.Proposal_Name)} className={tdClass}>{displayCell(inv.Proposal_Name)}</Td>
+                                                <Td className={tdClass}>{displayCell(inv.Bill_to_Account_Name)}</Td>
+                                                <Td className={tdClass}>{displayCell(inv.Authorized_Bill_To_Location_Name)}</Td>
+                                                <Td className={tdClass}>{displayCell(inv.Bill_to_Contact_Name)}</Td>
+                                                <Td className={tdClass}>{formatNumber(inv.Total_Lines__c)}</Td>
+                                                <Td className={tdClass}>{formatCurrency(inv.Total_Price__c ?? 0)}</Td>
+                                                <Td className={tdClass}>{formatCurrency(inv.Total_Shipping_Charges__c ?? 0)}</Td>
+                                                <Td className={tdClass}>{formatCurrency(inv.Total_Taxes_Amount__c ?? 0)}</Td>
+                                                <Td className={tdBoldClass}>{formatCurrency(inv.Grand_Total__c ?? 0)}</Td>
+                                                <Td className={tdClass}>{formatDate(inv.Issued_Date__c, "numeric-dash") || "—"}</Td>
+                                                <Td className={tdClass}>{displayCell(inv.Payment_Terms__c)}</Td>
+                                                <Td className={tdClass}>{formatDate(inv.Due_Date__c, "numeric-dash") || "—"}</Td>
+                                                <Td>{inv.Collection_Status__c ? statusBadge(inv.Collection_Status__c) : "—"}</Td>
+                                                <Td className={tdBoldClass}>{formatCurrency(inv.Open_Balance__c ?? 0)}</Td>
+                                                <Td className={tdClass}>{formatDate(inv.Settled_Date__c, "numeric-dash") || "—"}</Td>
+                                            </Tr>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </TBody>
+                                </Table>
                             </div>
                             <Pagination
                                 currentPage={invPage}

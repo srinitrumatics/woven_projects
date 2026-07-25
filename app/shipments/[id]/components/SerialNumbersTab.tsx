@@ -7,6 +7,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { displayCell } from "@/lib/utils/formatting";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -108,11 +109,7 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
 
     // ── States ─────────────────────────────────────────────────────────────
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     if (error) {
@@ -125,10 +122,10 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
 
     if (logs.length === 0) {
         return (
-            <div className="p-12 text-center  rounded-lg ">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no Serial Number Logs associated with this shipment manifest.">There are no Serial Number Logs associated with this shipment manifest.</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There are no Serial Number Logs associated with this shipment manifest."
+            />
         );
     }
 
@@ -136,8 +133,8 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
     return (
         <div className="flex flex-col">
             <div className="overflow-x-auto py-2">
-                <table className="w-full text-sm table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                <Table className="text-sm table-fixed">
+                    <THead>
                         <tr>
                             <SortableHeader label="Serial Number Log" field="name" sortConfig={sortConfig} requestSort={handleSort} width={widths.name} onResize={handleResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                             <SortableHeader label="Serial Number #" field="serialNumber" sortConfig={sortConfig} requestSort={handleSort} width={widths.serialNumber} onResize={handleResize} align="left" />
@@ -147,13 +144,13 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                             <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={handleSort} width={widths.brand} onResize={handleResize} align="left" />
                             <SortableHeader label="Shipping Manifest #" field="shippingManifest" sortConfig={sortConfig} requestSort={handleSort} width={widths.shippingManifest} onResize={handleResize} align="left" />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedLogs.map((log) => (
-                            <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 font-medium text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }} title={log.name}>
+                            <Tr key={log.id}>
+                                <Td className="font-medium text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }} title={log.name}>
                                     {log.name}
-                                </td>
+                                </Td>
                                 <TextCell v={displayCell(log.serialNumber)} w={widths.serialNumber} />
                                 <TextCell v={displayCell(log.productSerialNumber)} w={widths.productSerialNumber} />
                                 <TextCell
@@ -178,10 +175,10 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                                     )}
                                     w={widths.shippingManifest}
                                 />
-                            </tr>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
             <Pagination
                 currentPage={currentPage}
@@ -198,8 +195,8 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
 // ─── Cell helpers ─────────────────────────────────────────────────────────────
 function TextCell({ v, w }: { v: React.ReactNode; w: number }) {
     return (
-        <td className="px-3 py-2 text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={typeof v === 'string' ? v : undefined}>
+        <Td className="text-gray-700 dark:text-gray-300 truncate" style={{ width: w }} title={typeof v === 'string' ? v : undefined}>
             {v}
-        </td>
+        </Td>
     );
 }

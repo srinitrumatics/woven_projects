@@ -190,7 +190,7 @@ const RoleManagement: React.FC = () => {
           <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
             <div className="flex items-center justify-between min-w-0">
               <div className="flex items-center gap-4 min-w-0">
-                <div className="w-14 h-14 bg-gradient-to-br from-[#96C2DB] to-[#6B9DB8] rounded-xl flex items-center justify-center shadow-lg">
+                <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-lg">
                   <Shield className="w-7 h-7 text-white" />
                 </div>
                 <div>
@@ -212,7 +212,7 @@ const RoleManagement: React.FC = () => {
                     setEditingRole(null);
                     setShowForm(true);
                   }}
-                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#96C2DB] to-[#6B9DB8] text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium"
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium"
                 >
                   <Plus className="w-5 h-5" />
                   Add New Role
@@ -261,8 +261,8 @@ const RoleManagement: React.FC = () => {
           >
             <div className="max-w-md mx-auto">
               <div className="relative inline-block mb-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-[#96C2DB]/20 to-[#6B9DB8]/20 rounded-2xl flex items-center justify-center">
-                  <Shield className="w-12 h-12 text-[#6B9DB8]" />
+                <div className="w-24 h-24 bg-gradient-to-br from-primary/20 to-primary-dark/20 rounded-2xl flex items-center justify-center">
+                  <Shield className="w-12 h-12 text-primary-dark" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
                   <Sparkles className="w-4 h-4 text-white" />
@@ -281,7 +281,7 @@ const RoleManagement: React.FC = () => {
                   setEditingRole(null);
                   setShowForm(true);
                 }}
-                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#96C2DB] to-[#6B9DB8] text-white rounded-xl hover:shadow-xl transition-all duration-200 font-semibold text-lg"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl hover:shadow-xl transition-all duration-200 font-semibold text-lg"
               >
                 <Plus className="w-6 h-6" />
                 Create Your First Role

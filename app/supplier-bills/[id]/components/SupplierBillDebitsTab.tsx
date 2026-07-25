@@ -10,6 +10,7 @@ import Pagination from "@/components/ui/Pagination";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import Link from 'next/link';
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface SupplierBillDebitsTabProps {
     debitMemos: DebitMemo[];
@@ -53,18 +54,18 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
 
     if (debitMemos.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no debit memos associated with this supplier bill.">There are no debit memos associated with this supplier bill.</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There are no debit memos associated with this supplier bill."
+            />
         );
     }
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0 table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0 table-fixed">
+                    <THead className="sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="Debit Memo #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
@@ -83,24 +84,24 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                             <SortableHeader label="Available Debit Balance" field="availableDebitBalance" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.availableDebitBalance} onResize={handleResize} />
                             <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.settledDate} onResize={handleResize} />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((debit) => (
-                            <tr key={debit.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={debit.name}>
+                            <Tr key={debit.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={debit.name}>
                                     {displayCell(debit.name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm truncate">
+                                </Td>
+                                <Td className="px-3 py-2 text-sm truncate">
                                     <StatusBadge status={debit.status} />
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.purchaseOrderName || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.purchaseOrderName || '-'}>
                                     {debit.purchaseOrderId ? (
                                         <Link href={`/purchase-orders/${debit.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {displayCell(debit.purchaseOrderName)}
                                         </Link>
                                     ) : displayCell(debit.purchaseOrderName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.customerQuoteName || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.customerQuoteName || '-'}>
                                     {debit.customerQuoteId ? (
                                         !isManufacturer ? (
                                             <Link href={`/quotes/${debit.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -110,8 +111,8 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                                             <span className="font-medium">{displayCell(debit.customerQuoteName)}</span>
                                         )
                                     ) : displayCell(debit.customerQuoteName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.proposalNumber || debit.proposalName || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.proposalNumber || debit.proposalName || '-'}>
                                     {debit.proposalId ? (
                                         !isManufacturer ? (
                                             <Link href={`/proposals/${debit.proposalId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -121,9 +122,9 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                                             <span className="font-medium">{displayCell(debit.proposalNumber || debit.proposalName)}</span>
                                         )
                                     ) : displayCell(debit.proposalNumber || debit.proposalName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.proposalName || '-'}>{displayCell(debit.proposalName)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.customerOrderName || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.proposalName || '-'}>{displayCell(debit.proposalName)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.customerOrderName || '-'}>
                                     {debit.customerOrderId ? (
                                         !isManufacturer ? (
                                             <Link href={`/orders/${debit.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -133,24 +134,24 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                                             <span className="font-medium">{displayCell(debit.customerOrderName)}</span>
                                         )
                                     ) : displayCell(debit.customerOrderName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
                                     <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium">
                                         {debit.totalLines || 0}
                                     </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.totalCost || 0)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{formatCurrency(debit.totalShippingCharges || 0)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{formatCurrency(debit.totalTaxes || 0)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.totalDebitAmount || 0)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.issuedDate ? formatDate(debit.issuedDate, 'numeric-dash') : '-'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.expirationDate ? formatDate(debit.expirationDate, 'numeric-dash') : '-'}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.availableDebitBalance || 0)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.settledDate ? formatDate(debit.settledDate, 'numeric-dash') : '-'}</td>
-                            </tr>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.totalCost || 0)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{formatCurrency(debit.totalShippingCharges || 0)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{formatCurrency(debit.totalTaxes || 0)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.totalDebitAmount || 0)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.issuedDate ? formatDate(debit.issuedDate, 'numeric-dash') : '-'}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.expirationDate ? formatDate(debit.expirationDate, 'numeric-dash') : '-'}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.availableDebitBalance || 0)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.settledDate ? formatDate(debit.settledDate, 'numeric-dash') : '-'}</Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="border-t border-gray-100 dark:border-gray-700">

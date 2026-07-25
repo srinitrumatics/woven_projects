@@ -383,7 +383,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
 
       {/* Tabs Section Section Below Details */}
       <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div className="p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+        <div className="p-3 border-b border-gray-200 dark:border-gray-700">
           <InvoiceTabs
             activeTab={activeTab}
             onTabChange={setActiveTab}

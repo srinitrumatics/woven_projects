@@ -136,7 +136,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
       className="bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 shadow-xl mb-8 overflow-hidden"
     >
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#96C2DB] to-[#6B9DB8] px-8 py-6">
+      <div className="bg-gradient-to-r from-primary to-primary-dark px-8 py-6">
         <div className="flex items-center justify-between min-w-0">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -175,7 +175,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#96C2DB] focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   placeholder="e.g., Administrator, Manager, Viewer"
                   required title={String(formData.name ?? '')}
                 />
@@ -190,7 +190,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
                   value={formData.description}
                   onChange={handleInputChange}
                   rows={5}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#96C2DB] focus:border-transparent transition-all resize-none"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
                   placeholder="Describe the purpose and responsibilities of this role..."
                 />
               </div>
@@ -230,7 +230,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search permissions..."
-                    className="pl-10 pr-4 py-2 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#96C2DB] focus:border-transparent"
+                    className="pl-10 pr-4 py-2 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
               </div>
@@ -254,11 +254,11 @@ const RoleForm: React.FC<RoleFormProps> = ({
                             className="flex items-center gap-2 flex-1 text-left group"
                           >
                             {isExpanded ? (
-                              <ChevronUp className="w-4 h-4 text-gray-500 group-hover:text-[#96C2DB] transition-colors" />
+                              <ChevronUp className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors" />
                             ) : (
-                              <ChevronDown className="w-4 h-4 text-gray-500 group-hover:text-[#96C2DB] transition-colors" />
+                              <ChevronDown className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors" />
                             )}
-                            <span className="font-semibold text-gray-900 group-hover:text-[#96C2DB] transition-colors">
+                            <span className="font-semibold text-gray-900 group-hover:text-primary transition-colors">
                               {group.name}
                             </span>
                             <span className="text-xs text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full">
@@ -268,7 +268,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
                           <button
                             type="button"
                             onClick={() => toggleAllInGroup(group)}
-                            className="text-xs font-medium text-[#6B9DB8] hover:text-[#96C2DB] transition-colors"
+                            className="text-xs font-medium text-primary-dark hover:text-primary transition-colors"
                           >
                             {allSelected ? 'Deselect All' : 'Select All'}
                           </button>
@@ -309,7 +309,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
                                             setFormPermissionAssignments((prev: string[]) => prev.filter(id => id !== permission.id));
                                           }
                                         }}
-                                        className="w-5 h-5 text-[#96C2DB] rounded border-gray-300 focus:ring-[#96C2DB] cursor-pointer"
+                                        className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary cursor-pointer"
                                       />
                                       {isSelected && (
                                         <CheckCircle2 className="absolute -right-1 -top-1 w-3 h-3 text-purple-600 pointer-events-none" />
@@ -360,7 +360,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
             <button
               type="submit"
               disabled={isSaving}
-              className="px-8 py-3 bg-gradient-to-r from-[#96C2DB] to-[#6B9DB8] text-white rounded-xl font-medium hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-2"
+              className="px-8 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl font-medium hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-2"
             >
               {isSaving ? (
                 <>

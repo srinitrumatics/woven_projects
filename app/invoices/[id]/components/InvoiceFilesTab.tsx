@@ -8,6 +8,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useToast } from "@/components/ui/Toast";
 import Pagination from "@/components/ui/Pagination";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -136,42 +137,38 @@ export default function InvoiceFiles({ files, invoiceId, accountId, contactId }:
 
     if (files.length === 0) {
         return (
-            <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No record found">No record found</p>
-                <p className="text-sm truncate" title="There are no files associated with this invoice.">There are no files associated with this invoice.</p>
-
-            </div>
+            <TableEmptyState message="No record found" description="There are no files associated with this invoice." />
         );
     }
 
     return (
         <>
             <div className="overflow-x-auto">
-                <table className="w-full table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                <Table className="table-fixed">
+                    <THead>
                         <tr>
                             <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
                             <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={widths.type} onResize={handleResize} />
                             <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={widths.size} onResize={handleResize} />
                             <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedBy} onResize={handleResize} />
                             <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.date} onResize={handleResize} />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.action }}>Action</th>
+                            <Th style={{ width: widths.action }}>Action</Th>
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedFiles.map((file) => (
-                            <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">
+                            <Tr key={file.id} className="transition-colors">
+                                <Td className="font-medium truncate">
                                     <div className="flex items-center gap-2 min-w-0">
 
                                         <span className="truncate" title={file.fileName}>{file.fileName}</span>
                                     </div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(file.fileType)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{formatFileSize(file.sizeInBytes)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>{displayCell(file.uploadedBy)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(file.uploadedDate)}</td>
-                                <td className="px-3 py-2 text-left truncate">
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(file.fileType)}</Td>
+                                <Td className="truncate">{formatFileSize(file.sizeInBytes)}</Td>
+                                <Td className="truncate" title={file.uploadedBy}>{displayCell(file.uploadedBy)}</Td>
+                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(file.uploadedDate)}</Td>
+                                <Td className="text-left truncate">
                                     <div className="flex items-center gap-2 min-w-0">
                                         <button onClick={() => handlePreview(file)} className="text-blue-600 hover:text-blue-800 p-1" title="Preview">
                                             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -190,11 +187,11 @@ export default function InvoiceFiles({ files, invoiceId, accountId, contactId }:
                                             </svg>
                                         </button>
                                     </div>
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-left">

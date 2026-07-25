@@ -3,6 +3,7 @@ import { TaxDetail } from "../types";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import Pagination from "../../../../components/ui/Pagination";
+import { Table, THead, TBody, Tr, Td, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -49,11 +50,7 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
     const totalPages = Math.ceil(displayTaxes.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
 
@@ -61,8 +58,8 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0 table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0 table-fixed">
+                    <THead className="sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
                             <SortableHeader label="Sales Tax Amount" field="salesTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
@@ -79,56 +76,56 @@ export default function TaxesTab({ taxes, loading, widths, onResize }: TaxesTabP
                             <SortableHeader label="VAT Rate" field="vatRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatRate} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
                             <SortableHeader label="VAT Amount" field="vatAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatAmount} onResize={onResize} align="left" className="border-b border-gray-100 dark:border-gray-700" />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedTaxes.map((tax) => (
-                            <tr key={tax.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                            <Tr key={tax.id} className="transition-colors">
+                                <Td className="text-left truncate">
                                     {tax.salesTaxRate?.toFixed(3)}%
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     ${tax.salesTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {tax.useTaxRate?.toFixed(3)}%
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     ${tax.useTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white  truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {tax.localTaxRate?.toFixed(3)}%
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     ${tax.localTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {tax.exciseTaxRate?.toFixed(3)}%
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     ${tax.exciseTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {tax.grossReceiptsTaxRate?.toFixed(3)}%
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     ${tax.grossReceiptsTaxAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {tax.gstRate?.toFixed(3)}%
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     ${tax.gstAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {tax.vatRate?.toFixed(3)}%
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white  truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     ${tax.vatAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
         </div>

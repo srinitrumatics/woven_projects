@@ -8,6 +8,7 @@ import Pagination from "@/components/ui/Pagination";
 import { formatDate, formatCurrency, displayCell } from "@/lib/utils/formatting";
 import Link from 'next/link';
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface RtvLine {
     Id: string;
@@ -102,20 +103,17 @@ export default function PORtvLinesTab({ lines }: PORtvLinesTabProps) {
 
     if (lines.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 min-w-0">
-                <p className="text-sm font-medium truncate" title="No RTV lines found">No RTV lines found</p>
-                <p className="text-xs mt-1 truncate" title="There are no RTV lines associated with this record.">There are no RTV lines associated with this record.</p>
-            </div>
+            <TableEmptyState message="No RTV lines found" description="There are no RTV lines associated with this record." />
         );
     }
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden mt-4">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0">
+                    <THead className="sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="RTV Line" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-[#e9f1f7] dark:bg-gray-900 z-30" />
+                            <SortableHeader label="RTV Line" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
                             <SortableHeader label="RTV #" field="RTV__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.rtv} onResize={handleResize} />
                             <SortableHeader label="Customer Quote Line" field="Customer_Quote_Line_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.quoteLine} onResize={handleResize} />
@@ -128,18 +126,18 @@ export default function PORtvLinesTab({ lines }: PORtvLinesTabProps) {
                             <SortableHeader label="Return Qty" field="Return_Qty__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.qty} onResize={handleResize} />
                             <SortableHeader label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.total} onResize={handleResize} />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((line) => (
-                            <tr key={line.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={line.Name}>
+                            <Tr key={line.Id} className="transition-colors group">
+                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={line.Name}>
                                     {line.Name}
-                                </td>
-                                <td className="px-4 py-3 truncate"><StatusBadge status={line.Status__c} /></td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.RTV_Name || '-'}>
+                                </Td>
+                                <Td className="truncate"><StatusBadge status={line.Status__c} /></Td>
+                                <Td className="truncate" title={line.RTV_Name || '-'}>
                                     {displayCell(line.RTV_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || '-'}>
+                                </Td>
+                                <Td className="truncate" title={line.Customer_Quote_Line_Name || '-'}>
                                     {line.Customer_Quote_Line__c && line.Customer_Quote__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -149,8 +147,8 @@ export default function PORtvLinesTab({ lines }: PORtvLinesTabProps) {
                                             <span className="font-medium">{line.Customer_Quote_Line_Name || '-'}</span>
                                         )
                                     ) : displayCell(line.Customer_Quote_Line_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Proposed_Product_Name || '-'}>
+                                </Td>
+                                <Td className="truncate" title={line.Proposed_Product_Name || '-'}>
                                     {line.Proposed_Product__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/proposals/${line.proposal__c}/lines/${line.Proposed_Product__c}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -160,24 +158,24 @@ export default function PORtvLinesTab({ lines }: PORtvLinesTabProps) {
                                             <span className="font-medium">{line.Proposed_Product_Name || '-'}</span>
                                         )
                                     ) : displayCell(line.Proposed_Product_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Reason_Code__c || '-'}>{displayCell(line.Reason_Code__c)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>
+                                </Td>
+                                <Td className="truncate" title={line.Reason_Code__c || '-'}>{displayCell(line.Reason_Code__c)}</Td>
+                                <Td className="truncate" title={line.Product_Name || '-'}>
                                     {line.Product_Name__c ? (
                                         <Link href={`/products/${line.Product_Name__c}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {line.Product_Name}
                                         </Link>
                                     ) : displayCell(line.Product_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || '-'}>{displayCell(line.Product_Description__c)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.brand || line.Product_Brand_Name__c || '-'}>{displayCell(line.brand || line.Product_Brand_Name__c)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={String(line.Return_Qty__c || 0)}>{line.Return_Qty__c || 0}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-semibold text-left truncate" title={formatCurrency(line.Total_Cost__c || 0)}>{formatCurrency(line.Total_Cost__c || 0)}</td>
-                            </tr>
+                                </Td>
+                                <Td className="truncate" title={line.Product_Description__c || '-'}>{displayCell(line.Product_Description__c)}</Td>
+                                <Td className="truncate" title={line.brand || line.Product_Brand_Name__c || '-'}>{displayCell(line.brand || line.Product_Brand_Name__c)}</Td>
+                                <Td className="text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</Td>
+                                <Td className="text-left truncate" title={String(line.Return_Qty__c || 0)}>{line.Return_Qty__c || 0}</Td>
+                                <Td className="font-semibold text-left truncate" title={formatCurrency(line.Total_Cost__c || 0)}>{formatCurrency(line.Total_Cost__c || 0)}</Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
             <div className="border-t border-gray-200 dark:border-gray-700">
                 <Pagination

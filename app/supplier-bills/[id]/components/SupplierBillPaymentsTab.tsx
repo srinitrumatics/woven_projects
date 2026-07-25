@@ -9,6 +9,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import Link from 'next/link';
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface SupplierBillPaymentsTabProps {
     billPayments: BillPayment[];
@@ -96,15 +97,15 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
             <div className="mt-2">
                 {subTab === 'bill-payments' && (
                     billPayments.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                            <p className="text-lg font-medium truncate" title="No Bill Payments Recorded">No Bill Payments Recorded</p>
-                            <p className="text-sm truncate" title="There are no bill payments associated with this supplier bill.">There are no bill payments associated with this supplier bill.</p>
-                        </div>
+        <TableEmptyState
+                            message="No Bill Payments Recorded"
+                            description="There are no bill payments associated with this supplier bill."
+                        />
                     ) : (
                         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                                <table className="w-full border-separate border-spacing-0 table-fixed">
-                                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                                <Table className="border-separate border-spacing-0 table-fixed">
+                                    <THead className="sticky top-0 z-20">
                                         <tr>
                                             <SortableHeader className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" label="Bill Payment" field="name" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={columnWidthsPayments.name} onResize={handleResizePayments} />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={columnWidthsPayments.status} onResize={handleResizePayments} />
@@ -116,27 +117,27 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                                             <SortableHeader label="Failed Date" field="failedDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={columnWidthsPayments.failedDate} onResize={handleResizePayments} />
                                             <SortableHeader label="Posted Date" field="postedDate" sortConfig={sortConfigPayments} requestSort={requestSortPayments} width={columnWidthsPayments.postedDate} onResize={handleResizePayments} />
                                         </tr>
-                                    </thead>
-                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    </THead>
+                                    <TBody>
                                         {paginatedPayments.map((payment) => (
-                                            <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                                <td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 border-r border-gray-100 dark:border-gray-700">
+                                            <Tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                                                <Td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 border-r border-gray-100 dark:border-gray-700">
                                                     {displayCell(payment.name)}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm truncate">
+                                                </Td>
+                                                <Td className="px-3 py-2 text-sm truncate">
                                                     <StatusBadge status={payment.status} />
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(payment.amount)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(payment.paymentMethod)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(payment.referenceNo)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.transactionDate ? formatDate(payment.transactionDate, 'numeric-dash') : '-'}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.scheduledDate ? formatDate(payment.scheduledDate, 'numeric-dash') : '-'}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.failedDate ? formatDate(payment.failedDate, 'numeric-dash') : '-'}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.postedDate ? formatDate(payment.postedDate, 'numeric-dash') : '-'}</td>
-                                            </tr>
+                                                </Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(payment.amount)}</Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(payment.paymentMethod)}</Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(payment.referenceNo)}</Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.transactionDate ? formatDate(payment.transactionDate, 'numeric-dash') : '-'}</Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.scheduledDate ? formatDate(payment.scheduledDate, 'numeric-dash') : '-'}</Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.failedDate ? formatDate(payment.failedDate, 'numeric-dash') : '-'}</Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{payment.postedDate ? formatDate(payment.postedDate, 'numeric-dash') : '-'}</Td>
+                                            </Tr>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </TBody>
+                                </Table>
                             </div>
                             <div className="px-3 py-2">
                                 <Pagination
@@ -153,15 +154,15 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                 )}
                 {subTab === 'applied-debits' && (
                     appliedDebits.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                            <p className="text-lg font-medium truncate" title="No Applied Debit Memos">No Applied Debit Memos</p>
-                            <p className="text-sm truncate" title="There are no applied debit memos associated with this supplier bill.">There are no applied debit memos associated with this supplier bill.</p>
-                        </div>
+        <TableEmptyState
+                            message="No Applied Debit Memos"
+                            description="There are no applied debit memos associated with this supplier bill."
+                        />
                     ) : (
                         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                                <table className="w-full border-separate border-spacing-0 table-fixed">
-                                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                                <Table className="border-separate border-spacing-0 table-fixed">
+                                    <THead className="sticky top-0 z-20">
                                         <tr>
                                             <SortableHeader className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" label="Applied Debit Payment" field="name" sortConfig={sortConfigDebits} requestSort={requestSortDebits} width={columnWidthsDebits.name} onResize={handleResizeDebits} />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfigDebits} requestSort={requestSortDebits} width={columnWidthsDebits.status} onResize={handleResizeDebits} />
@@ -173,31 +174,31 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                                             <SortableHeader label="Available Debit Balance" field="availableDebitBalance" sortConfig={sortConfigDebits} requestSort={requestSortDebits} width={columnWidthsDebits.availableDebitBalance} onResize={handleResizeDebits} />
                                             <SortableHeader label="Applied Debit Memo Notes" field="notes" sortConfig={sortConfigDebits} requestSort={requestSortDebits} width={columnWidthsDebits.notes} onResize={handleResizeDebits} />
                                         </tr>
-                                    </thead>
-                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    </THead>
+                                    <TBody>
                                         {paginatedDebits.map((debit) => (
-                                            <tr key={debit.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                                <td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 border-r border-gray-100 dark:border-gray-700">
+                                            <Tr key={debit.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                                                <Td className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white truncate sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 z-10 border-r border-gray-100 dark:border-gray-700">
                                                     {displayCell(debit.name)}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm truncate">
+                                                </Td>
+                                                <Td className="px-3 py-2 text-sm truncate">
                                                     <StatusBadge status={debit.status} />
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.appliedAmount)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
+                                                </Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.appliedAmount)}</Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
                                                     {displayCell(debit.debitMemoName)}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
+                                                </Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">
                                                     {displayCell(debit.supplierBillName)}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.appliedDate ? formatDate(debit.appliedDate, 'numeric-dash') : '-'}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.postedDate ? formatDate(debit.postedDate, 'numeric-dash') : '-'}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.availableDebitBalance)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={debit.notes}>{displayCell(debit.notes)}</td>
-                                            </tr>
+                                                </Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.appliedDate ? formatDate(debit.appliedDate, 'numeric-dash') : '-'}</Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{debit.postedDate ? formatDate(debit.postedDate, 'numeric-dash') : '-'}</Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">{formatCurrency(debit.availableDebitBalance)}</Td>
+                                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate" title={debit.notes}>{displayCell(debit.notes)}</Td>
+                                            </Tr>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </TBody>
+                                </Table>
                             </div>
                             <div className="px-3 py-2">
                                 <Pagination

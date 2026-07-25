@@ -8,6 +8,7 @@ import Pagination from "@/components/ui/Pagination";
 import { formatFileSize, formatDate, displayCell } from "@/lib/utils/formatting";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface BillFile {
     id: string;
@@ -133,41 +134,41 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
 
     if (files.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no files attached to this supplier bill.">There are no files attached to this supplier bill.</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There are no files attached to this supplier bill."
+            />
         );
     }
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0 table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0 table-fixed">
+                    <THead className="sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.fileName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.fileType} onResize={handleResize} />
                             <SortableHeader label="Size" field="sizeInBytes" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.sizeInBytes} onResize={handleResize} />
                             <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.uploadedBy} onResize={handleResize} />
                             <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.uploadedDate} onResize={handleResize} />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: columnWidths.action }}>Action</th>
+                            <Th style={{ width: columnWidths.action }}>Action</Th>
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((file) => (
-                            <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate">
+                            <Tr key={file.id} className="group">
+                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate">
                                     <div className="flex items-center gap-3 min-w-0">
                                         {getFileIcon(file.fileType)}
                                         <div className="truncate" title={file.fileName}>{file.fileName}</div>
                                     </div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>{displayCell(file.fileType)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatFileSize(file.sizeInBytes)}>{formatFileSize(file.sizeInBytes)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>{displayCell(file.uploadedBy)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? formatDate(file.uploadedDate) : '-'}>{file.uploadedDate ? formatDate(file.uploadedDate) : '-'}</td>
-                                <td className="px-3 py-2 truncate">
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>{displayCell(file.fileType)}</Td>
+                                <Td className="truncate" title={formatFileSize(file.sizeInBytes)}>{formatFileSize(file.sizeInBytes)}</Td>
+                                <Td className="truncate" title={file.uploadedBy}>{displayCell(file.uploadedBy)}</Td>
+                                <Td className="text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? formatDate(file.uploadedDate) : '-'}>{file.uploadedDate ? formatDate(file.uploadedDate) : '-'}</Td>
+                                <Td className="truncate">
                                     <div className="flex items-center gap-3 min-w-0">
                                         <button onClick={() => handleAction(file, 'preview')} className="text-blue-600 hover:text-blue-800 transition-colors" title="Preview">
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -188,11 +189,11 @@ export default function SupplierBillFilesTable({ files, billId }: SupplierBillFi
                                             )}
                                         </button>
                                     </div>
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="px-3 py-2">

@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Tabs from "@/components/ui/Tabs";
 
 interface SupplierBillTabsProps {
     activeTab: string;
@@ -22,22 +23,10 @@ export default function SupplierBillTabs({ activeTab, onTabChange, counts = {} }
     ];
 
     return (
-        <div className="flex flex-nowrap gap-2 overflow-x-auto py-2 w-full">
-            {tabs.map((tab) => (
-                <button
-                    key={tab.id}
-                    onClick={() => onTabChange(tab.id)}
-                    className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 text-sm font-medium ${activeTab === tab.id
-                        ? "bg-primary text-white"
-                        : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                        }`}
-                >
-                    {tab.label}
-                    {tab.count !== undefined && tab.count > 0 && (
-                        ` (${tab.count})`
-                    )}
-                </button>
-            ))}
-        </div>
+        <Tabs
+            tabs={tabs.map((tab) => ({ key: tab.id, label: tab.label, count: tab.count }))}
+            activeKey={activeTab}
+            onChange={onTabChange}
+        />
     );
 }

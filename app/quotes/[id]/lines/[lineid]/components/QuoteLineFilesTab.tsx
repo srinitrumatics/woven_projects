@@ -3,6 +3,7 @@ import { formatDate, formatFileSize, displayCell } from "@/lib/utils/formatting"
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 interface QuoteLineFile {
     id: string;
@@ -159,39 +160,32 @@ export default function QuoteLineFilesTab({ lineId, accountId, contactId, files,
     };
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
         <div className="overflow-x-auto">
             {files.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                    <p className="text-lg font-medium" title="No records found">No records found</p>
-                    <p className="text-sm">There are no files associated with this quote line.</p>
-                </div>
+                <TableEmptyState message="No records found" description="There are no files associated with this quote line." />
             ) : (
                 <>
-                    <table className="w-full">
-                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                    <Table>
+                        <THead>
                             <tr>
                                 <SortableHeader label="File Name" field="fileName" sortConfig={sortConfig} requestSort={requestSort} width={widths.fileName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                 <SortableHeader label="Type" field="fileType" sortConfig={sortConfig} requestSort={requestSort} width={widths.fileType} onResize={handleResize} />
                                 <SortableHeader label="Size" field="fileSize" sortConfig={sortConfig} requestSort={requestSort} width={widths.fileSize} onResize={handleResize} />
                                 <SortableHeader label="Uploaded By" field="uploadedBy" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedBy} onResize={handleResize} />
                                 <SortableHeader label="Date" field="uploadedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.uploadedDate} onResize={handleResize} />
-                                <th className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.action }}>
+                                <Th className="px-2" style={{ width: widths.action }}>
                                     Action
-                                </th>
+                                </Th>
                             </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        </THead>
+                        <TBody>
                             {paginatedFiles.map((file) => (
-                                <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                    <td className="px-3 py-2 text-sm sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.fileName }}>
+                                <Tr key={file.id}>
+                                    <Td className="sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.fileName }}>
                                         <div className="flex items-center gap-3 min-w-0">
                                             {getFileIcon(file.fileType)}
                                             <span
@@ -202,22 +196,22 @@ export default function QuoteLineFilesTab({ lineId, accountId, contactId, files,
                                                 {file.fileName}
                                             </span>
                                         </div>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.fileType }}>
+                                    </Td>
+                                    <Td className="text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.fileType }}>
                                         {displayCell(file.fileType?.toUpperCase())}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.fileSize }}>
+                                    </Td>
+                                    <Td className="text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.fileSize }}>
                                         {formatFileSize(file.sizeInBytes)}
-                                    </td>
-                                    <td className="px-3 py-2 truncate" style={{ width: widths.uploadedBy }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.uploadedBy }}>
                                         <div className="text-sm text-gray-900 dark:text-white" title={file.uploadedBy}>
                                             {displayCell(file.uploadedBy)}
                                         </div>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.uploadedDate }}>
+                                    </Td>
+                                    <Td className="text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.uploadedDate }}>
                                         {formatDate(file.uploadedDate, 'numeric-dash')}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm truncate" style={{ width: widths.action }}>
+                                    </Td>
+                                    <Td className="truncate" style={{ width: widths.action }}>
                                         <div className="flex gap-2">
                                             <button onClick={() => handlePreview(file)} className="p-1 text-blue-600 hover:text-blue-800" title="Preview File">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -242,11 +236,11 @@ export default function QuoteLineFilesTab({ lineId, accountId, contactId, files,
                                                 )}
                                             </button>
                                         </div>
-                                    </td>
-                                </tr>
+                                    </Td>
+                                </Tr>
                             ))}
-                        </tbody>
-                    </table>
+                        </TBody>
+                    </Table>
 
                 </>
             )}

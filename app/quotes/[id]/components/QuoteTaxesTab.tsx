@@ -3,6 +3,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { formatCurrency } from "@/lib/utils/formatting";
 import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
+import { Table, THead, TBody, Tr, Td, TableLoadingState } from "@/components/ui/DataTable";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -57,17 +58,13 @@ export default function QuoteTaxesTab({
     const totalPages = Math.ceil(displayTaxes.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
         <div className="overflow-x-auto py-2">
-            <table className="w-full">
-                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+            <Table>
+                <THead>
                     <tr>
                         <SortableHeader label="Sales Tax Rate" field="salesTaxRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxRate} onResize={onResize} align="left" />
                         <SortableHeader label="Sales Tax Amount" field="salesTaxAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesTaxAmount} onResize={onResize} align="left" />
@@ -84,28 +81,28 @@ export default function QuoteTaxesTab({
                         <SortableHeader label="VAT Rate" field="vatRate" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatRate} onResize={onResize} align="left" />
                         <SortableHeader label="VAT Amount" field="vatAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.vatAmount} onResize={onResize} align="left" />
                     </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                </THead>
+                <TBody>
                     {paginatedTaxes.map((tax) => (
-                        <tr key={tax.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesTaxRate }}>{(tax.salesTaxRate ?? 0).toFixed(3)}%</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[160px] truncate" style={{ width: widths.salesTaxAmount }}>{formatCurrency(tax.salesTaxAmount ?? 0)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.useTaxRate }}>{(tax.useTaxRate ?? 0).toFixed(3)}%</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.useTaxAmount }}>{formatCurrency(tax.useTaxAmount ?? 0)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.localTaxRate }}>{(tax.localTaxRate ?? 0).toFixed(3)}%</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[160px] truncate" style={{ width: widths.localTaxAmount }}>{formatCurrency(tax.localTaxAmount ?? 0)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.exciseTaxRate }}>{(tax.exciseTaxRate ?? 0).toFixed(3)}%</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[165px] truncate" style={{ width: widths.exciseTaxAmount }}>{formatCurrency(tax.exciseTaxAmount ?? 0)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.grtRate }}>{(tax.grtRate ?? 0).toFixed(3)}%</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.grtAmount }}>{formatCurrency(tax.grtAmount ?? 0)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.gstRate }}>{(tax.gstRate ?? 0).toFixed(3)}%</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.gstAmount }}>{formatCurrency(tax.gstAmount ?? 0)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.vatRate }}>{(tax.vatRate ?? 0).toFixed(3)}%</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.vatAmount }}>{formatCurrency(tax.vatAmount ?? 0)}</td>
-                        </tr>
+                        <Tr key={tax.id}>
+                            <Td className="truncate" style={{ width: widths.salesTaxRate }}>{(tax.salesTaxRate ?? 0).toFixed(3)}%</Td>
+                            <Td className="min-w-[160px] truncate" style={{ width: widths.salesTaxAmount }}>{formatCurrency(tax.salesTaxAmount ?? 0)}</Td>
+                            <Td className="truncate" style={{ width: widths.useTaxRate }}>{(tax.useTaxRate ?? 0).toFixed(3)}%</Td>
+                            <Td className="truncate" style={{ width: widths.useTaxAmount }}>{formatCurrency(tax.useTaxAmount ?? 0)}</Td>
+                            <Td className="truncate" style={{ width: widths.localTaxRate }}>{(tax.localTaxRate ?? 0).toFixed(3)}%</Td>
+                            <Td className="min-w-[160px] truncate" style={{ width: widths.localTaxAmount }}>{formatCurrency(tax.localTaxAmount ?? 0)}</Td>
+                            <Td className="truncate" style={{ width: widths.exciseTaxRate }}>{(tax.exciseTaxRate ?? 0).toFixed(3)}%</Td>
+                            <Td className="min-w-[165px] truncate" style={{ width: widths.exciseTaxAmount }}>{formatCurrency(tax.exciseTaxAmount ?? 0)}</Td>
+                            <Td className="truncate" style={{ width: widths.grtRate }}>{(tax.grtRate ?? 0).toFixed(3)}%</Td>
+                            <Td className="truncate" style={{ width: widths.grtAmount }}>{formatCurrency(tax.grtAmount ?? 0)}</Td>
+                            <Td className="truncate" style={{ width: widths.gstRate }}>{(tax.gstRate ?? 0).toFixed(3)}%</Td>
+                            <Td className="truncate" style={{ width: widths.gstAmount }}>{formatCurrency(tax.gstAmount ?? 0)}</Td>
+                            <Td className="truncate" style={{ width: widths.vatRate }}>{(tax.vatRate ?? 0).toFixed(3)}%</Td>
+                            <Td className="truncate" style={{ width: widths.vatAmount }}>{formatCurrency(tax.vatAmount ?? 0)}</Td>
+                        </Tr>
                     ))}
-                </tbody>
-            </table>
+                </TBody>
+            </Table>
         </div>
     );
 }

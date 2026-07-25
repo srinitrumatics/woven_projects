@@ -214,11 +214,11 @@ export default function AddToOrderModal({
           <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
             <div className="flex justify-between items-start gap-4">
               <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Product</p>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Product</p>
                 <h3 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-2">{product.name}</h3>
               </div>
               <div className="text-right">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Quantity</p>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Quantity</p>
                 <p className="text-sm font-bold text-primary">{formatNumber(quantity)}</p>
               </div>
             </div>
@@ -257,7 +257,7 @@ export default function AddToOrderModal({
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(order.total)}</p>
-                      <p className="text-[10px] font-bold text-amber-600 uppercase">{order.status}</p>
+                      <p className="text-xs font-bold text-amber-600 uppercase">{order.status}</p>
                     </div>
                   </button>
                 ))}

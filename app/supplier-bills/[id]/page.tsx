@@ -330,19 +330,17 @@ export default function SupplierBillDetailPage() {
 
             {/* Third Row: Tabs and Content */}
             <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
-                    <div className="w-full lg:flex-1 min-w-0">
-                        <SupplierBillTabs
-                            activeTab={activeTab}
-                            onTabChange={setActiveTab}
-                            counts={{
-                                lines: lines.length,
-                                payments: billPayments.length + appliedDebits.length,
-                                debits: debitMemos.length,
-                                files: files.length
-                            }}
-                        />
-                    </div>
+                <div className="p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
+                    <SupplierBillTabs
+                        activeTab={activeTab}
+                        onTabChange={setActiveTab}
+                        counts={{
+                            lines: lines.length,
+                            payments: billPayments.length + appliedDebits.length,
+                            debits: debitMemos.length,
+                            files: files.length
+                        }}
+                    />
                 </div>
                 <div className="p-4">
                     {activeTab === 'lines' && <SupplierBillLinesTable lines={lines} />}

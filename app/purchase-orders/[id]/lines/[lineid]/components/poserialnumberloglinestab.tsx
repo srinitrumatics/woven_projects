@@ -7,6 +7,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { formatDate, displayCell } from "@/lib/utils/formatting";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface SerialNumberLog {
     Id: string;
@@ -60,20 +61,20 @@ export default function POSerialNumberLogLinesTab({ serialNumbers }: POSerialNum
 
     if (serialNumbers.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-900 dark:text-gray-700 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no Serial Number Logs associated with this record.">There are no Serial Number Logs associated with this record.</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There are no Serial Number Logs associated with this record."
+            />
         );
     }
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0">
+                    <THead className="sticky top-0 z-20">
                         <tr>
-                            <SortableHeader label="Serial Number Log" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-[#e9f1f7] dark:bg-gray-900 z-30" />
+                            <SortableHeader label="Serial Number Log" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Serial Number #" field="Serial_Number_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.serialNumber} onResize={handleResize} />
                             <SortableHeader label="Product Serial Number" field="Product_Serial_Number__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productSerialNumber} onResize={handleResize} />
                             <SortableHeader label="Product Name" field="Product_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.productName} onResize={handleResize} />
@@ -84,54 +85,54 @@ export default function POSerialNumberLogLinesTab({ serialNumbers }: POSerialNum
                             <SortableHeader label="Received Date" field="Received_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.receivedDate} onResize={handleResize} />
                             <SortableHeader label="Active" field="Active__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.active} onResize={handleResize} />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((s) => (
-                            <tr key={s.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={s.Name}>
+                            <Tr key={s.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={s.Name}>
                                     {s.Name}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Serial_Number_Name || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Serial_Number_Name || '-'}>
                                     {displayCell(s.Serial_Number_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Serial_Number__c || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Serial_Number__c || '-'}>
                                     {displayCell(s.Product_Serial_Number__c)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate" title={s.Product_Name || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate" title={s.Product_Name || '-'}>
                                     {s.Product_Name__c ? (
                                         <Link href={`/products/${s.Product_Name__c}`} className="text-primary hover:underline font-medium">
                                             {s.Product_Name}
                                         </Link>
                                     ) : displayCell(s.Product_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Description__c || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Description__c || '-'}>
                                     {displayCell(s.Product_Description__c)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Brand_Name__c || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Brand_Name__c || '-'}>
                                     {displayCell(s.Product_Brand_Name__c)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Name || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Name || '-'}>
                                     {s.Purchase_Order__c ? (
                                         <Link href={`/purchase-orders/${s.Purchase_Order__c}`} className="text-primary hover:underline font-medium">
                                             {s.Purchase_Order_Name}
                                         </Link>
                                     ) : displayCell(s.Purchase_Order_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.RMA_Name || '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.RMA_Name || '-'}>
                                     {displayCell(s.RMA_Name)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : '-'}>
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : '-'}>
                                     {s.Received_Date__c ? formatDate(s.Received_Date__c, 'numeric-dash') : displayCell(undefined)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={s.Active__c ? 'Yes' : 'No'}>
-                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full truncate ${s.Active__c ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                                </Td>
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={s.Active__c ? 'Yes' : 'No'}>
+                                    <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full truncate ${s.Active__c ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
                                         }`} title={s.Active__c ? 'Yes' : 'No'}>
                                         {s.Active__c ? 'Yes' : 'No'}</span>
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="border-t border-gray-200 dark:border-gray-700">

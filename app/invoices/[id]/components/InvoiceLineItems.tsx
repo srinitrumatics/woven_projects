@@ -6,6 +6,7 @@ import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../hooks/useSortableData";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -48,22 +49,19 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
 
     if (lines.length === 0) {
         return (
-            <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400 font-medium tracking-tight text-lg truncate" title="No invoice lines found">No invoice lines found</p>
-                <p className="text-sm truncate" title="There are no items associated with this invoice.">There are no items associated with this invoice.</p>
-            </div>
+            <TableEmptyState message="No invoice lines found" description="There are no items associated with this invoice." />
         );
     }
 
     return (
         <div className="flex flex-col">
             <div className="overflow-x-auto">
-                <table className="w-full table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                <Table className="table-fixed">
+                    <THead>
                         <tr>
                             <SortableHeader label="Invoice Line" field="invoiceLineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap" style={{ width: widths.invoiceNumber }}>Invoice #</th>
+                            <Th className="whitespace-nowrap" style={{ width: widths.invoiceNumber }}>Invoice #</Th>
                             <SortableHeader label="Sales Order Line" field="salesOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} />
                             <SortableHeader label="Purchase Order Line" field="purchaseOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderLine} onResize={handleResize} />
                             <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} />
@@ -77,15 +75,15 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                             <SortableHeader label="Shipping" field="shippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
                             <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
                             <SortableHeader label="Line Grand Total" field="lineGrandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: widths.actions }}>Action</th>
+                            <Th style={{ width: widths.actions }}>Action</Th>
                         </tr>
                         {/* Force minimum height for header to prevent collapse */}
                         <tr aria-hidden="true" className="h-0 border-none"></tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedLines.map((line) => (
-                            <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td className="px-3 py-2 text-sm font-bold text-left sticky left-0 bg-white dark:bg-gray-800 truncate">
+                            <Tr key={line.id} className="transition-colors">
+                                <Td className="font-bold text-left sticky left-0 bg-white dark:bg-gray-800 truncate">
                                     {invoiceId ? (
                                         <Link href={`/invoices/${invoiceId}/lines/${line.id}`} className="text-primary hover:underline truncate block" title={line.invoiceLineName}>
                                             {line.invoiceLineName}
@@ -93,16 +91,16 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                                     ) : (
                                         <span className="text-primary truncate block" title={line.invoiceLineName}>{line.invoiceLineName}</span>
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-left truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${line.status === 'Paid' || line.status === 'Settled' || line.status === 'Approved'
                                         ? 'bg-green-100 text-green-800'
                                         : 'bg-blue-100 text-blue-800'
                                         }`}>
                                         {line.status}
                                     </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {invoiceId ? (
                                         <Link href={`/invoices/${invoiceId}`} className="text-primary hover:underline font-medium">
                                             {displayCell(invoiceNumber)}
@@ -110,14 +108,14 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                                     ) : (
                                         displayCell(invoiceNumber)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {displayCell(line.salesOrderLine)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {displayCell(line.purchaseOrderLine)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {line.customerQuoteId && line.customerQuoteLineId ? (
                                         <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                             {displayCell(line.customerQuoteLineName)}
@@ -129,8 +127,8 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                                     ) : (
                                         displayCell(line.customerQuoteLineName)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {line.proposedProductId ? (
                                         <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                             {displayCell(line.proposedProduct)}
@@ -138,8 +136,8 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                                     ) : (
                                         displayCell(line.proposedProduct)
                                     )}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">
+                                </Td>
+                                <Td className="font-medium text-left truncate">
                                     <div className="truncate">
                                         {line.productId ? (
                                             <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium" title={line.productName} onClick={(e) => e.stopPropagation()}>
@@ -149,32 +147,32 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                                             <span title={line.productName}>{displayCell(line.productName)}</span>
                                         )}
                                     </div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 text-left truncate">
                                     <div className="truncate" title={line.description}>{displayCell(line.description)}</div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 text-left truncate">
                                     {displayCell(line.brand)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {formatCurrency(line.unitPrice)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {line.quantity.toFixed(2)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-bold truncate">
+                                </Td>
+                                <Td className="text-left font-bold truncate">
                                     {formatCurrency(line.subtotal)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {formatCurrency(line.shippingCharges)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {formatCurrency(line.totalTaxesAmount)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white min-w-[170px] font-bold text-primary truncate">
+                                </Td>
+                                <Td className="text-left min-w-[170px] font-bold text-primary truncate">
                                     {formatCurrency(line.lineGrandTotal)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-left truncate">
+                                </Td>
+                                <Td className="text-left truncate">
                                     {invoiceId && (
                                         <Link
                                             href={`/invoices/${invoiceId}/lines/${line.id}`}
@@ -187,11 +185,11 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                                             </svg>
                                         </Link>
                                     )}
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
             <Pagination
                 currentPage={currentPage}

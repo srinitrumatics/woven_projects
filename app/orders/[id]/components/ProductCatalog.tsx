@@ -5,6 +5,7 @@ import Pagination from "@/components/ui/Pagination";
 import { formatCurrency, formatNumber, truncateText, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { SortConfig } from "../../../../hooks/useSortableData"; // Import SortConfig type
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface ProductCatalogProps {
     selectedProductIds: Set<string>;
@@ -102,18 +103,18 @@ export default function ProductCatalog({
                 )}
             </div>
             {paginatedCatalogProducts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                    <p className="text-sm mt-1 truncate">{searchQuery ? "No products found matching your search." : "All products have been added to your order."}</p>
-                </div>
+                <TableEmptyState
+                    message="No records found"
+                    description={searchQuery ? "No products found matching your search." : "All products have been added to your order."}
+                />
             ) : (
                 <div className="overflow-auto">
-                    <table className="w-full table-fixed">
-                        <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-10">
+                    <Table className="table-fixed">
+                        <THead className="sticky top-0 z-10">
                             <tr>
                                 {isEditing && (
-                                    <th
-                                        className="px-2 py-3 text-left truncate"
+                                    <Th
+                                        className="text-left truncate"
                                         style={{ width: widths.selection, minWidth: widths.selection, maxWidth: widths.selection }}
                                     >
                                         <input
@@ -122,7 +123,7 @@ export default function ProductCatalog({
                                             checked={paginatedCatalogProducts.length > 0 && paginatedCatalogProducts.every(p => selectedProductIds.has(p.id))}
                                             className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
                                         />
-                                    </th>
+                                    </Th>
                                 )}
                                 {/*<th
                                 className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white truncate"
@@ -137,26 +138,26 @@ export default function ProductCatalog({
                                 {isEditing && (
                                     <>
                                         <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
-                                        <th
-                                            className="px-2 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white truncate"
+                                        <Th
+                                            className="truncate"
                                             style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
-                                        >Action</th>
+                                        >Action</Th>
                                     </>
                                 )}
                             </tr>
-                        </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        </THead>
+                        <TBody>
                             {paginatedCatalogProducts.map((product) => (
-                                <tr key={product.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${selectedProductIds.has(product.id) ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
+                                <Tr key={product.id} className={`${selectedProductIds.has(product.id) ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
                                     {isEditing && (
-                                        <td className="px-2 py-2 text-left truncate">
+                                        <Td className="text-left truncate">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedProductIds.has(product.id)}
                                                 onChange={() => handleSelectProduct(product.id)}
                                                 className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
                                             />
-                                        </td>
+                                        </Td>
                                     )}
                                     {/*<td className="px-4 py-2 text-center truncate">
                                         <div
@@ -168,7 +169,7 @@ export default function ProductCatalog({
                                             </svg>
                                         </div>
                                     </td>*/}
-                                    <td className="px-3 py-2 text-left truncate">
+                                    <Td className="px-3 py-2 text-left truncate">
                                         <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.name}>
                                             <Link href={`/products/${product.id}`}
                                                 className="text-gray-900 hover:text-primary dark:text-gray-600 dark:hover:text-primary transition-colors p-1"
@@ -179,27 +180,27 @@ export default function ProductCatalog({
                                         <div className="text-sm text-gray-500 dark:text-gray-400 truncate break-words" title={product.description || "—"}>
                                             {product.description ? truncateText(product.description, 50) : "—"}
                                         </div>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                    </Td>
+                                    <Td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
                                         <div className="truncate" title={displayCell(product.brand)}>{displayCell(product.brand)}</div>
-                                    </td>
-                                    <td className="px-3 py-2 text-left truncate">
+                                    </Td>
+                                    <Td className="px-3 py-2 text-left truncate">
                                         <div className="truncate" title={displayCell(product.productFamily)}>
                                             <span className="inline-block px-2 py-0.5 text-sm font-medium rounded bg-primary/10 text-primary  tracking-wider whitespace-normal truncate">
                                                 {displayCell(product.productFamily)}
                                             </span>
                                         </div>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-left text-gray-500 dark:text-gray-400 line-through truncate">
+                                    </Td>
+                                    <Td className="px-3 py-2 text-sm text-left text-gray-500 dark:text-gray-400 line-through truncate">
                                         {formatCurrency(product.listPrice)}
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">
+                                    </Td>
+                                    <Td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">
                                         {formatCurrency(product.unitPrice)}
-                                    </td>
+                                    </Td>
                                     {/* Removed Available Qty Cell */}
                                     {isEditing && (
                                         <>
-                                            <td className="px-3 py-2 text-left truncate">
+                                            <Td className="px-3 py-2 text-left truncate">
                                                 <div className="flex flex-col gap-1 min-w-0">
                                                     <div className="flex gap-1">
                                                         <button
@@ -246,8 +247,8 @@ export default function ProductCatalog({
                                                     </div>
                                                     <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
                                                 </div>
-                                            </td>
-                                            <td className="px-3 py-2 text-left truncate">
+                                            </Td>
+                                            <Td className="px-3 py-2 text-left truncate">
                                                 <div className="flex flex-col gap-1 min-w-0">
                                                     <button
                                                         onClick={() => {
@@ -265,13 +266,13 @@ export default function ProductCatalog({
                                                         Add
                                                     </button>
                                                 </div>
-                                            </td>
+                                            </Td>
                                         </>
                                     )}
-                                </tr>
+                                </Tr>
                             ))}
-                        </tbody>
-                    </table>
+                        </TBody>
+                    </Table>
                 </div>
             )}
             {/* Image Popup Modal */}

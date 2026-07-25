@@ -24,7 +24,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       {/* Category Tag */}
       <div className="flex items-center gap-2 mb-1.5">
         <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-        <span className="text-[10px] font-bold text-blue-500 leading-none">
+        <span className="text-xs font-bold text-blue-500 leading-none">
           {product.category}
         </span>
       </div>
@@ -34,7 +34,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
         <h1 className="text-lg md:text-xl font-extrabold text-gray-900 dark:text-white leading-tight mb-1">
           {product.name}
         </h1>
-        <div className="text-[10px] font-bold tracking-widest text-gray-400">
+        <div className="text-xs font-bold tracking-widest text-gray-400">
           SKU: {product.sku}
         </div>
       </div>
@@ -45,7 +45,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
           <div className="w-2 h-2 rounded-full bg-green-500 ring-2 ring-green-50"></div>
           <span className="text-xs font-bold text-green-600">{product.status}</span>
         </div>
-        <div className="text-[10px] whitespace-nowrap font-bold text-gray-400">
+        <div className="text-xs whitespace-nowrap font-bold text-gray-400">
           {product.onHand} Available • {product.warehouses} warehouses
         </div>
       </div>
@@ -54,7 +54,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       <div className="p-3 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl border border-gray-100 dark:border-gray-700 mb-3 relative group overflow-hidden">
         <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
         <div className="relative">
-          <div className="text-[10px] font-bold text-gray-400 mb-1">Unit Price</div>
+          <div className="text-xs font-bold text-gray-400 mb-1">Unit Price</div>
           <div className="flex items-baseline gap-3">
             <span className="text-2xl font-black text-gray-900 dark:text-blue-400 tracking-tight">
               {formatCurrency(product.price)}
@@ -66,7 +66,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       {/* Order Controls */}
       <div className="space-y-3 mb-3">
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold text-gray-400">Total Order Qty</label>
+          <label className="text-xs font-bold text-gray-400">Total Order Qty</label>
           <div className="flex flex-wrap items-center gap-3">
             <div className="inline-flex items-center gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-1.5 rounded-lg shadow-sm">
               <button
@@ -102,19 +102,19 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       {/* Grid Stats */}
       <div className="grid grid-cols-2 gap-px mt-auto rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-100 dark:border-gray-700">
         <div className="bg-white dark:bg-gray-800 p-3.5">
-          <div className="text-[9px] font-bold text-gray-400 mb-1 opacity-60">Lead Time</div>
+          <div className="text-xs font-bold text-gray-400 mb-1 opacity-60">Lead Time</div>
           <div className="text-xs font-bold text-gray-900 dark:text-white">{product.leadTime}</div>
         </div>
         <div className="bg-white dark:bg-gray-800 p-3.5">
-          <div className="text-[9px] font-bold text-gray-400 mb-1 opacity-60">MOQ</div>
+          <div className="text-xs font-bold text-gray-400 mb-1 opacity-60">MOQ</div>
           <div className="text-xs font-bold text-gray-900 dark:text-white">{product.moq}</div>
         </div>
         <div className="bg-white dark:bg-gray-800 p-3.5">
-          <div className="text-[9px] font-bold text-gray-400 mb-1 opacity-60">Brand Name</div>
+          <div className="text-xs font-bold text-gray-400 mb-1 opacity-60">Brand Name</div>
           <div className="text-xs font-bold text-gray-900 dark:text-white line-clamp-1">{product.brand}</div>
         </div>
         <div className="bg-white dark:bg-gray-800 p-3.5">
-          <div className="text-[9px] font-bold text-gray-400 mb-1 opacity-60">Warranty</div>
+          <div className="text-xs font-bold text-gray-400 mb-1 opacity-60">Warranty</div>
           <div className="text-xs font-bold text-gray-900 dark:text-white line-clamp-1">{product.warranty}</div>
         </div>
       </div>

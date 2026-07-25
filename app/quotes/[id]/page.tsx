@@ -703,31 +703,28 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
       />
 
       <div className="mt-8">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
-            {/* Tab buttons — left on desktop (>=1024px) */}
-            <div className="w-full lg:flex-1 min-w-0">
-              <QuoteTabs
-                activeTab={activeTab}
-                accountType={selectedAccount?.Account_Record_Type__c || selectedAccount?.Account_Type__c || user?.role}
-                onTabChange={(tab) => {
-                  setActiveTab(tab);
-                  if (['fulfillment', 'purchases', 'returns', 'files'].includes(tab)) {
-                    fetchTabData(tab);
-                  }
-                }}
-                counts={{
-                  quotelines: quoteLines.length,
-                  taxes: taxes.length,
-                  fulfillment: (fulfillmentData.salesOrders?.length || 0) + (fulfillmentData.shippingManifests?.length || 0) + (fulfillmentData.invoices?.length || 0),
-                  purchases: (purchasesData.purchases?.length || 0) + (purchasesData.supplierBills?.length || 0),
-                  returns: (returnsData.rma?.length || 0) + (returnsData.rtv?.length || 0) + (returnsData.creditMemos?.length || 0) + (returnsData.debitMemos?.length || 0),
-                  files: quoteFiles.length
-                }}
-              />
-            </div>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
+            <QuoteTabs
+              activeTab={activeTab}
+              accountType={selectedAccount?.Account_Record_Type__c || selectedAccount?.Account_Type__c || user?.role}
+              onTabChange={(tab) => {
+                setActiveTab(tab);
+                if (['fulfillment', 'purchases', 'returns', 'files'].includes(tab)) {
+                  fetchTabData(tab);
+                }
+              }}
+              counts={{
+                quotelines: quoteLines.length,
+                taxes: taxes.length,
+                fulfillment: (fulfillmentData.salesOrders?.length || 0) + (fulfillmentData.shippingManifests?.length || 0) + (fulfillmentData.invoices?.length || 0),
+                purchases: (purchasesData.purchases?.length || 0) + (purchasesData.supplierBills?.length || 0),
+                returns: (returnsData.rma?.length || 0) + (returnsData.rtv?.length || 0) + (returnsData.creditMemos?.length || 0) + (returnsData.debitMemos?.length || 0),
+                files: quoteFiles.length
+              }}
+            />
           </div>
-          <div className="px-4">
+          <div className="p-4">
             {activeTab === 'quotelines' && (
               <QuoteLinesTab
                 products={sortedLines}

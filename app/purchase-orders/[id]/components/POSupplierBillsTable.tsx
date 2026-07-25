@@ -11,6 +11,7 @@ import { Eye } from 'lucide-react';
 import { useUserSession } from "@/components/UserSessionContext";
 
 import { StatusBadge, RemittanceBadge } from "@/components/ui/StatusBadge";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface SupplierBill {
     Id: string;
@@ -107,11 +108,20 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
 
     const totalPages = Math.ceil(bills.length / ITEMS_PER_PAGE);
 
+    if (bills.length === 0) {
+        return (
+            <TableEmptyState
+                message="No records found"
+                description="There are no Supplier Bills associated with this purchase order."
+            />
+        );
+    }
+
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0 table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0 table-fixed">
+                    <THead className="sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="Supplier Bill #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
@@ -133,38 +143,31 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                             <SortableHeader label="Remittance Status" field="Remittance_Status__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.remittanceStatus} onResize={handleResize} />
                             <SortableHeader label="Open Balance" field="Open_Balance__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.openBalance} onResize={handleResize} />
                             <SortableHeader label="Settled Date" field="Settled_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.settledDate} onResize={handleResize} />
-                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap" style={{ width: columnWidths.action }}>Action</th>
+                            <Th className="whitespace-nowrap" style={{ width: columnWidths.action }}>Action</Th>
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {paginatedData.length === 0 ? (
-                            <tr>
-                                <td colSpan={21} className="px-6 py-12 text-center truncate">
-                                    <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                                    <p className="text-sm truncate" title="There are no Supplier Bills associated with this purchase order.">There are no Supplier Bills associated with this purchase order.</p>
-                                </td>
-                            </tr>
-                        ) : paginatedData.map((b) => (
-                            <tr key={b.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={b.Name}>
+                    </THead>
+                    <TBody>
+                        {paginatedData.map((b) => (
+                            <Tr key={b.Id} className="transition-colors group">
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={b.Name}>
                                     {b.Id ? (
                                         <Link href={`/supplier-bills/${b.Id}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {b.Name || 'View suppiler bill'}
                                         </Link>
                                     ) : b.Name || '-'}
 
-                                </td>
-                                <td className="px-3 py-2 truncate">
+                                </Td>
+                                <Td className="px-3 py-2 truncate">
                                     <StatusBadge status={b.Status__c} />
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Purchase_Order_Name || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Purchase_Order_Name || '-'}>
                                     {b.Purchase_Order__c ? (
                                         <Link href={`/purchase-orders/${b.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {b.Purchase_Order_Name || 'View PO'}
                                         </Link>
                                     ) : displayCell(b.Purchase_Order_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Quote_Name || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Quote_Name || '-'}>
                                     {b.Customer_Quote__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/quotes/${b.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -174,8 +177,8 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                             <span className="font-medium">{displayCell(b.Customer_Quote_Name)}</span>
                                         )
                                     ) : displayCell(b.Customer_Quote_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Proposal_Name || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Proposal_Name || '-'}>
                                     {b.Proposal__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/proposals/${b.Proposal__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -185,9 +188,9 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                             <span className="font-medium">{displayCell(b.Proposal_Number || b.Proposal_Name)}</span>
                                         )
                                     ) : displayCell(b.Proposal_Number || b.Proposal_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Proposal_Name || '-'}>{displayCell(b.Proposal_Name)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Order_Name || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Proposal_Name || '-'}>{displayCell(b.Proposal_Name)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Order_Name || '-'}>
                                     {b.Customer_Order__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/orders/${b.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -197,49 +200,49 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                             <span className="font-medium">{displayCell(b.Customer_Order_Name)}</span>
                                         )
                                     ) : displayCell(b.Customer_Order_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Ship_to_Account_Name || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Ship_to_Account_Name || '-'}>
                                     {displayCell(b.Ship_to_Account_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Authorized_Ship_To_Location_Name || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Authorized_Ship_To_Location_Name || '-'}>
                                     {displayCell(b.Authorized_Ship_To_Location_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Ship_to_Contact_Name || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Ship_to_Contact_Name || '-'}>
                                     {displayCell(b.Ship_to_Contact_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(b.Total_Lines__c || 0)}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(b.Total_Lines__c || 0)}>
                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 text-xs font-semibold truncate">
                                         {b.Total_Lines__c || 0}
                                     </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(b.Total_Product_Amount__c || b.gtherp__Total_Product_Amount__c || 0)}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(b.Total_Product_Amount__c || b.gtherp__Total_Product_Amount__c || 0)}>
                                     {formatCurrency(b.Total_Product_Amount__c || b.gtherp__Total_Product_Amount__c || 0)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(b.Total_Shipping_Charges__c || b.gtherp__Total_Shipping_Charges__c || 0)}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(b.Total_Shipping_Charges__c || b.gtherp__Total_Shipping_Charges__c || 0)}>
                                     {formatCurrency(b.Total_Shipping_Charges__c || b.gtherp__Total_Shipping_Charges__c || 0)}
-                                </td>
-                                <td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white text-left truncate" title={formatCurrency(b.TotalAmount__c || b.gtherp__TotalAmount__c || 0)}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm font-bold text-gray-900 dark:text-white text-left truncate" title={formatCurrency(b.TotalAmount__c || b.gtherp__TotalAmount__c || 0)}>
                                     {formatCurrency(b.TotalAmount__c || b.gtherp__TotalAmount__c || 0)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={b.Billed_Date__c ? formatDate(b.Billed_Date__c, 'numeric-dash') : '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={b.Billed_Date__c ? formatDate(b.Billed_Date__c, 'numeric-dash') : '-'}>
                                     {b.Billed_Date__c ? formatDate(b.Billed_Date__c, 'numeric-dash') : '-'}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Payment_Terms__c || '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Payment_Terms__c || '-'}>
                                     {displayCell(b.Payment_Terms__c)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={b.Due_Date__c ? formatDate(b.Due_Date__c, 'numeric-dash') : '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={b.Due_Date__c ? formatDate(b.Due_Date__c, 'numeric-dash') : '-'}>
                                     {b.Due_Date__c ? formatDate(b.Due_Date__c, 'numeric-dash') : '-'}
-                                </td>
-                                <td className="px-3 py-2 truncate">
+                                </Td>
+                                <Td className="px-3 py-2 truncate">
                                     <RemittanceBadge status={b.Remittance_Status__c || 'Pending'} />
-                                </td>
-                                <td className={`px-3 py-2 text-sm text-left truncate font-medium ${(b.Open_Balance__c || 0) > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`} title={formatCurrency(b.Open_Balance__c || 0)}>
+                                </Td>
+                                <Td className={`px-3 py-2 text-sm text-left truncate font-medium ${(b.Open_Balance__c || 0) > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`} title={formatCurrency(b.Open_Balance__c || 0)}>
                                     {formatCurrency(b.Open_Balance__c || 0)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={b.Settled_Date__c ? formatDate(b.Settled_Date__c, 'numeric-dash') : '-'}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={b.Settled_Date__c ? formatDate(b.Settled_Date__c, 'numeric-dash') : '-'}>
                                     {b.Settled_Date__c ? formatDate(b.Settled_Date__c, 'numeric-dash') : '-'}
-                                </td>
-                                <td className="px-3 py-2 text-sm truncate" onClick={(e) => e.stopPropagation()}>
+                                </Td>
+                                <Td className="px-3 py-2 text-sm truncate" onClick={(e) => e.stopPropagation()}>
                                     <Link
                                         href={`/supplier-bills/${b.Id}`}
                                         target="_blank"
@@ -248,11 +251,11 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                     >
                                         <Eye className="w-5 h-5 text-primary" />
                                     </Link>
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="border-t border-gray-100 dark:border-gray-700">

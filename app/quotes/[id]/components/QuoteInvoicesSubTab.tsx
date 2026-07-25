@@ -5,6 +5,7 @@ import Link from "next/link";
 import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -45,25 +46,18 @@ export default function QuoteInvoicesSubTab({
     const totalPages = Math.ceil(invoices.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     return (
         <div>
             <div className="overflow-x-auto py-2">
                 {invoices.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                        <p className="text-lg font-medium" title="No records found">No records found</p>
-                        <p className="text-sm" title="There are no invoices associated with this quote.">There are no invoices associated with this quote.</p>
-                    </div>
+                    <TableEmptyState message="No records found" description="There are no invoices associated with this quote." />
                 ) : (
                     <>
-                        <table className="w-full table-fixed">
-                            <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                        <Table className="table-fixed">
+                            <THead>
                                 <tr>
                                     <SortableHeader label="Invoice" field="invoiceNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                                     <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
@@ -89,25 +83,25 @@ export default function QuoteInvoicesSubTab({
                                     <SortableHeader label="Open Balance" field="openBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalance} onResize={onResize} align="left" />
                                     <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={onResize} align="left" />
                                 </tr>
-                            </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            </THead>
+                            <TBody>
                                 {paginatedInvoices.map((invoice) => (
-                                    <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="px-3 py-2 text-sm font-medium text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.invoiceNumber }}>
+                                    <Tr key={invoice.id}>
+                                        <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.invoiceNumber }}>
                                             <Link href={`/invoices/${invoice.id}`} target="_blank" className="text-primary hover:underline font-medium">
                                                 {invoice.invoiceNumber}
                                             </Link>
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.status }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.status }}>
                                             <StatusBadge status={invoice.status} />
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.salesOrder }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.salesOrder }}>
                                             {displayCell(invoice.salesOrder)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.purchaseOrder }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.purchaseOrder }}>
                                             {displayCell(invoice.purchaseOrder)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerQuote }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.customerQuote }}>
                                             {invoice.customerQuoteId ? (
                                                 !isManufacturer ? (
                                                     <Link href={`/quotes/${invoice.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -115,8 +109,8 @@ export default function QuoteInvoicesSubTab({
                                                     </Link>
                                                 ) : displayCell(invoice.customerQuote)
                                             ) : displayCell(invoice.customerQuote)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposalNumber }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.proposalNumber }}>
                                             {invoice.proposalId ? (
                                                 !isManufacturer ? (
                                                     <Link href={`/proposals/${invoice.proposalId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -124,11 +118,11 @@ export default function QuoteInvoicesSubTab({
                                                     </Link>
                                                 ) : displayCell(invoice.proposalName)
                                             ) : displayCell(invoice.proposalName)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.proposalName }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.proposalName }}>
                                             {displayCell(invoice.proposalName)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerOrder }}>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.customerOrder }}>
                                             {invoice.customerOrderId ? (
                                                 !isManufacturer && !isRestricted ? (
                                                     <Link href={`/orders/${invoice.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
@@ -136,26 +130,26 @@ export default function QuoteInvoicesSubTab({
                                                     </Link>
                                                 ) : displayCell(invoice.customerOrder)
                                             ) : displayCell(invoice.customerOrder)}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.customerPO }}>{displayCell(invoice.customerPO)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToAccount }}>{displayCell(invoice.billToAccount)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToLocation }}>{displayCell(invoice.billToLocation)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.billToContact }}>{displayCell(invoice.billToContact)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalLines }}>{formatNumber(invoice.totalLines)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(invoice.totalPrice)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }}>{formatCurrency(invoice.shipping)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }}>{formatCurrency(invoice.taxes)}</td>
-                                        <td className="px-3 py-2 text-sm text-primary font-bold truncate" style={{ width: widths.grandTotal }}>{formatCurrency(invoice.grandTotal)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.issuedDate }}>{formatDate(invoice.issuedDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.paymentTerms }}>{displayCell(invoice.paymentTerms)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.dueDate }}>{formatDate(invoice.dueDate, 'numeric-dash')}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.collectionStatus }}>{displayCell(invoice.collectionStatus)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.openBalance }}>{formatCurrency(invoice.openBalance)}</td>
-                                        <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.settledDate }}>{formatDate(invoice.settledDate, 'numeric-dash')}</td>
-                                    </tr>
+                                        </Td>
+                                        <Td className="truncate" style={{ width: widths.customerPO }}>{displayCell(invoice.customerPO)}</Td>
+                                        <Td className="truncate" style={{ width: widths.billToAccount }}>{displayCell(invoice.billToAccount)}</Td>
+                                        <Td className="truncate" style={{ width: widths.billToLocation }}>{displayCell(invoice.billToLocation)}</Td>
+                                        <Td className="truncate" style={{ width: widths.billToContact }}>{displayCell(invoice.billToContact)}</Td>
+                                        <Td className="truncate" style={{ width: widths.totalLines }}>{formatNumber(invoice.totalLines)}</Td>
+                                        <Td className="font-bold truncate" style={{ width: widths.totalPrice }}>{formatCurrency(invoice.totalPrice)}</Td>
+                                        <Td className="truncate" style={{ width: widths.shipping }}>{formatCurrency(invoice.shipping)}</Td>
+                                        <Td className="truncate" style={{ width: widths.taxes }}>{formatCurrency(invoice.taxes)}</Td>
+                                        <Td className="text-primary font-bold truncate" style={{ width: widths.grandTotal }}>{formatCurrency(invoice.grandTotal)}</Td>
+                                        <Td className="truncate" style={{ width: widths.issuedDate }}>{formatDate(invoice.issuedDate, 'numeric-dash')}</Td>
+                                        <Td className="truncate" style={{ width: widths.paymentTerms }}>{displayCell(invoice.paymentTerms)}</Td>
+                                        <Td className="truncate" style={{ width: widths.dueDate }}>{formatDate(invoice.dueDate, 'numeric-dash')}</Td>
+                                        <Td className="truncate" style={{ width: widths.collectionStatus }}>{displayCell(invoice.collectionStatus)}</Td>
+                                        <Td className="truncate" style={{ width: widths.openBalance }}>{formatCurrency(invoice.openBalance)}</Td>
+                                        <Td className="truncate" style={{ width: widths.settledDate }}>{formatDate(invoice.settledDate, 'numeric-dash')}</Td>
+                                    </Tr>
                                 ))}
-                            </tbody>
-                        </table>
+                            </TBody>
+                        </Table>
 
                     </>
                 )}

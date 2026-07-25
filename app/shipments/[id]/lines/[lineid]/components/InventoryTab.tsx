@@ -5,6 +5,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { formatDate, formatNumber, displayCell } from "@/lib/utils/formatting";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -105,27 +106,20 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
     });
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     if (inventoryData.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no Inventory Positions associated with this shipping manifest line.">There are no Inventory Positions associated with this shipping manifest line.</p>
-            </div>
+            <TableEmptyState message="No records found" description="There are no Inventory Positions associated with this shipping manifest line." />
         );
     }
 
     return (
         <div className="flex flex-col mt-4">
             <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
-            <table className="w-full table-fixed">
-                <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+            <Table className="table-fixed">
+                <THead>
                     <tr>
                         <SortableHeader label="Inventory Position" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                         <SortableHeader label="Received Date" field="receivedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.receivedDate} onResize={handleResize} />
@@ -139,16 +133,16 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                         <SortableHeader label="Location" field="inventoryLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.inventoryLocation} onResize={handleResize} />
                         <SortableHeader label="Ship Confirmed Date" field="shipConfirmedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipConfirmedDate} onResize={handleResize} />
                     </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                </THead>
+                <TBody>
                     {paginatedData.map((pos) => (
-                        <tr key={pos.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={pos.name}>
+                        <Tr key={pos.id}>
+                            <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" title={pos.name}>
                                 {pos.name}
-                            </td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : ""}>{displayCell(pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : "")}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={`${formatNumber(pos.daysInInventory, 0)} Days`}>{formatNumber(pos.daysInInventory, 0)} Days</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productName}>
+                            </Td>
+                            <Td className="text-gray-600 dark:text-gray-400 truncate" title={pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : ""}>{displayCell(pos.receivedDate ? formatDate(pos.receivedDate, "numeric-dash") : "")}</Td>
+                            <Td className="truncate" title={`${formatNumber(pos.daysInInventory, 0)} Days`}>{formatNumber(pos.daysInInventory, 0)} Days</Td>
+                            <Td className="truncate" title={pos.productName}>
                                 {pos.productId ? (
                                     <Link href={`/inventory/${pos.productId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                                         {pos.productName}
@@ -156,18 +150,18 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                                 ) : (
                                     displayCell(pos.productName)
                                 )}
-                            </td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.productDescription}>{displayCell(pos.productDescription)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.brand}>{displayCell(pos.brand)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.supplierName}>{displayCell(pos.supplierName)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.qtyOnHand.toLocaleString()}>{pos.qtyOnHand.toLocaleString()}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.qtyAvailable.toLocaleString()}>{pos.qtyAvailable.toLocaleString()}</td>
-                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={pos.inventoryLocation}>{displayCell(pos.inventoryLocation)}</td>
-                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : ""}>{displayCell(pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : "")}</td>
-                        </tr>
+                            </Td>
+                            <Td className="truncate" title={pos.productDescription}>{displayCell(pos.productDescription)}</Td>
+                            <Td className="truncate" title={pos.brand}>{displayCell(pos.brand)}</Td>
+                            <Td className="truncate" title={pos.supplierName}>{displayCell(pos.supplierName)}</Td>
+                            <Td className="truncate" title={pos.qtyOnHand.toLocaleString()}>{pos.qtyOnHand.toLocaleString()}</Td>
+                            <Td className="truncate" title={pos.qtyAvailable.toLocaleString()}>{pos.qtyAvailable.toLocaleString()}</Td>
+                            <Td className="truncate" title={pos.inventoryLocation}>{displayCell(pos.inventoryLocation)}</Td>
+                            <Td className="text-gray-600 dark:text-gray-400 truncate" title={pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : ""}>{displayCell(pos.shipConfirmedDate ? formatDate(pos.shipConfirmedDate, "numeric-dash") : "")}</Td>
+                        </Tr>
                     ))}
-                </tbody>
-            </table>
+                </TBody>
+            </Table>
             </div>
             <Pagination
                 currentPage={currentPage}

@@ -5,6 +5,7 @@ import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import Pagination from "../../../../components/ui/Pagination";
 import { useUserSession } from "../../../../components/UserSessionContext";
 import { displayCell } from "@/lib/utils/formatting";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -38,27 +39,20 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
     const totalPages = Math.ceil(orders.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     if (orders.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium" title="No records found">No records found</p>
-                <p className="text-sm" title="There are no customer orders associated with this proposal.">There are no customer orders associated with this proposal.</p>
-            </div>
+            <TableEmptyState message="No records found" description="There are no customer orders associated with this proposal." />
         );
     }
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0 table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0 table-fixed">
+                    <THead className="sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="Customer Order #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
@@ -82,11 +76,11 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                             <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipDate} onResize={onResize} />
                             <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveredDate} onResize={onResize} />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedOrders.map((order) => (
-                            <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={order.name}>
+                            <Tr key={order.id} className="group transition-colors">
+                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={order.name}>
                                     {!isRestricted && order.id ? (
                                         <Link
                                             href={`/orders/${order.id}`}
@@ -99,68 +93,68 @@ export default function OrdersTab({ orders, loading, sortField, sortDirection, o
                                     ) : (
                                         <span className="text-sm font-semibold truncate">{order.name}</span>
                                     )}
-                                </td>
-                                <td className="px-3 py-2 truncate">
+                                </Td>
+                                <Td className="truncate">
                                     <StatusBadge status={order.status} />
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerPO}>{displayCell(order.customerPO)}</div>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.customerPODate)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToAccountName}>{displayCell(order.billToAccountName)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToLocationName}>{displayCell(order.billToLocationName)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToContactName}>{displayCell(order.billToContactName)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToAccountName}>{displayCell(order.shipToAccountName)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToLocationName}>{displayCell(order.shipToLocationName)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToContactName}>{displayCell(order.shipToContactName)}</td>
-                                <td className="px-3 py-2 truncate">
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(order.customerPODate)}</Td>
+                                <Td className="truncate" title={order.billToAccountName}>{displayCell(order.billToAccountName)}</Td>
+                                <Td className="truncate" title={order.billToLocationName}>{displayCell(order.billToLocationName)}</Td>
+                                <Td className="truncate" title={order.billToContactName}>{displayCell(order.billToContactName)}</Td>
+                                <Td className="truncate" title={order.shipToAccountName}>{displayCell(order.shipToAccountName)}</Td>
+                                <Td className="truncate" title={order.shipToLocationName}>{displayCell(order.shipToLocationName)}</Td>
+                                <Td className="truncate" title={order.shipToContactName}>{displayCell(order.shipToContactName)}</Td>
+                                <Td className="truncate">
                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.proposalRequested
                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                         }`}>
                                         {order.proposalRequested ? 'Yes' : 'No'}
                                     </span>
-                                </td>
-                                <td className="px-3 py-2 truncate">
+                                </Td>
+                                <Td className="truncate">
                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.transferOrder
                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                         }`}>
                                         {order.transferOrder ? 'Yes' : 'No'}
                                     </span>
-                                </td>
-                                <td className="px-3 py-2 truncate">
+                                </Td>
+                                <Td className="truncate">
                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.dropShip
                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                         }`}>
                                         {order.dropShip ? 'Yes' : 'No'}
                                     </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
                                         {order.totalLines}
                                     </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
+                                </Td>
+                                <Td className="truncate font-medium">
                                     ${order.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     ${order.totalShippingCharges.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                </Td>
+                                <Td className="truncate">
                                     ${order.totalTaxesAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-bold truncate">
+                                </Td>
+                                <Td className="font-bold truncate">
                                     ${order.grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.requestDate)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.shipDate)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.deliveredDate)}</td>
-                            </tr>
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(order.requestDate)}</Td>
+                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(order.shipDate)}</Td>
+                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(order.deliveredDate)}</Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="px-3 py-2">

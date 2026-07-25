@@ -6,6 +6,7 @@ import { useSortableData } from "../../../../hooks/useSortableData";
 import Pagination from "../../../../components/ui/Pagination";
 import { useUserSession } from "../../../../components/UserSessionContext";
 import { displayCell } from "@/lib/utils/formatting";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -62,9 +63,7 @@ export default function FulfillmentsTab({
     if (loading) {
         return (
             <div className="px-4">
-                <div className="flex justify-center items-center py-12 min-w-0">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                </div>
+                <TableLoadingState />
             </div>
         );
     }
@@ -117,15 +116,14 @@ export default function FulfillmentsTab({
                 {/* Customer Quotes Table */}
                 {activeTab === "quotes" && (
                     sortedData.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-12 text-center text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium" title="No records found">No records found</p>
-                            <p className="text-sm" title="There are no Customer Quotes associated with this proposal.">There are no Customer Quotes associated with this proposal.</p>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                            <TableEmptyState message="No records found" description="There are no Customer Quotes associated with this proposal." />
                         </div>
                     ) : (
                         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                                <table className="w-full border-separate border-spacing-0 table-fixed">
-                                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                                <Table className="border-separate border-spacing-0 table-fixed">
+                                    <THead className="sticky top-0 z-20">
                                         <tr>
                                             <SortableHeader label="Customer Quote" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.name} onResize={(f, w) => onResize('quotes', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.status} onResize={(f, w) => onResize('quotes', f, w)} />
@@ -151,11 +149,11 @@ export default function FulfillmentsTab({
                                             <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.shipDate} onResize={(f, w) => onResize('quotes', f, w)} />
                                             <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.deliveredDate} onResize={(f, w) => onResize('quotes', f, w)} />
                                         </tr>
-                                    </thead>
-                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    </THead>
+                                    <TBody>
                                         {(paginatedData as CustomerQuote[]).map((quote) => (
-                                            <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={quote.name}>
+                                            <Tr key={quote.id} className="group transition-colors">
+                                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={quote.name}>
                                                     {quote.name && quote.id ? (
                                                         <Link
                                                             href={`/quotes/${quote.id}`}
@@ -169,11 +167,11 @@ export default function FulfillmentsTab({
 
                                                     )}
 
-                                                </td>
-                                                <td className="px-3 py-2 truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <StatusBadge status={quote.status as any} />
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {quote.proposalName && quote.proposalId ? (
                                                         <Link
                                                             href={`/proposals/${quote.proposalId}`}
@@ -187,9 +185,9 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.proposalName}>{displayCell(quote.proposalName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.proposalName}>{displayCell(quote.proposalName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate" title={quote.proposalName}>{displayCell(quote.proposalName)}</Td>
+                                                <Td className="truncate">
                                                     {quote.customerOrderName && quote.customerOrderId ? (
                                                         <Link
                                                             href={`/orders/${quote.customerOrderId}`}
@@ -203,50 +201,50 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.customerOrderName}>{displayCell(quote.customerOrderName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.customerPO}>{displayCell(quote.customerPO)}</div>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.billToAccountName}>{displayCell(quote.billToAccountName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.billToLocationName}>{displayCell(quote.billToLocationName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.billToContactName}>{displayCell(quote.billToContactName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.shipToAccountName}>{displayCell(quote.shipToAccountName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.shipToLocationName}>{displayCell(quote.shipToLocationName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={quote.shipToContactName}>{displayCell(quote.shipToContactName)}</td>
-                                                <td className="px-3 py-2 truncate">
+                                                </Td>
+                                                <Td className="truncate" title={quote.billToAccountName}>{displayCell(quote.billToAccountName)}</Td>
+                                                <Td className="truncate" title={quote.billToLocationName}>{displayCell(quote.billToLocationName)}</Td>
+                                                <Td className="truncate" title={quote.billToContactName}>{displayCell(quote.billToContactName)}</Td>
+                                                <Td className="truncate" title={quote.shipToAccountName}>{displayCell(quote.shipToAccountName)}</Td>
+                                                <Td className="truncate" title={quote.shipToLocationName}>{displayCell(quote.shipToLocationName)}</Td>
+                                                <Td className="truncate" title={quote.shipToContactName}>{displayCell(quote.shipToContactName)}</Td>
+                                                <Td className="truncate">
                                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${quote.dropShip
                                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                         }`}>
                                                         {quote.dropShip ? 'Yes' : 'No'}
                                                     </span>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
                                                         {quote.totalLines}
                                                     </span>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
+                                                </Td>
+                                                <Td className="truncate font-medium">
                                                     ${quote.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     ${quote.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     ${quote.totalTaxesAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
+                                                </Td>
+                                                <Td className="truncate font-bold">
                                                     ${quote.grandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.issuedDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.expirationDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.requestDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.shipDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.deliveredDate)}</td>
-                                            </tr>
+                                                </Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.issuedDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.expirationDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.requestDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.shipDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(quote.deliveredDate)}</Td>
+                                            </Tr>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </TBody>
+                                </Table>
                             </div>
                             <div className="px-3 py-2">
                                 <Pagination
@@ -265,15 +263,14 @@ export default function FulfillmentsTab({
                 {/* Sales Orders Table */}
                 {activeTab === "sales" && (
                     sortedData.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-12 text-center text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium" title="No records found">No records found</p>
-                            <p className="text-sm" title="There are no Sales Orders associated with this proposal.">There are no Sales Orders associated with this proposal.</p>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                            <TableEmptyState message="No records found" description="There are no Sales Orders associated with this proposal." />
                         </div>
                     ) : (
                         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                                <table className="w-full border-separate border-spacing-0 table-fixed">
-                                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                                <Table className="border-separate border-spacing-0 table-fixed">
+                                    <THead className="sticky top-0 z-20">
                                         <tr>
                                             <SortableHeader label="Sales Order #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.name} onResize={(f, w) => onResize('sales', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.status} onResize={(f, w) => onResize('sales', f, w)} />
@@ -298,11 +295,11 @@ export default function FulfillmentsTab({
                                             <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.shipDate} onResize={(f, w) => onResize('sales', f, w)} />
                                             <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.deliveredDate} onResize={(f, w) => onResize('sales', f, w)} />
                                         </tr>
-                                    </thead>
-                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    </THead>
+                                    <TBody>
                                         {(paginatedData as SalesOrder[]).map((order) => (
-                                            <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={order.name}>
+                                            <Tr key={order.id} className="group transition-colors">
+                                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={order.name}>
                                                     {!isRestricted && order.name && order.salesOrderId ? (
                                                         <Link
                                                             href={`/orders/${order.salesOrderId}`}
@@ -316,11 +313,11 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={order.name}>{displayCell(order.name)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <StatusBadge status={order.status as any} />
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {order.customerQuoteName && order.customerQuoteId ? (
                                                         <Link
                                                             href={`/quotes/${order.customerQuoteId}`}
@@ -334,8 +331,8 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerQuoteName}>{displayCell(order.customerQuoteName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {order.proposalName && order.proposalId ? (
                                                         <Link
                                                             href={`/proposals/${order.proposalId}`}
@@ -349,9 +346,9 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={order.proposalName}>{displayCell(order.proposalName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.proposalName}>{displayCell(order.proposalName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate" title={order.proposalName}>{displayCell(order.proposalName)}</Td>
+                                                <Td className="truncate">
                                                     {order.customerOrderName && order.customerOrderId ? (
                                                         <Link
                                                             href={`/orders/${order.customerOrderId}`}
@@ -365,48 +362,48 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerOrderName}>{displayCell(order.customerOrderName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <div className="text-sm text-gray-900 dark:text-white truncate" title={order.customerPO}>{displayCell(order.customerPO)}</div>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToAccountName}>{displayCell(order.billToAccountName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToLocationName}>{displayCell(order.billToLocationName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.billToContactName}>{displayCell(order.billToContactName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToAccountName}>{displayCell(order.shipToAccountName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToLocationName}>{displayCell(order.shipToLocationName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={order.shipToContactName}>{displayCell(order.shipToContactName)}</td>
-                                                <td className="px-3 py-2 truncate">
+                                                </Td>
+                                                <Td className="truncate" title={order.billToAccountName}>{displayCell(order.billToAccountName)}</Td>
+                                                <Td className="truncate" title={order.billToLocationName}>{displayCell(order.billToLocationName)}</Td>
+                                                <Td className="truncate" title={order.billToContactName}>{displayCell(order.billToContactName)}</Td>
+                                                <Td className="truncate" title={order.shipToAccountName}>{displayCell(order.shipToAccountName)}</Td>
+                                                <Td className="truncate" title={order.shipToLocationName}>{displayCell(order.shipToLocationName)}</Td>
+                                                <Td className="truncate" title={order.shipToContactName}>{displayCell(order.shipToContactName)}</Td>
+                                                <Td className="truncate">
                                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${order.dropShip
                                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                         }`}>
                                                         {order.dropShip ? 'Yes' : 'No'}
                                                     </span>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
                                                         {order.totalLines}
                                                     </span>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
+                                                </Td>
+                                                <Td className="truncate font-medium">
                                                     ${order.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     ${order.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     ${order.totalTaxesAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
+                                                </Td>
+                                                <Td className="truncate font-bold">
                                                     ${order.grandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.requestDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.shipDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(order.deliveredDate)}</td>
-                                            </tr>
+                                                </Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(order.requestDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(order.shipDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(order.deliveredDate)}</Td>
+                                            </Tr>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </TBody>
+                                </Table>
                             </div>
                             <div className="px-3 py-2">
                                 <Pagination
@@ -425,15 +422,14 @@ export default function FulfillmentsTab({
                 {/* Invoices Table */}
                 {activeTab === "invoices" && (
                     sortedData.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-12 text-center text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium" title="No records found">No records found</p>
-                            <p className="text-sm" title="There are no Invoices associated with this proposal.">There are no Invoices associated with this proposal.</p>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                            <TableEmptyState message="No records found" description="There are no Invoices associated with this proposal." />
                         </div>
                     ) : (
                         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                                <table className="w-full border-separate border-spacing-0 table-fixed">
-                                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                                <Table className="border-separate border-spacing-0 table-fixed">
+                                    <THead className="sticky top-0 z-20">
                                         <tr>
                                             <SortableHeader label="Invoice #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.name} onResize={(f, w) => onResize('invoices', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.status} onResize={(f, w) => onResize('invoices', f, w)} />
@@ -459,11 +455,11 @@ export default function FulfillmentsTab({
                                             <SortableHeader label="Open Balance" field="openBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.openBalance} onResize={(f, w) => onResize('invoices', f, w)} />
                                             <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.settledDate} onResize={(f, w) => onResize('invoices', f, w)} />
                                         </tr>
-                                    </thead>
-                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    </THead>
+                                    <TBody>
                                         {(paginatedData as Invoice[]).map((invoice) => (
-                                            <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={invoice.name}>
+                                            <Tr key={invoice.id} className="group transition-colors">
+                                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={invoice.name}>
 
                                                     {invoice.name && invoice.id ? (
                                                         <Link
@@ -478,15 +474,15 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.name}>{displayCell(invoice.name)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <StatusBadge status={invoice.status as any} />
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.salesOrderName}>{displayCell(invoice.salesOrderName)}</div>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.purchaseOrderName}>{displayCell(invoice.purchaseOrderName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate" title={invoice.purchaseOrderName}>{displayCell(invoice.purchaseOrderName)}</Td>
+                                                <Td className="truncate">
                                                     {invoice.customerQuoteName && invoice.customerQuoteId ? (
                                                         <Link
                                                             href={`/quotes/${invoice.customerQuoteId}`}
@@ -500,8 +496,8 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerQuoteName}>{displayCell(invoice.customerQuoteName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {invoice.proposalName && invoice.proposalId ? (
                                                         <Link
                                                             href={`/proposals/${invoice.proposalId}`}
@@ -515,9 +511,9 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.proposalName}>{displayCell(invoice.proposalName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.proposalName}>{displayCell(invoice.proposalName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate" title={invoice.proposalName}>{displayCell(invoice.proposalName)}</Td>
+                                                <Td className="truncate">
                                                     {invoice.customerOrderName && invoice.customerOrderId ? (
                                                         <Link
                                                             href={`/orders/${invoice.customerOrderId}`}
@@ -531,43 +527,43 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerOrderName}>{displayCell(invoice.customerOrderName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.customerPO}>{displayCell(invoice.customerPO)}</div>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.billToAccountName}>{displayCell(invoice.billToAccountName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.billToLocationName}>{displayCell(invoice.billToLocationName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={invoice.billToContactName}>{displayCell(invoice.billToContactName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate" title={invoice.billToAccountName}>{displayCell(invoice.billToAccountName)}</Td>
+                                                <Td className="truncate" title={invoice.billToLocationName}>{displayCell(invoice.billToLocationName)}</Td>
+                                                <Td className="truncate" title={invoice.billToContactName}>{displayCell(invoice.billToContactName)}</Td>
+                                                <Td className="truncate">
                                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
                                                         {invoice.totalLines}
                                                     </span>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
+                                                </Td>
+                                                <Td className="truncate font-medium">
                                                     ${invoice.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     ${invoice.totalShippingCharges?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     ${invoice.totalTaxesAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
+                                                </Td>
+                                                <Td className="truncate font-bold">
                                                     ${invoice.grandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(invoice.issuedDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(invoice.paymentTerms)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(invoice.dueDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                    <StatusBadge status={invoice.collectionStatus as any} /></td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-medium">
+                                                </Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(invoice.issuedDate)}</Td>
+                                                <Td className="truncate">{displayCell(invoice.paymentTerms)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(invoice.dueDate)}</Td>
+                                                <Td className="truncate">
+                                                    <StatusBadge status={invoice.collectionStatus as any} /></Td>
+                                                <Td className="truncate font-medium">
                                                     ${invoice.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '0.00'}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(invoice.settledDate)}</td>
-                                            </tr>
+                                                </Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(invoice.settledDate)}</Td>
+                                            </Tr>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </TBody>
+                                </Table>
                             </div>
                             <div className="px-3 py-2">
                                 <Pagination
@@ -586,15 +582,14 @@ export default function FulfillmentsTab({
                 {/* Shipping Manifests Table */}
                 {activeTab === "shipping" && (
                     sortedData.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-12 text-center text-gray-500 dark:text-gray-400">
-                            <p className="text-lg font-medium" title="No records found">No records found</p>
-                            <p className="text-sm" title="There are no Shipping Manifests associated with this proposal.">There are no Shipping Manifests associated with this proposal.</p>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                            <TableEmptyState message="No records found" description="There are no Shipping Manifests associated with this proposal." />
                         </div>
                     ) : (
                         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                                <table className="w-full border-separate border-spacing-0 table-fixed">
-                                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                                <Table className="border-separate border-spacing-0 table-fixed">
+                                    <THead className="sticky top-0 z-20">
                                         <tr>
                                             <SortableHeader label="Shipping Manifest #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.name} onResize={(f, w) => onResize('shipping', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.status} onResize={(f, w) => onResize('shipping', f, w)} />
@@ -624,11 +619,11 @@ export default function FulfillmentsTab({
                                             <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.estimatedDeliveryDate} onResize={(f, w) => onResize('shipping', f, w)} />
                                             <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.actualDeliveryDate} onResize={(f, w) => onResize('shipping', f, w)} />
                                         </tr>
-                                    </thead>
-                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    </THead>
+                                    <TBody>
                                         {(paginatedData as ShippingManifest[]).map((manifest) => (
-                                            <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={manifest.name}>
+                                            <Tr key={manifest.id} className="group transition-colors">
+                                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={manifest.name}>
                                                     {manifest.name && manifest.id ? (
                                                         <Link
                                                             href={`/shipments/${manifest.id}`}
@@ -643,14 +638,14 @@ export default function FulfillmentsTab({
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.name}>{displayCell(manifest.name)}</div>
                                                     )}
 
-                                                </td>
-                                                <td className="px-3 py-2 truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <StatusBadge status={manifest.status as any} />
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.salesOrderName}>{displayCell(manifest.salesOrderName)}</div>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {manifest.customerQuoteName && manifest.customerQuoteId ? (
                                                         <Link
                                                             href={`/quotes/${manifest.customerQuoteId}`}
@@ -664,8 +659,8 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.customerQuoteName}>{displayCell(manifest.customerQuoteName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     {manifest.proposalName && manifest.proposalId ? (
                                                         <Link
                                                             href={`/proposals/${manifest.proposalId}`}
@@ -679,9 +674,9 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.proposalName}>{displayCell(manifest.proposalName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.proposalName}>{displayCell(manifest.proposalName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate" title={manifest.proposalName}>{displayCell(manifest.proposalName)}</Td>
+                                                <Td className="truncate">
                                                     {manifest.customerOrderName && manifest.customerOrderId ? (
                                                         <Link
                                                             href={`/orders/${manifest.customerOrderId}`}
@@ -695,46 +690,46 @@ export default function FulfillmentsTab({
                                                     ) : (
                                                         <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.customerOrderName}>{displayCell(manifest.customerOrderName)}</div>
                                                     )}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.customerPO}>{displayCell(manifest.customerPO)}</div>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shipToAccountName}>{displayCell(manifest.shipToAccountName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shipToLocationName}>{displayCell(manifest.shipToLocationName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shipToContactName}>{displayCell(manifest.shipToContactName)}</td>
-                                                <td className="px-3 py-2 truncate">
+                                                </Td>
+                                                <Td className="truncate" title={manifest.shipToAccountName}>{displayCell(manifest.shipToAccountName)}</Td>
+                                                <Td className="truncate" title={manifest.shipToLocationName}>{displayCell(manifest.shipToLocationName)}</Td>
+                                                <Td className="truncate" title={manifest.shipToContactName}>{displayCell(manifest.shipToContactName)}</Td>
+                                                <Td className="truncate">
                                                     <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${manifest.dropShip
                                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                                         }`}>
                                                         {manifest.dropShip ? 'Yes' : 'No'}
                                                     </span>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                                </Td>
+                                                <Td className="truncate">
                                                     <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold">
                                                         {manifest.totalLines}
                                                     </span>
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate font-bold">
+                                                </Td>
+                                                <Td className="truncate font-bold">
                                                     ${manifest.totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxCount ?? ''))}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxLength ?? ''))}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxWidth ?? ''))}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxHeight ?? ''))}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxNetWeight ?? ''))}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxGrossWeight ?? ''))}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.logisticsPartnerName)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.shipDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.deliveredDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.trackingNumber)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.trackingStatus)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.estimatedDeliveryDate)}</td>
-                                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.actualDeliveryDate)}</td>
-                                            </tr>
+                                                </Td>
+                                                <Td className="truncate">{displayCell(String(manifest.boxCount ?? ''))}</Td>
+                                                <Td className="truncate">{displayCell(String(manifest.boxLength ?? ''))}</Td>
+                                                <Td className="truncate">{displayCell(String(manifest.boxWidth ?? ''))}</Td>
+                                                <Td className="truncate">{displayCell(String(manifest.boxHeight ?? ''))}</Td>
+                                                <Td className="truncate">{displayCell(String(manifest.boxNetWeight ?? ''))}</Td>
+                                                <Td className="truncate">{displayCell(String(manifest.boxGrossWeight ?? ''))}</Td>
+                                                <Td className="truncate">{displayCell(manifest.logisticsPartnerName)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.shipDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.deliveredDate)}</Td>
+                                                <Td className="truncate">{displayCell(manifest.trackingNumber)}</Td>
+                                                <Td className="truncate">{displayCell(manifest.trackingStatus)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.estimatedDeliveryDate)}</Td>
+                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.actualDeliveryDate)}</Td>
+                                            </Tr>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </TBody>
+                                </Table>
                             </div>
                             <div className="px-3 py-2">
                                 <Pagination

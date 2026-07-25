@@ -9,6 +9,7 @@ import { formatDate, displayCell } from "@/lib/utils/formatting";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import Link from 'next/link';
 import { useUserSession } from "@/components/UserSessionContext";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface DebitMemo {
     Id: string;
@@ -85,18 +86,18 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
 
     if (debitMemos.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no Debit Memos associated with this purchase order.">There are no Debit Memos associated with this purchase order.</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There are no Debit Memos associated with this purchase order."
+            />
         );
     }
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full border-separate border-spacing-0 table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 sticky top-0 z-20">
+                <Table className="border-separate border-spacing-0 table-fixed">
+                    <THead className="sticky top-0 z-20">
                         <tr>
                             <SortableHeader label="Debit Memo #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.status} onResize={handleResize} />
@@ -114,24 +115,24 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                             <SortableHeader label="Available Debit Balance" field="Available_Debit_Balance__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.availableDebitBalance} onResize={handleResize} />
                             <SortableHeader label="Settled Date" field="Settled_Date__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.settledDate} onResize={handleResize} />
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((d) => (
-                            <tr key={d.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={d.Name}>
+                            <Tr key={d.Id} className="transition-colors group">
+                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={d.Name}>
                                     {d.Name}
-                                </td>
-                                <td className="px-3 py-2 truncate">
+                                </Td>
+                                <Td className="truncate">
                                     <StatusBadge status={d.Status__c} />
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Purchase_Order_Name || '-'}>
+                                </Td>
+                                <Td className="truncate" title={d.Purchase_Order_Name || '-'}>
                                     {d.Purchase_Order__c ? (
                                         <Link href={`/purchase-orders/${d.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {d.Purchase_Order_Name || 'View PO'}
                                         </Link>
                                     ) : displayCell(d.Purchase_Order_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Quote_Name || '-'}>
+                                </Td>
+                                <Td className="truncate" title={d.Customer_Quote_Name || '-'}>
                                     {d.Customer_Quote__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/quotes/${d.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -141,8 +142,8 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                             <span className="font-medium">{displayCell(d.Customer_Quote_Name)}</span>
                                         )
                                     ) : displayCell(d.Customer_Quote_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Proposal_Name || '-'}>
+                                </Td>
+                                <Td className="truncate" title={d.Proposal_Name || '-'}>
                                     {d.Proposal__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/proposals/${d.Proposal__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -152,9 +153,9 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                             <span className="font-medium">{displayCell(d.Proposal_Number || d.Proposal_Name)}</span>
                                         )
                                     ) : displayCell(d.Proposal_Number || d.Proposal_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Proposal_Name || '-'}>{displayCell(d.Proposal_Name)}</td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={d.Customer_Order_Name || '-'}>
+                                </Td>
+                                <Td className="truncate" title={d.Proposal_Name || '-'}>{displayCell(d.Proposal_Name)}</Td>
+                                <Td className="truncate" title={d.Customer_Order_Name || '-'}>
                                     {d.Customer_Order__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/orders/${d.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -164,37 +165,37 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                             <span className="font-medium">{displayCell(d.Customer_Order_Name)}</span>
                                         )
                                     ) : displayCell(d.Customer_Order_Name)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={String(d.Total_Lines__c || 0)}>
+                                </Td>
+                                <Td className="text-left truncate" title={String(d.Total_Lines__c || 0)}>
                                     <span className="inline-flex items-center justify-center min-w-[32px] h-6 px-1.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium truncate">
                                         {d.Total_Lines__c || 0}
                                     </span>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={`$${(d.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
+                                </Td>
+                                <Td className="text-left truncate" title={`$${(d.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${(d.Total_Cost__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left truncate" title={`$${(d.Total_Shipping_Charges__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
+                                </Td>
+                                <Td className="text-left truncate" title={`$${(d.Total_Shipping_Charges__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${(d.Total_Shipping_Charges__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left font-semibold truncate" title={`$${(d.Total_Debit_Amount__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
+                                </Td>
+                                <Td className="text-left font-semibold truncate" title={`$${(d.Total_Debit_Amount__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${(d.Total_Debit_Amount__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={d.Issued_Date__c ? formatDate(d.Issued_Date__c, 'numeric-dash') : '-'}>
+                                </Td>
+                                <Td className="dark:text-gray-700 truncate" title={d.Issued_Date__c ? formatDate(d.Issued_Date__c, 'numeric-dash') : '-'}>
                                     {d.Issued_Date__c ? formatDate(d.Issued_Date__c, 'numeric-dash') : '-'}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={d.expirationDate ? formatDate(d.expirationDate, 'numeric-dash') : '-'}>
+                                </Td>
+                                <Td className="dark:text-gray-700 truncate" title={d.expirationDate ? formatDate(d.expirationDate, 'numeric-dash') : '-'}>
                                     {d.expirationDate ? formatDate(d.expirationDate, 'numeric-dash') : '-'}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left font-medium truncate" title={`$${(d.Available_Debit_Balance__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
+                                </Td>
+                                <Td className="text-left font-medium truncate" title={`$${(d.Available_Debit_Balance__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}>
                                     ${(d.Available_Debit_Balance__c || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-700 truncate" title={d.Settled_Date__c ? formatDate(d.Settled_Date__c, 'numeric-dash') : '-'}>
+                                </Td>
+                                <Td className="dark:text-gray-700 truncate" title={d.Settled_Date__c ? formatDate(d.Settled_Date__c, 'numeric-dash') : '-'}>
                                     {d.Settled_Date__c ? formatDate(d.Settled_Date__c, 'numeric-dash') : '-'}
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="px-3 py-2">

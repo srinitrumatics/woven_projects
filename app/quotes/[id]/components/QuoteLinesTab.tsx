@@ -5,6 +5,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import { Eye } from "lucide-react";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 
 interface QuoteLinesTabProps {
@@ -42,27 +43,18 @@ export default function QuoteLinesTab({
     const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12 min-w-0">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-        );
+        return <TableLoadingState />;
     }
 
     if (products.length === 0) {
-        return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium" title="No records found">No records found</p>
-                <p className="text-sm" title="There are no quote lines listed in this quote.">There are no quote lines listed in this quote.</p>
-            </div>
-        );
+        return <TableEmptyState message="No records found" description="There are no quote lines listed in this quote." />;
     }
 
     return (
         <div>
             <div className="overflow-x-auto py-2">
-                <table className="w-full table-fixed">
-                    <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                <Table className="table-fixed">
+                    <THead>
                         <tr>
                             <SortableHeader label="Customer Quote Line" field="Name" sortConfig={sortConfig} requestSort={requestSort} width={widths.Name} onResize={onResize} align="left" className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={onResize} align="left" />
@@ -78,13 +70,13 @@ export default function QuoteLinesTab({
                             <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={onResize} align="left" />
                             <SortableHeader label="Line Grand Total" field="lineGrandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.lineGrandTotal} onResize={onResize} align="left" />
                             <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyShipped} onResize={onResize} align="left" />
-                            <th className="px-3 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white w-[80px]">Action</th>
+                            <Th className="text-center w-[80px]">Action</Th>
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedProducts.map((line) => (
-                            <tr key={line.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" style={{ width: widths.Name }}>
+                            <Tr key={line.id}>
+                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" style={{ width: widths.Name }}>
                                     <Link
                                         href={`/quotes/${quoteId}/lines/${line.id}`}
                                         className="text-primary font-medium hover:underline"
@@ -92,55 +84,55 @@ export default function QuoteLinesTab({
                                     >
                                         {line.Name}
                                     </Link>
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.status }}>
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.status }}>
                                     <StatusBadge status={line.status as QuoteStatus} />
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[160px] truncate" style={{ width: widths.proposedProductName }} title={line.proposedProductName}>
+                                </Td>
+                                <Td className="min-w-[160px] truncate" style={{ width: widths.proposedProductName }} title={line.proposedProductName}>
                                     {line.proposedProductId ? (
                                         <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {line.proposedProductName}
                                         </Link>
                                     ) : displayCell(line.proposedProductName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[160px] truncate" style={{ width: widths.productName }} title={line.productName}>
+                                </Td>
+                                <Td className="min-w-[160px] truncate" style={{ width: widths.productName }} title={line.productName}>
                                     {line.productId ? (
                                         <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium">
                                             {line.productName}
                                         </Link>
                                     ) : displayCell(line.productName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.description }} title={line.description}>
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.description }} title={line.description}>
                                     {displayCell(line.description)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.manufacturerDBA }} title={line.brand}>
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.manufacturerDBA }} title={line.brand}>
                                     {displayCell(line.brand)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.grouping }} title={line.grouping}>
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 min-w-[160px] truncate" style={{ width: widths.grouping }} title={line.grouping}>
                                     {displayCell(line.grouping)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.unitPrice }} title={formatCurrency(line.unitPrice)}>
+                                </Td>
+                                <Td className="truncate" style={{ width: widths.unitPrice }} title={formatCurrency(line.unitPrice)}>
                                     {formatCurrency(line.unitPrice)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.quantity }} title={String(line.quantity)}>
+                                </Td>
+                                <Td className="truncate" style={{ width: widths.quantity }} title={String(line.quantity)}>
                                     {line.quantity}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.totalPrice }} title={formatCurrency(line.totalPrice)}>
+                                </Td>
+                                <Td className="truncate" style={{ width: widths.totalPrice }} title={formatCurrency(line.totalPrice)}>
                                     {formatCurrency(line.totalPrice)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.shipping }} title={formatCurrency(line.shipping)}>
+                                </Td>
+                                <Td className="truncate" style={{ width: widths.shipping }} title={formatCurrency(line.shipping)}>
                                     {formatCurrency(line.shipping)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.taxes }} title={formatCurrency(line.taxes)}>
+                                </Td>
+                                <Td className="truncate" style={{ width: widths.taxes }} title={formatCurrency(line.taxes)}>
                                     {formatCurrency(line.taxes)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.lineGrandTotal }} title={formatCurrency(line.lineGrandTotal)}>
+                                </Td>
+                                <Td className="truncate" style={{ width: widths.lineGrandTotal }} title={formatCurrency(line.lineGrandTotal)}>
                                     {formatCurrency(line.lineGrandTotal)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" style={{ width: widths.qtyShipped }} title={String(line.qtyShipped)}>
+                                </Td>
+                                <Td className="truncate" style={{ width: widths.qtyShipped }} title={String(line.qtyShipped)}>
                                     {line.qtyShipped}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 text-center">
                                     <Link
                                         href={`/quotes/${quoteId}/lines/${line.id}`}
                                         className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full inline-flex items-center justify-center transition-colors"
@@ -148,11 +140,11 @@ export default function QuoteLinesTab({
                                     >
                                         <Eye className="w-5 h-5 text-primary" />
                                     </Link>
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
 
             </div>
             <div className="px-3 py-2">

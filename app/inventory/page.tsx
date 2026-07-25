@@ -11,6 +11,7 @@ import { InventoryPosition, InventoryStatus } from "./types";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 type TabFilter = "All" | "On Hold" | "Put-Away";
 
@@ -341,7 +342,7 @@ export default function InventoryPage() {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 min-w-0">
                 <div className="flex flex-col min-w-0">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">My Inventory</h1>
-                    <p className="text-gray-600 dark:text-gray-400 text-[16px] mt-1 truncate" title="Managed and Track Inventory Across All Locations.">Managed and Track Inventory Across All Locations.</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-base mt-1 truncate" title="Managed and Track Inventory Across All Locations.">Managed and Track Inventory Across All Locations.</p>
                 </div>
                 <div className="flex items-center gap-3 min-w-0">
                     <button
@@ -586,15 +587,17 @@ export default function InventoryPage() {
 
                 <div className="overflow-x-auto rounded-lg">
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center py-20 bg-gray-50/50 dark:bg-gray-900/50 rounded-lg min-w-0">
-                            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mb-4"></div>
-                            <p className="text-sm font-medium text-gray-500 truncate" title="Loading inventory data...">Loading inventory data...</p>
-                        </div>
+                        <TableLoadingState message="Loading inventory data..." />
+                    ) : paginatedInventory.length === 0 ? (
+                        <TableEmptyState
+                            message="No inventory items found"
+                            description="Try adjusting your filters or search query to find what you're looking for."
+                        />
                     ) : (
-                        <table className="w-full text-sm" style={{ tableLayout: 'fixed' }}>
-                            <thead className="bg-primary-light dark:bg-gray-900">
+                        <Table className="text-sm table-fixed">
+                            <THead>
                                 <tr>
-                                    <th className="px-3 py-2 sticky left-0 bg-primary-light dark:bg-gray-900 z-30 text-center" style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
+                                    <Th className="sticky left-0 z-30 text-center" style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
                                         <input
                                             type="checkbox"
                                             className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
@@ -604,7 +607,7 @@ export default function InventoryPage() {
                                             }
                                             onChange={toggleSelectAll}
                                         />
-                                    </th>
+                                    </Th>
                                     <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} className="sticky bg-primary-light dark:bg-gray-900 z-20" style={{ left: widths.checkbox }} />
                                     <SortableHeader label="Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
                                     <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} />
@@ -618,26 +621,13 @@ export default function InventoryPage() {
                                     <SortableHeader label="Avg Age (Days)" field="avgInventoryAge" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} />
                                     <SortableHeader label="Total Positions" field="totalPositions" sortConfig={sortConfig} requestSort={requestSort} width={widths.positions} onResize={handleResize} />
                                     <SortableHeader label="Sites" field="countSites" sortConfig={sortConfig} requestSort={requestSort} width={widths.sites} onResize={handleResize} />
-                                    <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white " style={{ width: widths.actions }}>Action</th>
+                                    <Th style={{ width: widths.actions }}>Action</Th>
                                 </tr>
-                            </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
-                                {paginatedInventory.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={15} className="px-6 py-16 text-center text-gray-500 rounded-b-lg truncate">
-                                            <div className="flex flex-col items-center justify-center min-w-0">
-                                                <svg className="w-20 h-20 text-gray-200 dark:text-gray-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                </svg>
-                                                <p className="text-xl font-semibold text-gray-900 dark:text-white mb-2 truncate" title="No inventory items found">No inventory items found</p>
-                                                <p className="text-gray-500 truncate" title="Try adjusting your filters or search query to find what you&apos;re looking for.">Try adjusting your filters or search query to find what you&apos;re looking for.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    paginatedInventory.map((item) => (
-                                        <tr key={item.id} className={`transition-colors group ${selectedItems.has(item.productId || item.id) ? 'bg-primary/5 dark:bg-primary/10' : 'hover:bg-primary-light/20 dark:hover:bg-primary/5'}`}>
-                                            <td className={`px-3 py-2 sticky left-0 z-30 text-center ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
+                            </THead>
+                            <TBody>
+                                {paginatedInventory.map((item) => (
+                                        <Tr key={item.id} className={`group ${selectedItems.has(item.productId || item.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}>
+                                            <Td className={`px-3 py-2 sticky left-0 z-30 text-center ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
                                                 <input
                                                     type="checkbox"
                                                     className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
@@ -645,34 +635,34 @@ export default function InventoryPage() {
                                                     onChange={() => toggleSelection(item.productId || item.id)}
                                                     disabled={item.qtyAvailable <= 0}
                                                 />
-                                            </td>
-                                            <td className={`px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky text-left truncate shadow-[1px_0_0_0_#f3f4f6] dark:shadow-[1px_0_0_0_#374151] z-20 ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.productName, minWidth: widths.productName, maxWidth: widths.productName, left: widths.checkbox }}>
+                                            </Td>
+                                            <Td className={`px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky text-left truncate shadow-[1px_0_0_0_#f3f4f6] dark:shadow-[1px_0_0_0_#374151] z-20 ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.productName, minWidth: widths.productName, maxWidth: widths.productName, left: widths.checkbox }}>
                                                 <Link href={`/inventory/${item.productId || item.id}`} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
                                                     {displayCell(item.productName)}
                                                 </Link>
 
-                                            </td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.description, maxWidth: widths.description }}>
+                                            </Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.description, maxWidth: widths.description }}>
                                                 <div className="truncate" title={item.productDescription}>{displayCell(item.productDescription)}</div>
-                                            </td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.manufacturer, maxWidth: widths.manufacturer }}>
+                                            </Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.manufacturer, maxWidth: widths.manufacturer }}>
                                                 <div className="truncate" title={item.brand}>{displayCell(item.brand)}</div>
-                                            </td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
+                                            </Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                                                 <div className="truncate">
                                                     <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">{displayCell(item.productFamily)}</span>
                                                 </div>
-                                            </td>
-                                            <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.qtyOnHand)}</td>
-                                            <td className={`px-3 py-2 text-sm font-bold text-left truncate ${item.qtyAvailable < 1 ? 'text-red-600' : 'text-green-600'}`}>{formatNumber(item.qtyAvailable)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white text-left truncate">{formatCurrency(item.unitCost)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white text-left truncate">{formatCurrency(item.totalPrice ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{formatNumber(item.totalUnitCVInches ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{formatNumber(item.totalUnitCVSQFT ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-medium text-left truncate">{formatNumber(item.avgInventoryAge ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-medium text-left truncate">{formatNumber(item.totalPositions ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-medium text-left truncate">{formatNumber(item.countSites ?? 0)}</td>
-                                            <td className="px-3 py-2 text-sm text-left truncate">
+                                            </Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-left truncate">{formatNumber(item.qtyOnHand)}</Td>
+                                            <Td className={`px-3 py-2 text-sm font-bold text-left truncate ${item.qtyAvailable < 1 ? 'text-red-600' : 'text-green-600'}`}>{formatNumber(item.qtyAvailable)}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-white text-left truncate">{formatCurrency(item.unitCost)}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-white text-left truncate">{formatCurrency(item.totalPrice ?? 0)}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{formatNumber(item.totalUnitCVInches ?? 0)}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-left truncate">{formatNumber(item.totalUnitCVSQFT ?? 0)}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-medium text-left truncate">{formatNumber(item.avgInventoryAge ?? 0)}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-medium text-left truncate">{formatNumber(item.totalPositions ?? 0)}</Td>
+                                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-white font-medium text-left truncate">{formatNumber(item.countSites ?? 0)}</Td>
+                                            <Td className="px-3 py-2 text-sm text-left truncate">
                                                 {!isManufacturer && (
                                                     <button
                                                         onClick={() => router.push(`/inventory/${item.productId || item.id}`)}
@@ -685,12 +675,11 @@ export default function InventoryPage() {
                                                         </svg>
                                                     </button>
                                                 )}
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
+                                            </Td>
+                                        </Tr>
+                                ))}
+                            </TBody>
+                        </Table>
                     )}
                 </div>
 

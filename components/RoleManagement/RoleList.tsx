@@ -98,20 +98,20 @@ const RoleList: React.FC<RoleListProps> = ({
             key={role.id}
             variants={item}
             whileHover={{ y: -4, transition: { duration: 0.2 } }}
-            className="group relative bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 hover:border-[#96C2DB] hover:shadow-xl transition-all duration-300 overflow-hidden"
+            className="group relative bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 hover:border-primary hover:shadow-xl transition-all duration-300 overflow-hidden"
           >
             {/* Gradient overlay on hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#96C2DB]/5 to-[#6B9DB8]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary-dark/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
             <div className="relative p-6">
               {/* Header with Icon */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#96C2DB] to-[#6B9DB8] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                     <Shield className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#6B9DB8] transition-colors">
+                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary-dark transition-colors">
                       {role.name}
                     </h3>
                     <div className="flex items-center gap-1 text-sm text-gray-500 mt-0.5 min-w-0">
@@ -156,7 +156,7 @@ const RoleList: React.FC<RoleListProps> = ({
               <div className="flex items-center gap-2 pt-4 border-t border-gray-100 min-w-0">
                 <button
                   onClick={() => handleEdit(role)}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#96C2DB] to-[#6B9DB8] text-white rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 font-medium text-sm"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 font-medium text-sm"
                 >
                   <Edit className="w-4 h-4" />
                   Edit
@@ -172,7 +172,7 @@ const RoleList: React.FC<RoleListProps> = ({
             </div>
 
             {/* Decorative corner element */}
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-[#96C2DB]/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </motion.div>
         );
       })}

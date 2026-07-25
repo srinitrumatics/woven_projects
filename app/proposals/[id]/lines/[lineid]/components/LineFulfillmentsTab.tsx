@@ -6,6 +6,7 @@ import { SortableHeader } from "../../../../../../components/ui/SortableHeader";
 import { useSortableData } from "../../../../../../hooks/useSortableData";
 import { useResizableColumns } from "../../../../../../hooks/useResizableColumns";
 import Pagination from "../../../../../../components/ui/Pagination";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -131,9 +132,7 @@ export default function LineFulfillmentsTab({
     if (loading) {
         return (
             <div className="p-6">
-                <div className="flex justify-center items-center py-12 min-w-0">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                </div>
+                <TableLoadingState />
             </div>
         );
     }
@@ -167,96 +166,90 @@ export default function LineFulfillmentsTab({
                     <div>
                         <div className="overflow-x-auto">
                             {sortedData.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                                    <p className="text-lg font-medium" title="No records found">No records found</p>
-                                    <p className="text-sm" title="There are no customer quotes associated with this proposal.">There are no customer quotes associated with this proposal.</p>
-                                </div>
+                                <TableEmptyState message="No records found" description="There are no customer quotes associated with this proposal." />
                             ) : (
-                                <>
-                                    <table className="w-full table-fixed">
-                                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                                            <tr>
-                                                <SortableHeader
-                                                    label="Customer Quote Line"
-                                                    field="name"
-                                                    sortConfig={sortConfig}
-                                                    requestSort={requestSort}
-                                                    width={quoteWidths.name}
-                                                    onResize={handleQuoteResize}
-                                                    className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
+                                <Table className="table-fixed">
+                                    <THead>
+                                        <tr>
+                                            <SortableHeader
+                                                label="Customer Quote Line"
+                                                field="name"
+                                                sortConfig={sortConfig}
+                                                requestSort={requestSort}
+                                                width={quoteWidths.name}
+                                                onResize={handleQuoteResize}
+                                                className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
 
-                                                />
-                                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.status} onResize={handleQuoteResize} />
-                                                <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.customerQuoteName} onResize={handleQuoteResize} />
-                                                <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.productName} onResize={handleQuoteResize} />
-                                                <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.productDescription} onResize={handleQuoteResize} />
-                                                <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.manufacturerDBA} onResize={handleQuoteResize} />
-                                                <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.unitPrice} onResize={handleQuoteResize} />
-                                                <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.totalOrderQty} onResize={handleQuoteResize} />
-                                                <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.totalPrice} onResize={handleQuoteResize} />
-                                                <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.shipping} onResize={handleQuoteResize} />
-                                                <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.taxes} onResize={handleQuoteResize} />
-                                                <SortableHeader label="Line Grand Total" field="lineGrandTotal" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.lineGrandTotal} onResize={handleQuoteResize} />
-                                                <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.qtyShipped} onResize={handleQuoteResize} />
-                                                <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: quoteWidths.action }}>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                            {(paginatedData as CustomerQuote[]).map((quote) => (
-                                                <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
-                                                        {quote.customerQuoteId ? (
-                                                            <Link href={`/quotes/${quote.customerQuoteId}/lines/${quote.id}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={quote.name}>{displayCell(quote.name)}</Link>
-                                                        ) : displayCell(quote.name)}
-                                                    </td>
-                                                    <td className="px-3 py-2 truncate">
-                                                        <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
-                                                            {quote.status}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {quote.customerQuoteName && quote.customerQuoteId ? (
-                                                            <Link href={`/quotes/${quote.customerQuoteId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={quote.customerQuoteName}>{quote.customerQuoteName}</Link>
-                                                        ) : (
-                                                            <div className="truncate" title={quote.customerQuoteName}>{quote.customerQuoteName}</div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(quote.productName)}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={quote.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(quote.productDescription)}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[163px] truncate">{displayCell(quote.brand)}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
-                                                        ${quote.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[154px] truncate">{formatNumber(quote.totalOrderQty)}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
-                                                        ${quote.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
-                                                        ${quote.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
-                                                        ${quote.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-primary font-bold truncate">
-                                                        ${quote.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[121px] truncate">{formatNumber(quote.qtyShipped)}</td>
-                                                    <td className="px-3 py-2 text-left truncate">
-                                                        {quote.customerQuoteId && (
-                                                            <Link href={`/quotes/${quote.customerQuoteId}/lines/${quote.id}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark transition-colors inline-block">
-                                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                                </svg>
-                                                            </Link>
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-
-                                </>
+                                            />
+                                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.status} onResize={handleQuoteResize} />
+                                            <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.customerQuoteName} onResize={handleQuoteResize} />
+                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.productName} onResize={handleQuoteResize} />
+                                            <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.productDescription} onResize={handleQuoteResize} />
+                                            <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.manufacturerDBA} onResize={handleQuoteResize} />
+                                            <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.unitPrice} onResize={handleQuoteResize} />
+                                            <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.totalOrderQty} onResize={handleQuoteResize} />
+                                            <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.totalPrice} onResize={handleQuoteResize} />
+                                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.shipping} onResize={handleQuoteResize} />
+                                            <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.taxes} onResize={handleQuoteResize} />
+                                            <SortableHeader label="Line Grand Total" field="lineGrandTotal" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.lineGrandTotal} onResize={handleQuoteResize} />
+                                            <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={requestSort} width={quoteWidths.qtyShipped} onResize={handleQuoteResize} />
+                                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: quoteWidths.action }}>Action</th>
+                                        </tr>
+                                    </THead>
+                                    <TBody>
+                                        {(paginatedData as CustomerQuote[]).map((quote) => (
+                                            <Tr key={quote.id}>
+                                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
+                                                    {quote.customerQuoteId ? (
+                                                        <Link href={`/quotes/${quote.customerQuoteId}/lines/${quote.id}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={quote.name}>{displayCell(quote.name)}</Link>
+                                                    ) : displayCell(quote.name)}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
+                                                        {quote.status}
+                                                    </span>
+                                                </Td>
+                                                <Td className="truncate">
+                                                    {quote.customerQuoteName && quote.customerQuoteId ? (
+                                                        <Link href={`/quotes/${quote.customerQuoteId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={quote.customerQuoteName}>{quote.customerQuoteName}</Link>
+                                                    ) : (
+                                                        <div className="truncate" title={quote.customerQuoteName}>{quote.customerQuoteName}</div>
+                                                    )}
+                                                </Td>
+                                                <Td className="truncate">{displayCell(quote.productName)}</Td>
+                                                <Td className="max-w-xs truncate" title={quote.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(quote.productDescription)}</div></Td>
+                                                <Td className="min-w-[163px] truncate">{displayCell(quote.brand)}</Td>
+                                                <Td className="font-medium truncate">
+                                                    ${quote.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="min-w-[154px] truncate">{formatNumber(quote.totalOrderQty)}</Td>
+                                                <Td className="font-semibold truncate">
+                                                    ${quote.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    ${quote.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    ${quote.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
+                                                </Td>
+                                                <Td className="text-primary font-bold truncate">
+                                                    ${quote.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="min-w-[121px] truncate">{formatNumber(quote.qtyShipped)}</Td>
+                                                <Td className="text-left truncate">
+                                                    {quote.customerQuoteId && (
+                                                        <Link href={`/quotes/${quote.customerQuoteId}/lines/${quote.id}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark transition-colors inline-block">
+                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                            </svg>
+                                                        </Link>
+                                                    )}
+                                                </Td>
+                                            </Tr>
+                                        ))}
+                                    </TBody>
+                                </Table>
                             )}
                         </div>
                         <div className="px-3 py-2 ">
@@ -277,94 +270,88 @@ export default function LineFulfillmentsTab({
                     <div>
                         <div className="overflow-x-auto">
                             {sortedData.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                                    <p className="text-lg font-medium" title="No records found">No records found</p>
-                                    <p className="text-sm" title="There are no sales orders associated with this proposal.">There are no sales orders associated with this proposal.</p>
-                                </div>
+                                <TableEmptyState message="No records found" description="There are no sales orders associated with this proposal." />
                             ) : (
-                                <>
-                                    <table className="w-full table-fixed">
-                                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                                            <tr>
-                                                <SortableHeader
-                                                    label="Sales Order Line"
-                                                    field="name"
-                                                    sortConfig={sortConfig}
-                                                    requestSort={requestSort}
-                                                    width={salesWidths.name}
-                                                    onResize={handleSalesResize}
-                                                    className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
+                                <Table className="table-fixed">
+                                    <THead>
+                                        <tr>
+                                            <SortableHeader
+                                                label="Sales Order Line"
+                                                field="name"
+                                                sortConfig={sortConfig}
+                                                requestSort={requestSort}
+                                                width={salesWidths.name}
+                                                onResize={handleSalesResize}
+                                                className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
 
-                                                />
-                                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.status} onResize={handleSalesResize} />
-                                                <SortableHeader label="Sales Order #" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.salesOrderName} onResize={handleSalesResize} />
-                                                <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.customerQuoteLineName} onResize={handleSalesResize} />
-                                                <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.productName} onResize={handleSalesResize} />
-                                                <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.productDescription} onResize={handleSalesResize} />
-                                                <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.manufacturerDBA} onResize={handleSalesResize} />
-                                                <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.unitPrice} onResize={handleSalesResize} />
-                                                <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.totalOrderQty} onResize={handleSalesResize} />
-                                                <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.totalPrice} onResize={handleSalesResize} />
-                                                <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.shipping} onResize={handleSalesResize} />
-                                                <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.taxes} onResize={handleSalesResize} />
-                                                <SortableHeader label="Line Grand Total" field="lineGrandTotal" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.lineGrandTotal} onResize={handleSalesResize} />
-                                                <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.qtyShipped} onResize={handleSalesResize} />
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                            {(paginatedData as SalesOrder[]).map((order) => (
-                                                <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">{displayCell(order.name)}</td>
-                                                    <td className="px-3 py-2 truncate">
-                                                        <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 truncate">
-                                                            {order.status}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {order.salesOrderName && order.salesOrderId ? (
-                                                            <Link href={`/orders/${order.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={order.salesOrderName}>
-                                                                {order.salesOrderName}
-                                                            </Link>
-                                                        ) : (
-                                                            <div className="truncate" title={order.salesOrderName}>{order.salesOrderName}</div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {order.customerQuoteLineName && order.customerQuoteLineId ? (
-                                                            <Link href={`/quotes/${order.customerQuoteId}/lines/${order.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={order.customerQuoteLineName}>{order.customerQuoteLineName}</Link>
-                                                        ) : (
-                                                            <div className="truncate" title={order.customerQuoteLineName}>{order.customerQuoteLineName}</div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(order.productName)}</td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={order.productDescription}>
-                                                        <div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(order.productDescription)}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[163px] truncate">{displayCell(order.brand)}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
-                                                        ${order.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[161px] truncate">{formatNumber(order.totalOrderQty)}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
-                                                        ${order.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
-                                                        ${order.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
-                                                        ${order.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-primary font-bold truncate">
-                                                        ${order.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[123px] truncate">{formatNumber(order.qtyShipped)}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-
-                                </>
+                                            />
+                                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.status} onResize={handleSalesResize} />
+                                            <SortableHeader label="Sales Order #" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.salesOrderName} onResize={handleSalesResize} />
+                                            <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.customerQuoteLineName} onResize={handleSalesResize} />
+                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.productName} onResize={handleSalesResize} />
+                                            <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.productDescription} onResize={handleSalesResize} />
+                                            <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.manufacturerDBA} onResize={handleSalesResize} />
+                                            <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.unitPrice} onResize={handleSalesResize} />
+                                            <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.totalOrderQty} onResize={handleSalesResize} />
+                                            <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.totalPrice} onResize={handleSalesResize} />
+                                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.shipping} onResize={handleSalesResize} />
+                                            <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.taxes} onResize={handleSalesResize} />
+                                            <SortableHeader label="Line Grand Total" field="lineGrandTotal" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.lineGrandTotal} onResize={handleSalesResize} />
+                                            <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={requestSort} width={salesWidths.qtyShipped} onResize={handleSalesResize} />
+                                        </tr>
+                                    </THead>
+                                    <TBody>
+                                        {(paginatedData as SalesOrder[]).map((order) => (
+                                            <Tr key={order.id}>
+                                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">{displayCell(order.name)}</Td>
+                                                <Td className="truncate">
+                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 truncate">
+                                                        {order.status}
+                                                    </span>
+                                                </Td>
+                                                <Td className="truncate">
+                                                    {order.salesOrderName && order.salesOrderId ? (
+                                                        <Link href={`/orders/${order.salesOrderId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={order.salesOrderName}>
+                                                            {order.salesOrderName}
+                                                        </Link>
+                                                    ) : (
+                                                        <div className="truncate" title={order.salesOrderName}>{order.salesOrderName}</div>
+                                                    )}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    {order.customerQuoteLineName && order.customerQuoteLineId ? (
+                                                        <Link href={`/quotes/${order.customerQuoteId}/lines/${order.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={order.customerQuoteLineName}>{order.customerQuoteLineName}</Link>
+                                                    ) : (
+                                                        <div className="truncate" title={order.customerQuoteLineName}>{order.customerQuoteLineName}</div>
+                                                    )}
+                                                </Td>
+                                                <Td className="truncate">{displayCell(order.productName)}</Td>
+                                                <Td className="max-w-xs truncate" title={order.productDescription}>
+                                                    <div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(order.productDescription)}
+                                                    </div>
+                                                </Td>
+                                                <Td className="min-w-[163px] truncate">{displayCell(order.brand)}</Td>
+                                                <Td className="font-medium truncate">
+                                                    ${order.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="min-w-[161px] truncate">{formatNumber(order.totalOrderQty)}</Td>
+                                                <Td className="font-semibold truncate">
+                                                    ${order.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    ${order.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    ${order.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
+                                                </Td>
+                                                <Td className="text-primary font-bold truncate">
+                                                    ${order.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="min-w-[123px] truncate">{formatNumber(order.qtyShipped)}</Td>
+                                            </Tr>
+                                        ))}
+                                    </TBody>
+                                </Table>
                             )}
                         </div>
                         <div className="px-3 py-2">
@@ -385,125 +372,119 @@ export default function LineFulfillmentsTab({
                     <div>
                         <div className="overflow-x-auto">
                             {sortedData.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                                    <p className="text-lg font-medium" title="No records found">No records found</p>
-                                    <p className="text-sm" title="There are no invoices associated with this proposal.">There are no invoices associated with this proposal.</p>
-                                </div>
+                                <TableEmptyState message="No records found" description="There are no invoices associated with this proposal." />
                             ) : (
-                                <>
-                                    <table className="w-full table-fixed">
-                                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                                            <tr>
-                                                <SortableHeader
-                                                    label="Invoice Line"
-                                                    field="name"
-                                                    sortConfig={sortConfig}
-                                                    requestSort={requestSort}
-                                                    width={invoiceWidths.name}
-                                                    onResize={handleInvoiceResize}
-                                                    className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
+                                <Table className="table-fixed">
+                                    <THead>
+                                        <tr>
+                                            <SortableHeader
+                                                label="Invoice Line"
+                                                field="name"
+                                                sortConfig={sortConfig}
+                                                requestSort={requestSort}
+                                                width={invoiceWidths.name}
+                                                onResize={handleInvoiceResize}
+                                                className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
 
-                                                />
-                                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.status} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Invoice #" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.invoiceName} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.salesOrderLineName} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.purchaseOrderLineName} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.customerQuoteLineName} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.productName} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.productDescription} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.manufacturerDBA} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.unitPrice} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.totalOrderQty} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.totalPrice} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.shipping} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.taxes} onResize={handleInvoiceResize} />
-                                                <SortableHeader label="Line Grand Total" field="lineGrandTotal" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.lineGrandTotal} onResize={handleInvoiceResize} />
-                                                <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: invoiceWidths.action }}>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                            {(paginatedData as Invoice[]).map((invoice) => (
-                                                <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
-                                                        {invoice.invoiceId ? (
-                                                            <Link href={`/invoices/${invoice.invoiceId}/lines/${invoice.id}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.name}>{displayCell(invoice.name)}</Link>
-                                                        ) : <div className="truncate" title={invoice.name}>{displayCell(invoice.name)}</div>}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-left truncate">
-                                                        <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
-                                                            {invoice.status}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
+                                            />
+                                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.status} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Invoice #" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.invoiceName} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.salesOrderLineName} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Purchase Order Line" field="purchaseOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.purchaseOrderLineName} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.customerQuoteLineName} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.productName} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.productDescription} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.manufacturerDBA} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.unitPrice} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.totalOrderQty} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.totalPrice} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.shipping} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.taxes} onResize={handleInvoiceResize} />
+                                            <SortableHeader label="Line Grand Total" field="lineGrandTotal" sortConfig={sortConfig} requestSort={requestSort} width={invoiceWidths.lineGrandTotal} onResize={handleInvoiceResize} />
+                                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: invoiceWidths.action }}>Action</th>
+                                        </tr>
+                                    </THead>
+                                    <TBody>
+                                        {(paginatedData as Invoice[]).map((invoice) => (
+                                            <Tr key={invoice.id}>
+                                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
+                                                    {invoice.invoiceId ? (
+                                                        <Link href={`/invoices/${invoice.invoiceId}/lines/${invoice.id}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.name}>{displayCell(invoice.name)}</Link>
+                                                    ) : <div className="truncate" title={invoice.name}>{displayCell(invoice.name)}</div>}
+                                                </Td>
+                                                <Td className="text-left truncate">
+                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
+                                                        {invoice.status}
+                                                    </span>
+                                                </Td>
+                                                <Td className="truncate">
 
-                                                        {invoice.invoiceName && invoice.invoiceId ? (
-                                                            <Link href={`/invoices/${invoice.invoiceId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.invoiceName}>{invoice.invoiceName}</Link>
-                                                        ) : (
-                                                            <div className="truncate" title={invoice.invoiceName}>{invoice.invoiceName}</div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {invoice.salesOrderLineName && invoice.salesOrderLineId ? (
-                                                            <Link href={`/orders/${invoice.salesOrderLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.salesOrderLineName}>{invoice.salesOrderLineName}</Link>
-                                                        ) : (
-                                                            <div className="truncate" title={invoice.salesOrderLineName}>{invoice.salesOrderLineName}</div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {invoice.purchaseOrderLineName && invoice.purchaseOrderLineId ? (
-                                                            <Link href={`/purchase-orders/${invoice.purchaseOrderLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.purchaseOrderLineName}>{invoice.purchaseOrderLineName}</Link>
-                                                        ) : (
-                                                            <div className="truncate" title={invoice.purchaseOrderLineName}>{invoice.purchaseOrderLineName}</div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        {invoice.customerQuoteLineName && invoice.customerQuoteLineId ? (
-                                                            <Link href={`/quotes/${invoice.customerQuoteId}/lines/${invoice.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.customerQuoteLineName}>{invoice.customerQuoteLineName}</Link>
-                                                        ) : (
-                                                            <div className="truncate" title={invoice.customerQuoteLineName}>{invoice.customerQuoteLineName}</div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        <div className="truncate" title={invoice.productName}>{displayCell(invoice.productName)}</div>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">
-                                                        <div className="max-w-xs truncate" title={invoice.productDescription}>{displayCell(invoice.productDescription)}</div>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white text-left min-w-[159px] truncate">
-                                                        <div className="truncate" title={invoice.brand}>{displayCell(invoice.brand)}</div>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
-                                                        ${invoice.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[121px] truncate">{formatNumber(invoice.totalOrderQty)}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
-                                                        ${invoice.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
-                                                        ${invoice.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">
-                                                        ${invoice.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-primary font-bold truncate">
-                                                        ${invoice.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-left truncate">
-                                                        {invoice.invoiceId && (
-                                                            <Link href={`/invoices/${invoice.invoiceId}/lines/${invoice.id}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark transition-colors inline-block">
-                                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                                </svg>
-                                                            </Link>
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-
-                                </>
+                                                    {invoice.invoiceName && invoice.invoiceId ? (
+                                                        <Link href={`/invoices/${invoice.invoiceId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.invoiceName}>{invoice.invoiceName}</Link>
+                                                    ) : (
+                                                        <div className="truncate" title={invoice.invoiceName}>{invoice.invoiceName}</div>
+                                                    )}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    {invoice.salesOrderLineName && invoice.salesOrderLineId ? (
+                                                        <Link href={`/orders/${invoice.salesOrderLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.salesOrderLineName}>{invoice.salesOrderLineName}</Link>
+                                                    ) : (
+                                                        <div className="truncate" title={invoice.salesOrderLineName}>{invoice.salesOrderLineName}</div>
+                                                    )}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    {invoice.purchaseOrderLineName && invoice.purchaseOrderLineId ? (
+                                                        <Link href={`/purchase-orders/${invoice.purchaseOrderLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.purchaseOrderLineName}>{invoice.purchaseOrderLineName}</Link>
+                                                    ) : (
+                                                        <div className="truncate" title={invoice.purchaseOrderLineName}>{invoice.purchaseOrderLineName}</div>
+                                                    )}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    {invoice.customerQuoteLineName && invoice.customerQuoteLineId ? (
+                                                        <Link href={`/quotes/${invoice.customerQuoteId}/lines/${invoice.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={invoice.customerQuoteLineName}>{invoice.customerQuoteLineName}</Link>
+                                                    ) : (
+                                                        <div className="truncate" title={invoice.customerQuoteLineName}>{invoice.customerQuoteLineName}</div>
+                                                    )}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    <div className="truncate" title={invoice.productName}>{displayCell(invoice.productName)}</div>
+                                                </Td>
+                                                <Td className="truncate">
+                                                    <div className="max-w-xs truncate" title={invoice.productDescription}>{displayCell(invoice.productDescription)}</div>
+                                                </Td>
+                                                <Td className="text-left min-w-[159px] truncate">
+                                                    <div className="truncate" title={invoice.brand}>{displayCell(invoice.brand)}</div>
+                                                </Td>
+                                                <Td className="font-medium truncate">
+                                                    ${invoice.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="min-w-[121px] truncate">{formatNumber(invoice.totalOrderQty)}</Td>
+                                                <Td className="font-semibold truncate">
+                                                    ${invoice.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    ${invoice.shipping?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    ${invoice.taxes?.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) || '0.000'}
+                                                </Td>
+                                                <Td className="text-primary font-bold truncate">
+                                                    ${invoice.lineGrandTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="text-left truncate">
+                                                    {invoice.invoiceId && (
+                                                        <Link href={`/invoices/${invoice.invoiceId}/lines/${invoice.id}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark transition-colors inline-block">
+                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                            </svg>
+                                                        </Link>
+                                                    )}
+                                                </Td>
+                                            </Tr>
+                                        ))}
+                                    </TBody>
+                                </Table>
                             )}
                         </div>
                         <div className="px-3 py-2">
@@ -524,109 +505,104 @@ export default function LineFulfillmentsTab({
                     <div>
                         <div className="overflow-x-auto">
                             {sortedData.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                                    <p className="text-lg font-medium" title="No records found">No records found</p>
-                                    <p className="text-sm" title="There are no shipping manifests associated with this proposal.">There are no shipping manifests associated with this proposal.</p>
-                                </div>
+                                <TableEmptyState message="No records found" description="There are no shipping manifests associated with this proposal." />
                             ) : (
-                                <>
-                                    <table className="w-full table-fixed">
-                                        <thead className="bg-primary-light dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                                            <tr>
-                                                <SortableHeader
-                                                    label="Shipping Manifest Line"
-                                                    field="name"
-                                                    sortConfig={sortConfig}
-                                                    requestSort={requestSort}
-                                                    width={shippingWidths.name}
-                                                    onResize={handleShippingResize}
-                                                    className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
+                                <Table className="table-fixed">
+                                    <THead>
+                                        <tr>
+                                            <SortableHeader
+                                                label="Shipping Manifest Line"
+                                                field="name"
+                                                sortConfig={sortConfig}
+                                                requestSort={requestSort}
+                                                width={shippingWidths.name}
+                                                onResize={handleShippingResize}
+                                                className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10"
 
-                                                />
-                                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.status} onResize={handleShippingResize} />
-                                                <SortableHeader label="Shipping Manifest #" field="shippingManifestName" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.shippingManifestName} onResize={handleShippingResize} />
-                                                <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.salesOrderLineName} onResize={handleShippingResize} />
-                                                <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.customerQuoteLineName} onResize={handleShippingResize} />
-                                                <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.productName} onResize={handleShippingResize} />
-                                                <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.productDescription} onResize={handleShippingResize} />
-                                                <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.manufacturerDBA} onResize={handleShippingResize} />
-                                                <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.unitPrice} onResize={handleShippingResize} />
-                                                <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.totalOrderQty} onResize={handleShippingResize} />
-                                                <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.totalPrice} onResize={handleShippingResize} />
-                                                <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.qtyShipped} onResize={handleShippingResize} />
-                                                <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxCount} onResize={handleShippingResize} />
-                                                <SortableHeader label="Box Length" field="boxLength" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxLength} onResize={handleShippingResize} />
-                                                <SortableHeader label="Box Width" field="boxWidth" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxWidth} onResize={handleShippingResize} />
-                                                <SortableHeader label="Box Height" field="boxHeight" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxHeight} onResize={handleShippingResize} />
-                                                <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxNetWeight} onResize={handleShippingResize} />
-                                                <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxGrossWeight} onResize={handleShippingResize} />
-                                                <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: shippingWidths.action }}>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                            {(paginatedData as ShippingManifest[]).map((manifest) => (
-                                                <tr key={manifest.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 text-left min-w-[198px] truncate" title={manifest.name}>
-                                                        {manifest.shippingManifestId ? (
-                                                            <Link href={`/shipments/${manifest.shippingManifestId}/lines/${manifest.id}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{displayCell(manifest.name)}</Link>
-                                                        ) : <div className="text-sm font-medium  text-gray-900 dark:text-white truncate">{displayCell(manifest.name)}</div>}
-                                                    </td>
-                                                    <td className="px-3 py-2 truncate">
-                                                        <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
-                                                            {manifest.status}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.shippingManifestName}>
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate">
-                                                            {manifest.shippingManifestName}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.salesOrderLineName}>
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate">{manifest.salesOrderLineName}</div>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.customerQuoteLineName}>
-                                                        {manifest.customerQuoteLineName && manifest.customerQuoteLineId ? (
-                                                            <Link href={`/quotes/${manifest.customerQuoteId}/lines/${manifest.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{manifest.customerQuoteLineName}</Link>
-                                                        ) : (
-                                                            <div className="text-sm text-gray-900 dark:text-white truncate">{manifest.customerQuoteLineName}</div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={manifest.productName}><div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.productName)}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white max-w-xs truncate" title={manifest.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(manifest.productDescription)}</div></td>
-                                                    <td className="px-3 py-2 text-sm text-gray-900 dark:text-white min-w-[167px] truncate" title={manifest.brand}>
-                                                        <div
-                                                            className="text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.brand)}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-medium truncate">
-                                                        ${manifest.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[160px] truncate">{formatNumber(manifest.totalOrderQty)}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white font-semibold truncate">
-                                                        ${manifest.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[124px] truncate">{formatNumber(manifest.qtyShipped)}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[118px] truncate">{formatNumber(manifest.boxCount)}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxLength ?? ''))}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxWidth ?? ''))}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white truncate">{displayCell(String(manifest.boxHeight ?? ''))}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[140px] truncate">{formatNumber(manifest.boxNetWeight)}</td>
-                                                    <td className="px-3 py-2 text-sm  text-gray-900 dark:text-white min-w-[162px] truncate">{formatNumber(manifest.boxGrossWeight)}</td>
-                                                    <td className="px-3 py-2 text-left truncate">
-                                                        {manifest.shippingManifestId && (
-                                                            <Link href={`/shipments/${manifest.shippingManifestId}/lines/${manifest.id}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark transition-colors inline-block">
-                                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                                </svg>
-                                                            </Link>
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </>
+                                            />
+                                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.status} onResize={handleShippingResize} />
+                                            <SortableHeader label="Shipping Manifest #" field="shippingManifestName" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.shippingManifestName} onResize={handleShippingResize} />
+                                            <SortableHeader label="Sales Order Line" field="salesOrderLineName" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.salesOrderLineName} onResize={handleShippingResize} />
+                                            <SortableHeader label="Customer Quote Line" field="customerQuoteLineName" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.customerQuoteLineName} onResize={handleShippingResize} />
+                                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.productName} onResize={handleShippingResize} />
+                                            <SortableHeader label="Product Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.productDescription} onResize={handleShippingResize} />
+                                            <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.manufacturerDBA} onResize={handleShippingResize} />
+                                            <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.unitPrice} onResize={handleShippingResize} />
+                                            <SortableHeader label="Total Order Qty" field="totalOrderQty" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.totalOrderQty} onResize={handleShippingResize} />
+                                            <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.totalPrice} onResize={handleShippingResize} />
+                                            <SortableHeader label="Qty Shipped" field="qtyShipped" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.qtyShipped} onResize={handleShippingResize} />
+                                            <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxCount} onResize={handleShippingResize} />
+                                            <SortableHeader label="Box Length" field="boxLength" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxLength} onResize={handleShippingResize} />
+                                            <SortableHeader label="Box Width" field="boxWidth" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxWidth} onResize={handleShippingResize} />
+                                            <SortableHeader label="Box Height" field="boxHeight" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxHeight} onResize={handleShippingResize} />
+                                            <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxNetWeight} onResize={handleShippingResize} />
+                                            <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={shippingWidths.boxGrossWeight} onResize={handleShippingResize} />
+                                            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white" style={{ width: shippingWidths.action }}>Action</th>
+                                        </tr>
+                                    </THead>
+                                    <TBody>
+                                        {(paginatedData as ShippingManifest[]).map((manifest) => (
+                                            <Tr key={manifest.id}>
+                                                <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 text-left min-w-[198px] truncate" title={manifest.name}>
+                                                    {manifest.shippingManifestId ? (
+                                                        <Link href={`/shipments/${manifest.shippingManifestId}/lines/${manifest.id}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{displayCell(manifest.name)}</Link>
+                                                    ) : <div className="text-sm font-medium  text-gray-900 dark:text-white truncate">{displayCell(manifest.name)}</div>}
+                                                </Td>
+                                                <Td className="truncate">
+                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
+                                                        {manifest.status}
+                                                    </span>
+                                                </Td>
+                                                <Td className="truncate" title={manifest.shippingManifestName}>
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate">
+                                                        {manifest.shippingManifestName}
+                                                    </div>
+                                                </Td>
+                                                <Td className="truncate" title={manifest.salesOrderLineName}>
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate">{manifest.salesOrderLineName}</div>
+                                                </Td>
+                                                <Td className="truncate" title={manifest.customerQuoteLineName}>
+                                                    {manifest.customerQuoteLineName && manifest.customerQuoteLineId ? (
+                                                        <Link href={`/quotes/${manifest.customerQuoteId}/lines/${manifest.customerQuoteLineId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate">{manifest.customerQuoteLineName}</Link>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate">{manifest.customerQuoteLineName}</div>
+                                                    )}
+                                                </Td>
+                                                <Td className="truncate" title={manifest.productName}><div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.productName)}</div></Td>
+                                                <Td className="max-w-xs truncate" title={manifest.productDescription}><div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{displayCell(manifest.productDescription)}</div></Td>
+                                                <Td className="min-w-[167px] truncate" title={manifest.brand}>
+                                                    <div
+                                                        className="text-sm text-gray-900 dark:text-white truncate">{displayCell(manifest.brand)}
+                                                    </div>
+                                                </Td>
+                                                <Td className="font-medium truncate">
+                                                    ${manifest.unitPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="min-w-[160px] truncate">{formatNumber(manifest.totalOrderQty)}</Td>
+                                                <Td className="font-semibold truncate">
+                                                    ${manifest.totalPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                                </Td>
+                                                <Td className="min-w-[124px] truncate">{formatNumber(manifest.qtyShipped)}</Td>
+                                                <Td className="min-w-[118px] truncate">{formatNumber(manifest.boxCount)}</Td>
+                                                <Td className="truncate">{displayCell(String(manifest.boxLength ?? ''))}</Td>
+                                                <Td className="truncate">{displayCell(String(manifest.boxWidth ?? ''))}</Td>
+                                                <Td className="truncate">{displayCell(String(manifest.boxHeight ?? ''))}</Td>
+                                                <Td className="min-w-[140px] truncate">{formatNumber(manifest.boxNetWeight)}</Td>
+                                                <Td className="min-w-[162px] truncate">{formatNumber(manifest.boxGrossWeight)}</Td>
+                                                <Td className="text-left truncate">
+                                                    {manifest.shippingManifestId && (
+                                                        <Link href={`/shipments/${manifest.shippingManifestId}/lines/${manifest.id}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark transition-colors inline-block">
+                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                            </svg>
+                                                        </Link>
+                                                    )}
+                                                </Td>
+                                            </Tr>
+                                        ))}
+                                    </TBody>
+                                </Table>
                             )}
                         </div>
                         <div className="px-3 py-2">

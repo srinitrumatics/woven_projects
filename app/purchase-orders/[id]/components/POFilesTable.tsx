@@ -8,6 +8,7 @@ import Pagination from "@/components/ui/Pagination";
 import { formatFileSize, formatDate, displayCell } from "@/lib/utils/formatting";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
+import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 
 interface POFile {
     id: string;
@@ -146,10 +147,10 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
 
     if (files.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-                <p className="text-lg font-medium truncate" title="No records found">No records found</p>
-                <p className="text-sm truncate" title="There are no files attached to this purchase order.">There are no files attached to this purchase order.</p>
-            </div>
+            <TableEmptyState
+                message="No records found"
+                description="There are no files attached to this purchase order."
+            />
         );
     }
 
@@ -157,8 +158,8 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
         <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
 
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                <table className="w-full">
-                    <thead className="bg-primary-light dark:bg-gray-900">
+                <Table>
+                    <THead>
                         <tr>
                             <SortableHeader
                                 label="File Name"
@@ -202,26 +203,26 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                             />
                             <th className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white ">Actions</th>
                         </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    </THead>
+                    <TBody>
                         {paginatedData.map((file) => (
-                            <tr key={file.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={file.fileName}>
+                            <Tr key={file.id} className="transition-colors group">
+                                <Td className="font-semibold sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={file.fileName}>
                                     {displayCell(file.fileName)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>
+                                </Td>
+                                <Td className="text-gray-600 dark:text-gray-400 truncate" title={file.fileType}>
                                     {file.fileType.toLowerCase()}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={formatFileSize(file.sizeInBytes)}>
+                                </Td>
+                                <Td className="truncate" title={formatFileSize(file.sizeInBytes)}>
                                     {formatFileSize(file.sizeInBytes)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={file.uploadedBy}>
+                                </Td>
+                                <Td className="truncate" title={file.uploadedBy}>
                                     {displayCell(file.uploadedBy)}
-                                </td>
-                                <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? file.uploadedDate.split('T')[0] : '-'}>
+                                </Td>
+                                <Td className="text-gray-500 dark:text-gray-400 truncate" title={file.uploadedDate ? file.uploadedDate.split('T')[0] : '-'}>
                                     {file.uploadedDate ? file.uploadedDate.split('T')[0] : '-'}
-                                </td>
-                                <td className="px-3 py-2 truncate">
+                                </Td>
+                                <Td className="truncate">
                                     <div className="flex items-center gap-3 min-w-0">
                                         <button
                                             onClick={() => handleAction(file, 'preview')}
@@ -251,11 +252,11 @@ export default function POFilesTable({ files, poId }: POFilesTableProps) {
                                             )}
                                         </button>
                                     </div>
-                                </td>
-                            </tr>
+                                </Td>
+                            </Tr>
                         ))}
-                    </tbody>
-                </table>
+                    </TBody>
+                </Table>
             </div>
 
             <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-left">

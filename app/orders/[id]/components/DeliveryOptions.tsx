@@ -103,7 +103,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                                 disabled={true}
                                 className="w-4 h-4 text-primary rounded focus:ring-2 focus:ring-primary mr-2 cursor-not-allowed opacity-60 truncate"
                             />
-                            <span className="text-[12px] text-gray-700 dark:text-gray-300 truncate">{formData.liftGateRequired ? "Required" : "Not Required"}</span>
+                            <span className="text-xs text-gray-700 dark:text-gray-300 truncate">{formData.liftGateRequired ? "Required" : "Not Required"}</span>
                         </div>
                     </div>
 
@@ -116,7 +116,7 @@ export default function DeliveryOptions({ formData, setFormData, shippingMethods
                                 disabled={true}
                                 className="w-4 h-4 text-primary rounded focus:ring-2 focus:ring-primary mr-2 cursor-not-allowed opacity-60 truncate"
                             />
-                            <span className="text-[12px] text-gray-700 dark:text-gray-300 truncate">{formData.insideDelivery ? "Required" : "Not Required"}</span>
+                            <span className="text-xs text-gray-700 dark:text-gray-300 truncate">{formData.insideDelivery ? "Required" : "Not Required"}</span>
                         </div>
                     </div>
                 </div>

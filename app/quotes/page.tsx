@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
 import { Quote, QuoteStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
@@ -456,16 +457,10 @@ export default function QuotesPage() {
         {/* Table */}
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
-              <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-              </svg>
-              <p className="text-sm" title="Loading quotes...">Loading quotes...</p>
-            </div>
+            <TableLoadingState message="Loading quotes..." />
           ) : (
-            <table className="w-full table-fixed">
-              <thead className="bg-primary-light dark:bg-gray-900">
+            <Table className="table-fixed">
+              <THead>
                 <tr>
                   <SortableHeader label="Customer Quote #" field="quoteNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.quoteNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                   <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
@@ -497,36 +492,31 @@ export default function QuotesPage() {
                     Action
                   </th>
                 </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              </THead>
+              <TBody>
                 {paginatedQuotes.length === 0 ? (
                   <tr>
                     <td colSpan={24} className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center justify-center min-w-0">
-                        <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <p className="text-gray-500 dark:text-gray-400 text-lg mb-2" title="No quotes found">No quotes found</p>
-                        <p className="text-gray-400 dark:text-gray-500 text-sm">
-                          {searchQuery || activeTab !== "All"
-                            ? "Try adjusting your filters"
-                            : "Get started by creating your first quote"}
-                        </p>
-                      </div>
+                      <TableEmptyState
+                        message="No quotes found"
+                        description={searchQuery || activeTab !== "All"
+                          ? "Try adjusting your filters"
+                          : "Get started by creating your first quote"}
+                      />
                     </td>
                   </tr>
                 ) : (
                   paginatedQuotes.map((quote) => (
-                    <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <td className="px-3 py-2 text-sm text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
+                    <Tr key={quote.id} className="transition-colors">
+                      <Td className="text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
                         <Link href={`/quotes/${quote.id}`} className="text-sm font-semibold text-primary hover:underline">
                           <div title={quote.quoteNumber}>{quote.quoteNumber}</div>
                         </Link>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <StatusBadge status={quote.status} />
-                      </td>
-                      <td className="px-3 py-2  text-left truncate">
+                      </Td>
+                      <Td className="text-left truncate">
                         {quote.proposalId && quote.proposalName !== 'N/A' ? (
                           !isManufacturer ? (
                             <Link
@@ -545,11 +535,11 @@ export default function QuotesPage() {
                         ) : (
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{displayCell(quote.proposalName)}</div>
                         )}
-                      </td>
-                      <td className="px-3 py-2 text-left truncate">
+                      </Td>
+                      <Td className="text-left truncate">
                         <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{displayCell(quote.proposalName)}</div>
-                      </td>
-                      <td className="px-3 py-2  text-left truncate">
+                      </Td>
+                      <Td className="text-left truncate">
                         {quote.customerOrderId && quote.customerOrder !== 'N/A' ? (
                           !isManufacturer && !isRestricted ? (
                             <Link
@@ -568,47 +558,47 @@ export default function QuotesPage() {
                         ) : (
                           <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerOrder}>{displayCell(quote.customerOrder)}</div>
                         )}
-                      </td>
-                      <td className="px-3 py-2 text-left truncate">
+                      </Td>
+                      <Td className="text-left truncate">
                         <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.customerPO}>{displayCell(quote.customerPO)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={quote.billToAccountName}>{displayCell(quote.billToAccountName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={quote.billToLocationName}>{displayCell(quote.billToLocationName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={quote.billToContactName}>{displayCell(quote.billToContactName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={quote.shipToAccountName}>{displayCell(quote.shipToAccountName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={quote.shipToLocationName}>{displayCell(quote.shipToLocationName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <div className="text-sm text-gray-600 dark:text-gray-400" title={quote.shipToContactName}>{displayCell(quote.shipToContactName)}</div>
-                      </td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="truncate">
                         <span className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${quote.dropShip
                           ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                           : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                           }`}>
                           {quote.dropShip ? 'Yes' : 'No'}
                         </span>
-                      </td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{quote.totalLines}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">{formatCurrency(quote.totalAmount)}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{formatCurrency(quote.shipping)}</td>
-                      <td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">{formatCurrency(quote.taxes)}</td>
-                      <td className="px-3 py-2 text-sm text-left text-primary font-bold truncate">{formatCurrency(quote.grandTotal)}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.issuedDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.expirationDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.requestDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.plannedShipDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.shipConfirmedDate, 'numeric-dash')}</td>
-                      <td className="px-3 py-2 truncate">
+                      </Td>
+                      <Td className="text-left truncate">{quote.totalLines}</Td>
+                      <Td className="text-left font-semibold truncate">{formatCurrency(quote.totalAmount)}</Td>
+                      <Td className="text-left truncate">{formatCurrency(quote.shipping)}</Td>
+                      <Td className="text-left truncate">{formatCurrency(quote.taxes)}</Td>
+                      <Td className="text-left text-primary font-bold truncate">{formatCurrency(quote.grandTotal)}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.issuedDate, 'numeric-dash')}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.expirationDate, 'numeric-dash')}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.requestDate, 'numeric-dash')}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.plannedShipDate, 'numeric-dash')}</Td>
+                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(quote.shipConfirmedDate, 'numeric-dash')}</Td>
+                      <Td className="truncate">
                         <div className="flex gap-2">
                           <button
                             onClick={() => router.push(`/quotes/${quote.id}`)}
@@ -621,12 +611,12 @@ export default function QuotesPage() {
                             </svg>
                           </button>
                         </div>
-                      </td>
-                    </tr>
+                      </Td>
+                    </Tr>
                   ))
                 )}
-              </tbody>
-            </table>
+              </TBody>
+            </Table>
           )}
         </div>
 
