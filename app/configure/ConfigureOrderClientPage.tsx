@@ -756,8 +756,9 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                   <Th className="whitespace-nowrap">Description</Th>
                   <Th className="whitespace-nowrap">Brand Name</Th>
                   <Th className="text-right whitespace-nowrap">Sell Price</Th>
-                  <Th className="text-center whitespace-nowrap w-28">Order Qty</Th>
+                  <Th className="text-center whitespace-nowrap">Order Qty</Th>
                   <Th className="text-center whitespace-nowrap">MOQ</Th>
+                  <Th className="text-center whitespace-nowrap w-28">Total Qty</Th>
                   <Th className="text-right whitespace-nowrap">Total Price</Th>
                   <Th className="w-10"></Th>
                 </tr>
@@ -790,7 +791,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                             <span className="text-xs text-gray-500 dark:text-gray-400">{s.n} item{s.n !== 1 ? 's' : ''}</span>
                           </div>
                         </Td>
-                        <Td colSpan={5}></Td>
+                        <Td colSpan={6}></Td>
                         <Td className="px-3 py-2 text-right font-bold text-indigo-600 dark:text-indigo-400 text-sm">{fmt(s.ts)}</Td>
                         <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
                       </tr>
@@ -818,6 +819,10 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                         <Td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate max-w-[150px]" title={l.desc}>{l.desc}</Td>
                         <Td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px]">{l.brand || '-'}</Td>
                         <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-right">{fmt(l.sell)}</Td>
+                        <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-center">
+                          {lineMoq > 0 ? (Number.isInteger(orderQty / lineMoq) ? orderQty / lineMoq : (orderQty / lineMoq).toFixed(2)) : 0}
+                        </Td>
+                        <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">{lineMoq}</Td>
                         <Td className="px-3 py-2 text-center">
                           <div className="flex flex-col items-center gap-1">
                             <div className="flex items-center justify-center gap-1">
@@ -850,7 +855,6 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                             <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {lineMoq} / Avail: {l.avail ?? 0}</div>
                           </div>
                         </Td>
-                        <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">{lineMoq}</Td>
                         <Td className="px-3 py-2 text-sm font-semibold text-green-600 dark:text-green-400 text-right">{fmt(totalPrice)}</Td>
                         <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
                       </tr>
