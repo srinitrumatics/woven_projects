@@ -676,7 +676,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               customerOrderId: r.Customer_Order__c || '',
               salesOrderId: r.Sales_Order__c || '',
               proposalId: r.Proposal__c || '',
-              proposalName: r.Proposal_Name || r.Proposal__r?.Name || ''
+              proposalName: r.Proposal_Name || r.Proposal__r?.Name || '',
+              proposalNumber: r.Proposal_Number__c || r.Proposal_Name || r.Proposal__r?.Name || ''
             })),
             rtv: (json.RTV__c || []).map((r: any) => ({
               id: r.Id,
@@ -737,7 +738,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               shipmentId: c.Shipment__c || '',
               salesOrderName: c.Sales_Order_Name || '',
               proposalId: c.Proposal__c || '',
-              proposalName: c.Proposal_Name || c.Proposal__r?.Name || ''
+              proposalName: c.Proposal_Name || c.Proposal__r?.Name || '',
+              proposalNumber: c.Proposal_Number__c || c.Proposal_Name || c.Proposal__r?.Name || ''
             })),
             debitMemos: (json.Debit_Memo__c || []).map((d: any) => ({
               id: d.Id,
@@ -846,7 +848,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               settledDate: formatDate(inv.Settled_Date__c, 'numeric-dash'),
               purchaseOrderName: inv.Purchase_Order_Name || inv.Purchase_Order__r?.Name || '',
               proposalId: inv.Proposal__c || '',
-              proposalName: inv.Proposal_Name || inv.Proposal__r?.Name || ''
+              proposalName: inv.Proposal_Name || inv.Proposal__r?.Name || '',
+              proposalNumber: inv.Proposal_Number__c || inv.Proposal_Name || inv.Proposal__r?.Name || ''
             })),
             shippingManifests: (json.Shipping_Manifest__c || []).map((sm: any) => ({
               id: sm.Id,
@@ -883,7 +886,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               boxHeight: sm.Case_Height__c || 0,
               requestDate: formatDate(sm.Request_Date__c, 'numeric-dash'),
               proposalId: sm.Proposal__c || '',
-              proposalName: sm.Proposal_Name || sm.Proposal__r?.Name || ''
+              proposalName: sm.Proposal_Name || sm.Proposal__r?.Name || '',
+              proposalNumber: sm.Proposal_Number__c || sm.Proposal_Name || sm.Proposal__r?.Name || ''
             })),
             salesOrders: (json.Sales_Order__c || []).map((so: any) => ({
               id: so.Id,
@@ -914,7 +918,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               deliveredDate: formatDate(so.Delivered_Date__c, 'numeric-dash'),
               salesOrderId: so.Id || '',
               proposalId: so.Proposal__c || '',
-              proposalName: so.Proposal_Name || so.Proposal__r?.Name || ''
+              proposalName: so.Proposal_Name || so.Proposal__r?.Name || '',
+              proposalNumber: so.Proposal_Number__c || so.Proposal_Name || so.Proposal__r?.Name || ''
             })),
             customerQuotes: (json.Customer_Quote__c || []).map((cq: any) => ({
               id: cq.Id,
@@ -942,7 +947,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               shipDate: formatDate(cq.Ship_Date__c, 'numeric-dash'),
               deliveredDate: formatDate(cq.Delivered_Date__c, 'numeric-dash'),
               proposalId: cq.Proposal__c || '',
-              proposalName: cq.Proposal_Name || cq.Proposal__r?.Name || ''
+              proposalName: cq.Proposal_Name || cq.Proposal__r?.Name || '',
+              proposalNumber: cq.Proposal_Number__c || cq.Proposal_Name || cq.Proposal__r?.Name || ''
             }))
           });
           break;

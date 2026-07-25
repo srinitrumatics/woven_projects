@@ -114,7 +114,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                         <SortableHeader label="Type" field="rmaType" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].rmaType} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Sales Order #" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].salesOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].proposalId} onResize={(f, w) => onResize(activeTab, f, w)} />
+                                        <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].proposalId} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].proposalName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Ship from Account" field="shipFromAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].shipFromAccountName} onResize={(f, w) => onResize(activeTab, f, w)} />
@@ -161,7 +161,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                         <SortableHeader label="Invoice #" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].invoiceName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Sales Order #" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].salesOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerQuoteName} onResize={(f, w) => onResize(activeTab, f, w)} />
-                                        <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].proposalId} onResize={(f, w) => onResize(activeTab, f, w)} />
+                                        <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].proposalId} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].proposalName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].customerOrderName} onResize={(f, w) => onResize(activeTab, f, w)} />
                                         <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths[activeTab].totalLines} onResize={(f, w) => onResize(activeTab, f, w)} />
@@ -235,10 +235,10 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                     )}
                                                 </Td>
                                                 <Td className="truncate">
-                                                    {rma.proposalName && rma.proposalId ? (
-                                                        <Link href={`/proposals/${rma.proposalId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.proposalName}>{rma.proposalName}</Link>
+                                                    {rma.proposalNumber && rma.proposalId ? (
+                                                        <Link href={`/proposals/${rma.proposalId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={rma.proposalNumber}>{rma.proposalNumber}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.proposalName}>{displayCell(rma.proposalName)}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={rma.proposalNumber}>{displayCell(rma.proposalNumber)}</div>
                                                     )}
                                                 </Td>
                                                 <Td className="truncate" title={rma.proposalName}>{displayCell(rma.proposalName)}</Td>
@@ -339,10 +339,10 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                                     )}
                                                 </Td>
                                                 <Td className="truncate">
-                                                    {credit.proposalName && credit.proposalId ? (
-                                                        <Link href={`/proposals/${credit.proposalId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.proposalName}>{credit.proposalName}</Link>
+                                                    {credit.proposalNumber && credit.proposalId ? (
+                                                        <Link href={`/proposals/${credit.proposalId}`} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-primary hover:underline truncate" title={credit.proposalNumber}>{credit.proposalNumber}</Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.proposalName}>{displayCell(credit.proposalName)}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={credit.proposalNumber}>{displayCell(credit.proposalNumber)}</div>
                                                     )}
                                                 </Td>
                                                 <Td className="truncate" title={credit.proposalName}>{displayCell(credit.proposalName)}</Td>

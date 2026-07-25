@@ -72,7 +72,7 @@ export default function ShipmentsPage() {
       salesOrderId: s.Sales_Order__c || "",
       customerQuote: s.Customer_Quote_Name || "",
       customerQuoteId: s.Customer_Quote__c || "",
-      proposalNumber: s.Proposal_Number || s.Proposal_Name || "",
+      proposalNumber: s.Proposal_Number__c || s.Proposal_Name || "",
       proposalName: s.Proposal_Name || "",
       proposalId: s.Proposal__c || "",
       customerOrder: s.Customer_Order_Name || "",

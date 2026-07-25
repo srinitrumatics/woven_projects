@@ -64,7 +64,7 @@ export default function QuoteInvoicesSubTab({
                                     <SortableHeader label="Sales Order #" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={onResize} align="left" />
                                     <SortableHeader label="Purchase Order #" field="purchaseOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={onResize} align="left" />
                                     <SortableHeader label="Customer Quote #" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={onResize} align="left" />
-                                    <SortableHeader label="Proposal #" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={onResize} align="left" />
+                                    <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={onResize} align="left" />
                                     <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={onResize} align="left" />
                                     <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={onResize} align="left" />
                                     <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={onResize} align="left" />
@@ -114,10 +114,10 @@ export default function QuoteInvoicesSubTab({
                                             {invoice.proposalId ? (
                                                 !isManufacturer ? (
                                                     <Link href={`/proposals/${invoice.proposalId}`} target="_blank" className="text-primary hover:underline font-medium">
-                                                        {invoice.proposalName}
+                                                        {invoice.proposalNumber}
                                                     </Link>
-                                                ) : displayCell(invoice.proposalName)
-                                            ) : displayCell(invoice.proposalName)}
+                                                ) : displayCell(invoice.proposalNumber)
+                                            ) : displayCell(invoice.proposalNumber)}
                                         </Td>
                                         <Td className="truncate" style={{ width: widths.proposalName }}>
                                             {displayCell(invoice.proposalName)}

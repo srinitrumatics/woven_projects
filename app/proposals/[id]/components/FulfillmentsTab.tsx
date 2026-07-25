@@ -127,7 +127,7 @@ export default function FulfillmentsTab({
                                         <tr>
                                             <SortableHeader label="Customer Quote" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.name} onResize={(f, w) => onResize('quotes', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.status} onResize={(f, w) => onResize('quotes', f, w)} />
-                                            <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.proposalId} onResize={(f, w) => onResize('quotes', f, w)} />
+                                            <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.proposalId} onResize={(f, w) => onResize('quotes', f, w)} />
                                             <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.proposalName} onResize={(f, w) => onResize('quotes', f, w)} />
                                             <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.customerOrderName} onResize={(f, w) => onResize('quotes', f, w)} />
                                             <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.quotes.customerPO} onResize={(f, w) => onResize('quotes', f, w)} />
@@ -172,18 +172,18 @@ export default function FulfillmentsTab({
                                                     <StatusBadge status={quote.status as any} />
                                                 </Td>
                                                 <Td className="truncate">
-                                                    {quote.proposalName && quote.proposalId ? (
+                                                    {quote.proposalNumber && quote.proposalId ? (
                                                         <Link
                                                             href={`/proposals/${quote.proposalId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={quote.proposalName}
+                                                            title={quote.proposalNumber}
                                                         >
-                                                            {quote.proposalName}
+                                                            {quote.proposalNumber}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.proposalName}>{displayCell(quote.proposalName)}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={quote.proposalNumber}>{displayCell(quote.proposalNumber)}</div>
                                                     )}
                                                 </Td>
                                                 <Td className="truncate" title={quote.proposalName}>{displayCell(quote.proposalName)}</Td>
@@ -275,7 +275,7 @@ export default function FulfillmentsTab({
                                             <SortableHeader label="Sales Order #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.name} onResize={(f, w) => onResize('sales', f, w)} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-30" />
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.status} onResize={(f, w) => onResize('sales', f, w)} />
                                             <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerQuoteName} onResize={(f, w) => onResize('sales', f, w)} />
-                                            <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.proposalId} onResize={(f, w) => onResize('sales', f, w)} />
+                                            <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.proposalId} onResize={(f, w) => onResize('sales', f, w)} />
                                             <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.proposalName} onResize={(f, w) => onResize('sales', f, w)} />
                                             <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerOrderName} onResize={(f, w) => onResize('sales', f, w)} />
                                             <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.sales.customerPO} onResize={(f, w) => onResize('sales', f, w)} />
@@ -333,18 +333,18 @@ export default function FulfillmentsTab({
                                                     )}
                                                 </Td>
                                                 <Td className="truncate">
-                                                    {order.proposalName && order.proposalId ? (
+                                                    {order.proposalNumber && order.proposalId ? (
                                                         <Link
                                                             href={`/proposals/${order.proposalId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={order.proposalName}
+                                                            title={order.proposalNumber}
                                                         >
-                                                            {order.proposalName}
+                                                            {order.proposalNumber}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.proposalName}>{displayCell(order.proposalName)}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={order.proposalNumber}>{displayCell(order.proposalNumber)}</div>
                                                     )}
                                                 </Td>
                                                 <Td className="truncate" title={order.proposalName}>{displayCell(order.proposalName)}</Td>
@@ -436,7 +436,7 @@ export default function FulfillmentsTab({
                                             <SortableHeader label="Sales Order" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.salesOrderName} onResize={(f, w) => onResize('invoices', f, w)} />
                                             <SortableHeader label="Purchase Order #" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.purchaseOrderName} onResize={(f, w) => onResize('invoices', f, w)} />
                                             <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerQuoteName} onResize={(f, w) => onResize('invoices', f, w)} />
-                                            <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.proposalId} onResize={(f, w) => onResize('invoices', f, w)} />
+                                            <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.proposalId} onResize={(f, w) => onResize('invoices', f, w)} />
                                             <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.proposalName} onResize={(f, w) => onResize('invoices', f, w)} />
                                             <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerOrderName} onResize={(f, w) => onResize('invoices', f, w)} />
                                             <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoices.customerPO} onResize={(f, w) => onResize('invoices', f, w)} />
@@ -498,18 +498,18 @@ export default function FulfillmentsTab({
                                                     )}
                                                 </Td>
                                                 <Td className="truncate">
-                                                    {invoice.proposalName && invoice.proposalId ? (
+                                                    {invoice.proposalNumber && invoice.proposalId ? (
                                                         <Link
                                                             href={`/proposals/${invoice.proposalId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={invoice.proposalName}
+                                                            title={invoice.proposalNumber}
                                                         >
-                                                            {invoice.proposalName}
+                                                            {invoice.proposalNumber}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.proposalName}>{displayCell(invoice.proposalName)}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={invoice.proposalNumber}>{displayCell(invoice.proposalNumber)}</div>
                                                     )}
                                                 </Td>
                                                 <Td className="truncate" title={invoice.proposalName}>{displayCell(invoice.proposalName)}</Td>
@@ -595,7 +595,7 @@ export default function FulfillmentsTab({
                                             <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.status} onResize={(f, w) => onResize('shipping', f, w)} />
                                             <SortableHeader label="Sales Order #" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.salesOrderName} onResize={(f, w) => onResize('shipping', f, w)} />
                                             <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.customerQuoteName} onResize={(f, w) => onResize('shipping', f, w)} />
-                                            <SortableHeader label="Proposal #" field="proposalId" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.proposalId} onResize={(f, w) => onResize('shipping', f, w)} />
+                                            <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.proposalId} onResize={(f, w) => onResize('shipping', f, w)} />
                                             <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.proposalName} onResize={(f, w) => onResize('shipping', f, w)} />
                                             <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.customerOrderName} onResize={(f, w) => onResize('shipping', f, w)} />
                                             <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping.customerPO} onResize={(f, w) => onResize('shipping', f, w)} />
@@ -661,18 +661,18 @@ export default function FulfillmentsTab({
                                                     )}
                                                 </Td>
                                                 <Td className="truncate">
-                                                    {manifest.proposalName && manifest.proposalId ? (
+                                                    {manifest.proposalNumber && manifest.proposalId ? (
                                                         <Link
                                                             href={`/proposals/${manifest.proposalId}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-sm font-semibold text-primary hover:underline truncate"
-                                                            title={manifest.proposalName}
+                                                            title={manifest.proposalNumber}
                                                         >
-                                                            {manifest.proposalName}
+                                                            {manifest.proposalNumber}
                                                         </Link>
                                                     ) : (
-                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.proposalName}>{displayCell(manifest.proposalName)}</div>
+                                                        <div className="text-sm text-gray-900 dark:text-white truncate" title={manifest.proposalNumber}>{displayCell(manifest.proposalNumber)}</div>
                                                     )}
                                                 </Td>
                                                 <Td className="truncate" title={manifest.proposalName}>{displayCell(manifest.proposalName)}</Td>

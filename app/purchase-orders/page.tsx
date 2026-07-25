@@ -71,7 +71,7 @@ export default function PurchaseOrdersPage() {
                     name: p.Name || '',
                     status: p.Status__c || '',
                     proposalName: p.Proposal_Name || p.Proposal__r?.Name || p.Proposal__c || '',
-                    proposalNumber: p.Proposal_Number || p.Proposal_Name || p.Proposal__r?.Name || p.Proposal__c || '',
+                    proposalNumber: p.Proposal_Number__c || p.Proposal_Name || p.Proposal__r?.Name || p.Proposal__c || '',
                     customerQuoteName: p.Customer_Quote_Name || '',
                     customerOrderName: p.Customer_Order_Name || '',
                     customerPO: p.Customer_PO__c || '',

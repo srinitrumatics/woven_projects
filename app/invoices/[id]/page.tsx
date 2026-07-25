@@ -130,6 +130,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           customerQuoteName: cm.Customer_Quote_Name || cm.Customer_Quote__r?.Name || 'N/A',
           customerQuoteId: cm.Customer_Quote__c || '',
           proposalName: cm.Proposal_Name || cm.Proposal__r?.Name || '',
+          proposalNumber: cm.Proposal_Number__c || cm.Proposal_Name || cm.Proposal__r?.Name || '',
           proposalId: cm.Proposal__c || '',
           customerOrderName: cm.Customer_Order_Name || cm.Customer_Order__r?.Name || 'N/A',
           customerOrderId: cm.Customer_Order__c || '',

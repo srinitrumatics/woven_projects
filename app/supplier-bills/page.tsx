@@ -74,7 +74,7 @@ export default function SupplierBillsPage() {
                     customerOrderId: b.Customer_Order__c || '',
                     proposalName: b.Proposal_Name || '',
                     proposalId: b.Proposal__c || '',
-                    proposalNumber: b.Proposal_Number || b.Proposal_Name || '',
+                    proposalNumber: b.Proposal_Number__c || b.Proposal_Name || '',
                     shipToAccount: b.Ship_to_Account_Name || '',
                     shipToLocation: b.Authorized_Ship_To_Location_Name || '',
                     shipToContact: b.Ship_to_Contact_Name || '',

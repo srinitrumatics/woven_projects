@@ -73,6 +73,7 @@ export default function QuotesPage() {
           quoteNumber: item.Quote_Number__c || item.Name || 'N/A',
           status: (item.Status__c || item.Status || 'Draft') as QuoteStatus,
           proposalName: item.Proposal_Name || 'N/A',
+          proposalNumber: item.Proposal_Number__c || item.Proposal_Name || 'N/A',
           proposalId: item.Proposal__c || '',
           customerPO: item.Customer_PO__c || 'N/A',
           customerOrder: item.Customer_Order_Name || 'N/A',
@@ -464,7 +465,7 @@ export default function QuotesPage() {
                 <tr>
                   <SortableHeader label="Customer Quote #" field="quoteNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.quoteNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
                   <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                  <SortableHeader label="Proposal #" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
+                  <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
                   <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
                   <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
                   <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
@@ -524,16 +525,16 @@ export default function QuotesPage() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-sm font-medium text-primary hover:underline"
-                              title={quote.proposalName}
+                              title={quote.proposalNumber}
                               onClick={(e) => e.stopPropagation()}
                             >
-                              {quote.proposalName}
+                              {quote.proposalNumber}
                             </Link>
                           ) : (
-                            <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{displayCell(quote.proposalName)}</div>
+                            <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalNumber}>{displayCell(quote.proposalNumber)}</div>
                           )
                         ) : (
-                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalName}>{displayCell(quote.proposalName)}</div>
+                          <div className="text-sm text-gray-900 dark:text-white font-medium" title={quote.proposalNumber}>{displayCell(quote.proposalNumber)}</div>
                         )}
                       </Td>
                       <Td className="text-left truncate">

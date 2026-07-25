@@ -97,7 +97,7 @@ export default function InvoicesPage() {
           accountId: item.Bill_to_Account__c || '',
           customerQuoteId: item.Customer_Quote__c || '',
           customerQuoteName: item.Customer_Quote_Name || 'N/A',
-          proposalNumber: item.Proposal_Number || item.Proposal_Name || 'N/A',
+          proposalNumber: item.Proposal_Number__c || item.Proposal_Name || 'N/A',
           billToLocation: item.Authorized_Bill_To_Location_Name || 'N/A',
           totalPrice: item.Total_Price__c || 0,
           shipping: item.Total_Shipping_Charges__c || 0,

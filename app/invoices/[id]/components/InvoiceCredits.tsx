@@ -63,7 +63,7 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                             <SortableHeader label="Invoice #" field="invoiceName" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={handleResize} />
                             <SortableHeader label="Sales Order #" field="salesOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
                             <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} />
-                            <SortableHeader label="Proposal #" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal} onResize={handleResize} />
+                            <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal} onResize={handleResize} />
                             <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
                             <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
                             <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
@@ -107,10 +107,10 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                 <Td className="text-gray-900 dark:text-gray-400 truncate">
                                     {cm.proposalId ? (
                                         <Link href={`/proposals/${cm.proposalId}`} target='_blank' className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                            {displayCell(cm.proposalName)}
+                                            {displayCell(cm.proposalNumber)}
                                         </Link>
                                     ) : (
-                                        displayCell(cm.proposalName)
+                                        displayCell(cm.proposalNumber)
                                     )}
                                 </Td>
                                 <Td className="truncate">

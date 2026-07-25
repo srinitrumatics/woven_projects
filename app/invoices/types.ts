@@ -121,6 +121,7 @@ export interface CreditMemo {
   availableCreditBalance: number; // Available_Credit_Balance__c
   settledDate: string; // Settled_Date__c
   proposalName?: string;
+  proposalNumber?: string;
   proposalId?: string;
 }
 

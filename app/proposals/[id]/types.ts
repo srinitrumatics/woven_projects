@@ -126,6 +126,7 @@ export interface Invoice {
     purchaseOrderName?: string;
     proposalId?: string;
     proposalName?: string;
+    proposalNumber?: string;
     // Keeping old fields just in case, but they might not be used in the new table view
     customerPO?: string;
     billToAccountName?: string;
@@ -195,6 +196,7 @@ export interface ShippingManifest {
     purchaseOrderId?: string;
     proposalId?: string;
     proposalName?: string;
+    proposalNumber?: string;
 }
 
 export interface SalesOrder {
@@ -244,6 +246,7 @@ export interface SalesOrder {
     salesOrderId?: string;
     proposalId?: string;
     proposalName?: string;
+    proposalNumber?: string;
 }
 
 export interface CustomerQuote {
@@ -287,6 +290,7 @@ export interface CustomerQuote {
     customerQuoteId?: string;
     proposalId?: string;
     proposalName?: string;
+    proposalNumber?: string;
 }
 
 export interface PurchaseOrder {
@@ -559,6 +563,7 @@ export interface CreditMemo extends Return {
     shipmentName?: string;
     proposalId?: string;
     proposalName?: string;
+    proposalNumber?: string;
 }
 
 export interface RMA extends Return {
@@ -608,6 +613,7 @@ export interface RMA extends Return {
     shipmentName?: string;
     proposalId?: string;
     proposalName?: string;
+    proposalNumber?: string;
 }
 
 export interface RTV extends Return {

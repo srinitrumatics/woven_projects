@@ -21,7 +21,7 @@ interface RTV {
     Customer_Quote_Name?: string;
     Customer_Quote__c?: string;
     Proposal_Name?: string;
-    Proposal_Number?: string;
+    Proposal_Number__c?: string;
     Proposal__c?: string;
     Customer_Order_Name?: string;
     Customer_Order__c?: string;
@@ -51,7 +51,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
         ...r,
         name: r.Name,
         status: r.Status__c,
-        proposalNumber: r.Proposal_Number || r.Proposal_Name || '',
+        proposalNumber: r.Proposal_Number__c || r.Proposal_Name || '',
         proposalName: r.Proposal_Name || '',
     })), [rtv]);
 
@@ -146,16 +146,16 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                         )
                                     ) : displayCell(r.Customer_Quote_Name)}
                                 </Td>
-                                <Td className="truncate" title={r.Proposal_Name || '-'}>
+                                <Td className="truncate" title={r.Proposal_Number__c || r.Proposal_Name || '-'}>
                                     {r.Proposal__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/proposals/${r.Proposal__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                                {r.Proposal_Number || r.Proposal_Name || 'View Proposal'}
+                                                {r.Proposal_Number__c || r.Proposal_Name || 'View Proposal'}
                                             </Link>
                                         ) : (
-                                            <span className="font-medium">{displayCell(r.Proposal_Number || r.Proposal_Name)}</span>
+                                            <span className="font-medium">{displayCell(r.Proposal_Number__c || r.Proposal_Name)}</span>
                                         )
-                                    ) : displayCell(r.Proposal_Number || r.Proposal_Name)}
+                                    ) : displayCell(r.Proposal_Number__c || r.Proposal_Name)}
                                 </Td>
                                 <Td className="truncate" title={r.Proposal_Name || '-'}>{displayCell(r.Proposal_Name)}</Td>
                                 <Td className="truncate" title={r.Customer_Order_Name || '-'}>

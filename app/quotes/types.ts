@@ -26,6 +26,7 @@ export interface QuoteCreditMemo {
   availableCreditBalance: number; // 15. gtherp__Available_Credit_Balance__c
   settledDate: string; // 16. gtherp__Settled_Date__c
   proposalName?: string;
+  proposalNumber?: string;
   proposalId?: string;
 }
 
@@ -37,6 +38,7 @@ export interface Quote {
   status: QuoteStatus;
   totalAmount: number;
   proposalName?: string;
+  proposalNumber?: string;
   proposalId?: string;
   customerPO?: string;
   purchaseOrderId?: string;
@@ -129,6 +131,7 @@ export interface QuoteSalesOrder {
   customerQuote: string;
   customerQuoteId?: string;
   proposalName?: string;
+  proposalNumber?: string;
   proposalId?: string;
   customerOrder: string;
   customerOrderId?: string;
@@ -159,6 +162,7 @@ export interface QuoteShippingManifest {
   customerQuote: string;
   customerQuoteId?: string;
   proposalName?: string;
+  proposalNumber?: string;
   proposalId?: string;
   customerOrder: string;
   customerOrderId?: string;
@@ -195,6 +199,7 @@ export interface QuoteInvoice {
   customerQuote: string;
   customerQuoteId?: string;
   proposalName?: string;
+  proposalNumber?: string;
   proposalId?: string;
   customerOrder: string;
   customerOrderId?: string;
@@ -284,6 +289,7 @@ export interface QuoteRMA {
   customerQuote: string;
   customerQuoteId?: string;
   proposalName?: string;
+  proposalNumber?: string;
   proposalId?: string;
   customerOrder: string;
   customerOrderId?: string;

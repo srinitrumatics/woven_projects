@@ -22,7 +22,7 @@ interface SupplierBill {
     Customer_Quote_Name?: string;
     Customer_Quote__c?: string;
     Proposal_Name?: string;
-    Proposal_Number?: string;
+    Proposal_Number__c?: string;
     Proposal__c?: string;
     Customer_Order_Name?: string;
     Customer_Order__c?: string;
@@ -61,7 +61,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
         ...b,
         name: b.Name,
         status: b.Status__c,
-        proposalNumber: b.Proposal_Number || b.Proposal_Name || '',
+        proposalNumber: b.Proposal_Number__c || b.Proposal_Name || '',
         proposalName: b.Proposal_Name || '',
         shipToAccount: b.Ship_to_Account_Name || '',
         shipToLocation: b.Authorized_Ship_To_Location_Name || '',
@@ -178,16 +178,16 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                         )
                                     ) : displayCell(b.Customer_Quote_Name)}
                                 </Td>
-                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Proposal_Name || '-'}>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Proposal_Number__c || b.Proposal_Name || '-'}>
                                     {b.Proposal__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/proposals/${b.Proposal__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                                {b.Proposal_Number || b.Proposal_Name || 'View Proposal'}
+                                                {b.Proposal_Number__c || b.Proposal_Name || 'View Proposal'}
                                             </Link>
                                         ) : (
-                                            <span className="font-medium">{displayCell(b.Proposal_Number || b.Proposal_Name)}</span>
+                                            <span className="font-medium">{displayCell(b.Proposal_Number__c || b.Proposal_Name)}</span>
                                         )
-                                    ) : displayCell(b.Proposal_Number || b.Proposal_Name)}
+                                    ) : displayCell(b.Proposal_Number__c || b.Proposal_Name)}
                                 </Td>
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Proposal_Name || '-'}>{displayCell(b.Proposal_Name)}</Td>
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Order_Name || '-'}>

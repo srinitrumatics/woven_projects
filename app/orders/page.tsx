@@ -132,6 +132,7 @@ export default function OrdersPage() {
       name: o.Name,
       status: o.Status__c ?? "N/A",
       proposal_name: o.Proposal_Name ?? "",
+      proposal_number: o.Proposal_Number__c ?? o.Proposal_Name ?? "",
       proposal_id: o.Proposal__c ?? "",
       customerPO: o.Customer_PO__c ?? "",
       billToAccountName: o.Bill_to_Account_Name ?? "",
@@ -870,7 +871,7 @@ export default function OrdersPage() {
                 <tr>
                   <SortableHeader label="Customer Order #" field="name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-20" />
                   <SortableHeader label="Status" field="status" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                  <SortableHeader label="Proposal #" field="proposal_id" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalId} onResize={handleResize} />
+                  <SortableHeader label="Proposal #" field="proposal_number" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalId} onResize={handleResize} />
                   <SortableHeader label="Proposal Name" field="proposal_name" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposal_name} onResize={handleResize} />
                   <SortableHeader label="Customer PO" field="customerPO" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
                   <SortableHeader label="Bill to Account" field="billToAccountName" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToAccountName} onResize={handleResize} />
@@ -908,13 +909,13 @@ export default function OrdersPage() {
                       {order.proposal_id && order.proposal_id !== '' ? (
                         !isManufacturer ? (
                           <Link href={`/proposals/${order.proposal_id}`} target="_blank" className="text-sm font-semibold text-primary hover:underline truncate">
-                            {order.proposal_name}
+                            {order.proposal_number}
                           </Link>
                         ) : (
-                          <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{displayCell(order.proposal_name)}</div>
+                          <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_number}>{displayCell(order.proposal_number)}</div>
                         )
                       ) : (
-                        <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_name}>{displayCell(order.proposal_name)}</div>
+                        <div className="text-sm text-gray-600 dark:text-white font-medium " title={order.proposal_number}>{displayCell(order.proposal_number)}</div>
                       )}
                     </Td>
                     <Td className="truncate">

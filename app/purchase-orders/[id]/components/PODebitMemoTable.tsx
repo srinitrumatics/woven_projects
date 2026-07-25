@@ -20,7 +20,7 @@ interface DebitMemo {
     Customer_Quote_Name?: string;
     Customer_Quote__c?: string;
     Proposal_Name?: string;
-    Proposal_Number?: string;
+    Proposal_Number__c?: string;
     Proposal__c?: string;
     Customer_Order_Name?: string;
     Customer_Order__c?: string;
@@ -50,7 +50,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
         ...d,
         name: d.Name,
         status: d.Status__c,
-        proposalNumber: d.Proposal_Number || d.Proposal_Name || '',
+        proposalNumber: d.Proposal_Number__c || d.Proposal_Name || '',
         proposalName: d.Proposal_Name || '',
         expirationDate: d.Expiration_Date__c || '',
     })), [debitMemos]);
@@ -143,16 +143,16 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                         )
                                     ) : displayCell(d.Customer_Quote_Name)}
                                 </Td>
-                                <Td className="truncate" title={d.Proposal_Name || '-'}>
+                                <Td className="truncate" title={d.Proposal_Number__c || d.Proposal_Name || '-'}>
                                     {d.Proposal__c ? (
                                         !isManufacturer ? (
                                             <Link href={`/proposals/${d.Proposal__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                                {d.Proposal_Number || d.Proposal_Name || 'View Proposal'}
+                                                {d.Proposal_Number__c || d.Proposal_Name || 'View Proposal'}
                                             </Link>
                                         ) : (
-                                            <span className="font-medium">{displayCell(d.Proposal_Number || d.Proposal_Name)}</span>
+                                            <span className="font-medium">{displayCell(d.Proposal_Number__c || d.Proposal_Name)}</span>
                                         )
-                                    ) : displayCell(d.Proposal_Number || d.Proposal_Name)}
+                                    ) : displayCell(d.Proposal_Number__c || d.Proposal_Name)}
                                 </Td>
                                 <Td className="truncate" title={d.Proposal_Name || '-'}>{displayCell(d.Proposal_Name)}</Td>
                                 <Td className="truncate" title={d.Customer_Order_Name || '-'}>

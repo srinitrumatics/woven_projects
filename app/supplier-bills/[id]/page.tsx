@@ -233,7 +233,7 @@ export default function SupplierBillDetailPage() {
                                     customerOrderName: d.Customer_Order_Name || '',
                                     customerOrderId: d.Customer_Order__c || '',
                                     proposalName: d.Proposal_Name || '',
-                                    proposalNumber: d.Proposal_Number || '',
+                                    proposalNumber: d.Proposal_Number__c || d.Proposal_Name || '',
                                     proposalId: d.Proposal__c || '',
                                     supplierCreditMemo: d.Supplier_Credit_Memo__c || '',
                                     debitToAccountName: d.Debit_to_Account_Name || '',
