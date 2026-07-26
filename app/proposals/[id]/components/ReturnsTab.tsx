@@ -93,6 +93,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
             </div>
 
             {/* Content */}
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
                 {sortedData.length === 0 ? (
                     <TableEmptyState
@@ -437,6 +438,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                         </TBody>
                     </Table>
                 )}
+            </div>
             </div>
             <div className="px-4 py-3">
                 <Pagination

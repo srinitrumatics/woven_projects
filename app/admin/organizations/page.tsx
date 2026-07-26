@@ -447,7 +447,7 @@ const OrganizationManagement: React.FC = () => {
 
         {/* Organization List */}
         {!showForm && organizations.length > 0 && (
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {/* Search Bar */}
             <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-orange-50 to-amber-50">
               <div className="flex items-center gap-4">
@@ -466,6 +466,7 @@ const OrganizationManagement: React.FC = () => {
             </div>
 
             {/* Table */}
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <Table>
                 <THead>
@@ -602,6 +603,7 @@ const OrganizationManagement: React.FC = () => {
                   })}
                 </TBody>
               </Table>
+            </div>
             </div>
 
             {/* Pagination */}

@@ -25,6 +25,9 @@ export default function POLineDetailPage({
     const [lines, setLines] = useState<PurchaseOrderLine[]>([]);
     const [currentLineIndex, setCurrentLineIndex] = useState(0);
 
+    const [promiseDate, setPromiseDate] = useState("");
+    const [trackingNumber, setTrackingNumber] = useState("");
+
     const [activeTab, setActiveTab] = useState<"bills" | "returns" | "serialNumbers" | "files">("bills");
     const [bills, setBills] = useState<any[]>([]);
     const [debitMemos, setDebitMemos] = useState<any[]>([]);
@@ -36,6 +39,14 @@ export default function POLineDetailPage({
     const { user, selectedAccount } = useUserSession();
     const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
     const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+
+    useEffect(() => {
+        if (lines[currentLineIndex]) {
+            const currentLine = lines[currentLineIndex];
+            setPromiseDate(currentLine.promiseDate ? currentLine.promiseDate.split("T")[0] : "");
+            setTrackingNumber(currentLine.trackingNumber || "");
+        }
+    }, [lines, currentLineIndex]);
 
     useEffect(() => {
         async function fetchLines() {
@@ -255,9 +266,9 @@ export default function POLineDetailPage({
                 </div>
 
                 {/* Row 1: Image + Line Note + Detailed Information */}
-                <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">
+                <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
                     {/* Image Carousel (3 of 12) */}
-                    <div className="xl:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                    <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                         <div className="relative flex-1 flex flex-col">
                             {/* Main Image Display */}
                             <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
@@ -316,7 +327,7 @@ export default function POLineDetailPage({
                     </div>
 
                     {/* Purchase Order Line Note (3 of 12) */}
-                    <div className="xl:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                    <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                         <div className="flex items-center gap-2 mb-3 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
@@ -325,77 +336,216 @@ export default function POLineDetailPage({
                                 <h2 className="text-base font-semibold text-gray-900 dark:text-white " title="Purchase Order Line Notes">Purchase Order Line Notes</h2>
                             </div>
                         </div>
-                        <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-gray-700 min-h-[200px] overflow-y-auto">
-                            {line.poLineNotes || "No notes available for this line item."}
+                        <div className="flex-1 flex flex-col min-w-0">
+                            <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-800 dark:text-white min-h-[200px]">
+                                <p className="text-gray-700 truncate">{line.poLineNotes || "No notes available."}</p>
+                            </div>
                         </div>
                     </div>
 
                     {/* Product Information (6 of 12) */}
-                    <div className="xl:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
-                        <div className="flex items-center gap-2 mb-4 min-w-0">
+                    <div className="w1025:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
+                        <div className="flex items-center gap-2 mb-3 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                             </div>
-                            <div className="min-w-0">
+                            <div>
                                 <h3 className="text-base font-semibold text-gray-900 dark:text-white " title="Product Information">Product Information</h3>
-                                <p className="text-xs text-gray-500 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            {/* Column 1 */}
-                            <div className="space-y-3">
-                                <InfoField label="Product Name" value={line.productName} />
-                                <InfoField label="Description" value={line.productDescription} />
-                                <InfoField label="Manufacturer DBA" value={line.manufacturerDBA} />
-                                <InfoField label="Product Family" value={line.productFamily} />
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-x-4 gap-y-3">
+                            {/* Product Name */}
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Name">
+                                    Product Name
+                                </label>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={line.productName || ""}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    title={line.productName || ""}
+                                />
                             </div>
-                            {/* Column 2 */}
-                            <div className="space-y-3">
-                                <InfoField label="Need by Date" value={formatDate(line.needByDate, 'numeric-dash')} />
-                                <InfoField label="Ship by Date" value={formatDate(line.shipByDate, 'numeric-dash')} />
-                                <InfoField label="Promise Date" value={formatDate(line.promiseDate, 'numeric-dash')} />
-                                <InfoField label="Goods Receipt Date" value={formatDate(line.goodsReceiptDate, 'numeric-dash')} />
+
+                            {/* Description */}
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Description">
+                                    Description
+                                </label>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={line.productDescription || "No description available"}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    title={line.productDescription || "No description available"}
+                                />
                             </div>
-                            {/* Column 3 */}
-                            <div className="space-y-3">
-                                <InfoField label="Tracking Number" value={line.trackingNumber} />
-                                <InfoField label="Tracking Status" value={line.trackingStatus} />
-                                <InfoField label="Estimated Delivery Date" value={formatDate(line.estimatedDeliveryDate, 'numeric-dash')} />
-                                <InfoField label="Actual Delivery Date" value={formatDate(line.actualDeliveryDate, 'numeric-dash')} />
+
+                            {/* Brand Name */}
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Brand Name">
+                                    Brand Name
+                                </label>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={line.brand || "—"}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    title={line.brand || "—"}
+                                />
+                            </div>
+
+                            {/* Need by Date */}
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Need by Date">
+                                    Need by Date
+                                </label>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={formatDate(line.needByDate, 'numeric-dash') || "—"}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    title={formatDate(line.needByDate, 'numeric-dash') || "—"}
+                                />
+                            </div>
+
+                            {/* Ship by Date */}
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Ship by Date">
+                                    Ship by Date
+                                </label>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={formatDate(line.shipByDate, 'numeric-dash') || "—"}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    title={formatDate(line.shipByDate, 'numeric-dash') || "—"}
+                                />
+                            </div>
+
+                            {/* Promise Date */}
+                            <div>
+                                <div className="flex items-center justify-between mb-1">
+                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 truncate" title="Promise Date">
+                                        Promise Date
+                                    </label>
+                                    {(line.status === "Draft" || line.status === "Approved" || line.status === "Awarded") && (
+                                        <span className="text-[10px] text-primary font-semibold uppercase tracking-wider">Editable</span>
+                                    )}
+                                </div>
+                                {(line.status === "Draft" || line.status === "Approved" || line.status === "Awarded") ? (
+                                    <input
+                                        type="date"
+                                        value={promiseDate}
+                                        onChange={(e) => setPromiseDate(e.target.value)}
+                                        className="w-full px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:outline-none truncate"
+                                    />
+                                ) : (
+                                    <input
+                                        type="text"
+                                        readOnly
+                                        value={formatDate(line.promiseDate, 'numeric-dash') || "—"}
+                                        className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                        title={formatDate(line.promiseDate, 'numeric-dash') || "—"}
+                                    />
+                                )}
+                            </div>
+
+                            {/* Tracking Number */}
+                            <div>
+                                <div className="flex items-center justify-between mb-1">
+                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 truncate" title="Tracking Number">
+                                        Tracking Number
+                                    </label>
+                                    {(line.status === "Draft" || line.status === "Approved" || line.status === "Awarded") && (
+                                        <span className="text-[10px] text-primary font-semibold uppercase tracking-wider">Editable</span>
+                                    )}
+                                </div>
+                                {(line.status === "Draft" || line.status === "Approved" || line.status === "Awarded") ? (
+                                    <input
+                                        type="text"
+                                        value={trackingNumber}
+                                        onChange={(e) => setTrackingNumber(e.target.value)}
+                                        placeholder="Enter tracking #"
+                                        className="w-full px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:outline-none truncate"
+                                        title={trackingNumber}
+                                    />
+                                ) : (
+                                    <input
+                                        type="text"
+                                        readOnly
+                                        value={line.trackingNumber || "—"}
+                                        className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                        title={line.trackingNumber || "—"}
+                                    />
+                                )}
+                            </div>
+
+                            {/* Tracking Status */}
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Tracking Status">
+                                    Tracking Status
+                                </label>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={line.trackingStatus || "—"}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    title={line.trackingStatus || "—"}
+                                />
+                            </div>
+
+                            {/* Estimated Delivery Date */}
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Estimated Delivery Date">
+                                    Estimated Delivery Date
+                                </label>
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={formatDate(line.estimatedDeliveryDate, 'numeric-dash') || "—"}
+                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    title={formatDate(line.estimatedDeliveryDate, 'numeric-dash') || "—"}
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Row 2: Standard Styled Table Layout */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 p-4">
-                    <Table className="text-left border-collapse">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-x-auto p-4 mb-4">
+                    <Table className="text-left border-collapse text-sm">
                         <THead>
                             <tr>
-                                <Th>Unit Cost</Th>
-                                <Th>Order Qty</Th>
-                                <Th>MOQ</Th>
-                                <Th>Total Order Qty</Th>
-                                <Th>Total Product Cost</Th>
-                                <Th>Shipping</Th>
-                                <Th>Total Cost</Th>
-                                <Th>LT (Wks)</Th>
-                                <Th>Transit LT (Days)</Th>
-                                <Th>Open Balance Qty</Th>
+                                <Th className="py-2 font-bold">Unit Cost</Th>
+                                <Th className="py-2 font-bold">Total Order Qty</Th>
+                                <Th className="py-2 font-bold">Total Product Cost</Th>
+                                <Th className="py-2 font-bold">Shipping</Th>
+                                <Th className="py-2 font-bold">Total Cost</Th>
+                                <Th className="py-2 font-bold">LT (Wks)</Th>
+                                <Th className="py-2 font-bold">Transit LT (Days)</Th>
+                                <Th className="py-2 font-bold">Open Balance Qty</Th>
+                                <Th className="py-2 font-bold">Goods Receipt Date</Th>
                             </tr>
                         </THead>
                         <TBody>
                             <Tr>
-                                <Td className="font-medium truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</Td>
-                                <Td className="font-medium truncate" title={String(line.orderQty)}>{line.orderQty}</Td>
-                                <Td className="font-medium truncate" title={String(line.moq)}>{line.moq}</Td>
-                                <Td className="font-medium truncate" title={String(line.totalOrderQty)}>{line.totalOrderQty}</Td>
-                                <Td className="font-bold truncate" title={formatCurrency(line.totalProductCost)}>{formatCurrency(line.totalProductCost)}</Td>
-                                <Td className="font-medium truncate" title={formatCurrency(line.shippingCharges)}>{formatCurrency(line.shippingCharges)}</Td>
-                                <Td className="font-bold text-primary truncate" title={formatCurrency(line.totalCost)}>{formatCurrency(line.totalCost)}</Td>
-                                <Td className="font-medium truncate">{line.leadTimeWks}</Td>
-                                <Td className="font-medium truncate" title={String(line.transitLTDays || 0)}>{line.transitLTDays || 0} days</Td>
-                                <Td className="font-medium truncate" title={String(line.openBalanceQty || 0)}>{line.openBalanceQty || 0}</Td>
+                                <Td className="font-medium truncate">{formatCurrency(line.unitCost)}</Td>
+                                <Td className="font-medium truncate" title={`${line.totalOrderQty ?? line.orderQty ?? 0} (MOQ:${line.moq ?? 1})`}>
+                                    {line.totalOrderQty ?? line.orderQty ?? 0} (MOQ:{line.moq ?? 1})
+                                </Td>
+                                <Td className="font-bold truncate">{formatCurrency(line.totalProductCost)}</Td>
+                                <Td className="font-medium truncate">{formatCurrency(line.shippingCharges)}</Td>
+                                <Td className="font-bold text-primary truncate">{formatCurrency(line.totalCost)}</Td>
+                                <Td className="font-medium truncate">{line.leadTimeWks ?? "-"}</Td>
+                                <Td className="font-medium truncate">{line.transitLTDays || 0} days</Td>
+                                <Td className="font-medium truncate">{line.openBalanceQty || 0}</Td>
+                                <Td className="font-medium truncate" title={line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : '-'}>
+                                    {line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : '-'}
+                                </Td>
                             </Tr>
                         </TBody>
                     </Table>

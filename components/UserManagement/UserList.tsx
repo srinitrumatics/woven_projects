@@ -196,8 +196,8 @@ const UserList: React.FC<UserListProps> = ({
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto">
-        {viewMode === 'card' ? (
+      {viewMode === 'card' ? (
+          <div className="overflow-x-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
             {paginatedUsers.length === 0 ? (
               <div className="col-span-full text-center py-12 text-gray-500 dark:text-gray-400">
@@ -270,7 +270,10 @@ const UserList: React.FC<UserListProps> = ({
               })
             )}
           </div>
+          </div>
         ) : (
+          <div className="rounded-lg shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-primary-light dark:bg-gray-900">
               <tr>
@@ -338,8 +341,9 @@ const UserList: React.FC<UserListProps> = ({
               )}
             </tbody>
           </table>
+          </div>
+          </div>
         )}
-      </div>
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">

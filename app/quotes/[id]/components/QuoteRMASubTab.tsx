@@ -52,6 +52,7 @@ export default function QuoteRMASubTab({
 
     return (
         <div>
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto py-2">
                 {rmas.length === 0 ? (
                     <TableEmptyState message="No records found" description="There are no RMAs associated with this quote." />
@@ -155,6 +156,7 @@ export default function QuoteRMASubTab({
 
                     </>
                 )}
+            </div>
             </div>
             <div className="px-3 py-2">
                 <Pagination

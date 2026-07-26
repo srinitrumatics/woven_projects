@@ -22,6 +22,7 @@ export const AuthorizedSuppliersTab: React.FC<AuthorizedSuppliersTabProps> = ({ 
       {/* Important Note Alert */}
 
 
+      <div className="rounded-lg shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
         {!suppliers || suppliers.length === 0 ? (
           <TableEmptyState message="No authorized suppliers found for this product." />
@@ -68,6 +69,7 @@ export const AuthorizedSuppliersTab: React.FC<AuthorizedSuppliersTabProps> = ({ 
             </TBody>
           </Table>
         )}
+      </div>
       </div>
     </div>
   );

@@ -66,6 +66,7 @@ export default function QuoteLineSupplierBillLinesSubTab({
 
     return (
         <div>
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
                 {data.length === 0 ? (
                     <TableEmptyState message="No records found" description="There are no supplier bill lines associated with this quote line." />
@@ -125,6 +126,7 @@ export default function QuoteLineSupplierBillLinesSubTab({
                         </TBody>
                     </Table>
                 )}
+            </div>
             </div>
             <div className="px-3 py-2">
                 <Pagination

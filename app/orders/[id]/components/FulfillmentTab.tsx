@@ -351,7 +351,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
             {/* Proposals */}
             {activeSubTab === "proposals" && (
                 proposals.length === 0 ? emptyState("proposals") : (
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div className="rounded-lg shadow-sm overflow-hidden">
                         <div className="overflow-auto">
                             <Table className="table-fixed text-sm">
                                 <THead>
@@ -423,7 +423,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
             {/* Customer Quotes */}
             {activeSubTab === "customerQuotes" && (
                 customerQuotes.length === 0 ? emptyState("customer quotes") : (
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div className="rounded-lg shadow-sm overflow-hidden">
                         <div className="overflow-auto">
                             <Table className="table-fixed text-sm">
                                 <THead>
@@ -507,7 +507,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
             {/* Sales Orders */}
             {activeSubTab === "salesOrders" && (
                 salesOrders.length === 0 ? emptyState("sales orders") : (
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div className="rounded-lg shadow-sm overflow-hidden">
                         <div className="overflow-auto">
                             <Table className="table-fixed text-sm">
                                 <THead>
@@ -591,7 +591,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
             {
                 activeSubTab === "manifests" && (
                     manifests.length === 0 ? emptyState("shipping manifests") : (
-                        <div className="rounded-lg border border-gray-200 dark:border-gray-700">
+                        <div className="rounded-lg shadow-sm overflow-hidden">
                             <div className="overflow-auto">
                                 <Table className="table-fixed text-sm">
                                     <THead>
@@ -692,7 +692,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
             {
                 activeSubTab === "invoices" && (
                     invoices.length === 0 ? emptyState("invoices") : (
-                        <div className="rounded-lg border border-gray-200 dark:border-gray-700">
+                        <div className="rounded-lg shadow-sm overflow-hidden">
                             <div className="overflow-auto">
                                 <Table className="table-fixed text-sm">
                                     <THead>

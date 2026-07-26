@@ -42,7 +42,8 @@ export default function LineTaxesTab({ taxData, loading }: LineTaxesTabProps) {
     }
 
     return (
-        <div className="overflow-x-auto bg-white dark:bg-gray-800">
+        <div className="rounded-lg shadow-sm overflow-hidden bg-white dark:bg-gray-800">
+            <div className="overflow-x-auto">
             <Table className="table-fixed">
                 <THead>
                     <tr>
@@ -81,6 +82,7 @@ export default function LineTaxesTab({ taxData, loading }: LineTaxesTabProps) {
                     </Tr>
                 </TBody>
             </Table>
+            </div>
         </div>
     );
 }

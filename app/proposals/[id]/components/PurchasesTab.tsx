@@ -95,11 +95,11 @@ export default function PurchasesTab({
             <div className="flex-1 min-h-0">
                 {activeTab === "orders" ? (
                     sortedPurchases.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                             <TableEmptyState message="No records found" description="There are no Purchases Orders associated with this proposal." />
                         </div>
                     ) : (
-                        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-sm shadow-sm  overflow-hidden">
+                        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm  overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                                 <Table className="border-separate border-spacing-0 table-fixed">
                                     <THead className="sticky top-0 z-20">
@@ -258,7 +258,7 @@ export default function PurchasesTab({
                     )
                 ) : (
                     sortedBills.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                             <TableEmptyState message="No records found" description="There are no Supplier Bills associated with this proposal." />
                         </div>
                     ) : (

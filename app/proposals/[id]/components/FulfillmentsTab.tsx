@@ -116,11 +116,11 @@ export default function FulfillmentsTab({
                 {/* Customer Quotes Table */}
                 {activeTab === "quotes" && (
                     sortedData.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                             <TableEmptyState message="No records found" description="There are no Customer Quotes associated with this proposal." />
                         </div>
                     ) : (
-                        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                                 <Table className="border-separate border-spacing-0 table-fixed">
                                     <THead className="sticky top-0 z-20">
@@ -263,7 +263,7 @@ export default function FulfillmentsTab({
                 {/* Sales Orders Table */}
                 {activeTab === "sales" && (
                     sortedData.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                             <TableEmptyState message="No records found" description="There are no Sales Orders associated with this proposal." />
                         </div>
                     ) : (
@@ -422,11 +422,11 @@ export default function FulfillmentsTab({
                 {/* Invoices Table */}
                 {activeTab === "invoices" && (
                     sortedData.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                             <TableEmptyState message="No records found" description="There are no Invoices associated with this proposal." />
                         </div>
                     ) : (
-                        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                                 <Table className="border-separate border-spacing-0 table-fixed">
                                     <THead className="sticky top-0 z-20">
@@ -582,11 +582,11 @@ export default function FulfillmentsTab({
                 {/* Shipping Manifests Table */}
                 {activeTab === "shipping" && (
                     sortedData.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                             <TableEmptyState message="No records found" description="There are no Shipping Manifests associated with this proposal." />
                         </div>
                     ) : (
-                        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
                             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                                 <Table className="border-separate border-spacing-0 table-fixed">
                                     <THead className="sticky top-0 z-20">

@@ -275,7 +275,7 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
     };
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="flex justify-between items-center mb-4 min-w-0">
                 <div></div>
                 <div className="flex gap-2">

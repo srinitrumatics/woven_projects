@@ -51,6 +51,7 @@ export default function QuoteRTVSubTab({
 
     return (
         <div>
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto py-2">
                 {rtvs.length === 0 ? (
                     <TableEmptyState message="No records found" description="There are no RTVs associated with this quote." />
@@ -135,6 +136,7 @@ export default function QuoteRTVSubTab({
 
                     </>
                 )}
+            </div>
             </div>
             <div className="px-3 py-2">
                 <Pagination

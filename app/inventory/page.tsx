@@ -551,7 +551,7 @@ export default function InventoryPage() {
             )}
 
             {/* Filters & Table Section */}
-            < div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden p-4" >
+            < div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden p-4" >
                 <div className="pb-4 border-b border-gray-100 dark:border-gray-700 mb-4">
                     <div className="flex flex-wrap items-center gap-3 px-2 pb-4">
                         <div className="relative min-w-[280px] max-w-xs flex-shrink-0">
@@ -585,7 +585,8 @@ export default function InventoryPage() {
                     </div>
                 </div>
 
-                <div className="overflow-x-auto rounded-lg">
+                <div className="rounded-lg shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
                     {loading ? (
                         <TableLoadingState message="Loading inventory data..." />
                     ) : paginatedInventory.length === 0 ? (
@@ -681,6 +682,7 @@ export default function InventoryPage() {
                             </TBody>
                         </Table>
                     )}
+                </div>
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">

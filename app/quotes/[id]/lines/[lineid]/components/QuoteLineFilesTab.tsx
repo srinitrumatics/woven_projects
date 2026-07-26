@@ -164,7 +164,9 @@ export default function QuoteLineFilesTab({ lineId, accountId, contactId, files,
     }
 
     return (
-        <div className="overflow-x-auto">
+        <div>
+            <div className="rounded-lg shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
             {files.length === 0 ? (
                 <TableEmptyState message="No records found" description="There are no files associated with this quote line." />
             ) : (
@@ -244,6 +246,8 @@ export default function QuoteLineFilesTab({ lineId, accountId, contactId, files,
 
                 </>
             )}
+            </div>
+            </div>
             <div className="px-3 py-2">
                 <Pagination
                     currentPage={currentPage}

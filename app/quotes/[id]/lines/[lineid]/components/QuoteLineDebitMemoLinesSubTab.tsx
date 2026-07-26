@@ -62,6 +62,7 @@ export default function QuoteLineDebitMemoLinesSubTab({
 
     return (
         <div>
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
                 {data.length === 0 ? (
                     <TableEmptyState message="No records found" description="There are no debit memos associated with this quote line." />
@@ -127,6 +128,7 @@ export default function QuoteLineDebitMemoLinesSubTab({
                         </TBody>
                     </Table>
                 )}
+            </div>
             </div>
 
             <div className="px-3 py-2">

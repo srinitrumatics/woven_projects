@@ -145,6 +145,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
     // ── Table ───────────────────────────────────────────────────────────────
     return (
         <div className="flex flex-col">
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto py-2">
                 <Table className="text-sm table-fixed">
                     <THead>
@@ -203,6 +204,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                         ))}
                     </TBody>
                 </Table>
+            </div>
             </div>
             <Pagination
                 currentPage={currentPage}

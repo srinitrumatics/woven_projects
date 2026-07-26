@@ -108,6 +108,7 @@ export default function ProductCatalog({
                     description={searchQuery ? "No products found matching your search." : "All products have been added to your order."}
                 />
             ) : (
+                <div className="rounded-lg shadow-sm overflow-hidden">
                 <div className="overflow-auto">
                     <Table className="table-fixed">
                         <THead className="sticky top-0 z-10">
@@ -273,6 +274,7 @@ export default function ProductCatalog({
                             ))}
                         </TBody>
                     </Table>
+                </div>
                 </div>
             )}
             {/* Image Popup Modal */}

@@ -88,6 +88,7 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
 
     return (
         <div className="flex flex-col min-w-0">
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                 <Table className="border-separate border-spacing-0 table-fixed">
                     <THead className="sticky top-0 z-20">
@@ -159,6 +160,7 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
                         ))}
                     </TBody>
                 </Table>
+            </div>
             </div>
 
             <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700">

@@ -307,8 +307,8 @@ export default function AuthorizeLocationsPage() {
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                    {loading ? (
+                {loading ? (
+                    <div className="overflow-x-auto">
                         <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">
                             <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -316,7 +316,9 @@ export default function AuthorizeLocationsPage() {
                             </svg>
                             <p className="text-sm truncate" title="Loading locations...">Loading locations...</p>
                         </div>
+                    </div>
                     ) : viewMode === 'card' ? (
+                        <div className="overflow-x-auto">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
                             {paginatedLocations.length === 0 ? (
                                 <div className="col-span-full text-center py-12 text-gray-500 dark:text-gray-400">
@@ -396,9 +398,13 @@ export default function AuthorizeLocationsPage() {
                                 ))
                             )}
                         </div>
-                    ) : paginatedLocations.length === 0 ? (
-                        <TableEmptyState message="No locations found" />
+                        </div>
                     ) : (
+                        <div className="rounded-lg shadow-sm overflow-hidden">
+                        <div className="overflow-x-auto">
+                        {paginatedLocations.length === 0 ? (
+                            <TableEmptyState message="No locations found" />
+                        ) : (
                         <Table className="border-collapse table-fixed" style={{ minWidth: Object.values(widths).reduce((a, b) => a + b, 0) }}>
                             <THead>
                                 <tr>
@@ -480,8 +486,10 @@ export default function AuthorizeLocationsPage() {
                                 ))}
                             </TBody>
                         </Table>
+                        )}
+                        </div>
+                        </div>
                     )}
-                </div>
 
                 <Pagination
                     currentPage={currentPage}

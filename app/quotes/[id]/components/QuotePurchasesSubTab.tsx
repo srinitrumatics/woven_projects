@@ -50,6 +50,7 @@ export default function QuotePurchasesSubTab({
     }
 
     return (
+        <div className="rounded-lg shadow-sm overflow-hidden">
         <div className="overflow-x-auto py-2">
             {purchases.length === 0 ? (
                 <TableEmptyState message="No records found" description="There are no purchases associated with this quote." />
@@ -144,6 +145,7 @@ export default function QuotePurchasesSubTab({
 
                 </>
             )}
+        </div>
         </div>
     );
 }

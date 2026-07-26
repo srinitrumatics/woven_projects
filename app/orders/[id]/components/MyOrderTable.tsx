@@ -84,6 +84,7 @@ export default function MyOrderTable({
                     }
                 />
             ) : (
+                <div className="rounded-lg shadow-sm overflow-hidden">
                 <div className="overflow-auto">
                     <Table className="text-sm table-fixed">
                         <THead className="sticky top-0 z-10">
@@ -219,6 +220,7 @@ export default function MyOrderTable({
                             ))}
                         </TBody>
                     </Table>
+                </div>
                 </div>
             )}
             {

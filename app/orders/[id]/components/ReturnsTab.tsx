@@ -277,7 +277,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
             {/* RMAs */}
             {activeSubTab === "rma" && (
                 rmaList.length === 0 ? emptyState("RMAs") : (
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div className="rounded-lg shadow-sm overflow-hidden">
                         <div className="overflow-auto">
                             <Table className={tableClass}>
                                 <THead>
@@ -367,7 +367,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
             {/* Credit Memos */}
             {activeSubTab === "credits" && (
                 creditMemos.length === 0 ? emptyState("credit memos") : (
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div className="rounded-lg shadow-sm overflow-hidden">
                         <div className="overflow-auto">
                             <Table className={tableClass}>
                                 <THead>
@@ -440,7 +440,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
             {/* Debit Memos (non-Customer/NSO accounts only — kept unchanged per spec) */}
             {activeSubTab === "debits" && (
                 debitMemos.length === 0 ? emptyState("debit memos") : (
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div className="rounded-lg shadow-sm overflow-hidden">
                         <div className="overflow-auto">
                             <Table className={tableClass}>
                                 <THead>
@@ -496,7 +496,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
             {/* RTV (non-Customer/NSO accounts only — kept unchanged per spec) */}
             {activeSubTab === "rtv" && (
                 rtvList.length === 0 ? emptyState("RTVs") : (
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div className="rounded-lg shadow-sm overflow-hidden">
                         <div className="overflow-auto">
                             <Table className={tableClass}>
                                 <THead>

@@ -186,7 +186,8 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
 
     return (
         <>
-        <div className="overflow-x-auto mt-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+        <div className="rounded-lg shadow-sm overflow-hidden">
+        <div className="overflow-x-auto mt-4">
             <Table className="table-fixed">
                 <THead className="font-medium">
                     <tr>
@@ -253,6 +254,7 @@ export default function FilesTab({ accountId, contactId, lineId }: FilesTabProps
                     ))}
                 </TBody>
             </Table>
+        </div>
         </div>
 
         {files.length > ITEMS_PER_PAGE && (

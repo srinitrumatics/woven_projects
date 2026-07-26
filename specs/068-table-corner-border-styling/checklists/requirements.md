@@ -1,0 +1,35 @@
+# Specification Quality Checklist: Consistent DataTable Corner & Border Styling
+
+**Purpose**: Validate specification completeness and quality before proceeding to planning
+**Created**: 2026-07-26
+**Feature**: [spec.md](../spec.md)
+
+## Content Quality
+
+- [x] No implementation details (languages, frameworks, APIs)
+- [x] Focused on user value and business needs
+- [x] Written for non-technical stakeholders
+- [x] All mandatory sections completed
+
+## Requirement Completeness
+
+- [x] No [NEEDS CLARIFICATION] markers remain
+- [x] Requirements are testable and unambiguous
+- [x] Success criteria are measurable
+- [x] Success criteria are technology-agnostic (no implementation details)
+- [x] All acceptance scenarios are defined
+- [x] Edge cases are identified
+- [x] Scope is clearly bounded
+- [x] Dependencies and assumptions identified
+
+## Feature Readiness
+
+- [x] All functional requirements have clear acceptance criteria
+- [x] User scenarios cover primary flows
+- [x] Feature meets measurable outcomes defined in Success Criteria
+- [x] No implementation details leak into specification
+
+## Notes
+
+- No clarifications were needed: the user's request maps directly onto reasonable, industry-standard defaults (rounded header corners as the existing majority style, borderless outer edge, per-row bottom divider), all captured in the Assumptions section.
+- This spec is closely related to `specs/067-datatable-header-border-consistency`, whose prior `/speckit-analyze` run found two unresolved gaps (an outer border still present on `app/configure/ConfigureOrderClientPage.tsx` and on 6 empty-state wrappers in `FulfillmentsTab.tsx`/`PurchasesTab.tsx`). This spec's FR-007–FR-009 and edge cases explicitly cover those cases (outlier tables, empty/loading states) so `/speckit-plan` can close them out under this feature if 067 is not reopened.

@@ -55,6 +55,7 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
 
     return (
         <div className="flex flex-col">
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
                 <Table className="table-fixed">
                     <THead>
@@ -190,6 +191,7 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                         ))}
                     </TBody>
                 </Table>
+            </div>
             </div>
             <Pagination
                 currentPage={currentPage}

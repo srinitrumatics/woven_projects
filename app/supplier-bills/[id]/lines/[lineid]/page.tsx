@@ -58,8 +58,11 @@ export default function SupplierBillLineDetailPage({
                         productName: item.Product_Name,
                         productDescription: item.Product_Description__c,
                         manufacturerDBA: item.Manufacturer_DBA__c,
-                        brand: item.Product_Brand_Name__c,
+                        brand: item.Product_Brand_Name__c || item.Brand_Name__c || item.Brand__c,
+                        productFamily: item.Product_Family__c || item.Product_Family || item.Family,
                         proposedProduct: item.Proposed_Product_Name,
+                        proposedProductId: item.Proposed_Product__c,
+                        proposalId: item.Proposal__c || item.Proposed_Product__r?.Proposal__c || item.Customer_Quote_Line__r?.Proposal__c,
                         site: item.Site_Name,
                         siteId: item.Site__c,
                         inventoryAccount: item.Inventory_Account_Name,
@@ -218,9 +221,9 @@ export default function SupplierBillLineDetailPage({
                 </div>
 
                 {/* Row 1: Image + Line Note + Detailed Information */}
-                <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">
+                <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
                     {/* Image Carousel (3 of 12) */}
-                    <div className="xl:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                    <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                         <div className="relative flex-1 flex flex-col">
                             {/* Main Image Display */}
                             <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
@@ -291,7 +294,7 @@ export default function SupplierBillLineDetailPage({
                     </div>
 
                     {/* Supplier Bill Line Note (3 of 12) */}
-                    <div className="xl:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                    <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                         <div className="flex items-center gap-2 mb-3 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
@@ -306,57 +309,44 @@ export default function SupplierBillLineDetailPage({
                     </div>
 
                     {/* Product Information (6 of 12) */}
-                    <div className="xl:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
-                        <div className="flex items-center gap-2 mb-4 min-w-0">
+                    <div className="w1025:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
+                        <div className="flex items-center gap-2 mb-3 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                             </div>
                             <div className="min-w-0">
                                 <h3 className="text-base font-semibold text-gray-900 dark:text-white " title="Product Information">Product Information</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            {/* Column 1 */}
-                            <div className="space-y-3">
-                                <InfoField label="Product Name" value={line.productName} />
-                                <InfoField label="Description" value={line.productDescription} />
-                                <InfoField label="Manufacturer DBA" value={line.manufacturerDBA} />
-                            </div>
-                            {/* Column 2 */}
-                            <div className="space-y-3">
-                                <InfoField label="Proposed Product" value={line.proposedProduct} />
-                                <InfoField
-                                    label="Customer Quote Line"
-                                    value={line.customerQuoteLineName}
-                                />
-                                <InfoField
-                                    label="Purchase Order Lines"
-                                    value={line.purchaseOrderLineName}
-                                />
-                            </div>
-                            {/* Column 3 */}
-                            <div className="space-y-3">
-                                <InfoField
-                                    label="Site"
-                                    value={line.site}
-                                />
-                                <InfoField label="Inventory Account" value={line.inventoryAccount} />
-                                <InfoField label="Goods Receipt Date" value={formatDate(line.goodsReceiptDate, 'numeric-dash')} />
-                            </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-x-4 gap-y-3">
+                            <InfoField label="Product Name" value={line.productName} />
+                            <InfoField label="Description" value={line.productDescription} />
+                            <InfoField label="Product Family" value={line.productFamily} />
+
+                            <InfoField label="Brand Name" value={line.brand} />
+                            <InfoField label="Inventory Account" value={line.inventoryAccount} />
+                            <InfoField label="Site" value={line.site} />
+
+                            <InfoField label="Purchase Order Line" value={line.purchaseOrderLineName} href={line.purchaseOrderId ? `/purchase-orders/${line.purchaseOrderId}` : undefined} />
+                            <InfoField label="Customer Quote Line" value={line.customerQuoteLineName} href={line.customerQuoteId ? `/quotes/${line.customerQuoteId}` : undefined} />
+                            <InfoField label="Proposed Product Line" value={line.proposedProduct} href={line.proposalId ? `/proposals/${line.proposalId}` : undefined} />
                         </div>
                     </div>
                 </div>
 
                 {/* Row 2: Standard Styled Table Layout */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden p-4">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden p-4 pb-2 mb-4">
+                <div className="overflow-x-auto">
                     <Table className="text-left border-collapse">
                         <THead>
                             <tr>
-                                <Th>Unit Cost</Th>
-                                <Th>Billed Qty</Th>
-                                <Th>Product Amount</Th>
-                                <Th>Shipping</Th>
-                                <Th>Total Bill Amount</Th>
+                                <Th className="py-2 font-bold">Unit Cost</Th>
+                                <Th className="py-2 font-bold">Billed Qty</Th>
+                                <Th className="py-2 font-bold">Product Amount</Th>
+                                <Th className="py-2 font-bold">Shipping</Th>
+                                <Th className="py-2 font-bold">Total Bill Amount</Th>
+                                <Th className="py-2 font-bold">Goods Receipt Date</Th>
                             </tr>
                         </THead>
                         <TBody>
@@ -366,9 +356,11 @@ export default function SupplierBillLineDetailPage({
                                 <Td className="font-bold truncate" title={formatCurrency(line.billAmount)}>{formatCurrency(line.billAmount)}</Td>
                                 <Td className="font-medium truncate" title={formatCurrency(line.shipping)}>{formatCurrency(line.shipping)}</Td>
                                 <Td className="font-bold text-primary truncate" title={formatCurrency(line.totalBillAmount)}>{formatCurrency(line.totalBillAmount)}</Td>
+                                <Td className="font-medium truncate" title={formatDate(line.goodsReceiptDate, 'numeric-dash')}>{formatDate(line.goodsReceiptDate, 'numeric-dash')}</Td>
                             </Tr>
                         </TBody>
                     </Table>
+                </div>
                 </div>
 
                 {/* Row 3: Related Items Tabs (Debit Memo Lines, Files) */}

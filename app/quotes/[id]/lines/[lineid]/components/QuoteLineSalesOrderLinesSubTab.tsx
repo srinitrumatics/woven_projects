@@ -65,6 +65,7 @@ export default function QuoteLineSalesOrderLinesSubTab({
 
     return (
         <div>
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
                 {data.length === 0 ? (
                     <TableEmptyState message="No records found" description="There are no sales orders associated with this quote line." />
@@ -130,6 +131,7 @@ export default function QuoteLineSalesOrderLinesSubTab({
                         </TBody>
                     </Table>
                 )}
+            </div>
             </div>
             <div className="px-3 py-2">
                 <Pagination

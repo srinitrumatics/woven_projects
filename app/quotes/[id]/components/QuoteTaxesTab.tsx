@@ -62,6 +62,7 @@ export default function QuoteTaxesTab({
     }
 
     return (
+        <div className="rounded-lg shadow-sm overflow-hidden">
         <div className="overflow-x-auto py-2">
             <Table>
                 <THead>
@@ -103,6 +104,7 @@ export default function QuoteTaxesTab({
                     ))}
                 </TBody>
             </Table>
+        </div>
         </div>
     );
 }

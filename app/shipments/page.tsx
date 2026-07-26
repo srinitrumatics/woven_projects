@@ -422,7 +422,7 @@ export default function ShipmentsPage() {
       }
 
       {/* Main Table Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
         {/* Header with Search and Filter Buttons */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <div className="flex flex-wrap items-center gap-3">
@@ -469,6 +469,7 @@ export default function ShipmentsPage() {
 
         {/* Table Area */}
         <div className="p-4">
+          <div className="rounded-lg shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             {loading ? (
               <TableLoadingState message="Loading shipments..." />
@@ -625,6 +626,7 @@ export default function ShipmentsPage() {
                 </TBody>
               </Table>
             )}
+          </div>
           </div>
         </div>
         {/* Pagination Section */}

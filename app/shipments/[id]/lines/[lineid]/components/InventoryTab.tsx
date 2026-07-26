@@ -117,7 +117,8 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
 
     return (
         <div className="flex flex-col mt-4">
-            <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="rounded-lg shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
             <Table className="table-fixed">
                 <THead>
                     <tr>
@@ -162,6 +163,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                     ))}
                 </TBody>
             </Table>
+            </div>
             </div>
             <Pagination
                 currentPage={currentPage}

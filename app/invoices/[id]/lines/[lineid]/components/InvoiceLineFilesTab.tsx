@@ -185,6 +185,7 @@ export default function InvoiceLineFilesTab({ lineId, accountId, contactId }: In
 
     return (
         <>
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
                 <Table className="text-sm table-fixed">
                     <THead>
@@ -234,6 +235,7 @@ export default function InvoiceLineFilesTab({ lineId, accountId, contactId }: In
                         ))}
                     </TBody>
                 </Table>
+            </div>
             </div>
 
             <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-left">

@@ -71,7 +71,7 @@ export default function PurchaseOrdersPage() {
                     name: p.Name || '',
                     status: p.Status__c || '',
                     proposalName: p.Proposal_Name || p.Proposal__r?.Name || p.Proposal__c || '',
-                    proposalNumber: p.Proposal_Number__c || p.Proposal_Name || p.Proposal__r?.Name || p.Proposal__c || '',
+                    proposalNumber: p.Proposal_Number__c || p.Proposal_Number || p.Proposal_Name || '',
                     customerQuoteName: p.Customer_Quote_Name || '',
                     customerOrderName: p.Customer_Order_Name || '',
                     customerPO: p.Customer_PO__c || '',
@@ -117,11 +117,16 @@ export default function PurchaseOrdersPage() {
         }
     }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
+    // Dynamic status list from available POs
+    const statusTabs = useMemo(() => {
+        const uniqueStatuses = Array.from(new Set(purchaseOrders.map(po => po.status).filter(Boolean)));
+        return ["All", ...uniqueStatuses];
+    }, [purchaseOrders]);
+
     // Stats calculation matching Proposal style
     const stats = useMemo(() => {
-        const cardOneRecords = purchaseOrders.filter(po => ["Approved", "Partial", "Closed"].includes(po.status));
-        const totalCount = cardOneRecords.length;
-        const totalValue = cardOneRecords.reduce((sum, po) => sum + (po.totalCost || 0), 0);
+        const totalCount = purchaseOrders.length;
+        const totalValue = purchaseOrders.reduce((sum, po) => sum + (po.totalCost || 0), 0);
 
         const issued = purchaseOrders.filter(po => po.status === "Issued");
         const issuedCount = issued.length;
@@ -164,8 +169,6 @@ export default function PurchaseOrdersPage() {
 
         if (activeTab !== "All") {
             filtered = filtered.filter(po => po.status === activeTab);
-        } else {
-            filtered = filtered.filter(po => ["Approved", "Partial", "Closed"].includes(po.status));
         }
 
         if (searchQuery.trim()) {
@@ -173,7 +176,9 @@ export default function PurchaseOrdersPage() {
             filtered = filtered.filter(po =>
                 po.name.toLowerCase().includes(query) ||
                 po.supplierName.toLowerCase().includes(query) ||
-                (po.customerPO || '').toLowerCase().includes(query)
+                (po.customerPO || '').toLowerCase().includes(query) ||
+                (po.proposalNumber || '').toLowerCase().includes(query) ||
+                (po.proposalName || '').toLowerCase().includes(query)
             );
         }
 
@@ -267,7 +272,7 @@ export default function PurchaseOrdersPage() {
                         </div>
 
                         <div className="flex flex-wrap items-center gap-2">
-                            {["All", "Draft", "Approved", "Issued", "Acknowledged", "Received", "Partial", "Closed"].map(status => (
+                            {statusTabs.map(status => (
                                 <button
                                     key={status}
                                     onClick={() => setActiveTab(status)}
@@ -283,7 +288,8 @@ export default function PurchaseOrdersPage() {
                     </div>
                 </div>
 
-                <div className="overflow-x-auto shadow-sm">
+                <div className="rounded-lg shadow-sm overflow-hidden">
+                  <div className="overflow-x-auto">
                     {loading ? (
                         <TableLoadingState message="Synchronizing data from Salesforce..." />
                     ) : paginatedPOs.length === 0 ? (
@@ -403,6 +409,7 @@ export default function PurchaseOrdersPage() {
                             </TBody>
                         </Table>
                     )}
+                  </div>
                 </div>
 
                 <Pagination

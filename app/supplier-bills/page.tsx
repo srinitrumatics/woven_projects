@@ -266,6 +266,7 @@ export default function SupplierBillsPage() {
                     </div>
                 </div>
 
+                <div className="rounded-lg shadow-sm overflow-hidden">
                 <div className="overflow-x-auto ">
                     {loading ? (
                         <TableLoadingState message="Synchronizing data from Salesforce..." />
@@ -386,6 +387,7 @@ export default function SupplierBillsPage() {
                             </TBody>
                         </Table>
                     )}
+                </div>
                 </div>
 
                 <Pagination

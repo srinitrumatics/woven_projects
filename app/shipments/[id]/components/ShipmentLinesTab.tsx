@@ -189,6 +189,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
     // ── Table ──────────────────────────────────────────────────────────────
     return (
         <div className="flex flex-col">
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
                 <Table className="text-sm table-fixed">
                     <THead>
@@ -289,6 +290,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                         ))}
                     </TBody>
                 </Table>
+            </div>
             </div>
             <Pagination
                 currentPage={currentPage}

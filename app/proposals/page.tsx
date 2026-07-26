@@ -505,6 +505,7 @@ export default function ProposalsPage() {
         </div>
 
         {/* Table */}
+        <div className="rounded-lg shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           {loading ? (
             <TableLoadingState message="Loading proposals..." />
@@ -660,6 +661,7 @@ export default function ProposalsPage() {
               </TBody>
             </Table>
           )}
+        </div>
         </div>
 
         {/* Pagination */}

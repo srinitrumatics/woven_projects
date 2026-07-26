@@ -62,7 +62,7 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
     }
 
     return (
-        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                 <Table className="border-separate border-spacing-0 table-fixed">
                     <THead className="sticky top-0 z-20">

@@ -257,7 +257,7 @@ export default function DeliveryWindowsPage() {
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden p-4">
                 {/* Header with Search and Filter */}
                 <div className="border-b border-gray-200 dark:border-gray-700 py-6">
                     <div className="flex flex-wrap items-center gap-3 px-2">
@@ -310,6 +310,7 @@ export default function DeliveryWindowsPage() {
                 </div>
 
                 {/* Table */}
+                <div className="rounded-lg shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                     {loading ? (
                         <TableLoadingState message="Loading delivery windows..." />
@@ -382,6 +383,7 @@ export default function DeliveryWindowsPage() {
                             </TBody>
                         </Table>
                     )}
+                </div>
                 </div>
 
                 <Pagination

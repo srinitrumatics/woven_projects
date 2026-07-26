@@ -50,6 +50,7 @@ export default function QuoteSupplierBillsSubTab({
     }
 
     return (
+        <div className="rounded-lg shadow-sm overflow-hidden">
         <div className="overflow-x-auto py-2">
             {bills.length === 0 ? (
                 <TableEmptyState message="No records found" description="There are no supplier bills associated with this quote." />
@@ -134,6 +135,7 @@ export default function QuoteSupplierBillsSubTab({
 
                 </>
             )}
+        </div>
         </div>
     );
 }

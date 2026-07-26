@@ -52,6 +52,7 @@ export default function QuoteLinesTab({
 
     return (
         <div>
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto py-2">
                 <Table className="table-fixed">
                     <THead>
@@ -146,6 +147,7 @@ export default function QuoteLinesTab({
                     </TBody>
                 </Table>
 
+            </div>
             </div>
             <div className="px-3 py-2">
                 <Pagination

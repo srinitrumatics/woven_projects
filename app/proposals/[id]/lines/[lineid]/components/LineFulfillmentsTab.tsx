@@ -164,6 +164,7 @@ export default function LineFulfillmentsTab({
                 {/* Customer Quotes Table */}
                 {activeTab === "quotes" && (
                     <div>
+                        <div className="rounded-lg shadow-sm overflow-hidden">
                         <div className="overflow-x-auto">
                             {sortedData.length === 0 ? (
                                 <TableEmptyState message="No records found" description="There are no customer quotes associated with this proposal." />
@@ -252,6 +253,7 @@ export default function LineFulfillmentsTab({
                                 </Table>
                             )}
                         </div>
+                        </div>
                         <div className="px-3 py-2 ">
                             <Pagination
                                 currentPage={currentPage}
@@ -268,6 +270,7 @@ export default function LineFulfillmentsTab({
                 {/* Sales Orders Table */}
                 {activeTab === "sales" && (
                     <div>
+                        <div className="rounded-lg shadow-sm overflow-hidden">
                         <div className="overflow-x-auto">
                             {sortedData.length === 0 ? (
                                 <TableEmptyState message="No records found" description="There are no sales orders associated with this proposal." />
@@ -354,6 +357,7 @@ export default function LineFulfillmentsTab({
                                 </Table>
                             )}
                         </div>
+                        </div>
                         <div className="px-3 py-2">
                             <Pagination
                                 currentPage={currentPage}
@@ -370,6 +374,7 @@ export default function LineFulfillmentsTab({
                 {/* Invoices Table */}
                 {activeTab === "invoices" && (
                     <div>
+                        <div className="rounded-lg shadow-sm overflow-hidden">
                         <div className="overflow-x-auto">
                             {sortedData.length === 0 ? (
                                 <TableEmptyState message="No records found" description="There are no invoices associated with this proposal." />
@@ -487,6 +492,7 @@ export default function LineFulfillmentsTab({
                                 </Table>
                             )}
                         </div>
+                        </div>
                         <div className="px-3 py-2">
                             <Pagination
                                 currentPage={currentPage}
@@ -503,6 +509,7 @@ export default function LineFulfillmentsTab({
                 {/* Shipping Manifests Table */}
                 {activeTab === "shipping" && (
                     <div>
+                        <div className="rounded-lg shadow-sm overflow-hidden">
                         <div className="overflow-x-auto">
                             {sortedData.length === 0 ? (
                                 <TableEmptyState message="No records found" description="There are no shipping manifests associated with this proposal." />
@@ -604,6 +611,7 @@ export default function LineFulfillmentsTab({
                                     </TBody>
                                 </Table>
                             )}
+                        </div>
                         </div>
                         <div className="px-3 py-2">
                             <Pagination

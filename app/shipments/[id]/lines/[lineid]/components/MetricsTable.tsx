@@ -21,8 +21,6 @@ export default function MetricsTable({ product }: { product: any }) {
                                 <Th className="font-bold">DIM Height</Th>
                                 <Th className="font-bold">Net Weight</Th>
                                 <Th className="font-bold">Gross Weight</Th>
-                                <Th className="font-bold">DW 139</Th>
-                                <Th className="font-bold">DW 166</Th>
                             </tr>
                         </THead>
                         <TBody>
@@ -37,8 +35,6 @@ export default function MetricsTable({ product }: { product: any }) {
                                 <Td className="text-gray-600 truncate">{product.Case_Height__c !== undefined ? product.Case_Height__c : ""}</Td>
                                 <Td className="text-gray-600 truncate">{product.Case_Net_Weight__c !== undefined ? product.Case_Net_Weight__c : ""}</Td>
                                 <Td className="text-gray-600 truncate">{product.Case_Gross_Weight__c !== undefined ? product.Case_Gross_Weight__c : ""}</Td>
-                                <Td className="text-gray-600 truncate">{product.Case_DW_139__c !== undefined ? product.Case_DW_139__c : ""}</Td>
-                                <Td className="text-gray-600 truncate">{product.Case_DW_166__c !== undefined ? product.Case_DW_166__c : ""}</Td>
                             </Tr>
                         </TBody>
                     </Table>

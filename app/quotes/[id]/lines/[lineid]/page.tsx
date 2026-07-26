@@ -4,7 +4,7 @@ import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
-import { formatDate, formatCurrency, decodeHtmlEntities } from "@/lib/utils/formatting";
+import { formatDate, formatCurrency, formatNumber, decodeHtmlEntities } from "@/lib/utils/formatting";
 import { QuoteLine } from "../../../types";
 import QuoteLineFulfillmentsTab from "./components/QuoteLineFulfillmentsTab";
 import QuoteLineTaxesTab from "./components/QuoteLineTaxesTab";
@@ -23,6 +23,10 @@ interface QuoteLineItem {
     Status__c?: string;
     Product_Description__c?: string;
     Manufacturer_DBA__c?: string;
+    Product_Brand_Name__c?: string;
+    Brand_Name__c?: string;
+    Lead_Time_Wks__c?: number;
+    Shipping_Dimensions__c?: string;
     Product_Family__c?: string;
     Product_Grouping__c?: string;
     Groupings__c?: string;
@@ -83,6 +87,9 @@ interface ProductData {
     lineName: string;
     description: string;
     productFamily: string;
+    brand?: string;
+    leadTimeWks?: number;
+    shippingDimensions?: string;
     productGrouping: string;
     grouping: string;
     notes: string;
@@ -176,6 +183,9 @@ export default function QuoteLineDetailPage({
                         status: item.Status__c || "Draft",
                         description: item.Product_Description__c || "",
                         productFamily: item.Product_Family__c || "",
+                        brand: item.Product_Brand_Name__c || item.Brand_Name__c || item.Brand__c || "-",
+                        leadTimeWks: item.Lead_Time_Wks__c,
+                        shippingDimensions: item.Shipping_Dimensions__c || "-",
                         productGrouping: item.Product_Grouping__c || "",
                         grouping: item.Grouping__c || "",
                         notes: item.Customer_Quote_Line_Notes__c || "",
@@ -433,96 +443,164 @@ export default function QuoteLineDetailPage({
                 </div>
 
                 {/* Quotes Note - 25% width (3 of 12 cols) */}
-                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6 min-h-[380px]">
-                    <div className="flex items-center gap-3 mb-6 min-w-0">
-                        <div className="w-10 h-10 rounded bg-gray-50 dark:bg-gray-700 flex items-center justify-center">
-                            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                    <div className="flex items-center gap-2 mb-3 min-w-0">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
-                        <div className="min-w-0">
-                            <h2 className="text-base font-bold text-gray-800 dark:text-white tracking-tight" title="Quote Lines Note">Quote Lines Note</h2>
-                        </div>
+                        <h2 className="text-base font-semibold text-gray-900 dark:text-white ">
+                            Quote Line Note
+                        </h2>
                     </div>
-                    <div className="flex-1 flex flex-col min-h-[300px]">
-                        <textarea
-                            readOnly
-                            className="w-full flex-1 p-3 bg-gray-50/50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 outline-none cursor-default resize-none "
-                            value={decodeHtmlEntities(product.notes) || "No notes available."}
-                            title="Quote Lines Note"
-                        />
+                    <div className="flex-1 flex flex-col min-w-0">
+                        <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-800 dark:text-white min-h-[200px]">
+                            <p className="text-gray-700 truncate">{decodeHtmlEntities(product.notes) || "No notes available."}</p>
+                        </div>
                     </div>
                 </div>
 
                 {/* Product Information Card - 50% width (6 of 12 cols) */}
-                <div className="w1025:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6 min-h-[380px]">
-                    <div className="flex items-center gap-3 mb-6 min-w-0">
-                        <div className="w-10 h-10 rounded bg-gray-50 dark:bg-gray-700 flex items-center justify-center">
-                            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <div className="w1025:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
+                    <div className="flex items-center gap-2 mb-3 min-w-0">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                             </svg>
                         </div>
-                        <div className="min-w-0">
-                            <div>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                    Product Information
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400" title="Detailed Product Specifications">Detailed Product Specifications</p>
-                            </div>
+                        <div>
+                            <h3 className="text-base font-semibold text-gray-900 dark:text-white " title="Product Information">
+                                Product Information
+                            </h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate" title="Detailed Product Specifications">Detailed Product Specifications</p>
                         </div>
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-4">
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="Product Name">Product Name</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 dark:bg-gray-700/50  border border-gray-200 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-300 outline-none  cursor-default" title={product.name} value={product.name} />
-                        </div>
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="Product Grouping">Product Grouping</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600  rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-300 outline-none  cursor-default" title={product.productGrouping} value={product.productGrouping} />
-                        </div>
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="Site">Site</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600  rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-300 outline-none  cursor-default" title={product.site} value={product.site} />
-                        </div>
-
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="Description">Description</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-300 outline-none  cursor-default" title={product.description} value={product.description} />
-                        </div>
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="Grouping">Grouping</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-300 outline-none  cursor-default" title={product.grouping} value={product.grouping} />
-                        </div>
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="Inventory Account">Inventory Account</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-300 outline-none  cursor-default" title={product.inventoryAccount} value={product.inventoryAccount} />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-x-4 gap-y-3">
+                        {/* Product Name */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Name">
+                                Product Name
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.name}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.name}
+                            />
                         </div>
 
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="Manufacturer DBA">Manufacturer DBA</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-300 outline-none  cursor-default" title={product.manufacturerDBA} value={product.manufacturerDBA} />
-                        </div>
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="IsTaxable">IsTaxable</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-300 outline-none  cursor-default" title={product.isTaxable} value={product.isTaxable} />
-                        </div>
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="Unit Cost">Unit Cost</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-300 outline-none  cursor-default" title={formatCurrency(product.unitCost)} value={formatCurrency(product.unitCost)} />
+                        {/* Description */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Description">
+                                Description
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.description || "No description available"}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.description || "No description available"}
+                            />
                         </div>
 
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="Product Family">Product Family</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-300 outline-none  cursor-default" title={product.productFamily} value={product.productFamily} />
+                        {/* Product Family */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Family">
+                                Product Family
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.productFamily}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-primary font-medium focus:outline-none cursor-default truncate"
+                                title={product.productFamily}
+                            />
                         </div>
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="Available to Sell">Available to Sell</label>
-                            <input readOnly type="text" className={`w-full bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded px-3 py-2 text-sm outline-none  font-semibold cursor-default ${product.availableToSell > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-700 dark:text-gray-300'}`} title={product.availableToSell.toString()} value={product.availableToSell} />
+
+                        {/* Brand Name */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Brand Name">
+                                Brand Name
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.brand || "—"}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.brand || "—"}
+                            />
                         </div>
-                        <div className="md:col-span-1">
-                            <label className="text-gray-700 dark:text-gray-300 text-sm font-bold block mb-1" title="Total Cost">Total Cost</label>
-                            <input readOnly type="text" className="w-full bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-300 outline-none  cursor-default" title={formatCurrency(product.totalCost)} value={formatCurrency(product.totalCost)} />
+
+                        {/* Grouping */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Grouping">
+                                Grouping
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.grouping || "—"}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.grouping || "—"}
+                            />
+                        </div>
+
+                        {/* Taxable */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Taxable">
+                                Taxable
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.isTaxable || "No"}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.isTaxable || "No"}
+                            />
+                        </div>
+
+                        {/* MOQ */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="MOQ">
+                                MOQ
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={formatNumber(product.moq, 0)}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={formatNumber(product.moq, 0)}
+                            />
+                        </div>
+
+                        {/* Lead-Time (Wks) */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Lead-Time (Wks)">
+                                Lead-Time (Wks)
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.leadTimeWks != null ? formatNumber(product.leadTimeWks, 0) : "—"}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.leadTimeWks != null ? String(product.leadTimeWks) : "—"}
+                            />
+                        </div>
+
+                        {/* Shipping Dimensions */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Shipping Dimensions">
+                                Shipping Dimensions
+                            </label>
+                            <input
+                                type="text"
+                                readOnly
+                                value={product.shippingDimensions || "—"}
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                title={product.shippingDimensions || "—"}
+                            />
                         </div>
                     </div>
                 </div>
@@ -530,7 +608,7 @@ export default function QuoteLineDetailPage({
 
             {/* quotes Details Table */}
             <div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden p-4">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden p-4">
                     <div className="overflow-x-auto">
                         <Table className="text-sm text-left">
                             <THead>

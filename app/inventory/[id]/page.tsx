@@ -203,6 +203,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                     </div>
                 </div>
 
+                <div className="rounded-lg shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                     {paginatedPositions.length === 0 ? (
                         <TableEmptyState message="No positions found." />
@@ -259,6 +260,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
                         </TBody>
                     </Table>
                     )}
+                </div>
                 </div>
 
 

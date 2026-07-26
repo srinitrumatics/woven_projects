@@ -209,10 +209,10 @@ export default function ShipmentLineDetailPage({
             {/* Row 1: Main Image + Notes + Product Information */}
             <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
                 {/* Main Image with Carousel - 25% width (3 of 12 cols) */}
-                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm  p-4 h-full flex flex-col">
+                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
                     <div className="relative flex-1 flex flex-col">
                         {/* Main Image Display */}
-                        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[180px]">
+                        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
                             <div className="text-center">
                                 <svg className="w-16 h-16 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -245,20 +245,20 @@ export default function ShipmentLineDetailPage({
                 </div>
 
                 {/* Notes - 25% width (3 of 12 cols) */}
-                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 ">
-                    <div className="flex items-center gap-3 mb-6 min-w-0">
-                        <div className="w-10 h-10 rounded bg-gray-50 flex items-center justify-center border border-gray-100">
-                            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                    <div className="flex items-center gap-2 mb-3 min-w-0">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
-                        <div className="min-w-0">
-                            <h2 className="text-base font-bold text-gray-800 tracking-tight " title="Shipping Manifest Line Notes">Shipping Manifest Line Notes</h2>
-                        </div>
+                        <h2 className="text-base font-semibold text-gray-900 dark:text-white ">
+                            Shipping Manifest Line Notes
+                        </h2>
                     </div>
-                    <div>
-                        <div className="w-full min-h-[340px] p-4 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-700 overflow-y-auto">
-                            {product.Shipping_Manifest_Line_Notes__c || "No notes available."}
+                    <div className="flex-1 flex flex-col min-w-0">
+                        <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-800 dark:text-white min-h-[200px]">
+                            <p className="text-gray-700 truncate">{product.Shipping_Manifest_Line_Notes__c || "No notes available."}</p>
                         </div>
                     </div>
                 </div>

@@ -51,6 +51,7 @@ export default function QuoteShippingManifestsSubTab({
 
     return (
         <div>
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto py-2">
                 {manifests.length === 0 ? (
                     <TableEmptyState message="No records found" description="There are no shipping manifests associated with this quote." />
@@ -164,6 +165,7 @@ export default function QuoteShippingManifestsSubTab({
 
                     </>
                 )}
+            </div>
             </div>
             <div className="px-3 py-2">
                 <Pagination

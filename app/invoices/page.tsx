@@ -478,7 +478,8 @@ export default function InvoicesPage() {
         </div >
 
         {/* Table Following Proposal Style */}
-        < div className="overflow-x-auto" >
+        <div className="rounded-lg shadow-sm overflow-hidden">
+        <div className="overflow-x-auto" >
           {
             loading ? (
               <TableLoadingState message="Loading invoices..." />
@@ -641,6 +642,7 @@ export default function InvoicesPage() {
             )
           }
         </div >
+        </div>
 
         {/* Pagination */}
         < Pagination

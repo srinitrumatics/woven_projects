@@ -83,7 +83,7 @@ export default function InvoiceLineTaxesTab({ product }: InvoiceLineTaxesTabProp
     });
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-auto pt-0">
                 <Table className="text-sm text-left">
                     <THead>

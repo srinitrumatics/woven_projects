@@ -456,6 +456,7 @@ export default function QuotesPage() {
         </div>
 
         {/* Table */}
+        <div className="rounded-lg shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           {loading ? (
             <TableLoadingState message="Loading quotes..." />
@@ -619,6 +620,7 @@ export default function QuotesPage() {
               </TBody>
             </Table>
           )}
+        </div>
         </div>
 
         {/* Pagination */}

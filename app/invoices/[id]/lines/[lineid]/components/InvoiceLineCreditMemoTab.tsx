@@ -133,6 +133,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
 
     return (
         <div className="bg-white dark:bg-gray-800">
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-auto ">
                 <Table className="text-sm table-fixed">
                     <THead>
@@ -207,6 +208,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                         ))}
                     </TBody>
                 </Table>
+            </div>
             </div>
             <Pagination
                 currentPage={currentPage}

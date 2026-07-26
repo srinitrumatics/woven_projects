@@ -177,6 +177,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
 
             {/* Content */}
             <div>
+                <div className="rounded-lg shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                     {activeTab === 'rma' ? (
                         sortedData.length === 0 ? (
@@ -524,6 +525,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
 
                         </div>
                     )}
+                </div>
                 </div>
                 {activeData.length > 0 && (
                     <div className="px-3 py-2">

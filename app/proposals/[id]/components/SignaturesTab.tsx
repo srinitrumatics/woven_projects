@@ -18,6 +18,7 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
 
     return (
         <div>
+            <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
                 <Table className="table-fixed">
                     <THead>
@@ -70,6 +71,7 @@ export default function SignaturesTab({ proposal }: SignaturesTabProps) {
                         </Tr>
                     </TBody>
                 </Table>
+            </div>
             </div>
         </div>
     );

@@ -116,6 +116,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
 
             {/* Content */}
             <div>
+                <div className="rounded-lg shadow-sm overflow-hidden">
                 <div className="overflow-x-auto ">
                     {activeTab === "purchases" && (
                         sortedPurchases.length === 0 ? (
@@ -301,6 +302,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                             </Table>
                         )
                     )}
+                </div>
                 </div>
                 {(sortedBills.length > 0 || sortedPurchases.length > 0) && (
                     <div className="px-3 py-2 ">

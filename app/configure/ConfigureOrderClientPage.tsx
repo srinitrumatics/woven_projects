@@ -639,7 +639,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
 
       <div className="flex gap-6 h-[600px]">
         {/* Table Area */}
-        <div className="flex-1 flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="flex-1 flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
           {/* Toolbar */}
           <div className="flex items-center justify-between p-4 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
             <div className="flex flex-wrap items-center gap-3">
