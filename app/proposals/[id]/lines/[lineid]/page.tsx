@@ -841,7 +841,7 @@ export default function ProposalProductDetailPage({
                                 type="text"
                                 readOnly
                                 value={product.productFamily}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-primary font-medium focus:outline-none cursor-default truncate"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
                                 title={product.productFamily}
                             />
                         </div>

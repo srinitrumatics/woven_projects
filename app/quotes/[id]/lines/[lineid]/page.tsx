@@ -514,7 +514,7 @@ export default function QuoteLineDetailPage({
                                 type="text"
                                 readOnly
                                 value={product.productFamily}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-primary font-medium focus:outline-none cursor-default truncate"
+                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
                                 title={product.productFamily}
                             />
                         </div>
@@ -583,9 +583,9 @@ export default function QuoteLineDetailPage({
                             <input
                                 type="text"
                                 readOnly
-                                value={product.leadTimeWks != null ? formatNumber(product.leadTimeWks, 0) : "—"}
+                                value={product.leadTimeWks != null ? formatNumber(product.leadTimeWks, 0) : "-"}
                                 className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.leadTimeWks != null ? String(product.leadTimeWks) : "—"}
+                                title={product.leadTimeWks != null ? String(product.leadTimeWks) : "-"}
                             />
                         </div>
 
@@ -645,7 +645,7 @@ export default function QuoteLineDetailPage({
             {/* Bottom Tabs */}
             <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                 {/* Tabs Header */}
-                <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 mb-6 items-center min-w-0">
+                <div className="flex flex-nowrap gap-2 overflow-x-auto items-center min-w-0">
                     {(([
                         {
                             id: "taxes",

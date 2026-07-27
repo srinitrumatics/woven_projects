@@ -328,39 +328,39 @@ export default function SupplierBillLineDetailPage({
                             <InfoField label="Inventory Account" value={line.inventoryAccount} />
                             <InfoField label="Site" value={line.site} />
 
-                            <InfoField label="Purchase Order Line" value={line.purchaseOrderLineName} href={line.purchaseOrderId ? `/purchase-orders/${line.purchaseOrderId}` : undefined} />
-                            <InfoField label="Customer Quote Line" value={line.customerQuoteLineName} href={line.customerQuoteId ? `/quotes/${line.customerQuoteId}` : undefined} />
-                            <InfoField label="Proposed Product Line" value={line.proposedProduct} href={line.proposalId ? `/proposals/${line.proposalId}` : undefined} />
+                            <InfoField label="Purchase Order Line" value={line.purchaseOrderLineName} />
+                            <InfoField label="Customer Quote Line" value={line.customerQuoteLineName} />
+                            <InfoField label="Proposed Product Line" value={line.proposedProduct} />
                         </div>
                     </div>
                 </div>
 
                 {/* Row 2: Standard Styled Table Layout */}
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden p-4 pb-2 mb-4">
-                <div className="overflow-x-auto">
-                    <Table className="text-left border-collapse">
-                        <THead>
-                            <tr>
-                                <Th className="py-2 font-bold">Unit Cost</Th>
-                                <Th className="py-2 font-bold">Billed Qty</Th>
-                                <Th className="py-2 font-bold">Product Amount</Th>
-                                <Th className="py-2 font-bold">Shipping</Th>
-                                <Th className="py-2 font-bold">Total Bill Amount</Th>
-                                <Th className="py-2 font-bold">Goods Receipt Date</Th>
-                            </tr>
-                        </THead>
-                        <TBody>
-                            <Tr>
-                                <Td className="font-medium truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</Td>
-                                <Td className="font-medium truncate" title={String(line.billedQty)}>{line.billedQty}</Td>
-                                <Td className="font-bold truncate" title={formatCurrency(line.billAmount)}>{formatCurrency(line.billAmount)}</Td>
-                                <Td className="font-medium truncate" title={formatCurrency(line.shipping)}>{formatCurrency(line.shipping)}</Td>
-                                <Td className="font-bold text-primary truncate" title={formatCurrency(line.totalBillAmount)}>{formatCurrency(line.totalBillAmount)}</Td>
-                                <Td className="font-medium truncate" title={formatDate(line.goodsReceiptDate, 'numeric-dash')}>{formatDate(line.goodsReceiptDate, 'numeric-dash')}</Td>
-                            </Tr>
-                        </TBody>
-                    </Table>
-                </div>
+                    <div className="overflow-x-auto">
+                        <Table className="text-left border-collapse">
+                            <THead>
+                                <tr>
+                                    <Th className="py-2 font-bold">Unit Cost</Th>
+                                    <Th className="py-2 font-bold">Billed Qty</Th>
+                                    <Th className="py-2 font-bold">Product Amount</Th>
+                                    <Th className="py-2 font-bold">Shipping</Th>
+                                    <Th className="py-2 font-bold">Total Bill Amount</Th>
+                                    <Th className="py-2 font-bold">Goods Receipt Date</Th>
+                                </tr>
+                            </THead>
+                            <TBody>
+                                <Tr>
+                                    <Td className="font-medium truncate" title={formatCurrency(line.unitCost)}>{formatCurrency(line.unitCost)}</Td>
+                                    <Td className="font-medium truncate" title={String(line.billedQty)}>{line.billedQty}</Td>
+                                    <Td className="font-bold truncate" title={formatCurrency(line.billAmount)}>{formatCurrency(line.billAmount)}</Td>
+                                    <Td className="font-medium truncate" title={formatCurrency(line.shipping)}>{formatCurrency(line.shipping)}</Td>
+                                    <Td className="font-bold text-primary truncate" title={formatCurrency(line.totalBillAmount)}>{formatCurrency(line.totalBillAmount)}</Td>
+                                    <Td className="font-medium truncate" title={formatDate(line.goodsReceiptDate, 'numeric-dash')}>{formatDate(line.goodsReceiptDate, 'numeric-dash')}</Td>
+                                </Tr>
+                            </TBody>
+                        </Table>
+                    </div>
                 </div>
 
                 {/* Row 3: Related Items Tabs (Debit Memo Lines, Files) */}
@@ -451,7 +451,7 @@ function InfoField({ label, value, highlight = false, href }: { label: string, v
 
     return (
         <div>
-            <label className="block text-xs font-bold text-gray-700 dark:text-gray-500 mb-1.5 truncate" title={label}>
+            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1.5 truncate" title={label}>
                 {label}
             </label>
             {isLink ? (
@@ -467,7 +467,7 @@ function InfoField({ label, value, highlight = false, href }: { label: string, v
                     type="text"
                     readOnly
                     value={value || "-"}
-                    className={`${commonClasses} bg-gray-50/50 dark:bg-gray-900/50`}
+                    className={`${commonClasses} bg-gray-50/50 dark:bg-gray-900/50 `}
                     title={String(value || "")}
                 />
             )}

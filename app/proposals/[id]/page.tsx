@@ -1435,7 +1435,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               />
             </div>
 
-            <div className="p-4">
+            <div className="px-4">
               {activeTab === 'products' && (
                 <ProductsTab
                   products={sortData(proposedProducts, productSortField, productSortDirection)}

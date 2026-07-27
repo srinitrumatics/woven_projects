@@ -3,11 +3,11 @@ import { formatDate } from "@/lib/utils/formatting";
 export default function ProductInformationCard({ product }: { product: any }) {
     if (!product) return null;
 
-    const serialControlled = product.Is_Serial_Tracked__c !== undefined 
+    const serialControlled = product.Is_Serial_Tracked__c !== undefined
         ? (product.Is_Serial_Tracked__c ? "Yes" : "No")
-        : product.Serial_Controlled__c !== undefined 
-        ? (product.Serial_Controlled__c ? "Yes" : "No")
-        : "—";
+        : product.Serial_Controlled__c !== undefined
+            ? (product.Serial_Controlled__c ? "Yes" : "No")
+            : "—";
 
     return (
         <div className="w1025:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
@@ -63,7 +63,7 @@ export default function ProductInformationCard({ product }: { product: any }) {
                         type="text"
                         readOnly
                         value={product.Product_Family__c || "—"}
-                        className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-primary font-medium focus:outline-none cursor-default truncate"
+                        className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
                         title={product.Product_Family__c || "—"}
                     />
                 </div>

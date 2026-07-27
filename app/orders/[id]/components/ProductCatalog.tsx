@@ -109,58 +109,58 @@ export default function ProductCatalog({
                 />
             ) : (
                 <div className="rounded-lg shadow-sm overflow-hidden">
-                <div className="overflow-auto">
-                    <Table className="table-fixed">
-                        <THead className="sticky top-0 z-10">
-                            <tr>
-                                {isEditing && (
-                                    <Th
-                                        className="text-left truncate"
-                                        style={{ width: widths.selection, minWidth: widths.selection, maxWidth: widths.selection }}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            onChange={handleSelectAll}
-                                            checked={paginatedCatalogProducts.length > 0 && paginatedCatalogProducts.every(p => selectedProductIds.has(p.id))}
-                                            className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
-                                        />
-                                    </Th>
-                                )}
-                                {/*<th
+                    <div className="overflow-auto">
+                        <Table className="table-fixed">
+                            <THead className="sticky top-0 z-10">
+                                <tr>
+                                    {isEditing && (
+                                        <Th
+                                            className="text-left truncate"
+                                            style={{ width: widths.selection, minWidth: widths.selection, maxWidth: widths.selection }}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                onChange={handleSelectAll}
+                                                checked={paginatedCatalogProducts.length > 0 && paginatedCatalogProducts.every(p => selectedProductIds.has(p.id))}
+                                                className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                                            />
+                                        </Th>
+                                    )}
+                                    {/*<th
                                 className="px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white truncate"
                             style={{ width: widths.image, minWidth: widths.image, maxWidth: widths.image }}
                             >Image</th>*/}
-                                <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
-                                <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
-                                <SortableHeader label="Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
-                                <SortableHeader label="List Price" field="listPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={onResize} />
-                                <SortableHeader label="Unit Price" field="unitPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
-                                {/* Removed Available Qty Header */}
-                                {isEditing && (
-                                    <>
-                                        <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
-                                        <Th
-                                            className="truncate"
-                                            style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
-                                        >Action</Th>
-                                    </>
-                                )}
-                            </tr>
-                        </THead>
-                        <TBody>
-                            {paginatedCatalogProducts.map((product) => (
-                                <Tr key={product.id} className={`${selectedProductIds.has(product.id) ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
+                                    <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={onResize} />
+                                    <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={onResize} />
+                                    <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.productFamily} onResize={onResize} />
+                                    <SortableHeader label="List Price" field="listPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={onResize} />
+                                    <SortableHeader label="Unit Price" field="unitPrice" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={onResize} />
+                                    {/* Removed Available Qty Header */}
                                     {isEditing && (
-                                        <Td className="text-left truncate">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedProductIds.has(product.id)}
-                                                onChange={() => handleSelectProduct(product.id)}
-                                                className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
-                                            />
-                                        </Td>
+                                        <>
+                                            <SortableHeader label="Total Order Qty" field="orderQty" align="left" sortConfig={sortConfig} requestSort={requestSort} width={widths.orderQty} onResize={onResize} />
+                                            <Th
+                                                className="truncate"
+                                                style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                                            >Action</Th>
+                                        </>
                                     )}
-                                    {/*<td className="px-4 py-2 text-center truncate">
+                                </tr>
+                            </THead>
+                            <TBody>
+                                {paginatedCatalogProducts.map((product) => (
+                                    <Tr key={product.id} className={`${selectedProductIds.has(product.id) ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
+                                        {isEditing && (
+                                            <Td className="text-left truncate">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedProductIds.has(product.id)}
+                                                    onChange={() => handleSelectProduct(product.id)}
+                                                    className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                                                />
+                                            </Td>
+                                        )}
+                                        {/*<td className="px-4 py-2 text-center truncate">
                                         <div
                                             className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity mx-auto"
                                             onClick={() => handleImageClick(product)}
@@ -170,111 +170,111 @@ export default function ProductCatalog({
                                             </svg>
                                         </div>
                                     </td>*/}
-                                    <Td className="px-3 py-2 text-left truncate">
-                                        <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.name}>
-                                            <Link href={`/products/${product.id}`}
-                                                className="text-gray-900 hover:text-primary dark:text-gray-600 dark:hover:text-primary transition-colors p-1"
-                                                title="Product Details" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                                                {truncateText(product.name, 50)}
-                                            </Link>
-                                        </div>
-                                        <div className="text-sm text-gray-500 dark:text-gray-400 truncate break-words" title={product.description || "—"}>
-                                            {product.description ? truncateText(product.description, 50) : "—"}
-                                        </div>
-                                    </Td>
-                                    <Td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
-                                        <div className="truncate" title={displayCell(product.brand)}>{displayCell(product.brand)}</div>
-                                    </Td>
-                                    <Td className="px-3 py-2 text-left truncate">
-                                        <div className="truncate" title={displayCell(product.productFamily)}>
-                                            <span className="inline-block px-2 py-0.5 text-sm font-medium rounded bg-primary/10 text-primary  tracking-wider whitespace-normal truncate">
-                                                {displayCell(product.productFamily)}
-                                            </span>
-                                        </div>
-                                    </Td>
-                                    <Td className="px-3 py-2 text-sm text-left text-gray-500 dark:text-gray-400 line-through truncate">
-                                        {formatCurrency(product.listPrice)}
-                                    </Td>
-                                    <Td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">
-                                        {formatCurrency(product.unitPrice)}
-                                    </Td>
-                                    {/* Removed Available Qty Cell */}
-                                    {isEditing && (
-                                        <>
-                                            <Td className="px-3 py-2 text-left truncate">
-                                                <div className="flex flex-col gap-1 min-w-0">
-                                                    <div className="flex gap-1">
+                                        <Td className="px-3 py-2 text-left truncate">
+                                            <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.name}>
+                                                <Link href={`/products/${product.id}`}
+                                                    className="text-gray-900 hover:text-primary dark:text-gray-600 dark:hover:text-primary transition-colors p-1"
+                                                    title="Product Details" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    {truncateText(product.name, 50)}
+                                                </Link>
+                                            </div>
+                                            <div className="text-sm text-gray-500 dark:text-gray-400 truncate break-words" title={product.description || "—"}>
+                                                {product.description ? truncateText(product.description, 50) : "—"}
+                                            </div>
+                                        </Td>
+                                        <Td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white truncate">
+                                            <div className="truncate" title={displayCell(product.brand)}>{displayCell(product.brand)}</div>
+                                        </Td>
+                                        <Td className="px-3 py-2 text-left truncate">
+                                            <div className="truncate" title={displayCell(product.productFamily)}>
+                                                <span className="inline-block px-2 py-0.5 text-sm font-medium rounded bg-primary/10 text-primary  tracking-wider whitespace-normal truncate">
+                                                    {displayCell(product.productFamily)}
+                                                </span>
+                                            </div>
+                                        </Td>
+                                        <Td className="px-3 py-2 text-sm text-left text-gray-500 dark:text-gray-400 line-through truncate">
+                                            {formatCurrency(product.listPrice)}
+                                        </Td>
+                                        <Td className="px-3 py-2 text-sm text-left text-gray-900 dark:text-white font-semibold truncate">
+                                            {formatCurrency(product.unitPrice)}
+                                        </Td>
+                                        {/* Removed Available Qty Cell */}
+                                        {isEditing && (
+                                            <>
+                                                <Td className="px-3 py-2 text-left truncate">
+                                                    <div className="flex flex-col gap-1 min-w-0">
+                                                        <div className="flex gap-1">
+                                                            <button
+                                                                onClick={() => {
+                                                                    const currentQty = catalogQuantities[product.id] || product.moq || 1;
+                                                                    const moq = product.moq || 1;
+                                                                    const newQty = Math.max(currentQty - moq, 0);
+                                                                    handleCatalogQuantityChange(product.id, newQty, moq);
+                                                                }}
+                                                                className="w-6 h-6 flex items-center justify-center rounded transition-colors bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
+                                                            >
+                                                                -
+                                                            </button>
+                                                            <input
+                                                                type="text"
+                                                                min={0}
+                                                                value={catalogQuantities[product.id] ?? product.moq ?? 1}
+                                                                onChange={(e) => {
+                                                                    const val = e.target.value;
+                                                                    if (val === '' || /^[0-9]+$/.test(val)) {
+                                                                        const numVal = val === '' ? 0 : Number(val);
+                                                                        handleCatalogQuantityChange(product.id, numVal, product.moq || 1);
+                                                                    }
+                                                                }}
+                                                                onBlur={() => {
+                                                                    const moq = product.moq || 1;
+                                                                    if ((catalogQuantities[product.id] ?? moq) < moq) {
+                                                                        handleCatalogQuantityChange(product.id, moq, moq);
+                                                                    }
+                                                                }}
+                                                                className="w-16 px-1 py-0.5 text-sm border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
+                                                            />
+                                                            <button
+                                                                onClick={() => {
+                                                                    const currentQty = catalogQuantities[product.id] || product.moq || 1;
+                                                                    const moq = product.moq || 1;
+                                                                    const newQty = currentQty + moq;
+                                                                    handleCatalogQuantityChange(product.id, newQty, moq);
+                                                                }}
+                                                                className="w-6 h-6 flex items-center justify-center rounded transition-colors bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
+                                                            >
+                                                                +
+                                                            </button>
+                                                        </div>
+                                                        <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
+                                                    </div>
+                                                </Td>
+                                                <Td className="px-3 py-2 text-left truncate">
+                                                    <div className="flex flex-col gap-1 min-w-0">
                                                         <button
                                                             onClick={() => {
-                                                                const currentQty = catalogQuantities[product.id] || product.moq || 1;
-                                                                const moq = product.moq || 1;
-                                                                const newQty = Math.max(currentQty - moq, 0);
-                                                                handleCatalogQuantityChange(product.id, newQty, moq);
+                                                                handleAddProduct(product);
+                                                                // Reset ALL products' quantities back to MOQ
+                                                                resetAllQuantities();
+                                                                showBanner("Product added to order!");
                                                             }}
-                                                            className="w-6 h-6 flex items-center justify-center rounded transition-colors bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
+                                                            className="flex items-center justify-center gap-1.5 px-3 py-1.5 w-full rounded text-sm font-medium transition-colors bg-primary text-white hover:bg-primary-dark"
+                                                            title="Add to Order"
                                                         >
-                                                            -
-                                                        </button>
-                                                        <input
-                                                            type="text"
-                                                            min={0}
-                                                            value={catalogQuantities[product.id] ?? product.moq ?? 1}
-                                                            onChange={(e) => {
-                                                                const val = e.target.value;
-                                                                if (val === '' || /^[0-9]+$/.test(val)) {
-                                                                    const numVal = val === '' ? 0 : Number(val);
-                                                                    handleCatalogQuantityChange(product.id, numVal, product.moq || 1);
-                                                                }
-                                                            }}
-                                                            onBlur={() => {
-                                                                const moq = product.moq || 1;
-                                                                if ((catalogQuantities[product.id] ?? moq) < moq) {
-                                                                    handleCatalogQuantityChange(product.id, moq, moq);
-                                                                }
-                                                            }}
-                                                            className="w-16 px-1 py-0.5 text-sm border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
-                                                        />
-                                                        <button
-                                                            onClick={() => {
-                                                                const currentQty = catalogQuantities[product.id] || product.moq || 1;
-                                                                const moq = product.moq || 1;
-                                                                const newQty = currentQty + moq;
-                                                                handleCatalogQuantityChange(product.id, newQty, moq);
-                                                            }}
-                                                            className="w-6 h-6 flex items-center justify-center rounded transition-colors bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
-                                                        >
-                                                            +
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                                                                <path d="M11 9h2V6h3V4h-3V1h-2v3H8v2h3v3zm-4 9c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm-8.9-5h7.45c.75 0 1.41-.41 1.75-1.03l3.86-7.01L19.42 4l-3.87 7H8.53L4.27 2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7l1.1-2z" />
+                                                            </svg>
+                                                            Add
                                                         </button>
                                                     </div>
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {product.moq || 1} / Avail: {product.availableQty}</div>
-                                                </div>
-                                            </Td>
-                                            <Td className="px-3 py-2 text-left truncate">
-                                                <div className="flex flex-col gap-1 min-w-0">
-                                                    <button
-                                                        onClick={() => {
-                                                            handleAddProduct(product);
-                                                            // Reset ALL products' quantities back to MOQ
-                                                            resetAllQuantities();
-                                                            showBanner("Product added to order!");
-                                                        }}
-                                                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 w-full rounded text-sm font-medium transition-colors bg-primary text-white hover:bg-primary-dark"
-                                                        title="Add to Order"
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                                                            <path d="M11 9h2V6h3V4h-3V1h-2v3H8v2h3v3zm-4 9c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm-8.9-5h7.45c.75 0 1.41-.41 1.75-1.03l3.86-7.01L19.42 4l-3.87 7H8.53L4.27 2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7l1.1-2z" />
-                                                        </svg>
-                                                        Add
-                                                    </button>
-                                                </div>
-                                            </Td>
-                                        </>
-                                    )}
-                                </Tr>
-                            ))}
-                        </TBody>
-                    </Table>
-                </div>
+                                                </Td>
+                                            </>
+                                        )}
+                                    </Tr>
+                                ))}
+                            </TBody>
+                        </Table>
+                    </div>
                 </div>
             )}
             {/* Image Popup Modal */}
