@@ -91,7 +91,7 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
                                             ? "bg-green-200 text-green-900"
                                             : orderStatus === "In Progress"
                                                 ? "bg-yellow-100 text-yellow-800"
-                                                : orderStatus === "Submitted"
+                                                : orderStatus === "Submitted" || orderStatus === "Submit"
                                                     ? "bg-yellow-200 text-yellow-900"
                                                     : orderStatus === "Canceled"
                                                         ? "bg-red-100 text-red-800"

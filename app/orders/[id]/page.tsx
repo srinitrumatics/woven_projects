@@ -1838,45 +1838,42 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           )}
 
           {/* Action Buttons Logic */}
-          {!["Approved", "Delivered", "Canceled", "Cancelled"].includes(orderStatus) && isEditing && (
+          {orderStatus === "Draft" && isEditing && (
             <>
               {/* Save Draft - Only visible in Draft mode */}
-              {orderStatus === "Draft" && (
-                <button
-                  onClick={handleSaveDraft}
-                  disabled={isSubmitting}
-                  className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed truncate"
-                >
-                  {isSubmitting ? "Saving..." : "Save Draft"}
-                </button>
-              )}
+              <button
+                onClick={handleSaveDraft}
+                disabled={isSubmitting}
+                className="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed truncate"
+              >
+                {isSubmitting ? "Saving..." : "Save Draft"}
+              </button>
 
-              {/* Submit Order - Visible in Draft AND Submitted modes */}
-              {(orderStatus === "Draft" || orderStatus === "Submitted") && (
-                <button
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  className="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed truncate"
-                >
-                  {isSubmitting ? "Submitting..." : "Submit Order"}
-                </button>
-              )}
-
-              {/* Recall - Visible only in Submitted mode */}
-              {orderStatus === "Submitted" && (
-                <button
-                  onClick={() => {
-                    confirmToast("Are you sure you want to recall this order and set it back to Draft?", () => {
-                      setOrderStatus("Draft");
-                      handleSaveDraft();
-                    });
-                  }}
-                  className="w-full sm:w-auto px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors"
-                >
-                  Recall
-                </button>
-              )}
+              {/* Submit Order - Visible in Draft mode */}
+              <button
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed truncate"
+              >
+                {isSubmitting ? "Submitting..." : "Submit Order"}
+              </button>
             </>
+          )}
+
+          {/* Recall - Visible when status is Submitted / Submit */}
+          {(orderStatus?.toLowerCase() === "submitted" || orderStatus?.toLowerCase() === "submit") && (
+            <button
+              onClick={() => {
+                confirmToast("Are you sure you want to recall this order and set it back to Draft?", () => {
+                  setOrderStatus("Draft");
+                  handleSaveDraft();
+                });
+              }}
+              disabled={isSubmitting}
+              className="w-full sm:w-auto px-6 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed truncate"
+            >
+              {isSubmitting ? "Recalling..." : "Recall"}
+            </button>
           )}
         </div>
         {/* Fixed Tooltip */}
