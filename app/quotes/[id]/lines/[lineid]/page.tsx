@@ -682,7 +682,7 @@ export default function QuoteLineDetailPage({
                         </button>
                     ))}
                 </div>
-                <div>
+                <div className="mt-4 py-4">
                     {activeTab === 'taxes' && (
                         <QuoteLineTaxesTab product={product} />
                     )}
@@ -779,6 +779,6 @@ export default function QuoteLineDetailPage({
                     </span>
                 )}
             </div>
-        </Sidebar>
+        </Sidebar >
     );
 }
