@@ -27,6 +27,12 @@ import ReturnsTab, { ReturnsPreloadedData } from "./components/ReturnsTab";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
+import algoliasearch from 'algoliasearch';
+
+const searchClient = algoliasearch(
+  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || "",
+  process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY || ""
+);
 // import { mockProducts } from "@/app/products/mockData"; // Removed in favor of API data
 
 interface Address {
@@ -175,6 +181,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   const [loading, setLoading] = useState(true);
   const [orderProducts, setOrderProducts] = useState<Product[]>([]);
+  // Tracks order line IDs deleted this session so the post-save reload can verify
+  // Salesforce's read path has actually caught up before reloading (see handleSubmitOrder).
+  const recentlyDeletedOrderLineIds = useRef<Set<string>>(new Set());
   const [orderData, setOrderData] = useState<Order | null>(null);
   const [loadingOrder, setLoadingOrder] = useState(true);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -581,58 +590,46 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     loadPicklists();
   }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
-  // Load products from Salesforce
+  // Load products from Algolia
   useEffect(() => {
     if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
 
     async function loadProducts() {
       try {
-        const currentAccountId = orderData?.AccountId || SF_ACCOUNT_ID;
-        const currentContactId = orderData?.Ship_to_Contact__c || SF_CONTACT_ID;
-
         setProductsLoading(true);
-        const url = `/api/salesforce/orders?action=products&accountId=${currentAccountId}&contactId=${currentContactId}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`Failed to fetch products: ${res.status} ${res.statusText}`);
-        const responseData = await res.json();
+        const indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "wovn_products_local";
+        const index = searchClient.initIndex(indexName);
 
-        // Handle potential different response structures
-        let data = [];
-        if (Array.isArray(responseData)) {
-          data = responseData;
-        } else if (responseData && responseData.data && Array.isArray(responseData.data)) {
-          data = responseData.data;
-        } else {
-          console.warn('DEBUG: responseData structure unexpected:', responseData);
-        }
+        const { hits } = await index.search('', { hitsPerPage: 1000 });
 
-        const mappedProducts: Product[] = data.map((item: any) => ({
-          id: item.Id || item.id,
-          name: item.Name || item.name || "Unnamed Product",
-          description: item.Description || item.description || "",
-          productFamily: item.Family || item.productFamily || "General",
-          productGrouping: item.Grouping__c || item.Product_Grouping__c || item.productGrouping || "",
-          sku: item.StockKeepingUnit || item.SKU || item.sku || item.Name || "",
-          manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer__c || item.Manufacturer_Name || item.Manufacturer_Name__c || "",
-          brand: item.gtherp__Brand_Name__c ?? item.Brand_Name__c ?? item.Product_Brand_Name__c ?? "",
-          availableQty: item.gtherp__Available_To_Sell__c ?? item.Available_To_Sell__c ?? item.availableQty ?? 0,
-          moq: item.MOQ__c || item.moq || 1,
-          listPrice: item.List_Price__c || item.listPrice || 0,
-          unitPrice: item.Unit_Price__c || item.unitPrice || 0,
+        const mappedProducts: Product[] = hits.map((h: any) => ({
+          id: h.objectID,
+          name: h.name || "-",
+          description: h.description || "",
+          productFamily: h.family || h.category || "General",
+          productGrouping: h.groupingLabel || "",
+          sku: h.sku || h.productcode || h.name || "",
+          manufacturer: h.manufacturer || "-",
+          brand: h.brand || h.brandName || "-",
+          availableQty: h.available_quantity ?? h.gtherp__available_quantity__c ?? h.stock_quantity ?? 0,
+          moq: h.moq || 1,
+          listPrice: h.price ?? 0,
+          unitPrice: h.price ?? 0,
           orderQty: 0,
           subtotal: 0
         }));
+        
         setCatalogProducts(mappedProducts);
       } catch (error) {
-        console.error("DEBUG: Error loading products:", error);
+        console.error("DEBUG: Error loading products from Algolia:", error);
       } finally {
         setProductsLoading(false);
       }
     }
 
-    // Always load products initially, and reload if orderData provides specific IDs
+    // Always load products initially
     loadProducts();
-  }, [SF_ACCOUNT_ID, SF_CONTACT_ID, orderData?.AccountId, orderData?.Ship_to_Contact__c]);
+  }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
   // Auto-add transfer products once catalog loads
   useEffect(() => {
@@ -931,11 +928,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                     description: item.Product_Description__c || "",
                     unitPrice: item.Unit_Price__c,
                     listPrice: item.Unit_Price__c, // Assuming list price same as unit price for now
-                    brand: item.gtherp__Brand_Name__c ?? item.Brand_Name__c ?? item.Product_Brand_Name__c ?? "",
+                    brand: item.gtherp__brand_name__c ?? item.gtherp__Brand_Name__c ?? item.Brand_Name__c ?? item.Product_Brand_Name__c ?? "",
                     manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__r?.Name || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
                     productFamily: item.Product_Family__c || "", // Not in API response
                     productGrouping: item.Product_Grouping__c || item.Grouping__c || "",
-                    availableQty: item.gtherp__Available_To_Sell__c ?? item.Available_To_Sell__c ?? 0,
+                    availableQty: item.gtherp__available_to_sell__c ?? item.gtherp__Available_To_Sell__c ?? item.Available_To_Sell__c ?? 0,
                     moq: item.MOQ__c || 1,
                     orderQty: (item.Order_Qty__c || 0) * (item.MOQ__c || 1),
                     subtotal: item.Total_Price__c,
@@ -1120,7 +1117,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       // Add a unique identifier for this line item
       lineItemKey: `${product.id}-${Date.now()}-${Math.random()}`
     };
-    setOrderProducts([...orderProducts, uniqueLineItem]);
+    setOrderProducts(prev => [...prev, uniqueLineItem]);
   };
 
   const handleRemoveProduct = async (lineItemKey: string) => {
@@ -1131,7 +1128,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       // Confirm deletion with user
       confirmToast(`Are you sure you want to delete ${product.name} from this order?`, async () => {
         try {
-          const deleteUrl = `/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID || '')}&orderLineId=${encodeURIComponent(product.orderLineId || '')}&contactId=${encodeURIComponent(SF_CONTACT_ID || '')}`;
+          const deleteUrl = `/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID || '')}&orderLineId=${encodeURIComponent(product.orderLineId || '')}&contactId=${encodeURIComponent(SF_CONTACT_ID || '')}&orderId=${encodeURIComponent(id)}`;
 
           const response = await fetch(deleteUrl, {
             method: 'DELETE',
@@ -1147,8 +1144,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
           const result = await response.json();
 
-          // Remove from state only after successful API deletion
-          setOrderProducts(orderProducts.filter(p => p.lineItemKey !== lineItemKey));
+          // Remove from state only after successful, confirmed API deletion
+          recentlyDeletedOrderLineIds.current.add(product.orderLineId as string);
+          setOrderProducts(prev => prev.filter(p => p.lineItemKey !== lineItemKey));
           success('Order line deleted successfully');
         } catch (err) {
           console.error('Error deleting order line:', err);
@@ -1157,13 +1155,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       });
     } else {
       // Product doesn't exist in Salesforce yet, just remove from state
-      setOrderProducts(orderProducts.filter(p => p.lineItemKey !== lineItemKey));
+      setOrderProducts(prev => prev.filter(p => p.lineItemKey !== lineItemKey));
     }
   };
 
   const handleQuantityChange = (lineItemKey: string, newQuantity: number) => {
     if (newQuantity < 0) return;
-    setOrderProducts(orderProducts.map(p => {
+    setOrderProducts(prev => prev.map(p => {
       if (p.lineItemKey === lineItemKey) {
         return { ...p, orderQty: newQuantity, subtotal: newQuantity * p.unitPrice };
       }
@@ -1312,6 +1310,32 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     }
   };
 
+  // Fetch just the current order line IDs from Salesforce, used to verify a save's
+  // deletions have actually propagated before reloading (see handleSubmitOrder).
+  const fetchOrderLineIds = async (): Promise<Set<string>> => {
+    try {
+      const linesRes = await fetch(`/api/salesforce/orders?accountId=${encodeURIComponent(SF_ACCOUNT_ID || '')}&orderId=${encodeURIComponent(id)}&contactId=${encodeURIComponent(SF_CONTACT_ID || '')}&action=orderlines`);
+      if (!linesRes.ok) return new Set();
+      const linesData = await linesRes.json();
+
+      let lines: any[] = [];
+      if (Array.isArray(linesData) && linesData.length > 0) {
+        const firstItem = linesData[0];
+        const nestedKey = Object.keys(firstItem).find(key => key.endsWith('__c') && Array.isArray(firstItem[key]));
+        lines = nestedKey ? firstItem[nestedKey] : linesData;
+      } else if (linesData?.data && Array.isArray(linesData.data) && linesData.data.length > 0) {
+        const firstItem = linesData.data[0];
+        const nestedKey = Object.keys(firstItem).find(key => key.endsWith('__c') && Array.isArray(firstItem[key]));
+        lines = nestedKey ? firstItem[nestedKey] : linesData.data;
+      }
+
+      return new Set((lines || []).map((item: any) => item.Id).filter(Boolean));
+    } catch (err) {
+      console.error('Error verifying order lines after save:', err);
+      return new Set();
+    }
+  };
+
   // Handle order submission (update only)
   const handleSubmitOrder = async (isDraft: boolean = false) => {
     try {
@@ -1435,8 +1459,20 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           }));
         }
       }
-      // Refresh after a short delay to allow Salesforce to propagate
-      setTimeout(() => window.location.reload(), 5000);
+      // Verify this session's deletions are actually reflected before reloading,
+      // retrying a few times with backoff instead of trusting a fixed delay.
+      const deletedIds = Array.from(recentlyDeletedOrderLineIds.current);
+      const maxAttempts = 3;
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        const currentIds = await fetchOrderLineIds();
+        const stillStale = deletedIds.some(deletedId => currentIds.has(deletedId));
+        if (!stillStale) break;
+        if (attempt < maxAttempts - 1) {
+          await new Promise(resolve => setTimeout(resolve, 500 * (attempt + 1)));
+        }
+      }
+      recentlyDeletedOrderLineIds.current.clear();
+      window.location.reload();
     } catch (error) {
       console.error("Error submitting order:", error);
       setSubmitError(error instanceof Error ? error.message : "Failed to submit order");

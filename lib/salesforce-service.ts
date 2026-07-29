@@ -422,7 +422,13 @@ export async function updateOrderFromSalesforce(orderId: string, orderData: any)
       throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
     }
 
-    const result = await response.json();
+    const result = await response.json().catch(() => null);
+    const signal = extractApexSuccessSignal(result);
+    if (signal === false) {
+      console.error('Salesforce PATCH reported failure in response body:', result);
+      return false;
+    }
+
     return true;
   } catch (error) {
     console.error('Error updating order in Salesforce:', error);
@@ -467,8 +473,26 @@ export async function cloneOrderFromSalesforce(orderData: any): Promise<any> {
 }
 
 
+// Inspect a parsed Apex REST response body for an explicit success/failure signal.
+// A 2xx HTTP status alone does not guarantee the Apex REST resource actually applied
+// the change, so callers use this to look for a real confirmation in the body before
+// trusting response.ok. Returns null when the shape doesn't say either way.
+function extractApexSuccessSignal(result: any): boolean | null {
+  if (result === null || result === undefined) return false;
+  if (typeof result.success === 'boolean') return result.success;
+  if (Array.isArray(result)) {
+    if (result.length === 0) return false;
+    if (typeof result[0]?.success === 'boolean') return result[0].success;
+    return null;
+  }
+  if (Array.isArray(result.errors) && result.errors.length > 0) return false;
+  if (Array.isArray(result.data)) return result.data.length > 0 ? true : null;
+  if (typeof result === 'object' && Object.keys(result).length === 0) return false;
+  return null;
+}
+
 // Delete an order line from Salesforce
-export async function deleteOrderFromSalesforce(accountId: string, contactId: string, orderLineId: string): Promise<boolean> {
+export async function deleteOrderFromSalesforce(accountId: string, contactId: string, orderLineId: string, orderId?: string): Promise<boolean> {
   try {
     const session = await getSalesforceSession();
 
@@ -495,7 +519,25 @@ export async function deleteOrderFromSalesforce(accountId: string, contactId: st
       throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
     }
 
-    const result = await response.json();
+    const result = await response.json().catch(() => null);
+    const signal = extractApexSuccessSignal(result);
+    if (signal === false) {
+      console.error('Salesforce DELETE reported failure in response body:', result);
+      return false;
+    }
+    if (signal === true) return true;
+
+    // Body didn't confirm either way — fall back to verifying directly against the
+    // order lines list rather than assuming the 2xx status meant it worked.
+    if (orderId) {
+      const remainingLines = await getOrderLinesFromSalesforce(accountId, contactId, orderId);
+      const stillPresent = remainingLines.some((line: any) => line?.Id === orderLineId);
+      if (stillPresent) {
+        console.error('Order line still present after delete confirmation check:', orderLineId);
+        return false;
+      }
+    }
+
     return true;
   } catch (error) {
     console.error('Error deleting order line from Salesforce:', error);

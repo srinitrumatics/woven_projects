@@ -228,7 +228,7 @@ export async function DELETE(req: Request) {
     }
 
     if (orderLineId) {
-      const result = await deleteOrderFromSalesforce(accountId, contactId, orderLineId);
+      const result = await deleteOrderFromSalesforce(accountId, contactId, orderLineId, orderId || undefined);
       if (!result) {
         return NextResponse.json({ error: "Failed to delete order line" }, { status: 500 });
       }

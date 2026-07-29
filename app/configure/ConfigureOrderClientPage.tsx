@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import algoliasearch from 'algoliasearch';
+import { InstantSearch, Configure, useInfiniteHits, useSearchBox, useInstantSearch } from 'react-instantsearch';
 import { useUserSession } from '@/components/UserSessionContext';
 import { useToast } from "@/components/ui/Toast";
 import { Table, THead, TBody, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
@@ -55,6 +56,8 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
   const [loading, setLoading] = useState(false);
 
   const [lines, setLines] = useState<any[]>([]);
+  // Backs Quick Add only — the Browse Catalog panel itself is sourced live via InstantSearch/useInfiniteHits
+  // (BrowseCatalogPanel below) so it is never capped by this one-shot fetch's hitsPerPage.
   const [catalog, setCatalog] = useState<any[]>([]);
   const [addingIds, setAddingIds] = useState<Set<string>>(new Set());
   const [nextId, setNextId] = useState(1000);
@@ -62,9 +65,6 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
   const [panelOpen, setPanelOpen] = useState(false);
   const [searchQ, setSearchQ] = useState('');
   const [quickAddQ, setQuickAddQ] = useState('');
-  const [catQ, setCatQ] = useState('');
-  const [fMfr, setFMfr] = useState('');
-  const [fFamily, setFFamily] = useState('');
   const [quickAddOpen, setQuickAddOpen] = useState(false);
   const [grpDDOpen, setGrpDDOpen] = useState(false);
   const [customGrpName, setCustomGrpName] = useState('');
@@ -73,7 +73,9 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
   const [grpNameError, setGrpNameError] = useState(false);
 
   // DnD state refs (to avoid re-renders during drag)
-  const dragSrcRef = useRef<{ type: string, id: string | number } | null>(null);
+  // `payload` (for type 'cat') carries the dragged catalog product itself, since Browse Catalog is sourced
+  // from InstantSearch/useInfiniteHits (BrowseCatalogPanel) and may not be present in the Quick-Add-only `catalog` state.
+  const dragSrcRef = useRef<{ type: string, id: string | number, payload?: any } | null>(null);
   const insertIdxRef = useRef<number>(-1);
   const [insertLineStyle, setInsertLineStyle] = useState<{ top: string, display: string }>({ top: '0', display: 'none' });
 
@@ -94,9 +96,14 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
     } catch (e) { }
   }, []);
 
-  // Load Browse Catalog list from the Algolia search index (replaces the old bulk Salesforce catalog fetch).
-  // One-shot, broad fetch to keep the existing client-side filtering (filteredCatalog/quickAddResults) unchanged.
+  // One-shot catalog snapshot, used only by Quick Add's lookup-by-search below. indexName is only ever the
+  // org's real index or "" (see app/configure/page.tsx) — an empty indexName means the org's index could not
+  // be resolved, and must never fall back to a shared/default index (FR-002), so no request is made.
   useEffect(() => {
+    if (!indexName) {
+      setCatalog([]);
+      return;
+    }
     let cancelled = false;
     index.search('', { hitsPerPage: 1000 })
       .then(({ hits }) => {
@@ -107,7 +114,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
           name: h.name || '-',
           desc: h.description || '',
           mfr: h.manufacturer || '-',
-          brand: h.brandName || '-',
+          brand: h.brand || h.brandName || '-',
           family: h.family || h.category || 'General',
           groupingLabel: h.groupingLabel || '',
           sell: h.price ?? 0,
@@ -237,11 +244,6 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
     }
   };
 
-  const addCat = (id: string) => {
-    const p = catalog.find(x => x.id === id);
-    if (p) addProductFromCatalog(p);
-  };
-
   const selAll = (v: boolean) => setLines(prev => prev.map(l => ({ ...l, sel: v })));
   const rowSel = (id: number, v: boolean) => setLines(prev => prev.map(l => l.id === id ? { ...l, sel: v } : l));
   const toggleExp = (id: number) => setLines(prev => prev.map(l => l.id === id ? { ...l, exp: !l.exp } : l));
@@ -337,8 +339,8 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
   };
 
   // DnD Logic
-  const startDrag = (e: React.DragEvent, type: string, id: string | number) => {
-    dragSrcRef.current = { type, id };
+  const startDrag = (e: React.DragEvent, type: string, id: string | number, payload?: any) => {
+    dragSrcRef.current = { type, id, payload };
     e.dataTransfer.effectAllowed = 'copyMove';
     e.dataTransfer.setData('text/plain', type + ':' + id);
     // Let CSS handle visual state, or we can force it here
@@ -405,7 +407,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
     setInsertLineStyle({ top: '0', display: 'none' });
 
     if (dragSrc.type === 'cat') {
-      const prod = catalog.find(p => p.id === dragSrc.id);
+      const prod = dragSrc.payload || catalog.find(p => p.id === dragSrc.id);
       if (!prod) return;
       addProductFromCatalogAt(prod, at);
     } else {
@@ -556,17 +558,6 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
     return catalog.filter(p => p.sku.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.mfr.toLowerCase().includes(q)).slice(0, 8);
   }, [quickAddQ, catalog]);
 
-  const filteredCatalog = useMemo(() => {
-    const q = catQ.toLowerCase();
-    return catalog.filter(p =>
-      (!q || p.sku.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.mfr.toLowerCase().includes(q)) &&
-      (!fMfr || p.mfr === fMfr) &&
-      (!fFamily || p.family === fFamily)
-    );
-  }, [catalog, catQ, fMfr, fFamily]);
-
-  const mfrs = useMemo(() => [...new Set(catalog.map(p => p.mfr))].sort(), [catalog]);
-  const fams = useMemo(() => [...new Set(catalog.map(p => p.family))].sort(), [catalog]);
   const filteredGrpLabels = useMemo(
     () => grpLabels.filter(l => l.toLowerCase().includes(grpSearch.toLowerCase())),
     [grpLabels, grpSearch]
@@ -746,192 +737,276 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                 description="Search to add products or drag them from the catalog."
               />
             ) : (
-            <Table className="text-left border-collapse min-w-[800px]">
-              <THead className="text-gray-900 dark:text-white sticky top-0 z-10">
-                <tr>
-                  <Th className="w-10 text-center"><input type="checkbox" checked={lines.length > 0 && lines.every(l => l.sel)} onChange={e => selAll(e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Th>
-                  <Th className="px-1 w-8"></Th>
-                  <Th className="whitespace-nowrap">Level</Th>
-                  <Th className="whitespace-nowrap">Seq</Th>
-                  <Th className="whitespace-nowrap">Product Name</Th>
-                  <Th className="whitespace-nowrap">Description</Th>
-                  <Th className="whitespace-nowrap">Brand Name</Th>
-                  <Th className="text-right whitespace-nowrap">Sell Price</Th>
-                  <Th className="text-center whitespace-nowrap">Order Qty</Th>
-                  <Th className="text-center whitespace-nowrap">MOQ</Th>
-                  <Th className="text-center whitespace-nowrap w-28">Total Qty</Th>
-                  <Th className="text-right whitespace-nowrap">Total Price</Th>
-                  <Th className="w-10"></Th>
-                </tr>
-              </THead>
-              <TBody>
-                {lines.map((l, idx) => {
-                  const hidden = isHidden(l);
-                  const hasKids = lines.some(c => c.pid === l.id);
-                  if (hidden) return null;
+              <Table className="text-left border-collapse min-w-[800px]">
+                <THead className="text-gray-900 dark:text-white sticky top-0 z-10">
+                  <tr>
+                    <Th className="w-10 text-center"><input type="checkbox" checked={lines.length > 0 && lines.every(l => l.sel)} onChange={e => selAll(e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Th>
+                    <Th className="px-1 w-8"></Th>
+                    <Th className="whitespace-nowrap">Level</Th>
+                    <Th className="whitespace-nowrap">Seq</Th>
+                    <Th className="whitespace-nowrap">Product Name</Th>
+                    <Th className="whitespace-nowrap">Description</Th>
+                    <Th className="whitespace-nowrap">Brand Name</Th>
+                    <Th className="text-right whitespace-nowrap">Sell Price</Th>
+                    <Th className="text-center whitespace-nowrap">Order Qty</Th>
+                    <Th className="text-center whitespace-nowrap">MOQ</Th>
+                    <Th className="text-center whitespace-nowrap w-28">Total Qty</Th>
+                    <Th className="text-right whitespace-nowrap">Total Price</Th>
+                    <Th className="w-10"></Th>
+                  </tr>
+                </THead>
+                <TBody>
+                  {lines.map((l, idx) => {
+                    const hidden = isHidden(l);
+                    const hasKids = lines.some(c => c.pid === l.id);
+                    if (hidden) return null;
 
-                  const q = searchQ.trim().toLowerCase();
-                  if (q && l.type === 'product' && !l.name.toLowerCase().includes(q) && !l.sku.toLowerCase().includes(q) && !l.desc.toLowerCase().includes(q) && !l.mfr.toLowerCase().includes(q)) {
-                    return null;
-                  }
+                    const q = searchQ.trim().toLowerCase();
+                    if (q && l.type === 'product' && !l.name.toLowerCase().includes(q) && !l.sku.toLowerCase().includes(q) && !l.desc.toLowerCase().includes(q) && !l.mfr.toLowerCase().includes(q)) {
+                      return null;
+                    }
 
-                  if (l.type === 'group') {
-                    let s = { ts: 0, n: 0 };
-                    lines.forEach(c => { if (c.pid === l.id && c.type === 'product') { s.ts += c.sell * lineTotalQty(c); s.n++; } });
-                    const abbr = l.grpName.split(/[\s&]+/).map((w: string) => w[0]).join('').substring(0, 2).toUpperCase();
+                    if (l.type === 'group') {
+                      let s = { ts: 0, n: 0 };
+                      lines.forEach(c => { if (c.pid === l.id && c.type === 'product') { s.ts += c.sell * lineTotalQty(c); s.n++; } });
+                      const abbr = l.grpName.split(/[\s&]+/).map((w: string) => w[0]).join('').substring(0, 2).toUpperCase();
 
-                    return (
-                      <tr key={l.id} draggable className={`border-b border-gray-200 dark:border-gray-700 bg-indigo-50/50 dark:bg-indigo-900/10 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors ${l.sel ? 'bg-indigo-100/50 dark:bg-indigo-900/30' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
-                        <Td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Td>
-                        <Td className="px-1 py-2 cursor-grab text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-center">&#9776;</Td>
-                        <Td colSpan={3} className="px-3 py-2">
-                          <div className="flex items-center gap-2">
-                            {hasKids ? <button className="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition-transform" onClick={() => toggleExp(l.id)} style={{ transform: l.exp ? 'rotate(0)' : 'rotate(-90deg)' }}>&#9660;</button> : <span className="w-5 inline-block"></span>}
-                            <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${l.grpColor}`}>{abbr}</span>
-                            <input className="font-bold text-sm bg-transparent border border-transparent hover:border-gray-300 focus:border-purple-500 focus:bg-white dark:focus:bg-gray-800 rounded px-1 py-0.5 outline-none transition-colors w-48 text-gray-900 dark:text-white" value={l.grpName} onChange={e => setLines(prev => prev.map(x => x.id === l.id ? { ...x, grpName: e.target.value } : x))} />
-                            <span className="text-xs text-gray-500 dark:text-gray-400">{s.n} item{s.n !== 1 ? 's' : ''}</span>
-                          </div>
-                        </Td>
-                        <Td colSpan={6}></Td>
-                        <Td className="px-3 py-2 text-right font-bold text-indigo-600 dark:text-indigo-400 text-sm">{fmt(s.ts)}</Td>
-                        <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
-                      </tr>
-                    );
-                  } else {
-                    const indent = (l.lv - 1) * 20;
-                    const lvColors = ['bg-gray-200 text-gray-700', 'bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-purple-100 text-purple-700'];
-                    const lvCls = lvColors[Math.min(l.lv - 1, 3)];
-                    const lineMoq = resolveMoq(l);
-                    const orderQty = safeOrderQty(l);
-                    const totalQty = lineTotalQty(l);
-                    const totalPrice = totalQty * l.sell;
-                    const atFloor = orderQty <= 1;
-                    return (
-                      <tr key={l.id} draggable className={`border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${l.sel ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
-                        <Td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Td>
-                        <Td className="px-1 py-2 cursor-grab text-gray-300 hover:text-gray-500 dark:hover:text-gray-400 text-center">&#9776;</Td>
-                        <Td className="px-3 py-2">
-                          <div className="flex items-center" style={{ paddingLeft: `${indent}px` }}>
-                            {hasKids ? <button className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-transform" onClick={() => toggleExp(l.id)} style={{ transform: l.exp ? 'rotate(0)' : 'rotate(-90deg)' }}>&#9660;</button> : <span className="w-5 inline-block"></span>}
-                            <span className={`ml-1 px-1.5 py-0.5 rounded text-xs font-bold ${lvCls}`}>{l.lv}</span>
-                          </div>
-                        </Td>
-                        <Td className="px-3 py-2 text-sm text-gray-500">{l.seq}</Td>
-                        <Td className="px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:underline cursor-pointer truncate max-w-[200px]" title={`${l.sku} - ${l.name}`}>{l.name}</Td>
-                        <Td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate max-w-[150px]" title={l.desc}>{l.desc}</Td>
-                        <Td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px]">{l.brand || '-'}</Td>
-                        <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-right">{fmt(l.sell)}</Td>
-                        <Td className="px-3 py-2 text-center">
-                          <div className="flex flex-col items-center gap-1">
-                            <div className="flex items-center justify-center gap-1">
-                              <button
-                                type="button"
-                                onClick={() => bumpQty(l.id, -1)}
-                                disabled={atFloor}
-                                aria-label="Decrease order quantity"
-                                className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-gray-700"
-                              >
-                                &#8722;
-                              </button>
-                              <input
-                                type="text"
-                                value={l.orderQty}
-                                onChange={e => setOrderQty(l.id, e.target.value)}
-                                onBlur={() => commitOrderQty(l.id)}
-                                aria-label="Order quantity"
-                                className="w-16 px-1 py-0.5 text-sm border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => bumpQty(l.id, 1)}
-                                aria-label="Increase order quantity"
-                                className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
-                              >
-                                &#43;
-                              </button>
+                      return (
+                        <tr key={l.id} draggable className={`border-b border-gray-200 dark:border-gray-700 bg-indigo-50/50 dark:bg-indigo-900/10 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors ${l.sel ? 'bg-indigo-100/50 dark:bg-indigo-900/30' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
+                          <Td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Td>
+                          <Td className="px-1 py-2 cursor-grab text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-center">&#9776;</Td>
+                          <Td colSpan={3} className="px-3 py-2">
+                            <div className="flex items-center gap-2">
+                              {hasKids ? <button className="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition-transform" onClick={() => toggleExp(l.id)} style={{ transform: l.exp ? 'rotate(0)' : 'rotate(-90deg)' }}>&#9660;</button> : <span className="w-5 inline-block"></span>}
+                              <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${l.grpColor}`}>{abbr}</span>
+                              <input className="font-bold text-sm bg-transparent border border-transparent hover:border-gray-300 focus:border-purple-500 focus:bg-white dark:focus:bg-gray-800 rounded px-1 py-0.5 outline-none transition-colors w-48 text-gray-900 dark:text-white" value={l.grpName} onChange={e => setLines(prev => prev.map(x => x.id === l.id ? { ...x, grpName: e.target.value } : x))} />
+                              <span className="text-xs text-gray-500 dark:text-gray-400">{s.n} item{s.n !== 1 ? 's' : ''}</span>
                             </div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {lineMoq} / Avail: {l.avail ?? 0}</div>
-                          </div>
-                        </Td>
-                        <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">{lineMoq}</Td>
-                        <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-center">{totalQty}</Td>
-                        <Td className="px-3 py-2 text-sm font-semibold text-green-600 dark:text-green-400 text-right">{fmt(totalPrice)}</Td>
-                        <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
-                      </tr>
-                    );
-                  }
-                })}
-              </TBody>
-              <tfoot className="bg-gray-50 dark:bg-gray-800/80 border-t-2 border-gray-200 dark:border-gray-700">
-                <tr>
-                  <Td colSpan={8}></Td>
-                  <Td colSpan={3} className="px-3 py-3 text-right text-sm font-bold text-gray-700 dark:text-gray-300  tracking-wider">Order Total</Td>
-                  <Td className="px-3 py-3 text-right text-lg font-bold text-green-600 dark:text-green-400">{fmt(totalSell)}</Td>
-                  <Td></Td>
-                </tr>
-              </tfoot>
-            </Table>
+                          </Td>
+                          <Td colSpan={6}></Td>
+                          <Td className="px-3 py-2 text-right font-bold text-indigo-600 dark:text-indigo-400 text-sm">{fmt(s.ts)}</Td>
+                          <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
+                        </tr>
+                      );
+                    } else {
+                      const indent = (l.lv - 1) * 20;
+                      const lvColors = ['bg-gray-200 text-gray-700', 'bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-purple-100 text-purple-700'];
+                      const lvCls = lvColors[Math.min(l.lv - 1, 3)];
+                      const lineMoq = resolveMoq(l);
+                      const orderQty = safeOrderQty(l);
+                      const totalQty = lineTotalQty(l);
+                      const totalPrice = totalQty * l.sell;
+                      const atFloor = orderQty <= 1;
+                      return (
+                        <tr key={l.id} draggable className={`border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${l.sel ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
+                          <Td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Td>
+                          <Td className="px-1 py-2 cursor-grab text-gray-300 hover:text-gray-500 dark:hover:text-gray-400 text-center">&#9776;</Td>
+                          <Td className="px-3 py-2">
+                            <div className="flex items-center" style={{ paddingLeft: `${indent}px` }}>
+                              {hasKids ? <button className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-transform" onClick={() => toggleExp(l.id)} style={{ transform: l.exp ? 'rotate(0)' : 'rotate(-90deg)' }}>&#9660;</button> : <span className="w-5 inline-block"></span>}
+                              <span className={`ml-1 px-1.5 py-0.5 rounded text-xs font-bold ${lvCls}`}>{l.lv}</span>
+                            </div>
+                          </Td>
+                          <Td className="px-3 py-2 text-sm text-gray-500">{l.seq}</Td>
+                          <Td className="px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:underline cursor-pointer truncate max-w-[200px]" title={`${l.sku} - ${l.name}`}>{l.name}</Td>
+                          <Td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate max-w-[150px]" title={l.desc}>{l.desc}</Td>
+                          <Td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px]">{l.brand || '-'}</Td>
+                          <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-right">{fmt(l.sell)}</Td>
+                          <Td className="px-3 py-2 text-center">
+                            <div className="flex flex-col items-center gap-1">
+                              <div className="flex items-center justify-center gap-1">
+                                <button
+                                  type="button"
+                                  onClick={() => bumpQty(l.id, -1)}
+                                  disabled={atFloor}
+                                  aria-label="Decrease order quantity"
+                                  className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-gray-700"
+                                >
+                                  &#8722;
+                                </button>
+                                <input
+                                  type="text"
+                                  value={l.orderQty}
+                                  onChange={e => setOrderQty(l.id, e.target.value)}
+                                  onBlur={() => commitOrderQty(l.id)}
+                                  aria-label="Order quantity"
+                                  className="w-16 px-1 py-0.5 text-sm border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => bumpQty(l.id, 1)}
+                                  aria-label="Increase order quantity"
+                                  className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
+                                >
+                                  &#43;
+                                </button>
+                              </div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {lineMoq} / Avail: {l.avail ?? 0}</div>
+                            </div>
+                          </Td>
+                          <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">{lineMoq}</Td>
+                          <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-center">{totalQty}</Td>
+                          <Td className="px-3 py-2 text-sm font-semibold text-green-600 dark:text-green-400 text-right">{fmt(totalPrice)}</Td>
+                          <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
+                        </tr>
+                      );
+                    }
+                  })}
+                </TBody>
+                <tfoot className="bg-gray-50 dark:bg-gray-800/80 border-t-2 border-gray-200 dark:border-gray-700">
+                  <tr>
+                    <Td colSpan={8}></Td>
+                    <Td colSpan={3} className="px-3 py-3 text-right text-sm font-bold text-gray-700 dark:text-gray-300  tracking-wider">Order Total</Td>
+                    <Td className="px-3 py-3 text-right text-lg font-bold text-green-600 dark:text-green-400">{fmt(totalSell)}</Td>
+                    <Td></Td>
+                  </tr>
+                </tfoot>
+              </Table>
             )}
           </div>
         </div>
 
         {/* Panel Area (Catalog) */}
-        {panelOpen && (
+        {panelOpen && !indexName && (
           <div className="w-80 flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden flex-shrink-0 animate-in slide-in-from-right-4 duration-200">
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-sm text-gray-900 dark:text-white">Product Catalog</span>
-                <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-1.5 py-0.5 rounded-full font-bold">{filteredCatalog.length}/{catalog.length}</span>
-              </div>
+              <span className="font-semibold text-sm text-gray-900 dark:text-white">Product Catalog</span>
               <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors" onClick={() => setPanelOpen(false)}>&#10005;</button>
             </div>
-            <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-2">
-              <input type="search" placeholder="Search catalog..." value={catQ} onChange={e => setCatQ(e.target.value)} className="w-full px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary" />
-              <div className="flex gap-2">
-                <select value={fMfr} onChange={e => setFMfr(e.target.value)} className="flex-1 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-primary">
-                  <option value="">All Mfrs</option>
-                  {mfrs.map(m => <option key={m} value={m}>{m}</option>)}
-                </select>
-                <select value={fFamily} onChange={e => setFFamily(e.target.value)} className="flex-1 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-primary">
-                  <option value="">All Families</option>
-                  {fams.map(f => <option key={f} value={f}>{f}</option>)}
-                </select>
+            <div className="flex-1 overflow-y-auto p-2">
+              <div className="p-8 text-center text-gray-500 dark:text-gray-400 flex flex-col items-center">
+                <div className="text-3xl mb-2 opacity-30">&#9888;</div>
+                <div className="text-sm">Catalog not configured for your organization</div>
+                <div className="text-xs mt-1">Contact support to have your product catalog connected.</div>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-2">
-              {filteredCatalog.length > 0 ? filteredCatalog.map(p => {
-                let av = { text: p.avail + ' avail', cls: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' };
-                if (p.avail < 0) av = { text: 'Unlimited', cls: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' };
-                else if (p.avail === 0) av = { text: '0 avail', cls: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' };
-                const isAdding = addingIds.has(p.id);
-
-                return (
-                  <div key={p.id} className={`p-2.5 mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-gray-300 dark:hover:border-gray-500 shadow-sm transition-all flex gap-2 group ${isAdding ? 'opacity-50 cursor-wait' : 'cursor-grab'}`} draggable={!isAdding} onDragStart={e => startDrag(e, 'cat', p.id)}>
-                    <div className="text-gray-300 group-hover:text-gray-400 mt-1">&#9776;</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1 mb-1">
-                        <span className="text-xs text-gray-700 dark:text-gray-300 truncate" title={p.name}>{p.name}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-semibold text-gray-600 dark:text-gray-400 truncate max-w-[80px]">{trn(p.brand, 16)}</span>
-                        <span className="text-gray-500">Sell <span className="font-bold text-gray-900 dark:text-white">{fmt(p.sell)}</span></span>
-                        <span className={`px-1.5 py-0.5 rounded font-medium ${av.cls}`}>{av.text}</span>
-                      </div>
-                    </div>
-                    <button className="w-7 h-7 flex-shrink-0 flex items-center justify-center rounded border border-gray-200 dark:border-gray-600 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors self-center disabled:opacity-40 disabled:cursor-wait" onClick={() => addCat(p.id)} disabled={isAdding} title="Add to order">&#43;</button>
-                  </div>
-                );
-              }) : (
-                <div className="p-8 text-center text-gray-500 dark:text-gray-400 flex flex-col items-center">
-                  <div className="text-3xl mb-2 opacity-30">&#128270;</div>
-                  <div className="text-sm">No matches found</div>
-                </div>
-              )}
-            </div>
           </div>
+        )}
+        {panelOpen && indexName && (
+          <InstantSearch searchClient={searchClient} indexName={indexName} future={{ preserveSharedStateOnUnmount: true }}>
+            <BrowseCatalogPanel
+              addingIds={addingIds}
+              onAdd={addProductFromCatalog}
+              onDragStart={startDrag}
+              onClose={() => setPanelOpen(false)}
+            />
+          </InstantSearch>
         )}
       </div>
     </div>
   );
 
+}
+
+// Maps an Algolia hit into the Catalog Product Record shape the Browse Catalog panel renders.
+const mapHitToCatalogProduct = (h: any) => ({
+  id: h.objectID,
+  sku: h.sku || h.productcode || h.name || '',
+  name: h.name || '-',
+  desc: h.description || '',
+  mfr: h.manufacturer || '-',
+  brand: h.brand || h.brandName || '-',
+  family: h.family || h.category || 'General',
+  groupingLabel: h.groupingLabel || '',
+  sell: h.price ?? 0,
+  avail: h.available_quantity ?? h.gtherp__available_quantity__c ?? h.stock_quantity ?? 0,
+});
+
+// Browse Catalog panel body — must render under <InstantSearch> since useSearchBox/useInfiniteHits/useInstantSearch
+// require that context. Sourced live from the org's Algolia index via useInfiniteHits so search and scrolling reach
+// the full catalog (FR-006), never a fixed hitsPerPage ceiling.
+function BrowseCatalogPanel({ addingIds, onAdd, onDragStart, onClose }: {
+  addingIds: Set<string>;
+  onAdd: (prod: any) => void;
+  onDragStart: (e: React.DragEvent, type: string, id: string | number, payload?: any) => void;
+  onClose: () => void;
+}) {
+  const { query, refine: setQuery } = useSearchBox();
+  const { status } = useInstantSearch();
+  const { hits, isLastPage, showMore } = useInfiniteHits();
+  const [fMfr, setFMfr] = useState('');
+  const [fFamily, setFFamily] = useState('');
+  const sentinelRef = useRef(null);
+
+  const isLoading = status === 'loading' || status === 'stalled';
+  const catalog = useMemo(() => (hits || []).map(mapHitToCatalogProduct), [hits]);
+  const filteredCatalog = useMemo(() => catalog.filter(p =>
+    (!fMfr || p.mfr === fMfr) && (!fFamily || p.family === fFamily)
+  ), [catalog, fMfr, fFamily]);
+  const mfrs = useMemo(() => [...new Set(catalog.map(p => p.mfr))].sort(), [catalog]);
+  const fams = useMemo(() => [...new Set(catalog.map(p => p.family))].sort(), [catalog]);
+
+  // Infinite scroll: load the next page as the sentinel comes into view.
+  useEffect(() => {
+    if (!sentinelRef.current || isLastPage || isLoading) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) showMore(); });
+    }, { threshold: 0.1 });
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [isLastPage, showMore, isLoading]);
+
+  return (
+    <div className="w-80 flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden flex-shrink-0 animate-in slide-in-from-right-4 duration-200">
+      <Configure hitsPerPage={20} />
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+        <div className="flex items-center gap-2">
+          <span className="font-semibold text-sm text-gray-900 dark:text-white">Product Catalog</span>
+          <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-1.5 py-0.5 rounded-full font-bold">{filteredCatalog.length}/{catalog.length}</span>
+        </div>
+        <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors" onClick={onClose}>&#10005;</button>
+      </div>
+      <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-2">
+        <input type="search" placeholder="Search catalog..." value={query} onChange={e => setQuery(e.target.value)} className="w-full px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary" />
+        <div className="flex gap-2">
+          <select value={fMfr} onChange={e => setFMfr(e.target.value)} className="flex-1 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-primary">
+            <option value="">All Mfrs</option>
+            {mfrs.map(m => <option key={m} value={m}>{m}</option>)}
+          </select>
+          <select value={fFamily} onChange={e => setFFamily(e.target.value)} className="flex-1 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-primary">
+            <option value="">All Families</option>
+            {fams.map(f => <option key={f} value={f}>{f}</option>)}
+          </select>
+        </div>
+      </div>
+      <div className="flex-1 overflow-y-auto p-2">
+        {filteredCatalog.length > 0 ? filteredCatalog.map(p => {
+          let av = { text: p.avail + ' avail', cls: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' };
+          if (p.avail < 0) av = { text: 'Unlimited', cls: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' };
+          else if (p.avail === 0) av = { text: '0 avail', cls: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' };
+          const isAdding = addingIds.has(p.id);
+
+          return (
+            <div key={p.id} className={`p-2.5 mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-gray-300 dark:hover:border-gray-500 shadow-sm transition-all flex gap-2 group ${isAdding ? 'opacity-50 cursor-wait' : 'cursor-grab'}`} draggable={!isAdding} onDragStart={e => onDragStart(e, 'cat', p.id, p)}>
+              <div className="text-gray-300 group-hover:text-gray-400 mt-1">&#9776;</div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1 mb-1">
+                  <span className="text-xs text-gray-700 dark:text-gray-300 truncate" title={p.name}>{p.name}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-gray-600 dark:text-gray-400 truncate max-w-[80px]">{trn(p.brand, 16)}</span>
+                  <span className="text-gray-500">Sell <span className="font-bold text-gray-900 dark:text-white">{fmt(p.sell)}</span></span>
+                  <span className={`px-1.5 py-0.5 rounded font-medium ${av.cls}`}>{av.text}</span>
+                </div>
+              </div>
+              <button className="w-7 h-7 flex-shrink-0 flex items-center justify-center rounded border border-gray-200 dark:border-gray-600 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors self-center disabled:opacity-40 disabled:cursor-wait" onClick={() => onAdd(p)} disabled={isAdding} title="Add to order">&#43;</button>
+            </div>
+          );
+        }) : isLoading ? (
+          <div className="p-8 text-center text-gray-500 dark:text-gray-400 text-sm">Loading catalog…</div>
+        ) : catalog.length === 0 && !query && !fMfr && !fFamily ? (
+          <div className="p-8 text-center text-gray-500 dark:text-gray-400 flex flex-col items-center">
+            <div className="text-3xl mb-2 opacity-30">&#128230;</div>
+            <div className="text-sm">No products have been synced yet</div>
+          </div>
+        ) : (
+          <div className="p-8 text-center text-gray-500 dark:text-gray-400 flex flex-col items-center">
+            <div className="text-3xl mb-2 opacity-30">&#128270;</div>
+            <div className="text-sm">No matches found</div>
+          </div>
+        )}
+        {!isLastPage && <div ref={sentinelRef} className="h-4" />}
+      </div>
+    </div>
+  );
 }
