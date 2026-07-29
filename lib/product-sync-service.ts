@@ -120,6 +120,9 @@ export async function syncNewProductToPostgresAndAlgolia(
         productData.Family ?? productData.family ?? null,                                     // $5  family
         productData.Description ?? productData.description ?? null,                           // $6  description
         resolveLookupName(productData, 'Manufacturer_Name') ?? productData.gtherp__Manufacturer_Name__c ?? productData.Manufacturer_Name__c ?? null, // $7  manufacturer_name__c
+        // NULL (not '') is the canonical "no brand assigned" value — product-load-service.ts's
+        // bulk sync follows this same convention so callers can tell "no brand" apart from
+        // "not yet synced" (a product2 row that doesn't exist at all).
         resolveLookupName(productData, 'Brand_Name') ?? productData.gtherp__Brand_Name__c ?? productData.Brand_Name__c ?? null,                       // $8  gtherp__brand_name__c
         productData.gtherp__price__c ?? productData.gtherp__Selling_Unit_Price__c ?? 0,      // $9  gtherp__price__c (selling price)
         productData.list_price__c ?? productData.List_Price__c ?? productData.UnitPrice ?? 0, // $10 list_price__c (list price)
@@ -181,7 +184,7 @@ export async function syncNewProductToPostgresAndAlgolia(
       sub_category: productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null,
       family: productData.Product_Family__c ?? productData.product_family__c ?? productData.Family ?? productData.family ?? '',
       manufacturer: resolveLookupName(productData, 'Manufacturer_Name') ?? productData.gtherp__Manufacturer_Name__c ?? productData.Manufacturer_Name__c ?? '',
-      brand: resolveLookupName(productData, 'Brand_Name') ?? productData.gtherp__Brand_Name__c ?? productData.Brand_Name__c ?? '',
+      brand: resolveLookupName(productData, 'Brand_Name') ?? productData.gtherp__Brand_Name__c ?? productData.Brand_Name__c ?? productData.Product_Brand_Name__c ?? '',
       status: productData.IsActive === false ? 'inactive' : 'active',
       is_active: productData.IsActive === false ? false : true,
       product_availability: productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? '',

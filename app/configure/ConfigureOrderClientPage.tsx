@@ -106,7 +106,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
     }
     let cancelled = false;
     index.search('', { hitsPerPage: 1000 })
-      .then(({ hits }) => {
+      .then(async ({ hits }) => {
         if (cancelled) return;
         const cat = (hits || []).map((h: any) => ({
           id: h.objectID,
@@ -114,12 +114,29 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
           name: h.name || '-',
           desc: h.description || '',
           mfr: h.manufacturer || '-',
-          brand: h.brand || h.brandName || '-',
+          brand: h.brand || h.brandName || h.Brand_Name__c || h.gtherp__Brand_Name__c || h.gtherp__brand_name__c || '-',
           family: h.family || h.category || 'General',
           groupingLabel: h.groupingLabel || '',
           sell: h.price ?? 0,
           avail: h.available_quantity ?? h.gtherp__available_quantity__c ?? h.stock_quantity ?? 0,
         }));
+        
+        const missingIds = cat.filter(p => p.brand === '-').map(p => p.id);
+        if (missingIds.length > 0) {
+          try {
+            for (let i = 0; i < missingIds.length; i += 100) {
+              const chunk = missingIds.slice(i, i + 100);
+              const res = await fetch(`/api/products/brands?ids=${chunk.join(',')}`);
+              if (res.ok) {
+                const mapping = await res.json();
+                // A key present with '' means "synced, no brand" — must resolve to a final
+                // display value, not be left at the '-' placeholder that means "unresolved".
+                cat.forEach(p => { if (p.id in mapping) p.brand = mapping[p.id] || 'No Brand'; });
+              }
+            }
+          } catch (e) { console.error('Failed to fetch fallback brands', e); }
+        }
+        
         setCatalog(cat);
       })
       .catch(err => {
@@ -905,7 +922,7 @@ const mapHitToCatalogProduct = (h: any) => ({
   name: h.name || '-',
   desc: h.description || '',
   mfr: h.manufacturer || '-',
-  brand: h.brand || h.brandName || '-',
+  brand: h.brand || h.brandName || h.Brand_Name__c || h.gtherp__Brand_Name__c || h.gtherp__brand_name__c || '-',
   family: h.family || h.category || 'General',
   groupingLabel: h.groupingLabel || '',
   sell: h.price ?? 0,
@@ -928,8 +945,42 @@ function BrowseCatalogPanel({ addingIds, onAdd, onDragStart, onClose }: {
   const [fFamily, setFFamily] = useState('');
   const sentinelRef = useRef(null);
 
+  const [brandsMap, setBrandsMap] = useState<Record<string, string>>({});
+  // Ids already sent to /api/products/brands, resolved or not — prevents refetching ids the
+  // backend has no brand for (which would otherwise never leave `missingIds` and loop forever).
+  const attemptedBrandIdsRef = useRef<Set<string>>(new Set());
+
   const isLoading = status === 'loading' || status === 'stalled';
-  const catalog = useMemo(() => (hits || []).map(mapHitToCatalogProduct), [hits]);
+  const catalog = useMemo(() => {
+    return (hits || []).map(h => {
+      const p = mapHitToCatalogProduct(h);
+      // A key present with '' means "synced, no brand" — resolve to a final display value,
+      // not the '-' placeholder that means "unresolved".
+      if (p.brand === '-' && p.id in brandsMap) p.brand = brandsMap[p.id] || 'No Brand';
+      return p;
+    });
+  }, [hits, brandsMap]);
+
+  useEffect(() => {
+    const fetchMissingBrands = async () => {
+      const missingIds = (hits || [])
+        .map(mapHitToCatalogProduct)
+        .filter(p => p.brand === '-' && !attemptedBrandIdsRef.current.has(p.id))
+        .map(p => p.id);
+
+      if (missingIds.length === 0) return;
+      missingIds.forEach(id => attemptedBrandIdsRef.current.add(id));
+      try {
+        const res = await fetch(`/api/products/brands?ids=${missingIds.join(',')}`);
+        if (res.ok) {
+          const mapping = await res.json();
+          setBrandsMap(prev => ({ ...prev, ...mapping }));
+        }
+      } catch (e) { console.error(e); }
+    };
+    fetchMissingBrands();
+  }, [hits]);
+
   const filteredCatalog = useMemo(() => catalog.filter(p =>
     (!fMfr || p.mfr === fMfr) && (!fFamily || p.family === fFamily)
   ), [catalog, fMfr, fFamily]);

@@ -101,5 +101,5 @@ Each business domain has a dedicated service file in `lib/`:
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/070-fix-orderline-delete-persist/plan.md
+at specs/071-product-brand-sync/plan.md
 <!-- SPECKIT END -->
