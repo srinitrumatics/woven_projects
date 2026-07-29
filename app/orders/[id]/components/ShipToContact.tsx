@@ -57,7 +57,7 @@ export default function ShipToContact({
                             ) : (
                                 shipContacts.map(contact => (
                                     <option key={contact.Id} value={contact.Id}>
-                                        {contact.Name} - {contact.Email}
+                                        {contact.Name}
                                     </option>
                                 ))
                             )}
