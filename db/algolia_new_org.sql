@@ -90,9 +90,15 @@ BEGIN
         'name', product_row.name,
         'description', product_row.description,
         'price', COALESCE(product_row.gtherp__price__c, 0),
+        'listPrice', COALESCE(product_row.list_price__c, product_row.gtherp__price__c, 0),
+        'unitPrice', COALESCE(product_row.gtherp__price__c, 0),
         'stock_quantity', COALESCE(product_row.gtherp__stock_quantity__c, 0),
         'available_quantity', COALESCE(product_row.gtherp__available_quantity__c, 0),
         'discount', COALESCE(product_row.gtherp__discount__c, 0),
+
+        -- New fields
+        'moq', COALESCE(product_row.gtherp__moq__c, 0),
+        'available_to_sell', COALESCE(product_row.gtherp__available_to_sell__c, 0),
         
         -- Primary image URL (first image for backward compatibility)
         'image_url', CASE
@@ -112,9 +118,11 @@ BEGIN
         END,
         
         -- Categories and Family
-        'category', product_row.family,
-        'sub_category', 'sub_category',
+        'category', product_row.gtherp__category__c,
+        'sub_category', product_row.gtherp__sub_category__c,
+        'family', product_row.family,
         'manufacturer', product_row.manufacturer_name__c,
+        'brand', product_row.gtherp__brand_name__c,
         
         'status', CASE WHEN product_row.isactive THEN 'active' ELSE 'inactive' END,
         'is_active', product_row.isactive,
@@ -127,16 +135,16 @@ BEGIN
         -- Searchable tags (remove NULLs)
         '_tags', ARRAY_REMOVE(ARRAY[
             product_row.family,
-            product_row.family, 
-            product_row.gtherp__category__c, 
+            product_row.gtherp__category__c,
             product_row.gtherp__sub_category__c,
-            product_row.gtherp__category__c, 
             product_row.manufacturer_name__c,
+            product_row.gtherp__brand_name__c,
             product_row.product_availability__c
         ], NULL)
     ));
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
+
 
 -- ============================================
 -- 7. QUEUE MANAGEMENT FUNCTIONS

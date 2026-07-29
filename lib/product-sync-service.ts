@@ -87,10 +87,12 @@ export async function syncNewProductToPostgresAndAlgolia(
         product_availability__c,
         gtherp__category__c,
         gtherp__sub_category__c,
+        gtherp__moq__c,
+        gtherp__available_to_sell__c,
         createddate,
         systemmodstamp
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, COALESCE($15, NOW()), NOW()
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, COALESCE($17, NOW()), NOW()
       )
       ON CONFLICT (sfid) DO UPDATE SET
         name                          = EXCLUDED.name,
@@ -106,6 +108,8 @@ export async function syncNewProductToPostgresAndAlgolia(
         product_availability__c       = EXCLUDED.product_availability__c,
         gtherp__category__c           = EXCLUDED.gtherp__category__c,
         gtherp__sub_category__c       = EXCLUDED.gtherp__sub_category__c,
+        gtherp__moq__c                = EXCLUDED.gtherp__moq__c,
+        gtherp__available_to_sell__c  = EXCLUDED.gtherp__available_to_sell__c,
         systemmodstamp                = NOW()
       `,
       [
@@ -123,8 +127,11 @@ export async function syncNewProductToPostgresAndAlgolia(
         productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? null, // $12
         productData.gtherp__category__c ?? productData.Category__c ?? productData.Family ?? productData.family ?? null, // $13
         productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null,           // $14
-        productData.CreatedDate ? new Date(productData.CreatedDate).toISOString() : null,     // $15 createddate
+        productData.gtherp__MOQ__c ?? productData.gtherp__moq__c ?? productData.MOQ__c ?? 0, // $15 gtherp__moq__c
+        productData.gtherp__Available_To_Sell__c ?? productData.Available_To_Sell__c ?? 0,     // $16 gtherp__available_to_sell__c
+        productData.CreatedDate ? new Date(productData.CreatedDate).toISOString() : null,     // $17 createddate
       ]
+
     );
   } catch (pgErr: any) {
     console.error(`[ProductSync] ❌ PostgreSQL upsert failed for ${sfProductId}:`, pgErr.message);
@@ -165,6 +172,8 @@ export async function syncNewProductToPostgresAndAlgolia(
       unitPrice: productData.gtherp__price__c ?? productData.gtherp__Selling_Unit_Price__c ?? productData.UnitPrice__c ?? 0,
       stock_quantity: 0,
       available_quantity: productData.gtherp__Available_To_Sell__c ?? productData.Available_To_Sell__c ?? 0,
+      moq: productData.gtherp__MOQ__c ?? productData.gtherp__moq__c ?? productData.MOQ__c ?? 0,
+      available_to_sell: productData.gtherp__Available_To_Sell__c ?? productData.Available_To_Sell__c ?? 0,
       discount: 0,
       image_url: productData.image_url ?? null,
       images: productData.images ?? [],

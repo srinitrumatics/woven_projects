@@ -438,7 +438,10 @@ CREATE TABLE salesforce.product2 (
     createddate timestamp without time zone,
     systemmodstamp timestamp without time zone,
     product_availability__c character varying(255),
-    list_price__c numeric
+    list_price__c numeric,
+    gtherp__brand_name__c character varying(255),
+    gtherp__moq__c numeric,
+    gtherp__available_to_sell__c numeric
 );
 
 
@@ -464,6 +467,8 @@ CREATE FUNCTION salesforce.transform_sf_product_for_algolia(product_row salesfor
          'stock_quantity', COALESCE(product_row.gtherp__stock_quantity__c, 0),
          'available_quantity', COALESCE(product_row.gtherp__available_quantity__c, 0),
          'discount', COALESCE(product_row.gtherp__discount__c, 0),
+         'moq', COALESCE(product_row.gtherp__moq__c, 0),
+         'available_to_sell', COALESCE(product_row.gtherp__available_to_sell__c, 0),
 
          -- Primary image URL (first image for backward compatibility)
          'image_url', CASE
@@ -487,6 +492,7 @@ CREATE FUNCTION salesforce.transform_sf_product_for_algolia(product_row salesfor
          'sub_category', product_row.gtherp__sub_category__c,
          'family', product_row.family,
          'manufacturer', product_row.manufacturer_name__c,
+         'brand', product_row.gtherp__brand_name__c,
 
          'status', CASE WHEN product_row.isactive THEN 'active' ELSE 'inactive' END,
          'is_active', product_row.isactive,
@@ -501,6 +507,7 @@ CREATE FUNCTION salesforce.transform_sf_product_for_algolia(product_row salesfor
              product_row.gtherp__category__c,
              product_row.gtherp__sub_category__c,
              product_row.manufacturer_name__c,
+             product_row.gtherp__brand_name__c,
              product_row.product_availability__c
          ], NULL)
      ));
@@ -1019,7 +1026,10 @@ CREATE TABLE sf_00dcb00000deud4eah.product2 (
     product_availability__c character varying(255),
     createddate timestamp without time zone,
     systemmodstamp timestamp without time zone,
-    list_price__c numeric
+    list_price__c numeric,
+    gtherp__brand_name__c character varying(255),
+    gtherp__moq__c numeric,
+    gtherp__available_to_sell__c numeric
 );
 
 
@@ -1045,6 +1055,8 @@ CREATE FUNCTION sf_00dcb00000deud4eah.transform_sf_product_for_algolia(product_r
          'stock_quantity', COALESCE(product_row.gtherp__stock_quantity__c, 0),
          'available_quantity', COALESCE(product_row.gtherp__available_quantity__c, 0),
          'discount', COALESCE(product_row.gtherp__discount__c, 0),
+         'moq', COALESCE(product_row.gtherp__moq__c, 0),
+         'available_to_sell', COALESCE(product_row.gtherp__available_to_sell__c, 0),
          'image_url', CASE
              WHEN product_row.image_url IS NOT NULL AND product_row.image_url->'images' IS NOT NULL
                   AND jsonb_array_length(product_row.image_url->'images') > 0
@@ -1060,6 +1072,7 @@ CREATE FUNCTION sf_00dcb00000deud4eah.transform_sf_product_for_algolia(product_r
          'sub_category', product_row.gtherp__sub_category__c,
          'family', product_row.family,
          'manufacturer', product_row.manufacturer_name__c,
+         'brand', product_row.gtherp__brand_name__c,
          'status', CASE WHEN product_row.isactive THEN 'active' ELSE 'inactive' END,
          'is_active', product_row.isactive,
          'product_availability', product_row.product_availability__c,
@@ -1068,7 +1081,7 @@ CREATE FUNCTION sf_00dcb00000deud4eah.transform_sf_product_for_algolia(product_r
          '_tags', ARRAY_REMOVE(ARRAY[
              product_row.family, product_row.gtherp__category__c,
              product_row.gtherp__sub_category__c, product_row.manufacturer_name__c,
-             product_row.product_availability__c
+             product_row.gtherp__brand_name__c, product_row.product_availability__c
          ], NULL)
      ));
  END;
@@ -1586,7 +1599,10 @@ CREATE TABLE sf_546546ffdfdsfd.product2 (
     product_availability__c character varying(255),
     createddate timestamp without time zone,
     systemmodstamp timestamp without time zone,
-    list_price__c numeric
+    list_price__c numeric,
+    gtherp__brand_name__c character varying(255),
+    gtherp__moq__c numeric,
+    gtherp__available_to_sell__c numeric
 );
 
 
@@ -1612,6 +1628,8 @@ CREATE FUNCTION sf_546546ffdfdsfd.transform_sf_product_for_algolia(product_row s
          'stock_quantity', COALESCE(product_row.gtherp__stock_quantity__c, 0),
          'available_quantity', COALESCE(product_row.gtherp__available_quantity__c, 0),
          'discount', COALESCE(product_row.gtherp__discount__c, 0),
+         'moq', COALESCE(product_row.gtherp__moq__c, 0),
+         'available_to_sell', COALESCE(product_row.gtherp__available_to_sell__c, 0),
          'image_url', CASE
              WHEN product_row.image_url IS NOT NULL AND product_row.image_url->'images' IS NOT NULL
                   AND jsonb_array_length(product_row.image_url->'images') > 0
@@ -1627,6 +1645,7 @@ CREATE FUNCTION sf_546546ffdfdsfd.transform_sf_product_for_algolia(product_row s
          'sub_category', product_row.gtherp__sub_category__c,
          'family', product_row.family,
          'manufacturer', product_row.manufacturer_name__c,
+         'brand', product_row.gtherp__brand_name__c,
          'status', CASE WHEN product_row.isactive THEN 'active' ELSE 'inactive' END,
          'is_active', product_row.isactive,
          'product_availability', product_row.product_availability__c,
@@ -1635,7 +1654,7 @@ CREATE FUNCTION sf_546546ffdfdsfd.transform_sf_product_for_algolia(product_row s
          '_tags', ARRAY_REMOVE(ARRAY[
              product_row.family, product_row.gtherp__category__c,
              product_row.gtherp__sub_category__c, product_row.manufacturer_name__c,
-             product_row.product_availability__c
+             product_row.gtherp__brand_name__c, product_row.product_availability__c
          ], NULL)
      ));
  END;
@@ -2153,7 +2172,10 @@ CREATE TABLE sf_tyu57865785dgdds.product2 (
     product_availability__c character varying(255),
     createddate timestamp without time zone,
     systemmodstamp timestamp without time zone,
-    list_price__c numeric
+    list_price__c numeric,
+    gtherp__brand_name__c character varying(255),
+    gtherp__moq__c numeric,
+    gtherp__available_to_sell__c numeric
 );
 
 
@@ -2179,6 +2201,8 @@ CREATE FUNCTION sf_tyu57865785dgdds.transform_sf_product_for_algolia(product_row
          'stock_quantity', COALESCE(product_row.gtherp__stock_quantity__c, 0),
          'available_quantity', COALESCE(product_row.gtherp__available_quantity__c, 0),
          'discount', COALESCE(product_row.gtherp__discount__c, 0),
+         'moq', COALESCE(product_row.gtherp__moq__c, 0),
+         'available_to_sell', COALESCE(product_row.gtherp__available_to_sell__c, 0),
          'image_url', CASE
              WHEN product_row.image_url IS NOT NULL AND product_row.image_url->'images' IS NOT NULL
                   AND jsonb_array_length(product_row.image_url->'images') > 0
@@ -2194,6 +2218,7 @@ CREATE FUNCTION sf_tyu57865785dgdds.transform_sf_product_for_algolia(product_row
          'sub_category', product_row.gtherp__sub_category__c,
          'family', product_row.family,
          'manufacturer', product_row.manufacturer_name__c,
+         'brand', product_row.gtherp__brand_name__c,
          'status', CASE WHEN product_row.isactive THEN 'active' ELSE 'inactive' END,
          'is_active', product_row.isactive,
          'product_availability', product_row.product_availability__c,
@@ -2202,7 +2227,7 @@ CREATE FUNCTION sf_tyu57865785dgdds.transform_sf_product_for_algolia(product_row
          '_tags', ARRAY_REMOVE(ARRAY[
              product_row.family, product_row.gtherp__category__c,
              product_row.gtherp__sub_category__c, product_row.manufacturer_name__c,
-             product_row.product_availability__c
+             product_row.gtherp__brand_name__c, product_row.product_availability__c
          ], NULL)
      ));
  END;

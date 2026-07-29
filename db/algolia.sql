@@ -135,6 +135,10 @@ BEGIN
         'stock_quantity', COALESCE(product_row.gtherp__stock_quantity__c, 0),
         'available_quantity', COALESCE(product_row.gtherp__available_quantity__c, 0),
         'discount', COALESCE(product_row.gtherp__discount__c, 0),
+
+        -- New fields
+        'moq', COALESCE(product_row.gtherp__moq__c, 0),
+        'available_to_sell', COALESCE(product_row.gtherp__available_to_sell__c, 0),
         
         -- Primary image URL (first image for backward compatibility)
         'image_url', CASE
@@ -180,6 +184,7 @@ BEGIN
     ));
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
+
 
 -- ============================================
 -- 7. QUEUE MANAGEMENT FUNCTIONS

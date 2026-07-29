@@ -12,6 +12,7 @@ const COLUMNS = [
   'gtherp__available_quantity__c', 'gtherp__discount__c',
   'gtherp__category__c', 'gtherp__sub_category__c',
   'manufacturer_name__c', 'gtherp__brand_name__c', 'product_availability__c',
+  'gtherp__moq__c', 'gtherp__available_to_sell__c',
   'createddate', 'systemmodstamp',
 ] as const;
 
@@ -50,7 +51,7 @@ async function fetchAllProducts(accessToken: string, instanceUrl: string) {
   const query = `
     SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp,
            gtherp__Product_Availability__c, gtherp__Manufacturer_Name__r.Name, gtherp__Brand_Name__r.Name,
-           gtherp__Available_To_Sell__c,
+           gtherp__Available_To_Sell__c, gtherp__MOQ__c,
            (SELECT Id, Name, UnitPrice, gtherp__Selling_Unit_Price__c FROM PricebookEntries)
     FROM Product2
     WHERE IsActive = true
@@ -95,6 +96,8 @@ function toRow(p: any): any[] {
     p.gtherp__Manufacturer_Name__r?.Name || '',
     p.gtherp__Brand_Name__r?.Name || '',
     p.gtherp__Product_Availability__c || '',
+    p.gtherp__MOQ__c ?? 0,
+    p.gtherp__Available_To_Sell__c ?? 0,
     p.CreatedDate, p.SystemModstamp || null,
   ];
 }
@@ -124,6 +127,8 @@ function buildUpsertQuery(schemaName: string, rowCount: number): string {
       manufacturer_name__c = EXCLUDED.manufacturer_name__c,
       gtherp__brand_name__c = EXCLUDED.gtherp__brand_name__c,
       product_availability__c = EXCLUDED.product_availability__c,
+      gtherp__moq__c = EXCLUDED.gtherp__moq__c,
+      gtherp__available_to_sell__c = EXCLUDED.gtherp__available_to_sell__c,
       systemmodstamp = EXCLUDED.systemmodstamp
   `;
 }
@@ -166,6 +171,15 @@ export async function runLoadAsync(schemaName: string, runId: string, org: Org):
     // Idempotent, matches the defensive migration in the original combined sync route.
     await client.query(
       `ALTER TABLE "${schemaName}".product2 ADD COLUMN IF NOT EXISTS list_price__c NUMERIC;`
+    );
+    await client.query(
+      `ALTER TABLE "${schemaName}".product2 ADD COLUMN IF NOT EXISTS gtherp__moq__c NUMERIC;`
+    );
+    await client.query(
+      `ALTER TABLE "${schemaName}".product2 ADD COLUMN IF NOT EXISTS gtherp__available_to_sell__c NUMERIC;`
+    );
+    await client.query(
+      `ALTER TABLE "${schemaName}".product2 ADD COLUMN IF NOT EXISTS gtherp__brand_name__c VARCHAR(255);`
     );
 
     const active = products.filter((p) => {

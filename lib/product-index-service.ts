@@ -21,6 +21,8 @@ function buildAlgoliaPayload(row: any) {
     stock_quantity: row.gtherp__stock_quantity__c ?? 0,
     available_quantity: row.gtherp__available_quantity__c ?? 0,
     discount: row.gtherp__discount__c ?? 0,
+    moq: row.gtherp__moq__c ?? 0,
+    available_to_sell: row.gtherp__available_to_sell__c ?? 0,
     image_url: images[0]?.url ?? null,
     images,
     category: row.gtherp__category__c,
@@ -37,6 +39,7 @@ function buildAlgoliaPayload(row: any) {
     _tags: [row.family, row.gtherp__category__c, row.gtherp__sub_category__c, row.manufacturer_name__c, row.gtherp__brand_name__c, row.product_availability__c].filter(Boolean),
   };
 }
+
 
 /**
  * Resolves Algolia credentials for a schema, mirroring the exact precedence

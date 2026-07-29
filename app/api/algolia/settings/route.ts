@@ -61,7 +61,7 @@ export async function PATCH() {
         // Not JSON — treat as a schema label/name for reference only
         schemaSource = `organizations.algolia_schema (label: '${algoliaSchema}')`;
       }
-    } else {}
+    } else { }
 
     // ── Merge: schema JSON overrides take priority over defaults ──────────────
     const finalSettings = { ...DEFAULT_SETTINGS, ...schemaOverride };
