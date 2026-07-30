@@ -33,7 +33,7 @@ interface ManifestLineItem {
     Tracking_Status__c?: string;
     Estimated_Delivery_Date__c?: string;
     Shipping_Manifest_Line_Notes__c?: string;
-
+    IsSerialControlled__c: boolean;
     Unit_Price__c?: number;
     Total_Order_Qty__c?: number;
     Total_Price__c?: number;
@@ -63,9 +63,9 @@ export default function ShipmentLineDetailPage({
     const [serialCount, setSerialCount] = useState<number | undefined>(undefined);
     const [filesCount, setFilesCount] = useState<number | undefined>(undefined);
 
-  const { user, selectedAccount } = useUserSession();
-  const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
-  const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
+    const { user, selectedAccount } = useUserSession();
+    const SF_ACCOUNT_ID = selectedAccount?.Id || selectedAccount?.id || "";
+    const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     useEffect(() => {
         async function fetchLineData() {

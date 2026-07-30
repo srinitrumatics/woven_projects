@@ -40,7 +40,7 @@ interface ProposalProductItem {
     Product_Brand_Name__c?: string;
     Brand_Name__c?: string;
     Lead_Time_Wks__c?: number;
-    Shipping_Dimensions__c?: string;
+    ShippingDimensions__c?: string;
     // Tax Fields
     Total_VAT_Amount__c?: number;
     VAT_Rate__c?: number;
@@ -58,6 +58,7 @@ interface ProposalProductItem {
     Sales_Tax_Rate__c?: number;
     Site_Name?: string;
     Inventory_Account_Name?: string;
+    Status_c: string;
 }
 
 // Interface for mapped product data
@@ -88,6 +89,7 @@ interface ProductData {
     totalCost: string;
     moq: number;
     taxDetail: TaxDetail;
+    status: string;
 }
 
 export default function ProposalProductDetailPage({
@@ -440,7 +442,7 @@ export default function ProposalProductDetailPage({
                         grouping: item.Groupings__c || "",
                         brand: item.Product_Brand_Name__c || item.Brand_Name__c || "-",
                         leadTimeWks: item.Lead_Time_Wks__c,
-                        shippingDimensions: item.Shipping_Dimensions__c || "-",
+                        shippingDimensions: item.ShippingDimensions__c || "-",
                         ProductNotes: item.Proposed_Product_Notes__c,
                         site: item.Site_Name || "",
                         inventoryAccount: item.Inventory_Account_Name || "",
@@ -450,6 +452,7 @@ export default function ProposalProductDetailPage({
                         unitCost: item.Unit_Cost__c != null ? `$${item.Unit_Cost__c.toFixed(2)}` : "Hide",
                         totalCost: item.Total_Cost__c != null ? `$${item.Total_Cost__c.toFixed(2)}` : "Hide",
                         moq: item.MOQ__c || 1,
+                        status: item.Status_c || "",
 
                         taxDetail: {
                             id: item.Id,
@@ -581,7 +584,9 @@ export default function ProposalProductDetailPage({
                     <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1 min-w-0">
                         <button className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Proposals</button>
                         <span>&gt;</span>
-                        <button className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Proposal Details</button>
+                        <Link href={`/proposals/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors inline-flex items-center gap-2 truncate">
+                            <button className="hover:text-gray-700 dark:hover:text-gray-300 truncate">Proposal Details</button>
+                        </Link>
                         <span>&gt;</span>
                         <span className="text-gray-900 dark:text-white truncate">Proposed Product</span>
                     </div>
@@ -596,6 +601,14 @@ export default function ProposalProductDetailPage({
                                 </svg>
                                 Back to Proposal
                             </Link>
+                        </div>
+                        <div className="flex items-center gap-2 mt-1 min-w-0">
+                            <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded truncate">
+                                Line {lineNumber} of {totalLines}
+                                <br />
+
+                            </span>
+
                         </div>
                     </div>
                 </div>
@@ -685,6 +698,7 @@ export default function ProposalProductDetailPage({
                     <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded truncate">
                         Line {lineNumber} of {totalLines}
                     </span>
+                    <StatusBadge status={product.status} />
                 </div>
             </div>
 
@@ -1153,5 +1167,31 @@ export default function ProposalProductDetailPage({
                 }
             </div >
         </Sidebar >
+
+    );
+}
+function StatusBadge({ status }: { status: string }) {
+    const getStyles = () => {
+        switch (status) {
+            case "Approved":
+            case "Awarded":
+            case "Paid":
+                return "bg-green-100/80 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50";
+            case "Pending":
+                return "bg-yellow-100/80 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800/50";
+            case "Draft":
+                return "bg-blue-100/80 text-blue-600 border-blue-200 dark:bg-blue-700 dark:text-blue-300 dark:border-blue-600/50";
+            case "Cancelled":
+            case "Closed":
+                return "bg-red-100/80 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50";
+            default:
+                return "bg-gray-100/80 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800/50";
+        }
+    };
+
+    return (
+        <span className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-bold border ${getStyles()}`}>
+            {status}
+        </span>
     );
 }

@@ -42,7 +42,7 @@ interface OrderLineItem {
   Total_Cost__c?: number;
   Manufacturer_DBA__c?: string;
   Lead_Time_Wks__c?: number;
-  Shipping_Dimensions__c?: string;
+  ShippingDimensions__c?: string;
   Site_Name?: string;
   Inventory_Account_Name?: string;
   Customer_Order_Line_Notes__c?: string;
@@ -197,7 +197,7 @@ export default function OrderLineDetailPage({
               isTaxable: item.IsTaxable__c === true ? "Yes" : "No",
               availableToSell: item.Available_To_Sell__c || 0,
               leadTimeWks: item.Lead_Time_Wks__c,
-              shippingDimensions: item.Shipping_Dimensions__c || "",
+              shippingDimensions: item.ShippingDimensions__c || "",
               qtyShipped: item.Qty_Shipped__c || 0,
               unitCost: item.Unit_Cost__c != null ? `$${item.Unit_Cost__c.toFixed(2)}` : "Hide",
               totalCost: item.Total_Cost__c != null ? `$${item.Total_Cost__c.toFixed(2)}` : "Hide",

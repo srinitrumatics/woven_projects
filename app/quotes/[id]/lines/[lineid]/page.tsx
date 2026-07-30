@@ -26,7 +26,7 @@ interface QuoteLineItem {
     Product_Brand_Name__c?: string;
     Brand_Name__c?: string;
     Lead_Time_Wks__c?: number;
-    Shipping_Dimensions__c?: string;
+    ShippingDimensions__c?: string;
     Product_Family__c?: string;
     Product_Grouping__c?: string;
     Groupings__c?: string;
@@ -185,7 +185,7 @@ export default function QuoteLineDetailPage({
                         productFamily: item.Product_Family__c || "",
                         brand: item.Product_Brand_Name__c || item.Brand_Name__c || item.Brand__c || "-",
                         leadTimeWks: item.Lead_Time_Wks__c,
-                        shippingDimensions: item.Shipping_Dimensions__c || "-",
+                        shippingDimensions: item.ShippingDimensions__c || "-",
                         productGrouping: item.Product_Grouping__c || "",
                         grouping: item.Grouping__c || "",
                         notes: item.Customer_Quote_Line_Notes__c || "",

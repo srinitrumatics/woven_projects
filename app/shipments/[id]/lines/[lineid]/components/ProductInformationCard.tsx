@@ -3,11 +3,9 @@ import { formatDate } from "@/lib/utils/formatting";
 export default function ProductInformationCard({ product }: { product: any }) {
     if (!product) return null;
 
-    const serialControlled = product.Is_Serial_Tracked__c !== undefined
-        ? (product.Is_Serial_Tracked__c ? "Yes" : "No")
-        : product.Serial_Controlled__c !== undefined
-            ? (product.Serial_Controlled__c ? "Yes" : "No")
-            : "—";
+    const serialControlled = product.IsSerialControlled__c !== undefined
+        ? (product.IsSerialControlled__c ? "Yes" : "No")
+        : "—";
 
     return (
         <div className="w1025:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full">
