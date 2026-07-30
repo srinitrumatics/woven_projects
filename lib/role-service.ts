@@ -1,5 +1,5 @@
 import { db } from '../db';
-import { roles, permissions, rolePermissions, permissionGroups } from '../db/schema';
+import { roles, permissions, rolePermissions, permissionGroups, userRoles } from '../db/schema';
 import { eq, and, or, inArray } from 'drizzle-orm';
 import { NewRole, NewPermissionGroup } from '../db/schema';
 
@@ -98,6 +98,38 @@ export async function getRoleByName(name: string) {
     console.error('Error fetching role by name:', error);
     throw new Error('Failed to fetch role by name');
   }
+}
+
+/**
+ * Gets distinct organizations that a role is associated with (via userRoles)
+ * @param roleId - The ID of the role
+ * @returns Promise with array of unique organizationIds for the role
+ */
+export async function getOrganizationsForRole(roleId: string) {
+  try {
+    // Since roleOrganizations table was removed, derive from userRoles
+    const rows = await db
+      .selectDistinct({ organizationId: userRoles.organizationId })
+      .from(userRoles)
+      .where(eq(userRoles.roleId, roleId));
+    return rows;
+  } catch (error) {
+    console.error('Error fetching organizations for role:', error);
+    throw new Error('Failed to fetch organizations for role');
+  }
+}
+
+/**
+ * Stub: Organization assignment to roles is now managed through user-role-org assignments.
+ * This function is kept for API compatibility and always returns true.
+ * @param roleId - The ID of the role
+ * @param organizationIds - Array of organization IDs (unused)
+ * @returns Promise<true>
+ */
+export async function assignOrganizationsToRole(roleId: string, organizationIds: string[]) {
+  // roleOrganizations table has been removed;
+  // org membership for roles is derived from user_roles associations.
+  return true;
 }
 
 

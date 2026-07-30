@@ -1,5 +1,5 @@
 import { db } from './index';
-import { users, organizations, roles, userRoles, permissions, permissionGroups, userOrganizations } from './schema_uuid'; // Use the new schema file
+import { users, organizations, roles, userRoles, permissions, permissionGroups, userOrganizations } from './schema';
 import { hash } from 'bcryptjs';
 
 async function seedDatabase() {
